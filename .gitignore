@@ -1,2 +1,5 @@
 # picture thumbnail
 Thumbs.db
+
+# temp file
+*.tmp
