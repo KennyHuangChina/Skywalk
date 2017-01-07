@@ -3,3 +3,8 @@ Thumbs.db
 
 # temp file
 *.tmp
+
+# beego generated files
+status
+ApiServer
+

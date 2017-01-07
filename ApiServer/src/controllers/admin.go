@@ -3,6 +3,7 @@ package controllers
 import (
 	// "encoding/json"
 	// "fmt"
+	"ApiServer/models"
 	"github.com/astaxie/beego"
 )
 
@@ -24,4 +25,8 @@ func (this *AdminController) GetSecurePic() {
 
 	this.Data["json"] = "Kenny Test"
 	this.ServeJSON()
+}
+
+func init() {
+	models.TmpUse()
 }
