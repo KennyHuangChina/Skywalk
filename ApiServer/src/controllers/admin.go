@@ -3,6 +3,7 @@ package controllers
 import (
 	// "encoding/json"
 	// "fmt"
+	"ApiServer/commdef"
 	"ApiServer/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/cache"
@@ -28,14 +29,25 @@ func (a *AdminController) URLMapping() {
 // @router /sec_pic [get]
 func (this *AdminController) GetSecurePic() {
 	FN := "[GetSecurePic] "
-	beego.Warn("[--- API: GetSecurePic ---]")
+	beego.Warn("[API --- GetSecurePic ---]")
 
 	var result ResAdminGetSecurePic
+	var err error
 
-	imageID, err := cpt.CreateCaptcha()
-	if err != nil {
-		beego.Error(FN, err)
-		// commdefin.ApiResult(commdefin.ERR_COMMON_CAPTCHA_SERVER, a.Controller, &result.ResCommon)
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		api_result(err, this.Controller, &result.ResCommon)
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	imageID, err1 := cpt.CreateCaptcha()
+	if err1 != nil {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_CAPTCHA_SERVER}
 		return
 	}
 
@@ -43,11 +55,8 @@ func (this *AdminController) GetSecurePic() {
 	beego.Trace(FN, "url:", url)
 	result.Capt.PicDataBase64 = url
 	result.Capt.GUID = imageID
+	beego.Warn(FN, "TODO: cross-site access setting is too dangeour, need to set correct")
 	this.Ctx.Output.Header("Access-Control-Allow-Origin", "*")
-	// commdefin.ApiResult(commdefin.ERR_NONE, a.Controller, &result.ResCommon)
-
-	this.Data["json"] = result
-	this.ServeJSON()
 }
 
 func init() {
