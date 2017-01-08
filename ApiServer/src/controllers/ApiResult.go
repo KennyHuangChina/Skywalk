@@ -23,6 +23,12 @@ type ResAdminGetSecurePic struct {
 	Capt models.Captcha
 }
 
+// result of API get user info
+type ResAdminGetUserInfo struct {
+	ResCommon
+	commdef.UserInfo
+}
+
 /************************************************************************************
 *
 *		Functions
@@ -36,6 +42,7 @@ func api_result(err error, controller beego.Controller, data *ResCommon) {
 	httpRespCode := int(0)
 
 	defer func() {
+		// beego.Debug("[api_result] ", "httpRespCode:", httpRespCode)
 		controller.Ctx.ResponseWriter.WriteHeader(httpRespCode)
 	}()
 

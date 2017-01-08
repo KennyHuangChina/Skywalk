@@ -20,6 +20,48 @@ type AdminController struct {
 
 func (a *AdminController) URLMapping() {
 	a.Mapping("GetSecurePic", a.GetSecurePic)
+	a.Mapping("GetUserInfo", a.GetUserInfo)
+}
+
+// @Title GetUserInfo
+// @Description get user info by id
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /user/:id [get]
+func (this *AdminController) GetUserInfo() {
+	FN := "[GetUserInfo] "
+	beego.Warn("[--- API: GetUserInfo ---]")
+
+	var result ResAdminGetUserInfo
+	var err error
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		api_result(err, this.Controller, &result.ResCommon)
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	version := this.GetString("ver")
+	uid, _ := this.GetInt64(":id")
+	sid := this.GetString("sid")
+
+	beego.Debug(FN, "ver:", version, ", uid:", uid, ", sid:", sid)
+
+	/*
+	 *	Processing
+	 */
+	err, uif := models.GetUserInfo(uid)
+	if nil == err {
+		result.UserInfo = uif
+	}
 }
 
 // @Title GetSecurePic

@@ -12,11 +12,14 @@ import (
 	tables for system user
 ***************************************************************************/
 type TblUser struct {
-	Id        int64
-	LoginName string `orm:"size(64)"`
-	Pass      string `orm:"size(32)"`
-	IdNo      string `orm:"size(50)"`
-	Salt      string `orm:"size(32)"`
+	Id    int64
+	Name  string `orm:"size(64)"`
+	Salt  string `orm:"size(32)"`
+	Pass  string `orm:"size(50)"` // login password
+	IdNo  string `orm:"size(50)"`
+	Phone string `orm:"size(50)"`
+	Head  string `orm:"size(50)"` // url of head portrait
+	Role  int    // USER_TYPE_xxx
 }
 
 func TmpUse() {
@@ -55,11 +58,11 @@ func init() {
 	beego.Debug(db_acc + "@" + "tcp(" + db_url + ")/" + db_name + "?charset=utf8")
 	orm.RegisterDataBase("default", "mysql", db_acc+"@"+"tcp("+db_url+")/"+db_name+"?charset=utf8")
 
-	o := orm.NewOrm()
-	// o.Using("default")
-	o.Using("rtdb")
-	dr := o.Driver()
-	beego.Warn("dr:", dr)
+	// o := orm.NewOrm()
+	// // o.Using("default")
+	// o.Using("rtdb")
+	// dr := o.Driver()
+	// beego.Warn("dr:", dr)
 
 	orm.RunSyncdb("default", false, true) // sync tables
 }

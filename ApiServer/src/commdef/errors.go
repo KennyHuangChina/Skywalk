@@ -3,7 +3,7 @@ package commdef
 import (
 	// "errors"
 	"fmt"
-	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego"
 )
 
 type SwError struct {
@@ -14,8 +14,8 @@ type SwError struct {
 	HttpRespcode int64  // http respond code. 2xx - OK,
 }
 
-func (se SwError) FillError() {
-	beego.Debug("se:", se)
+func (se *SwError) FillError() {
+	// beego.Error("se:", se)
 	se.ErrDesc = ErrorDesc[se.ErrCode]
 	switch se.ErrCode {
 	case ERR_NONE:
@@ -35,6 +35,7 @@ func (se SwError) FillError() {
 	default:
 		se.HttpRespcode = 500 // TODO: this is a example to remapping the Cidana error code to http response code
 	}
+	// beego.Error("se:", se)
 }
 
 // Implement `error` 接口
@@ -43,10 +44,11 @@ func (se SwError) Error() string {
 		return "OK"
 	}
 
-	strÈrr := fmt.Sprintln("<Error> code:", se.ErrCode, ", model:", se.Model, ",", se.ErrDesc)
+	ErrInfo := ""
 	if len(se.ErrInfo) > 0 {
-		strÈrr = strÈrr + fmt.Sprintln("(", se.ErrInfo, ")")
+		ErrInfo = fmt.Sprintln("(", se.ErrInfo, ")")
 	}
+	strÈrr := fmt.Sprintln("<Error> code:", se.ErrCode, ", model:", se.Model, ",", se.ErrDesc, ErrInfo)
 	return strÈrr
 }
 
@@ -56,6 +58,7 @@ const (
 
 	// common error
 	ERR_COMMON_BAD_ARGUMENT   = 1001
+	ERR_COMMON_RES_NOTFOUND   = 1002
 	ERR_COMMON_CAPTCHA_SERVER = 1101
 )
 
@@ -64,5 +67,6 @@ var ErrorDesc = map[int64]string{
 
 	// common error
 	ERR_COMMON_BAD_ARGUMENT: "invalid input argument",
+	ERR_COMMON_RES_NOTFOUND: "resource not found",
 	ERR_COMMON_UNEXPECTED:   "unexpect error",
 }
