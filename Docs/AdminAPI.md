@@ -1,7 +1,7 @@
 # Admin APIs
 
 ##
-##1. Get security picture
+###1. Get security picture
 	[Request]
   		* GET /v1/admin/sec_pic
 	[Response]
@@ -11,4 +11,44 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
 
+###2. User Login
+	[Request]
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
+	
+##
+
+###3. User Info
+	[Request]
+  		* GET /v1/admin/user/:id?sid=xxx
+  			* sid			string 		// session id, from which the server could know who send the request
+	[Response]
+		* SUCCESS:200 							// user info
+			* id				int			// user id
+			* name				string		// user name
+			* phone				string		// user phone number.
+			* id_no				string		// user ID number or passport number
+			* head_portratit	string		// url of user head portrait picture
+			* role				int 		// 0 - agent manager, 1 - agent, 10 - customer, including house owner and house tenant
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
+##
+
+###4. agent rating
+	[Request]
+  		* GET /v1/admin/user/:id/rating?sid=xxx
+  			* sid			string 		// session id, from which the server could know who send the request
+	[Response]
+		* SUCCESS:200 
+			* user info
+				* professional	int		// agent professional rating, 0 ~5.0, it is 10 times than real value, so it should be devided by 10 before actual using, for example value 47 means 4.7 indeed
+				* attitude		int 	// agent attitude rating, 0 ~ 5.0, same as prefessional rating
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
