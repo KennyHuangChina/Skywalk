@@ -1,0 +1,49 @@
+{
+	"id": "b9ffda26-ceda-f53b-650b-26121e64bdff",
+	"name": "Skywalk_Admin",
+	"description": "",
+	"order": [
+		"d9b02b2f-fe53-b309-6bb1-22e873acb363",
+		"7836736c-e697-7c67-d468-1e3746fbf87c"
+	],
+	"folders": [],
+	"timestamp": 1483882464704,
+	"owner": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "7836736c-e697-7c67-d468-1e3746fbf87c",
+			"url": "http://ub1604-64bit:8080/v1/admin/user/1?sid=abcdefg",
+			"method": "GET",
+			"headers": "",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-64bit:8080/v1/admin/user/1?sid=abcdefg",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
+		},
+		{
+			"id": "d9b02b2f-fe53-b309-6bb1-22e873acb363",
+			"url": "http://ub1604-64bit:8080/v1/admin/sec_pic",
+			"method": "GET",
+			"headers": "",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-64bit:8080/v1/admin/sec_pic",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
+		}
+	]
+}
