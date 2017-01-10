@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">App_Android</string>
+    <string name="tab_menu_homepage">首页</string>
+    <string name="tab_menu_apartment">找房</string>
+    <string name="tab_menu_msg">消息</string>
+    <string name="tab_menu_private">我的</string>
+
+</resources>
