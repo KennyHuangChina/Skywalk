@@ -8,16 +8,16 @@ import (
 )
 
 /*
-	Get user information by id
+	Get house information by id
 	Arguments:
-		id - user id
+		id - house id
 	Returns
 		err - error info
-		uif - user info
+		hif - house info
 */
-func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
+func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 	FN := "[GetUserInfo] "
-	beego.Trace(FN, "id:", id)
+	beego.Trace(FN, "hid:", hid)
 
 	defer func() {
 		if nil != err {
@@ -27,8 +27,8 @@ func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
 
 	o := orm.NewOrm()
 
-	u := TblUser{Id: id}
-	if err1 := o.Read(&u); nil != err1 {
+	house := TblHouse{Id: hid}
+	if err1 := o.Read(&house); nil != err1 {
 		// beego.Error(FN, err1)
 		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
@@ -38,13 +38,16 @@ func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
 		return
 	}
 
-	uif.Id = u.Id
-	uif.Name = u.Name
-	uif.IdNo = u.IdNo
-	uif.Phone = u.Phone
-	uif.HeadPortrait = u.Head
-	uif.Role = u.Role
-	uif.Role2Desc() // uif.RoleDesc
+	hif.Id = house.Id
+	hif.Property = house.Property.Id
+	hif.BuddingNo = house.BuildingNo
+	hif.FloorTotal = house.FloorTotal
+	hif.FloorThis = house.FloorThis
+	hif.HouseNo = house.HouseNo
+	hif.Bedrooms = house.Bedrooms
+	hif.Livingrooms = house.Livingrooms
+	hif.Bathrooms = house.Bathrooms
+	hif.Acreage = house.Acreage
 
 	return
 }

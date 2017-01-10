@@ -2,6 +2,7 @@
 
 ##
 ###1. Get house info
+	[Security]	public, anyone could fetch this information
 	[Request]
   		* GET /v1/house/id?sid=xxx
 	  		* sid 			string	// session id, by which server could know who send the request
@@ -12,7 +13,7 @@
 			* Building_No	int		// the building number the house belong to
 			* Floor_Total	int 	// total floors
 			* Floor_this	int		// exact floor the house resident
-			* House_No		int		// exact house number. like house 1305# 
+			* House_No		string		// exact house number. like house 1305# 
 			* Bedrooms		int		// how many bedrooms whitin house
 			* Livingrooms	int		// how many living rooms within house
 			* Bathrooms		int		// how many bathrooms within house

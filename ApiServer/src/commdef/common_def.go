@@ -1,5 +1,9 @@
 package commdef
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		User
+//
 const (
 	USER_TYPE_Manger   = 0
 	USER_TYPE_Agent    = 1
@@ -27,4 +31,21 @@ func (this *UserInfo) Role2Desc() {
 	default:
 		this.RoleDesc = "Unknown"
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		House
+//
+type HouseInfo struct {
+	Id          int64
+	Property    int64
+	BuddingNo   int
+	FloorTotal  int
+	FloorThis   int
+	HouseNo     string
+	Bedrooms    int
+	Livingrooms int
+	Bathrooms   int
+	Acreage     int
 }

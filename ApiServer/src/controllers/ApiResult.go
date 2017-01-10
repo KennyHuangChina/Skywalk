@@ -29,6 +29,12 @@ type ResAdminGetUserInfo struct {
 	commdef.UserInfo
 }
 
+// result of API get house info
+type ResGetUserInfo struct {
+	ResCommon
+	commdef.HouseInfo
+}
+
 /************************************************************************************
 *
 *		Functions

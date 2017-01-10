@@ -1,0 +1,31 @@
+{
+	"id": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2",
+	"name": "Skywalk_House",
+	"description": "",
+	"order": [
+		"c06c8eeb-d2cf-153a-bc9a-340852e5bc43"
+	],
+	"folders": [],
+	"timestamp": 1484057962826,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "c06c8eeb-d2cf-153a-bc9a-340852e5bc43",
+			"url": "http://ub1604-skywalk-:8080/v1/house/1?sid=xxxxx",
+			"method": "GET",
+			"headers": "",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/1?sid=xxxxx",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		}
+	]
+}

@@ -22,6 +22,26 @@ type TblUser struct {
 	Role  int    // USER_TYPE_xxx
 }
 
+type TblProperty struct {
+	Id      int64
+	Name    string      `orm:"size(50)"`
+	Address string      `orm:"size(200)"`
+	Houses  []*TblHouse `orm:"reverse(many)"`
+}
+
+type TblHouse struct {
+	Id          int64
+	BuildingNo  int
+	FloorTotal  int
+	FloorThis   int
+	HouseNo     string `orm:"size(50)"`
+	Bedrooms    int
+	Livingrooms int
+	Bathrooms   int
+	Acreage     int
+	Property    *TblProperty `orm:"rel(fk)"`
+}
+
 func TmpUse() {
 	// TODO: this function should be removed once this file could be compiled automatic
 }
@@ -34,7 +54,8 @@ func init() {
 	beego.Warn("init")
 
 	// 需要在init中注册定义的model
-	orm.RegisterModel(new(TblUser))
+	orm.RegisterModel(new(TblUser),
+		new(TblProperty), new(TblHouse))
 
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 
