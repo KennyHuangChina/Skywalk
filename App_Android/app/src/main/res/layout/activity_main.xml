@@ -10,10 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.kjs.skywalk.app_android.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tab_menu"
+        android:layout_alignParentEnd="true" >
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/tab_menu"
@@ -30,7 +34,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:drawableTop="@drawable/tab_menu_homepage"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onTabMenuClick" />
 
         <TextView
             android:id="@+id/tv_apartment"
@@ -40,7 +45,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:drawableTop="@drawable/tab_menu_apartment"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onTabMenuClick" />
 
         <TextView
             android:id="@+id/tv_msg"
@@ -50,7 +56,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:drawableTop="@drawable/tab_menu_msg"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onTabMenuClick" />
 
         <TextView
             android:id="@+id/tv_private"
@@ -60,7 +67,10 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:drawableTop="@drawable/tab_menu_private"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onTabMenuClick" />
 
     </LinearLayout>
+
+
 </RelativeLayout>
