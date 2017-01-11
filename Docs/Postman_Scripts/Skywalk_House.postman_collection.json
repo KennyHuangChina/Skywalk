@@ -3,7 +3,8 @@
 	"name": "Skywalk_House",
 	"description": "",
 	"order": [
-		"c06c8eeb-d2cf-153a-bc9a-340852e5bc43"
+		"c06c8eeb-d2cf-153a-bc9a-340852e5bc43",
+		"bfefe4a6-5253-6989-af2e-a48c961785ae"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -11,20 +12,39 @@
 	"public": false,
 	"requests": [
 		{
-			"id": "c06c8eeb-d2cf-153a-bc9a-340852e5bc43",
-			"url": "http://ub1604-skywalk-:8080/v1/house/1?sid=xxxxx",
-			"method": "GET",
+			"id": "bfefe4a6-5253-6989-af2e-a48c961785ae",
 			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/house/property/1?sid=xxxxx",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
 			"data": null,
 			"dataMode": "params",
-			"tests": null,
-			"preRequestScript": null,
-			"currentHelper": "normal",
-			"pathVariables": {},
 			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1484140169468,
+			"name": "http://ub1604-skywalk-:8080/v1/house/property/1?sid=xxxxx",
+			"description": "",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "c06c8eeb-d2cf-153a-bc9a-340852e5bc43",
+			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/house/1?sid=xxxxx",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1484140218778,
 			"name": "http://ub1604-skywalk-:8080/v1/house/1?sid=xxxxx",
 			"description": "",
-			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
 		}
 	]
