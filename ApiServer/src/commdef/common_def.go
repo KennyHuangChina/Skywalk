@@ -49,3 +49,10 @@ type HouseInfo struct {
 	Bathrooms   int
 	Acreage     int
 }
+
+type PropInfo struct {
+	Id          int64
+	PropName    string
+	PropAddress string
+	PropDesc    string
+}

@@ -26,6 +26,7 @@ type TblProperty struct {
 	Id      int64
 	Name    string      `orm:"size(50)"`
 	Address string      `orm:"size(200)"`
+	Desc    string      `orm:"size(1000)"`
 	Houses  []*TblHouse `orm:"reverse(many)"`
 }
 
