@@ -7,14 +7,14 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-/*
-	Get user information by id
-	Arguments:
-		id - user id
-	Returns
-		err - error info
-		uif - user info
-*/
+/**
+*	Get user information by id
+*	Arguments:
+*		id - user id
+*	Returns
+*		err - error info
+*		uif - user info
+ */
 func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
 	FN := "[GetUserInfo] "
 	beego.Trace(FN, "id:", id)
@@ -45,6 +45,27 @@ func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
 	uif.HeadPortrait = u.Head
 	uif.Role = u.Role
 	uif.Role2Desc() // uif.RoleDesc
+
+	return
+}
+
+/**
+*	Get user salt
+*	Arguments:
+*		un - user login name
+*	Returns
+*		err 	- error info
+*		salt 	- salt string for user
+ */
+func GetSaltByName(un string) (err error, salt string) {
+	FN := "[GetSaltByName] "
+	beego.Trace(FN, "login user:", un)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
 
 	return
 }

@@ -38,6 +38,9 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 		return
 	}
 
+	// beego.Debug(FN, "house:", house)
+	// beego.Debug(FN, "property:", house.Property)
+
 	hif.Id = house.Id
 	hif.Property = house.Property.Id
 	hif.BuddingNo = house.BuildingNo
@@ -83,7 +86,7 @@ func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
 		return
 	}
 
-	beego.Debug(FN, "prop:", prop)
+	// beego.Debug(FN, "prop:", prop)
 
 	pif.Id = prop.Id
 	pif.PropName = prop.Name

@@ -66,7 +66,8 @@ var ErrorDesc = map[int64]string{
 	ERR_NONE: "OK",
 
 	// common error
-	ERR_COMMON_BAD_ARGUMENT: "invalid input argument",
-	ERR_COMMON_RES_NOTFOUND: "resource not found",
-	ERR_COMMON_UNEXPECTED:   "unexpect error",
+	ERR_COMMON_BAD_ARGUMENT:   "invalid input argument",
+	ERR_COMMON_RES_NOTFOUND:   "resource not found",
+	ERR_COMMON_UNEXPECTED:     "unexpect error",
+	ERR_COMMON_CAPTCHA_SERVER: "Captchar server error",
 }

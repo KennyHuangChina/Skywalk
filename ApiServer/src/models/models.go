@@ -16,12 +16,22 @@ type TblUser struct {
 	Name  string `orm:"size(64)"`
 	Salt  string `orm:"size(32)"`
 	Pass  string `orm:"size(50)"` // login password
-	IdNo  string `orm:"size(50)"`
+	IdNo  string `orm:"size(50)"` // ID number or passport number
 	Phone string `orm:"size(50)"`
 	Head  string `orm:"size(50)"` // url of head portrait
 	Role  int    // USER_TYPE_xxx
 }
 
+func (rs *TblUser) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Phone"},
+		// []string{"IdNo"}, 	// user may not fill in the ID number
+	}
+}
+
+/***************************************************************************
+	tables for house
+***************************************************************************/
 type TblProperty struct {
 	Id      int64
 	Name    string      `orm:"size(50)"`
@@ -35,7 +45,7 @@ type TblHouse struct {
 	BuildingNo  int
 	FloorTotal  int
 	FloorThis   int
-	HouseNo     string `orm:"size(50)"`
+	HouseNo     string `orm:"size(50)"` // private info, only the house owner and agent could see
 	Bedrooms    int
 	Livingrooms int
 	Bathrooms   int
@@ -43,18 +53,16 @@ type TblHouse struct {
 	Property    *TblProperty `orm:"rel(fk)"`
 }
 
-func TmpUse() {
-	// TODO: this function should be removed once this file could be compiled automatic
-}
+/***************************************************************************
+	tables for
+***************************************************************************/
 
 // before using please makere sure the database already created, else use the following sentence to create it
 //	CREATE DATABASE IF NOT EXISTS yourdbname DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
 /***************************************************************************/
 func init() {
-	beego.Warn("init")
-
-	// 需要在init中注册定义的model
+	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
 		new(TblProperty), new(TblHouse))
 
