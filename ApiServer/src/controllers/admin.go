@@ -138,7 +138,6 @@ func (this *AdminController) GetSaltForUser() {
 	}
 
 	err, salt := models.GetSaltByName(username)
-	//get salt
 	if nil == err {
 		result.Salt = salt
 		random := make([]byte, 16)

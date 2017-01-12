@@ -21,6 +21,18 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
+
+###2. Get User Salt
+	[Request]
+		* GET /v1/admin/salt?sid=xxx&un=xxx
+  			* sid			string 		// session id, from which the server could know who send the request
+			* un			string 		// user login name
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
 	
 ##
 

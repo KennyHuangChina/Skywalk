@@ -14,19 +14,20 @@
 	"requests": [
 		{
 			"id": "38f70f59-e0bb-53ec-c39c-fefb458acc7d",
-			"url": "http://ub1604-skywalk-:8080/v1/admin/salt?un=Kenny&sid=abcdefg",
-			"method": "GET",
 			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/admin/salt?un=15306261804&sid=abcdefg",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
 			"data": null,
 			"dataMode": "params",
-			"tests": null,
-			"preRequestScript": null,
-			"currentHelper": "normal",
-			"pathVariables": {},
 			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1484226291785,
 			"name": "http://ub1604-skywalk-:8080/v1/admin/salt?un=Kenny&sid=abcdefg",
 			"description": "",
-			"descriptionFormat": "html",
 			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
 		},
 		{

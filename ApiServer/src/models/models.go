@@ -12,19 +12,21 @@ import (
 	tables for system user
 ***************************************************************************/
 type TblUser struct {
-	Id    int64
-	Name  string `orm:"size(64)"`
-	Salt  string `orm:"size(32)"`
-	Pass  string `orm:"size(50)"` // login password
-	IdNo  string `orm:"size(50)"` // ID number or passport number
-	Phone string `orm:"size(50)"`
-	Head  string `orm:"size(50)"` // url of head portrait
-	Role  int    // USER_TYPE_xxx
+	Id        int64
+	LoginName string `orm:"size(64)"` // login name, user phone
+	Name      string `orm:"size(64)"`
+	Salt      string `orm:"size(32)"`
+	Pass      string `orm:"size(50)"` // login password
+	IdNo      string `orm:"size(50)"` // ID number or passport number
+	Phone     string `orm:"size(50)"`
+	Head      string `orm:"size(50)"` // url of head portrait
+	Role      int    // USER_TYPE_xxx
 }
 
 func (rs *TblUser) TableUnique() [][]string {
 	return [][]string{
 		[]string{"Phone"},
+		[]string{"LoginName"},
 		// []string{"IdNo"}, 	// user may not fill in the ID number
 	}
 }

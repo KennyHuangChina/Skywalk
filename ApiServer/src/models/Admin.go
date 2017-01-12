@@ -67,5 +67,20 @@ func GetSaltByName(un string) (err error, salt string) {
 		}
 	}()
 
+	o := orm.NewOrm()
+
+	user := TblUser{LoginName: un}
+	if err1 := o.Read(&user, "LoginName"); nil != err1 {
+		// beego.Error(FN, err1)
+		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+		}
+		return
+	}
+
+	salt = user.Salt
+
 	return
 }
