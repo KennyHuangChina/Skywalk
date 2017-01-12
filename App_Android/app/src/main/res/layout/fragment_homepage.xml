@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="@string/tab_menu_homepage"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textView"
-        android:gravity="center" />
-</LinearLayout>
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_title"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="130px">
+
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:text="南京"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/dropdown"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/editTextInputPassword"
+                android:inputType="numberPassword"
+                android:drawableLeft="@drawable/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textColorHint="#9c9ea5"
+                android:textSize="42px"
+                android:hint="输入小区或商区名称"
+                />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/message"
+                android:id="@+id/imageView3"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_title"
+            app:srcCompat="@android:drawable/btn_star_big_on"
+            android:id="@+id/imageView2" />
+    </RelativeLayout>
+
+
+</ScrollView>
