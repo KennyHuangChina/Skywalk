@@ -25,6 +25,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("GetSecurePic", a.GetSecurePic)
 	a.Mapping("GetUserInfo", a.GetUserInfo)
 	a.Mapping("GetSaltForUser", a.GetSaltForUser)
+	a.Mapping("Login", a.Login)
 }
 
 // @Title GetUserInfo
@@ -148,7 +149,87 @@ func (this *AdminController) GetSaltForUser() {
 		result.Random = hex.EncodeToString(random)
 	}
 
-	beego.Debug(FN, "salt:", result.Salt, ", random:", result.Random)
+	// beego.Debug(FN, "salt:", result.Salt, ", random:", result.Random)
+}
+
+// @Title Login
+// @Description login by login name & password
+// @Success 200 {string}
+// @Failure 400 body is empty
+// @router /Login [get]
+func (this *AdminController) Login() {
+	FN := "<Login> "
+	beego.Warn("[--- API: Login ---]")
+
+	var result ResAdminLogin
+	var err error
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		api_result(err, this.Controller, &result.ResCommon)
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/* Extract agreements */
+	loginName := this.GetString("ln")
+	password := this.GetString("pw")
+	random := this.GetString("rd")
+	beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", random:", random)
+
+	if 0 == len(loginName) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "login name could not be empty"}
+		return
+	}
+
+	//2 check captcha MD5(GUID+Password) with client's secret
+	err, userid := models.LoginAccout(loginName, password, random)
+	if nil != err {
+		return
+	}
+	// if !bLogined {
+	// 	errDesc := ""
+	// 	switch userid {
+	// 	case -1:
+	// 		errDesc = "the specified user does not exist"
+	// 	case -2:
+	// 		errDesc = "password is incorrect"
+	// 	case -3:
+	// 		errDesc = "password couldn't be empty"
+	// 	}
+	// 	beego.Error(FN, "fail to login.", errDesc)
+	// 	// commdefin.ApiResult2(commdefin.ERR_ADMIN_LOGIN_FAIL, errDesc, this.Controller, &result.ResCommon)
+	// 	return
+	// }
+	beego.Info(FN, "login success for user:", userid)
+
+	// //3 return session id
+	// // result.Sid = "1234567890"
+	// // this.Data["json"] = result
+	// this.StartSession()
+	// result.Sid = this.CruSession.SessionID()
+	// beego.Debug("result.Sid:", result.Sid)
+	// cookie := &http.Cookie{
+	// 	Name:     beego.SessionName,
+	// 	Value:    url.QueryEscape(result.Sid),
+	// 	Path:     "/",
+	// 	HttpOnly: true,
+	// 	Secure:   beego.EnableHttpTLS,
+	// 	Domain:   beego.SessionDomain,
+	// }
+	// if beego.SessionCookieLifeTime > 0 {
+	// 	cookie.MaxAge = beego.SessionCookieLifeTime
+	// 	cookie.Expires = time.Now().Add(time.Duration(beego.SessionCookieLifeTime) * time.Second)
+	// }
+	// //NOTE by Gavin:SetCookie must be called before ResponseWriter.WriteHeader
+	// //because ResponseWriter.Header will never accept header modification after Wri
+	// http.SetCookie(this.Ctx.ResponseWriter, cookie)
+	// this.SetSession("userid", userid)
+	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

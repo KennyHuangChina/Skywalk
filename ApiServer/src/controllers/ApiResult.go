@@ -36,6 +36,12 @@ type ResAdminGetUserSalt struct {
 	Random string
 }
 
+// result of API Logoin
+type ResAdminLogin struct {
+	ResCommon
+	Sid string
+}
+
 // result of API get house info
 type ResGetUserInfo struct {
 	ResCommon

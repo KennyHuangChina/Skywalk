@@ -60,14 +60,20 @@ const (
 	ERR_COMMON_BAD_ARGUMENT   = 1001
 	ERR_COMMON_RES_NOTFOUND   = 1002
 	ERR_COMMON_CAPTCHA_SERVER = 1101
+
+	// user login
+	ERR_USERLOGIN_NO_PASSWORD        = 1201
+	ERR_USERLOGIN_INCORRECT_PASSWORD = 1202
 )
 
 var ErrorDesc = map[int64]string{
 	ERR_NONE: "OK",
 
 	// common error
-	ERR_COMMON_BAD_ARGUMENT:   "invalid input argument",
-	ERR_COMMON_RES_NOTFOUND:   "resource not found",
-	ERR_COMMON_UNEXPECTED:     "unexpect error",
-	ERR_COMMON_CAPTCHA_SERVER: "Captchar server error",
+	ERR_COMMON_BAD_ARGUMENT:          "invalid input argument",
+	ERR_COMMON_RES_NOTFOUND:          "resource not found",
+	ERR_COMMON_UNEXPECTED:            "unexpect error",
+	ERR_COMMON_CAPTCHA_SERVER:        "Captchar server error",
+	ERR_USERLOGIN_NO_PASSWORD:        "empty password",
+	ERR_USERLOGIN_INCORRECT_PASSWORD: "incorrect password",
 }

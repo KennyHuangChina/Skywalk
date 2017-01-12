@@ -16,14 +16,19 @@
 
 ###2. User Login
 	[Request]
+  		* GET /v1/admin/login
+	  		* lg			string 		// login name
+	  		* pw			string		// password
+	  		* rd			string		// random 
 	[Response]
 		* SUCCESS:200 
+			* Sid			string		// session id
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
 ##
 
-###2. Get User Salt
+###3. Get User Salt
 	[Request]
 		* GET /v1/admin/salt?sid=xxx&un=xxx
   			* sid			string 		// session id, from which the server could know who send the request
@@ -36,7 +41,7 @@
 	
 ##
 
-###3. User Info
+###4. User Info
 	[Request]
   		* GET /v1/admin/user/:id?sid=xxx
   			* sid			string 		// session id, from which the server could know who send the request
@@ -54,7 +59,7 @@
 	  		* errDesc		string		// error description
 ##
 
-###4. agent rating
+###5. agent rating
 	[Request]
   		* GET /v1/admin/user/:id/rating?sid=xxx
   			* sid			string 		// session id, from which the server could know who send the request
