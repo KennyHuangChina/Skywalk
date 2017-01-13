@@ -8,51 +8,57 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--130px-->
         <LinearLayout
             android:id="@+id/ll_title"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:layout_height="130px">
+            android:weightSum="1080"
+            android:layout_height="43dp">
 
-
-            <TextView
+            <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
                 android:id="@+id/tv_location"
-                android:text="南京"
+                android:text="@string/homepage_nanjing"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/dropdown"
+                android:drawableEnd="@drawable/dropdown"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:adjustViewBounds="true"
-                android:layout_weight="1" />
+                android:layout_weight="248" />
 
+            <!--textSize 42px-->
             <EditText
                 android:id="@+id/editTextInputPassword"
                 android:inputType="numberPassword"
-                android:drawableLeft="@drawable/search"
+                android:drawableStart="@drawable/search"
+                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="592"
                 android:textColorHint="#9c9ea5"
-                android:textSize="42px"
-                android:hint="输入小区或商区名称"
+                android:textSize="14sp"
+                android:hint="@string/homepage_input_hint"
                 />
 
             <ImageView
+                android:contentDescription="@string/tab_menu_msg"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/message"
-                android:id="@+id/imageView3"
-                android:layout_weight="1" />
+                android:id="@+id/im_message"
+                android:layout_weight="250" />
         </LinearLayout>
 
+        <!--540px-->
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="270dp"
+            android:contentDescription=""
             android:layout_below="@+id/ll_title"
-            app:srcCompat="@android:drawable/btn_star_big_on"
-            android:id="@+id/imageView2" />
+            android:background="@drawable/homepage_title"
+            android:id="@+id/iv_title" />
     </RelativeLayout>
 
 

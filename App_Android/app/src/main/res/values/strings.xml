@@ -4,5 +4,8 @@
     <string name="tab_menu_apartment">找房</string>
     <string name="tab_menu_msg">消息</string>
     <string name="tab_menu_private">我的</string>
+    <string name="homepage_nanjing">南京</string>
+    <string name="homepage_input_hint">输入小区或商区名称</string>
+    <string name="nanjing">南京</string>
 
 </resources>
