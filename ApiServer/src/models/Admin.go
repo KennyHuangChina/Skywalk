@@ -193,25 +193,8 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 	}()
 
 	// argument checking
-	if lenLN := len(login_name); 11 != lenLN {
-		if 0 == lenLN {
-			err = commdef.SwError{ErrCode: commdef.ERR_SMS_EMPTY_PHONE}
-		} else if 11 != len(login_name) { //
-			err = commdef.SwError{ErrCode: commdef.ERR_SMS_PHONE_LEN}
-		}
+	if err = checkPhoneNo(login_name); nil != err {
 		return
-	} else {
-		nPhoneNo, err1 := strconv.ParseInt(login_name, 10, 64)
-		if nil != err1 {
-			err = commdef.SwError{ErrCode: commdef.ERR_SMS_PHONE_NO_NUMERIC, ErrInfo: err1.Error()}
-			return
-		}
-
-		// China. cell phone start with number 1, it could be 13, 15, 17, 18, or maybe more in the feature
-		if nPhoneNo < 10000000000 || nPhoneNo >= 20000000000 {
-			err = commdef.SwError{ErrCode: commdef.ERR_SMS_INVALID_PHONE_NO}
-			return
-		}
 	}
 
 	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
@@ -229,6 +212,81 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 	// }
 
 	// salt = user.Salt
+
+	return
+}
+
+/**
+*	Get user salt
+*	Arguments:
+*		login_name 	- login name
+*	Returns
+*		err 	- error info
+*		uid 	- new user id
+ */
+func RegCust(login_name, sms string) (err error, uid int64) {
+	FN := "[RegCust] "
+	beego.Trace(FN, "login user:", login_name)
+
+	uid = 0
+
+	defer func() {
+		if nil != err {
+			se, _ := err.(commdef.SwError)
+			se.FillError()
+			err = se
+			beego.Error(FN, err)
+		}
+	}()
+
+	// argument checking
+	if err = checkPhoneNo(login_name); nil != err {
+		return
+	}
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	// o := orm.NewOrm()
+
+	// user := TblUser{LoginName: un}
+	// if err1 := o.Read(&user, "LoginName"); nil != err1 {
+	// 	// beego.Error(FN, err1)
+	// 	if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
+	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
+	// 	} else {
+	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+	// 	}
+	// 	return
+	// }
+
+	// salt = user.Salt
+
+	return
+}
+
+func checkPhoneNo(phone string) (err error) {
+	FN := "[checkPhoneNo] "
+	beego.Trace(FN, "phone:", phone)
+
+	if lenLN := len(phone); 11 != lenLN {
+		if 0 == lenLN {
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_EMPTY_PHONE}
+		} else if 11 != len(phone) { //
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_PHONE_LEN}
+		}
+		return
+	}
+
+	nPhoneNo, err1 := strconv.ParseInt(phone, 10, 64)
+	if nil != err1 {
+		err = commdef.SwError{ErrCode: commdef.ERR_SMS_PHONE_NO_NUMERIC, ErrInfo: err1.Error()}
+		return
+	}
+
+	// China. cell phone start with number 1, it could be 13, 15, 17, 18, or maybe more in the feature
+	if nPhoneNo < 10000000000 || nPhoneNo >= 20000000000 {
+		err = commdef.SwError{ErrCode: commdef.ERR_SMS_INVALID_PHONE_NO}
+		return
+	}
 
 	return
 }

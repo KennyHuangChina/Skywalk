@@ -43,6 +43,12 @@ type ResAdminGetSms struct {
 	SmsCode string
 }
 
+// result of API RegCust{
+type ResAdminRegCust struct {
+	ResCommon
+	Uid int64
+}
+
 // result of API Logoin
 type ResAdminLogin struct {
 	ResCommon

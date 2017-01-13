@@ -90,7 +90,7 @@
 	[Scope]			APP/Web
 	[Private]		public
 	[Request]
-  		* PUT /v1/admin/regcust
+  		* POST /v1/admin/regcust
   			* ln		// login name. Typically it is phone number
   			* sms		// sms code
 	[Response]

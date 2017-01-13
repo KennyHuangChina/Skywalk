@@ -6,7 +6,8 @@
 		"d9b02b2f-fe53-b309-6bb1-22e873acb363",
 		"7836736c-e697-7c67-d468-1e3746fbf87c",
 		"38f70f59-e0bb-53ec-c39c-fefb458acc7d",
-		"df3c7426-dd71-a4e7-1428-9e1ae17ef350"
+		"df3c7426-dd71-a4e7-1428-9e1ae17ef350",
+		"edfac8e2-dc30-aff1-907b-266189bb98b2"
 	],
 	"folders": [],
 	"timestamp": 1483882464704,
@@ -83,6 +84,23 @@
 			"time": 1484319478480,
 			"name": "http://ub1604-skywalk-:8080/v1/admin/fetchsms?ln=",
 			"description": "",
+			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
+		},
+		{
+			"id": "edfac8e2-dc30-aff1-907b-266189bb98b2",
+			"url": "http://ub1604-skywalk-:8080/v1/admin/regcust?ln=12222222222&sms=123456",
+			"method": "POST",
+			"headers": "",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/admin/regcust?ln=12222222222&sms=123456",
+			"description": "",
+			"descriptionFormat": "html",
 			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
 		}
 	]

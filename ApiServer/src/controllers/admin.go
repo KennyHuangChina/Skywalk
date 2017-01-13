@@ -30,6 +30,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Login", a.Login)
 
 	a.Mapping("FetchSms", a.FetchSms)
+	a.Mapping("RegCust", a.RegCust)
 }
 
 // @Title GetUserInfo
@@ -255,6 +256,42 @@ func (this *AdminController) FetchSms() {
 	err, sms := models.FetchSms(login_name)
 	if nil == err {
 		result.SmsCode = sms
+	}
+}
+
+// @Title RegCust
+// @Description register new customer
+// @Success 200 {string}
+// @Failure 400 body is empty
+// @router /regcust [post]
+func (this *AdminController) RegCust() {
+	FN := "<RegCust> "
+	beego.Warn("[API --- RegCust ---]")
+
+	var result ResAdminRegCust
+	var err error
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		api_result(err, this.Controller, &result.ResCommon)
+		// beego.Debug(FN, "result:", result)
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/* Extract agreements */
+	login_name := this.GetString("ln")
+	sms_code := this.GetString("sms")
+	beego.Debug(FN, "login_name:", login_name, ", sms code:", sms_code)
+
+	/* Process */
+	err, uid := models.RegCust(login_name, sms_code)
+	if nil == err {
+		result.Uid = uid
 	}
 }
 
