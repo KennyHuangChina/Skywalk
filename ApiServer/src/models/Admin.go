@@ -8,6 +8,7 @@ import (
 	// "fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"strconv"
 )
 
 /**
@@ -106,7 +107,9 @@ func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
 	uid = -1
 
 	defer func() {
-
+		if nil != err {
+			beego.Error(FN, err)
+		}
 	}()
 
 	// check if the password user keyined is empty
@@ -163,5 +166,69 @@ func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
 	}
 
 	uid = user.Id
+	return
+}
+
+/**
+*	Get user salt
+*	Arguments:
+*		login_name 	- login name
+*	Returns
+*		err 		- error info
+*		SmsCode 	- sms code sent
+ */
+func FetchSms(login_name string) (err error, SmsCode string) {
+	FN := "[FetchSms] "
+	beego.Trace(FN, "login user:", login_name)
+
+	SmsCode = ""
+
+	defer func() {
+		if nil != err {
+			se, _ := err.(commdef.SwError)
+			se.FillError()
+			err = se
+			beego.Error(FN, err)
+		}
+	}()
+
+	// argument checking
+	if lenLN := len(login_name); 11 != lenLN {
+		if 0 == lenLN {
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_EMPTY_PHONE}
+		} else if 11 != len(login_name) { //
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_PHONE_LEN}
+		}
+		return
+	} else {
+		nPhoneNo, err1 := strconv.ParseInt(login_name, 10, 64)
+		if nil != err1 {
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_PHONE_NO_NUMERIC, ErrInfo: err1.Error()}
+			return
+		}
+
+		// China. cell phone start with number 1, it could be 13, 15, 17, 18, or maybe more in the feature
+		if nPhoneNo < 10000000000 || nPhoneNo >= 20000000000 {
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_INVALID_PHONE_NO}
+			return
+		}
+	}
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	// o := orm.NewOrm()
+
+	// user := TblUser{LoginName: un}
+	// if err1 := o.Read(&user, "LoginName"); nil != err1 {
+	// 	// beego.Error(FN, err1)
+	// 	if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
+	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
+	// 	} else {
+	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+	// 	}
+	// 	return
+	// }
+
+	// salt = user.Salt
+
 	return
 }

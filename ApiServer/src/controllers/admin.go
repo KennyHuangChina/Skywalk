@@ -11,6 +11,8 @@ import (
 	"github.com/astaxie/beego/cache"
 	"github.com/astaxie/beego/utils/captcha"
 	"io"
+	// "net/http"
+	// "net/url"
 )
 
 var cpt *captcha.Captcha
@@ -26,6 +28,8 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("GetUserInfo", a.GetUserInfo)
 	a.Mapping("GetSaltForUser", a.GetSaltForUser)
 	a.Mapping("Login", a.Login)
+
+	a.Mapping("FetchSms", a.FetchSms)
 }
 
 // @Title GetUserInfo
@@ -186,33 +190,20 @@ func (this *AdminController) Login() {
 		return
 	}
 
-	//2 check captcha MD5(GUID+Password) with client's secret
+	/* Processing */
+	//1. check captcha MD5(GUID+Password) with client's secret
 	err, userid := models.LoginAccout(loginName, password, random)
 	if nil != err {
 		return
 	}
-	// if !bLogined {
-	// 	errDesc := ""
-	// 	switch userid {
-	// 	case -1:
-	// 		errDesc = "the specified user does not exist"
-	// 	case -2:
-	// 		errDesc = "password is incorrect"
-	// 	case -3:
-	// 		errDesc = "password couldn't be empty"
-	// 	}
-	// 	beego.Error(FN, "fail to login.", errDesc)
-	// 	// commdefin.ApiResult2(commdefin.ERR_ADMIN_LOGIN_FAIL, errDesc, this.Controller, &result.ResCommon)
-	// 	return
-	// }
 	beego.Info(FN, "login success for user:", userid)
 
-	// //3 return session id
-	// // result.Sid = "1234567890"
-	// // this.Data["json"] = result
-	// this.StartSession()
-	// result.Sid = this.CruSession.SessionID()
-	// beego.Debug("result.Sid:", result.Sid)
+	//2. return session id
+	// result.Sid = "1234567890"
+	// this.Data["json"] = result
+	this.StartSession()
+	result.Sid = this.CruSession.SessionID()
+	beego.Debug(FN, "result.Sid:", result.Sid)
 	// cookie := &http.Cookie{
 	// 	Name:     beego.SessionName,
 	// 	Value:    url.QueryEscape(result.Sid),
@@ -228,8 +219,43 @@ func (this *AdminController) Login() {
 	// //NOTE by Gavin:SetCookie must be called before ResponseWriter.WriteHeader
 	// //because ResponseWriter.Header will never accept header modification after Wri
 	// http.SetCookie(this.Ctx.ResponseWriter, cookie)
-	// this.SetSession("userid", userid)
+	this.SetSession("userid", userid)
 	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
+}
+
+// @Title FetchSms
+// @Description get sms code for user(phone number)
+// @Success 200 {string}
+// @Failure 400 body is empty
+// @router /fetchsms [get]
+func (this *AdminController) FetchSms() {
+	FN := "<FetchSms> "
+	beego.Warn("[API --- FetchSms ---]")
+
+	var result ResAdminGetSms
+	var err error
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		api_result(err, this.Controller, &result.ResCommon)
+		// beego.Debug(FN, "result:", result)
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/* Extract agreements */
+	login_name := this.GetString("ln")
+	beego.Debug(FN, "login_name:", login_name)
+
+	/* Process */
+	err, sms := models.FetchSms(login_name)
+	if nil == err {
+		result.SmsCode = sms
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

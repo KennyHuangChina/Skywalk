@@ -38,42 +38,67 @@ func (se *SwError) FillError() {
 	// beego.Error("se:", se)
 }
 
-// Implement `error` 接口
-func (se SwError) Error() string {
+func (se SwError) GetErrorString() string {
 	if ERR_NONE == se.ErrCode {
-		return "OK"
+		return "No Error"
 	}
 
 	ErrInfo := ""
 	if len(se.ErrInfo) > 0 {
 		ErrInfo = fmt.Sprintln("(", se.ErrInfo, ")")
 	}
-	strÈrr := fmt.Sprintln("<Error> code:", se.ErrCode, ", model:", se.Model, ",", se.ErrDesc, ErrInfo)
-	return strÈrr
+	Model := ""
+	if len(se.Model) > 0 {
+		Model = "model:" + se.Model + ", "
+	}
+	strErr := Model + se.ErrDesc + ErrInfo
+	return strErr
+}
+
+// Implement `error` 接口
+func (se SwError) Error() string {
+	strErr := fmt.Sprintf("<Error> code: %d, %s", se.ErrCode, se.GetErrorString())
+	return strErr
 }
 
 const (
 	ERR_NONE              = 0
 	ERR_COMMON_UNEXPECTED = 1000
+	ERR_NOT_IMPLEMENT     = 1001
 
 	// common error
-	ERR_COMMON_BAD_ARGUMENT   = 1001
-	ERR_COMMON_RES_NOTFOUND   = 1002
-	ERR_COMMON_CAPTCHA_SERVER = 1101
+	ERR_COMMON_BAD_ARGUMENT = 1101
+	ERR_COMMON_RES_NOTFOUND = 1102
 
 	// user login
-	ERR_USERLOGIN_NO_PASSWORD        = 1201
-	ERR_USERLOGIN_INCORRECT_PASSWORD = 1202
+	ERR_COMMON_CAPTCHA_SERVER        = 1201
+	ERR_USERLOGIN_NO_PASSWORD        = 1202
+	ERR_USERLOGIN_INCORRECT_PASSWORD = 1203
+
+	// fetch sms
+	ERR_SMS_EMPTY_PHONE      = 1301
+	ERR_SMS_PHONE_LEN        = 1302
+	ERR_SMS_PHONE_NO_NUMERIC = 1303
+	ERR_SMS_INVALID_PHONE_NO = 1304
 )
 
 var ErrorDesc = map[int64]string{
-	ERR_NONE: "OK",
+	ERR_NONE:          "OK",
+	ERR_NOT_IMPLEMENT: "Not implement",
 
 	// common error
-	ERR_COMMON_BAD_ARGUMENT:          "invalid input argument",
-	ERR_COMMON_RES_NOTFOUND:          "resource not found",
-	ERR_COMMON_UNEXPECTED:            "unexpect error",
+	ERR_COMMON_BAD_ARGUMENT: "invalid input argument",
+	ERR_COMMON_RES_NOTFOUND: "resource not found",
+	ERR_COMMON_UNEXPECTED:   "unexpect error",
+
+	// user login
 	ERR_COMMON_CAPTCHA_SERVER:        "Captchar server error",
 	ERR_USERLOGIN_NO_PASSWORD:        "empty password",
 	ERR_USERLOGIN_INCORRECT_PASSWORD: "incorrect password",
+
+	// fetch sms
+	ERR_SMS_EMPTY_PHONE:      "Phone number is empty",
+	ERR_SMS_PHONE_LEN:        "Wrong phone number length",
+	ERR_SMS_PHONE_NO_NUMERIC: "Phone number include no-numeric char",
+	ERR_SMS_INVALID_PHONE_NO: "Invalid phone number",
 }

@@ -5,7 +5,8 @@
 	"order": [
 		"d9b02b2f-fe53-b309-6bb1-22e873acb363",
 		"7836736c-e697-7c67-d468-1e3746fbf87c",
-		"38f70f59-e0bb-53ec-c39c-fefb458acc7d"
+		"38f70f59-e0bb-53ec-c39c-fefb458acc7d",
+		"df3c7426-dd71-a4e7-1428-9e1ae17ef350"
 	],
 	"folders": [],
 	"timestamp": 1483882464704,
@@ -63,6 +64,24 @@
 			"helperAttributes": {},
 			"time": 1484140172593,
 			"name": "http://ub1604-64bit:8080/v1/admin/sec_pic",
+			"description": "",
+			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
+		},
+		{
+			"id": "df3c7426-dd71-a4e7-1428-9e1ae17ef350",
+			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/admin/fetchsms?ln=12222222222",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1484319478480,
+			"name": "http://ub1604-skywalk-:8080/v1/admin/fetchsms?ln=",
 			"description": "",
 			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
 		}

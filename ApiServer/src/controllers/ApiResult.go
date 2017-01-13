@@ -3,6 +3,7 @@ package controllers
 import (
 	"ApiServer/commdef"
 	"ApiServer/models"
+	// "fmt"
 	// "errors"
 	"github.com/astaxie/beego"
 )
@@ -34,6 +35,12 @@ type ResAdminGetUserSalt struct {
 	ResCommon
 	Salt   string
 	Random string
+}
+
+// result of API GetSms{
+type ResAdminGetSms struct {
+	ResCommon
+	SmsCode string
 }
 
 // result of API Logoin
@@ -93,5 +100,5 @@ func api_result(err error, controller beego.Controller, data *ResCommon) {
 
 	// http response body, common part
 	data.ErrCode = se.ErrCode
-	data.ErrString = err.Error() // "" //ErrorCodes[resCode]
+	data.ErrString = se.GetErrorString() // se.Error() // "" //ErrorCodes[resCode]
 }

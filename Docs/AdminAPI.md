@@ -70,3 +70,32 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
+
+###6. fetch sms code
+	[Scope]			APP/Web
+	[Private]		public
+	[Request]
+  		* GET /v1/admin/fetchsms?ln=xxx
+  			* ln		// login name. It is phone number actually
+	[Response]
+		* SUCCESS:200 
+			* SmsCode		string		// sms code
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
+##
+
+###7. register customer
+	[Scope]			APP/Web
+	[Private]		public
+	[Request]
+  		* PUT /v1/admin/regcust
+  			* ln		// login name. Typically it is phone number
+  			* sms		// sms code
+	[Response]
+		* SUCCESS:200 
+			* Uid			int			// new user id
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
