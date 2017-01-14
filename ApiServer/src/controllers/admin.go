@@ -27,8 +27,8 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("GetSecurePic", a.GetSecurePic)
 	a.Mapping("GetUserInfo", a.GetUserInfo)
 	a.Mapping("GetSaltForUser", a.GetSaltForUser)
-	a.Mapping("Login", a.Login)
 
+	a.Mapping("Loginpass", a.Loginpass)
 	a.Mapping("FetchSms", a.FetchSms)
 	a.Mapping("Loginsms", a.Loginsms)
 }
@@ -157,25 +157,25 @@ func (this *AdminController) GetSaltForUser() {
 	// beego.Debug(FN, "salt:", result.Salt, ", random:", result.Random)
 }
 
-// @Title Login
+// @Title Loginpass
 // @Description login by login name & password
 // @Success 200 {string}
 // @Failure 400 body is empty
-// @router /Login [get]
-func (this *AdminController) Login() {
-	FN := "<Login> "
-	beego.Warn("[--- API: Login ---]")
+// @router /loginpass [post]
+func (this *AdminController) Loginpass() {
+	FN := "<Loginpass> "
+	beego.Warn("[--- API: Loginpass ---]")
 
 	var result ResAdminLogin
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
 		// export result
-		api_result(err, this.Controller, &result.ResCommon)
 		this.Data["json"] = result
 		this.ServeJSON()
 	}()
@@ -192,33 +192,31 @@ func (this *AdminController) Login() {
 	}
 
 	/* Processing */
-	//1. check captcha MD5(GUID+Password) with client's secret
+	// 1. check captcha MD5(GUID+Password) with client's secret
 	err, userid := models.LoginAccout(loginName, password, random)
 	if nil != err {
 		return
 	}
 	beego.Info(FN, "login success for user:", userid)
 
-	//2. return session id
-	// result.Sid = "1234567890"
-	// this.Data["json"] = result
+	// 2. return session id
 	this.StartSession()
 	result.Sid = this.CruSession.SessionID()
-	beego.Debug(FN, "result.Sid:", result.Sid)
+	// beego.Debug(FN, "result.Sid:", result.Sid)
 	// cookie := &http.Cookie{
-	// 	Name:     beego.SessionName,
+	// 	Name:     beego.BConfig.WebConfig.Session.SessionName, // beego.SessionName,
 	// 	Value:    url.QueryEscape(result.Sid),
 	// 	Path:     "/",
 	// 	HttpOnly: true,
 	// 	Secure:   beego.EnableHttpTLS,
-	// 	Domain:   beego.SessionDomain,
+	// 	Domain: beego.BConfig.WebConfig.Session.SessionDomain,
 	// }
 	// if beego.SessionCookieLifeTime > 0 {
 	// 	cookie.MaxAge = beego.SessionCookieLifeTime
 	// 	cookie.Expires = time.Now().Add(time.Duration(beego.SessionCookieLifeTime) * time.Second)
 	// }
-	// //NOTE by Gavin:SetCookie must be called before ResponseWriter.WriteHeader
-	// //because ResponseWriter.Header will never accept header modification after Wri
+	// // NOTE by Gavin:SetCookie must be called before ResponseWriter.WriteHeader
+	// // because ResponseWriter.Header will never accept header modification after Wri
 	// http.SetCookie(this.Ctx.ResponseWriter, cookie)
 	this.SetSession("userid", userid)
 	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
