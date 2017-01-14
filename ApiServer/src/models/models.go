@@ -80,6 +80,7 @@ func (sc *TblSmsCode) TableUnique() [][]string {
 
 /***************************************************************************/
 func init() {
+	orm.DefaultTimeLoc = time.UTC
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
 		new(TblProperty), new(TblHouse),
@@ -105,7 +106,7 @@ func init() {
 	}
 	db_name = "rtdb" // realty database
 	beego.Debug(db_acc + "@" + "tcp(" + db_url + ")/" + db_name + "?charset=utf8")
-	orm.RegisterDataBase("default", "mysql", db_acc+"@"+"tcp("+db_url+")/"+db_name+"?charset=utf8")
+	orm.RegisterDataBase("default", "mysql", db_acc+"@"+"tcp("+db_url+")/"+db_name+"?charset=utf8&loc=Asia%2FShanghai")
 
 	// o := orm.NewOrm()
 	// // o.Using("default")

@@ -14,10 +14,10 @@
 	  		* errDesc		string		// error description
 ##
 
-###2. User Login
+###2. User Login by password
 	[Request]
-  		* GET /v1/admin/login
-	  		* lg			string 		// login name
+  		* GET /v1/admin/loginpass
+	  		* ln			string 		// login name
 	  		* pw			string		// password
 	  		* rd			string		// random 
 	[Response]

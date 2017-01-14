@@ -212,10 +212,11 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 	}
 
 	// record for using
-	bFound := false
 	o := orm.NewOrm()
+
 	s := TblSmsCode{Phone: login_name}
 	errTmp := o.Read(&s, "Phone")
+	bFound := false
 	if nil != errTmp {
 		if orm.ErrNoRows != errTmp && orm.ErrMissPK != errTmp {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
@@ -229,13 +230,22 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 
 	tNow := time.Now()
 	tExpire := tNow.Add(time.Duration(600) * time.Second) // 10 minutes timeout
-	s.Expire = tExpire
+	// beego.Debug(FN, "tExpire:", tExpire.String(), ", ", tExpire.UTC().String())
+	s.Expire = tExpire //.UTC()
 	s.SmsCode = sms
 
 	if bFound {
 		/*numb*/ _, errTmp = o.Update(&s, "SmsCode", "Expire")
 	} else {
 		/*id*/ _, errTmp = o.Insert(&s)
+
+		var sms_tmp TblSmsCode
+		o.Raw("SELECT * FROM tbl_sms_code").QueryRow(&sms_tmp)
+		beego.Debug(FN, "sms_tmp:", sms_tmp)
+
+		// orm.DefaultTimeLoc = time.UTC
+		// orm.NewOrm().Raw("SELECT * FROM tbl_sms_code").QueryRow(&sms_tmp)
+		// beego.Debug(FN, "sms_tmp:", sms_tmp)
 	}
 	if nil != errTmp {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
@@ -367,6 +377,12 @@ func checkSms(phone, sms string) (err error) {
 		return
 	}
 
+	defer func() {
+		// remove the sms record, it is for one-time using
+		num, errTmp := o.Delete(&TblSmsCode{Id: s.Id})
+		beego.Debug(FN, "num:", num, ", errtmp:", errTmp)
+	}()
+
 	if sms != s.SmsCode { // incorrect sms code
 		err = commdef.SwError{ErrCode: commdef.ERR_SMS_WRONG_CODE}
 		return
@@ -377,7 +393,7 @@ func checkSms(phone, sms string) (err error) {
 	beego.Debug(FN, "timeNowUTC:", timeNow.UTC(), ", ExpireUTC:", s.Expire.UTC(), ", after:", timeNow.UTC().After(s.Expire.UTC()))
 	// beego.Debug(FN, "timeNow.Local:", timeNow.Local(), ", Expire.Local:", s.Expire.Local(), ", after:", timeNow.Local().After(s.Expire.Local()))
 	// beego.Debug(FN, "timeNowUTC:", timeNow.UTC(), ", Expire:", s.Expire, ", after:", timeNow.UTC().After(s.Expire))
-	if timeNow.After(s.Expire) { // timeNow > s.Expire
+	if timeNow.UTC().After(s.Expire.UTC()) { // timeNow > s.Expire
 		err = commdef.SwError{ErrCode: commdef.ERR_SMS_EXPIRED}
 		return
 	}
