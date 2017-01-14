@@ -5,7 +5,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 	// "os"
-	// "time"
+	"time"
 )
 
 /***************************************************************************
@@ -16,7 +16,8 @@ type TblUser struct {
 	LoginName string `orm:"size(64)"` // login name, user phone
 	Name      string `orm:"size(64)"`
 	Salt      string `orm:"size(32)"`
-	Pass      string `orm:"size(50)"` // login password
+	PassLogin string `orm:"size(50)"` // login password
+	PassTrasn string `orm:"size(50)"` // transaction password
 	IdNo      string `orm:"size(50)"` // ID number or passport number
 	Phone     string `orm:"size(50)"`
 	Head      string `orm:"size(50)"` // url of head portrait
@@ -56,8 +57,23 @@ type TblHouse struct {
 }
 
 /***************************************************************************
-	tables for
+	tables for sms fetching
 ***************************************************************************/
+/*
+	tmp table to store the phone and sms code mapping table
+*/
+type TblSmsCode struct {
+	Id      int64
+	Phone   string    `orm:"size(50)"`                    // phone number
+	SmsCode string    `orm:"size(50)"`                    // sms code
+	Expire  time.Time `orm:"auto_now_add;type(datetime)"` // expire time for this sms code
+}
+
+func (sc *TblSmsCode) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Phone"},
+	}
+}
 
 // before using please makere sure the database already created, else use the following sentence to create it
 //	CREATE DATABASE IF NOT EXISTS yourdbname DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
@@ -66,7 +82,8 @@ type TblHouse struct {
 func init() {
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
-		new(TblProperty), new(TblHouse))
+		new(TblProperty), new(TblHouse),
+		new(TblSmsCode))
 
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 

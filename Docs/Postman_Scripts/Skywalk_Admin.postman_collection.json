@@ -88,19 +88,20 @@
 		},
 		{
 			"id": "edfac8e2-dc30-aff1-907b-266189bb98b2",
-			"url": "http://ub1604-skywalk-:8080/v1/admin/regcust?ln=12222222222&sms=123456",
-			"method": "POST",
 			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/admin/loginsms?ln=15306261804&sms=123456",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
 			"data": null,
 			"dataMode": "params",
-			"tests": null,
-			"preRequestScript": null,
-			"currentHelper": "normal",
-			"pathVariables": {},
 			"version": 2,
-			"name": "http://ub1604-skywalk-:8080/v1/admin/regcust?ln=12222222222&sms=123456",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1484369068024,
+			"name": "http://ub1604-skywalk-:8080/v1/admin/loginsms?ln=15306261804&sms=123456",
 			"description": "",
-			"descriptionFormat": "html",
 			"collectionId": "b9ffda26-ceda-f53b-650b-26121e64bdff"
 		}
 	]

@@ -3,12 +3,19 @@ package models
 import (
 	"ApiServer/commdef"
 	"crypto/md5"
-	// "crypto/rand"
+	"crypto/rand"
 	"encoding/hex"
 	// "fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"io"
 	"strconv"
+	"time"
+)
+
+const (
+	c_PW_SALT_BYTES = 16
+	c_PW_HASH_BYTES = 32
 )
 
 /**
@@ -135,7 +142,7 @@ func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
 		return
 	}
 
-	beego.Debug(FN, "user.Pass:", user.Pass, ", user.Salt:", user.Salt)
+	beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
 
 	// check if the password user keyined is empty
 	// md5(md5(pass+salt)+random)
@@ -154,7 +161,7 @@ func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
 	}
 
 	hasher := md5.New() // md5(pass+random)
-	hasher.Write([]byte(user.Pass))
+	hasher.Write([]byte(user.PassLogin))
 	hasher.Write([]byte(random))
 	rdHashPath := hex.EncodeToString(hasher.Sum(nil))
 
@@ -217,26 +224,25 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 }
 
 /**
-*	Get user salt
+*	Login by phone number + sms code, if phone does not exist, create new user
 *	Arguments:
 *		login_name 	- login name
+*		sms			- sms code
 *	Returns
 *		err 	- error info
-*		uid 	- new user id
+*		uid 	- user id
  */
-func RegCust(login_name, sms string) (err error, uid int64) {
-	FN := "[RegCust] "
+func LoginSms(login_name, sms string) (err error, uid int64) {
+	FN := "[loginsms] "
 	beego.Trace(FN, "login user:", login_name)
 
 	uid = 0
 
 	defer func() {
 		if nil != err {
-			se, _ := err.(commdef.SwError)
-			se.FillError()
-			err = se
 			beego.Error(FN, err)
 		}
+		beego.Debug(FN, "uid:", uid)
 	}()
 
 	// argument checking
@@ -244,25 +250,47 @@ func RegCust(login_name, sms string) (err error, uid int64) {
 		return
 	}
 
-	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
-	// o := orm.NewOrm()
+	// check if the sms code is valid
+	if err = checkSms(login_name, sms); nil != err {
+		return
+	}
 
-	// user := TblUser{LoginName: un}
-	// if err1 := o.Read(&user, "LoginName"); nil != err1 {
-	// 	// beego.Error(FN, err1)
-	// 	if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
-	// 	} else {
-	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
-	// 	}
-	// 	return
-	// }
+	o := orm.NewOrm()
 
-	// salt = user.Salt
+	user := TblUser{LoginName: login_name}
+	err1 := o.Read(&user, "LoginName")
+	if nil != err1 {
+		if orm.ErrNoRows != err1 && orm.ErrMissPK != err1 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+			return
+		} else {
+			beego.Debug(FN, "user:", login_name, "does not exist, create for it")
+			err, user.Salt = newUserSalt()
+			if nil != err {
+				return
+			}
+			user.LoginName = login_name
+			user.Phone = login_name
+			user.Role = commdef.USER_TYPE_Customer
+
+			id, errTmp := o.Insert(&user)
+			if nil != errTmp {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+				return
+			}
+			uid = id
+		}
+	} else {
+		uid = user.Id
+	}
 
 	return
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+//		Internal Functions
+//
 func checkPhoneNo(phone string) (err error) {
 	FN := "[checkPhoneNo] "
 	beego.Trace(FN, "phone:", phone)
@@ -288,5 +316,68 @@ func checkPhoneNo(phone string) (err error) {
 		return
 	}
 
+	return
+}
+
+/*
+ *	create new salt for user
+ */
+func checkSms(phone, sms string) (err error) {
+	FN := "[checkSms] "
+	beego.Trace(FN, "phone:", phone, ", sms:", sms)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	s := TblSmsCode{Phone: phone}
+
+	if errTmp := o.Read(&s, "Phone"); nil != errTmp { // sms code does not exist
+		if orm.ErrNoRows == errTmp || orm.ErrMissPK == errTmp {
+			err = commdef.SwError{ErrCode: commdef.ERR_SMS_NOT_FOUND}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		}
+		return
+	}
+
+	if sms != s.SmsCode { // incorrect sms code
+		err = commdef.SwError{ErrCode: commdef.ERR_SMS_WRONG_CODE}
+		return
+	}
+
+	timeNow := time.Now()
+	beego.Debug(FN, "timeNow:", timeNow, ", Expire:", s.Expire, ", expired:", timeNow.After(s.Expire))
+	beego.Debug(FN, "timeNowUTC:", timeNow.UTC(), ", ExpireUTC:", s.Expire.UTC(), ", after:", timeNow.UTC().After(s.Expire.UTC()))
+	// beego.Debug(FN, "timeNow.Local:", timeNow.Local(), ", Expire.Local:", s.Expire.Local(), ", after:", timeNow.Local().After(s.Expire.Local()))
+	// beego.Debug(FN, "timeNowUTC:", timeNow.UTC(), ", Expire:", s.Expire, ", after:", timeNow.UTC().After(s.Expire))
+	if timeNow.After(s.Expire) { // timeNow > s.Expire
+		err = commdef.SwError{ErrCode: commdef.ERR_SMS_EXPIRED}
+		return
+	}
+
+	return
+}
+
+/*
+ *	create new salt for user
+ */
+func newUserSalt() (err error, ss string) {
+	FN := "[newUserSalt] "
+	// beego.Trace(FN, "phone:", phone)
+
+	salt := make([]byte, c_PW_SALT_BYTES)
+	_, ioerr := io.ReadFull(rand.Reader, salt)
+	if nil != ioerr {
+		err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_READ, ErrInfo: ioerr.Error()}
+		return
+	}
+
+	// hasher := md5.New()
+	ss = hex.EncodeToString(salt)
+	beego.Debug(FN, "new salt:", ss, ",", salt)
 	return
 }

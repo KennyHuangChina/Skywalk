@@ -30,7 +30,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Login", a.Login)
 
 	a.Mapping("FetchSms", a.FetchSms)
-	a.Mapping("RegCust", a.RegCust)
+	a.Mapping("Loginsms", a.Loginsms)
 }
 
 // @Title GetUserInfo
@@ -259,24 +259,24 @@ func (this *AdminController) FetchSms() {
 	}
 }
 
-// @Title RegCust
-// @Description register new customer
+// @Title Loginsms
+// @Description login by phone + sms code
 // @Success 200 {string}
 // @Failure 400 body is empty
-// @router /regcust [post]
-func (this *AdminController) RegCust() {
-	FN := "<RegCust> "
-	beego.Warn("[API --- RegCust ---]")
+// @router /loginsms [post]
+func (this *AdminController) Loginsms() {
+	FN := "<Loginsms> "
+	beego.Warn("[API --- Loginsms ---]")
 
 	var result ResAdminRegCust
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
-		api_result(err, this.Controller, &result.ResCommon)
 		// beego.Debug(FN, "result:", result)
 		// export result
 		this.Data["json"] = result
@@ -289,7 +289,7 @@ func (this *AdminController) RegCust() {
 	beego.Debug(FN, "login_name:", login_name, ", sms code:", sms_code)
 
 	/* Process */
-	err, uid := models.RegCust(login_name, sms_code)
+	err, uid := models.LoginSms(login_name, sms_code)
 	if nil == err {
 		result.Uid = uid
 	}

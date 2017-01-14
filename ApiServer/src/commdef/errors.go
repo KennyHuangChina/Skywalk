@@ -80,11 +80,17 @@ const (
 	ERR_SMS_PHONE_LEN        = 1302
 	ERR_SMS_PHONE_NO_NUMERIC = 1303
 	ERR_SMS_INVALID_PHONE_NO = 1304
+	ERR_SMS_NOT_FOUND        = 1305
+	ERR_SMS_WRONG_CODE       = 1306
+	ERR_SMS_EXPIRED          = 1307
+
+	// system
+	ERR_SYS_IO_READ = 1401
 )
 
 var ErrorDesc = map[int64]string{
 	ERR_NONE:          "OK",
-	ERR_NOT_IMPLEMENT: "Not implement",
+	ERR_NOT_IMPLEMENT: "Not Implement",
 
 	// common error
 	ERR_COMMON_BAD_ARGUMENT: "invalid input argument",
@@ -101,4 +107,10 @@ var ErrorDesc = map[int64]string{
 	ERR_SMS_PHONE_LEN:        "Wrong phone number length",
 	ERR_SMS_PHONE_NO_NUMERIC: "Phone number include no-numeric char",
 	ERR_SMS_INVALID_PHONE_NO: "Invalid phone number",
+	ERR_SMS_NOT_FOUND:        "No sms code found",
+	ERR_SMS_WRONG_CODE:       "Incorrect SMS code",
+	ERR_SMS_EXPIRED:          "SMS code was expired",
+
+	// system
+	ERR_SYS_IO_READ: "System IO read error",
 }

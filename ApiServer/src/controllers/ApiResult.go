@@ -4,7 +4,7 @@ import (
 	"ApiServer/commdef"
 	"ApiServer/models"
 	// "fmt"
-	// "errors"
+	"errors"
 	"github.com/astaxie/beego"
 )
 
@@ -72,7 +72,7 @@ type ResGetPropInfo struct {
 *		Functions
 *
 *************************************************************************************/
-func api_result(err error, controller beego.Controller, data *ResCommon) {
+func api_result(err error, controller beego.Controller, data *ResCommon) (errRet error) {
 
 	data.ErrCode = commdef.ERR_NONE
 	data.ErrString = ""
@@ -93,10 +93,12 @@ func api_result(err error, controller beego.Controller, data *ResCommon) {
 	if !ok {
 		data.ErrCode = commdef.ERR_COMMON_UNEXPECTED
 		data.ErrString = "Unexpected result"
+		errRet = errors.New(data.ErrString)
 		return
 	}
 
 	se.FillError()
+	errRet = se
 
 	// http response header
 	httpRespCode = int(se.HttpRespcode)
@@ -107,4 +109,6 @@ func api_result(err error, controller beego.Controller, data *ResCommon) {
 	// http response body, common part
 	data.ErrCode = se.ErrCode
 	data.ErrString = se.GetErrorString() // se.Error() // "" //ErrorCodes[resCode]
+
+	return
 }

@@ -86,12 +86,12 @@
 	  		* errDesc		string		// error description
 ##
 
-###7. register customer
+###7. login by sms
 	[Scope]			APP/Web
 	[Private]		public
 	[Request]
-  		* POST /v1/admin/regcust
-  			* ln		// login name. Typically it is phone number
+  		* POST /v1/admin/loginsms
+  			* ln		// login name. It should is phone number
   			* sms		// sms code
 	[Response]
 		* SUCCESS:200 
