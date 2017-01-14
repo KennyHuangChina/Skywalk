@@ -3,12 +3,13 @@ package models
 import (
 	"ApiServer/commdef"
 	"crypto/md5"
-	"crypto/rand"
+	crand "crypto/rand"
 	"encoding/hex"
-	// "fmt"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"io"
+	mrand "math/rand"
 	"strconv"
 	"time"
 )
@@ -192,11 +193,9 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 
 	defer func() {
 		if nil != err {
-			se, _ := err.(commdef.SwError)
-			se.FillError()
-			err = se
 			beego.Error(FN, err)
 		}
+		beego.Debug(FN, "SmsCode:", SmsCode)
 	}()
 
 	// argument checking
@@ -204,22 +203,46 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 		return
 	}
 
-	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
-	// o := orm.NewOrm()
+	// generate new sms code
+	sms := generateSmsCode()
 
-	// user := TblUser{LoginName: un}
-	// if err1 := o.Read(&user, "LoginName"); nil != err1 {
-	// 	// beego.Error(FN, err1)
-	// 	if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
-	// 	} else {
-	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
-	// 	}
-	// 	return
-	// }
+	// send sms code via sms vendor's getway
+	if err = postSms(login_name, sms); nil != err {
+		return
+	}
 
-	// salt = user.Salt
+	// record for using
+	bFound := false
+	o := orm.NewOrm()
+	s := TblSmsCode{Phone: login_name}
+	errTmp := o.Read(&s, "Phone")
+	if nil != errTmp {
+		if orm.ErrNoRows != errTmp && orm.ErrMissPK != errTmp {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+			return
+		}
+		// sms code does not exist, append
+	} else {
+		// already exist, just update
+		bFound = true
+	}
 
+	tNow := time.Now()
+	tExpire := tNow.Add(time.Duration(600) * time.Second) // 10 minutes timeout
+	s.Expire = tExpire
+	s.SmsCode = sms
+
+	if bFound {
+		/*numb*/ _, errTmp = o.Update(&s, "SmsCode", "Expire")
+	} else {
+		/*id*/ _, errTmp = o.Insert(&s)
+	}
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		return
+	}
+
+	SmsCode = sms
 	return
 }
 
@@ -370,7 +393,7 @@ func newUserSalt() (err error, ss string) {
 	// beego.Trace(FN, "phone:", phone)
 
 	salt := make([]byte, c_PW_SALT_BYTES)
-	_, ioerr := io.ReadFull(rand.Reader, salt)
+	_, ioerr := io.ReadFull(crand.Reader, salt)
 	if nil != ioerr {
 		err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_READ, ErrInfo: ioerr.Error()}
 		return
@@ -379,5 +402,32 @@ func newUserSalt() (err error, ss string) {
 	// hasher := md5.New()
 	ss = hex.EncodeToString(salt)
 	beego.Debug(FN, "new salt:", ss, ",", salt)
+	return
+}
+
+/*
+*	Generate new SMS code
+ */
+func generateSmsCode() (smsCode string) {
+	FN := "[generateSmsCode] "
+
+	smsCode = ""
+	r := mrand.New(mrand.NewSource(time.Now().UnixNano()))
+	rand := r.Intn(999999)
+	smsCode = fmt.Sprintf("%.6d", rand)
+	beego.Debug(FN, "smsCode:", smsCode)
+
+	return
+}
+
+/*
+*	delivery sms code via sms vendoer's getway
+ */
+func postSms(phone, sms string) (err error) {
+	FN := "[postSms] "
+
+	beego.Warn(FN, "NOT Implement")
+	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+
 	return
 }

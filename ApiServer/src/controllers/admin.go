@@ -237,11 +237,11 @@ func (this *AdminController) FetchSms() {
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
-		api_result(err, this.Controller, &result.ResCommon)
 		// beego.Debug(FN, "result:", result)
 		// export result
 		this.Data["json"] = result
