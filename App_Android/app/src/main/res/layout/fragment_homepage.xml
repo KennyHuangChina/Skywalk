@@ -54,11 +54,53 @@
         <!--540px-->
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="180dp"
             android:contentDescription=""
             android:layout_below="@+id/ll_title"
             android:background="@drawable/homepage_title"
             android:id="@+id/iv_title" />
+
+        <!--238px-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="#33ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:layout_below="@+id/ll_title"
+            android:layout_marginTop="141dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/tv_rent"
+                android:text="@string/homepage_chuzu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:drawableTop="@drawable/chuzu"
+                android:layout_weight="1"
+                android:textColor="@drawable/tab_menu_text"
+                android:textSize="12sp"
+                android:onClick="" />
+
+            <TextView
+                android:id="@+id/tv_apartment"
+                android:text="@string/homepage_zufang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:drawableTop="@drawable/zufang"
+                android:layout_weight="1"
+                android:textColor="@drawable/tab_menu_text"
+                android:textSize="12sp"
+                android:onClick="" />
+
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 

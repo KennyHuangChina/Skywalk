@@ -6,6 +6,9 @@
     <string name="tab_menu_private">我的</string>
     <string name="homepage_nanjing">南京</string>
     <string name="homepage_input_hint">输入小区或商区名称</string>
+    <string name="homepage_chuzu">我要出租</string>
+    <string name="homepage_zufang">我要租房</string>
+
     <string name="nanjing">南京</string>
 
 </resources>
