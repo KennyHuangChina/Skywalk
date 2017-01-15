@@ -99,3 +99,17 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
+
+###8. logout
+	[Scope]			APP/Web
+	[Private]		public
+	[Request]
+  		* POST /v1/admin/logout
+  			* sid			string 		// session id, from which the server could know who send the request
+	[Response]
+		* SUCCESS:200 
+			* Uid			int			// new user id
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description

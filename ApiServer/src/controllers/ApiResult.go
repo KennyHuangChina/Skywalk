@@ -112,3 +112,63 @@ func api_result(err error, controller beego.Controller, data *ResCommon) (errRet
 
 	return
 }
+
+/**
+*	Get loginned user
+	Return:
+		uid	- logined user id, must > 0 (0 is reserved for system), -1 for error
+		err	- error
+*/
+func getLoginUser(c beego.Controller) (uid int64, err error) {
+	FN := "[getLoginUser] "
+
+	defer func() {
+		beego.Debug(FN, "uid:", uid)
+	}()
+
+	// read uid from http request cookie
+	beego.Debug(FN, "c.CruSession:", c.CruSession)
+	c.StartSession()
+	beego.Debug(FN, "c.CruSession:", c.CruSession)
+	if nil != c.CruSession {
+		sid := c.CruSession.SessionID()
+		beego.Debug(FN, "request.Sid:", sid)
+		userId := c.GetSession("userid")
+		beego.Debug(FN, "userId:", userId)
+		if nil != userId {
+			switch userId.(type) {
+			case int64:
+				uid, _ = userId.(int64)
+			default:
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Unknow type of userId"}
+			}
+			return
+		}
+	}
+
+	// read uid from http request paramers
+	sid := c.GetString("sid")
+	if 0 == len(sid) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
+		return
+	}
+
+	session, errTmp := beego.GlobalSessions.GetSessionStore(sid)
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN, ErrInfo: errTmp.Error()}
+		return
+	}
+
+	userId := session.Get("userid")
+	if nil != userId {
+		switch userId.(type) {
+		case int64:
+			uid, _ = userId.(int64)
+		default:
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Unknow type of userId"}
+		}
+		return
+	}
+
+	return
+}

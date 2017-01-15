@@ -31,6 +31,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Loginpass", a.Loginpass)
 	a.Mapping("FetchSms", a.FetchSms)
 	a.Mapping("Loginsms", a.Loginsms)
+	a.Mapping("Logout", a.Logout)
 }
 
 // @Title GetUserInfo
@@ -220,6 +221,37 @@ func (this *AdminController) Loginpass() {
 	// http.SetCookie(this.Ctx.ResponseWriter, cookie)
 	this.SetSession("userid", userid)
 	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
+}
+
+// @Title Logout
+// @Description login by login name & password
+// @Success 200 {string}
+// @Failure 400 body is empty
+// @router /logout [post]
+func (this *AdminController) Logout() {
+	FN := "<Logout> "
+	beego.Warn("[--- API: Logout ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/* Extract agreements */
+	loginName := this.GetString("ln")
+	password := this.GetString("pw")
+	random := this.GetString("rd")
+	beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", random:", random)
+
 }
 
 // @Title FetchSms

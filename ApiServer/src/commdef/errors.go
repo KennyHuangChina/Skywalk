@@ -62,13 +62,14 @@ func (se SwError) Error() string {
 }
 
 const (
-	ERR_NONE              = 0
-	ERR_COMMON_UNEXPECTED = 1000
-	ERR_NOT_IMPLEMENT     = 1001
+	ERR_NONE          = 0
+	ERR_NOT_IMPLEMENT = 1001
 
 	// common error
 	ERR_COMMON_BAD_ARGUMENT = 1101
 	ERR_COMMON_RES_NOTFOUND = 1102
+	ERR_COMMON_UNEXPECTED   = 1103
+	ERR_COMMON_NOT_LOGIN    = 1104
 
 	// user login
 	ERR_COMMON_CAPTCHA_SERVER        = 1201
@@ -93,9 +94,10 @@ var ErrorDesc = map[int64]string{
 	ERR_NOT_IMPLEMENT: "Not Implement",
 
 	// common error
-	ERR_COMMON_BAD_ARGUMENT: "invalid input argument",
-	ERR_COMMON_RES_NOTFOUND: "resource not found",
-	ERR_COMMON_UNEXPECTED:   "unexpect error",
+	ERR_COMMON_BAD_ARGUMENT: "Invalid input argument",
+	ERR_COMMON_RES_NOTFOUND: "Resource not found",
+	ERR_COMMON_UNEXPECTED:   "Unexpect error",
+	ERR_COMMON_NOT_LOGIN:    "User not login",
 
 	// user login
 	ERR_COMMON_CAPTCHA_SERVER:        "Captchar server error",
