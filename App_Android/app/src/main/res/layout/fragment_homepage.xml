@@ -61,6 +61,12 @@
             android:id="@+id/iv_title" />
 
         <!--238px-->
+        <ListView
+            android:id="@+id/lv_content"
+            android:layout_below="@+id/iv_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:background="#33ffffff"
@@ -96,8 +102,6 @@
                 android:textColor="@drawable/tab_menu_text"
                 android:textSize="12sp"
                 android:onClick="" />
-
-
         </LinearLayout>
 
 

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:orientation="vertical">
+
+    <!--301px-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp" >
+
+        <TextView
+            android:text="今日推荐"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_info_title"
+            android:textSize="23sp"
+            android:textColor="#394142"
+            android:layout_marginBottom="19dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:text="查看全部1234套 >"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_info_all"
+            android:textSize="13sp"
+            android:textColor="#979aa1"
+            android:layout_marginBottom="19dp"
+            android:layout_alignBaseline="@+id/tv_info_title"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:contentDescription=""
+        android:background="#E5E5E5"
+        android:id="@+id/imageView" />
+
+    <!--397px-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="132dp" >
+        <!--316x240px-->
+        <ImageView
+            android:layout_width="105dp"
+            android:layout_height="80dp"
+            android:contentDescription=""
+            android:layout_marginTop="21dp"
+            android:background="#E5E5E5"
+            android:id="@+id/iv_apartment_thumb" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_alignTop="@+id/iv_apartment_thumb"
+            android:layout_alignBottom="@+id/iv_apartment_thumb"
+            android:layout_toRightOf="@+id/iv_apartment_thumb"
+            android:layout_marginLeft="13dp">
+
+            <TextView
+                android:text="证大大拇指广场"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:id="@+id/tv_content_name"
+                android:textSize="13sp"
+                android:textColor="#242224" />
+
+            <TextView
+                android:text="姑苏白杨湾街道 / 3室2厅 / 88 m²"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:id="@+id/tv_content_description"
+                android:textSize="12sp"
+                android:textColor="#939499" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+                <TextView
+                    android:text="随时看房"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_content_category1"
+                    android:background="@drawable/homepage_cg1"
+                    android:textSize="10sp"
+                    android:textColor="#27bf82" />
+                <TextView
+                    android:text="满2年"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_content_category2"
+                    android:background="@drawable/homepage_cg2"
+                    android:textSize="10sp"
+                    android:textColor="#5aaaff" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical" >
+                <TextView
+                    android:text="150万"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_content_cost"
+                    android:textSize="13sp"
+                    android:textColor="#ff3d19" />
+
+                <TextView
+                    android:text="25437元/平"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@+id/tv_content_cost"
+                    android:layout_alignBaseline="@+id/tv_content_cost"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/tv_content_costper"
+                    android:textSize="11sp"
+                    android:textColor="#939499" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:contentDescription=""
+        android:background="#E5E5E5" />
+
+    <!--397px-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="132dp" >
+        <!--316x240px-->
+        <ImageView
+            android:layout_width="105dp"
+            android:layout_height="80dp"
+            android:contentDescription=""
+            android:layout_marginTop="21dp"
+            android:background="#E5E5E5"
+            android:id="@+id/iv_apartment1_thumb" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_alignTop="@+id/iv_apartment1_thumb"
+            android:layout_alignBottom="@+id/iv_apartment1_thumb"
+            android:layout_toRightOf="@+id/iv_apartment1_thumb"
+            android:layout_marginLeft="13dp">
+
+            <TextView
+                android:text="证大大拇指广场"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:id="@+id/tv_content1_name"
+                android:textSize="13sp"
+                android:textColor="#242224" />
+
+            <TextView
+                android:text="姑苏白杨湾街道 / 3室2厅 / 88 m²"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:id="@+id/tv_content1_description"
+                android:textSize="12sp"
+                android:textColor="#939499" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+                <TextView
+                    android:text="随时看房"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_content1_category1"
+                    android:background="@drawable/homepage_cg1"
+                    android:textSize="10sp"
+                    android:textColor="#27bf82" />
+                <TextView
+                    android:text="满2年"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_content1_category2"
+                    android:background="@drawable/homepage_cg2"
+                    android:textSize="10sp"
+                    android:textColor="#5aaaff" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical" >
+                <TextView
+                    android:text="150万"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_content1_cost"
+                    android:textSize="13sp"
+                    android:textColor="#ff3d19" />
+
+                <TextView
+                    android:text="25437元/平"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@+id/tv_content1_cost"
+                    android:layout_alignBaseline="@+id/tv_content1_cost"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/tv_content1_costper"
+                    android:textSize="11sp"
+                    android:textColor="#939499" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:contentDescription=""
+        android:background="#E5E5E5" />
+</LinearLayout>
