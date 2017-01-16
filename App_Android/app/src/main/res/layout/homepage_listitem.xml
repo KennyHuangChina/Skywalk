@@ -14,22 +14,16 @@
 
         <TextView
             android:text="今日推荐"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextView_section_title"
             android:id="@+id/tv_info_title"
-            android:textSize="23sp"
-            android:textColor="#394142"
             android:layout_marginBottom="19dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"/>
 
         <TextView
             android:text="查看全部1234套 >"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextView_section_title_all"
             android:id="@+id/tv_info_all"
-            android:textSize="13sp"
-            android:textColor="#979aa1"
             android:layout_marginBottom="19dp"
             android:layout_alignBaseline="@+id/tv_info_title"
             android:layout_alignParentBottom="true"
@@ -67,49 +61,36 @@
             android:layout_marginLeft="13dp">
 
             <TextView
+                style="@style/TextView_apartment_name"
                 android:text="证大大拇指广场"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:id="@+id/tv_content_name"
-                android:textSize="13sp"
-                android:textColor="#242224" />
+                android:gravity="center_vertical" />
 
             <TextView
+                style="@style/TextView_apartment_description"
                 android:text="姑苏白杨湾街道 / 3室2厅 / 88 m²"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:id="@+id/tv_content_description"
-                android:textSize="12sp"
-                android:textColor="#939499" />
+                android:gravity="center_vertical" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical">
+                <!--158x52px-->
                 <TextView
                     android:text="随时看房"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
                     android:id="@+id/tv_content_category1"
-                    android:background="@drawable/homepage_cg1"
-                    android:textSize="10sp"
-                    android:textColor="#27bf82" />
+                    style="@style/TextView_cg1" />
                 <TextView
                     android:text="满2年"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
                     android:id="@+id/tv_content_category2"
-                    android:background="@drawable/homepage_cg2"
-                    android:textSize="10sp"
-                    android:textColor="#5aaaff" />
+                    style="@style/TextView_cg2"
+                    android:layout_marginLeft="5dp"/>
             </LinearLayout>
 
             <RelativeLayout
@@ -119,24 +100,15 @@
                 android:gravity="center_vertical" >
                 <TextView
                     android:text="150万"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:id="@+id/tv_content_cost"
-                    android:textSize="13sp"
-                    android:textColor="#ff3d19" />
+                    android:id="@+id/tv_apartment_cost"
+                    style="@style/TextView_cost"/>
 
                 <TextView
                     android:text="25437元/平"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_toRightOf="@+id/tv_content_cost"
-                    android:layout_alignBaseline="@+id/tv_content_cost"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/tv_content_costper"
-                    android:textSize="11sp"
-                    android:textColor="#939499" />
+                    style="@style/TextView_unitcost"
+                    android:layout_toRightOf="@+id/tv_apartment_cost"
+                    android:layout_alignBaseline="@+id/tv_apartment_cost"
+                    android:layout_marginLeft="10dp" />
             </RelativeLayout>
 
 
@@ -173,24 +145,20 @@
             android:layout_marginLeft="13dp">
 
             <TextView
+                style="@style/TextView_apartment_name"
                 android:text="证大大拇指广场"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:id="@+id/tv_content1_name"
-                android:textSize="13sp"
-                android:textColor="#242224" />
+                android:gravity="center_vertical" />
 
             <TextView
+                style="@style/TextView_apartment_description"
                 android:text="姑苏白杨湾街道 / 3室2厅 / 88 m²"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:id="@+id/tv_content1_description"
-                android:textSize="12sp"
-                android:textColor="#939499" />
+                android:gravity="center_vertical" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -199,23 +167,11 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:text="随时看房"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:id="@+id/tv_content1_category1"
-                    android:background="@drawable/homepage_cg1"
-                    android:textSize="10sp"
-                    android:textColor="#27bf82" />
+                    style="@style/TextView_cg1" />
                 <TextView
                     android:text="满2年"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:id="@+id/tv_content1_category2"
-                    android:background="@drawable/homepage_cg2"
-                    android:textSize="10sp"
-                    android:textColor="#5aaaff" />
+                    style="@style/TextView_cg2"
+                    android:layout_marginLeft="5dp"/>
             </LinearLayout>
 
             <RelativeLayout
@@ -225,24 +181,15 @@
                 android:gravity="center_vertical" >
                 <TextView
                     android:text="150万"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:id="@+id/tv_content1_cost"
-                    android:textSize="13sp"
-                    android:textColor="#ff3d19" />
+                    android:id="@+id/tv_apartment1_cost"
+                    style="@style/TextView_cost"/>
 
                 <TextView
                     android:text="25437元/平"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_toRightOf="@+id/tv_content1_cost"
-                    android:layout_alignBaseline="@+id/tv_content1_cost"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/tv_content1_costper"
-                    android:textSize="11sp"
-                    android:textColor="#939499" />
+                    style="@style/TextView_unitcost"
+                    android:layout_toRightOf="@+id/tv_apartment1_cost"
+                    android:layout_alignBaseline="@+id/tv_apartment1_cost"
+                    android:layout_marginLeft="10dp" />
             </RelativeLayout>
 
 

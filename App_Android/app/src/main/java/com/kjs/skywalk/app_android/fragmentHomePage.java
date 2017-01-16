@@ -24,6 +24,7 @@ public class fragmentHomePage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ListView lvContent = (ListView) view.findViewById(R.id.lv_content);
+        lvContent.setFocusable(false);
 
         homepage_apartment_listitem_adapter adapter = new homepage_apartment_listitem_adapter(mContext);
         lvContent.setAdapter(adapter);
