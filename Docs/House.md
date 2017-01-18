@@ -17,7 +17,7 @@
 			* Bedrooms			int		// how many bedrooms whitin house
 			* Livingrooms		int		// how many living rooms within house
 			* Bathrooms			int		// how many bathrooms within house
-			* Acreage			int 	// the exact acreage of house license, 100 times than real value, so please devided by 100 before using, for example, value 9848 mean 98.48 square meters
+			* Acreage			int 	// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
@@ -34,6 +34,26 @@
 			* PropName		string	// property name
 			* PropAddress	string	// property address
 			* PropDesc		string	// property description
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+##
+
+###3. Get bref public house info
+	[Security]	public
+	[Request]
+  		* GET /v1/house/digest/id?sid=xxxxx
+	  		* sid 			string	// session id, by which server could know who send the request
+	[Response]
+		* SUCCESS:200 
+			* Id    		int		// id
+			* Property		string	// property name
+			* Bedrooms		int		// bathrooms quantity
+			* LivingRooms	int		// living room quantity
+			* Bathrooms		int		// bathroom quantity
+			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
+			* Rental		int		// the exact rental that the house owner published, in 0.01RMB
+			* Pricing		int		// -1: Rental depreciate; 0: Even; 1: Rental raise
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

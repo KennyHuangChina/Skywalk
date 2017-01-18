@@ -2,10 +2,48 @@ package models
 
 import (
 	"ApiServer/commdef"
-	// "fmt"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
+
+/**
+*	Get house information by id
+*	Arguments:
+*		id - house id
+*	Returns
+*		err - error info
+*		hd 	- house digest info
+ */
+func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
+	FN := "[GetUserInfo] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+
+	// House info
+	var dig commdef.HouseDigest
+	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, bedrooms, livingrooms, bathrooms, acreage 
+							FROM tbl_house AS house, tbl_property AS prop 
+							WHERE house.property_id=prop.id AND house.id=%d`, hid)
+	errTmp := o.Raw(sql).QueryRow(&dig)
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		return
+	}
+
+	// rental info
+	beego.Warn(FN, "not implement for rental")
+
+	hd = dig
+	return
+}
 
 /**
 *	Get house information by id
