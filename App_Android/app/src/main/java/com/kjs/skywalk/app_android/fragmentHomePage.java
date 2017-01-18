@@ -14,7 +14,6 @@ import android.widget.ListView;
  */
 
 public class fragmentHomePage extends Fragment {
-    private Context mContext;
     public fragmentHomePage() {
         super();
     }
@@ -26,14 +25,8 @@ public class fragmentHomePage extends Fragment {
         ListView lvContent = (ListView) view.findViewById(R.id.lv_content);
         lvContent.setFocusable(false);
 
-        homepage_apartment_listitem_adapter adapter = new homepage_apartment_listitem_adapter(mContext);
+        homepage_apartment_listitem_adapter adapter = new homepage_apartment_listitem_adapter(getActivity());
         lvContent.setAdapter(adapter);
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
     }
 }
