@@ -29,7 +29,7 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 
 	// House info
 	var dig commdef.HouseDigest
-	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, bedrooms, livingrooms, bathrooms, acreage 
+	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, livingrooms, bathrooms, acreage 
 							FROM tbl_house AS house, tbl_property AS prop 
 							WHERE house.property_id=prop.id AND house.id=%d`, hid)
 	errTmp := o.Raw(sql).QueryRow(&dig)

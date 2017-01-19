@@ -48,12 +48,15 @@
 		* SUCCESS:200 
 			* Id    		int		// id
 			* Property		string	// property name
+			* PropertyAddr	string	// property address
 			* Bedrooms		int		// bathrooms quantity
 			* LivingRooms	int		// living room quantity
 			* Bathrooms		int		// bathroom quantity
 			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
 			* Rental		int		// the exact rental that the house owner published, in 0.01RMB
 			* Pricing		int		// <0: Rental depreciate; 0: Even, no change; >0: Rental raise
+			* CoverImgS		int		// small cover image id
+			* CoverImgL		int 	// large cover image id
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

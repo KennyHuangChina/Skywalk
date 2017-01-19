@@ -38,14 +38,17 @@ func (this *UserInfo) Role2Desc() {
 //		House
 //
 type HouseDigest struct {
-	Id          int64
-	Property    string
-	Bedrooms    int
-	Livingrooms int
-	Bathrooms   int
-	Acreage     int
-	Rental      int
-	Pricing     int
+	Id           int64
+	Property     string
+	PropertyAddr string
+	Bedrooms     int
+	Livingrooms  int
+	Bathrooms    int
+	Acreage      int
+	Rental       int
+	Pricing      int
+	CoverImgS    int // small cover image id
+	CoverImgL    int // Large cover image id
 }
 
 type HouseInfo struct {
