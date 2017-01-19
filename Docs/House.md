@@ -53,7 +53,7 @@
 			* Bathrooms		int		// bathroom quantity
 			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
 			* Rental		int		// the exact rental that the house owner published, in 0.01RMB
-			* Pricing		int		// -1: Rental depreciate; 0: Even; 1: Rental raise
+			* Pricing		int		// <0: Rental depreciate; 0: Even, no change; >0: Rental raise
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

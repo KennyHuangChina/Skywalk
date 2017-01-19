@@ -39,7 +39,20 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 	}
 
 	// rental info
-	beego.Warn(FN, "not implement for rental")
+	err, rs := getHouseRental(hid)
+	if nil != err {
+		return
+	}
+
+	if len(rs) > 0 {
+		p0 := rs[0].RentalBid // first bid price
+		p1 := p0              // last bid price
+		if len(rs) > 1 {
+			p1 = rs[len(rs)-1].RentalBid
+		}
+		dig.Rental = p0
+		dig.Pricing = p1 - p0
+	}
 
 	hd = dig
 	return
@@ -131,5 +144,44 @@ func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
 	pif.PropAddress = prop.Address
 	pif.PropDesc = prop.Desc
 
+	return
+}
+
+/**
+*	Get house active rental by house id
+*	Arguments:
+*		hid - house id
+*	Returns
+*		err - error info
+*		rs 	- house rental list
+ */
+func getHouseRental(hid int64) (err error, rs []TblRental) {
+	FN := "[getHouseRental] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	var rlst []TblRental
+
+	qs := o.QueryTable("tbl_rental")
+	num, errTmp := qs.Filter("HouseId", hid).Filter("Active", true).OrderBy("Id").All(&rlst)
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		return
+	}
+
+	if 0 == num {
+		// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND}
+		// return
+		beego.Debug(FN, "No active rental found")
+	}
+
+	rs = rlst
+	beego.Debug(FN, "rs:", rs)
 	return
 }

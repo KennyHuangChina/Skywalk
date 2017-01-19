@@ -56,6 +56,22 @@ type TblHouse struct {
 	Property    *TblProperty `orm:"rel(fk)"`
 }
 
+type TblRental struct {
+	Id           int64
+	HouseId      int64
+	RentalBid    int       // rental Bid price, in 0.01. So 120050 means 1200.50
+	RentalBottom int       // rental bottom price, in 0.01. So 120050 means 1200.50
+	Who          int       // who made this price, ref to TblUser. typically it is house owner
+	When         time.Time `orm:"auto_now_add;type(datetime)"` // when made this price
+	Active       bool      // Is the price still open. when house has been rented, this field should be set to false which means there is no available rental
+}
+
+func (r *TblRental) TableIndex() [][]string {
+	return [][]string{
+		[]string{"HouseId"},
+	}
+}
+
 /***************************************************************************
 	tables for sms fetching
 ***************************************************************************/
@@ -83,7 +99,7 @@ func init() {
 	orm.DefaultTimeLoc = time.UTC
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
-		new(TblProperty), new(TblHouse),
+		new(TblProperty), new(TblHouse), new(TblRental),
 		new(TblSmsCode))
 
 	orm.RegisterDriver("mysql", orm.DRMySQL)
