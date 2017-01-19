@@ -4,13 +4,31 @@
 	"description": "",
 	"order": [
 		"c06c8eeb-d2cf-153a-bc9a-340852e5bc43",
-		"bfefe4a6-5253-6989-af2e-a48c961785ae"
+		"bfefe4a6-5253-6989-af2e-a48c961785ae",
+		"1df22bb3-03aa-a4c2-cca7-ccf1eacbbcaa"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
 	"owner": 0,
 	"public": false,
 	"requests": [
+		{
+			"id": "1df22bb3-03aa-a4c2-cca7-ccf1eacbbcaa",
+			"url": "http://ub1604-skywalk-:8080/v1/house/digest/1?sid=xxxxx",
+			"method": "GET",
+			"headers": "",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/digest/1?sid=xxxxx",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
 		{
 			"id": "bfefe4a6-5253-6989-af2e-a48c961785ae",
 			"headers": "",
