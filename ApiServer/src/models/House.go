@@ -54,7 +54,14 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 		dig.Pricing = p1 - p0
 	}
 
+	// house tags
+	err, tgs := getHouseTags(hid)
+	if nil != err {
+		return
+	}
 	hd = dig
+	hd.Tags = tgs
+
 	return
 }
 
@@ -147,6 +154,11 @@ func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
 	return
 }
 
+/*********************************************************************************************************
+*
+*	Internal Functions
+*
+**********************************************************************************************************/
 /**
 *	Get house active rental by house id
 *	Arguments:
@@ -183,5 +195,44 @@ func getHouseRental(hid int64) (err error, rs []TblRental) {
 
 	rs = rlst
 	beego.Debug(FN, "rs:", rs)
+	return
+}
+
+/**
+*	Get house tags by house id
+*	Arguments:
+*		hid - house id
+*	Returns
+*		err - error info
+*		ts 	- house tag list
+ */
+func getHouseTags(hid int64) (err error, ts []commdef.HouseTags) {
+	FN := "[getHouseRental] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	sql := fmt.Sprintf(`SELECT htags.tag AS tag_id, tags.tag AS tag_desc
+							FROM tbl_house_tag AS htags, tbl_tag AS tags 
+							WHERE htags.tag=tags.id AND house=%d`, hid)
+
+	var tgs []commdef.HouseTags
+	numb, errTmp := o.Raw(sql).QueryRows(&tgs)
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		return
+	}
+
+	if 0 == numb /*len(tgs)*/ {
+		beego.Debug(FN, "No tags found")
+	}
+
+	ts = tgs
+	beego.Debug(FN, "tags:", ts)
 	return
 }

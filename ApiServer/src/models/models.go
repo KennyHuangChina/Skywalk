@@ -72,6 +72,28 @@ func (r *TblRental) TableIndex() [][]string {
 	}
 }
 
+type TblTag struct {
+	Id  int64
+	Tag string `orm:"size(50)"`
+}
+
+type TblHouseTag struct {
+	Id    int64
+	House int64 // house id
+	Tag   int64 // tag id
+}
+
+func (ht *TblHouseTag) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+	}
+}
+func (ht *TblHouseTag) TableUnique() [][]string {
+	return [][]string{
+		[]string{"House", "Tag"},
+	}
+}
+
 /***************************************************************************
 	tables for sms fetching
 ***************************************************************************/
@@ -99,7 +121,7 @@ func init() {
 	orm.DefaultTimeLoc = time.UTC
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
-		new(TblProperty), new(TblHouse), new(TblRental),
+		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag),
 		new(TblSmsCode))
 
 	orm.RegisterDriver("mysql", orm.DRMySQL)

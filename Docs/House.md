@@ -57,6 +57,9 @@
 			* Pricing		int		// <0: Rental depreciate; 0: Even, no change; >0: Rental raise
 			* CoverImgS		int		// small cover image id
 			* CoverImgL		int 	// large cover image id
+			* Tags			array	// house tags
+				* TagId		int 	// tag id
+				* TagDesc	string	// tag description string
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

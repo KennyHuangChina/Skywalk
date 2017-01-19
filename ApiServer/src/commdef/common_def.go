@@ -37,6 +37,11 @@ func (this *UserInfo) Role2Desc() {
 //
 //		House
 //
+type HouseTags struct {
+	TagId   int64
+	TagDesc string
+}
+
 type HouseDigest struct {
 	Id           int64
 	Property     string
@@ -47,8 +52,9 @@ type HouseDigest struct {
 	Acreage      int
 	Rental       int
 	Pricing      int
-	CoverImgS    int // small cover image id
-	CoverImgL    int // Large cover image id
+	CoverImgS    int64 // small cover image id
+	CoverImgL    int64 // Large cover image id
+	Tags         []HouseTags
 }
 
 type HouseInfo struct {
