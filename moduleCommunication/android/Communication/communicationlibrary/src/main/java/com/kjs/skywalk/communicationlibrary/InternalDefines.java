@@ -7,7 +7,9 @@ package com.kjs.skywalk.communicationlibrary;
 class InternalDefines {
 
     //Log Tags defines
-    public static final String TAG_HTTPConnector = "HTTPConnector";
+    public static final String TAG_HTTPConnector                            = "HTTPConnector";
+    public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";
+    public static final String TAG_COMMUNICATION_BASE                       = "CommunicationBase";
 
     //Error Code Defines
     public static final int     ERROR_CODE_OK                               = 0x0;

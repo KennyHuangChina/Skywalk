@@ -35,7 +35,7 @@ import javax.net.ssl.TrustManagerFactory;
  * Created by Jackie on 2017/1/17.
  */
 
-public class HttpConnector {
+class HttpConnector {
     private Context mContext = null;
     private String mStringURL = "";
     private String mStringServerURL = "";
