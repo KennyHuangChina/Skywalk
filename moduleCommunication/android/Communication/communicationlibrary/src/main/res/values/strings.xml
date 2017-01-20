@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CommunicationLibrary</string>
+    <string name="communication_lib_store_pass">abcdef</string>
 </resources>
