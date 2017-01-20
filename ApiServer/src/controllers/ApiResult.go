@@ -73,6 +73,12 @@ type ResGetPropInfo struct {
 	PropInfo commdef.PropInfo
 }
 
+// result of API get picture url
+type ResGetPicUrl struct {
+	ResCommon
+	url string
+}
+
 /************************************************************************************
 *
 *		Functions

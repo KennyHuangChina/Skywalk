@@ -1,0 +1,32 @@
+{
+	"id": "d9106868-2ec9-8124-53f6-e369b920b1e8",
+	"name": "skywalk_Picture",
+	"description": "",
+	"order": [
+		"d6a88807-f4c6-24a0-2f49-30bd43061d2f"
+	],
+	"folders": [],
+	"timestamp": 1484921231777,
+	"owner": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "d6a88807-f4c6-24a0-2f49-30bd43061d2f",
+			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/pic/1?size=3",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1484922322772,
+			"name": "http://ub1604-skywalk-:8080/v1/pic/1",
+			"description": "",
+			"collectionId": "d9106868-2ec9-8124-53f6-e369b920b1e8"
+		}
+	]
+}

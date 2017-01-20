@@ -19,6 +19,11 @@ func init() {
 				&controllers.HouseController{},
 			),
 		),
+		beego.NSNamespace("/pic",
+			beego.NSInclude(
+				&controllers.PictureController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }
