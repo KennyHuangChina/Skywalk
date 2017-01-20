@@ -1,15 +1,23 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import java.util.HashMap;
+
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
 /**
  * Created by Jackie on 2017/1/17.
  */
 
 class InternalDefines {
 
+    public interface DoOperation {
+        int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener);
+    }
+
     //Log Tags defines
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
-    public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";
-    public static final String TAG_COMMUNICATION_BASE                       = "CommunicationBase";
+    public static final String TAG_COMMUNICATION_MANAGER                   = "CommunicationManager";
+    public static final String TAG_COMMUNICATION_UTILS                      = "CommunicationUtils";
 
     //Error Code Defines
     public static final int     ERROR_CODE_OK                               = 0x0;
