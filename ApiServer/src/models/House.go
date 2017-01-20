@@ -29,7 +29,7 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 
 	// House info
 	var dig commdef.HouseDigest
-	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, livingrooms, bathrooms, acreage 
+	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, livingrooms, bathrooms, acreage, cover_img 
 							FROM tbl_house AS house, tbl_property AS prop 
 							WHERE house.property_id=prop.id AND house.id=%d`, hid)
 	errTmp := o.Raw(sql).QueryRow(&dig)
@@ -72,7 +72,7 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 *	Returns
 *		err - error info
 *		hif - house info
- */
+**/
 func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 	FN := "[GetUserInfo] "
 	beego.Trace(FN, "hid:", hid)
@@ -207,7 +207,7 @@ func getHouseRental(hid int64) (err error, rs []TblRental) {
 *		ts 	- house tag list
  */
 func getHouseTags(hid int64) (err error, ts []commdef.HouseTags) {
-	FN := "[getHouseRental] "
+	FN := "[getHouseTags] "
 	beego.Trace(FN, "hid:", hid)
 
 	defer func() {

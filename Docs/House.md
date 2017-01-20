@@ -55,8 +55,7 @@
 			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
 			* Rental		int		// the exact rental that the house owner published, in 0.01RMB
 			* Pricing		int		// <0: Rental depreciate; 0: Even, no change; >0: Rental raise
-			* CoverImgS		int		// small cover image id
-			* CoverImgL		int 	// large cover image id
+			* CoverImg		int		// cover image id
 			* Tags			array	// house tags
 				* TagId		int 	// tag id
 				* TagDesc	string	// tag description string

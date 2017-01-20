@@ -53,6 +53,7 @@ type TblHouse struct {
 	Livingrooms int
 	Bathrooms   int
 	Acreage     int
+	CoverImg    int64        // the picture id of house cover image
 	Property    *TblProperty `orm:"rel(fk)"`
 }
 
@@ -95,6 +96,36 @@ func (ht *TblHouseTag) TableUnique() [][]string {
 }
 
 /***************************************************************************
+	tables for pictures
+***************************************************************************/
+type TblPictures struct {
+	Id        int64
+	TypeMajor int    // picture major type. ref to commdef.PIC_TYPE_xxxx
+	TypeMiner int    // picture miner type. ref to commdef.PIC_xxx, based on what major type is. for example, if TypeMajor is PIC_TYPE_HOUSE, then TypeMiner should be PIC_HOUSE_xxx
+	RefId     int64  // picture reference id, based on what type it is. for example if type is PIC_TYPE_HOUSE, then the RefId is house id
+	Desc      string `orm:"size(100)"` // picture description
+}
+
+func (p *TblPictures) TableIndex() [][]string {
+	return [][]string{
+		[]string{"TypeMajor", "TypeMiner", "RefId"},
+	}
+}
+
+type TblPicSet struct {
+	Id    int64
+	PicId int64  // parent picture id, ref to TblPictures.Id
+	Size  int    // picture size, ref to commdef.PIC_SIZE_xxx
+	Url   string `orm:"size(100)"` // the path where the picture placed
+}
+
+func (ps *TblPicSet) TableIndex() [][]string {
+	return [][]string{
+		[]string{"PicId", "Size"},
+	}
+}
+
+/***************************************************************************
 	tables for sms fetching
 ***************************************************************************/
 /*
@@ -122,6 +153,7 @@ func init() {
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag),
+		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))
 
 	orm.RegisterDriver("mysql", orm.DRMySQL)

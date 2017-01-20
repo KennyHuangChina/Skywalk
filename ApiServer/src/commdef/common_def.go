@@ -52,8 +52,7 @@ type HouseDigest struct {
 	Acreage      int
 	Rental       int
 	Pricing      int
-	CoverImgS    int64 // small cover image id
-	CoverImgL    int64 // Large cover image id
+	CoverImg     int64 // cover image id
 	Tags         []HouseTags
 }
 
@@ -76,3 +75,27 @@ type PropInfo struct {
 	PropAddress string
 	PropDesc    string
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		Pictures
+//
+const (
+	PIC_TYPE_USER   = 100
+	PIC_TYPE_HOUSE  = 200
+	PIC_TYPE_RENTAL = 300
+)
+
+// for PIC_TYPE_HOUSE
+const (
+	PIC_HOUSE_FLOOR     = 1
+	PIC_HOUSE_FURNITURE = 2
+	PIC_HOUSE_APPLIANCE = 3
+)
+
+const (
+	PIC_SIZE_SMALL    = 1
+	PIC_SIZE_MODERATE = 2
+	PIC_SIZE_LARGE    = 3
+	// PIC_SIZE_HEAD_PORTRAINT = 4 // head portraint, typically used for user picture
+)
