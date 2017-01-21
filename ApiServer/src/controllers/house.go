@@ -16,6 +16,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseInfo", h.GetHouseInfo)
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetHouseDigestInfo", h.GetHouseDigestInfo)
+	h.Mapping("GetHouseList", h.GetHouseList)
 }
 
 // @Title GetPropertyInfo
@@ -55,6 +56,55 @@ func (this *HouseController) GetPropertyInfo() {
 	}
 }
 
+// @Title GetHouseList
+// @Description get house list by type
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /list [get]
+func (this *HouseController) GetHouseList() {
+	FN := "[GetHouseList] "
+	beego.Warn("[--- API: GetHouseList ---]")
+
+	var result ResGetHouseList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	tp, _ := this.GetInt("type")
+	begin, _ := this.GetInt64("bgn")
+	count, _ := this.GetInt64("cnt")
+	sid := this.GetString("sid")
+
+	beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", sid:", sid, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count)
+	if nil == err {
+		result.Total = total
+		result.Count = fetched
+		result.IDs = ids
+	}
+}
+
 // @Title GetHouseDigestInfo
 // @Description get user info by id
 // @Success 200 {string}
@@ -64,7 +114,7 @@ func (this *HouseController) GetHouseDigestInfo() {
 	FN := "[GetHouseDigestInfo] "
 	beego.Warn("[--- API: GetHouseDigestInfo ---]")
 
-	var result ResGetUserDigest
+	var result ResGetHouseDigest
 	var err error
 
 	defer func() {

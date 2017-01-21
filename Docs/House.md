@@ -62,3 +62,22 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+###4. Get house list
+	[Security]	public
+	[Request]
+  		* GET /v1/house/list?type=<>?bgn=<>&cnt=<>&sid=xxxxx
+	  		* type			int 	// house type. 0: all; 1: recommend; 2: deducted; 3: new
+	  		* bgn			int		// from which item to fetch
+	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
+	  		* sid 			string	// session id, by which server could know who send the request
+	[Response]
+		* SUCCESS:200 
+			* Total    		int		// total number
+			* Count			int		// how many items fetched
+			* IDs			array
+				* Id		int		// house id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

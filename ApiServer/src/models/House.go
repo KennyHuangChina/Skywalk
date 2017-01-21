@@ -8,6 +8,53 @@ import (
 )
 
 /**
+*	Get house list by id
+*	Arguments:
+*		ht 		- list type. ref to commdef.HOUSE_LIST_xxx
+*		begin	- from which item to fetch
+*		count	- how many items to fetch
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		ids		- house id list
+ */
+func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched int64, ids []int64) {
+	FN := "[GetHouseListByType] "
+	beego.Trace(FN, "type:", ht, ", begin:", begin, ", count:", count)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	if ht < commdef.HOUSE_LIST_Unknown || ht > commdef.HOUSE_LIST_Max {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Invalid list type:%d", ht)}
+		return
+	}
+	if begin < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Invalid begin position:%d", begin)}
+		return
+	}
+	if count < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Invalid count:%d", count)}
+		return
+	}
+
+	switch ht {
+	case commdef.HOUSE_LIST_Recommend:
+		return getRecommendHouseList(begin, count)
+	case commdef.HOUSE_LIST_Deducted:
+	case commdef.HOUSE_LIST_New:
+	case commdef.HOUSE_LIST_All:
+	}
+
+	return
+}
+
+/**
 *	Get house information by id
 *	Arguments:
 *		id - house id
@@ -45,6 +92,7 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 	}
 
 	if len(rs) > 0 {
+		beego.Warn(FN, "TODO: bug here")
 		p0 := rs[0].RentalBid // first bid price
 		p1 := p0              // last bid price
 		if len(rs) > 1 {
@@ -234,5 +282,66 @@ func getHouseTags(hid int64) (err error, ts []commdef.HouseTags) {
 
 	ts = tgs
 	beego.Debug(FN, "tags:", ts)
+	return
+}
+
+/**
+*	Get recommend house list
+*	Arguments:
+*		begin	- from which item to fetch
+*		count	- how many items to fetch
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		ids		- house id list
+ */
+func getRecommendHouseList(begin, count int64) (err error, total, fetched int64, ids []int64) {
+	FN := "[getRecommendHouseList] "
+	beego.Trace(FN, "begin:", begin, ", count:", count)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_recommend")
+
+	// calculate the total house number
+	cnt, errT := qs.Count()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	total = cnt
+
+	if 0 == count { // user just want to detect how many houses
+		return
+	}
+
+	// fetch exact house list
+	if begin > total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "begin position out of range"}
+		return
+	}
+
+	// fetching
+	beego.Warn(FN, "TODO: all() will be restricted by limit, and return max 1000 records")
+	var hids []TblHouseRecommend
+	numb, errT := qs.OrderBy("When").All(&hids)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	// beego.Debug(FN, "hids:", hids)
+
+	fetched = numb
+	for _, v := range hids {
+		ids = append(ids, v.House)
+	}
+	// ids = hids
+
 	return
 }

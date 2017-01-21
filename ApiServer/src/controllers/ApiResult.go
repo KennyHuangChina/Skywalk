@@ -61,10 +61,18 @@ type ResGetUserInfo struct {
 	HouseInfo commdef.HouseInfo
 }
 
-// result of API get house info
-type ResGetUserDigest struct {
+// result of API get house digest info
+type ResGetHouseDigest struct {
 	ResCommon
 	HouseDigest commdef.HouseDigest
+}
+
+// result of API get house list
+type ResGetHouseList struct {
+	ResCommon
+	Total int64
+	Count int64
+	IDs   []int64
 }
 
 // result of API get property info

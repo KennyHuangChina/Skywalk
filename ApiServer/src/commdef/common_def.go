@@ -76,6 +76,16 @@ type PropInfo struct {
 	PropDesc    string
 }
 
+const (
+	HOUSE_LIST_Unknown   = 0
+	HOUSE_LIST_All       = 0
+	HOUSE_LIST_Recommend = 1
+	HOUSE_LIST_Deducted  = 2
+	HOUSE_LIST_New       = 3
+
+	HOUSE_LIST_Max = 3
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Pictures

@@ -95,6 +95,19 @@ func (ht *TblHouseTag) TableUnique() [][]string {
 	}
 }
 
+type TblHouseRecommend struct {
+	Id    int64
+	House int64     // house id
+	Who   int64     // agent id
+	When  time.Time `orm:"auto_now_add;type(datetime)"` // recommendation time
+}
+
+func (hr *TblHouseRecommend) TableUnique() [][]string {
+	return [][]string{
+		[]string{"House"},
+	}
+}
+
 /***************************************************************************
 	tables for pictures
 ***************************************************************************/
@@ -152,7 +165,7 @@ func init() {
 	orm.DefaultTimeLoc = time.UTC
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
-		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag),
+		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))
 

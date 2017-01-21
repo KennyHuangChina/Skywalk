@@ -12,10 +12,16 @@
 *
 1. 修改 hostname 为 ub1604-skywalk-dev。注意，Windows 中访问 "\\ub1604-skywalk-"，访问 “\\ub1604-skywalk-dev” 会失败
 
-2. CREATE DATABASE IF NOT EXISTS rtdb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+2. 将 db.sql 文件复制到 \\ub1604-skywalk-\share
 
-3. 将 db.sql 文件复制到 \\ub1604-skywalk-\share
+3. cd ~/share
 
-4. cd ~/share
+4. mysql -u root -proot
 
-5. mysql -u root -proot rtdb < db.sql (将测试数据导入数据库)
+5. DROP DATABASE rtdb;
+
+6. CREATE DATABASE IF NOT EXISTS rtdb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
+7. exit
+
+8. mysql -u root -proot rtdb < db.sql (将测试数据导入数据库)
