@@ -76,7 +76,9 @@ type ResGetPropInfo struct {
 // result of API get picture url
 type ResGetPicUrl struct {
 	ResCommon
-	url string
+	Url_s string
+	Url_m string
+	Url_l string
 }
 
 /************************************************************************************

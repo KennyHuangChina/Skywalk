@@ -37,6 +37,7 @@ func main() {
 
 	// StaticDir["/static"] = "static"
 	beego.SetStaticPath("/static", "static")
+	beego.SetStaticPath("/pics", "pics")
 
 	beego.Run()
 }

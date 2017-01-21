@@ -86,14 +86,21 @@ const (
 	PIC_TYPE_RENTAL = 300
 )
 
+// for PIC_TYPE_USER
+const (
+	PIC_OWNER_ID           = 1 // house owern's ID card, including ID card and passport. only house owner and house agent could access
+	PIC_USER_HEAD_PORTRAIT = 2 // user's head portrait, anyone could access it
+)
+
 // for PIC_TYPE_HOUSE
 const (
-	PIC_HOUSE_FLOOR     = 1
-	PIC_HOUSE_FURNITURE = 2
-	PIC_HOUSE_APPLIANCE = 3
+	PIC_HOUSE_FLOOR     = 1 // house type image, anyone could access
+	PIC_HOUSE_FURNITURE = 2 // house furnitures, anyone could access
+	PIC_HOUSE_APPLIANCE = 3 // house appliance, andy could access
 )
 
 const (
+	PIC_SIZE_ALL      = 0
 	PIC_SIZE_SMALL    = 1
 	PIC_SIZE_MODERATE = 2
 	PIC_SIZE_LARGE    = 3

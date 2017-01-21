@@ -51,8 +51,10 @@ func (this *PictureController) GetPicUrl() {
 	/*
 	 *	Processing
 	 */
-	err, url := models.GetPicUrl(pid, uid, size)
+	err, url_s, url_m, url_l := models.GetPicUrl(pid, uid, size)
 	if nil == err {
-		result.url = url
+		result.Url_s = url_s
+		result.Url_m = url_m
+		result.Url_l = url_l
 	}
 }
