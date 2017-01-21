@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
         CommunicationManager mManager = new CommunicationManager(this);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_SESSION_ID, "ssssid");
+        pMap.put(CommunicationParameterKey.CPK_SESSION_ID, "xxxxx");
         mManager.get(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
     }
 
