@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -27,6 +29,7 @@ public class fragmentHomePage extends Fragment {
 
         homepage_apartment_listitem_adapter adapter = new homepage_apartment_listitem_adapter(getActivity());
         lvContent.setAdapter(adapter);
+
         return view;
     }
 }

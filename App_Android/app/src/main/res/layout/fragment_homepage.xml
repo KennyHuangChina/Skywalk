@@ -44,13 +44,20 @@
                 android:hint="@string/homepage_input_hint"
                 />
 
-            <ImageView
-                android:contentDescription="@string/tab_menu_msg"
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/message"
-                android:id="@+id/im_message"
-                android:layout_weight="250" />
+                android:layout_weight="250" >
+                <ImageView
+                    android:contentDescription="@string/tab_menu_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_centerInParent="true"
+                    app:srcCompat="@drawable/message"
+                    android:id="@+id/im_message" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <!--540px-->
@@ -90,7 +97,7 @@
                 android:layout_weight="1"
                 android:textColor="@drawable/tab_menu_text"
                 android:textSize="12sp"
-                android:onClick="" />
+                android:onClick="onClickResponse" />
 
             <TextView
                 android:id="@+id/tv_apartment"
@@ -103,7 +110,7 @@
                 android:layout_weight="1"
                 android:textColor="@drawable/tab_menu_text"
                 android:textSize="12sp"
-                android:onClick="" />
+                android:onClick="onClickResponse" />
         </LinearLayout>
 
 
