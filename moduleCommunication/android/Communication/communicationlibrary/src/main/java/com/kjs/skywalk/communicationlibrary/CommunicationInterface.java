@@ -12,6 +12,6 @@ public class CommunicationInterface {
     }
 
     public interface CIProgressListener {
-        void onCommandFinished(final String command, final String percent, HashMap<String, String> map);
+        void onProgressChanged(final String command, final String percent, HashMap<String, String> map);
     }
 }

@@ -18,7 +18,7 @@ public class CommunicationManager {
 
     private MyUtils mUtils = null;
 
-    CommunicationManager(Context context) {
+    public CommunicationManager(Context context) {
         mContext = context;
         mUtils= new MyUtils(context);
     }
@@ -43,10 +43,6 @@ public class CommunicationManager {
         int ret = mOperation.doOperation(map, commandListener, progressListener);
 
         return 0;
-    }
-
-    public void setProgressListener(CIProgressListener progressListener) {
-        mProgressListener = progressListener;
     }
 
     private CommunicationBase createOperation(String which) {

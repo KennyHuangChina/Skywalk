@@ -21,8 +21,10 @@ class CommunicationBase implements InternalDefines.DoOperation {
 
     protected MyUtils mUtils = null;
     protected CIProgressListener mProgressListener = null;
+    protected CICommandListener mCommandListener = null;
 
     CommunicationBase(Context context) {
+        Log.i(TAG, "Communication Base Constructor");
         mContext = context;
         mUtils = new MyUtils(context);
     }

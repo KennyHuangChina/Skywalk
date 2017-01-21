@@ -9,7 +9,25 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.CommunicationManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
+
+import java.util.HashMap;
+
+public class MainActivity extends AppCompatActivity
+                implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
+
+    @Override
+    public void onCommandFinished(final String command, final String returnCode, final String description, final HashMap<String, String> map) {
+
+    }
+
+    @Override
+    public void onProgressChanged(final String command, final String percent, HashMap<String, String> map) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        CommunicationManager mManager = new CommunicationManager(this);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_SESSION_ID, "ssssid");
+        mManager.get(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
     }
 
     @Override
