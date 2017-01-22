@@ -27,6 +27,7 @@ class CommunicationBase implements InternalDefines.DoOperation {
         Log.i(TAG, "Communication Base Constructor");
         mContext = context;
         mUtils = new MyUtils(context);
+        mServerURL = ServerURL.mServerUri;
     }
 
     public interface CheckParameter {
@@ -36,6 +37,8 @@ class CommunicationBase implements InternalDefines.DoOperation {
     @Override
     public int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
         Log.i(TAG, "Communication Base: doOperation");
+        mCommandListener = commandListener;
+        mProgressListener = progressListener;
         return 0;
     }
 }

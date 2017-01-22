@@ -37,6 +37,8 @@ class GetBriefPublicHouseInfo extends CommunicationBase
     @Override
     public int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
         Log.i(TAG, "doOperation");
+        super.doOperation(map, commandListener, progressListener);
+
         return 0;
     }
 }

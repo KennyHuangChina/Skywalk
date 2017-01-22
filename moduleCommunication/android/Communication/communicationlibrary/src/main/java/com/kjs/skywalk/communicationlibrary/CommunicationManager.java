@@ -1,6 +1,8 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -41,8 +43,11 @@ public class CommunicationManager {
         }
 
         int ret = mOperation.doOperation(map, commandListener, progressListener);
+        if(ret != CommunicationError.CE_ERROR_NO_ERROR) {
+            Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + getWhat);
+        }
 
-        return 0;
+        return ret;
     }
 
     private CommunicationBase createOperation(String which) {
