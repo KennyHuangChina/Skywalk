@@ -6,6 +6,7 @@ import android.util.Log;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +36,42 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
 
     private HashMap<String, String> createResultMap(JSONObject jObject) {
         HashMap<String, String> map = new HashMap<String, String>();
+        try {
+            JSONObject obj = jObject.getJSONObject("HouseDigest");
+            if(obj == null) {
+                return null;
+            }
+
+            map.put("Id", Integer.toString(obj.getInt("Id")));
+            map.put("Property", obj.getString("Property"));
+            map.put("PropertyAddr", obj.getString("PropertyAddr"));
+            map.put("Bedrooms", Integer.toString(obj.getInt("Bedrooms")));
+            map.put("Livingrooms", Integer.toString(obj.getInt("Livingrooms")));
+            map.put("Bathrooms", Integer.toString(obj.getInt("Bathrooms")));
+            map.put("Acreage", Integer.toString(obj.getInt("Acreage")));
+            map.put("Rental", Integer.toString(obj.getInt("Rental")));
+            map.put("Pricing", Integer.toString(obj.getInt("Pricing")));
+            map.put("CoverImg", Integer.toString(obj.getInt("CoverImg")));
+
+            JSONArray array = obj.getJSONArray("Tags");
+            map.put("TagCount", Integer.toString(array.length()));
+            for(int i = 0; i < array.length(); i ++) {
+                String s = array.getString(i);
+                JSONObject tmpObj = new JSONObject(s);
+                if(tmpObj != null) {
+                    int tagId = tmpObj.getInt("TagId");
+                    String tagDesc = tmpObj.getString("TagDesc");
+                    String key = "TagID_" + i;
+                    String value = "" + tagId;
+                    map.put(key, value);
+                    key = "TagDesc_" + i;
+                    value = tagDesc;
+                    map.put(key, value);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return map;
     }
@@ -101,8 +138,8 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
 
                 HashMap<String, String> map = createResultMap(jObject);
 
-                String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
-                returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+                String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
+                returnCode = "" + InternalDefines.ERROR_CODE_OK;
                 mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, map);
             }
         }).start();
