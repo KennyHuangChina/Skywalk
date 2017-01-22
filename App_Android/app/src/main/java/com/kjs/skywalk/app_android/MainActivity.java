@@ -1,7 +1,16 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.FragmentTransaction;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -135,5 +144,43 @@ public class MainActivity extends AppCompatActivity {
             mBvMsgInTab.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
             mBvMsgInTab.show(true);
         }
+
+        // test notification
+        regNotification();
+//        Notification notifation= new Notification.Builder(this)
+//                .setContentTitle("通知标题")
+//                .setContentText("通知内容")
+//                .setSmallIcon(R.drawable.message)
+//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.message))
+//                .build();
+//        NotificationManager manger= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        manger.notify(0, notifation);
+    }
+
+    private void regNotification() {
+        int type = 3;
+
+        Intent intentClick = new Intent(this, NotificationBroadcastReceiver.class);
+        intentClick.setAction(NotificationBroadcastReceiver.NBR_NOTI_CLICKED);
+        intentClick.putExtra(NotificationBroadcastReceiver.NBR_TYPE, type);
+        PendingIntent pendingIntentClick = PendingIntent.getBroadcast(this, 0, intentClick, PendingIntent.FLAG_ONE_SHOT);
+
+        Intent intentCancel = new Intent(this, NotificationBroadcastReceiver.class);
+        intentCancel.setAction(NotificationBroadcastReceiver.NBR_NOTI_CANCELLED);
+        intentCancel.putExtra(NotificationBroadcastReceiver.NBR_TYPE, type);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this, 0, intentCancel, PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.message)
+                .setContentTitle("通知标题")
+                .setContentText("通知内容")
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntentClick)
+                .setDeleteIntent(pendingIntentCancel);
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(type, builder.build());
+
     }
 }
