@@ -95,6 +95,12 @@ type ResGetNewEventCnt struct {
 	NewEvent int64
 }
 
+// result of API get house new event
+type ResGetHouseEvents struct {
+	ResCommon
+	Houses []commdef.HouseEvents
+}
+
 /************************************************************************************
 *
 *		Functions

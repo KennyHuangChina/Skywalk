@@ -48,6 +48,34 @@ func GetNewEventCount(uid int64) (err error, new_event int64) {
 	if numb > 0 {
 		new_event = count[0]
 	}
+	beego.Warn(FN, "TODO: User permission checking")
+
+	return
+}
+
+/**
+*	Get new event count
+*	Arguments:
+*		uid 	- user id
+*	Returns
+*		err 	- error info
+*		houses 	- house list with new event
+**/
+func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
+	FN := "[GetHouseNewEvents] "
+	beego.Trace(FN, "uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if uid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user id:%d", uid)}
+		return
+	}
+	beego.Warn(FN, "TODO: User permission checking")
 
 	return
 }

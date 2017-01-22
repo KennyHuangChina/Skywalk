@@ -86,6 +86,10 @@ const (
 	HOUSE_LIST_Max = 3
 )
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		Events
+//
 const (
 	HOUSE_EVENT_Submit              = 1 // house owner submit a new house
 	HOUSE_EVENT_Certification_Begin = 2
@@ -98,6 +102,17 @@ const (
 	HOUSE_EVENT_PROC_Follow = 1
 	HOUSE_EVENT_PROC_Close  = 2
 )
+
+type HouseEvents struct {
+	HouseId  int64
+	Property string
+	Building int
+	Room     int
+	Picture  int
+	EventCnt int
+	Time     string
+	Desc     string
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
