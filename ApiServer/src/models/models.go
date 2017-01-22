@@ -125,6 +125,12 @@ type TblHouseEvent struct {
 	Process    []*TblHouseEventProcess `orm:"reverse(many)"`
 }
 
+func (he *TblHouseEvent) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+	}
+}
+
 type TblHouseEventProcess struct {
 	Id int64
 	// Event int64     // event id

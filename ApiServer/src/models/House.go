@@ -47,7 +47,7 @@ func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched i
 	case commdef.HOUSE_LIST_Recommend:
 		return getRecommendHouseList(begin, count)
 	case commdef.HOUSE_LIST_Deducted:
-		fallthrough
+		return getDeductedHouseList(begin, count)
 	case commdef.HOUSE_LIST_New:
 		fallthrough
 	case commdef.HOUSE_LIST_All:
@@ -287,6 +287,74 @@ func getHouseTags(hid int64) (err error, ts []commdef.HouseTags) {
 
 	ts = tgs
 	beego.Debug(FN, "tags:", ts)
+	return
+}
+
+/**
+*	Get deducted house list
+*	Arguments:
+*		begin	- from which item to fetch
+*		count	- how many items to fetch
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		ids		- house id list
+ */
+type DeductedHouse struct {
+	HouseId int64
+	P0Bide  int
+	P1Bide  int
+}
+
+func getDeductedHouseList(begin, count int64) (err error, total, fetched int64, ids []int64) {
+	FN := "[getDeductedHouseList] "
+	beego.Trace(FN, "begin:", begin, ", count:", count)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// calculate the total house number
+	sql_begin := "SELECT min(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
+	sql_now := "SELECT  max(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
+
+	sql_t0 := fmt.Sprintf(`SELECT t0.id, house_id, rental_bid 
+								FROM tbl_rental AS rental LEFT JOIN (%s) AS t0 
+								ON rental.id=t0.id WHERE t0.id IS NOT NULL`, sql_begin)
+	sql_t1 := fmt.Sprintf(`SELECT t1.id, house_id, rental_bid 
+								FROM tbl_rental AS rental LEFT JOIN (%s) AS t1 
+								ON rental.id=t1.id WHERE t1.id IS NOT NULL`, sql_now)
+	sql := fmt.Sprintf(`SELECT p0.id as p0_id, p1.id as p1_id, p0.house_id, p0.rental_bid as p0_bid, p1.rental_bid as p1_bid 
+							FROM (%s) AS p0, (%s) AS p1 
+							WHERE p0.house_id=p1.house_id 
+							HAVING (p1_bid - p0_bid) > 0`, sql_t0, sql_t1)
+	// beego.Debug(FN, "sql:", sql)
+
+	o := orm.NewOrm()
+
+	var hs []DeductedHouse
+	numb, errTmp := o.Raw(sql).QueryRows(&hs)
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		return
+	}
+	if 0 == numb { // no deducted house found
+		return
+	}
+
+	total = numb
+	if 0 == count { // user just want to get the total number of deducted house
+		return
+	}
+
+	for /*k*/ _, v := range hs {
+		ids = append(ids, v.HouseId)
+	}
+	fetched = int64(len(ids))
+
 	return
 }
 
