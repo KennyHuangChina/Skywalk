@@ -81,7 +81,8 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 
 	// House info
 	var dig commdef.HouseDigest
-	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, livingrooms, bathrooms, acreage, cover_img 
+	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, 
+								livingrooms, bathrooms, acreage, cover_img 
 							FROM tbl_house AS house, tbl_property AS prop 
 							WHERE house.property_id=prop.id AND house.id=%d`, hid)
 	errTmp := o.Raw(sql).QueryRow(&dig)
@@ -97,13 +98,12 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 	}
 
 	if len(rs) > 0 {
-		beego.Warn(FN, "TODO: bug here")
 		p0 := rs[0].RentalBid // first bid price
 		p1 := p0              // last bid price
 		if len(rs) > 1 {
 			p1 = rs[len(rs)-1].RentalBid
 		}
-		dig.Rental = p0
+		dig.Rental = p1
 		dig.Pricing = p1 - p0
 	}
 
