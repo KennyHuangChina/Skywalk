@@ -86,6 +86,19 @@ const (
 	HOUSE_LIST_Max = 3
 )
 
+const (
+	HOUSE_EVENT_Submit              = 1 // house owner submit a new house
+	HOUSE_EVENT_Certification_Begin = 2
+	HOUSE_EVENT_Certification_Fail  = 3
+	HOUSE_EVENT_Certification_OK    = 4
+	// HOUSE_EVENT_
+)
+
+const (
+	HOUSE_EVENT_PROC_Follow = 1
+	HOUSE_EVENT_PROC_Close  = 2
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Pictures

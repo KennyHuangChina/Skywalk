@@ -89,6 +89,12 @@ type ResGetPicUrl struct {
 	Url_l string
 }
 
+// result of API get new event count
+type ResGetNewEventCnt struct {
+	ResCommon
+	NewEvent int64
+}
+
 /************************************************************************************
 *
 *		Functions

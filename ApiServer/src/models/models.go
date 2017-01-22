@@ -109,6 +109,30 @@ func (hr *TblHouseRecommend) TableUnique() [][]string {
 }
 
 /***************************************************************************
+	tables for events
+***************************************************************************/
+type TblHouseEvent struct {
+	Id         int64
+	House      int64 // house id
+	Sender     int64
+	Receiver   int64
+	CreateTime time.Time               `orm:"auto_now_add;type(datetime)"`
+	Type       int                     // event type, ref to HOUSE_EVENT_xxx
+	Desc       string                  `orm:"size(200)"`
+	Process    []*TblHouseEventProcess `orm:"reverse(many)"`
+}
+
+type TblHouseEventProcess struct {
+	Id int64
+	// Event int64     // event id
+	Who   int64          // who made thie process
+	When  time.Time      `orm:"auto_now_add;type(datetime)"` // process time
+	Type  int            // event process type, ref to HOUSE_EVENT_PROC_XXXX
+	Desc  string         `orm:"size(200)"`
+	Event *TblHouseEvent `orm:"rel(fk)"`
+}
+
+/***************************************************************************
 	tables for pictures
 ***************************************************************************/
 type TblPictures struct {
@@ -166,6 +190,7 @@ func init() {
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
+		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))
 

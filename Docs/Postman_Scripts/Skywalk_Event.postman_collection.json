@@ -1,0 +1,31 @@
+{
+	"id": "9d0907c3-3c41-6efd-8a97-a92435704c43",
+	"name": "Skywalk_Event",
+	"description": "",
+	"order": [
+		"e3890fab-7772-9fca-3c36-7846115d3b35"
+	],
+	"folders": [],
+	"timestamp": 1485064541167,
+	"owner": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "e3890fab-7772-9fca-3c36-7846115d3b35",
+			"url": "http://ub1604-skywalk-:8080/v1/event/count",
+			"method": "GET",
+			"headers": "",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/event/count",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "9d0907c3-3c41-6efd-8a97-a92435704c43"
+		}
+	]
+}
