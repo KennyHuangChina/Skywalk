@@ -12,7 +12,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
  * Created by Jackie on 2017/1/20.
  */
 
-class CommunicationBase implements InternalDefines.DoOperation {
+class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.CheckParameter{
     protected String TAG = "";
     protected Context mContext = null;
     protected String mMethodType = "";
@@ -23,15 +23,13 @@ class CommunicationBase implements InternalDefines.DoOperation {
     protected CIProgressListener mProgressListener = null;
     protected CICommandListener mCommandListener = null;
 
+    protected String mSessionID = "";
+
     CommunicationBase(Context context) {
         Log.i(TAG, "Communication Base Constructor");
         mContext = context;
         mUtils = new MyUtils(context);
         mServerURL = ServerURL.mServerUri;
-    }
-
-    public interface CheckParameter {
-        boolean checkParameter(HashMap<String, String> map);
     }
 
     @Override
@@ -40,5 +38,10 @@ class CommunicationBase implements InternalDefines.DoOperation {
         mCommandListener = commandListener;
         mProgressListener = progressListener;
         return 0;
+    }
+
+    @Override
+    public boolean checkParameter(HashMap<String, String> map) {
+        return false;
     }
 }

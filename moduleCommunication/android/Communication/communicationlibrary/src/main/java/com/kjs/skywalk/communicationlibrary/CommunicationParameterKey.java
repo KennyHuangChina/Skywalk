@@ -5,5 +5,5 @@ package com.kjs.skywalk.communicationlibrary;
  */
 
 public class CommunicationParameterKey {
-    public static String CPK_SESSION_ID                             = "SessionID";
+    public static String CPK_INDEX                                  = "Index";
 }

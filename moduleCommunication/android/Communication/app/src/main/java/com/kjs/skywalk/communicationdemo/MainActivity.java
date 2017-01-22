@@ -13,6 +13,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 
 import java.util.HashMap;
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity
 
         CommunicationManager mManager = new CommunicationManager(this);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_SESSION_ID, "xxxxx");
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "1");
         mManager.get(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
     }
 

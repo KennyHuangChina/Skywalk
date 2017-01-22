@@ -13,6 +13,9 @@ class InternalDefines {
     public interface DoOperation {
         int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener);
     }
+    public interface CheckParameter {
+        boolean checkParameter(HashMap<String, String> map);
+    }
 
     //Log Tags defines
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
@@ -30,4 +33,24 @@ class InternalDefines {
     public static final int     ERROR_CODE_HTTP_REQUEST_FAILED              = 0x80001003;
     public static final int     ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND       = 0x80001004;
     public static final int     ERROR_CODE_HTTP_UNKNOWN_HOST                = 0x80001005;
+
+    //Error Description
+    private static HashMap<Integer, String> errorMap;
+
+    static {
+        errorMap = new HashMap<Integer, String>();
+    }
+
+    public static String getErrorDescription(int errCode) {
+        if(!errorMap.containsKey(errCode)) {
+            return "Undefined Error";
+        }
+
+        String description = errorMap.get(errCode);
+        if(description == null) {
+            description = "";
+        }
+
+        return description;
+    }
 }

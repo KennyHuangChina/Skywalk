@@ -42,6 +42,10 @@ public class CommunicationManager {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
 
+        if(!mOperation.checkParameter(map)) {
+            return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
+        }
+
         int ret = mOperation.doOperation(map, commandListener, progressListener);
         if(ret != CommunicationError.CE_ERROR_NO_ERROR) {
             Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + getWhat);

@@ -177,6 +177,8 @@ class HttpConnector {
             return InternalDefines.ERROR_CODE_HTTP_CONNECTION;
         }
 
+        mJsonObj = null;
+
         mResponseString = "";
 
         try {
