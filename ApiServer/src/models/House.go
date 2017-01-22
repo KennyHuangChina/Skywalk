@@ -47,8 +47,13 @@ func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched i
 	case commdef.HOUSE_LIST_Recommend:
 		return getRecommendHouseList(begin, count)
 	case commdef.HOUSE_LIST_Deducted:
+		fallthrough
 	case commdef.HOUSE_LIST_New:
+		fallthrough
 	case commdef.HOUSE_LIST_All:
+		fallthrough
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	}
 
 	return
@@ -343,5 +348,99 @@ func getRecommendHouseList(begin, count int64) (err error, total, fetched int64,
 	}
 	// ids = hids
 
+	return
+}
+
+/**
+*	Get house property name
+*	Arguments:
+*		hid		- house id
+*	Returns
+*		err 	- error info
+*		prop	- property name
+**/
+func getHouseProperty(hid int64) (err error, prop string) {
+	FN := "[getHouseProperty] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+
+	sql := fmt.Sprintf("SELECT name FROM tbl_house AS house, tbl_property AS prop WHERE house.id=%d AND house.property_id=prop.id", hid)
+	Name := ""
+	errT := o.Raw(sql).QueryRow(&Name)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	prop = Name
+	return
+}
+
+/**
+*	Get house number
+*	Arguments:
+*		hid		- house id
+*	Returns
+*		err 		- error info
+*		building	- house building number
+*		house_no	- house number
+**/
+func getHouseNumber(hid int64) (err error, building int, house_no string) {
+	FN := "[getHouseProperty] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	h := TblHouse{Id: hid}
+	errT := o.Read(&h) //, "BuildingNo", "HouseNo")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	building = h.BuildingNo
+	house_no = h.HouseNo
+	return
+}
+
+/**
+*	Get house cover image
+*	Arguments:
+*		hid		- house id
+*	Returns
+*		err 	- error info
+*		pic		- house cover image id
+**/
+func getHouseCoverImg(hid int64) (err error, pic int64) {
+	FN := "[getHouseProperty] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	h := TblHouse{Id: hid}
+	errT := o.Read(&h) // , "CoverImg")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	pic = h.CoverImg
 	return
 }

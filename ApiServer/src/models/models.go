@@ -55,6 +55,9 @@ type TblHouse struct {
 	Acreage     int
 	CoverImg    int64        // the picture id of house cover image
 	Property    *TblProperty `orm:"rel(fk)"`
+
+	Owner  *TblUser `orm:"rel(fk)"` // house owner
+	Agency *TblUser `orm:"rel(fk)"` // house agency
 }
 
 type TblRental struct {

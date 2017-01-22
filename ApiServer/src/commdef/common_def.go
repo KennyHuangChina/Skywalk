@@ -104,14 +104,14 @@ const (
 )
 
 type HouseEvents struct {
-	HouseId  int64
-	Property string
-	Building int
-	Room     int
-	Picture  int
-	EventCnt int
-	Time     string
-	Desc     string
+	HouseId   int64
+	Property  string
+	Building  int
+	HouseNo   string
+	Picture   int64
+	EventCnt  int
+	Time      string
+	EventDesc string
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

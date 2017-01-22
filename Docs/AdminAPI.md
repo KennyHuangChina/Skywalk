@@ -34,8 +34,10 @@
   			* sid			string 		// session id, from which the server could know who send the request
 			* un			string 		// user login name
 	[Response]
-		* SUCCESS:200 
-		* ERR: 4XX,5XX
+		* SUCCESS:200
+			* Salt   	string			// user salt
+			* Random 	string			// random for this time
+ 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
 	

@@ -39,7 +39,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-###3. Get bref public house info
+###3. Get brief public house info
 	[Security]	public
 	[Request]
   		* GET /v1/house/digest/id?sid=xxxxx

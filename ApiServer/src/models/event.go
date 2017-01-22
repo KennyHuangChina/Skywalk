@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 /**
@@ -60,7 +61,15 @@ func GetNewEventCount(uid int64) (err error, new_event int64) {
 *	Returns
 *		err 	- error info
 *		houses 	- house list with new event
+*	Comments:
+*		for house owner, only the houses they owned could be fetched
+*		for agency, the house they owned and the house they represent could be fetched
 **/
+type house_events struct {
+	House  int64 // house id
+	Events int   // new event count
+}
+
 func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 	FN := "[GetHouseNewEvents] "
 	beego.Trace(FN, "uid:", uid)
@@ -76,6 +85,109 @@ func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 		return
 	}
 	beego.Warn(FN, "TODO: User permission checking")
+
+	// houses that can access
+	sql_house := fmt.Sprintf("SELECT id FROM tbl_house WHERE owner_id=%d", uid)
+	if isAgency(uid) {
+		sql_house = sql_house + fmt.Sprintf(" OR agency_id=%d", uid)
+	}
+	// beego.Debug(FN, "sql_house:", sql_house)
+
+	// Kenny: due to sql_mod ONLY_FULL_GROUP_BY, we could get all information which is not in GROUP BY clause
+	//			so, we have to split it into two steps: 1st get all houses, and then get rest of informations by house id
+	// new events
+	sql_event := fmt.Sprintf(`SELECT event.id, house, create_time, event.desc, proc.event_id 
+								FROM tbl_house_event AS event LEFT JOIN tbl_house_event_process AS proc 
+									ON event.id=proc.event_id 
+								WHERE event.house IN (%s) AND event_id IS NULL
+								ORDER BY house, create_time DESC`, sql_house)
+	// beego.Debug(FN, "sql_event:", sql_event)
+
+	sql_event = fmt.Sprintf("SELECT t1.house, COUNT(*) AS events FROM (%s) AS t1 GROUP BY house", sql_event)
+	// beego.Debug(FN, "sql_event:", sql_event)
+
+	var hes []house_events
+	o := orm.NewOrm()
+	numb, errT := o.Raw(sql_event).QueryRows(&hes)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	if 0 == numb { // there are no new events
+		return
+	}
+
+	hs := make([]commdef.HouseEvents, 0)
+	for /*k*/ _, v := range hes {
+		newItem := commdef.HouseEvents{HouseId: v.House, EventCnt: v.Events}
+
+		_, newItem.Property = getHouseProperty(newItem.HouseId)
+		_, newItem.Building, newItem.HouseNo = getHouseNumber(newItem.HouseId)
+		_, newItem.Picture = getHouseCoverImg(newItem.HouseId)
+
+		_, EventDesc, create_time := getHouseNewestEventDesc(newItem.HouseId)
+		newItem.EventDesc = EventDesc
+		newItem.Time = create_time.String()
+
+		hs = append(hs, newItem)
+	}
+	beego.Debug(FN, "hs:", hs)
+
+	houses = hs
+	return
+}
+
+/***********************************************************************************************************************
+*
+*		Internal Functions
+*
+************************************************************************************************************************/
+/*
+*	Check if the user speficed is a agency
+ */
+func isAgency(uid int64) bool {
+	FN := "[isAgency] "
+
+	beego.Warn(FN, "TODO: not implement")
+	return true
+}
+
+/*
+*	get newest event desc of house specified
+*	Returns:
+*		ct	- create time
+*		ed	- event description
+**/
+type event_desc struct {
+	Desc       string
+	CreateTime time.Time
+}
+
+func getHouseNewestEventDesc(hid int64) (err error, ed string, ct time.Time) {
+	// FN := "[getHouseNewestEventDesc] "
+
+	sql_event := fmt.Sprintf(`SELECT create_time, event.desc, proc.event_id 
+								FROM tbl_house_event AS event LEFT JOIN tbl_house_event_process AS proc 
+									ON event.id=proc.event_id 
+								WHERE event.house=%d AND event_id IS NULL
+								ORDER BY house, create_time DESC`, hid)
+	// beego.Debug(FN, "sql_event:", sql_event)
+
+	o := orm.NewOrm()
+
+	var es []event_desc
+	numb, errT := o.Raw(sql_event).QueryRows(&es)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	if 0 == numb { // no new event found
+		return
+	}
+
+	ct = es[0].CreateTime
+	ed = es[0].Desc
 
 	return
 }
