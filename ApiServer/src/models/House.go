@@ -307,9 +307,9 @@ type DeductedHouse struct {
 	P1Bide  int
 }
 
-func getDeductedHouseList(begin, count int64) (err error, total, fetched int64, ids []int64) {
+func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched int64, ids []int64) {
 	FN := "[getDeductedHouseList] "
-	beego.Trace(FN, "begin:", begin, ", count:", count)
+	beego.Trace(FN, "begin:", begin, ", fetch_numb:", fetch_numb)
 
 	defer func() {
 		if nil != err {
@@ -330,11 +330,28 @@ func getDeductedHouseList(begin, count int64) (err error, total, fetched int64, 
 	sql := fmt.Sprintf(`SELECT p0.id as p0_id, p1.id as p1_id, p0.house_id, p0.rental_bid as p0_bid, p1.rental_bid as p1_bid 
 							FROM (%s) AS p0, (%s) AS p1 
 							WHERE p0.house_id=p1.house_id 
-							HAVING (p1_bid - p0_bid) > 0`, sql_t0, sql_t1)
+							HAVING (p1_bid - p0_bid) < 0`, sql_t0, sql_t1)
 	// beego.Debug(FN, "sql:", sql)
 
 	o := orm.NewOrm()
 
+	// calculate total number
+	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS tmp", sql)
+	var cnt int64
+	errT := o.Raw(sql_cnt).QueryRow(&cnt)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	total = cnt
+
+	if 0 == fetch_numb { // user just want to get the total number of deducted house
+		return
+	}
+
+	// fetch records
+	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch_numb)
 	var hs []DeductedHouse
 	numb, errTmp := o.Raw(sql).QueryRows(&hs)
 	if nil != errTmp {
@@ -342,11 +359,6 @@ func getDeductedHouseList(begin, count int64) (err error, total, fetched int64, 
 		return
 	}
 	if 0 == numb { // no deducted house found
-		return
-	}
-
-	total = numb
-	if 0 == count { // user just want to get the total number of deducted house
 		return
 	}
 
