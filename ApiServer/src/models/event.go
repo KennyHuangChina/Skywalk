@@ -31,12 +31,6 @@ func GetNewEventCount(uid int64) (err error, new_event int64) {
 		return
 	}
 
-	// sql := fmt.Sprintf(`SELECT proc.event_id
-	// 						FROM tbl_house_event AS event LEFT JOIN tbl_house_event_process AS proc
-	// 							ON event.id=proc.event_id
-	// 						WHERE (sender=%d OR receiver=%d) AND event_id IS NULL`, uid, uid)
-	// sql = fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS tmp GROUP BY event_id", sql)
-
 	sql := fmt.Sprintf("SELECT COUNT(*) AS count FROM tbl_house_event WHERE (sender=%d OR receiver=%d) AND read_time IS NULL", uid, uid)
 
 	o := orm.NewOrm()
@@ -99,11 +93,6 @@ func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 	// Kenny: due to sql_mod ONLY_FULL_GROUP_BY, we could get all information which is not in GROUP BY clause
 	//			so, we have to split it into two steps: 1st get all houses, and then get rest of informations by house id
 	// new events
-	// sql_event := fmt.Sprintf(`SELECT event.id, house, create_time, event.desc, proc.event_id
-	// 							FROM tbl_house_event AS event LEFT JOIN tbl_house_event_process AS proc
-	// 								ON event.id=proc.event_id
-	// 							WHERE event.house IN (%s) AND event_id IS NULL
-	// 							ORDER BY house, create_time DESC`, sql_house)
 	sql_event := fmt.Sprintf(`SELECT event.id, house, create_time, event.desc 
 								FROM tbl_house_event AS event, (%s) AS house 
 								WHERE event.house=house.id AND read_time IS NULL

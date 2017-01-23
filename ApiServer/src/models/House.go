@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 /**
@@ -49,7 +50,7 @@ func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched i
 	case commdef.HOUSE_LIST_Deducted:
 		return getDeductedHouseList(begin, count)
 	case commdef.HOUSE_LIST_New:
-		fallthrough
+		return getNewHouseList(begin, count)
 	case commdef.HOUSE_LIST_All:
 		fallthrough
 	default:
@@ -293,8 +294,8 @@ func getHouseTags(hid int64) (err error, ts []commdef.HouseTags) {
 /**
 *	Get deducted house list
 *	Arguments:
-*		begin	- from which item to fetch
-*		count	- how many items to fetch
+*		begin		- from which item to fetch
+*		fetch_numb	- how many items to fetch
 *	Returns
 *		err 	- error info
 *		total 	- total number
@@ -318,12 +319,12 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	}()
 
 	// calculate the total house number
-	sql_begin := "SELECT min(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
+	sql_1st := "SELECT min(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
 	sql_now := "SELECT  max(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
 
 	sql_t0 := fmt.Sprintf(`SELECT t0.id, house_id, rental_bid 
 								FROM tbl_rental AS rental LEFT JOIN (%s) AS t0 
-								ON rental.id=t0.id WHERE t0.id IS NOT NULL`, sql_begin)
+								ON rental.id=t0.id WHERE t0.id IS NOT NULL`, sql_1st)
 	sql_t1 := fmt.Sprintf(`SELECT t1.id, house_id, rental_bid 
 								FROM tbl_rental AS rental LEFT JOIN (%s) AS t1 
 								ON rental.id=t1.id WHERE t1.id IS NOT NULL`, sql_now)
@@ -365,6 +366,80 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	for /*k*/ _, v := range hs {
 		ids = append(ids, v.HouseId)
 	}
+	fetched = int64(len(ids))
+
+	return
+}
+
+/**
+*	Get new house list
+*	Arguments:
+*		begin		- from which item to fetch
+*		fetch_numb	- how many items to fetch
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		ids		- house id list
+**/
+func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, ids []int64) {
+	FN := "[getNewHouseList] "
+	beego.Trace(FN, "begin:", begin, ", fetch_numb:", fetch_numb)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// default time window: 7 days
+	tNow := time.Now()
+	beego.Debug(FN, "tNow:", tNow, ", UTC:", tNow.UTC())
+	tBegin := tNow.UTC().Add(-7 * 24 * time.Hour)
+	beego.Debug(FN, "tBegin:", tBegin)
+
+	t0 := time.Date(tBegin.Year(), tBegin.Month(), tBegin.Day(), 0, 0, 0, 0, time.UTC)
+	beego.Debug(FN, "t0:", t0)
+	beego.Warn(FN, "TODO: need to check the real submit_time, UTC or Local?")
+
+	// calculate the total house number
+	sql := fmt.Sprintf("SELECT Id FROM tbl_house WHERE submit_time>='%s'", t0)
+	beego.Debug(FN, "sql:", sql)
+
+	o := orm.NewOrm()
+
+	// calculate total number
+	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS tmp", sql)
+	var cnt int64
+	errT := o.Raw(sql_cnt).QueryRow(&cnt)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	total = cnt
+
+	if 0 == fetch_numb { // user just want to get the total number of deducted house
+		return
+	}
+
+	// fetch records
+	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch_numb)
+	var hs []int64
+	numb, errTmp := o.Raw(sql).QueryRows(&hs)
+	if nil != errTmp {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+		return
+	}
+	if 0 == numb { // no deducted house found
+		return
+	}
+
+	// for /*k*/ _, v := range hs {
+	// 	ids = append(ids, v)
+	// }
+
+	ids = hs
 	fetched = int64(len(ids))
 
 	return

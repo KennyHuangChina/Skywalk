@@ -58,6 +58,10 @@ type TblHouse struct {
 
 	Owner  *TblUser `orm:"rel(fk)"` // house owner
 	Agency *TblUser `orm:"rel(fk)"` // house agency
+
+	SubmitTime  time.Time `orm:"auto_now_add;type(datetime)"`      // the time the owner submited
+	PublishTime time.Time `orm:"auto_now_add;type(datetime);null"` // the time the agency certificated and published
+	ModifyTime  time.Time `orm:"auto_now_add;type(datetime);null"` // the time the house has been modified
 }
 
 type TblRental struct {
