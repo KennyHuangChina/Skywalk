@@ -3,36 +3,63 @@ package com.kjs.skywalk.communicationlibrary;
 import android.content.Context;
 import android.util.Log;
 
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
- * Created by Jackie on 2017/1/20.
+ * Created by admin on 2017/1/23.
  */
 
-class GetBriefPublicHouseInfo extends CommunicationBase {
+class LogInByPassword extends CommunicationBase {
 
-    private String mParamID = "";
+    private String mUserName = "";
+    private String mPassword = "";
+    private String mRadom = "";
+    private String mType = "1";
 
-    GetBriefPublicHouseInfo(Context context){
+    LogInByPassword(Context context) {
         super(context);
-        TAG = "GetBriefPublicHouseInfo";
+        TAG = "LogInByPassword";
         Log.i(TAG, "Constructor");
-        mMethodType = "GET";
+        mMethodType = "POST";
         mSessionID = "xxxxx";
+    }
+    @Override
+    public boolean checkParameter(HashMap<String, String> map) {
+        if(!map.containsKey(CommunicationParameterKey.CPK_USER_NAME) ||
+                !map.containsKey(CommunicationParameterKey.CPK_PASSWORD) ||
+                !map.containsKey(CommunicationParameterKey.CPK_RADOM)) {
+            return false;
+        }
+
+        mUserName = map.get(CommunicationParameterKey.CPK_USER_NAME);
+        if(mUserName == null || mUserName.isEmpty()) {
+            return false;
+        }
+        mPassword = map.get(CommunicationParameterKey.CPK_PASSWORD);
+        if(mPassword == null || mPassword.isEmpty()) {
+            return false;
+        }
+        mRadom = map.get(CommunicationParameterKey.CPK_RADOM);
+        if(mRadom == null || mRadom.isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 
     private void generateRequestData() {
-        mRequestData = "sid=" +  mSessionID;
+        mRequestData = ("ln=" +  mUserName);
+        mRequestData += "&";
+        mRequestData += ("pw=" + mPassword);
+        mRequestData += "&";
+        mRequestData += ("rd=" + mRadom);
+        mRequestData += "&";
+        mRequestData += ("typ=" + mType);
     }
-
     private HashMap<String, String> createResultMap(JSONObject jObject) {
         HashMap<String, String> map = new HashMap<String, String>();
         try {
@@ -76,26 +103,12 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
     }
 
     @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if(!map.containsKey(CommunicationParameterKey.CPK_INDEX)) {
-             return false;
-        }
-
-        mParamID = map.get(CommunicationParameterKey.CPK_INDEX);
-        if(mParamID == null || mParamID.isEmpty()) {
-            return false;
-        }
-
-       return true;
-    }
-
-    @Override
-    public int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
+    public int doOperation(HashMap<String, String> map, CommunicationInterface.CICommandListener commandListener, CommunicationInterface.CIProgressListener progressListener) {
         Log.i(TAG, "doOperation");
         super.doOperation(map, commandListener, progressListener);
 
-        mCommandURL = "/v1/house/digest";
-        mCommandURL += "/" + mParamID;
+        mCommandURL = "/v1/admin/loginpass";
+        mCommandURL += "/";
 
         generateRequestData();
 
@@ -130,7 +143,7 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
                 if(jObject == null) {
                     String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
                     returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
-                    mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, null);
+                    mCommandListener.onCommandFinished(CommunicationCommand.CC_LOG_IN_BY_PASSWORD, returnCode, strError, null);
 
                     return;
                 }
@@ -139,7 +152,7 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
 
                 String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
-                mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, map);
+                mCommandListener.onCommandFinished(CommunicationCommand.CC_LOG_IN_BY_PASSWORD, returnCode, strError, map);
             }
         }).start();
 

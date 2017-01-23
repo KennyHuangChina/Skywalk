@@ -18,6 +18,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
     protected String mMethodType = "";
     protected String mServerURL = "";
     protected String mCommandURL = "";
+    protected String mRequestData = "";
 
     protected MyUtils mUtils = null;
     protected CIProgressListener mProgressListener = null;

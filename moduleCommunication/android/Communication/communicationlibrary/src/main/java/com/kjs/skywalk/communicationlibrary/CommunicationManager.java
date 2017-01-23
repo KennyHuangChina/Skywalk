@@ -54,6 +54,8 @@ public class CommunicationManager {
         CommunicationBase operation = null;
         if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
             operation = new GetBriefPublicHouseInfo(mContext);
+        } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
+            operation = new LogInByPassword(mContext);
         }
 
         return operation;

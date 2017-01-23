@@ -6,4 +6,7 @@ package com.kjs.skywalk.communicationlibrary;
 
 public class CommunicationParameterKey {
     public static String CPK_INDEX                                  = "Index";
+    public static String CPK_USER_NAME                              = "UserName";
+    public static String CPK_PASSWORD                               = "Password";
+    public static String CPK_RADOM                                  = "Radom";
 }
