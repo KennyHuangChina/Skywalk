@@ -120,6 +120,7 @@ type TblHouseEvent struct {
 	Sender     int64
 	Receiver   int64
 	CreateTime time.Time               `orm:"auto_now_add;type(datetime)"`
+	ReadTime   time.Time               `orm:"auto_now_add;type(datetime);null"`
 	Type       int                     // event type, ref to HOUSE_EVENT_xxx
 	Desc       string                  `orm:"size(200)"`
 	Process    []*TblHouseEventProcess `orm:"reverse(many)"`
