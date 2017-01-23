@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             mBvMsg.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
             mBvMsg.setText(Integer.toString(count));
             mBvMsg.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
+//            mBvMsg.setBackgroundResource(R.drawable.red_circle);
             mBvMsg.show(true);
         }
 

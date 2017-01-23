@@ -36,7 +36,7 @@ public class BadgeView extends TextView {
     public static final int POSITION_BOTTOM_RIGHT = 4;
     public static final int POSITION_CENTER = 5;
 
-    private static final int DEFAULT_MARGIN_DIP = 5;
+    private static final int DEFAULT_MARGIN_DIP = 1;
     private static final int DEFAULT_LR_PADDING_DIP = 5;
     private static final int DEFAULT_CORNER_RADIUS_DIP = 8;
     private static final int DEFAULT_POSITION = POSITION_TOP_RIGHT;
@@ -119,6 +119,7 @@ public class BadgeView extends TextView {
         int paddingPixels = dipToPixels(DEFAULT_LR_PADDING_DIP);
         setPadding(paddingPixels, 0, paddingPixels, 0);
         setTextColor(DEFAULT_TEXT_COLOR);
+        setGravity(Gravity.CENTER);
 
         fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator());
@@ -335,8 +336,8 @@ public class BadgeView extends TextView {
     }
 
     private void applyLayoutParams() {
-		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(50, 50);
+//		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(40, 40);
 
         switch (badgePosition) {
             case POSITION_TOP_LEFT:
