@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,11 +26,11 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
 
+    private final int mFragmentCount = 2;
     private final String TAG = "MainActivity";
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+    private Fragment[] mFragments;
+    private FragmentManager mFragmentManager;
+    private FragmentTransaction mFragmentTransaction;
 
     @Override
     public void onCommandFinished(final String command, final String returnCode, final String description, final HashMap<String, String> map) {
@@ -52,14 +55,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mFragmentManager = getSupportFragmentManager();
+        mFragments = new Fragment[mFragmentCount];
+        mFragments[0] = mFragmentManager.findFragmentById(R.id.fragment_main);
+        mFragments[1] = mFragmentManager.findFragmentById(R.id.fragment_log_in_out);
+        mFragmentTransaction = mFragmentManager.beginTransaction().hide(mFragments[0]).hide(mFragments[1]);
+        mFragmentTransaction.show(mFragments[0]).commit();
 
         CommunicationManager mManager = new CommunicationManager(this);
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -83,8 +84,19 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        FragmentTransaction transaction = mFragmentManager.beginTransaction().hide(mFragments[0]).hide(mFragments[1]);
+//        for(int i = 0; i < mFragments.length; i ++) {
+//            transaction = transaction.hide(mFragments[i]);
+//        }
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_home) {
+            Log.i(TAG, "Home Clicked");
+            transaction.show(mFragments[0]).commit();
+            return true;
+        } else if(id == R.id.action_log_in_out) {
+            Log.i(TAG, "Log In/Log Out Clicked");
+            transaction.show(mFragments[1]).commit();
             return true;
         }
 

@@ -7,6 +7,10 @@
     android:fitsSystemWindows="true"
     tools:context="com.kjs.skywalk.communicationdemo.MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,14 +25,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <fragment
+        android:id="@+id/fragment_main"
+        android:name="com.kjs.skywalk.communicationdemo.MainActivityFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:layout="@layout/fragment_log_in_out" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
+    <fragment
+        android:id="@+id/fragment_log_in_out"
+        android:name="com.kjs.skywalk.communicationdemo.LogInOutFragment"
+        android:layout_width="fill_parent"
+        tools:layout="@layout/fragment_log_in_out"
+        android:layout_height="fill_parent" />
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
