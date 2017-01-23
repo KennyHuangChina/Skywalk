@@ -14,8 +14,6 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
 
 public class CommunicationManager {
     private Context mContext = null;
-    private CICommandListener mCommandListener = null;
-    private CIProgressListener mProgressListener = null;
     private CommunicationBase mOperation = null;
 
     private MyUtils mUtils = null;
@@ -25,19 +23,17 @@ public class CommunicationManager {
         mUtils= new MyUtils(context);
     }
 
-    public int get(String getWhat, HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
-        if(getWhat == null || commandListener == null) {
+    public int execute(String command, HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
+        if(command == null || commandListener == null) {
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
-        if(getWhat.isEmpty() || map.isEmpty()) {
+        if(command.isEmpty() || map.isEmpty()) {
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
-
-        mProgressListener = progressListener;
 
         MyUtils.printInputParameters(map);
 
-        mOperation = createOperation(getWhat);
+        mOperation = createOperation(command);
         if(mOperation == null) {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
@@ -48,15 +44,15 @@ public class CommunicationManager {
 
         int ret = mOperation.doOperation(map, commandListener, progressListener);
         if(ret != CommunicationError.CE_ERROR_NO_ERROR) {
-            Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + getWhat);
+            Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + command);
         }
 
         return ret;
     }
 
-    private CommunicationBase createOperation(String which) {
+    private CommunicationBase createOperation(String command) {
         CommunicationBase operation = null;
-        if(which.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
+        if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
             operation = new GetBriefPublicHouseInfo(mContext);
         }
 
