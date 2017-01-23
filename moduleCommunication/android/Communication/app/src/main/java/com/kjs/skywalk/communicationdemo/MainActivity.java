@@ -23,30 +23,13 @@ import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class MainActivity extends AppCompatActivity
-        implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
+public class MainActivity extends AppCompatActivity {
 
     private final int mFragmentCount = 2;
     private final String TAG = "MainActivity";
     private Fragment[] mFragments;
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
-
-    @Override
-    public void onCommandFinished(final String command, final String returnCode, final String description, final HashMap<String, String> map) {
-        if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
-            if(returnCode.equals("0")) {
-                printMap(map);
-            } else {
-                Log.i(TAG, "Command "+ CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO + " finished with error: " + description);
-            }
-        }
-    }
-
-    @Override
-    public void onProgressChanged(final String command, final String percent, HashMap<String, String> map) {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +45,6 @@ public class MainActivity extends AppCompatActivity
         mFragmentTransaction = mFragmentManager.beginTransaction().hide(mFragments[0]).hide(mFragments[1]);
         mFragmentTransaction.show(mFragments[0]).commit();
 
-        CommunicationManager mManager = new CommunicationManager(this);
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "1");
-        mManager.execute(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
@@ -101,17 +80,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void printMap(HashMap<String, String> map) {
-        if(map == null || map.size()== 0) {
-            return;
-        }
-        Iterator it = map.keySet().iterator();
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            Log.i(TAG, key + ": " + map.get(key));
-        }
     }
 
     @Override
