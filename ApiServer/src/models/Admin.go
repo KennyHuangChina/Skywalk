@@ -55,7 +55,7 @@ func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
 	uif.IdNo = u.IdNo
 	uif.Phone = u.Phone
 	uif.HeadPortrait = u.Head
-	uif.Role = u.Role
+	// uif.Role = u.Role
 	uif.Role2Desc() // uif.RoleDesc
 
 	return
@@ -304,7 +304,7 @@ func LoginSms(login_name, sms string) (err error, uid int64) {
 			}
 			user.LoginName = login_name
 			user.Phone = login_name
-			user.Role = commdef.USER_TYPE_Customer
+			// user.Role = commdef.USER_TYPE_Customer
 
 			id, errTmp := o.Insert(&user)
 			if nil != errTmp {
@@ -320,10 +320,11 @@ func LoginSms(login_name, sms string) (err error, uid int64) {
 	return
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Internal Functions
 //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func checkPhoneNo(phone string) (err error) {
 	FN := "[checkPhoneNo] "
 	beego.Trace(FN, "phone:", phone)
@@ -444,6 +445,111 @@ func postSms(phone, sms string) (err error) {
 
 	beego.Warn(FN, "NOT Implement")
 	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+
+	return
+}
+
+/**
+*	Check user
+*	Arguments
+*		uid		- user id
+*	Returns
+*		err		- error
+*		enable	- is this user enabled
+**/
+func checkUser(uid int64) (err error, enable bool) {
+	// FN := "[checkUser] "
+
+	o := orm.NewOrm()
+	u := TblUser{Id: uid}
+	errT := o.Read(&u)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: errT.Error()}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	enable = u.Enable
+	return
+}
+
+/**
+*	Check if the specified user is a agency
+*	Arguments
+*		uid		- user id
+*	Returns
+*		err		- error
+*		agency	- true: is an agency; false: isn't an agency
+**/
+func isAgency(uid int64) (err error, agency bool) {
+	FN := "[isAgency] "
+
+	err, enable := checkUser(uid)
+	if nil != err {
+		return
+	}
+
+	if !enable {
+		// TODO:
+	}
+
+	// check if the user in agency group
+	sql := fmt.Sprintf("SELECT COUNT(*) FROM tbl_user_group AS g, tbl_user_group_member AS m WHERE m.group_id=g.id AND admin=false AND user_id=%d", uid)
+	nCnt := int64(0)
+
+	o := orm.NewOrm()
+	errT := o.Raw(sql).QueryRow(&nCnt)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "nCnt:", nCnt)
+
+	if nCnt > 0 {
+		agency = true
+	}
+
+	return
+}
+
+/**
+*	Check if the specified user is a administrator
+*	Arguments
+*		uid		- user id
+*	Returns
+*		err		- error
+*		admin	- true: is an administrator; false: isn't an administrator
+**/
+func isAdministrator(uid int64) (err error, admin bool) {
+	FN := "[isAdministrator] "
+
+	err, enable := checkUser(uid)
+	if nil != err {
+		return
+	}
+
+	if !enable {
+		// TODO:
+	}
+
+	// check if the user in agency group
+	sql := fmt.Sprintf("SELECT COUNT(*) FROM tbl_user_group AS g, tbl_user_group_member AS m WHERE m.group_id=g.id AND admin=true AND user_id=%d", uid)
+	nCnt := int64(0)
+
+	o := orm.NewOrm()
+	errT := o.Raw(sql).QueryRow(&nCnt)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "nCnt:", nCnt)
+
+	if nCnt > 0 {
+		admin = true
+	}
 
 	return
 }

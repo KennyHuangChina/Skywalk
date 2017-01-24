@@ -85,7 +85,7 @@ func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 
 	// houses that can access
 	sql_house := fmt.Sprintf("SELECT id FROM tbl_house WHERE owner_id=%d", uid)
-	if isAgency(uid) {
+	if _, bAgency := isAgency(uid); bAgency {
 		sql_house = sql_house + fmt.Sprintf(" OR agency_id=%d", uid)
 	}
 	// beego.Debug(FN, "sql_house:", sql_house)
@@ -129,6 +129,7 @@ func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 		hs = append(hs, newItem)
 	}
 	beego.Debug(FN, "hs:", hs)
+	// fmt.Printf("%s hs:%+v", FN, hs)
 
 	houses = hs
 	return
@@ -139,16 +140,6 @@ func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 *		Internal Functions
 *
 ************************************************************************************************************************/
-/*
-*	Check if the user speficed is a agency
- */
-func isAgency(uid int64) bool {
-	FN := "[isAgency] "
-
-	beego.Warn(FN, "TODO: not implement")
-	return true
-}
-
 /*
 *	get newest event desc of house specified
 *	Returns:

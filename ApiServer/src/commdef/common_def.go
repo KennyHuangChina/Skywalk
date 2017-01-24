@@ -10,6 +10,8 @@ const (
 	USER_TYPE_Customer = 10
 )
 
+// TODO: user role type shoule be removed, use user group instead
+
 type UserInfo struct {
 	Id           int64
 	Name         string

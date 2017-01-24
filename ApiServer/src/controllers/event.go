@@ -83,7 +83,7 @@ func (this *EventController) GetHouseNewEvents() {
 	 *	Extract agreements
 	 */
 	sid := this.GetString("sid")
-	uid := int64(3)
+	uid := int64(4) // for testing
 
 	beego.Debug(FN, "uid:", uid, ", sid:", sid)
 

@@ -16,12 +16,14 @@ type TblUser struct {
 	LoginName string `orm:"size(64)"` // login name, user phone
 	Name      string `orm:"size(64)"`
 	Salt      string `orm:"size(32)"`
+	SaltTmp   string `orm:"size(32)"`
 	PassLogin string `orm:"size(50)"` // login password
 	PassTrasn string `orm:"size(50)"` // transaction password
 	IdNo      string `orm:"size(50)"` // ID number or passport number
 	Phone     string `orm:"size(50)"`
-	Head      string `orm:"size(50)"` // url of head portrait
-	Role      int    // USER_TYPE_xxx
+	Head      string `orm:"size(50)"`                // url of head portrait
+	Enable    bool   `orm:"default(true); not null"` // is this user enabled now. Administrator could enable or disable a user
+	// Role      int    // USER_TYPE_xxx
 }
 
 func (rs *TblUser) TableUnique() [][]string {
@@ -30,6 +32,19 @@ func (rs *TblUser) TableUnique() [][]string {
 		[]string{"LoginName"},
 		// []string{"IdNo"}, 	// user may not fill in the ID number
 	}
+}
+
+type TblUserGroup struct {
+	Id      int64
+	Name    string                `orm:"size(100)"`
+	Admin   bool                  // Is this group a administrator
+	Members []*TblUserGroupMember `orm:"reverse(many)"`
+}
+
+type TblUserGroupMember struct {
+	Id    int64
+	Group *TblUserGroup `orm:"rel(fk)"`
+	User  *TblUser      `orm:"rel(fk)"`
 }
 
 /***************************************************************************
@@ -202,7 +217,7 @@ func (sc *TblSmsCode) TableUnique() [][]string {
 func init() {
 	orm.DefaultTimeLoc = time.UTC
 	// tables need to be registered in init() function
-	orm.RegisterModel(new(TblUser),
+	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
