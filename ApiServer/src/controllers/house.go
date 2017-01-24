@@ -14,9 +14,11 @@ type HouseController struct {
 
 func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseInfo", h.GetHouseInfo)
-	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetHouseDigestInfo", h.GetHouseDigestInfo)
 	h.Mapping("GetHouseList", h.GetHouseList)
+
+	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
+	h.Mapping("GetPropertyList", h.GetPropertyList)
 }
 
 // @Title GetPropertyInfo
@@ -53,6 +55,55 @@ func (this *HouseController) GetPropertyInfo() {
 	err, pif := models.GetPropertyInfo(pid)
 	if nil == err {
 		result.PropInfo = pif
+	}
+}
+
+// @Title GetPropertyList
+// @Description get property list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /property/list [get]
+func (this *HouseController) GetPropertyList() {
+	FN := "[GetPropertyList] "
+	beego.Warn("[--- API: GetPropertyList ---]")
+
+	var result ResGetPropertyList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	name := this.GetString("name")
+	begin, _ := this.GetInt64("bgn")
+	count, _ := this.GetInt64("cnt")
+	sid := this.GetString("sid")
+
+	beego.Debug(FN, "type:", name, ", begin:", begin, ", count:", count, ", sid:", sid, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, total, fetched, pl := models.GetPropertyList(name, begin, count)
+	if nil == err {
+		result.Total = total
+		result.Count = fetched
+		result.Properties = pl
 	}
 }
 

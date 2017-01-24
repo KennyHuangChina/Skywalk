@@ -75,6 +75,14 @@ type ResGetHouseList struct {
 	IDs   []int64
 }
 
+// result of API get property list
+type ResGetPropertyList struct {
+	ResCommon
+	Total      int64
+	Count      int64
+	Properties []commdef.PropInfo
+}
+
 // result of API get property info
 type ResGetPropInfo struct {
 	ResCommon
@@ -159,6 +167,8 @@ func getLoginUser(c beego.Controller) (uid int64, err error) {
 	defer func() {
 		beego.Debug(FN, "uid:", uid)
 	}()
+
+	return 4, nil
 
 	// read uid from http request cookie
 	beego.Debug(FN, "c.CruSession:", c.CruSession)

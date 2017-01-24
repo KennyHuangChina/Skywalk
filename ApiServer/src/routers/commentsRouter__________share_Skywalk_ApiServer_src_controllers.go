@@ -29,16 +29,23 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
 		beego.ControllerComments{
+			Method: "Test",
+			Router: `/test`,
+			AllowHTTPMethods: []string{"post"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
+		beego.ControllerComments{
 			Method: "Loginpass",
 			Router: `/loginpass`,
-			AllowHTTPMethods: []string{"post"},
+			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
 		beego.ControllerComments{
 			Method: "Logout",
 			Router: `/logout`,
-			AllowHTTPMethods: []string{"post"},
+			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
@@ -73,6 +80,13 @@ func init() {
 		beego.ControllerComments{
 			Method: "GetPropertyInfo",
 			Router: `/property/:id`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
+		beego.ControllerComments{
+			Method: "GetPropertyList",
+			Router: `/property/list`,
 			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 

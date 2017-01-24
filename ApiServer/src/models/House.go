@@ -9,6 +9,78 @@ import (
 )
 
 /**
+*	Get property list
+*	Arguments:
+*		pn 		- property name. whole or partial
+*		begin	- from which item to fetch
+*		fetch	- how many items to fetch
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		ps		- property list
+ */
+func GetPropertyList(pn string, begin, fetch int64) (err error, total, fetched int64, ps []commdef.PropInfo) {
+	FN := "[GetPropertyList] "
+	beego.Trace(FN, "pn:", pn, ", begin:", begin, ", fetch:", fetch)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	if begin < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Invalid begin position:%d", begin)}
+		return
+	}
+	if fetch < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("fetch:%d", fetch)}
+		return
+	}
+
+	sql_cnt := "SELECT COUNT(*) FROM tbl_property"
+	beego.Debug(FN, "pn:", len(pn), "pn=\"\"", pn == "")
+	if len(pn) > 0 || pn != "" {
+		sql_cnt = fmt.Sprintf("%s WHERE name LIKE '%%%s%%'", sql_cnt, pn)
+	}
+	beego.Debug(FN, "sql_cnt:", sql_cnt)
+
+	o := orm.NewOrm()
+
+	numb := int64(0)
+	errT := o.Raw(sql_cnt).QueryRow(&numb)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	total = numb
+
+	if 0 == fetch { // user just want to know the total number
+		return
+	}
+
+	sql := "SELECT id, name AS prop_name FROM tbl_property"
+	if len(pn) > 0 || pn != "" {
+		sql = fmt.Sprintf("%s WHERE name LIKE '%%%s%%'", sql, pn)
+	}
+	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch)
+	beego.Debug(FN, "sql:", sql)
+
+	var ps_tmp []commdef.PropInfo
+	numb, errT = o.Raw(sql).QueryRows(&ps_tmp)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "ps_tmp:", ps_tmp)
+
+	ps = ps_tmp
+	return
+}
+
+/**
 *	Get house list by id
 *	Arguments:
 *		ht 		- list type. ref to commdef.HOUSE_LIST_xxx
