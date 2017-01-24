@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
+
+import org.json.JSONObject;
+
 /**
  * Created by Jackie on 2017/1/17.
  */
@@ -15,6 +18,9 @@ class InternalDefines {
     }
     public interface CheckParameter {
         boolean checkParameter(HashMap<String, String> map);
+    }
+    public interface CreateResultMap {
+        HashMap<String, String> doCreateResultMap(JSONObject jObject);
     }
 
     //Log Tags defines
