@@ -108,13 +108,16 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.tv_rent:
             {
-                if (mBvMsg != null) {
-                    mBvMsg.hide();
-                }
+//                if (mBvMsg != null) {
+//                    mBvMsg.hide();
+//                }
+//
+//                if (mBvMsgInTab != null) {
+//                    mBvMsgInTab.hide();
+//                }
 
-                if (mBvMsgInTab != null) {
-                    mBvMsgInTab.hide();
-                }
+                Intent intent = new Intent(this, Activity_HouseholdAppliances.class);
+                startActivity(intent);
             }
             break;
 
