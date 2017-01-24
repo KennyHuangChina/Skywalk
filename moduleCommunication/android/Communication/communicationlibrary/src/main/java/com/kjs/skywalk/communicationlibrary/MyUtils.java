@@ -17,8 +17,8 @@ class MyUtils {
         mContext = context;
     }
 
-    public static void printInputParameters(HashMap<String, String> map) {
-        Log.i(InternalDefines.TAG_COMMUNICATION_UTILS, "input parameters:");
+    public static void printContentInMap(HashMap<String, String> map) {
+        Log.i(InternalDefines.TAG_COMMUNICATION_UTILS, "printf content in map:");
         Iterator it = map.keySet().iterator();
         while(it.hasNext()) {
             String key = (String)it.next();

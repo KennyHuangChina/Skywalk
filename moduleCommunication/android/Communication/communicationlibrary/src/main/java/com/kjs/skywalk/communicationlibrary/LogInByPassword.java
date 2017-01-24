@@ -67,12 +67,6 @@ class LogInByPassword extends CommunicationBase {
     }
 
     @Override
-    public int doBeforeConnect(HttpConnector http) {
-        http.setReadCookie(true);
-        return 0;
-    }
-
-    @Override
     public int doOperation(HashMap<String, String> map, CommunicationInterface.CICommandListener commandListener, CommunicationInterface.CIProgressListener progressListener) {
         Log.i(TAG, "doOperation");
 

@@ -27,7 +27,6 @@ public class LogInOutFragment extends Fragment
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
 
     private final String TAG = "LogInOutFragment";
-    private MainActivity mainActivity = null;
     private String mResultString = "";
 
     TextView mTextViewResult = null;
@@ -45,13 +44,14 @@ public class LogInOutFragment extends Fragment
     }
 
     private void doLogout() {
-
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        mManager.execute(CommunicationCommand.CC_LOG_OUT, pMap, this, this);
     }
 
     private void doTest() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put("Test", "a");
         mManager.execute(CommunicationCommand.CC_TEST, pMap, this, this);
     }
 

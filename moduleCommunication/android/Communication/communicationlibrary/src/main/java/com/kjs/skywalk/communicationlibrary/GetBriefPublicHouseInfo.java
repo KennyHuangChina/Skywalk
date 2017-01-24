@@ -26,11 +26,10 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
         TAG = "GetBriefPublicHouseInfo";
         Log.i(TAG, "Constructor");
         mMethodType = "GET";
-        mSessionID = "xxxxx";
     }
 
     private void generateRequestData() {
-        mRequestData = "sid=" +  mSessionID;
+        mRequestData = "";
     }
 
     @Override

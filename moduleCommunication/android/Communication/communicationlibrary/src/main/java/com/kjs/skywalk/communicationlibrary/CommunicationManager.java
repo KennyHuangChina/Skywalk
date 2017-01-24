@@ -26,14 +26,14 @@ public class CommunicationManager {
     }
 
     public int execute(String command, HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
-        if(command == null || commandListener == null) {
+        if(command == null || commandListener == null || map== null) {
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
-        if(command.isEmpty() || map.isEmpty()) {
+        if(command.isEmpty()) {
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
 
-        MyUtils.printInputParameters(map);
+        MyUtils.printContentInMap(map);
 
         mOperation = createOperation(command);
         if(mOperation == null) {

@@ -24,6 +24,9 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -83,6 +86,8 @@ class HttpConnector {
         } else {
             mRequestData = strRequest;
         }
+
+        Log.i(InternalDefines.TAG_HTTPConnector, "Request Data: " + mRequestData);
     }
 
     public void setReadCookie(boolean read) {
@@ -263,6 +268,7 @@ class HttpConnector {
             }
 
             if(mReadCookie) {
+                Map<String, List<String>> map = mConnection.getHeaderFields();
                 String cookieFromServer = mConnection.getHeaderField("Set-Cookie");
                 SessionManager.setCookie(cookieFromServer);
             }

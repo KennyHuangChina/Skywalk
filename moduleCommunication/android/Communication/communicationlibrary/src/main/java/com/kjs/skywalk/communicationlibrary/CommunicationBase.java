@@ -108,8 +108,8 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
 
     @Override
     public int doBeforeConnect(HttpConnector http) {
-        http.setReadCookie(false);
-        http.setWriteCookie(false);
+        http.setReadCookie(true);
+        http.setWriteCookie(true);
         return 0;
     }
 }

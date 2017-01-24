@@ -35,13 +35,6 @@ class CommandTest extends CommunicationBase {
     }
 
     @Override
-    public int doBeforeConnect(HttpConnector http) {
-        http.setReadCookie(false);
-        http.setWriteCookie(true);
-        return 0;
-    }
-
-    @Override
     public int doOperation(HashMap<String, String> map, CommunicationInterface.CICommandListener commandListener, CommunicationInterface.CIProgressListener progressListener) {
         Log.i(TAG, "doOperation");
 
