@@ -15,7 +15,8 @@ import org.json.JSONObject;
  * Created by Jackie on 2017/1/20.
  */
 
-class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.CheckParameter, InternalDefines.CreateResultMap {
+class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.CheckParameter,
+        InternalDefines.CreateResultMap, InternalDefines.BeforeConnect {
     protected String TAG = "";
     protected Context mContext = null;
     protected String mMethodType = "";
@@ -28,12 +29,15 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
     protected CICommandListener mCommandListener = null;
 
     protected String mSessionID = "";
+    protected SessionManager mSessionManager = null;
 
     CommunicationBase(Context context) {
         Log.i(TAG, "Communication Base Constructor");
         mContext = context;
         mUtils = new MyUtils(context);
         mServerURL = ServerURL.mServerUri;
+
+        mSessionManager = SessionManager.getManager(context);
     }
 
     @Override
@@ -51,6 +55,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                 http.setURL(mServerURL, mCommandURL);
                 http.setRequestMethod(mMethodType);
                 http.setRequestData(mRequestData);
+                doBeforeConnect(http);
                 if((retValue = http.connect()) != InternalDefines.ERROR_CODE_OK) {
                     String strError = InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Can't connect to server. error: " +  strError);
@@ -60,6 +65,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                 }
 
                 if((retValue = http.sendRequest(mRequestData)) != InternalDefines.ERROR_CODE_OK) {
+                    http.disconnect();
                     String strError = InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Can't connect to server. error: " +  strError);
                     returnCode = "" + retValue;
@@ -98,5 +104,12 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
     @Override
     public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
         return null;
+    }
+
+    @Override
+    public int doBeforeConnect(HttpConnector http) {
+        http.setReadCookie(false);
+        http.setWriteCookie(false);
+        return 0;
     }
 }

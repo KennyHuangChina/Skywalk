@@ -22,11 +22,18 @@ class InternalDefines {
     public interface CreateResultMap {
         HashMap<String, String> doCreateResultMap(JSONObject jObject);
     }
+    public interface BeforeConnect {
+        int doBeforeConnect(HttpConnector http);
+    }
+    public interface AfterConnect {
+        int doAfterConnect(HttpConnector http);
+    }
 
     //Log Tags defines
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
-    public static final String TAG_COMMUNICATION_MANAGER                   = "CommunicationManager";
+    public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";
     public static final String TAG_COMMUNICATION_UTILS                      = "CommunicationUtils";
+    public static final String TAG_COMMUNICATION_SESSION_MANAGER            = "SessionManager";
 
     //Error Code Defines
     public static final int     ERROR_CODE_OK                               = 0x0;

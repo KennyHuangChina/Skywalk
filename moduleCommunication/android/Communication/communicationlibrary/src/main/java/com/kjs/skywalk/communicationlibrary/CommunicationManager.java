@@ -15,12 +15,14 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
 public class CommunicationManager {
     private Context mContext = null;
     private CommunicationBase mOperation = null;
+    private SessionManager mSessionManager = null;
 
     private MyUtils mUtils = null;
 
     public CommunicationManager(Context context) {
         mContext = context;
         mUtils= new MyUtils(context);
+        mSessionManager = SessionManager.getManager(context);
     }
 
     public int execute(String command, HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
@@ -58,6 +60,8 @@ public class CommunicationManager {
             operation = new LogInByPassword(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
             operation = new LogOut(mContext);
+        } else if(command.equals(CommunicationCommand.CC_TEST)) {
+            operation = new CommandTest(mContext);
         }
 
         return operation;

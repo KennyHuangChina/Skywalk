@@ -59,7 +59,19 @@ public class MainActivityFragment extends Fragment
         return view;
     }
 
-    private void showResult(HashMap<String, String> map) {
+    private void showResult(String command, HashMap<String, String> map) {
+        if(command != null || !command.isEmpty()) {
+            mResultString = command;
+            mResultString += "\n\n\n";
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTextViewResult.setText(mResultString);
+                }
+            });
+        }
+
         if(map == null || map.size()== 0) {
             return;
         }
@@ -82,7 +94,7 @@ public class MainActivityFragment extends Fragment
     public void onCommandFinished(String command, String returnCode, String description, HashMap<String, String> map) {
         if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
             if(returnCode.equals("0")) {
-                showResult(map);
+                showResult(command, map);
             } else {
                 Log.e(TAG, "Command "+ CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO + " finished with error: " + description);
             }

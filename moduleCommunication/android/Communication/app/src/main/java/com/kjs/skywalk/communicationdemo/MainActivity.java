@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,5 +102,12 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Log.i(TAG, "onDestroy");
     }
 }

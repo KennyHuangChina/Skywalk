@@ -48,6 +48,8 @@ class HttpConnector {
     private URL mURL = null;
     private HttpURLConnection mConnection = null;
     private String mResponseString = "";
+    private boolean mReadCookie = false;
+    private boolean mWriteCookie = false;
 
     private static final String BOUNDARY_STRING = "skywalk_http_boundary";
     private static final String BOUNDARY_START = "--" + BOUNDARY_STRING + "\r\n";
@@ -81,6 +83,14 @@ class HttpConnector {
         } else {
             mRequestData = strRequest;
         }
+    }
+
+    public void setReadCookie(boolean read) {
+        mReadCookie = read;
+    }
+
+    public void setWriteCookie(boolean write) {
+        mWriteCookie = write;
     }
 
     public int connect() {
@@ -178,8 +188,13 @@ class HttpConnector {
         }
 
         mJsonObj = null;
-
         mResponseString = "";
+        if(mWriteCookie) {
+            String cookie = SessionManager.getCookie();
+            if (cookie != null && !cookie.isEmpty()) {
+                mConnection.setRequestProperty("Cookie", cookie);
+            }
+        }
 
         try {
             if(mMethod.equals("POST")) {
@@ -245,6 +260,11 @@ class HttpConnector {
             } else if(mMethod.equals("GET")) {
                 mConnection.setRequestMethod(mMethod);
                 mConnection.setDoOutput(false);
+            }
+
+            if(mReadCookie) {
+                String cookieFromServer = mConnection.getHeaderField("Set-Cookie");
+                SessionManager.setCookie(cookieFromServer);
             }
 
             InputStream in = new BufferedInputStream(mConnection.getInputStream());
