@@ -19,6 +19,7 @@ func (h *HouseController) URLMapping() {
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
+	h.Mapping("AddProperty", h.AddProperty)
 }
 
 // @Title GetPropertyInfo
@@ -55,6 +56,49 @@ func (this *HouseController) GetPropertyInfo() {
 	err, pif := models.GetPropertyInfo(pid)
 	if nil == err {
 		result.PropInfo = pif
+	}
+}
+
+// @Title AddProperty
+// @Description get property list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /property [post]
+func (this *HouseController) AddProperty() {
+	FN := "[AddProperty] "
+	beego.Warn("[--- API: AddProperty ---]")
+
+	var result ResAddProperty
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	/*uid*/ _, err = getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	prop := this.GetString("prop")
+	beego.Debug(FN, "prop:", prop)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddProperty(prop)
+	if nil == err {
+		result.Id = id
 	}
 }
 

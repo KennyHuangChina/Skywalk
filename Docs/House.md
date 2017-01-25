@@ -102,7 +102,20 @@
 	  		* ErrDesc		string		// error description
 ##
 
-###6. Add New House (By owner)
+### 6. Add New property
+	[Security]	private
+	[Request]
+  		* POST /v1/house/property
+	  		* prop			string 	// property name
+	[Response]
+		* SUCCESS:200 
+			* Id    		int		// new property id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+##
+
+### 7. Add New House (By owner)
 	[Security]	private
 	[Request]
   		* POST /v1/house/commit

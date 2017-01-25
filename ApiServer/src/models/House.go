@@ -9,6 +9,52 @@ import (
 )
 
 /**
+*	add property
+*	Arguments:
+*		prop	- property name
+*	Returns
+*		err 	- error info
+*		id		- new property id
+ */
+func AddProperty(prop string) (err error, id int64) {
+	FN := "[AddProperty] "
+	beego.Trace(FN, "prop:", prop)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if 0 == len(prop) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property name:%s", prop)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	p := TblProperty{Name: prop}
+	errt := o.Read(&p, "Name")
+	if nil == errt { // property already exist, return directly
+		id = p.Id
+		return
+	}
+
+	// add into table
+	n := TblProperty{Name: prop}
+	newId, errT := o.Insert(&n)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	beego.Warn(FN, "Notify administrator or agency to complete the new property information")
+
+	id = newId
+	return
+}
+
+/**
 *	Get property list
 *	Arguments:
 *		pn 		- property name. whole or partial

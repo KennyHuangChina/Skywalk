@@ -83,6 +83,12 @@ type ResGetPropertyList struct {
 	Properties []commdef.PropInfo
 }
 
+// result of API add property
+type ResAddProperty struct {
+	ResCommon
+	Id int64
+}
+
 // result of API get property info
 type ResGetPropInfo struct {
 	ResCommon
