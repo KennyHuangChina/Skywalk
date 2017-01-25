@@ -8,7 +8,8 @@
 		"1df22bb3-03aa-a4c2-cca7-ccf1eacbbcaa",
 		"589b49c3-3845-1261-0879-64f7b74ea8e5",
 		"0090ca4f-ea4d-ba22-847c-51830085a6d9",
-		"92e50c86-d23b-ac49-6f4a-48a3e4bfd118"
+		"f4043d1c-3d00-8e29-a7f6-99048c8f70f3",
+		"da8ced73-c29f-bc50-c147-46fcf5de13fd"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -67,31 +68,6 @@
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
 		},
 		{
-			"id": "92e50c86-d23b-ac49-6f4a-48a3e4bfd118",
-			"headers": "",
-			"url": "http://ub1604-skywalk-:8080/v1/house/property",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "POST",
-			"data": [
-				{
-					"key": "prop",
-					"value": "世茂.蝶湖湾",
-					"type": "text",
-					"enabled": true
-				}
-			],
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485351775459,
-			"name": "http://ub1604-skywalk-:8080/v1/house/property",
-			"description": "",
-			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
-		},
-		{
 			"id": "bfefe4a6-5253-6989-af2e-a48c961785ae",
 			"headers": "",
 			"url": "http://ub1604-skywalk-:8080/v1/house/property/1?sid=xxxxx",
@@ -125,6 +101,108 @@
 			"time": 1484140218778,
 			"name": "http://ub1604-skywalk-:8080/v1/house/1?sid=xxxxx",
 			"description": "",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "da8ced73-c29f-bc50-c147-46fcf5de13fd",
+			"url": "http://ub1604-skywalk-:8080/v1/house/property",
+			"method": "POST",
+			"headers": "",
+			"data": [
+				{
+					"key": "prop",
+					"value": "世茂.蝶湖湾",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "1234",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/property",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "f4043d1c-3d00-8e29-a7f6-99048c8f70f3",
+			"url": "http://ub1604-skywalk-:8080/v1/house/commit",
+			"method": "POST",
+			"headers": "",
+			"data": [
+				{
+					"key": "prop",
+					"value": "3",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "build",
+					"value": "171",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "house",
+					"value": "1708",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "floor_total",
+					"value": "35",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "floor_this",
+					"value": "17",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Bedrooms",
+					"value": "3",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "LivingRooms",
+					"value": "2",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Bathrooms",
+					"value": "2",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Acreage",
+					"value": "13148",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/commit",
+			"description": "",
+			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
 		}
 	]

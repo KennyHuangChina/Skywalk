@@ -49,7 +49,7 @@
 			* Id    		int		// id
 			* Property		string	// property name
 			* PropertyAddr	string	// property address
-			* Bedrooms		int		// bathrooms quantity
+			* Bedrooms		int		// bedrooms quantity
 			* LivingRooms	int		// living room quantity
 			* Bathrooms		int		// bathroom quantity
 			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
@@ -119,13 +119,18 @@
 	[Security]	private
 	[Request]
   		* POST /v1/house/commit
-	  		* prop			int 	// house type. 0: all; 1: recommend; 2: deducted; 3: new
+	  		* prop			int 	// property id
+	  		* build			int		// building number
+	  		* house			string 	// house number
+	  		* floor_total	int		// total floor
+	  		* floor_this	int		// this floor
+			* Bedrooms		int		// bedrooms quantity
+			* LivingRooms	int		// living room quantity
+			* Bathrooms		int		// bathroom quantity
+			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
 	[Response]
 		* SUCCESS:200 
-			* Total    		int		// total number
-			* Count			int		// how many items fetched
-			* IDs			array
-				* Id		int		// house id
+			* Id    		int		// new house id
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

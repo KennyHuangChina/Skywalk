@@ -75,6 +75,12 @@ type ResGetHouseList struct {
 	IDs   []int64
 }
 
+// result of API add house
+type ResAddHouse struct {
+	ResCommon
+	Id int64
+}
+
 // result of API get property list
 type ResGetPropertyList struct {
 	ResCommon

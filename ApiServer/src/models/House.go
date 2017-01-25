@@ -187,7 +187,7 @@ func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched i
 *		hd 	- house digest info
  */
 func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
-	FN := "[GetUserInfo] "
+	FN := "[GetHouseDigestInfo] "
 	beego.Trace(FN, "hid:", hid)
 
 	defer func() {
@@ -246,7 +246,7 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 *		hif - house info
 **/
 func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
-	FN := "[GetUserInfo] "
+	FN := "[GetHouseInfo] "
 	beego.Trace(FN, "hid:", hid)
 
 	defer func() {
@@ -286,6 +286,30 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 }
 
 /**
+*	Add New House
+*	Arguments:
+*		id - property id
+*	Returns
+*		err - error info
+*		id 	- new house info
+ */
+func AddHouse(prop int64, building_no int, house_no string, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage int) (err error, id int64) {
+	FN := "[AddHouse] "
+	beego.Trace(FN, "prop:", prop, ", building_no:", building_no, ", house_no:", house_no, ", floor_total:", floor_total, ", floor_this:", floor_this,
+		", bedrooms:", bedrooms, ", livingrooms:", livingrooms, ", bathrooms:", bathrooms, ", acreage:", acreage)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+
+	return
+}
+
+/**
 *	Get property information by id
 *	Arguments:
 *		id - property id
@@ -294,7 +318,7 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 *		hif - property info
  */
 func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
-	FN := "[GetUserInfo] "
+	FN := "[GetPropertyInfo] "
 	beego.Trace(FN, "pid:", pid)
 
 	defer func() {

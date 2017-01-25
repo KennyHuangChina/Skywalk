@@ -16,6 +16,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseInfo", h.GetHouseInfo)
 	h.Mapping("GetHouseDigestInfo", h.GetHouseDigestInfo)
 	h.Mapping("GetHouseList", h.GetHouseList)
+	h.Mapping("AddHouse", h.AddHouse)
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
@@ -148,6 +149,56 @@ func (this *HouseController) GetPropertyList() {
 		result.Total = total
 		result.Count = fetched
 		result.Properties = pl
+	}
+}
+
+// @Title AddHouse
+// @Description get house list by type
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /commit [post]
+func (this *HouseController) AddHouse() {
+	FN := "[AddHouse] "
+	beego.Warn("[--- API: AddHouse ---]")
+
+	var result ResAddHouse
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	/*uid*/ _, err = getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	prop, _ := this.GetInt64("prop")
+	building_no, _ := this.GetInt("build")
+	house_no := this.GetString("house")
+	floor_total, _ := this.GetInt("floor_total")
+	floor_this, _ := this.GetInt("floor_this")
+	bedrooms, _ := this.GetInt("Bedrooms")
+	livingrooms, _ := this.GetInt("LivingRooms")
+	bathrooms, _ := this.GetInt("Bathrooms")
+	acreage, _ := this.GetInt("Acreage")
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddHouse(prop, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage)
+	if nil == err {
+		result.Id = id
 	}
 }
 
