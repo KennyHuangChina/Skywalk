@@ -135,3 +135,23 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 8. modify House (By owner and agency)
+	[Security]	private
+	[Request]
+  		* PUT /v1/house/:id
+	  		* prop			int 	// property id
+	  		* build			int		// building number
+	  		* house			string 	// house number
+	  		* floor_total	int		// total floor
+	  		* floor_this	int		// this floor
+			* Bedrooms		int		// bedrooms quantity
+			* LivingRooms	int		// living room quantity
+			* Bathrooms		int		// bathroom quantity
+			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

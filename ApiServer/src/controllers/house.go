@@ -3,7 +3,7 @@ package controllers
 import (
 	// "encoding/json"
 	// "fmt"
-	// "ApiServer/commdef"
+	"ApiServer/commdef"
 	"ApiServer/models"
 	"github.com/astaxie/beego"
 )
@@ -17,6 +17,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseDigestInfo", h.GetHouseDigestInfo)
 	h.Mapping("GetHouseList", h.GetHouseList)
 	h.Mapping("AddHouse", h.AddHouse)
+	h.Mapping("ModifyHouse", h.ModifyHouse)
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
@@ -152,8 +153,61 @@ func (this *HouseController) GetPropertyList() {
 	}
 }
 
+// @Title ModifyHouse
+// @Description modify house info
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id [put]
+func (this *HouseController) ModifyHouse() {
+	FN := "[ModifyHouse] "
+	beego.Warn("[--- API: ModifyHouse ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	/*uid*/ _, err = getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	prop, _ := this.GetInt64("prop")
+	building_no, _ := this.GetInt("build")
+	house_no := this.GetString("house")
+	floor_total, _ := this.GetInt("floor_total")
+	floor_this, _ := this.GetInt("floor_this")
+	bedrooms, _ := this.GetInt("Bedrooms")
+	livingrooms, _ := this.GetInt("LivingRooms")
+	bathrooms, _ := this.GetInt("Bathrooms")
+	acreage, _ := this.GetInt("Acreage")
+	hif := commdef.HouseInfo{Id: hid, Property: prop, BuddingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
+		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage}
+
+	/*
+	 *	Processing
+	 */
+	err = models.ModifyHouse(&hif)
+	if nil == err {
+		// result.Id = id
+	}
+}
+
 // @Title AddHouse
-// @Description get house list by type
+// @Description add new house
 // @Success 200 {string}
 // @Failure 403 body is empty
 // @router /commit [post]
@@ -183,8 +237,8 @@ func (this *HouseController) AddHouse() {
 		return
 	}
 
-	prop, _ := this.GetInt64("prop")
 	agent, _ := this.GetInt64("agen")
+	prop, _ := this.GetInt64("prop")
 	building_no, _ := this.GetInt("build")
 	house_no := this.GetString("house")
 	floor_total, _ := this.GetInt("floor_total")
@@ -193,11 +247,13 @@ func (this *HouseController) AddHouse() {
 	livingrooms, _ := this.GetInt("LivingRooms")
 	bathrooms, _ := this.GetInt("Bathrooms")
 	acreage, _ := this.GetInt("Acreage")
+	hif := commdef.HouseInfo{Property: prop, BuddingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
+		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage}
 
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddHouse(uid, prop, agent, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage)
+	err, id := models.AddHouse(&hif, uid, agent)
 	if nil == err {
 		result.Id = id
 	}
