@@ -128,6 +128,7 @@
 			* LivingRooms	int		// living room quantity
 			* Bathrooms		int		// bathroom quantity
 			* Acreage		int		// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
+			* agen			int		// agency id
 	[Response]
 		* SUCCESS:200 
 			* Id    		int		// new house id

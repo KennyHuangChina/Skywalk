@@ -27,20 +27,22 @@ CREATE TABLE `tbl_house` (
   `building_no` int(11) NOT NULL DEFAULT '0',
   `floor_total` int(11) NOT NULL DEFAULT '0',
   `floor_this` int(11) NOT NULL DEFAULT '0',
-  `house_no` varchar(50) NOT NULL DEFAULT '',
+  `house_no` varchar(20) NOT NULL DEFAULT '',
   `bedrooms` int(11) NOT NULL DEFAULT '0',
   `livingrooms` int(11) NOT NULL DEFAULT '0',
   `bathrooms` int(11) NOT NULL DEFAULT '0',
   `acreage` int(11) NOT NULL DEFAULT '0',
-  `property_id` bigint(20) NOT NULL,
-  `cover` bigint(20) NOT NULL DEFAULT '0',
   `cover_img` bigint(20) NOT NULL DEFAULT '0',
+  `property_id` bigint(20) NOT NULL,
   `owner_id` bigint(20) NOT NULL,
   `agency_id` bigint(20) NOT NULL,
   `submit_time` datetime NOT NULL,
   `publish_time` datetime DEFAULT NULL,
   `modify_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `property_id` (`property_id`,`building_no`,`house_no`),
+  KEY `tbl_house_property_id` (`property_id`),
+  KEY `tbl_house_agency_id` (`agency_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,7 +52,7 @@ CREATE TABLE `tbl_house` (
 
 LOCK TABLES `tbl_house` WRITE;
 /*!40000 ALTER TABLE `tbl_house` DISABLE KEYS */;
-INSERT INTO `tbl_house` VALUES (1,175,30,15,'1505',3,2,1,11567,1,0,1,2,3,'2017-01-23 21:14:24',NULL,NULL),(2,56,28,9,'906',2,1,1,9549,1,0,1,10,4,'2017-01-23 21:14:33',NULL,NULL);
+INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',3,2,2,13148,0,1,4,0,'2017-01-26 07:39:04',NULL,NULL);
 /*!40000 ALTER TABLE `tbl_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,7 +154,6 @@ CREATE TABLE `tbl_house_tag` (
   `house` bigint(20) NOT NULL DEFAULT '0',
   `tag` bigint(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `house` (`house`,`tag`),
   KEY `tbl_house_tag_house` (`house`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -163,7 +164,7 @@ CREATE TABLE `tbl_house_tag` (
 
 LOCK TABLES `tbl_house_tag` WRITE;
 /*!40000 ALTER TABLE `tbl_house_tag` DISABLE KEYS */;
-INSERT INTO `tbl_house_tag` VALUES (1,1,1),(3,1,3),(2,2,2);
+INSERT INTO `tbl_house_tag` VALUES (1,1,1),(2,2,2),(3,1,3);
 /*!40000 ALTER TABLE `tbl_house_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,7 +236,7 @@ CREATE TABLE `tbl_property` (
   `address` varchar(200) NOT NULL DEFAULT '',
   `desc` varchar(1000) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +245,7 @@ CREATE TABLE `tbl_property` (
 
 LOCK TABLES `tbl_property` WRITE;
 /*!40000 ALTER TABLE `tbl_property` DISABLE KEYS */;
-INSERT INTO `tbl_property` VALUES (1,'世茂蝶湖湾','长江南路 666号','');
+INSERT INTO `tbl_property` VALUES (1,'世茂蝶湖湾','长江南路 666号',''),(2,'世茂.滨江国际','火星路 999号',''),(3,'世茂.滨江花园','',''),(4,'世茂.蝶湖湾','','');
 /*!40000 ALTER TABLE `tbl_property` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,6 +348,8 @@ CREATE TABLE `tbl_user` (
   `head` varchar(50) NOT NULL DEFAULT '',
   `role` int(11) NOT NULL DEFAULT '0',
   `pass` varchar(32) NOT NULL DEFAULT '',
+  `salt_tmp` varchar(32) NOT NULL DEFAULT '',
+  `enable` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `phone` (`phone`),
   UNIQUE KEY `login_name` (`login_name`)
@@ -359,8 +362,58 @@ CREATE TABLE `tbl_user` (
 
 LOCK TABLES `tbl_user` WRITE;
 /*!40000 ALTER TABLE `tbl_user` DISABLE KEYS */;
-INSERT INTO `tbl_user` VALUES (4,'15306261804','','f1c0fb8578e356746e0f98ce07b7a27f','','','','15306261804','',10,'');
+INSERT INTO `tbl_user` VALUES (4,'15306261804','','f1c0fb8578e356746e0f98ce07b7a27f','','','','15306261804','',10,'','',1);
 /*!40000 ALTER TABLE `tbl_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_user_group`
+--
+
+DROP TABLE IF EXISTS `tbl_user_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_user_group` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `admin` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_user_group`
+--
+
+LOCK TABLES `tbl_user_group` WRITE;
+/*!40000 ALTER TABLE `tbl_user_group` DISABLE KEYS */;
+INSERT INTO `tbl_user_group` VALUES (1,'管理员',1),(2,'经纪人',0);
+/*!40000 ALTER TABLE `tbl_user_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_user_group_member`
+--
+
+DROP TABLE IF EXISTS `tbl_user_group_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_user_group_member` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `group_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_user_group_member`
+--
+
+LOCK TABLES `tbl_user_group_member` WRITE;
+/*!40000 ALTER TABLE `tbl_user_group_member` DISABLE KEYS */;
+INSERT INTO `tbl_user_group_member` VALUES (1,2,4);
+/*!40000 ALTER TABLE `tbl_user_group_member` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -372,4 +425,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-23 21:41:51
+-- Dump completed on 2017-01-26 15:49:41

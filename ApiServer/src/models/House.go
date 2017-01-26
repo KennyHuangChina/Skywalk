@@ -288,14 +288,16 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 /**
 *	Add New House
 *	Arguments:
-*		id - property id
+*		oid - house owner id
+*		pid	- property id
+*		aid	- agency id
 *	Returns
 *		err - error info
 *		id 	- new house info
  */
-func AddHouse(prop int64, building_no int, house_no string, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage int) (err error, id int64) {
+func AddHouse(oid, pid, aid int64, building_no int, house_no string, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage int) (err error, id int64) {
 	FN := "[AddHouse] "
-	beego.Trace(FN, "prop:", prop, ", building_no:", building_no, ", house_no:", house_no, ", floor_total:", floor_total, ", floor_this:", floor_this,
+	beego.Trace(FN, "prop:", pid, ", building_no:", building_no, ", house_no:", house_no, ", floor_total:", floor_total, ", floor_this:", floor_this,
 		", bedrooms:", bedrooms, ", livingrooms:", livingrooms, ", bathrooms:", bathrooms, ", acreage:", acreage)
 
 	defer func() {
@@ -304,8 +306,32 @@ func AddHouse(prop int64, building_no int, house_no string, floor_total, floor_t
 		}
 	}()
 
-	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house")
+	qs = qs.Filter("Property__Id", pid).Filter("BuildingNo", building_no).Filter("HouseNo", house_no)
+	bExist := qs.Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", pid, building_no, house_no)}
+		return
+	}
 
+	tSubmit := time.Now().UTC()
+	submitTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tSubmit.Year(), tSubmit.Month(), tSubmit.Day(), tSubmit.Hour(), tSubmit.Minute(), tSubmit.Second())
+	sql := fmt.Sprintf(`INSERT INTO tbl_house(property_id, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage, owner_id, agency_id, submit_time) 
+							VALUES(%d, %d, '%s', %d, %d, %d, %d, %d, %d, %d, %d, '%s')`, pid, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage, oid, aid, submitTime)
+	res, errT := o.Raw(sql).Exec()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	newId, errT := res.LastInsertId()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	id = newId
 	return
 }
 

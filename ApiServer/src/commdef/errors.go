@@ -70,6 +70,7 @@ const (
 	ERR_COMMON_RES_NOTFOUND = 1102
 	ERR_COMMON_UNEXPECTED   = 1103
 	ERR_COMMON_NOT_LOGIN    = 1104
+	ERR_COMMON_DUPLICATE    = 1105
 
 	// user login
 	ERR_COMMON_CAPTCHA_SERVER        = 1201
@@ -98,6 +99,7 @@ var ErrorDesc = map[int64]string{
 	ERR_COMMON_RES_NOTFOUND: "Resource not found",
 	ERR_COMMON_UNEXPECTED:   "Unexpect error",
 	ERR_COMMON_NOT_LOGIN:    "User not login",
+	ERR_COMMON_DUPLICATE:    "Duplicate resource",
 
 	// user login
 	ERR_COMMON_CAPTCHA_SERVER:        "Captchar server error",

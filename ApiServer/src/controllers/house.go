@@ -178,12 +178,13 @@ func (this *HouseController) AddHouse() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
+	uid, err := getLoginUser(this.Controller)
 	if nil != err {
 		return
 	}
 
 	prop, _ := this.GetInt64("prop")
+	agent, _ := this.GetInt64("agen")
 	building_no, _ := this.GetInt("build")
 	house_no := this.GetString("house")
 	floor_total, _ := this.GetInt("floor_total")
@@ -196,7 +197,7 @@ func (this *HouseController) AddHouse() {
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddHouse(prop, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage)
+	err, id := models.AddHouse(uid, prop, agent, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage)
 	if nil == err {
 		result.Id = id
 	}

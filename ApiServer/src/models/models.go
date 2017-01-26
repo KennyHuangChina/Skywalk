@@ -63,7 +63,7 @@ type TblHouse struct {
 	BuildingNo  int
 	FloorTotal  int
 	FloorThis   int
-	HouseNo     string `orm:"size(50)"` // private info, only the house owner and agent could see
+	HouseNo     string `orm:"size(20)"` // private info, only the house owner and agent could see
 	Bedrooms    int
 	Livingrooms int
 	Bathrooms   int
@@ -77,6 +77,19 @@ type TblHouse struct {
 	SubmitTime  time.Time `orm:"auto_now_add;type(datetime)"`      // the time the owner submited
 	PublishTime time.Time `orm:"auto_now_add;type(datetime);null"` // the time the agency certificated and published
 	ModifyTime  time.Time `orm:"auto_now_add;type(datetime);null"` // the time the house has been modified
+}
+
+func (h *TblHouse) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Property"},
+		[]string{"Agency"},
+	}
+}
+
+func (h *TblHouse) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Property", "BuildingNo", "HouseNo"},
+	}
 }
 
 type TblRental struct {
@@ -250,6 +263,9 @@ func init() {
 	// o.Using("rtdb")
 	// dr := o.Driver()
 	// beego.Warn("dr:", dr)
+
+	// /*_, err :=*/ o.Raw("CREATE UNIQUE INDEX house_id ON tbl_house (property_id, building_no, house_no)").Exec()
+	// beego.Debug("[init] err:", err.Error())
 
 	orm.RunSyncdb("default", false, true) // sync tables
 }
