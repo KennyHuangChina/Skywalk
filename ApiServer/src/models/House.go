@@ -352,6 +352,45 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 }
 
 /**
+*	Certify House
+*	Arguments:
+*		hid - house id
+*	Returns
+*		err - error info
+ */
+func CertHouse(hid int64) (err error) {
+	FN := "[CertHouse] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if err = checkHouse(hid); nil != err {
+		return
+	}
+
+	o := orm.NewOrm()
+
+	// Update
+	tPublish := time.Now() //.UTC()
+	publishTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tPublish.Year(), tPublish.Month(), tPublish.Day(), tPublish.Hour(), tPublish.Minute(), tPublish.Second())
+	sql := fmt.Sprintf(`UPDATE tbl_house SET publish_time='%s' WHERE id=%d`, publishTime, hid)
+	res, errT := o.Raw(sql).Exec()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	numb, _ := res.RowsAffected()
+	beego.Debug(FN, "numb:", numb)
+
+	return
+}
+
+/**
 *	Add New House
 *	Arguments:
 *		oid - house owner id
@@ -900,14 +939,7 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	// do further checking
 	// house id
 	if !bAdd {
-		o := orm.NewOrm()
-		h := TblHouse{Id: hif.Id}
-		errT := o.Read(&h)
-		if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hif.Id)}
-			return
-		} else if nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		if err = checkHouse(hif.Id); nil != err {
 			return
 		}
 	}
@@ -918,6 +950,21 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	errT := o.Read(&p)
 	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Property:%d", hif.Property)}
+		return
+	} else if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
+func checkHouse(hid int64) (err error) {
+	o := orm.NewOrm()
+	h := TblHouse{Id: hid}
+	errT := o.Read(&h)
+	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
 		return
 	} else if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}

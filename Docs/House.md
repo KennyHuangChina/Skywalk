@@ -155,3 +155,14 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 9. certificate House (By agency)
+	[Security]	private
+	[Request]
+  		* POST /v1/house/cert/:id
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

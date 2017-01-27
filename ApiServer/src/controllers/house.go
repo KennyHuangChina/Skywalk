@@ -18,6 +18,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseList", h.GetHouseList)
 	h.Mapping("AddHouse", h.AddHouse)
 	h.Mapping("ModifyHouse", h.ModifyHouse)
+	h.Mapping("CertHouse", h.CertHouse)
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
@@ -151,6 +152,50 @@ func (this *HouseController) GetPropertyList() {
 		result.Count = fetched
 		result.Properties = pl
 	}
+}
+
+// @Title CertHouse
+// @Description modify house info
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /cert/:id [post]
+func (this *HouseController) CertHouse() {
+	FN := "[CertHouse] "
+	beego.Warn("[--- API: CertHouse ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	/*uid*/ _, err = getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+
+	/*
+	 *	Processing
+	 */
+	err = models.CertHouse(hid)
+	if nil == err {
+		// result.Id = id
+	}
+
+	return
 }
 
 // @Title ModifyHouse
