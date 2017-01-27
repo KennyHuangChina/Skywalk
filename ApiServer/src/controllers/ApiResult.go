@@ -75,8 +75,8 @@ type ResGetHouseList struct {
 	IDs   []int64
 }
 
-// result of API add house
-type ResAddHouse struct {
+// result of API add resource
+type ResAddResource struct {
 	ResCommon
 	Id int64
 }
@@ -87,12 +87,6 @@ type ResGetPropertyList struct {
 	Total      int64
 	Count      int64
 	Properties []commdef.PropInfo
-}
-
-// result of API add property
-type ResAddProperty struct {
-	ResCommon
-	Id int64
 }
 
 // result of API get property info

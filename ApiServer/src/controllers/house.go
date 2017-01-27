@@ -70,7 +70,7 @@ func (this *HouseController) AddProperty() {
 	FN := "[AddProperty] "
 	beego.Warn("[--- API: AddProperty ---]")
 
-	var result ResAddProperty
+	var result ResAddResource
 	var err error
 
 	defer func() {
@@ -215,7 +215,7 @@ func (this *HouseController) AddHouse() {
 	FN := "[AddHouse] "
 	beego.Warn("[--- API: AddHouse ---]")
 
-	var result ResAddHouse
+	var result ResAddResource
 	var err error
 
 	defer func() {
