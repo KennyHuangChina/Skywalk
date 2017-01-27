@@ -310,7 +310,44 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 		return
 	}
 
-	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	// if the house id(property + building + house_no) is conflict
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuddingNo).Filter("HouseNo", hif.HouseNo)
+	h := TblHouse{}
+	errT := qs.One(&h)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "h.Id:", h.Id, ", hif.Id:", hif.Id)
+	if h.Id != hif.Id {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuddingNo, hif.HouseNo)}
+		return
+	}
+
+	// Update
+	tModi := time.Now() //.UTC()
+	modifyTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tModi.Year(), tModi.Month(), tModi.Day(), tModi.Hour(), tModi.Minute(), tModi.Second())
+	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no=%d, floor_total=%d, floor_this=%d,
+							house_no='%s', bedrooms=%d, livingrooms=%d, bathrooms=%d, acreage=%d, modify_time='%s' WHERE id=%d`,
+		hif.Property, hif.BuddingNo, hif.FloorTotal, hif.FloorThis, hif.HouseNo, hif.Bedrooms, hif.Livingrooms, hif.Bathrooms, hif.Acreage, modifyTime, hif.Id)
+	res, errT := o.Raw(sql).Exec()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	numb, _ := res.RowsAffected()
+	beego.Debug(FN, "numb:", numb)
+
+	// t := TblHouse{Id: hif.Id}
+	// o.Read(&t)
+	// beego.Debug(FN, "t:", t)
+
+	// sql = "SELECT modify_time FROM tbl_house WHERE id=2"
+	// var m time.Time
+	// o.Raw(sql).QueryRow(&m)
+	// beego.Debug(FN, "m:", m)
+
 	return
 }
 
@@ -324,7 +361,7 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 *		err - error info
 *		id 	- new house info
  */
-func AddHouse(hif *commdef.HouseInfo, oid, aid int64 /*, building_no int, house_no string, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage int*/) (err error, id int64) {
+func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 	FN := "[AddHouse] "
 	beego.Trace(FN, "hif:", hif)
 
@@ -339,7 +376,17 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64 /*, building_no int, house_
 	if nil != err {
 		return
 	}
-	beego.Warn(FN, "TODO: argument checking, oid & aid")
+
+	errT, enable := checkUser(oid)
+	if nil != errT || !enable {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("owner:%d", oid)}
+		return
+	}
+	errT, enable = checkUser(aid)
+	if nil != errT || !enable {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
+		return
+	}
 
 	o := orm.NewOrm()
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuddingNo).Filter("HouseNo", hif.HouseNo)
@@ -349,7 +396,7 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64 /*, building_no int, house_
 		return
 	}
 
-	tSubmit := time.Now().UTC()
+	tSubmit := time.Now() // .UTC()
 	submitTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tSubmit.Year(), tSubmit.Month(), tSubmit.Day(), tSubmit.Hour(), tSubmit.Minute(), tSubmit.Second())
 	sql := fmt.Sprintf(`INSERT INTO tbl_house(property_id, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, bathrooms, acreage, owner_id, agency_id, submit_time) 
 							VALUES(%d, %d, '%s', %d, %d, %d, %d, %d, %d, %d, %d, '%s')`,
@@ -807,7 +854,7 @@ func getHouseCoverImg(hid int64) (err error, pic int64) {
 *		err 	- error info
 **/
 func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
-	FN := "[checkHouseInfo] "
+	// FN := "[checkHouseInfo] "
 
 	if !bAdd && hif.Id <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hif.Id)}
@@ -851,7 +898,31 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	}
 
 	// do further checking
-	beego.Warn(FN, "TODO: hif.Id, hif.Property")
+	// house id
+	if !bAdd {
+		o := orm.NewOrm()
+		h := TblHouse{Id: hif.Id}
+		errT := o.Read(&h)
+		if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hif.Id)}
+			return
+		} else if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	}
+
+	// property id
+	o := orm.NewOrm()
+	p := TblProperty{Id: hif.Property}
+	errT := o.Read(&p)
+	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Property:%d", hif.Property)}
+		return
+	} else if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
 
 	return
 }
