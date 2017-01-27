@@ -166,3 +166,15 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 10. Set House cover image (By house owner and agency)
+	[Security]	private
+	[Request]
+  		* PUT /v1/house/covimg/:id
+	  		* img			int			// cover image id
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

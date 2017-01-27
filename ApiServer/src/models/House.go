@@ -352,6 +352,47 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 }
 
 /**
+*	Set house cover image id
+*	Arguments:
+*		hid - house id
+*		cid	- cover image id
+*	Returns
+*		err - error info
+ */
+func SetHouseCoverImage(hid, cid int64) (err error) {
+	FN := "[CertHouse] "
+	beego.Trace(FN, "hid:", hid, ", cid:", cid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if err = checkHouse(hid); nil != err {
+		return
+	}
+
+	if err = checkImage(cid); nil != err {
+		return
+	}
+
+	// Update
+	o := orm.NewOrm()
+
+	u := TblHouse{Id: hid, CoverImg: cid}
+	numb, errT := o.Update(&u, "CoverImg")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "numb:", numb)
+
+	return
+}
+
+/**
 *	Certify House
 *	Arguments:
 *		hid - house id
