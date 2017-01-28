@@ -178,3 +178,15 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 11. Set House agency (By administrator)
+	[Security]	private
+	[Request]
+  		* PUT /v1/house/agency/:id
+	  		* agent			int			// agency id
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

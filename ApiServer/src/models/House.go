@@ -352,6 +352,46 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 }
 
 /**
+*	Set house agency
+*	Arguments:
+*		hid - house id
+*		aid	- cover image id
+*	Returns
+*		err - error info
+ */
+func SetHouseAgency(hid, aid int64) (err error) {
+	FN := "[CertHouse] "
+	beego.Trace(FN, "hid:", hid, ", aid:", aid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if err = checkHouse(hid); nil != err {
+		return
+	}
+
+	if err = checkUser(aid); nil != err {
+		return
+	}
+
+	// Update
+	o := orm.NewOrm()
+
+	numb, errT := o.QueryTable("tbl_house").Filter("Id", hid).Update(orm.Params{"Agency": aid})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "numb:", numb)
+
+	return
+}
+
+/**
 *	Set house cover image id
 *	Arguments:
 *		hid - house id
@@ -457,13 +497,13 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 		return
 	}
 
-	errT, enable := checkUser(oid)
-	if nil != errT || !enable {
+	errT := checkUser(oid)
+	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("owner:%d", oid)}
 		return
 	}
-	errT, enable = checkUser(aid)
-	if nil != errT || !enable {
+	errT = checkUser(aid)
+	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
 		return
 	}

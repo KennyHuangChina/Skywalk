@@ -20,6 +20,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("ModifyHouse", h.ModifyHouse)
 	h.Mapping("CertHouse", h.CertHouse)
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
+	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
@@ -200,7 +201,7 @@ func (this *HouseController) CertHouse() {
 }
 
 // @Title SetHouseCoverImage
-// @Description modify house info
+// @Description set house cover image
 // @Success 200 {string}
 // @Failure 403 body is empty
 // @router /covimg/:id [put]
@@ -237,6 +238,51 @@ func (this *HouseController) SetHouseCoverImage() {
 	 *	Processing
 	 */
 	err = models.SetHouseCoverImage(hid, cid)
+	if nil == err {
+		// result.Id = id
+	}
+
+	return
+}
+
+// @Title SetHouseAgency
+// @Description set house agency
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /agency/:id [put]
+func (this *HouseController) SetHouseAgency() {
+	FN := "[SetHouseAgency] "
+	beego.Warn("[--- API: SetHouseAgency ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	/*uid*/ _, err = getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	aid, _ := this.GetInt64("agent")
+
+	/*
+	 *	Processing
+	 */
+	err = models.SetHouseAgency(hid, aid)
 	if nil == err {
 		// result.Id = id
 	}

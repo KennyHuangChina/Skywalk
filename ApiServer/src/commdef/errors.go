@@ -23,7 +23,7 @@ func (se *SwError) FillError() {
 	// TODO: mapping the http response code with API resulut code here
 	case ERR_COMMON_BAD_ARGUMENT:
 		se.HttpRespcode = 400
-	case ERR_COMMON_CAPTCHA_SERVER:
+	case ERR_USERLOGIN_CAPTCHA_SERVER:
 		se.HttpRespcode = 503
 	// case ERR_ADMIN_LOGIN_NAME_DUPLICATE:
 	// case ERR_ADMIN_LOGIN_CAPTCHA_FAIL:
@@ -72,10 +72,11 @@ const (
 	ERR_COMMON_NOT_LOGIN    = 1104
 	ERR_COMMON_DUPLICATE    = 1105
 
-	// user login
-	ERR_COMMON_CAPTCHA_SERVER        = 1201
+	// user
+	ERR_USERLOGIN_CAPTCHA_SERVER     = 1201
 	ERR_USERLOGIN_NO_PASSWORD        = 1202
 	ERR_USERLOGIN_INCORRECT_PASSWORD = 1203
+	ERR_USER_NOT_ENABLE              = 1204
 
 	// fetch sms
 	ERR_SMS_EMPTY_PHONE      = 1301
@@ -102,9 +103,10 @@ var ErrorDesc = map[int64]string{
 	ERR_COMMON_DUPLICATE:    "Duplicate resource",
 
 	// user login
-	ERR_COMMON_CAPTCHA_SERVER:        "Captchar server error",
+	ERR_USERLOGIN_CAPTCHA_SERVER:     "Captchar server error",
 	ERR_USERLOGIN_NO_PASSWORD:        "empty password",
 	ERR_USERLOGIN_INCORRECT_PASSWORD: "incorrect password",
+	ERR_USER_NOT_ENABLE:              "User not enabled",
 
 	// fetch sms
 	ERR_SMS_EMPTY_PHONE:      "Phone number is empty",

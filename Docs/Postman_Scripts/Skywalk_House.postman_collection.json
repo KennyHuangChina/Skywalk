@@ -12,7 +12,8 @@
 		"da8ced73-c29f-bc50-c147-46fcf5de13fd",
 		"fa282161-3ac4-17b7-95a1-05760b8bbf8a",
 		"aa0629f7-bb58-d11a-19c8-9ec31ba4a469",
-		"4ef24007-69d0-a44e-82a1-6754723c484c"
+		"4ef24007-69d0-a44e-82a1-6754723c484c",
+		"3140fc69-ae35-71a2-0d9c-10dc53b8c504"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -49,6 +50,30 @@
 			"pathVariables": {},
 			"version": 2,
 			"name": "http://ub1604-skywalk-:8080/v1/house/digest/1?sid=xxxxx",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "3140fc69-ae35-71a2-0d9c-10dc53b8c504",
+			"url": "http://ub1604-skywalk-:8080/v1/house/agency/2",
+			"method": "PUT",
+			"headers": "",
+			"data": [
+				{
+					"key": "agent",
+					"value": "4",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/agency/2",
 			"description": "",
 			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"

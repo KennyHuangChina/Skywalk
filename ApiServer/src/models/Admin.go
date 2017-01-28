@@ -455,9 +455,8 @@ func postSms(phone, sms string) (err error) {
 *		uid		- user id
 *	Returns
 *		err		- error
-*		enable	- is this user enabled
 **/
-func checkUser(uid int64) (err error, enable bool) {
+func checkUser(uid int64) (err error) {
 	// FN := "[checkUser] "
 
 	o := orm.NewOrm()
@@ -472,7 +471,11 @@ func checkUser(uid int64) (err error, enable bool) {
 		return
 	}
 
-	enable = u.Enable
+	if !u.Enable {
+		err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
+		return
+	}
+
 	return
 }
 
@@ -487,13 +490,9 @@ func checkUser(uid int64) (err error, enable bool) {
 func isAgency(uid int64) (err error, agency bool) {
 	FN := "[isAgency] "
 
-	err, enable := checkUser(uid)
+	err = checkUser(uid)
 	if nil != err {
 		return
-	}
-
-	if !enable {
-		// TODO:
 	}
 
 	// check if the user in agency group
@@ -526,13 +525,9 @@ func isAgency(uid int64) (err error, agency bool) {
 func isAdministrator(uid int64) (err error, admin bool) {
 	FN := "[isAdministrator] "
 
-	err, enable := checkUser(uid)
+	err = checkUser(uid)
 	if nil != err {
 		return
-	}
-
-	if !enable {
-		// TODO:
 	}
 
 	// check if the user in agency group
