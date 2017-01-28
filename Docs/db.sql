@@ -43,7 +43,7 @@ CREATE TABLE `tbl_house` (
   UNIQUE KEY `property_id` (`property_id`,`building_no`,`house_no`),
   KEY `tbl_house_property_id` (`property_id`),
   KEY `tbl_house_agency_id` (`agency_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +52,7 @@ CREATE TABLE `tbl_house` (
 
 LOCK TABLES `tbl_house` WRITE;
 /*!40000 ALTER TABLE `tbl_house` DISABLE KEYS */;
-INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',3,2,2,13148,0,1,4,0,'2017-01-26 07:39:04',NULL,NULL);
+INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',3,2,2,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-27 20:45:49'),(3,177,35,17,'1505',3,2,2,13148,0,1,4,2,'2017-01-26 12:31:55',NULL,NULL);
 /*!40000 ALTER TABLE `tbl_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +210,7 @@ CREATE TABLE `tbl_pictures` (
   `desc` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `tbl_pictures_type_major_type_miner_ref_id` (`type_major`,`type_miner`,`ref_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +219,7 @@ CREATE TABLE `tbl_pictures` (
 
 LOCK TABLES `tbl_pictures` WRITE;
 /*!40000 ALTER TABLE `tbl_pictures` DISABLE KEYS */;
-INSERT INTO `tbl_pictures` VALUES (1,200,1,1,'房型图');
+INSERT INTO `tbl_pictures` VALUES (1,200,1,1,'房型图'),(2,200,2,1,'客厅');
 /*!40000 ALTER TABLE `tbl_pictures` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,8 +235,9 @@ CREATE TABLE `tbl_property` (
   `name` varchar(50) NOT NULL DEFAULT '',
   `address` varchar(200) NOT NULL DEFAULT '',
   `desc` varchar(1000) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,7 +246,7 @@ CREATE TABLE `tbl_property` (
 
 LOCK TABLES `tbl_property` WRITE;
 /*!40000 ALTER TABLE `tbl_property` DISABLE KEYS */;
-INSERT INTO `tbl_property` VALUES (1,'世茂蝶湖湾','长江南路 666号',''),(2,'世茂.滨江国际','火星路 999号',''),(3,'世茂.滨江花园','',''),(4,'世茂.蝶湖湾','','');
+INSERT INTO `tbl_property` VALUES (1,'世茂.蝶湖湾','',''),(2,'长顺.滨江皇冠','长江南路 666号','1234');
 /*!40000 ALTER TABLE `tbl_property` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -425,4 +426,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-26 15:49:41
+-- Dump completed on 2017-01-28 21:20:51

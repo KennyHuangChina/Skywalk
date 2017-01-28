@@ -180,11 +180,13 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 11. Set House agency (By administrator)
+### 11. Update property info (By house owner and agency)
 	[Security]	private
 	[Request]
-  		* PUT /v1/house/agency/:id
-	  		* agent			int			// agency id
+  		* PUT /v1/house/property/:id
+	  		* name    		string		// property name
+	  		* addr 			string		// property location
+	  		* desc    		string		// property description
 	[Response]
 		* SUCCESS:200 
 		* ERR: 4XX,5XX

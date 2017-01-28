@@ -58,6 +58,12 @@ type TblProperty struct {
 	Houses  []*TblHouse `orm:"reverse(many)"`
 }
 
+func (p *TblProperty) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Name"},
+	}
+}
+
 type TblHouse struct {
 	Id          int64
 	BuildingNo  int
