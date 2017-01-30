@@ -22,6 +22,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
+	h.Mapping("GetBehalfList", h.GetBehalfList)
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
@@ -486,6 +487,54 @@ func (this *HouseController) AddHouse() {
 	err, id := models.AddHouse(&hif, uid, agent)
 	if nil == err {
 		result.Id = id
+	}
+}
+
+// @Title GetBehalfList
+// @Description get house list by type
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /behalf [get]
+func (this *HouseController) GetBehalfList() {
+	FN := "[GetBehalfList] "
+	beego.Warn("[--- API: GetBehalfList ---]")
+
+	var result ResGetHouseList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	tp, _ := this.GetInt("type")
+	begin, _ := this.GetInt64("bgn")
+	count, _ := this.GetInt64("cnt")
+
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, total, fetched, ids := models.GetBehalfList(tp, begin, count, uid)
+	if nil == err {
+		result.Total = total
+		result.Count = fetched
+		result.IDs = ids
 	}
 }
 

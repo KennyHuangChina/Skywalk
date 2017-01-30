@@ -204,3 +204,21 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 13. My represent houses (By agency)
+	[Security]	private
+	[Request]
+  		* GET /v1/house/behalf?type=<>?bgn=<>&cnt=<>
+	  		* type			int 	// house list type. 0: all; 1: to rent; 2: rented; 3: to sale
+	  		* bgn			int		// from which item to fetch
+	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
+	[Response]
+		* SUCCESS:200 
+			* Total    		int		// total number
+			* Count			int		// how many items fetched
+			* IDs			array
+				* Id		int		// house id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

@@ -61,6 +61,58 @@ func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched i
 }
 
 /**
+*	Get house list by id
+*	Arguments:
+*		typ		- list type. ref to commdef.BEHALF_TYPE_XXXX
+*		begin	- from which item to fetch
+*		tofetch	- how many items to fetch
+*		uid		- login user
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		hids	- house id list
+**/
+func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetched int64, hids []int64) {
+	FN := "[GetBehalfList] "
+	beego.Trace(FN, "typ:", typ, ", begin:", begin, ", tofetch:", tofetch, ", uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	if begin < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin:%d", begin)}
+		return
+	}
+	if tofetch < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tofetch:%d", tofetch)}
+		return
+	}
+	if err = checkUser(uid); nil != err {
+		return
+	}
+
+	sql_cnt := ""
+	switch typ {
+	case commdef.BEHALF_TYPE_ALL:
+		sql_cnt = fmt.Sprintf("SELECT COUNT(*) AS count FROM tbl_house WHERE agency_id='%d'", uid)
+	case commdef.BEHALF_TYPE_TO_RENT:
+	case commdef.BEHALF_TYPE_RENTED:
+	case commdef.BEHALF_TYPE_TO_SALE:
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("list type:%d", typ)}
+		return
+	}
+	beego.Debug(FN, "sql_cnt:", sql_cnt)
+
+	return
+}
+
+/**
 *	Get house information by id
 *	Arguments:
 *		id - house id

@@ -88,6 +88,13 @@ const (
 	HOUSE_LIST_Max = 3
 )
 
+const (
+	BEHALF_TYPE_ALL     = 0
+	BEHALF_TYPE_TO_RENT = 1
+	BEHALF_TYPE_RENTED  = 2
+	BEHALF_TYPE_TO_SALE = 3
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events
