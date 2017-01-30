@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="6dp"
+    android:layout_marginTop="6dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left"
+            android:textSize="21sp"
+            android:textColor="#242224"
+            android:text="家具：沙发+茶几"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textSize="21sp"
+            android:textColor="#242224"
+            android:text="1"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:contentDescription=""
+        android:background="#E5E5E5" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:gravity="left|center_vertical"
+        android:textSize="18sp"
+        android:textColor="#939499"
+        android:text="咖啡色真皮沙发2个，茶几1个，靠垫4个"/>
+
+</LinearLayout>
