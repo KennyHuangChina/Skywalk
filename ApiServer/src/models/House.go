@@ -252,13 +252,15 @@ func SetHouseAgency(hid, aid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	if err = checkHouse(hid); nil != err {
+	if err, _ = checkHouse(hid); nil != err {
 		return
 	}
 
 	if err = checkUser(aid); nil != err {
 		return
 	}
+
+	beego.Warn(FN, "permission checking")
 
 	// Update
 	o := orm.NewOrm()
@@ -292,13 +294,15 @@ func SetHouseCoverImage(hid, cid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	if err = checkHouse(hid); nil != err {
+	if err, _ = checkHouse(hid); nil != err {
 		return
 	}
 
 	if err = checkImage(cid); nil != err {
 		return
 	}
+
+	beego.Warn(FN, "Permission checking ...")
 
 	// Update
 	o := orm.NewOrm()
@@ -332,9 +336,11 @@ func CertHouse(hid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	if err = checkHouse(hid); nil != err {
+	if err, _ = checkHouse(hid); nil != err {
 		return
 	}
+
+	beego.Warn(FN, "Permission checking ...")
 
 	o := orm.NewOrm()
 
@@ -672,7 +678,7 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 	}()
 
 	/* Arguments checking*/
-	err, h := checkHouse2(hid)
+	err, h := checkHouse(hid)
 	if nil != err {
 		return err
 	}
@@ -1023,7 +1029,7 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	// do further checking
 	// house id
 	if !bAdd {
-		if err = checkHouse(hif.Id); nil != err {
+		if err, _ = checkHouse(hif.Id); nil != err {
 			return
 		}
 	}
@@ -1043,27 +1049,7 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	return
 }
 
-func checkHouse(hid int64) (err error) {
-	if hid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
-		return
-	}
-
-	o := orm.NewOrm()
-	h := TblHouse{Id: hid}
-	errT := o.Read(&h)
-	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
-		return
-	} else if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		return
-	}
-
-	return
-}
-
-func checkHouse2(hid int64) (err error, h TblHouse) {
+func checkHouse(hid int64) (err error, h TblHouse) {
 	if hid <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
 		return
