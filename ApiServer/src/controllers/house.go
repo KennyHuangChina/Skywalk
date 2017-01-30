@@ -21,6 +21,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("CertHouse", h.CertHouse)
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
+	h.Mapping("RecommendHouse", h.RecommendHouse)
 
 	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
 	h.Mapping("GetPropertyList", h.GetPropertyList)
@@ -285,6 +286,51 @@ func (this *HouseController) SetHouseCoverImage() {
 	 *	Processing
 	 */
 	err = models.SetHouseCoverImage(hid, cid)
+	if nil == err {
+		// result.Id = id
+	}
+
+	return
+}
+
+// @Title RecommendHouse
+// @Description recommend/unrecomment house
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /recommend/:id [put]
+func (this *HouseController) RecommendHouse() {
+	FN := "[RecommendHouse] "
+	beego.Warn("[--- API: RecommendHouse ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	act, _ := this.GetInt("act")
+
+	/*
+	 *	Processing
+	 */
+	err = models.RecommendHouse(hid, uid, act)
 	if nil == err {
 		// result.Id = id
 	}

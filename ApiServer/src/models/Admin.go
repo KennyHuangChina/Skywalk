@@ -459,12 +459,17 @@ func postSms(phone, sms string) (err error) {
 func checkUser(uid int64) (err error) {
 	// FN := "[checkUser] "
 
+	if uid < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
 	o := orm.NewOrm()
 	u := TblUser{Id: uid}
 	errT := o.Read(&u)
 	if nil != errT {
 		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: errT.Error()}
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		} else {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		}

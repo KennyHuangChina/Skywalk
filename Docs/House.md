@@ -192,3 +192,15 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 12. recommend/unrecommend house (By agency)
+	[Security]	private
+	[Request]
+  		* PUT /v1/house/recommend/:id
+	  		* act    		int		// 1: recommend; 2: unrecommend
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

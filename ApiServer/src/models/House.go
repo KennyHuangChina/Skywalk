@@ -653,6 +653,132 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 }
 
 /**
+*	Recommend/Unrecommend house
+*	Arguments:
+*		hid		- house id
+*		uid		- login user id
+*		act		- action. 1: recommend; 2: unrecommend
+*	Returns
+*		err 	- error info
+ */
+func RecommendHouse(hid, uid int64, act int) (err error) {
+	FN := "[RecommendHouse] "
+	beego.Trace(FN, "hid:", hid, ", act:", act, ", uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Arguments checking*/
+	err, h := checkHouse2(hid)
+	if nil != err {
+		return err
+	}
+	if err = checkUser(uid); nil != err {
+		return err
+	}
+
+	switch act {
+	case 1: // recomment
+		beego.Debug(FN, "Recommend house:", hid)
+		// checking
+		o := orm.NewOrm()
+		r := TblHouseRecommend{House: hid}
+		errT := o.Read(&r, "House")
+		if nil == errT { // found record
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+			return
+		} else if errT != orm.ErrNoRows && errT != orm.ErrMissPK { // other errors
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+
+		// right checking
+		nullTime := time.Time{}
+		// beego.Debug(FN, "nullTime:", nullTime, ", h.PublishTime:", h.PublishTime)
+		if nil == interface{}(h.PublishTime) || nullTime == h.PublishTime { // can not publish house not published
+			beego.Debug(FN, "not published")
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+			return
+		}
+
+		beego.Debug(FN, "h.Agency.Id:", h.Agency.Id)
+		bOK := false
+		if h.Agency.Id == uid {
+			bOK = true // agency could recommend houses represent by himself
+		} else {
+			errT, bAdmin := isAdministrator(uid)
+			beego.Debug(FN, "errT:", errT, ", bAdmin:", bAdmin)
+			if nil != errT {
+				err = errT
+				return
+			}
+			if bAdmin { // administrator could recomment any house
+				bOK = true
+			}
+		}
+		beego.Debug(FN, "bOK:", bOK)
+		if !bOK {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+			return
+		}
+
+		// Recommend
+		r.Who = uid
+		r.When = time.Now()
+		if /*id*/ _, errT := o.Insert(&r); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	case 2: // unrecommend
+		// checking
+		beego.Debug(FN, "Unrecommend house:", hid)
+		o := orm.NewOrm()
+		r := TblHouseRecommend{House: hid}
+		errT := o.Read(&r, "House")
+		if nil != errT { // recommend house does not exist
+			if errT == orm.ErrNoRows || errT == orm.ErrMissPK { // not found
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+			} else {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			}
+			return
+		}
+		// right checking
+		bOK := false
+		if r.Who == uid {
+			bOK = true
+		} else {
+			errT, bAdmin := isAdministrator(uid)
+			if nil != errT {
+				err = errT
+				return
+			}
+			if bAdmin {
+				bOK = true
+			}
+		}
+		if !bOK {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+			return
+		}
+		// unrecommend
+		if /*numb*/ _, errT := o.Delete(&TblHouseRecommend{Id: r.Id}); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("act:%d", act)}
+		return
+	}
+
+	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	return
+}
+
+/**
 *	Get recommend house list
 *	Arguments:
 *		begin	- from which item to fetch
@@ -808,6 +934,42 @@ func getHouseCoverImg(hid int64) (err error, pic int64) {
 }
 
 /**
+*	Get house agency
+*	Arguments:
+*		hid		- house id
+*	Returns
+*		err 	- error info
+*		aic		- agency id
+*		agency	- agency name
+**/
+func getHouseAgency(hid int64) (err error, aid int64, agency string) {
+	FN := "[getHouseAgency] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	h := TblHouse{Id: hid}
+	errT := o.Read(&h) // , "CoverImg")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	aid = h.Agency.Id
+	err, uif := GetUserInfo(aid)
+	if nil != err {
+		return
+	}
+	agency = uif.Name
+	return
+}
+
+/**
 *	Get house cover image
 *	Arguments:
 *		hif		- house information
@@ -882,6 +1044,11 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 }
 
 func checkHouse(hid int64) (err error) {
+	if hid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		return
+	}
+
 	o := orm.NewOrm()
 	h := TblHouse{Id: hid}
 	errT := o.Read(&h)
@@ -893,5 +1060,26 @@ func checkHouse(hid int64) (err error) {
 		return
 	}
 
+	return
+}
+
+func checkHouse2(hid int64) (err error, h TblHouse) {
+	if hid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	hT := TblHouse{Id: hid}
+	errT := o.Read(&hT)
+	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		return
+	} else if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	h = hT
 	return
 }

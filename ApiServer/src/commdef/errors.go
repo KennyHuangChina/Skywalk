@@ -71,6 +71,7 @@ const (
 	ERR_COMMON_UNEXPECTED   = 1103
 	ERR_COMMON_NOT_LOGIN    = 1104
 	ERR_COMMON_DUPLICATE    = 1105
+	ERR_COMMON_PERMISSION   = 1106
 
 	// user
 	ERR_USERLOGIN_CAPTCHA_SERVER     = 1201
@@ -101,6 +102,7 @@ var ErrorDesc = map[int64]string{
 	ERR_COMMON_UNEXPECTED:   "Unexpect error",
 	ERR_COMMON_NOT_LOGIN:    "User not login",
 	ERR_COMMON_DUPLICATE:    "Duplicate resource",
+	ERR_COMMON_PERMISSION:   "Permission Denied",
 
 	// user login
 	ERR_USERLOGIN_CAPTCHA_SERVER:     "Captchar server error",
