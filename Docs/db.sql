@@ -39,10 +39,15 @@ CREATE TABLE `tbl_house` (
   `submit_time` datetime NOT NULL,
   `publish_time` datetime DEFAULT NULL,
   `modify_time` datetime DEFAULT NULL,
+  `for_sale` int(11) NOT NULL DEFAULT '0',
+  `for_rent` int(11) NOT NULL DEFAULT '0',
+  `rent_stat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `property_id` (`property_id`,`building_no`,`house_no`),
   KEY `tbl_house_property_id` (`property_id`),
-  KEY `tbl_house_agency_id` (`agency_id`)
+  KEY `tbl_house_agency_id` (`agency_id`),
+  KEY `tbl_house_for_sale` (`for_sale`),
+  KEY `tbl_house_for_rent` (`for_rent`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,7 +57,7 @@ CREATE TABLE `tbl_house` (
 
 LOCK TABLES `tbl_house` WRITE;
 /*!40000 ALTER TABLE `tbl_house` DISABLE KEYS */;
-INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',3,2,2,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-27 20:45:49'),(3,177,35,17,'1505',3,2,2,13148,0,1,4,2,'2017-01-26 12:31:55',NULL,NULL);
+INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',3,2,2,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-27 20:45:49',1,1,1),(3,177,35,17,'1505',3,2,2,13148,0,1,4,4,'2017-01-26 12:31:55',NULL,NULL,1,1,2);
 /*!40000 ALTER TABLE `tbl_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -129,7 +134,7 @@ CREATE TABLE `tbl_house_recommend` (
   `when` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `house` (`house`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,7 +143,7 @@ CREATE TABLE `tbl_house_recommend` (
 
 LOCK TABLES `tbl_house_recommend` WRITE;
 /*!40000 ALTER TABLE `tbl_house_recommend` DISABLE KEYS */;
-INSERT INTO `tbl_house_recommend` VALUES (1,1,1,'2017-01-21 22:31:23');
+INSERT INTO `tbl_house_recommend` VALUES (1,1,1,'2017-01-21 22:31:23'),(7,2,4,'2017-01-30 20:08:38');
 /*!40000 ALTER TABLE `tbl_house_recommend` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -413,7 +418,7 @@ CREATE TABLE `tbl_user_group_member` (
 
 LOCK TABLES `tbl_user_group_member` WRITE;
 /*!40000 ALTER TABLE `tbl_user_group_member` DISABLE KEYS */;
-INSERT INTO `tbl_user_group_member` VALUES (1,2,4);
+INSERT INTO `tbl_user_group_member` VALUES (1,1,4);
 /*!40000 ALTER TABLE `tbl_user_group_member` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -426,4 +431,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-28 21:20:51
+-- Dump completed on 2017-01-31 15:48:44

@@ -95,6 +95,12 @@ const (
 	BEHALF_TYPE_TO_SALE = 3
 )
 
+const (
+	HOUSE_RENT_WAIT   = 1 // wait for renting
+	HOUSE_RENT_RENTED = 2 // already rented
+	HOUSE_RENT_DUE    = 3 // expire will be dued, typical is 1 month ago
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events

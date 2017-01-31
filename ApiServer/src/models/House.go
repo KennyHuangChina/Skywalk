@@ -96,18 +96,65 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 		return
 	}
 
-	sql_cnt := ""
+	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM tbl_house WHERE agency_id='%d'", uid)
 	switch typ {
 	case commdef.BEHALF_TYPE_ALL:
-		sql_cnt = fmt.Sprintf("SELECT COUNT(*) AS count FROM tbl_house WHERE agency_id='%d'", uid)
 	case commdef.BEHALF_TYPE_TO_RENT:
+		sql_cnt = sql_cnt + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
 	case commdef.BEHALF_TYPE_RENTED:
+		sql_cnt = sql_cnt + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_RENTED)
 	case commdef.BEHALF_TYPE_TO_SALE:
+		sql_cnt = sql_cnt + " AND for_sale=1"
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("list type:%d", typ)}
 		return
 	}
-	beego.Debug(FN, "sql_cnt:", sql_cnt)
+	// beego.Debug(FN, "sql_cnt:", sql_cnt)
+
+	o := orm.NewOrm()
+
+	cnt := int64(0)
+	errT := o.Raw(sql_cnt).QueryRow(&cnt)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	total = cnt
+	// beego.Debug(FN, "total:", total)
+
+	if 0 == tofetch { // user just want to know the total number
+		return
+	}
+
+	if begin >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin:%d", begin)}
+		return
+	}
+
+	// fetch real houses
+	sql := fmt.Sprintf("SELECT id FROM tbl_house WHERE agency_id='%d'", uid)
+	switch typ {
+	case commdef.BEHALF_TYPE_ALL:
+	case commdef.BEHALF_TYPE_TO_RENT:
+		sql = sql + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
+	case commdef.BEHALF_TYPE_RENTED:
+		sql = sql + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_RENTED)
+	case commdef.BEHALF_TYPE_TO_SALE:
+		sql = sql + " AND for_sale=1"
+	}
+	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, tofetch)
+	// beego.Debug(FN, "sql:", sql)
+
+	var ids []int64
+	numb, errT := o.Raw(sql).QueryRows(&ids)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	fetched = numb
+	hids = ids
+	// beego.Debug(FN, "fetched:", fetched)
+	// beego.Debug(FN, "hids:", hids)
 
 	return
 }
