@@ -425,8 +425,10 @@ func (this *HouseController) ModifyHouse() {
 	livingrooms, _ := this.GetInt("LivingRooms")
 	bathrooms, _ := this.GetInt("Bathrooms")
 	acreage, _ := this.GetInt("Acreage")
+	_4sale, _ := this.GetBool("4sale")
+	_4rent, _ := this.GetBool("4rent")
 	hif := commdef.HouseInfo{Id: hid, Property: prop, BuddingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
-		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage}
+		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage, ForSale: _4sale, ForRent: _4rent}
 
 	/*
 	 *	Processing
@@ -478,8 +480,10 @@ func (this *HouseController) AddHouse() {
 	livingrooms, _ := this.GetInt("LivingRooms")
 	bathrooms, _ := this.GetInt("Bathrooms")
 	acreage, _ := this.GetInt("Acreage")
+	_4sale, _ := this.GetBool("4sale")
+	_4rent, _ := this.GetBool("4rent")
 	hif := commdef.HouseInfo{Property: prop, BuddingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
-		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage}
+		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage, ForSale: _4sale, ForRent: _4rent}
 
 	/*
 	 *	Processing
@@ -641,7 +645,7 @@ func (this *HouseController) GetHouseInfo() {
 	FN := "[GetHouseInfo] "
 	beego.Warn("[--- API: GetHouseInfo ---]")
 
-	var result ResGetUserInfo
+	var result ResGetHouseInfo
 	var err error
 
 	defer func() {

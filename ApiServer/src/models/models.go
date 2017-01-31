@@ -77,9 +77,9 @@ type TblHouse struct {
 	CoverImg    int64        // the picture id of house cover image
 	Property    *TblProperty `orm:"rel(fk)"`
 
-	ForSale  int // house is for sale
-	ForRent  int // house is for rent
-	RentStat int // current rent status, ref to HOUSE_RENT_xxx
+	ForSale  bool // house is for sale
+	ForRent  bool // house is for rent
+	RentStat int  // current rent status, ref to HOUSE_RENT_xxx
 
 	Owner  *TblUser `orm:"rel(fk)"` // house owner
 	Agency *TblUser `orm:"rel(fk)"` // house agency

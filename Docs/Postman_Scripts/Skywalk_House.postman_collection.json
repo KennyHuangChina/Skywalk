@@ -277,31 +277,31 @@
 			"data": [
 				{
 					"key": "prop",
-					"value": "1",
+					"value": "2",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "build",
-					"value": "177",
+					"value": "56",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "house",
-					"value": "1505",
+					"value": "1605",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "floor_total",
-					"value": "35",
+					"value": "32",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "floor_this",
-					"value": "17",
+					"value": "16",
 					"type": "text",
 					"enabled": true
 				},
@@ -331,7 +331,19 @@
 				},
 				{
 					"key": "agen",
-					"value": "2",
+					"value": "4",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "4sale",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "4rent",
+					"value": "1",
 					"type": "text",
 					"enabled": true
 				}
@@ -341,7 +353,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1485521576093,
+			"time": 1485855732445,
 			"name": "http://ub1604-skywalk-:8080/v1/house/commit",
 			"description": "",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
@@ -362,7 +374,7 @@
 				},
 				{
 					"key": "build",
-					"value": "177",
+					"value": "175",
 					"type": "text",
 					"enabled": true
 				},
@@ -386,25 +398,37 @@
 				},
 				{
 					"key": "Bedrooms",
-					"value": "3",
+					"value": "2",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "LivingRooms",
-					"value": "2",
+					"value": "1",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "Bathrooms",
-					"value": "2",
+					"value": "1",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "Acreage",
 					"value": "13148",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "4sale",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "4rent",
+					"value": "1",
 					"type": "text",
 					"enabled": true
 				}
@@ -414,7 +438,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1485438861439,
+			"time": 1485856169685,
 			"name": "http://ub1604-skywalk-:8080/v1/house/2",
 			"description": "",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"

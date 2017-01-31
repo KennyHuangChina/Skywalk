@@ -69,6 +69,8 @@ type HouseInfo struct {
 	Livingrooms int
 	Bathrooms   int
 	Acreage     int
+	ForSale     bool
+	ForRent     bool
 }
 
 type PropInfo struct {

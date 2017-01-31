@@ -56,7 +56,7 @@ type ResAdminLogin struct {
 }
 
 // result of API get house info
-type ResGetUserInfo struct {
+type ResGetHouseInfo struct {
 	ResCommon
 	HouseInfo commdef.HouseInfo
 }
