@@ -28,6 +28,8 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetPropertyList", h.GetPropertyList)
 	h.Mapping("AddProperty", h.AddProperty)
 	h.Mapping("UpdateProperty", h.UpdateProperty)
+
+	h.Mapping("AddDeliverable", h.AddDeliverable)
 }
 
 // @Title GetPropertyInfo
@@ -151,6 +153,49 @@ func (this *HouseController) AddProperty() {
 	 *	Processing
 	 */
 	err, id := models.AddProperty(prop)
+	if nil == err {
+		result.Id = id
+	}
+}
+
+// @Title AddDeliverable
+// @Description add new deliverable
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /deliverable [post]
+func (this *HouseController) AddDeliverable() {
+	FN := "[AddDeliverable] "
+	beego.Warn("[--- API: AddDeliverable ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	name := this.GetString("name")
+	beego.Debug(FN, "name:", name)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddDeliverable(name, uid)
 	if nil == err {
 		result.Id = id
 	}

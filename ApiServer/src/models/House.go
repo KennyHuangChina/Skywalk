@@ -525,6 +525,60 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 	return
 }
 
+/**
+*	Add New Deliverable
+*	Arguments:
+*		uid 	- login user id
+*		name	- deliverable name
+*	Returns
+*		err - error info
+*		id 	- new deliverable id
+**/
+func AddDeliverable(name string, uid int64) (err error, id int64) {
+	FN := "[AddDeliverable] "
+	beego.Trace(FN, "name:", name, ", uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if 0 == len(name) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	// check if the deliver name already exist
+	o := orm.NewOrm()
+	bExist := o.QueryTable("tbl_deliverables").Filter("Name__contains", name).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	err, bAdmin := isAdministrator(uid)
+	if nil != err {
+		return
+	}
+	if !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	// Add
+	n := TblDeliverables{Name: name}
+	nid, errT := o.Insert(&n)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	id = nid
+	return
+}
+
 /*********************************************************************************************************
 *
 *	Internal Functions

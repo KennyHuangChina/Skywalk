@@ -226,3 +226,16 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 14. Add deliverable (By administrator)
+	[Security]	private
+	[Request]
+  		* POST /v1/house/deliverable
+	  		* name			string		// new deliverable name
+	[Response]
+		* SUCCESS:200 
+			* Id			int			// new deliverable id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
