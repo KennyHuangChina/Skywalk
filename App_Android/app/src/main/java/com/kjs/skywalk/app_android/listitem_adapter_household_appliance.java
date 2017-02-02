@@ -1,6 +1,8 @@
 package com.kjs.skywalk.app_android;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +48,17 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.listitem_household_appliance, null);
 
             holder = new ViewHolder();
+            holder.tvContentName = (TextView) view.findViewById(R.id.title);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
+        if(i == 1) {
+            Drawable drawable = commonFun.getDrawableFromLocal(mContext, "/sdcard/skywalk/canju.png");
+//        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            holder.tvContentName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+        }
         return view;
     }
 }
