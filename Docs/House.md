@@ -253,3 +253,19 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 16. Add deliverable for house (By logined user)
+	[Security]	private
+	[Request]
+  		* POST /v1/house/housedeliv/:id
+	  		* did			int			// deliverable id
+	  		* qty			int			// quantity. 0 means delete this house deliverable
+	  		* desc			string		// description 
+  	[Response]
+		* SUCCESS:200 
+			* Deliverable	array
+				* Id		int			// new house deliverable id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

@@ -160,6 +160,26 @@ type TblDeliverables struct {
 	Name string `orm:"size(50)"`
 }
 
+type TblHouseDeliverable struct {
+	Id          int64
+	House       int64  // house id
+	Deliverable int64  // deliverable id
+	Qty         int    // deliverable quantity
+	Desc        string `orm:"size(100)"`
+}
+
+func (hd *TblHouseDeliverable) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+	}
+}
+
+func (hd *TblHouseDeliverable) TableUnique() [][]string {
+	return [][]string{
+		[]string{"House", "Deliverable"},
+	}
+}
+
 /***************************************************************************
 	tables for events
 ***************************************************************************/
@@ -249,7 +269,7 @@ func init() {
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
-		new(TblDeliverables),
+		new(TblDeliverables), new(TblHouseDeliverable),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))

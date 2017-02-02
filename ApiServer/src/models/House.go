@@ -526,6 +526,73 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 }
 
 /**
+*	Add New House Deliverable
+*	Arguments:
+*		uid 	- login user id
+*		hid		- house id
+*		did		- deliverable id
+*		qty		- deliverable quantity. 0 means delete this house deliverable
+*		desc	- deliverable description
+*	Returns
+*		err 	- error info
+*		err 	- new house deliverable id
+**/
+func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, id int64) {
+	FN := "[AddHouseDeliverable] "
+	beego.Trace(FN, "uid:", uid, ", hid", hid, ", did:", did, ", qty:", qty, ", desc:", desc)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* argument checking */
+	err, _ = checkHouse(hid)
+	if nil != err {
+		return
+	}
+	if did <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("did:%d", did)}
+		return
+	}
+	if qty < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("qty:%d", qty)}
+		return
+	} else {
+		// check if this house deliverable exist
+		o := orm.NewOrm()
+		bExist := o.QueryTable("tbl_house_deliverable").Filter("House", hid).Filter("Deliverable", did).Exist()
+		if (0 == qty && !bExist) || (qty > 0 && bExist) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
+			return
+		}
+	}
+
+	// processing
+	o := orm.NewOrm()
+
+	if qty > 0 {
+		n := TblHouseDeliverable{House: hid, Deliverable: did, Qty: qty, Desc: desc}
+		nid, errT := o.Insert(&n)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		id = nid
+	} else {
+		numb, errT := o.QueryTable("tbl_house_deliverable").Filter("House", hid).Filter("Deliverable", did).Delete()
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(FN, "numb:", numb)
+	}
+
+	return
+}
+
+/**
 *	Add New Deliverable
 *	Arguments:
 *		uid 	- login user id

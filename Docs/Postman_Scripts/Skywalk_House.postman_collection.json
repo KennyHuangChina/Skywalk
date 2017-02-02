@@ -18,7 +18,8 @@
 		"7179aa18-8ccf-5f82-f908-57d6bc3c8794",
 		"298ad3cb-3eed-5d51-6068-bb2711a54dc0",
 		"3749a6b8-d033-17db-e4cd-252b88762862",
-		"5779be58-42bd-0217-38b2-a26761f90ec4"
+		"5779be58-42bd-0217-38b2-a26761f90ec4",
+		"2edc8324-7d39-801b-d71e-16bc2d7fe270"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -96,6 +97,42 @@
 			"pathVariables": {},
 			"version": 2,
 			"name": "http://ub1604-skywalk-:8080/v1/house/behalf?type=1&bgn=0&cnt=0",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "2edc8324-7d39-801b-d71e-16bc2d7fe270",
+			"url": "http://ub1604-skywalk-:8080/v1/house/housedeliv/4",
+			"method": "POST",
+			"headers": "",
+			"data": [
+				{
+					"key": "did",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "qty",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "desc",
+					"value": "2把钥匙",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/housedeliv/4",
 			"description": "",
 			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"

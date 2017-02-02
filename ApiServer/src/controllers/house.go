@@ -31,6 +31,7 @@ func (h *HouseController) URLMapping() {
 
 	h.Mapping("AddDeliverable", h.AddDeliverable)
 	h.Mapping("GetDeliverableList", h.GetDeliverableList)
+	h.Mapping("NewHouseDeliverable", h.NewHouseDeliverable)
 }
 
 // @Title GetPropertyInfo
@@ -238,6 +239,51 @@ func (this *HouseController) AddDeliverable() {
 	 *	Processing
 	 */
 	err, id := models.AddDeliverable(name, uid)
+	if nil == err {
+		result.Id = id
+	}
+}
+
+// @Title NewHouseDeliverable
+// @Description add new house deliverable
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /housedeliv/:id [post]
+func (this *HouseController) NewHouseDeliverable() {
+	FN := "[NewHouseDeliverable] "
+	beego.Warn("[--- API: NewHouseDeliverable ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	did, _ := this.GetInt64("did")
+	qty, _ := this.GetInt("qty")
+	desc := this.GetString("desc")
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddHouseDeliverable(uid, hid, did, qty, desc)
 	if nil == err {
 		result.Id = id
 	}
