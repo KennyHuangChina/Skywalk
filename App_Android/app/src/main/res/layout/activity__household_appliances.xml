@@ -29,8 +29,10 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="23dp"
         android:layout_marginRight="23dp"
-        android:background="#ffffff"
-        android:layout_marginTop="6dp">
+        android:dividerHeight="12dp"
+        android:divider="#00000000"
+        android:background="#EFEFEF"
+        android:layout_marginTop="12dp">
 
 
     </ListView>
