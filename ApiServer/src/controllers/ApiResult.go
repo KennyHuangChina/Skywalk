@@ -122,6 +122,13 @@ type ResGetDeliverables struct {
 	Deliverables []commdef.DeliverableInfo
 }
 
+// result of API get house deliverable list
+type ResGetHouseDeliverables struct {
+	ResCommon
+	Total        int64
+	Deliverables []commdef.HouseDeliverable
+}
+
 /************************************************************************************
 *
 *		Functions

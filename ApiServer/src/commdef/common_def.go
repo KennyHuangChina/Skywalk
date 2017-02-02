@@ -108,6 +108,13 @@ type DeliverableInfo struct {
 	Name string
 }
 
+type HouseDeliverable struct {
+	Id   int64
+	Name string // house id
+	Qty  int    // deliverable quantity
+	Desc string
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events

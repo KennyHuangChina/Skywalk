@@ -269,3 +269,19 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 17. Get House deliverable list (By logined user)
+	[Security]	private
+	[Request]
+  		* GET /v1/house/hdl/:id
+  	[Response]
+		* SUCCESS:200 
+			* DeliverableList	array
+				* DeliverId		int		// house deliverable id
+				* DeliverName	string	// house deliverable name
+				* Qty			int		// house deliverable quantity
+				* Desc			string	// house deliverable description 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
