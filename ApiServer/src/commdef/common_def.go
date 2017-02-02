@@ -103,6 +103,11 @@ const (
 	HOUSE_RENT_DUE    = 3 // expire will be dued, typical is 1 month ago
 )
 
+type DeliverableInfo struct {
+	Id   int64
+	Name string
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events

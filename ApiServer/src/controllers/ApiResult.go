@@ -115,6 +115,13 @@ type ResGetHouseEvents struct {
 	Houses []commdef.HouseEvents
 }
 
+// result of API get deliverable list
+type ResGetDeliverables struct {
+	ResCommon
+	Total        int64
+	Deliverables []commdef.DeliverableInfo
+}
+
 /************************************************************************************
 *
 *		Functions
@@ -219,6 +226,8 @@ func getLoginUser(c beego.Controller) (uid int64, err error) {
 		}
 		return
 	}
+
+	beego.Debug(FN, "TODO: check if the user is real")
 
 	return
 }

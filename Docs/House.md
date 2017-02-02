@@ -239,3 +239,17 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 15. Get deliverable list (By logined user)
+	[Security]	private
+	[Request]
+  		* GET /v1/house/delivelst
+	[Response]
+		* SUCCESS:200 
+			* Deliverable	array
+				* Id		int			// deliverable id
+				* Name		string		// deliverable name
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

@@ -17,7 +17,8 @@
 		"0629174c-ce63-26f4-ad2d-2bfe2fe4718f",
 		"7179aa18-8ccf-5f82-f908-57d6bc3c8794",
 		"298ad3cb-3eed-5d51-6068-bb2711a54dc0",
-		"3749a6b8-d033-17db-e4cd-252b88762862"
+		"3749a6b8-d033-17db-e4cd-252b88762862",
+		"5779be58-42bd-0217-38b2-a26761f90ec4"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -170,6 +171,30 @@
 			"time": 1485531160431,
 			"name": "http://ub1604-skywalk-:8080/v1/house/covimg/2",
 			"description": "",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "5779be58-42bd-0217-38b2-a26761f90ec4",
+			"url": "http://ub1604-skywalk-:8080/v1/house/delivelst",
+			"method": "GET",
+			"headers": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "大堂钥匙",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/delivelst",
+			"description": "",
+			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
 		},
 		{
