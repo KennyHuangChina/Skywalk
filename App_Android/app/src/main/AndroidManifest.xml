@@ -25,6 +25,8 @@
         </receiver>
 
         <activity android:name=".Activity_HouseholdAppliances"></activity>
+        <activity android:name=".Activity_HouseholdDeliverables"></activity>
+
     </application>
 
 </manifest>
