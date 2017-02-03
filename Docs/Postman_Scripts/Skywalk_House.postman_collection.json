@@ -20,7 +20,8 @@
 		"3749a6b8-d033-17db-e4cd-252b88762862",
 		"5779be58-42bd-0217-38b2-a26761f90ec4",
 		"2edc8324-7d39-801b-d71e-16bc2d7fe270",
-		"5fdedc5f-cd8a-f600-518d-5f34465c371b"
+		"5fdedc5f-cd8a-f600-518d-5f34465c371b",
+		"590dd26e-70d3-dc09-3d58-541ae91faa85"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -248,6 +249,30 @@
 			"pathVariables": {},
 			"version": 2,
 			"name": "http://ub1604-skywalk-:8080/v1/house/list?type=1&bgn=0&cnt=0&sid=xxxxx",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "590dd26e-70d3-dc09-3d58-541ae91faa85",
+			"url": "http://ub1604-skywalk-:8080/v1/house/facilitytype",
+			"method": "POST",
+			"headers": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/facilitytype",
 			"description": "",
 			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"

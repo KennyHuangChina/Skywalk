@@ -285,3 +285,16 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 18. New Facility Type (By administrator)
+	[Security]	private
+	[Request]
+  		* POST /v1/house/facilitytype
+	  		* name				string	// facility type name
+  	[Response]
+		* SUCCESS:200 
+			* Id				int		// new facility type id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

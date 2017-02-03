@@ -180,6 +180,11 @@ func (hd *TblHouseDeliverable) TableUnique() [][]string {
 	}
 }
 
+type TblFacilityType struct {
+	Id   int64
+	Name string `orm:"size(50)"`
+}
+
 /***************************************************************************
 	tables for events
 ***************************************************************************/
@@ -270,6 +275,7 @@ func init() {
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable),
+		new(TblFacilityType),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))

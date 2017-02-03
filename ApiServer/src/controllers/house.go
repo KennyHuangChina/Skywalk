@@ -33,6 +33,8 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetDeliverableList", h.GetDeliverableList)
 	h.Mapping("NewHouseDeliverable", h.NewHouseDeliverable)
 	h.Mapping("GetHouseDeliverableList", h.GetHouseDeliverableList)
+
+	h.Mapping("AddFacilityType", h.AddFacilityType)
 }
 
 // @Title GetPropertyInfo
@@ -199,6 +201,49 @@ func (this *HouseController) GetDeliverableList() {
 	if nil == err {
 		result.Total = int64(len(lst))
 		result.Deliverables = lst
+	}
+}
+
+// @Title AddFacilityType
+// @Description add new facility type
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /facilitytype [post]
+func (this *HouseController) AddFacilityType() {
+	FN := "[AddFacilityType] "
+	beego.Warn("[--- API: AddFacilityType ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	name := this.GetString("name")
+	beego.Debug(FN, "name:", name)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddFacilityType(name, uid)
+	if nil == err {
+		result.Id = id
 	}
 }
 

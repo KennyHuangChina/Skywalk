@@ -673,6 +673,60 @@ func GetDeliverables(uid int64) (err error, lst []commdef.DeliverableInfo) {
 }
 
 /**
+*	Add New facility type
+*	Arguments:
+*		uid 	- login user id
+*		name	- deliverable name
+*	Returns
+*		err - error info
+*		id 	- new facility type id
+**/
+func AddFacilityType(name string, uid int64) (err error, id int64) {
+	FN := "[AddDeliverable] "
+	beego.Trace(FN, "name:", name, ", uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if 0 == len(name) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	// check if the deliver name already exist
+	o := orm.NewOrm()
+	bExist := o.QueryTable("tbl_facility_type").Filter("Name__contains", name).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	err, bAdmin := isAdministrator(uid)
+	if nil != err {
+		return
+	}
+	if !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	// Add
+	n := TblFacilityType{Name: name}
+	nid, errT := o.Insert(&n)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	id = nid
+	return
+}
+
+/**
 *	Add New Deliverable
 *	Arguments:
 *		uid 	- login user id
