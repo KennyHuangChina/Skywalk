@@ -645,7 +645,7 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 *		err 	- error info
 *		lst 	- deliverable list
 **/
-func GetDeliverables(uid int64) (err error, lst []commdef.DeliverableInfo) {
+func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
 	FN := "[GetDeliverables] "
 	beego.Trace(FN, "uid:", uid)
 
@@ -665,10 +665,47 @@ func GetDeliverables(uid int64) (err error, lst []commdef.DeliverableInfo) {
 	}
 
 	for _, v := range dl {
-		newItem := commdef.DeliverableInfo{Id: v.Id, Name: v.Name}
+		newItem := commdef.CommonListItem{Id: v.Id, Name: v.Name}
 		lst = append(lst, newItem)
 	}
 	// lst = dl
+	return
+}
+
+/**
+*	Get facility type list
+*	Arguments:
+*		uid 	- login user id
+*	Returns
+*		err - error info
+*		lst - facility type list
+**/
+func GetFacilityTypeList(uid int64) (err error, lst []commdef.CommonListItem) {
+	FN := "[GetFacilityTypeList] "
+	beego.Trace(FN, "uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+
+	// get facility type list
+	o := orm.NewOrm()
+
+	var l []TblFacilityType
+	/*numb*/ _, errT := o.QueryTable("tbl_facility_type").All(&l)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	for _, v := range l {
+		lst = append(lst, commdef.CommonListItem{Id: v.Id, Name: v.Name})
+	}
+
 	return
 }
 
@@ -682,7 +719,7 @@ func GetDeliverables(uid int64) (err error, lst []commdef.DeliverableInfo) {
 *		id 	- new facility type id
 **/
 func AddFacilityType(name string, uid int64) (err error, id int64) {
-	FN := "[AddDeliverable] "
+	FN := "[AddFacilityType] "
 	beego.Trace(FN, "name:", name, ", uid:", uid)
 
 	defer func() {

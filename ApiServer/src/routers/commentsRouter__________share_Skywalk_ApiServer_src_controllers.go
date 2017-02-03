@@ -106,6 +106,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
 		beego.ControllerComments{
+			Method: "GetFacilityTypeList",
+			Router: `/facitypelst`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
+		beego.ControllerComments{
 			Method: "AddFacilityType",
 			Router: `/facilitytype`,
 			AllowHTTPMethods: []string{"post"},

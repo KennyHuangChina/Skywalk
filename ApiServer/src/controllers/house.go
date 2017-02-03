@@ -35,6 +35,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseDeliverableList", h.GetHouseDeliverableList)
 
 	h.Mapping("AddFacilityType", h.AddFacilityType)
+	h.Mapping("GetFacilityTypeList", h.GetFacilityTypeList)
 }
 
 // @Title GetPropertyInfo
@@ -172,7 +173,7 @@ func (this *HouseController) GetDeliverableList() {
 	FN := "[GetDeliverableList] "
 	beego.Warn("[--- API: GetDeliverableList ---]")
 
-	var result ResGetDeliverables
+	var result ResGetCommonList
 	var err error
 
 	defer func() {
@@ -200,7 +201,47 @@ func (this *HouseController) GetDeliverableList() {
 	err, lst := models.GetDeliverables(uid)
 	if nil == err {
 		result.Total = int64(len(lst))
-		result.Deliverables = lst
+		result.List = lst
+	}
+}
+
+// @Title GetFacilityTypeList
+// @Description get facility type list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /facitypelst [get]
+func (this *HouseController) GetFacilityTypeList() {
+	FN := "[GetFacilityTypeList] "
+	beego.Warn("[--- API: GetFacilityTypeList ---]")
+
+	var result ResGetCommonList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	/*
+	 *	Processing
+	 */
+	err, lst := models.GetFacilityTypeList(uid)
+	if nil == err {
+		result.List = lst
 	}
 }
 

@@ -115,11 +115,11 @@ type ResGetHouseEvents struct {
 	Houses []commdef.HouseEvents
 }
 
-// result of API get deliverable list
-type ResGetDeliverables struct {
+// result of APIs of list, like get deliverable list
+type ResGetCommonList struct {
 	ResCommon
-	Total        int64
-	Deliverables []commdef.DeliverableInfo
+	Total int64
+	List  []commdef.CommonListItem
 }
 
 // result of API get house deliverable list

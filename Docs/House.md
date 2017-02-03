@@ -298,3 +298,18 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 19. Get Facility Type List (By logined user)
+	[Security]	private
+	[Request]
+  		* GET /v1/house/facitypelst
+  	[Response]
+		* SUCCESS:200 
+			* Total				int			// total type quantity
+			* FacilityTypes		array
+				* Id			int			// faility type id
+				* Name			string		// facility type name
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description
