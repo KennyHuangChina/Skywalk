@@ -714,6 +714,36 @@ func GetFacilityTypeList(uid int64) (err error, lst []commdef.CommonListItem) {
 *	Arguments:
 *		uid 	- login user id
 *		name	- deliverable name
+*		ft		- facility type
+*	Returns
+*		err - error info
+*		id 	- new facility type id
+**/
+func AddFacility(name string, ft int, uid int64) (err error, id int64) {
+	FN := "[AddFacility] "
+	beego.Trace(FN, "name:", name, ", uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if 0 == len(name) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	return
+}
+
+/**
+*	Add New facility type
+*	Arguments:
+*		uid 	- login user id
+*		name	- deliverable name
 *	Returns
 *		err - error info
 *		id 	- new facility type id
