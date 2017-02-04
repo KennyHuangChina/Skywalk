@@ -129,6 +129,13 @@ type ResGetHouseDeliverables struct {
 	Deliverables []commdef.HouseDeliverable
 }
 
+// result of API get facility list
+type ResGetFacilities struct {
+	ResCommon
+	Total      int64
+	Facilities []commdef.Facility
+}
+
 /************************************************************************************
 *
 *		Functions

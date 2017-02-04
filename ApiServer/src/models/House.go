@@ -673,6 +673,31 @@ func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
 }
 
 /**
+*	Get facility list
+*	Arguments:
+*		uid 	- login user id
+*		ft		- facility list
+*	Returns
+*		err - error info
+*		lst - facility list
+**/
+func GetFacilityList(uid, ft int64) (err error, lst []commdef.Facility) {
+	FN := "[GetFacilityTypeList] "
+	beego.Trace(FN, "uid:", uid, ", ft:", ft)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	return
+}
+
+/**
 *	Get facility type list
 *	Arguments:
 *		uid 	- login user id

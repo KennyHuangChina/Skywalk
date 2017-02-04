@@ -319,12 +319,28 @@
 	[Security]	private
 	[Request]
   		* POST /v1/house/facility
-	  		* name				string	// facility name
-	  		* type				int		// facility type id
+	  		* name			string		// facility name
+	  		* type			int			// facility type id
   	[Response]
 		* SUCCESS:200 
-			* Id				int		// new facility id
+			* Id			int			// new facility id
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 ##
+
+### 21. Get Facility List (By login user)
+	[Security]	private
+	[Request]
+  		* GET /v1/house/facilitys?type=
+	  		* type			int		// facility type id. 0 means all type
+  	[Response]
+		* SUCCESS:200
+			* Total			int			// total facility quantity
+			* Facilities	array 
+				* Id		int			// facility id
+				* Name		string		// facility name
+				* Type		string		// facility type
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
