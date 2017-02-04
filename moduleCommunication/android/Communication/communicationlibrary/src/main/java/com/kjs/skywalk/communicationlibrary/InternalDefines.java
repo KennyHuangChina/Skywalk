@@ -28,6 +28,9 @@ class InternalDefines {
     public interface AfterConnect {
         int doAfterConnect(HttpConnector http);
     }
+    public interface ConnectFailed {
+        int doConnectFailed(HttpConnector http);
+    }
 
     //Log Tags defines
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
