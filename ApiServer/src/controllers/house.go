@@ -250,7 +250,7 @@ func (this *HouseController) GetFacilityTypeList() {
 // @Description add new facility type
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /facilitytype [post]
+// @router /facility [post]
 func (this *HouseController) AddFacility() {
 	FN := "[AddFacility] "
 	beego.Warn("[--- API: AddFacility ---]")

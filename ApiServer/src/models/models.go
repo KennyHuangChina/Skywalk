@@ -185,6 +185,25 @@ type TblFacilityType struct {
 	Name string `orm:"size(50)"`
 }
 
+// CREATE UNIQUE INDEX type_name ON tbl_facility_type (name)
+func (f *TblFacilityType) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Name"},
+	}
+}
+
+type TblFacilitys struct {
+	Id   int64
+	Type int64
+	Name string `orm:"size(50)"`
+}
+
+func (f *TblFacilitys) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Type", "Name"},
+	}
+}
+
 /***************************************************************************
 	tables for events
 ***************************************************************************/
@@ -275,7 +294,7 @@ func init() {
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable),
-		new(TblFacilityType),
+		new(TblFacilityType), new(TblFacilitys),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))

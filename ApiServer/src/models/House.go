@@ -734,8 +734,50 @@ func AddFacility(name string, ft int, uid int64) (err error, id int64) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
 		return
 	}
+	if ft <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("ft:%d", ft)}
+		return
+	}
 
-	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	// check if the facility type actual exist
+	o := orm.NewOrm()
+
+	f := TblFacilityType{Id: int64(ft)}
+	errT := o.Read(&f)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("ft:%d", ft)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	// check if type + facility name already exist
+	bExist := o.QueryTable("tbl_facilitys").Filter("Type", ft).Filter("Name__contains", name).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("facility type:%d, name:%s", ft, name)}
+		return
+	}
+
+	err, bAdmin := isAdministrator(uid)
+	if nil != err {
+		return
+	}
+	if !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/* Add to table */
+	nf := TblFacilitys{Type: int64(ft), Name: name}
+	nid, errT := o.Insert(&nf)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	id = nid
 	return
 }
 

@@ -22,7 +22,8 @@
 		"2edc8324-7d39-801b-d71e-16bc2d7fe270",
 		"5fdedc5f-cd8a-f600-518d-5f34465c371b",
 		"590dd26e-70d3-dc09-3d58-541ae91faa85",
-		"a81d6806-4215-9d52-a738-10deeec2ca32"
+		"a81d6806-4215-9d52-a738-10deeec2ca32",
+		"83a0a7da-37af-c1e6-078b-ad4a54213f73"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -336,6 +337,37 @@
 			"name": "http://ub1604-skywalk-:8080/v1/house/recommend/1",
 			"description": "",
 			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "83a0a7da-37af-c1e6-078b-ad4a54213f73",
+			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/house/facility",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "name",
+					"value": "沙发茶几",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1486218865707,
+			"name": "http://ub1604-skywalk-:8080/v1/house/facility",
+			"description": "",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
 		},
 		{

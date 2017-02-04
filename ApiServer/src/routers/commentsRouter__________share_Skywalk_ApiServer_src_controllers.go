@@ -38,14 +38,14 @@ func init() {
 		beego.ControllerComments{
 			Method: "Loginpass",
 			Router: `/loginpass`,
-			AllowHTTPMethods: []string{"get"},
+			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
 		beego.ControllerComments{
 			Method: "Logout",
 			Router: `/logout`,
-			AllowHTTPMethods: []string{"get"},
+			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
@@ -114,7 +114,7 @@ func init() {
 	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
 		beego.ControllerComments{
 			Method: "AddFacility",
-			Router: `/facilitytype`,
+			Router: `/facility`,
 			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 
