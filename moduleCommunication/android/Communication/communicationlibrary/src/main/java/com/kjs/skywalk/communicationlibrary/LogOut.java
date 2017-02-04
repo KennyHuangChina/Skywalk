@@ -40,7 +40,6 @@ class LogOut extends CommunicationBase {
         Log.i(TAG, "doOperation");
 
         mCommandURL = "/v1/admin/logout";
-        mCommandURL += "/";
 
         generateRequestData();
 

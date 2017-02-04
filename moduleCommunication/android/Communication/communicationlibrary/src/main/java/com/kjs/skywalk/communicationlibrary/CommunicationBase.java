@@ -29,7 +29,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
     protected CICommandListener mCommandListener = null;
 
     protected String mSessionID = "";
-    protected SessionManager mSessionManager = null;
+    protected SKCookieManager mCookieManager = null;
 
     CommunicationBase(Context context) {
         Log.i(TAG, "Communication Base Constructor");
@@ -37,7 +37,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
         mUtils = new MyUtils(context);
         mServerURL = ServerURL.mServerUri;
 
-        mSessionManager = SessionManager.getManager(context);
+        mCookieManager = SKCookieManager.getManager(context);
     }
 
     @Override

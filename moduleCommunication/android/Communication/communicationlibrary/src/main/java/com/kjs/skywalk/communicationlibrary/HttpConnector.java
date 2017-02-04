@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -53,6 +54,7 @@ class HttpConnector {
     private String mResponseString = "";
     private boolean mReadCookie = false;
     private boolean mWriteCookie = false;
+    private SKCookieManager mCookieManager = null;
 
     private static final String BOUNDARY_STRING = "skywalk_http_boundary";
     private static final String BOUNDARY_START = "--" + BOUNDARY_STRING + "\r\n";
@@ -60,6 +62,7 @@ class HttpConnector {
 
     public HttpConnector(Context context) {
         mContext = context;
+        mCookieManager = SKCookieManager.getManager(context);
     }
     private JSONObject mJsonObj = null;
 
@@ -195,7 +198,8 @@ class HttpConnector {
         mJsonObj = null;
         mResponseString = "";
         if(mWriteCookie) {
-            String cookie = SessionManager.getCookie();
+            String cookie = mCookieManager.getCookie(mConnection.getURL().toString());
+            Log.i(InternalDefines.TAG_HTTPConnector, "Send Cookie: " + cookie);
             if (cookie != null && !cookie.isEmpty()) {
                 mConnection.setRequestProperty("Cookie", cookie);
             }
@@ -270,7 +274,7 @@ class HttpConnector {
             if(mReadCookie) {
                 Map<String, List<String>> map = mConnection.getHeaderFields();
                 String cookieFromServer = mConnection.getHeaderField("Set-Cookie");
-                SessionManager.setCookie(cookieFromServer);
+                mCookieManager.setCookie(mConnection.getURL().toString(), cookieFromServer);
             }
 
             InputStream in = new BufferedInputStream(mConnection.getInputStream());

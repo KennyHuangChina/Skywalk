@@ -15,14 +15,14 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
 public class CommunicationManager {
     private Context mContext = null;
     private CommunicationBase mOperation = null;
-    private SessionManager mSessionManager = null;
+    private SKCookieManager mCookieManager = null;
 
     private MyUtils mUtils = null;
 
     public CommunicationManager(Context context) {
         mContext = context;
         mUtils= new MyUtils(context);
-        mSessionManager = SessionManager.getManager(context);
+        mCookieManager = SKCookieManager.getManager(context);
     }
 
     public int execute(String command, HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {

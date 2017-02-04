@@ -35,7 +35,7 @@ public class MainActivityFragment extends Fragment
     private void doTest() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "1");
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "3");
         mManager.execute(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
     }
 

@@ -34,6 +34,7 @@ class InternalDefines {
     public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";
     public static final String TAG_COMMUNICATION_UTILS                      = "CommunicationUtils";
     public static final String TAG_COMMUNICATION_SESSION_MANAGER            = "SessionManager";
+    public static final String TAG_COMMUNICATION_COOKIE_MANAGER             = "SKCookieManager";
 
     //Error Code Defines
     public static final int     ERROR_CODE_OK                               = 0x0;
