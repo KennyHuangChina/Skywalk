@@ -322,8 +322,8 @@ func (this *HouseController) AddFacility() {
 	}
 
 	name := this.GetString("name")
-	ft, _ := this.GetInt("type")
-	beego.Debug(FN, "name:", name, ", ft:", ft)
+	ft, _ := this.GetInt64("type")
+	// beego.Debug(FN, "name:", name, ", ft:", ft)
 
 	/*
 	 *	Processing
