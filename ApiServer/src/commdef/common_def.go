@@ -116,9 +116,9 @@ type HouseDeliverable struct {
 }
 
 type Facility struct {
-	Id   int64
-	Name string
-	Type string
+	Id   int64  // facility id
+	Name string // facility name
+	Type string // facility type name
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
