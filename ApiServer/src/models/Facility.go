@@ -93,13 +93,53 @@ func GetFacilityTypeList(uid int64) (err error, lst []commdef.CommonListItem) {
 /**
 *	Add New house facilities
 *	Arguments:
+*		hid	- house id
+*	Returns
+*		err - error info
+*		lst	- house facility list
+**/
+func GetHouseFacilities(hid int64) (err error, lst []commdef.HouseFacility) {
+	FN := "[AddHouseFacilities] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if err, _ = checkHouse(hid); nil != err {
+		return
+	}
+
+	/* query */
+	sql := fmt.Sprintf(`SELECT hf.id, f.name, t.name AS type, hf.qty, hf.desc 
+							FROM tbl_house_facility AS hf, tbl_facilitys AS f, tbl_facility_type AS t 
+							WHERE hf.house=%d AND hf.facility=f.id AND f.type=t.id`, hid)
+	o := orm.NewOrm()
+
+	var l []commdef.HouseFacility
+	/*numb*/ _, errT := o.Raw(sql).QueryRows(&l)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	lst = l
+	return
+}
+
+/**
+*	Add New house facilities
+*	Arguments:
 *		uid - login user id
 *		hid	- house id
 *		fl	- facility list
 *	Returns
 *		err - error info
 **/
-func AddHouseFacilities(uid, hid int64, fl []commdef.HouseFacility) (err error) {
+func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err error) {
 	FN := "[AddHouseFacilities] "
 	beego.Trace(FN, "uid:", uid, ", fl:", fl)
 
@@ -150,8 +190,8 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.HouseFacility) (err error) 
 	o := orm.NewOrm()
 
 	/* Processing */
-	var al []commdef.HouseFacility // list for adding
-	var ul []commdef.HouseFacility // list for updating
+	var al []commdef.AddHouseFacility // list for adding
+	var ul []commdef.AddHouseFacility // list for updating
 	for _, v := range fl {
 		// check if the house facility already exist
 		hf := TblHouseFacility{}

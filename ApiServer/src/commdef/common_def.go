@@ -121,11 +121,19 @@ type Facility struct {
 	Type string // facility type name
 }
 
-type HouseFacility struct {
+type AddHouseFacility struct {
 	Id       int64
 	Facility int64
 	Qty      int
 	Desc     string
+}
+
+type HouseFacility struct {
+	Id   int64  // facility id
+	Name string // facility name
+	Type string // facility type name
+	Qty  int    // facility quantity
+	Desc string // facility description
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

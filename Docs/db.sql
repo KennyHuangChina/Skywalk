@@ -16,6 +16,81 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `tbl_deliverables`
+--
+
+DROP TABLE IF EXISTS `tbl_deliverables`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_deliverables` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_deliverables`
+--
+
+LOCK TABLES `tbl_deliverables` WRITE;
+/*!40000 ALTER TABLE `tbl_deliverables` DISABLE KEYS */;
+INSERT INTO `tbl_deliverables` VALUES (1,'大门钥匙'),(3,'信报箱钥匙');
+/*!40000 ALTER TABLE `tbl_deliverables` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_facility_type`
+--
+
+DROP TABLE IF EXISTS `tbl_facility_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_facility_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `type_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_facility_type`
+--
+
+LOCK TABLES `tbl_facility_type` WRITE;
+/*!40000 ALTER TABLE `tbl_facility_type` DISABLE KEYS */;
+INSERT INTO `tbl_facility_type` VALUES (1,'家具'),(2,'家电');
+/*!40000 ALTER TABLE `tbl_facility_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_facilitys`
+--
+
+DROP TABLE IF EXISTS `tbl_facilitys`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_facilitys` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `type` bigint(20) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `type` (`type`,`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_facilitys`
+--
+
+LOCK TABLES `tbl_facilitys` WRITE;
+/*!40000 ALTER TABLE `tbl_facilitys` DISABLE KEYS */;
+INSERT INTO `tbl_facilitys` VALUES (6,1,'沙发茶几'),(3,2,'电冰箱'),(4,2,'电视机');
+/*!40000 ALTER TABLE `tbl_facilitys` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_house`
 --
 
@@ -39,16 +114,16 @@ CREATE TABLE `tbl_house` (
   `submit_time` datetime NOT NULL,
   `publish_time` datetime DEFAULT NULL,
   `modify_time` datetime DEFAULT NULL,
-  `for_sale` int(11) NOT NULL DEFAULT '0',
-  `for_rent` int(11) NOT NULL DEFAULT '0',
   `rent_stat` int(11) NOT NULL DEFAULT '0',
+  `for_sale` tinyint(1) NOT NULL DEFAULT '0',
+  `for_rent` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `property_id` (`property_id`,`building_no`,`house_no`),
   KEY `tbl_house_property_id` (`property_id`),
   KEY `tbl_house_agency_id` (`agency_id`),
   KEY `tbl_house_for_sale` (`for_sale`),
   KEY `tbl_house_for_rent` (`for_rent`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,8 +132,37 @@ CREATE TABLE `tbl_house` (
 
 LOCK TABLES `tbl_house` WRITE;
 /*!40000 ALTER TABLE `tbl_house` DISABLE KEYS */;
-INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',3,2,2,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-27 20:45:49',1,1,1),(3,177,35,17,'1505',3,2,2,13148,0,1,4,4,'2017-01-26 12:31:55',NULL,NULL,1,1,2);
+INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',2,1,1,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-31 17:48:49',1,1,1),(3,177,35,17,'1505',3,2,2,13148,0,1,4,4,'2017-01-26 12:31:55',NULL,NULL,2,0,0),(4,56,32,16,'1605',3,2,2,13148,0,2,4,4,'2017-01-31 17:41:20',NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE `tbl_house` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_house_deliverable`
+--
+
+DROP TABLE IF EXISTS `tbl_house_deliverable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_house_deliverable` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `house` bigint(20) NOT NULL DEFAULT '0',
+  `deliverable` bigint(20) NOT NULL DEFAULT '0',
+  `qty` int(11) NOT NULL DEFAULT '0',
+  `desc` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `house` (`house`,`deliverable`),
+  KEY `tbl_house_deliverable_house` (`house`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_house_deliverable`
+--
+
+LOCK TABLES `tbl_house_deliverable` WRITE;
+/*!40000 ALTER TABLE `tbl_house_deliverable` DISABLE KEYS */;
+INSERT INTO `tbl_house_deliverable` VALUES (1,4,2,2,'1把钥匙'),(2,4,1,3,'2把钥匙'),(3,4,3,2,'1把钥匙');
+/*!40000 ALTER TABLE `tbl_house_deliverable` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -118,6 +222,35 @@ LOCK TABLES `tbl_house_event_process` WRITE;
 /*!40000 ALTER TABLE `tbl_house_event_process` DISABLE KEYS */;
 INSERT INTO `tbl_house_event_process` VALUES (1,1,'2017-01-22 11:50:06',1,'test',1),(2,1,'2017-01-22 12:28:51',1,'测试',1);
 /*!40000 ALTER TABLE `tbl_house_event_process` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_house_facility`
+--
+
+DROP TABLE IF EXISTS `tbl_house_facility`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_house_facility` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `house` bigint(20) NOT NULL DEFAULT '0',
+  `facility` bigint(20) NOT NULL DEFAULT '0',
+  `qty` int(11) NOT NULL DEFAULT '0',
+  `desc` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `house` (`house`,`facility`),
+  KEY `tbl_house_facility_house` (`house`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_house_facility`
+--
+
+LOCK TABLES `tbl_house_facility` WRITE;
+/*!40000 ALTER TABLE `tbl_house_facility` DISABLE KEYS */;
+INSERT INTO `tbl_house_facility` VALUES (4,2,3,222,'fdesc_0000'),(5,2,4,333,'fdesc_1111'),(6,2,6,666,'fdesc_6666');
+/*!40000 ALTER TABLE `tbl_house_facility` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -431,4 +564,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-31 15:48:44
+-- Dump completed on 2017-02-05 20:55:59

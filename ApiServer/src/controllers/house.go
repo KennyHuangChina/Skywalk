@@ -39,6 +39,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("AddFacility", h.AddFacility)
 	h.Mapping("GetFacilityList", h.GetFacilityList)
 	h.Mapping("AddHouseFacilities", h.AddHouseFacilities)
+	h.Mapping("GetHouseFacilities", h.GetHouseFacilities)
 }
 
 // @Title GetPropertyInfo
@@ -291,6 +292,49 @@ func (this *HouseController) GetFacilityTypeList() {
 	}
 }
 
+// @Title GetHouseFacilities
+// @Description get house facility list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /housefacilities/:id [get]
+func (this *HouseController) GetHouseFacilities() {
+	FN := "[GetHouseFacilities] "
+	beego.Warn("[--- API: GetHouseFacilities ---]")
+
+	var result ResGetHouseFacilities
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
+
+	hid, _ := this.GetInt64(":id")
+
+	/*
+	 *	Processing
+	 */
+	err, lst := models.GetHouseFacilities(hid)
+	if nil == err {
+		result.Facilities = lst
+		result.Total = int64(len(lst))
+	}
+}
+
 // @Title AddHouseFacilities
 // @Description add new house facility
 // @Success 200 {string}
@@ -324,7 +368,7 @@ func (this *HouseController) AddHouseFacilities() {
 
 	hid, _ := this.GetInt64(":id")
 	numb, _ := this.GetInt("numb")
-	var al []commdef.HouseFacility
+	var al []commdef.AddHouseFacility
 	for i := 0; i < numb; i++ {
 		item := fmt.Sprintf("fid_%d", i)
 		fid, _ := this.GetInt64(item)
@@ -332,7 +376,7 @@ func (this *HouseController) AddHouseFacilities() {
 		qty, _ := this.GetInt(item)
 		item = fmt.Sprintf("fdesc_%d", i)
 		desc := this.GetString(item)
-		newItem := commdef.HouseFacility{Facility: fid, Qty: qty, Desc: desc}
+		newItem := commdef.AddHouseFacility{Facility: fid, Qty: qty, Desc: desc}
 
 		al = append(al, newItem)
 	}

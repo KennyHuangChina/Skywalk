@@ -363,3 +363,21 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 23. Get House Facility List (By house owner, agency and administrator)
+	[Security]	public
+	[Request]
+  		* GET /v1/house/housefacilities/:id
+  	[Response]
+		* SUCCESS:200
+	  		* Total			int			// facility item quantity
+	  		* Facilities	array
+		  		* Id		int			// facility id
+		  		* Name		string		// facility name
+		  		* Type		string		// facility type name
+		  		* Qty		ing 		// facility quantity
+		  		* Desc		string		// facility description
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
