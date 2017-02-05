@@ -20,7 +20,7 @@
             android:layout_weight="5"
             android:gravity="left"
             android:textSize="14sp"
-            android:textColor="#242224"
+            android:textColor="@color/colorTextNormal"
             android:drawablePadding="10dp"
             android:drawableLeft="@drawable/icn_shafa"
             android:text="家具：沙发+茶几"/>
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:textSize="14sp"
-            android:textColor="#242224"
+            android:textColor="@color/colorTextNormal"
             android:text="1"/>
     </LinearLayout>
 
