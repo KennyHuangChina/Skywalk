@@ -2,9 +2,9 @@ package controllers
 
 import (
 	// "encoding/json"
-	// "fmt"
 	"ApiServer/commdef"
 	"ApiServer/models"
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -38,6 +38,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetFacilityTypeList", h.GetFacilityTypeList)
 	h.Mapping("AddFacility", h.AddFacility)
 	h.Mapping("GetFacilityList", h.GetFacilityList)
+	h.Mapping("AddHouseFacilities", h.AddHouseFacilities)
 }
 
 // @Title GetPropertyInfo
@@ -287,6 +288,61 @@ func (this *HouseController) GetFacilityTypeList() {
 	err, lst := models.GetFacilityTypeList(uid)
 	if nil == err {
 		result.List = lst
+	}
+}
+
+// @Title AddHouseFacilities
+// @Description add new house facility
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /housefacilities/:id [post]
+func (this *HouseController) AddHouseFacilities() {
+	FN := "[AddHouseFacilities] "
+	beego.Warn("[--- API: AddHouseFacilities ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	numb, _ := this.GetInt("numb")
+	var al []commdef.HouseFacility
+	for i := 0; i < numb; i++ {
+		item := fmt.Sprintf("fid_%d", i)
+		fid, _ := this.GetInt64(item)
+		item = fmt.Sprintf("fqty_%d", i)
+		qty, _ := this.GetInt(item)
+		item = fmt.Sprintf("fdesc_%d", i)
+		desc := this.GetString(item)
+		newItem := commdef.HouseFacility{Facility: fid, Qty: qty, Desc: desc}
+
+		al = append(al, newItem)
+	}
+	beego.Debug(FN, "numb:", numb, ", al:", al)
+
+	/*
+	 *	Processing
+	 */
+	err = models.AddHouseFacilities(uid, hid, al)
+	if nil == err {
 	}
 }
 

@@ -12,7 +12,7 @@ import (
 *	Get facility list
 *	Arguments:
 *		uid 	- login user id
-*		ft		- facility list
+*		ft		- facility type
 *	Returns
 *		err - error info
 *		lst - facility list
@@ -91,14 +91,132 @@ func GetFacilityTypeList(uid int64) (err error, lst []commdef.CommonListItem) {
 }
 
 /**
-*	Add New facility type
+*	Add New house facilities
 *	Arguments:
-*		uid 	- login user id
-*		name	- deliverable name
-*		ft		- facility type
+*		uid - login user id
+*		hid	- house id
+*		fl	- facility list
 *	Returns
 *		err - error info
-*		id 	- new facility type id
+**/
+func AddHouseFacilities(uid, hid int64, fl []commdef.HouseFacility) (err error) {
+	FN := "[AddHouseFacilities] "
+	beego.Trace(FN, "uid:", uid, ", fl:", fl)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	// house
+	err, h := checkHouse(hid)
+	if nil != err {
+		return
+	}
+
+	// who could do this operation
+	bPermission := false
+	if h.Owner.Id == uid || h.Agency.Id == uid {
+		bPermission = true
+	} else {
+		errT, bAdmin := isAdministrator(uid)
+		if nil != errT {
+			err = errT
+			return
+		}
+		if bAdmin {
+			bPermission = true
+		}
+	}
+	if !bPermission {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	// facility id
+	if nLen := len(fl); 0 == nLen {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "no facility found"}
+		return
+	}
+
+	for _, v := range fl {
+		if err = checkFacility(v.Facility); nil != err {
+			return
+		}
+	}
+
+	o := orm.NewOrm()
+
+	/* Processing */
+	var al []commdef.HouseFacility // list for adding
+	var ul []commdef.HouseFacility // list for updating
+	for _, v := range fl {
+		// check if the house facility already exist
+		hf := TblHouseFacility{}
+		errT := o.QueryTable("tbl_house_facility").Filter("House", hid).Filter("Facility", v.Facility).One(&hf)
+		beego.Debug(FN, "errT:", errT)
+		if nil == errT {
+			// facility already exist, update information
+			v.Id = hf.Id
+			ul = append(ul, v)
+		} else if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			// new facility, add
+			al = append(al, v)
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	}
+
+	o.Begin()
+	defer func() {
+		if nil != err {
+			beego.Error(FN, "Rollback")
+			o.Rollback()
+		} else {
+			beego.Debug(FN, "Commit")
+			o.Commit()
+		}
+	}()
+
+	// add new house facilities
+	var la []TblHouseFacility
+	for _, v := range al {
+		newItem := TblHouseFacility{House: hid, Facility: v.Facility, Qty: v.Qty, Desc: v.Desc}
+		la = append(la, newItem)
+	}
+	if len(la) > 0 {
+		/*numb*/ _, errT := o.InsertMulti(len(la), la)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED} // , ErrInfo: fmt.Sprintf("add facility:", v.Facility)}
+			return
+		}
+	}
+
+	// update facilities already exist
+	for _, v := range ul {
+		u := TblHouseFacility{Id: v.Id, Qty: v.Qty, Desc: v.Desc}
+		/*numb*/ _, errT := o.Update(&u, "Qty", "Desc")
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("update facility:", v.Facility)}
+			return
+		}
+	}
+
+	return
+}
+
+/**
+*	Add New facility
+*	Arguments:
+*		uid 	- login user id
+*		name	- facility name
+*		ft		- facility type
+*	Returns
+*		err 	- error info
+*		id 		- new facility id
 **/
 func AddFacility(name string, ft, uid int64) (err error, id int64) {
 	FN := "[AddFacility] "
@@ -153,7 +271,7 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 *	Add New facility type
 *	Arguments:
 *		uid 	- login user id
-*		name	- deliverable name
+*		name	- facility type name
 *	Returns
 *		err - error info
 *		id 	- new facility type id
@@ -221,6 +339,28 @@ func checkFacilityType(ft int64) (err error) {
 	if nil != errT {
 		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("facility type:%d", ft)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	return
+}
+
+func checkFacility(fid int64) (err error) {
+	if fid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("facility:%d", fid)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	t := TblFacilitys{Id: fid}
+	errT := o.Read(&t)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("facility:%d", fid)}
 		} else {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		}

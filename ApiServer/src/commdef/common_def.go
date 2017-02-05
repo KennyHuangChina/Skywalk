@@ -121,6 +121,13 @@ type Facility struct {
 	Type string // facility type name
 }
 
+type HouseFacility struct {
+	Id       int64
+	Facility int64
+	Qty      int
+	Desc     string
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events

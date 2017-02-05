@@ -23,7 +23,9 @@
 		"5fdedc5f-cd8a-f600-518d-5f34465c371b",
 		"590dd26e-70d3-dc09-3d58-541ae91faa85",
 		"a81d6806-4215-9d52-a738-10deeec2ca32",
-		"83a0a7da-37af-c1e6-078b-ad4a54213f73"
+		"83a0a7da-37af-c1e6-078b-ad4a54213f73",
+		"04c6df6a-bbfa-d5a0-6b29-7004c8ddc930",
+		"4f894064-02b4-ce60-9f1f-a27c5f1ae33e"
 	],
 	"folders": [],
 	"timestamp": 1484057962826,
@@ -43,6 +45,30 @@
 			"pathVariables": {},
 			"version": 2,
 			"name": "http://ub1604-skywalk-:8080/v1/house/property/list?name=\"\"&bgn=0&cnt=0",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "04c6df6a-bbfa-d5a0-6b29-7004c8ddc930",
+			"url": "http://ub1604-skywalk-:8080/v1/house/facilitys?type=-1",
+			"method": "GET",
+			"headers": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "家电",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "http://ub1604-skywalk-:8080/v1/house/facilitys?type=-1",
 			"description": "",
 			"descriptionFormat": "html",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
@@ -211,6 +237,85 @@
 			"helperAttributes": {},
 			"time": 1485531160431,
 			"name": "http://ub1604-skywalk-:8080/v1/house/covimg/2",
+			"description": "",
+			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
+		},
+		{
+			"id": "4f894064-02b4-ce60-9f1f-a27c5f1ae33e",
+			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/house/housefacilities/2",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "numb",
+					"value": "3",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fid_0",
+					"value": "3",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fqty_0",
+					"value": "222",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fdesc_0",
+					"value": "fdesc_0000",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fid_1",
+					"value": "4",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fqty_1",
+					"value": "333",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fdesc_1",
+					"value": "fdesc_1111",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fid_2",
+					"value": "6",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fqty_2",
+					"value": "666",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fdesc_2",
+					"value": "fdesc_6666",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1486296492776,
+			"name": "http://ub1604-skywalk-:8080/v1/house/housefacilities/2",
 			"description": "",
 			"collectionId": "b6b2f486-bf32-467a-0c8a-cc86e038a6b2"
 		},

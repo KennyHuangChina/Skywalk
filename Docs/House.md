@@ -344,3 +344,22 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 22. Add House Facility (By house owner, agency and administrator)
+	[Security]	private
+	[Request]
+  		* POST /v1/house/housefacilities/:id
+	  		* numb			int			// facility number
+	  		* fid_0			int			// facility_0 id
+	  		* fqty_0		int			// facility_0 quantity
+	  		* fdesc_0		string		// facility_0 description
+	  		* ...
+	  		* fid_n			int			// facility_n id
+	  		* fqty_n		int			// facility_n quantity
+	  		* fdesc_n		string		// facility_n description
+  	[Response]
+		* SUCCESS:200
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

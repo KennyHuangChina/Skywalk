@@ -204,6 +204,26 @@ func (f *TblFacilitys) TableUnique() [][]string {
 	}
 }
 
+type TblHouseFacility struct {
+	Id       int64
+	House    int64  // house id
+	Facility int64  // facility id
+	Qty      int    // facility quantity
+	Desc     string `orm:"size(50)"`
+}
+
+func (hd *TblHouseFacility) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+	}
+}
+
+func (f *TblHouseFacility) TableUnique() [][]string {
+	return [][]string{
+		[]string{"House", "Facility"},
+	}
+}
+
 /***************************************************************************
 	tables for events
 ***************************************************************************/
@@ -294,7 +314,7 @@ func init() {
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable),
-		new(TblFacilityType), new(TblFacilitys),
+		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode))
