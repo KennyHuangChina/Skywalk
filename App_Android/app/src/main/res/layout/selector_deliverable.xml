@@ -8,7 +8,7 @@
     <TextView
         android:text="这是标题"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="38dp"
         android:id="@+id/tv_deliverable_name"
         android:textAlignment="center"
         android:textSize="21sp"
@@ -35,7 +35,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="38dp"
         android:gravity="center">
 
         <TextView
