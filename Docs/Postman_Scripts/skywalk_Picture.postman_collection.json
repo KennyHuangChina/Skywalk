@@ -3,13 +3,57 @@
 	"name": "skywalk_Picture",
 	"description": "",
 	"order": [
-		"d6a88807-f4c6-24a0-2f49-30bd43061d2f"
+		"d6a88807-f4c6-24a0-2f49-30bd43061d2f",
+		"cb2da408-3295-efbc-fb1f-2fe2feafc2cb"
 	],
 	"folders": [],
 	"timestamp": 1484921231777,
-	"owner": "",
+	"owner": 0,
 	"public": false,
 	"requests": [
+		{
+			"id": "cb2da408-3295-efbc-fb1f-2fe2feafc2cb",
+			"headers": "",
+			"url": "http://ub1604-skywalk-:8080/v1/pic/newpic",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "house",
+					"value": "4",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "202",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "desc",
+					"value": "客厅",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "pic",
+					"value": "",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1486390816002,
+			"name": "http://ub1604-skywalk-:8080/v1/pic/newpic",
+			"description": "",
+			"collectionId": "d9106868-2ec9-8124-53f6-e369b920b1e8"
+		},
 		{
 			"id": "d6a88807-f4c6-24a0-2f49-30bd43061d2f",
 			"headers": "",

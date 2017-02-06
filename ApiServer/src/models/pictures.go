@@ -10,6 +10,58 @@ import (
 /**
 *	Get picture url
 *	Arguments:
+*		hid 	- house id
+*		uid 	- login user id
+*		pt		- picture type
+*		desc	- picture description
+*	Returns
+*		err - error info
+*		nid - new picture id
+**/
+func AddPicture(hid, uid int64, pt int, desc string) (err error, nid int64) {
+	FN := "[AddPicture] "
+	beego.Trace(FN, "hid:", hid, ", uid:", uid, ", pt:", pt, ", desc:", desc)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Arguments checking */
+	if 0 != hid {
+		errT, h := checkHouse(hid)
+		if nil != errT {
+			err = errT
+			return
+		}
+		if h.Owner.Id != uid || h.Agency.Id != uid {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+			return
+		}
+	}
+	if 0 == len(desc) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture desc:%s", desc)}
+		return
+	}
+	// picture type
+	if err = checkPictureType(pt); nil != err {
+		return
+	}
+	if commdef.PIC_TYPE_HOUSE == pt/100*100 && 0 == hid {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		return
+	}
+
+	/* Processing */
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	return
+}
+
+/**
+*	Get picture url
+*	Arguments:
 *		pid 	- picture id
 *		uid 	- user id
 *		size	- picture size: PIC_SIZE_ALL, PIC_SIZE_SMALL, PIC_SIZE_MODERATE, PIC_SIZE_LARGE,
@@ -30,15 +82,15 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 	}()
 
 	if pid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid picture id:%d", pid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture id:%d", pid)}
 		return
 	}
 	if uid <= 0 {
-		// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid user id:%d", uid)}
+		// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user id:%d", uid)}
 		// return
 	}
 	if size < commdef.PIC_SIZE_ALL || size > commdef.PIC_SIZE_LARGE {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid size:%d", size)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("size:%d", size)}
 		return
 	}
 
@@ -81,6 +133,45 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 	}
 
 	beego.Warn(FN, "TODO: picture access right varification")
+
+	return
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		Internal Functions
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func checkPictureType(picType int) (err error) {
+	FN := "[checkPictureType] "
+
+	if picType <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT}
+		return
+	}
+
+	typeMajor := picType / 100 * 100
+	typeMinor := picType % 100
+	beego.Debug(FN, "Major:", typeMajor, ", minor:", typeMinor)
+
+	switch typeMajor {
+	case commdef.PIC_TYPE_USER:
+		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	case commdef.PIC_TYPE_HOUSE:
+		switch typeMinor {
+		case commdef.PIC_HOUSE_FLOOR:
+			fallthrough
+		case commdef.PIC_HOUSE_FURNITURE:
+			fallthrough
+		case commdef.PIC_HOUSE_APPLIANCE:
+		default:
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT}
+		}
+	case commdef.PIC_TYPE_RENTAL:
+		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT}
+	}
 
 	return
 }

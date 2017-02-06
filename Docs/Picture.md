@@ -1,7 +1,7 @@
 # Picture APIs
 
 ##
-###1. Get picture url
+### 1. Get picture url
 	[Security]	based on who is asking, some pictures are pulbic, but some pictures are private
 	[Request]
   		* GET /v1/pic/:id?sid=xxx&size=
@@ -12,6 +12,22 @@
 			* Url_s			string 		// small picture path url
 			* Url_m			string		// moderate picture path url
 			* Url_l			string		// large picture path url
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
+##
+### 2. Add picture
+	[Security]	Private. house owner, agency
+	[Request]
+  		* POST /v1/pic/newpic
+	  		* house			int			// house id. could be Zero, which means picture is not related with house
+	  		* type			int			// picture type
+	  		* desc			string		// picture description
+	  		* pic			file 		// binary file to store the picture to upload
+	[Response]
+		* SUCCESS:200 
+			* Id			string 		// new picture id
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
