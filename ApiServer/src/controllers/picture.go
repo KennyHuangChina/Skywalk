@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	// "ApiServer/commdef"
+	"ApiServer/commdef"
+	"fmt"
 	"github.com/astaxie/beego"
 	// "github.com/astaxie/beego/orm"
 	"ApiServer/models"
@@ -94,6 +95,22 @@ func (this *PictureController) AddPic() {
 	hid, _ := this.GetInt64("house")
 	pt, _ := this.GetInt("type")
 	desc := this.GetString("desc")
+
+	// picture
+	/*file*/ _, fHead, errT := this.GetFile("pic")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("no picture attached, err:%s", errT.Error())}
+		return
+	}
+	for k, v := range fHead.Header {
+		beego.Debug(FN, k, ":", v)
+	}
+	// file type
+	fType := fHead.Header["Content-Type"][0]
+	if "image/jpeg" != fType && "image/png" != fType {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid Content-Type::%s", fType)}
+		return
+	}
 
 	/*
 	 *	Processing
