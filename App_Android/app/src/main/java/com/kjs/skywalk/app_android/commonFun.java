@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -36,5 +38,14 @@ public class commonFun {
         }
 
         return bd;
+    }
+
+    public static void showToast_resEntryName(Context context, View v) {
+        String strVName = v.getResources().getResourceEntryName(v.getId());
+        Toast.makeText(context, "res entry name: " + strVName, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showToast_resId(Context context, View v) {
+        Toast.makeText(context, "res id: " + v.getId(), Toast.LENGTH_SHORT).show();
     }
 }
