@@ -26,9 +26,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#efefef"
-            android:layout_weight="300">
+            android:layout_weight="380">
 
             <SearchView
+                android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:searchIcon="@drawable/search"
@@ -66,6 +67,60 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_height="60dp">
+        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+            android:id="@+id/textViewRegion"
+            android:text="@string/fragment_search_condition_region"
+            android:textSize="21sp"
+            android:textColor="#272536"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/dropdown"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
+        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+            android:id="@+id/textViewPrice"
+            android:text="@string/fragment_search_condition_price"
+            android:textSize="21sp"
+            android:textColor="#272536"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/dropdown"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
+        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+            android:id="@+id/textViewType"
+            android:text="@string/fragment_search_condition_type"
+            android:textSize="21sp"
+            android:textColor="#272536"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/dropdown"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
+        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+            android:id="@+id/textViewFilter"
+            android:text="@string/fragment_search_condition_filter"
+            android:textSize="21sp"
+            android:textColor="#272536"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/dropdown"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <TextView
         android:text="@string/tab_menu_apartment"
