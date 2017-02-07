@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"io"
+	"math/rand"
 	"mime/multipart"
 	"os"
+	"time"
 	// "github.com/astaxie/beego/orm"
 	"ApiServer/models"
 )
@@ -114,11 +116,13 @@ func (this *PictureController) AddPic() {
 	}
 	// file type
 	fType := fHead.Header["Content-Type"][0]
-	if "image/jpeg" != fType && "image/png" != fType {
+	if !checkPicType(fType) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid Content-Type::%s", fType)}
 		return
 	}
-	if err = saveLocal(file, fHead.Filename); nil != err {
+
+	picFile := "./static/img/" + generatePicFileName() + getPicExtName(fType)
+	if err = saveLocal(file, picFile /*fHead.Filename*/); nil != err {
 		return
 	}
 
@@ -136,6 +140,24 @@ func (this *PictureController) AddPic() {
 //		Internal Functions
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func generatePicFileName() (fileName string) {
+	FN := "[generatePicFileName] "
+
+	timeNow := time.Now()
+	nameBase := fmt.Sprintf("%.4d%.2d%.2d%.2d%.2d%.2d", timeNow.Year(), timeNow.Month(), timeNow.Day(), timeNow.Hour(), timeNow.Minute(), timeNow.Second())
+	// beego.Debug(FN, "nameBase:", nameBase)
+
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	rand := r.Intn(999999)
+	nameRand := fmt.Sprintf("%.6d", rand)
+	// beego.Debug(FN, "nameRand:", nameRand)
+
+	fileName = nameBase + nameRand
+	beego.Debug(FN, "fileName:", fileName)
+
+	return
+}
+
 func saveLocal(file multipart.File, filename string) (err error) {
 	FN := "[saveLocal] "
 
@@ -196,4 +218,36 @@ func saveLocal(file multipart.File, filename string) (err error) {
 	beego.Debug(FN, "writeBytes:", writeBytes)
 
 	return
+}
+
+func checkPicType(ft string) bool {
+	// beego.Debug("ft:", ft)
+	for _, v := range PIC_TYPES {
+		// beego.Debug("v.picType:", v.picType)
+		if ft == v.picType {
+			return true
+		}
+	}
+	return false
+}
+
+func getPicExtName(ft string) string {
+	for _, v := range PIC_TYPES {
+		if ft == v.picType {
+			return v.extName
+		}
+	}
+	return ""
+}
+
+type PicType struct {
+	picType string // picture type
+	extName string // picture file external name
+}
+
+var PIC_TYPES []PicType
+
+func init() {
+	PIC_TYPES = append(PIC_TYPES, PicType{"image/jpeg", ".jpg"})
+	PIC_TYPES = append(PIC_TYPES, PicType{"image/png", ".png"})
 }
