@@ -102,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     // set in activity_main.xml
     public void onClickResponse(View v) {
-        String strVName = v.getResources().getResourceEntryName(v.getId());
-        Toast.makeText(this, "click: " + strVName, Toast.LENGTH_SHORT).show();
+        commonFun.showToast_resEntryName(this, v);
 
         switch (v.getId()) {
             case R.id.tv_rent:
