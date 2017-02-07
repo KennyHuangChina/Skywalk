@@ -4,9 +4,16 @@ import (
 	"ApiServer/commdef"
 	"fmt"
 	"github.com/astaxie/beego"
+	"io"
+	"mime/multipart"
+	"os"
 	// "github.com/astaxie/beego/orm"
 	"ApiServer/models"
 )
+
+type Size interface {
+	Size() int64
+}
 
 type PictureController struct {
 	beego.Controller
@@ -97,7 +104,7 @@ func (this *PictureController) AddPic() {
 	desc := this.GetString("desc")
 
 	// picture
-	/*file*/ _, fHead, errT := this.GetFile("pic")
+	file, fHead, errT := this.GetFile("pic")
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("no picture attached, err:%s", errT.Error())}
 		return
@@ -111,6 +118,9 @@ func (this *PictureController) AddPic() {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid Content-Type::%s", fType)}
 		return
 	}
+	if err = saveLocal(file, fHead.Filename); nil != err {
+		return
+	}
 
 	/*
 	 *	Processing
@@ -119,4 +129,71 @@ func (this *PictureController) AddPic() {
 	if nil == err {
 		result.Id = id
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		Internal Functions
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func saveLocal(file multipart.File, filename string) (err error) {
+	FN := "[saveLocal] "
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+	}()
+
+	// file size
+	fileSize := int64(0)
+	if sizeIntf, ok := file.(Size); ok {
+		fileSize = sizeIntf.Size()
+	}
+	if fileSize <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file, size:", fileSize)}
+		return
+	}
+	// beego.Debug(FN, "file name:", fHead.Header["Content-Disposition"][0])
+	beego.Debug(FN, "file name:", filename, ", size:", fileSize)
+
+	buffSize := int64(20 * 1024) // default buffer size 20KB
+	if fileSize < 20*1024 {
+		buffSize = fileSize
+	}
+	buff := make([]byte, buffSize)
+
+	// save to local disk
+	localFile, errT := os.Create(filename)
+	defer localFile.Close()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_CREATE_FILE, ErrInfo: errT.Error()}
+		return
+	}
+
+	writeBytes := int64(0)
+	file.Seek(0, 0)
+	for {
+		// read data from file
+		numb, errT := file.Read(buff)
+		// beego.Debug(FN, "numb:", numb, ", errT:", errT, ", buff:", buff)
+		if io.EOF == errT /*|| 0 == numb*/ { // EOF
+			beego.Debug(FN, "errT:", errT, ", numb:", numb)
+			break
+		} else if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_READ, ErrInfo: errT.Error()}
+			return
+		}
+
+		buff2write := buff[:numb]
+		n, errT := localFile.Write(buff2write)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_WRITE, ErrInfo: errT.Error()}
+			return
+		}
+		writeBytes = writeBytes + int64(n)
+	}
+	beego.Debug(FN, "writeBytes:", writeBytes)
+
+	return
 }

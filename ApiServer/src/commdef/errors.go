@@ -89,7 +89,9 @@ const (
 	ERR_SMS_EXPIRED          = 1307
 
 	// system
-	ERR_SYS_IO_READ = 1401
+	ERR_SYS_IO_READ        = 1401
+	ERR_SYS_IO_CREATE_FILE = 1402
+	ERR_SYS_IO_WRITE       = 1403
 )
 
 var ErrorDesc = map[int64]string{
@@ -120,5 +122,7 @@ var ErrorDesc = map[int64]string{
 	ERR_SMS_EXPIRED:          "SMS code was expired",
 
 	// system
-	ERR_SYS_IO_READ: "System IO read error",
+	ERR_SYS_IO_READ:        "System IO read error",
+	ERR_SYS_IO_CREATE_FILE: "Fail to create file",
+	ERR_SYS_IO_WRITE:       "Fail to write file",
 }
