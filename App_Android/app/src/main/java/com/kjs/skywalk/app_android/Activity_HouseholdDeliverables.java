@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -65,6 +66,15 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         ((TextView)findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
 
         loadUI();
+
+        // add button
+        ImageButton ibNew = (ImageButton) findViewById(R.id.ib_new);
+        ibNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeliverableNewDlg();
+            }
+        });
     }
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
@@ -123,7 +133,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
             mDeliverableEdtDlg = new AlertDialog.Builder(this).create();
         }
         mDeliverableEdtDlg.show();
-        mDeliverableEdtDlg.setContentView(R.layout.selector_deliverable);
+        mDeliverableEdtDlg.setContentView(R.layout.dialog_deliverable_editor);
 
         TextView tvName = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_deliverable_name);
         tvName.setText(name);
@@ -158,10 +168,54 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     }
 
+    private void showDeliverableNewDlg() {
+        int itemIndex = 0;  // for test
+        HouseholdDeliverable deliverable = mHouseDeliverables.get(itemIndex);
+        int curValue = deliverable.mNum;
+        String name = deliverable.mDesc;
+
+        if (mDeliverableEdtDlg == null) {
+            mDeliverableEdtDlg = new AlertDialog.Builder(this).create();
+        }
+        mDeliverableEdtDlg.show();
+        mDeliverableEdtDlg.setContentView(R.layout.dialog_deliverable_new);
+
+        TextView tvName = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_deliverable_name);
+        tvName.setText(name);
+
+        final NumberPicker npDeliverable = (NumberPicker) mDeliverableEdtDlg.findViewById(R.id.np_deliverable);
+        npDeliverable.setMinValue(1);
+        npDeliverable.setMaxValue(10);
+        npDeliverable.setValue(curValue);
+        npDeliverable.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+//                Toast.makeText(Activity_HouseholdDeliverables.this, oldVal + " to " + newVal, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        TextView tvBack = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_back);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDeliverableEdtDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDeliverableEdtDlg.dismiss();
+            }
+        });
+
+    }
+
     private View.OnClickListener mDeliverableItemClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            commonFun.showToast_resId(Activity_HouseholdDeliverables.this, v);
+//            commonFun.showToast_resId(Activity_HouseholdDeliverables.this, v);
             showDeliverableEditDlg(v);
         }
     };
