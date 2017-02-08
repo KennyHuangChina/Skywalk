@@ -189,8 +189,9 @@ const (
 
 const (
 	PIC_SIZE_ALL      = 0
-	PIC_SIZE_SMALL    = 1
-	PIC_SIZE_MODERATE = 2
-	PIC_SIZE_LARGE    = 3
-	// PIC_SIZE_HEAD_PORTRAINT = 4 // head portraint, typically used for user picture
+	PIC_SIZE_ORIGINAL = 1
+	PIC_SIZE_SMALL    = 2
+	PIC_SIZE_MODERATE = 3
+	PIC_SIZE_LARGE    = 4
+	// PIC_SIZE_HEAD_PORTRAINT = 5 // head portraint, typically used for user picture
 )

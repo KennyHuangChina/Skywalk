@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"os"
+	"strings"
 )
 
 /**
@@ -13,12 +15,14 @@ import (
 *		hid 	- house id
 *		uid 	- login user id
 *		pt		- picture type
+*		pfn		- picture file name, relative path against picture base dir
+*		pbd		- picture base dir
 *		desc	- picture description
 *	Returns
 *		err - error info
 *		nid - new picture id
 **/
-func AddPicture(hid, uid int64, pt int, desc string) (err error, nid int64) {
+func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid int64) {
 	FN := "[AddPicture] "
 	beego.Trace(FN, "hid:", hid, ", uid:", uid, ", pt:", pt, ", desc:", desc)
 
@@ -40,20 +44,48 @@ func AddPicture(hid, uid int64, pt int, desc string) (err error, nid int64) {
 			return
 		}
 	}
+	if 0 == len(pbd) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture base dir:%s", pbd)}
+		return
+	}
+	if 0 == len(pfn) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
+		return
+	}
+	if pos := strings.LastIndex(pfn, "/"); pos < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
+		return
+	}
+
 	if 0 == len(desc) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture desc:%s", desc)}
 		return
 	}
 	// picture type
-	if err = checkPictureType(pt); nil != err {
+	err, majorType, minorType := checkPictureType(pt)
+	if nil != err {
 		return
 	}
-	if commdef.PIC_TYPE_HOUSE == pt/100*100 && 0 == hid {
+	if commdef.PIC_TYPE_HOUSE == majorType && 0 == hid {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		return
+	}
+	// check if the picture exist
+	_, errT := os.Stat(pbd + pfn)
+	if nil == errT || os.IsExist(errT) { // picture exist
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture(%s) does not exist", pbd+pfn)}
 		return
 	}
 
 	/* Processing */
+	switch majorType {
+	case commdef.PIC_TYPE_USER:
+	case commdef.PIC_TYPE_HOUSE:
+		return addPicHouse(hid, minorType, desc, pfn, pbd)
+	case commdef.PIC_TYPE_RENTAL:
+	default:
+	}
 
 	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	return
@@ -142,7 +174,7 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 //		Internal Functions
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func checkPictureType(picType int) (err error) {
+func checkPictureType(picType int) (err error, majorType, minorType int) {
 	FN := "[checkPictureType] "
 
 	if picType <= 0 {
@@ -164,6 +196,8 @@ func checkPictureType(picType int) (err error) {
 		case commdef.PIC_HOUSE_FURNITURE:
 			fallthrough
 		case commdef.PIC_HOUSE_APPLIANCE:
+			majorType = typeMajor
+			minorType = typeMinor
 		default:
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT}
 		}
@@ -171,6 +205,77 @@ func checkPictureType(picType int) (err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT}
+	}
+
+	return
+}
+
+func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, nid int64) {
+	FN := "[addPicHouse] "
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+			nid = 0
+		}
+	}()
+
+	o := orm.NewOrm()
+
+	o.Begin()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
+
+	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMiner: minotType, RefId: hid, Desc: desc}
+	id, errT := o.Insert(&newPic)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	nid = id
+
+	// watermark
+
+	// generate picture set, original, large size and small size
+	po := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_ORIGINAL, Url: pfn}
+	_, errT = o.Insert(&po)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create original picture, err:%s", errT.Error())}
+		return
+	}
+
+	pos := strings.LastIndex(pfn, ".")
+	if pos < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
+		return
+	}
+	picName := pfn[:pos-1]
+	extName := pfn[pos:]
+	// beego.Debug(FN, "picName:", picName, ", extName:", extName)
+
+	// small size
+	beego.Warn(FN, "TODO: resizing")
+	psn := picName + "_s" + extName
+	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
+	_, errT = o.Insert(&ps)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
+		return
+	}
+
+	// Large size
+	beego.Warn(FN, "TODO: resizing")
+	psn = picName + "_l" + extName
+	pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: psn}
+	_, errT = o.Insert(&pl)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create large picture, err:%s", errT.Error())}
+		return
 	}
 
 	return

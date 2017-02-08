@@ -121,19 +121,28 @@ func (this *PictureController) AddPic() {
 		return
 	}
 
-	PicBaseDir := "./pics/"
-	err, picFileName := generatePicFileName(PicBaseDir, getPicExtName(fType)) // os.Getwd()
-	// picFile := picFileName            // + getPicExtName(fType)
-	if err = saveLocal(file, picFileName /*fHead.Filename*/); nil != err {
+	picBaseDir := beego.AppConfig.String("PicBaseDir") // os.Getwd()
+	// beego.Warn("picBaseDir:", picBaseDir)
+	err, picFileName := generatePicFileName(picBaseDir, getPicExtName(fType))
+	if nil != err {
+		return
+	}
+	// Notice: we need to save the picture right now, if we save the picture after models.AddPicture(), the picture file name
+	//	maybe used by other API calling, so we should occupy this file name first.
+	// Warning: This solution could not prevent picture file name conflict completely, there is chance that file conflict
+	//	between generatePicFileName() and savePicture(), although it's very low possibility
+	if err = savePicture(file, picBaseDir+picFileName /*fHead.Filename*/); nil != err {
 		return
 	}
 
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddPicture(hid, uid, pt, desc)
+	err, id := models.AddPicture(hid, uid, pt, desc, picFileName, picBaseDir)
 	if nil == err {
 		result.Id = id
+	} else {
+		beego.Warn(FN, "TODO: delete the picture already saved before")
 	}
 }
 
@@ -195,15 +204,16 @@ func generatePicFileName(baseDir, extName string) (err error, fileName string) {
 		// nameRand := fmt.Sprintf("%.6d", nTryTimes)
 		// beego.Debug(FN, "nameRand:", nameRand)
 
-		fileName = picDir + nameBase + nameRand + extName
+		// fileName = picDir + nameBase + nameRand + extName
 		// beego.Debug(FN, "fileName:", fileName)
 
 		// check if the file name is conflict
-		_, errT = os.Stat(fileName)
+		_, errT = os.Stat(picDir + nameBase + nameRand + extName)
 		if nil == errT || os.IsExist(errT) {
 			// file already exist, try again
 			time.Sleep(10 * time.Millisecond)
 		} else {
+			fileName = dateDir + nameBase + nameRand + extName
 			// beego.Debug(FN, "Done")
 			return
 		}
@@ -213,8 +223,8 @@ func generatePicFileName(baseDir, extName string) (err error, fileName string) {
 	return
 }
 
-func saveLocal(file multipart.File, filename string) (err error) {
-	FN := "[saveLocal] "
+func savePicture(file multipart.File, filename string) (err error) {
+	FN := "[savePicture] "
 
 	defer func() {
 		if nil != err {
