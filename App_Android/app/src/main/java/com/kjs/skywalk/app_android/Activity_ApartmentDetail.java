@@ -7,6 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.kjs.skywalk.control.SliderView;
+
+import java.util.ArrayList;
 
 //http://www.cnblogs.com/yangqiangyu/p/5143590.html
 //https://github.com/singwhatiwanna/banner/tree/master/app/src/main
@@ -28,5 +33,26 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        SliderView sView = (SliderView) findViewById(R.id.sv_view);
+        ArrayList<String> list = new ArrayList<>();
+        list.add(0, "1");
+        list.add(0, "2");
+        list.add(0, "3");
+        list.add(0, "4");
+        list.add(0, "5");
+        sView.setImages(list, mSvListener);
     }
+
+    private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
+        @Override
+        public void onImageClick(int pos, View view) {
+            commonFun.showToast_resIag(Activity_ApartmentDetail.this, view);
+        }
+
+        @Override
+        public void onImageDisplay(String imgUrl, ImageView imageView) {
+            imageView.setImageResource(R.drawable.homepage_title);
+        }
+    };
 }

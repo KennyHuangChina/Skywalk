@@ -9,10 +9,22 @@
     tools:context="com.kjs.skywalk.app_android.Activity_ApartmentDetail"
     tools:showIn="@layout/activity__apartment_detail">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.kjs.skywalk.control.SliderView
+            android:id="@+id/sv_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        </com.kjs.skywalk.control.SliderView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="@string/large_text"/>
+
+    </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -48,4 +48,8 @@ public class commonFun {
     public static void showToast_resId(Context context, View v) {
         Toast.makeText(context, "res id: " + v.getId(), Toast.LENGTH_SHORT).show();
     }
+
+    public static void showToast_resIag(Context context, View v) {
+        Toast.makeText(context, "res tag: " + v.getTag(), Toast.LENGTH_SHORT).show();
+    }
 }
