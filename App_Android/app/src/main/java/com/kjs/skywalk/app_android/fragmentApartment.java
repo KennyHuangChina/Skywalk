@@ -31,7 +31,7 @@ public class fragmentApartment extends Fragment {
         ListView listViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
         listViewSearchResult.setFocusable(false);
 
-        homepage_apartment_listitem_adapter adapter = new homepage_apartment_listitem_adapter(getActivity());
+        AdapterSearchResultList adapter = new AdapterSearchResultList(getActivity());
         listViewSearchResult.setAdapter(adapter);
 
         return view;
