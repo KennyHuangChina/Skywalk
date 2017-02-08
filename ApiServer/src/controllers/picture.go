@@ -121,8 +121,10 @@ func (this *PictureController) AddPic() {
 		return
 	}
 
-	picFile := "./static/img/" + generatePicFileName() + getPicExtName(fType)
-	if err = saveLocal(file, picFile /*fHead.Filename*/); nil != err {
+	PicBaseDir := "./pics/"
+	err, picFileName := generatePicFileName(PicBaseDir, getPicExtName(fType)) // os.Getwd()
+	// picFile := picFileName            // + getPicExtName(fType)
+	if err = saveLocal(file, picFileName /*fHead.Filename*/); nil != err {
 		return
 	}
 
@@ -140,21 +142,74 @@ func (this *PictureController) AddPic() {
 //		Internal Functions
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func generatePicFileName() (fileName string) {
+func generatePicFileName(baseDir, extName string) (err error, fileName string) {
 	FN := "[generatePicFileName] "
 
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+			fileName = ""
+		}
+	}()
+
+	if 0 == len(baseDir) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("baseDir:%s", baseDir)}
+		return
+	}
+	if 0 == len(extName) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("extName:%s", extName)}
+		return
+	}
+
+	// file path = base_dir + date_dir + file_name
 	timeNow := time.Now()
-	nameBase := fmt.Sprintf("%.4d%.2d%.2d%.2d%.2d%.2d", timeNow.Year(), timeNow.Month(), timeNow.Day(), timeNow.Hour(), timeNow.Minute(), timeNow.Second())
-	// beego.Debug(FN, "nameBase:", nameBase)
+	dateDir := fmt.Sprintf("%.4d%.2d/", timeNow.Year(), timeNow.Month())
+	picDir := baseDir + dateDir
+	beego.Debug(FN, "picDir:", picDir)
+	/*fileinfo*/ _, errT := os.Stat(picDir)
+	if nil == errT { // date dir already exist
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	rand := r.Intn(999999)
-	nameRand := fmt.Sprintf("%.6d", rand)
-	// beego.Debug(FN, "nameRand:", nameRand)
+	} else if os.IsNotExist(errT) {
+		beego.Warn(FN, "dir:", dateDir, " does not exist, create it")
+		errT = os.MkdirAll(picDir, 0700)
+		if nil != err {
+			err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_CREATE_DIR, ErrInfo: errT.Error()}
+			return
+		}
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
 
-	fileName = nameBase + nameRand
-	beego.Debug(FN, "fileName:", fileName)
+	MAX_TRY_TIMES := 10
+	nTryTimes := 0
+	for nTryTimes = 0; nTryTimes < MAX_TRY_TIMES; nTryTimes++ {
 
+		nameBase := fmt.Sprintf("%.2d%.2d%.2d%.2d", timeNow.Day(), timeNow.Hour(), timeNow.Minute(), timeNow.Second())
+		// nameBase := fmt.Sprintf("%.2d%.2d%.2d%.2d", timeNow.Day(), 0, 0, 0)
+		// beego.Debug(FN, "nameBase:", nameBase)
+
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		rand := r.Intn(999999)
+		nameRand := fmt.Sprintf("%.6d", rand)
+		// nameRand := fmt.Sprintf("%.6d", nTryTimes)
+		// beego.Debug(FN, "nameRand:", nameRand)
+
+		fileName = picDir + nameBase + nameRand + extName
+		// beego.Debug(FN, "fileName:", fileName)
+
+		// check if the file name is conflict
+		_, errT = os.Stat(fileName)
+		if nil == errT || os.IsExist(errT) {
+			// file already exist, try again
+			time.Sleep(10 * time.Millisecond)
+		} else {
+			// beego.Debug(FN, "Done")
+			return
+		}
+	}
+
+	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Try %d times, failed", nTryTimes)}
 	return
 }
 

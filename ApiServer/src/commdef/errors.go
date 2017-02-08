@@ -92,6 +92,7 @@ const (
 	ERR_SYS_IO_READ        = 1401
 	ERR_SYS_IO_CREATE_FILE = 1402
 	ERR_SYS_IO_WRITE       = 1403
+	ERR_SYS_IO_CREATE_DIR  = 1404
 )
 
 var ErrorDesc = map[int64]string{
@@ -125,4 +126,5 @@ var ErrorDesc = map[int64]string{
 	ERR_SYS_IO_READ:        "System IO read error",
 	ERR_SYS_IO_CREATE_FILE: "Fail to create file",
 	ERR_SYS_IO_WRITE:       "Fail to write file",
+	ERR_SYS_IO_CREATE_DIR:  "Fail to create dir",
 }
