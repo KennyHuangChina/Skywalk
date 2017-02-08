@@ -125,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.tv_apartment:
             {
+                Intent intent = new Intent(this, Activity_ApartmentDetail.class);
+                startActivity(intent);
+
                 setNewMessageCount(5);
             }
             break;
