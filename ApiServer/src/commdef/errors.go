@@ -64,6 +64,7 @@ func (se SwError) Error() string {
 const (
 	ERR_NONE          = 0
 	ERR_NOT_IMPLEMENT = 1001
+	ERR_LOWER_CLIENT  = 1002
 
 	// common error
 	ERR_COMMON_BAD_ARGUMENT = 1101
@@ -98,6 +99,7 @@ const (
 var ErrorDesc = map[int64]string{
 	ERR_NONE:          "OK",
 	ERR_NOT_IMPLEMENT: "Not Implement",
+	ERR_LOWER_CLIENT:  "Client is too low, please upgrade",
 
 	// common error
 	ERR_COMMON_BAD_ARGUMENT: "Invalid input argument",
