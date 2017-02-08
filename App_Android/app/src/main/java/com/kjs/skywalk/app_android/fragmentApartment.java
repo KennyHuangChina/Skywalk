@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -26,6 +27,13 @@ public class fragmentApartment extends Fragment {
         textView.setHint(R.string.fragment_search_input_hint);
         textView.setGravity(Gravity.BOTTOM);
         textView.setVisibility(View.VISIBLE);
+
+        ListView listViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
+        listViewSearchResult.setFocusable(false);
+
+        homepage_apartment_listitem_adapter adapter = new homepage_apartment_listitem_adapter(getActivity());
+        listViewSearchResult.setAdapter(adapter);
+
         return view;
     }
 }
