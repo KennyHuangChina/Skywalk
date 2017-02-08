@@ -12,4 +12,5 @@
     <string name="nanjing">南京</string>
 
     <string name="fragment_search_input_hint">输入小区或商圈名称</string>
+	<string name="fragment_search_input_hint1">sss</string>
 </resources>
