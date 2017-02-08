@@ -10,13 +10,14 @@
     <string name="homepage_zufang">我要租房</string>
 
     <string name="nanjing">南京</string>
-	<string name="nanjing1">ssssadsafsdfasdfasdfss</string>
     <string name="fragment_search_input_hint">输入小区或商圈名称</string>
-    <string name="fragment_search_input_hint1">sss</string>
     <string name="fragment_search_condition_region">区域</string>
     <string name="fragment_search_condition_price">价格</string>
     <string name="fragment_search_condition_type">户型</string>
     <string name="fragment_search_condition_filter">筛选</string>
+    <string name="fragment_search_sort_date">发布时间</string>
+    <string name="fragment_search_sort_unit_price">单价排序</string>
+    <string name="fragment_search_sort_total_price">总价升序</string>
 
     <string name="title_activity__apartment_detail">Activity_ApartmentDetail</string>
     <string name="large_text">
