@@ -5,6 +5,12 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	z "github.com/nutzam/zgo"
+	"image/draw"
+	// "graphics"
+	// "code.google.com/p/graphics-go/graphics"
+	"image"
+	"image/png"
 	"os"
 	"strings"
 )
@@ -260,6 +266,8 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 
 	// small size
 	beego.Warn(FN, "TODO: resizing")
+	err = resizeImage(pbd+pfn, 320, 240)
+
 	psn := picName + "_s" + extName
 	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
 	_, errT = o.Insert(&ps)
@@ -278,5 +286,99 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 		return
 	}
 
+	return
+}
+
+/*
+*	Resizing the image to new size
+*		path	- original image path
+*		tx		- target width
+*		ty		- target height
+ */
+func resizeImage(path string, tx, ty int) (err error) {
+	FN := "[resizeImage] "
+
+	if tx <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tx:", tx)}
+		return
+	}
+	if ty <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("ty:", ty)}
+		return
+	}
+
+	typef := z.FileType(path)
+	beego.Debug(FN, "typef:", typef)
+
+	src, err := loadImage(path)
+	if nil != err {
+		return
+	}
+
+	bound := src.Bounds()
+	dx := bound.Dx()
+	dy := bound.Dy()
+	beego.Debug(FN, "dx:", dx, ", dy:", dy)
+	if dx <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("dx:", dx)}
+		return
+	}
+	if dy <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("dy:", dy)}
+		return
+	}
+
+	// calculate the real target image width and height
+	nx := tx
+	ny := ty
+	ny0 := dy * tx / dx
+	if ny0 > ty {
+		nx = dx * ty / dy
+	} else {
+		ny = ny0
+	}
+	beego.Debug(FN, "nx:", nx, ", ny:", ny)
+
+	dst := image.NewRGBA(image.Rect(0, 0, nx, ny)) // newdx, newdx * dy / dx))
+
+	// if errT := graphics.Scale(dst, src); nil != errT {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Scan image, err:", errT.Error())}
+	// 	return
+	// }
+
+	// r := image.Rectangle{dp, dp.Add(src.Bounds())}
+	sr := src.Bounds()
+	// r := sr.Sub(sr.Min) //.Add()
+	draw.Draw(dst, src.Bounds(), src, sr.Min, draw.Over)
+
+	// draw.Draw(dst, image.Rect(0, 0, nx, ny), src, image.Pt(0, 0), draw.Src /*Over*/)
+
+	// save new image
+	imgfile, err := os.Create("./thumbnail.png")
+
+	defer imgfile.Close()
+	err = png.Encode(imgfile, dst) //编码图片
+	if err != nil {
+		beego.Error("Save fail:", err)
+	}
+
+	return
+}
+
+// Load Image decodes an image from a file of image.
+func loadImage(path string) (img image.Image, err error) {
+	// FN := "[loadImage] "
+
+	file, errT := os.Open(path)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Open image, err:%s", errT.Error())}
+		return
+	}
+	defer file.Close()
+	img, _, errT = image.Decode(file)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Decode image, err:%s", errT.Error())}
+		return
+	}
 	return
 }
