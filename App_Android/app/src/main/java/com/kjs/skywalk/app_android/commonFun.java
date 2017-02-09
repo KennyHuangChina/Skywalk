@@ -9,6 +9,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by sailor.zhou on 2017/2/2.
@@ -39,6 +44,32 @@ public class commonFun {
 
         return bd;
     }
+
+    public static final Bitmap loadImageFromUrl(String imgUrl) {
+        Bitmap bitmap = null;
+        try {
+            URL url = new URL(imgUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3000);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // show toast info
+    ///////////////////////////////////////////////////////////////////////////
 
     public static void showToast_resEntryName(Context context, View v) {
         String strVName = v.getResources().getResourceEntryName(v.getId());

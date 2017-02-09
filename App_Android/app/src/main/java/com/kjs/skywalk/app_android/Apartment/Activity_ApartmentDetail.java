@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android.Apartment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
+import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
@@ -37,11 +39,10 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         ArrayList<String> list = new ArrayList<>();
-        list.add(0, "1");
-        list.add(0, "2");
-        list.add(0, "3");
-        list.add(0, "4");
-        list.add(0, "5");
+        list.add("1");
+        list.add("2");
+        list.add("3");
+
         sView.setImages(list, mSvListener);
     }
 
@@ -52,8 +53,30 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
         }
 
         @Override
-        public void onImageDisplay(String imgUrl, ImageView imageView) {
-            imageView.setImageResource(R.drawable.homepage_title);
+        public void onImageDisplay(final String imgUrl, final ImageView imageView) {
+
+            String tag = (String) imageView.getTag();
+            int resId = getResources().getIdentifier("decorate" + tag, "drawable", getPackageName());
+            kjsLogUtil.i(String.format("tag is %s, resId is %#x", tag, resId));
+
+            imageView.setImageResource(resId);
+
+
+
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    final Bitmap bitmap = commonFun.loadImageFromUrl(imgUrl);
+//                    if (bitmap != null) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                imageView.setImageBitmap(bitmap);
+//                            }
+//                        });
+//                    }
+//                }
+//            }).start();
         }
     };
 }
