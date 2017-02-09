@@ -23,6 +23,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="148px"
+        android:background="@drawable/menu_background"
         android:layout_alignParentBottom="true" >
 
         <TextView

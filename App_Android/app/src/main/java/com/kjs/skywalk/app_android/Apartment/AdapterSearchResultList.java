@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
@@ -24,7 +25,7 @@ class AdapterSearchResultList extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 8;
     }
 
     @Override
@@ -46,7 +47,9 @@ class AdapterSearchResultList extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.homepage_listitem, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info, null);
+            ImageView flagView = (ImageView)convertView.findViewById(R.id.imageViewFlag);
+            flagView.setVisibility(View.VISIBLE);
 
             holder = new ViewHolder();
             holder.tvContentName = (TextView) convertView.findViewById(R.id.title);

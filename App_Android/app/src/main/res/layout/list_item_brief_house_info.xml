@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="132dp">
+    <ImageView
+        android:layout_width="105dp"
+        android:layout_height="80dp"
+        android:contentDescription=""
+        android:layout_marginTop="21dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/sample1"
+        android:id="@+id/iv_apartment_thumb" />
+
+    <ImageView
+        android:id="@+id/imageViewFlag"
+        android:background="@drawable/flag"
+        android:layout_width="30dp"
+        android:layout_height="23dp"
+        android:layout_alignLeft="@+id/iv_apartment_thumb"
+        android:layout_alignTop="@+id/iv_apartment_thumb"
+        android:layout_marginTop="3dp"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_alignTop="@+id/iv_apartment_thumb"
+        android:layout_alignBottom="@+id/iv_apartment_thumb"
+        android:layout_toRightOf="@+id/iv_apartment_thumb"
+        android:layout_marginLeft="13dp">
+
+        <TextView
+            style="@style/TextView_apartment_name"
+            android:text="证大大拇指广场"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <TextView
+            style="@style/TextView_apartment_description"
+            android:text="姑苏白杨湾街道 / 3室2厅 / 88 m²"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+            <!--158x52px-->
+            <TextView
+                android:text="随时看房"
+                android:id="@+id/tv_content_category1"
+                style="@style/TextView_cg1" />
+            <TextView
+                android:text="满2年"
+                android:id="@+id/tv_content_category2"
+                style="@style/TextView_cg2"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
+            <TextView
+                android:text="150万"
+                android:id="@+id/tv_apartment_cost"
+                style="@style/TextView_cost"/>
+
+            <TextView
+                android:text="25437元/平"
+                style="@style/TextView_unitcost"
+                android:layout_toRightOf="@+id/tv_apartment_cost"
+                android:layout_alignBaseline="@+id/tv_apartment_cost"
+                android:layout_marginLeft="10dp" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>
