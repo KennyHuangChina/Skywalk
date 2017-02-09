@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="5dp"
         android:layout_height="40dp">
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewRegion"
             android:text="@string/fragment_search_condition_region"
             android:textSize="15sp"
@@ -84,7 +84,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="1" />
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewPrice"
             android:text="@string/fragment_search_condition_price"
             android:textSize="15sp"
@@ -96,7 +96,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="1" />
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewType"
             android:text="@string/fragment_search_condition_type"
             android:textSize="15sp"
@@ -108,7 +108,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="1" />
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewFilter"
             android:text="@string/fragment_search_condition_filter"
             android:textSize="15sp"
@@ -133,7 +133,7 @@
         android:layout_width="match_parent"
         android:background="#EFEFEF"
         android:layout_height="40dp">
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortDate"
             android:text="@string/fragment_search_sort_date"
             android:textSize="13sp"
@@ -145,7 +145,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="3" />
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortUnitPrice"
             android:text="@string/fragment_search_sort_unit_price"
             android:textSize="13sp"
@@ -157,7 +157,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="3" />
-        <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+        <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortTotalPrice"
             android:text="@string/fragment_search_sort_total_price"
             android:textSize="13sp"
@@ -196,7 +196,7 @@
         android:layout_height="match_parent"
         android:id="@+id/scrollViewResult"
         android:gravity="center" >
-        <com.kjs.skywalk.app_android.ListView_NoScroll
+        <com.kjs.skywalk.control.ListView_NoScroll
             android:id="@+id/listViewSearchResult"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"

@@ -1,4 +1,4 @@
-package com.kjs.skywalk.app_android;
+package com.kjs.skywalk.app_android.Apartment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.kjs.skywalk.app_android.R;
 
 /**
  * Created by sailor.zhou on 2017/1/11.

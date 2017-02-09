@@ -28,7 +28,7 @@
         <activity android:name=".Activity_HouseholdDeliverables">
 </activity>
 <activity
-            android:name=".Activity_ApartmentDetail"
+            android:name=".Apartment.Activity_ApartmentDetail"
             android:label="@string/title_activity__apartment_detail"
             android:parentActivityName="android.support.v7.app.AppCompatActivity"
             android:theme="@style/AppTheme">

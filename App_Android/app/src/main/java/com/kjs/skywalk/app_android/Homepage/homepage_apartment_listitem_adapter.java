@@ -1,4 +1,4 @@
-package com.kjs.skywalk.app_android;
+package com.kjs.skywalk.app_android.Homepage;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.kjs.skywalk.app_android.R;
 
 /**
  * Created by sailor.zhou on 2017/1/15.

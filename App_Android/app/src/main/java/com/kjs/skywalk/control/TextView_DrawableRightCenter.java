@@ -1,4 +1,4 @@
-package com.kjs.skywalk.app_android;
+package com.kjs.skywalk.control;
 
 import android.content.Context;
 import android.graphics.Canvas;

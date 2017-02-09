@@ -1,4 +1,4 @@
-package com.kjs.skywalk.app_android;
+package com.kjs.skywalk.app_android.Apartment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.kjs.skywalk.app_android.R;
 
 /**
  * Created by admin on 2017/2/8.

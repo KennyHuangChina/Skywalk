@@ -1,15 +1,12 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.FragmentTransaction;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +16,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
+import com.kjs.skywalk.app_android.Apartment.fragmentApartment;
+import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
+import com.kjs.skywalk.app_android.Message.fragmentMsg;
+import com.kjs.skywalk.app_android.Private.fragmentPrivate;
+import com.kjs.skywalk.control.BadgeView;
 
 public class MainActivity extends AppCompatActivity {
     private fragmentHomePage mFragHomePage = null;

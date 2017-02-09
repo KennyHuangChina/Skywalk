@@ -19,7 +19,7 @@
             android:focusableInTouchMode="true"
             android:layout_height="43dp">
 
-            <com.kjs.skywalk.app_android.TextView_DrawableRightCenter
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
                 android:id="@+id/tv_location"
                 android:text="@string/homepage_nanjing"
                 android:layout_width="0dp"
@@ -70,7 +70,7 @@
             android:id="@+id/iv_title" />
 
         <!--238px-->
-        <com.kjs.skywalk.app_android.ListView_NoScroll
+        <com.kjs.skywalk.control.ListView_NoScroll
             android:id="@+id/lv_content"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
