@@ -50,6 +50,8 @@ class AdapterSearchResultList extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info, null);
             ImageView flagView = (ImageView)convertView.findViewById(R.id.imageViewFlag);
             flagView.setVisibility(View.VISIBLE);
+            ImageView thumbView = (ImageView)convertView.findViewById(R.id.iv_apartment_thumb);
+            thumbView.setImageResource(R.drawable.sample2);
 
             holder = new ViewHolder();
             holder.tvContentName = (TextView) convertView.findViewById(R.id.title);
