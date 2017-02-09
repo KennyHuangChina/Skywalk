@@ -85,7 +85,7 @@
             android:adjustViewBounds="true"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewPrice"
+            android:id="@+id/textViewSortConditionPrice"
             android:text="@string/fragment_search_condition_price"
             android:textSize="15sp"
             android:textColor="#272536"
@@ -95,6 +95,7 @@
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
+            android:onClick="onClickResponse"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewType"
