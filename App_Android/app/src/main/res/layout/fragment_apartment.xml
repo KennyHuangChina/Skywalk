@@ -85,7 +85,7 @@
             android:adjustViewBounds="true"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSortConditionPrice"
+            android:id="@+id/textViewSearchConditionPrice"
             android:text="@string/fragment_search_condition_price"
             android:textSize="15sp"
             android:textColor="#272536"
@@ -98,7 +98,7 @@
             android:onClick="onClickResponse"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewType"
+            android:id="@+id/textViewSearchConditionHouseType"
             android:text="@string/fragment_search_condition_type"
             android:textSize="15sp"
             android:textColor="#272536"
@@ -108,9 +108,10 @@
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
+            android:onClick="onClickResponse"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewFilter"
+            android:id="@+id/textViewSearchConditionFilter"
             android:text="@string/fragment_search_condition_filter"
             android:textSize="15sp"
             android:textColor="#272536"

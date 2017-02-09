@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
+import com.kjs.skywalk.app_android.Apartment.PopupWindowSearchConditionHouseType;
 import com.kjs.skywalk.app_android.Apartment.PopupWindowSearchConditionPrice;
 import com.kjs.skywalk.app_android.Apartment.fragmentApartment;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     // set in activity_main.xml
     public void onClickResponse(View v) {
-        commonFun.showToast_resEntryName(this, v);
+        //commonFun.showToast_resEntryName(this, v);
 
         switch (v.getId()) {
             case R.id.tv_rent:
@@ -136,8 +137,13 @@ public class MainActivity extends AppCompatActivity {
                 setNewMessageCount(5);
             }
             break;
-            case R.id.textViewSortConditionPrice: {
+            case R.id.textViewSearchConditionPrice: {
                 PopupWindowSearchConditionPrice pop = new PopupWindowSearchConditionPrice(this);
+                pop.showAsDropDown(v);
+                break;
+            }
+            case R.id.textViewSearchConditionHouseType: {
+                PopupWindowSearchConditionHouseType pop = new PopupWindowSearchConditionHouseType(this);
                 pop.showAsDropDown(v);
                 break;
             }

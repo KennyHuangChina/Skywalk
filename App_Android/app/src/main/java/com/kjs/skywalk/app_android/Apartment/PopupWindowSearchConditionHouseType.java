@@ -9,17 +9,17 @@ import android.widget.PopupWindow;
 import com.kjs.skywalk.app_android.R;
 
 /**
- * Created by Jackie on 2017/2/9.
+ * Created by admin on 2017/2/9.
  */
 
-public class PopupWindowSearchConditionPrice extends PopupWindow {
+public class PopupWindowSearchConditionHouseType extends PopupWindow {
     private Context mContext = null;
 
-    public PopupWindowSearchConditionPrice(Context context) {
+    public PopupWindowSearchConditionHouseType(Context context) {
         super(context);
         mContext = context;
 
-        View view = LayoutInflater.from(context).inflate(R.layout.popup_window_search_condition_price,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.popup_window_search_condition_house_type,null);
         setContentView(view);
         setFocusable(true);
         setTouchable(true);
