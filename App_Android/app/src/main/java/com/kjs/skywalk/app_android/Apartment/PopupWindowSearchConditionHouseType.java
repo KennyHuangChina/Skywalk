@@ -25,6 +25,6 @@ public class PopupWindowSearchConditionHouseType extends PopupWindow {
         setTouchable(true);
         setBackgroundDrawable(null);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+//        setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
     }
 }

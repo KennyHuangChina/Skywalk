@@ -71,9 +71,10 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_marginLeft="5dp"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:id="@+id/linearLayoutConditionContainer">
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewRegion"
+            android:id="@+id/textViewSearchConditionRegion"
             android:text="@string/fragment_search_condition_region"
             android:textSize="15sp"
             android:textColor="#272536"
@@ -95,7 +96,6 @@
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
-            android:onClick="onClickResponse"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSearchConditionHouseType"
@@ -108,7 +108,6 @@
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
-            android:onClick="onClickResponse"
             android:layout_weight="1" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewFilter"
@@ -130,7 +129,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:background="#EFEFEF"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:id="@+id/linearLayoutSortContainer">
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortDate"
             android:text="@string/fragment_search_sort_date"

@@ -8,11 +8,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -20,6 +24,13 @@ import com.kjs.skywalk.app_android.R;
 
 public class fragmentApartment extends Fragment {
     private String TAG = "FragmentApartment";
+    private ListView mListViewSearchResult = null;
+    private LinearLayout mSortContainer = null;
+    private LinearLayout mLinearLayoutConditionContainer = null;
+    private ScrollView mScrollViewSearchResult = null;
+
+    private TextView mTextViewConditionPrice = null;
+    private TextView mTextViewConditionHouseType = null;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,18 +41,43 @@ public class fragmentApartment extends Fragment {
         textView.setTextSize(14);
         textView.setHint(R.string.fragment_search_input_hint);
         textView.setGravity(Gravity.BOTTOM);
-        textView.setVisibility(View.VISIBLE);
 
-        ListView listViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
-        listViewSearchResult.setFocusable(false);
+        mListViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
+        mListViewSearchResult.setFocusable(false);
 
         AdapterSearchResultList adapter = new AdapterSearchResultList(getActivity());
-        listViewSearchResult.setAdapter(adapter);
+        mListViewSearchResult.setAdapter(adapter);
 
+        mSortContainer = (LinearLayout)view.findViewById(R.id.linearLayoutSortContainer);
+        mTextViewConditionPrice = (TextView)view.findViewById(R.id.textViewSearchConditionPrice);
+        mTextViewConditionPrice.setOnClickListener(mClickListenerConditionPrice);
+        mScrollViewSearchResult = (ScrollView)view.findViewById(R.id.scrollViewResult);
+        mLinearLayoutConditionContainer = (LinearLayout)view.findViewById(R.id.linearLayoutConditionContainer);
+
+        mTextViewConditionHouseType = (TextView)view.findViewById(R.id.textViewSearchConditionHouseType);
+        mTextViewConditionHouseType.setOnClickListener(mClickListenerConditionHouseType);
         return view;
     }
-    
-    public void onClickResponse(View view) {
-        Log.i(TAG, "onClickResponse: ");
-    }
+
+    private View.OnClickListener mClickListenerConditionPrice = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int nSortContainerHeight = mSortContainer.getHeight();
+            int nResultHeight = mScrollViewSearchResult.getHeight();
+            PopupWindowSearchConditionPrice pop = new PopupWindowSearchConditionPrice(getActivity().getBaseContext());
+            pop.setHeight(nSortContainerHeight + nResultHeight);
+            pop.showAsDropDown(mLinearLayoutConditionContainer);
+        }
+    };
+
+    private View.OnClickListener mClickListenerConditionHouseType = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int nSortContainerHeight = mSortContainer.getHeight();
+            int nResultHeight = mScrollViewSearchResult.getHeight();
+            PopupWindowSearchConditionHouseType pop = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
+            pop.setHeight(nSortContainerHeight + nResultHeight);
+            pop.showAsDropDown(mLinearLayoutConditionContainer);
+        }
+    };
 }
