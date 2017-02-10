@@ -7,25 +7,23 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import com.kjs.skywalk.app_android.R;
-import com.kjs.skywalk.app_android.kjsLogUtil;
 
 /**
- * Created by admin on 2017/2/9.
+ * Created by Jackie on 2017/2/10.
  */
 
-class PopupWindowSearchConditionHouseType extends PopupWindow {
+class PopupWindowSearchConditionFilter extends PopupWindow {
     private Context mContext = null;
 
-    public PopupWindowSearchConditionHouseType(Context context) {
+    public PopupWindowSearchConditionFilter(Context context) {
         super(context);
         mContext = context;
 
-        View view = LayoutInflater.from(context).inflate(R.layout.popup_window_search_condition_house_type,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.popup_window_search_condition_filter, null);
         setContentView(view);
         setFocusable(true);
         setTouchable(true);
         setBackgroundDrawable(null);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-//        setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
     }
 }

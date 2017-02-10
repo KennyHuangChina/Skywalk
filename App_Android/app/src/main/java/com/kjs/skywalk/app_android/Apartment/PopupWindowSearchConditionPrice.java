@@ -12,7 +12,7 @@ import com.kjs.skywalk.app_android.R;
  * Created by Jackie on 2017/2/9.
  */
 
-public class PopupWindowSearchConditionPrice extends PopupWindow {
+class PopupWindowSearchConditionPrice extends PopupWindow {
     private Context mContext = null;
 
     public PopupWindowSearchConditionPrice(Context context) {

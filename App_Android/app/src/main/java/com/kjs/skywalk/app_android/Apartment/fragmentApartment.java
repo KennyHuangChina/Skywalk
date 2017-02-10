@@ -32,6 +32,7 @@ public class fragmentApartment extends Fragment {
 
     private TextView mTextViewConditionPrice = null;
     private TextView mTextViewConditionHouseType = null;
+    private TextView mTextViewConditionFilter = null;
     private RelativeLayout mSeperator = null;
     @Nullable
     @Override
@@ -59,6 +60,9 @@ public class fragmentApartment extends Fragment {
         mTextViewConditionHouseType = (TextView)view.findViewById(R.id.textViewSearchConditionHouseType);
         mTextViewConditionHouseType.setOnClickListener(mClickListenerConditionHouseType);
 
+        mTextViewConditionFilter = (TextView)view.findViewById(R.id.textViewSearchConditionFilter);
+        mTextViewConditionFilter.setOnClickListener(mClickListenerConditionFilter);
+
         mSeperator = (RelativeLayout)view.findViewById(R.id.seperator_horizontal);
         return view;
     }
@@ -82,6 +86,18 @@ public class fragmentApartment extends Fragment {
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
             PopupWindowSearchConditionHouseType pop = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
+            pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
+            pop.showAsDropDown(mLinearLayoutConditionContainer);
+        }
+    };
+
+    private View.OnClickListener mClickListenerConditionFilter = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int nSortContainerHeight = mSortContainer.getHeight();
+            int nResultHeight = mScrollViewSearchResult.getHeight();
+            int nSeperatorHeight = mSeperator.getHeight() * 2;
+            PopupWindowSearchConditionFilter pop = new PopupWindowSearchConditionFilter(getActivity().getBaseContext());
             pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
             pop.showAsDropDown(mLinearLayoutConditionContainer);
         }

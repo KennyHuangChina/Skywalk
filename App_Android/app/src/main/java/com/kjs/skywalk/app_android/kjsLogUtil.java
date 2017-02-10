@@ -6,7 +6,7 @@ import android.util.Log;
 
 public class kjsLogUtil {
 	private static boolean mDebug = true;
-	private final static String TAG = "CiLogUtil";
+	private final static String TAG = kjsLogUtil.class.getSimpleName();
 	
 	public kjsLogUtil() {
 		// TODO Auto-generated constructor stub
