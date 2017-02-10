@@ -123,7 +123,8 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <include layout="@layout/seperator_horizontal" />
+    <include layout="@layout/seperator_horizontal"
+        android:id="@+id/seperator_horizontal"/>
 
     <LinearLayout
         android:orientation="horizontal"

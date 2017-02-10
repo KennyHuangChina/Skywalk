@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class fragmentApartment extends Fragment {
 
     private TextView mTextViewConditionPrice = null;
     private TextView mTextViewConditionHouseType = null;
+    private RelativeLayout mSeperator = null;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class fragmentApartment extends Fragment {
 
         mTextViewConditionHouseType = (TextView)view.findViewById(R.id.textViewSearchConditionHouseType);
         mTextViewConditionHouseType.setOnClickListener(mClickListenerConditionHouseType);
+
+        mSeperator = (RelativeLayout)view.findViewById(R.id.seperator_horizontal);
         return view;
     }
 
@@ -64,8 +68,9 @@ public class fragmentApartment extends Fragment {
         public void onClick(View view) {
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
+            int nSeperatorHeight = mSeperator.getHeight() * 2;
             PopupWindowSearchConditionPrice pop = new PopupWindowSearchConditionPrice(getActivity().getBaseContext());
-            pop.setHeight(nSortContainerHeight + nResultHeight);
+            pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
             pop.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
@@ -75,8 +80,9 @@ public class fragmentApartment extends Fragment {
         public void onClick(View view) {
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
+            int nSeperatorHeight = mSeperator.getHeight() * 2;
             PopupWindowSearchConditionHouseType pop = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
-            pop.setHeight(nSortContainerHeight + nResultHeight);
+            pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
             pop.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
