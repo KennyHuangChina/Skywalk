@@ -7,7 +7,8 @@ import (
 	"github.com/astaxie/beego/orm"
 	z "github.com/nutzam/zgo"
 	// "graphics"
-	"github.com/BurntSushi/graphics-go/graphics" // auto exported from code.google.com/p/graphics-go/graphics
+	// "github.com/BurntSushi/graphics-go/graphics" // auto exported from code.google.com/p/graphics-go/graphics
+	"github.com/KennyHuangChina/graphics-go/graphics"
 	// "image/draw"
 	// "code.google.com/p/graphics-go/graphics"
 	"image"
