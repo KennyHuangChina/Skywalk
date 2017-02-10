@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
 
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 public class SliderView extends LinearLayout {
     private Context mCtx;
     private ViewPager mVpImages;
+    private TextView mTvImageCount;
+    private TextView mTvImageName;
+
     private float mDensity;
     private SliderViewAdapter mSvAdapter;
     private int mImageIndex = 0;
@@ -53,6 +57,10 @@ public class SliderView extends LinearLayout {
                 return false;
             }
         });
+
+        mTvImageCount = (TextView) findViewById(R.id.tv_image_count);
+        mTvImageName = (TextView) findViewById(R.id.tv_image_name);
+
     }
 
     public void setImages(ArrayList<String> imageList, SliderViewListener listener) {
@@ -76,6 +84,9 @@ public class SliderView extends LinearLayout {
         @Override
         public void run() {
             mImageIndex++;
+            if(mImageIndex >= mSvAdapter.getCount()) {
+                mImageIndex = 0;
+            }
             mVpImages.setCurrentItem(mImageIndex);
         }
     };
@@ -90,6 +101,7 @@ public class SliderView extends LinearLayout {
         @Override
         public void onPageSelected(int position) {
             // set indicator
+            mTvImageCount.setText(String.format("%d/%d", position + 1, mSvAdapter.getCount()));
         }
 
         @Override
