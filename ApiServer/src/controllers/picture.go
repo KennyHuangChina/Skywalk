@@ -241,6 +241,10 @@ func savePicture(file multipart.File, filename string) (err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file, size:", fileSize)}
 		return
 	}
+	if fileSize > 2*1024*1024 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "picture size too large (< 2MB)"}
+		return
+	}
 	// beego.Debug(FN, "file name:", fHead.Header["Content-Disposition"][0])
 	beego.Debug(FN, "file name:", filename, ", size:", fileSize)
 
