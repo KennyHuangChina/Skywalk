@@ -195,3 +195,9 @@ const (
 	PIC_SIZE_LARGE    = 4
 	// PIC_SIZE_HEAD_PORTRAINT = 5 // head portraint, typically used for user picture
 )
+
+const (
+	PIC_SCALE_DOWN   = 1
+	PIC_SCALE_UP     = 2
+	PIC_SCALE_UPDOWN = 3
+)

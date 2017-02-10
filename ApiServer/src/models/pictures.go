@@ -257,7 +257,7 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
 		return
 	}
-	picName := pfn[:pos-1]
+	picName := pfn[:pos]
 	// extName := pfn[pos:]
 	// beego.Debug(FN, "picName:", picName, ", extName:", extName)
 
@@ -302,33 +302,39 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 
 	// small size
 	psn = picName + "_s.jpg" // + extName
-	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
-	_, errT = o.Insert(&ps)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
-		return
-	}
 	sw, _ := beego.AppConfig.Int("small_pic_w")
 	sh, _ := beego.AppConfig.Int("small_pic_h")
-	if err = resizeImage(pbd+pfn, pbd+psn, sw, sh); nil != err {
+	err, bResize := resizeImage(pbd+pfn, pbd+psn, sw, sh, commdef.PIC_SCALE_DOWN)
+	if nil != err {
+		return
+	}
+	if !bResize { // use original image
+		psn = pfn
+	}
+	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
+	if _, errT = o.Insert(&ps); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
 		return
 	}
 
 	// Large size
 	pln = picName + "_l.jpg" // + extName
+	lw, _ := beego.AppConfig.Int("lare_pic_w")
+	lh, _ := beego.AppConfig.Int("lare_pic_h")
+	if err, bResize = resizeImage(pbd+pfn, pbd+pln, lw, lh, commdef.PIC_SCALE_DOWN); nil != err {
+		return
+	}
+	if !bResize {
+		pln = pfn
+	}
 	pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: pln}
 	_, errT = o.Insert(&pl)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create large picture, err:%s", errT.Error())}
 		return
 	}
-	lw, _ := beego.AppConfig.Int("lare_pic_w")
-	lh, _ := beego.AppConfig.Int("lare_pic_h")
-	if err = resizeImage(pbd+pfn, pbd+pln, lw, lh); nil != err {
-		return
-	}
 
-	// Notice: open the following sentense to test the image deleting in case of error
+	// Notice: enable the following code to test the image deleting in case of error
 	// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED}
 	return
 }
@@ -339,12 +345,27 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 *		tip		- target image path
 *		tx		- target width
 *		ty		- target height
+*		rd		- resize direction
+*	Returns
+*		err		- error
+*		bResize	- if actual resized
  */
-func resizeImage(path, tip string, tx, ty int) (err error) {
+func resizeImage(path, tip string, tx, ty, rd int) (err error, bResize bool) {
 	FN := "[resizeImage] "
+	beego.Info(FN, "path:", path, ", tip:", tip, ", tx:", tx, ", ty:", ty, ", rd:", rd)
+
+	defer func() {
+		if nil != err {
+			bResize = false
+		}
+	}()
 
 	if tx <= 0 || ty <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tx:%d, ty:%d", tx, ty)}
+		return
+	}
+	if rd < commdef.PIC_SCALE_DOWN || rd > commdef.PIC_SCALE_UPDOWN {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("resize direction:", rd)}
 		return
 	}
 
@@ -376,24 +397,39 @@ func resizeImage(path, tip string, tx, ty int) (err error) {
 	}
 	beego.Debug(FN, "nx:", nx, ", ny:", ny)
 
+	bResize = true
+	if commdef.PIC_SCALE_DOWN == rd {
+		if nx >= dx { // && ny >= dy
+			bResize = false
+		}
+	} else if commdef.PIC_SCALE_UP == rd {
+		if nx <= dx {
+			bResize = false
+		}
+	}
+
+	if !bResize {
+		return
+	}
+
 	dst := image.NewRGBA(image.Rect(0, 0, nx, ny)) // newdx, newdx * dy / dx))
 
 	if errT := graphics.Scale(dst, src); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Scan image, err:", errT.Error())}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Scan image, err:%s", errT.Error())}
 		return
 	}
 
 	// save resized image
 	imgfile, errT := os.Create(tip)
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("fail to create image, err:", errT.Error())}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("fail to create image, err:%s", errT.Error())}
 		return
 	}
 	defer imgfile.Close()
 
 	errT = jpeg.Encode(imgfile, dst, &jpeg.Options{50}) // encoding the image
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("fail to encode image, err:", errT.Error())}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("fail to encode image, err:%s", errT.Error())}
 		return
 	}
 
@@ -410,6 +446,7 @@ func loadImage(path string) (img image.Image, err error) {
 		return
 	}
 	defer file.Close()
+
 	img, _, errT = image.Decode(file)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Decode image, err:%s", errT.Error())}

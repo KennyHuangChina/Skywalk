@@ -142,7 +142,6 @@ func (this *PictureController) AddPic() {
 	if nil == err {
 		result.Id = id
 	} else {
-		beego.Warn(FN, "TODO: delete the picture already saved before")
 		models.DelImage(picBaseDir + picFileName)
 	}
 }
