@@ -178,6 +178,29 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 	return
 }
 
+// delete the image specified
+func DelImage(image string) (err error) {
+	FN := "[DelImage] "
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if 0 == len(image) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("image path:%s", image)}
+		return
+	}
+
+	_, errT := os.Stat(image)
+	if nil == errT || os.IsExist(errT) { // picture exist
+		err = os.Remove(image)
+	}
+
+	return
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Internal Functions
@@ -238,12 +261,22 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	// extName := pfn[pos:]
 	// beego.Debug(FN, "picName:", picName, ", extName:", extName)
 
+	psn := ""
+	pln := ""
+
 	o := orm.NewOrm()
 
 	o.Begin()
 	defer func() {
 		if nil != err {
 			o.Rollback()
+			// delete the pictures created in this function
+			if len(psn) > 0 {
+				DelImage(pbd + psn)
+			}
+			if len(pln) > 0 {
+				DelImage(pbd + pln)
+			}
 		} else {
 			o.Commit()
 		}
@@ -268,29 +301,35 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	}
 
 	// small size
-	psn := picName + "_s.jpg" // + extName
+	psn = picName + "_s.jpg" // + extName
 	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
 	_, errT = o.Insert(&ps)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
 		return
 	}
-	if err = resizeImage(pbd+pfn, pbd+psn, 400, 400); nil != err {
+	sw, _ := beego.AppConfig.Int("small_pic_w")
+	sh, _ := beego.AppConfig.Int("small_pic_h")
+	if err = resizeImage(pbd+pfn, pbd+psn, sw, sh); nil != err {
 		return
 	}
 
 	// Large size
-	psn = picName + "_l.jpg" // + extName
-	pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: psn}
+	pln = picName + "_l.jpg" // + extName
+	pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: pln}
 	_, errT = o.Insert(&pl)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create large picture, err:%s", errT.Error())}
 		return
 	}
-	if err = resizeImage(pbd+pfn, pbd+psn, 1200, 1200); nil != err {
+	lw, _ := beego.AppConfig.Int("lare_pic_w")
+	lh, _ := beego.AppConfig.Int("lare_pic_h")
+	if err = resizeImage(pbd+pfn, pbd+pln, lw, lh); nil != err {
 		return
 	}
 
+	// Notice: open the following sentense to test the image deleting in case of error
+	// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED}
 	return
 }
 
