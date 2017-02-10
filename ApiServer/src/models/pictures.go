@@ -334,6 +334,10 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 		return
 	}
 
+	// watermarking for large picture
+	beego.Warn(FN, "TODO: how to watermark the large image if no resizing?")
+	err = watermarking(pbd, pln)
+
 	// Notice: enable the following code to test the image deleting in case of error
 	// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED}
 	return
@@ -372,7 +376,7 @@ func resizeImage(path, tip string, tx, ty, rd int) (err error, bResize bool) {
 	// typef := z.FileType(path)
 	// beego.Debug(FN, "typef:", typef)
 
-	src, err := loadImage(path)
+	src, err, _, _ := loadImage(path)
 	if nil != err {
 		return
 	}
@@ -437,8 +441,12 @@ func resizeImage(path, tip string, tx, ty, rd int) (err error, bResize bool) {
 }
 
 // Load Image decodes an image from a file of image.
-func loadImage(path string) (img image.Image, err error) {
+func loadImage(path string) (img image.Image, err error, w, h int) {
 	// FN := "[loadImage] "
+	if 0 == len(path) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("path:%s", path)}
+		return
+	}
 
 	file, errT := os.Open(path)
 	if nil != errT {
@@ -452,5 +460,37 @@ func loadImage(path string) (img image.Image, err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Decode image, err:%s", errT.Error())}
 		return
 	}
+	return
+}
+
+// watermarking image
+//		pbd - pic base dir
+//		img	- image file name
+func watermarking(pbd, img string) (err error) {
+	// FN := "[watermarking] "
+
+	/*imgImg*/ _, err, wImg, hImg := loadImage(pbd + img)
+	if nil != err {
+		return
+	}
+	if wImg <= 0 || hImg <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("invalid picture, width:%d, height:%d", wImg, hImg)}
+		return
+	}
+
+	wmp := "" // watermark path
+	/*imgWm*/ _, err, wM, hM := loadImage(wmp)
+	if nil != err {
+		return
+	}
+	if wM <= 0 || hM <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("invalid watermark, width:%d, height:%d", wM, hM)}
+		return
+	}
+
+	// draw.Draw(imgImg, )
+
+	err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+
 	return
 }
