@@ -6,8 +6,9 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	z "github.com/nutzam/zgo"
-	"image/draw"
 	// "graphics"
+	"github.com/BurntSushi/graphics-go/graphics" // auto exported from code.google.com/p/graphics-go/graphics
+	// "image/draw"
 	// "code.google.com/p/graphics-go/graphics"
 	"image"
 	"image/png"
@@ -341,17 +342,17 @@ func resizeImage(path string, tx, ty int) (err error) {
 
 	dst := image.NewRGBA(image.Rect(0, 0, nx, ny)) // newdx, newdx * dy / dx))
 
-	// if errT := graphics.Scale(dst, src); nil != errT {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Scan image, err:", errT.Error())}
-	// 	return
-	// }
+	if errT := graphics.Scale(dst, src); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Scan image, err:", errT.Error())}
+		return
+	}
 
-	// r := image.Rectangle{dp, dp.Add(src.Bounds())}
-	sr := src.Bounds()
-	// r := sr.Sub(sr.Min) //.Add()
-	draw.Draw(dst, src.Bounds(), src, sr.Min, draw.Over)
+	// // r := image.Rectangle{dp, dp.Add(src.Bounds())}
+	// sr := src.Bounds()
+	// // r := sr.Sub(sr.Min) //.Add()
+	// draw.Draw(dst, src.Bounds(), src, sr.Min, draw.Over)
 
-	// draw.Draw(dst, image.Rect(0, 0, nx, ny), src, image.Pt(0, 0), draw.Src /*Over*/)
+	// // draw.Draw(dst, image.Rect(0, 0, nx, ny), src, image.Pt(0, 0), draw.Src /*Over)
 
 	// save new image
 	imgfile, err := os.Create("./thumbnail.png")
