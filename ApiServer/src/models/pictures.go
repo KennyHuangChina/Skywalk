@@ -310,7 +310,7 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	sw, _ := beego.AppConfig.Int("small_pic_w")
 	sh, _ := beego.AppConfig.Int("small_pic_h")
 	if dx > sw && dy > sh {
-		if err = resizeImage(src, pbd+psn, sw, sh, 50); nil != err {
+		if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
 			return
 		}
 	} else { // original image is small than defined "small size", use original image
@@ -326,23 +326,20 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	pln = picName + "_l.jpg" // + extName
 	lw, _ := beego.AppConfig.Int("lare_pic_w")
 	lh, _ := beego.AppConfig.Int("lare_pic_h")
-	if dx > lw && dy > lh {
-		if err = resizeImage(src, pbd+pln, lw, lh, 100); nil != err {
-			return
-		}
-	} else {
-		pln = pfn
+	if dx < lw || dy < lh { // original image is small than defined "large size", make a copy
+		lw = dx
+		lh = dy
 	}
+	if err = resizeImage(src, pbd+pln, lw, lh, 100, watermarking); nil != err {
+		return
+	}
+
 	pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: pln}
 	_, errT = o.Insert(&pl)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create large picture, err:%s", errT.Error())}
 		return
 	}
-
-	// watermarking for large picture
-	beego.Warn(FN, "TODO: how to watermark the large image if no resizing?")
-	err = watermarking(pbd + pln)
 
 	// Notice: enable the following code to test the image deleting in case of error
 	// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED}
@@ -352,14 +349,14 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 /*
 *	Resizing the image
 *		src		- original image
-*		tip		- target image path
+*		tip		- target image path. if not set, do not save
 *		tx		- target width
 *		ty		- target height
 *		rd		- resize direction
 *	Returns
 *		err		- error
  */
-func resizeImage(src image.Image, tip string, tx, ty, quality int) (err error) {
+func resizeImage(src image.Image, tip string, tx, ty, quality int, markFun func(bgImg *image.RGBA) (err error)) (err error) {
 	FN := "[resizeImage] "
 	beego.Info(FN, "tip:", tip, ", tx:", tx, ", ty:", ty)
 
@@ -370,6 +367,10 @@ func resizeImage(src image.Image, tip string, tx, ty, quality int) (err error) {
 
 	if tx <= 0 || ty <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tx:%d, ty:%d", tx, ty)}
+		return
+	}
+	if 0 == len(tip) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tip:%s", tip)}
 		return
 	}
 	if quality <= 0 || quality > 100 {
@@ -401,21 +402,35 @@ func resizeImage(src image.Image, tip string, tx, ty, quality int) (err error) {
 	beego.Debug(FN, "nx:", nx, ", ny:", ny)
 
 	dst := image.NewRGBA(image.Rect(0, 0, nx, ny)) // newdx, newdx * dy / dx))
-
 	if errT := graphics.Scale(dst, src); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Scan image, err:%s", errT.Error())}
 		return
 	}
 
+	if nil != markFun { // wartermarking
+		if err = markFun(dst); nil != err {
+			return
+		}
+	}
+
 	// save resized image
-	imgfile, errT := os.Create(tip)
+	err = saveImage(dst, tip, quality)
+
+	return
+}
+
+func saveImage(img *image.RGBA, file string, quality int) (err error) {
+	// FN := "[saveImage] "
+
+	// save image in jpeg format
+	imgfile, errT := os.Create(file)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("fail to create image, err:%s", errT.Error())}
 		return
 	}
 	defer imgfile.Close()
 
-	errT = jpeg.Encode(imgfile, dst, &jpeg.Options{quality}) // encoding the image
+	errT = jpeg.Encode(imgfile, img, &jpeg.Options{quality}) // encoding the image
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("fail to encode image, err:%s", errT.Error())}
 		return
@@ -461,14 +476,15 @@ func loadImage(path string) (img image.Image, err error, w, h int) {
 
 // watermarking image
 //		bg - background image
-func watermarking(bg string) (err error) {
-	FN := "[watermarking] "
-	beego.Debug(FN, "bg:", bg)
+func watermarking(bgImg *image.RGBA) (err error) {
 
-	bgImg, err, dx, dy := loadImage(bg)
-	if nil != err {
+	if nil == bgImg {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("bgImg is NULL")}
 		return
 	}
+
+	dx := bgImg.Bounds().Dx()
+	dy := bgImg.Bounds().Dy()
 
 	wmp := beego.AppConfig.String("PicBaseDir") + "watermark.png" // watermark path
 	watermark, err, wM, hM := loadImage(wmp)
@@ -486,17 +502,17 @@ func watermarking(bg string) (err error) {
 		return
 	}
 
-	m := image.NewNRGBA(bgImg.Bounds())
+	// m := image.NewNRGBA(bgImg.Bounds())
 	// background
-	draw.Draw(m, m.Bounds(), bgImg, bgImg.Bounds().Min, draw.Src)
+	// draw.Draw(m, m.Bounds(), bgImg, bgImg.Bounds().Min, draw.Src)
 	// watermark
 	offset := image.Pt((bgImg.Bounds().Dx()-watermark.Bounds().Dx())/2, (bgImg.Bounds().Dy()-watermark.Bounds().Dy())/2)
-	draw.Draw(m, watermark.Bounds().Add(offset), watermark, watermark.Bounds().Min, draw.Over)
+	draw.Draw(bgImg, watermark.Bounds().Add(offset), watermark, watermark.Bounds().Min, draw.Over)
 
-	imgw, _ := os.Create("new.jpg")
-	defer imgw.Close()
+	// imgw, _ := os.Create("new.jpg")
+	// defer imgw.Close()
 
-	jpeg.Encode(imgw, m, &jpeg.Options{100})
+	// jpeg.Encode(imgw, bgImg, &jpeg.Options{100})
 
 	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 
