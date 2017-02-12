@@ -9,15 +9,81 @@
     tools:context="com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail"
     tools:showIn="@layout/activity__apartment_detail">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <com.kjs.skywalk.control.SliderView
             android:id="@+id/sv_view"
             android:layout_width="match_parent"
             android:layout_height="200dp">
         </com.kjs.skywalk.control.SliderView>
 
+        <LinearLayout
+            android:id="@+id/ll_apartment_base_info"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="14dp"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp">
+
+            <TextView
+                android:text="紫金华府175栋1505室"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:id="@+id/tv_apartment_name" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="14dp">
+
+                <TextView
+                    android:text="房屋编号： NO.12345"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#939499"
+                    android:id="@+id/tv_apartment_no" />
+
+                <TextView
+                    android:text="最后更新： 2016-11-165"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_apartment_no"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="12sp"
+                    android:textColor="#939499"
+                    android:id="@+id/tv_apartment_update_date" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="14dp">
+            <TextView
+                android:text="满五唯一"
+                android:id="@+id/tv_content_category1"
+                style="@style/TextView_cg1" />
+
+            <TextView
+                android:text="上门实勘"
+                android:layout_width="80dp"
+                android:id="@+id/tv_content_category2"
+                style="@style/TextView_cg2"
+                android:layout_marginLeft="5dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
 
 
         <!--<TextView-->
@@ -26,6 +92,6 @@
             <!--android:layout_margin="@dimen/text_margin"-->
             <!--android:text="@string/large_text"/>-->
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
