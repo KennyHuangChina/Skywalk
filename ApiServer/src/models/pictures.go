@@ -309,7 +309,7 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	psn = picName + "_s.jpg" // + extName
 	sw, _ := beego.AppConfig.Int("small_pic_w")
 	sh, _ := beego.AppConfig.Int("small_pic_h")
-	if dx > sw && dy > sh {
+	if dx > sw || dy > sh {
 		if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
 			return
 		}
@@ -326,7 +326,7 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	pln = picName + "_l.jpg" // + extName
 	lw, _ := beego.AppConfig.Int("lare_pic_w")
 	lh, _ := beego.AppConfig.Int("lare_pic_h")
-	if dx < lw || dy < lh { // original image is small than defined "large size", make a copy
+	if dx < lw && dy < lh { // original image is small than defined "large size", make a copy
 		lw = dx
 		lh = dy
 	}
@@ -349,10 +349,9 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 /*
 *	Resizing the image
 *		src		- original image
-*		tip		- target image path. if not set, do not save
+*		tip		- target image path.
 *		tx		- target width
 *		ty		- target height
-*		rd		- resize direction
 *	Returns
 *		err		- error
  */
@@ -508,13 +507,6 @@ func watermarking(bgImg *image.RGBA) (err error) {
 	// watermark
 	offset := image.Pt((bgImg.Bounds().Dx()-watermark.Bounds().Dx())/2, (bgImg.Bounds().Dy()-watermark.Bounds().Dy())/2)
 	draw.Draw(bgImg, watermark.Bounds().Add(offset), watermark, watermark.Bounds().Min, draw.Over)
-
-	// imgw, _ := os.Create("new.jpg")
-	// defer imgw.Close()
-
-	// jpeg.Encode(imgw, bgImg, &jpeg.Options{100})
-
-	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 
 	return
 }
