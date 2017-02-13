@@ -57,6 +57,78 @@
         <item name="android:textColor">#5aaaaf</item>
     </style>
 
+    <!--满五唯一-->
+    <style name="tv_apartment_cg1" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/rounded_rect_background1</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#5aaaaf</item>
+    </style>
+
+    <!--上门实勘-->
+    <style name="tv_apartment_cg2" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/rounded_rect_background2</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#4CA3FF</item>
+    </style>
+
+    <!--靠近地铁-->
+    <style name="tv_apartment_cg3" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/rounded_rect_background3</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#FF3F29</item>
+    </style>
+
+    <!--电梯房-->
+    <style name="tv_apartment_cg4" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/rounded_rect_background4</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#8D7DEF</item>
+    </style>
+
+    <!--无贷款-->
+    <style name="tv_apartment_cg5" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/rounded_rect_background5</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#E90132</item>
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!--150万-->
     <style name="TextView_cost" parent="@android:style/Widget.TextView">
         <item name="android:layout_width">wrap_content</item>

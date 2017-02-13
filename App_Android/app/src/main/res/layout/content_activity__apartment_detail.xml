@@ -50,7 +50,7 @@
                     android:id="@+id/tv_apartment_no" />
 
                 <TextView
-                    android:text="最后更新： 2016-11-165"
+                    android:text="最后更新： 2016-11-16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tv_apartment_no"
@@ -69,14 +69,31 @@
             android:layout_marginTop="14dp">
             <TextView
                 android:text="满五唯一"
-                android:id="@+id/tv_content_category1"
-                style="@style/TextView_cg1" />
+                android:layout_height="20dp"
+                style="@style/tv_apartment_cg1" />
 
             <TextView
                 android:text="上门实勘"
-                android:layout_width="80dp"
-                android:id="@+id/tv_content_category2"
-                style="@style/TextView_cg2"
+                android:layout_height="20dp"
+                style="@style/tv_apartment_cg2"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:text="靠近地铁"
+                android:layout_height="20dp"
+                style="@style/tv_apartment_cg3"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:text="电梯房"
+                android:layout_height="20dp"
+                style="@style/tv_apartment_cg4"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:text="无贷款"
+                android:layout_height="20dp"
+                style="@style/tv_apartment_cg5"
                 android:layout_marginLeft="5dp"/>
 
         </LinearLayout>
