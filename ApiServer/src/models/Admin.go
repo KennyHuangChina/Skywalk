@@ -130,14 +130,15 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 	o := orm.NewOrm()
 
 	defer func() {
-		if nil != err {
-			beego.Error(FN, err)
-		}
 		// beego.Warn(FN, "Remove the salt_tmp any way")
 		if uid > 0 {
 			u := TblUser{Id: uid, SaltTmp: ""}
 			num, errT := o.Update(&u, "SaltTmp")
 			beego.Debug(FN, "num:", num, ", errT:", errT)
+		}
+		if nil != err {
+			uid = -1
+			beego.Error(FN, err)
 		}
 	}()
 
@@ -161,7 +162,13 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 		}
 		return
 	}
+	uid = user.Id
 	beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
+
+	if 0 == len(user.SaltTmp) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "tmp salt not set, please call GetSaltByName() first"}
+		return
+	}
 
 	// check if the password user keyined is empty
 	// md5(md5(pass+salt)+SaltTmp)
@@ -192,7 +199,6 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 		return
 	}
 
-	uid = user.Id
 	return
 }
 
