@@ -76,9 +76,10 @@ const (
 
 	// user
 	ERR_USERLOGIN_CAPTCHA_SERVER     = 1201
-	ERR_USERLOGIN_NO_PASSWORD        = 1202
-	ERR_USERLOGIN_INCORRECT_PASSWORD = 1203
-	ERR_USER_NOT_ENABLE              = 1204
+	ERR_USERLOGIN_CAPTCHA_FAIL       = 1202
+	ERR_USERLOGIN_NO_PASSWORD        = 1203
+	ERR_USERLOGIN_INCORRECT_PASSWORD = 1204
+	ERR_USER_NOT_ENABLE              = 1205
 
 	// fetch sms
 	ERR_SMS_EMPTY_PHONE      = 1301
@@ -111,6 +112,7 @@ var ErrorDesc = map[int64]string{
 
 	// user login
 	ERR_USERLOGIN_CAPTCHA_SERVER:     "Captchar server error",
+	ERR_USERLOGIN_CAPTCHA_FAIL:       "Failed to challenge the captcha",
 	ERR_USERLOGIN_NO_PASSWORD:        "empty password",
 	ERR_USERLOGIN_INCORRECT_PASSWORD: "incorrect password",
 	ERR_USER_NOT_ENABLE:              "User not enabled",

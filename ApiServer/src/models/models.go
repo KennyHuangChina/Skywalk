@@ -16,11 +16,11 @@ type TblUser struct {
 	LoginName string `orm:"size(64)"` // login name, user phone
 	Name      string `orm:"size(64)"`
 	Salt      string `orm:"size(32)"`
-	SaltTmp   string `orm:"size(32)"`
-	PassLogin string `orm:"size(50)"` // login password
-	PassTrasn string `orm:"size(50)"` // transaction password
-	IdNo      string `orm:"size(50)"` // ID number or passport number
-	Phone     string `orm:"size(50)"`
+	SaltTmp   string `orm:"size(32)"`                // temp salt, just for this time using
+	PassLogin string `orm:"size(50)"`                // login password. md5(pass+salt)
+	PassTrasn string `orm:"size(50)"`                // transaction password
+	IdNo      string `orm:"size(50)"`                // ID number or passport number
+	Phone     string `orm:"size(50)"`                // secondary phone
 	Head      string `orm:"size(50)"`                // url of head portrait
 	Enable    bool   `orm:"default(true); not null"` // is this user enabled now. Administrator could enable or disable a user
 	// Role      int    // USER_TYPE_xxx
@@ -28,15 +28,15 @@ type TblUser struct {
 
 func (rs *TblUser) TableUnique() [][]string {
 	return [][]string{
-		[]string{"Phone"},
+		// []string{"Phone"},	// user may not fill in the secondary phone
 		[]string{"LoginName"},
-		// []string{"IdNo"}, 	// user may not fill in the ID number
+		// []string{"IdNo"}, 	// user may not fill in the ID number in the first place
 	}
 }
 
 type TblUserGroup struct {
 	Id      int64
-	Name    string                `orm:"size(100)"`
+	Name    string                `orm:"size(100)"` // group name
 	Admin   bool                  // Is this group a administrator
 	Members []*TblUserGroupMember `orm:"reverse(many)"`
 }

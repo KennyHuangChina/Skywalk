@@ -64,12 +64,13 @@ func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
 /**
 *	Get user salt
 *	Arguments:
-*		un - user login name
+*		un 		- user login name
 *	Returns
 *		err 	- error info
 *		salt 	- salt string for user
+*		rand	- rand for this time
  */
-func GetSaltByName(un string) (err error, salt string) {
+func GetSaltByName(un string) (err error, salt, rand string) {
 	FN := "[GetSaltByName] "
 	beego.Trace(FN, "login user:", un)
 
@@ -92,31 +93,51 @@ func GetSaltByName(un string) (err error, salt string) {
 		return
 	}
 
+	err, r := newUserSalt()
+	if nil != err {
+		return
+	}
+
+	user.SaltTmp = r
+	/*numb*/ _, errT := o.Update(&user, "SaltTmp")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
 	salt = user.Salt
+	rand = r
 
 	return
 }
 
 /**
-*	Get user id by name
+*	Login by user & password
 *	Parameters:
 *		loginName
 *		passwd
-*		random
 *	Return Values:
 *		err		- error info
 *		uid		- actual user id.
 *					> 0: point to a acutal user, = 0 point to "system",
 *					< 0: user not exist
  */
-func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
-	FN := "[LoginAccout] "
+func LoginByPass(loginName, passwd string) (err error, uid int64) {
+	FN := "[LoginByPass] "
 
 	uid = -1
+
+	o := orm.NewOrm()
 
 	defer func() {
 		if nil != err {
 			beego.Error(FN, err)
+		}
+		// beego.Warn(FN, "Remove the salt_tmp any way")
+		if uid > 0 {
+			u := TblUser{Id: uid, SaltTmp: ""}
+			num, errT := o.Update(&u, "SaltTmp")
+			beego.Debug(FN, "num:", num, ", errT:", errT)
 		}
 	}()
 
@@ -130,8 +151,6 @@ func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
 		return
 	}
 
-	o := orm.NewOrm()
-
 	user := TblUser{LoginName: loginName}
 	if err1 := o.Read(&user, "LoginName"); nil != err1 {
 		// beego.Error(FN, err1)
@@ -142,32 +161,32 @@ func LoginAccout(loginName, passwd, random string) (err error, uid int64) {
 		}
 		return
 	}
-
 	beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
 
 	// check if the password user keyined is empty
-	// md5(md5(pass+salt)+random)
+	// md5(md5(pass+salt)+SaltTmp)
 	hasher1 := md5.New()
 	hasher1.Write([]byte(user.Salt))
 	hasher1.Write([]byte(""))
 	rdHashPass1 := hex.EncodeToString(hasher1.Sum(nil))
+
 	hasher2 := md5.New()
 	hasher2.Write([]byte(rdHashPass1))
-	hasher2.Write([]byte(random))
+	hasher2.Write([]byte(user.SaltTmp))
 	rdHashPass2 := hex.EncodeToString(hasher2.Sum(nil))
 	beego.Debug(FN, "rdHashPass2:", rdHashPass2, ", passwd:", passwd)
 	if rdHashPass2 == passwd {
-		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_INCORRECT_PASSWORD}
+		// beego.Error(FN_NAME, "password couldn't be empty")
+		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_INCORRECT_PASSWORD, ErrInfo: "Empty password"}
 		return
 	}
 
 	hasher := md5.New() // md5(pass+random)
 	hasher.Write([]byte(user.PassLogin))
-	hasher.Write([]byte(random))
+	hasher.Write([]byte(user.SaltTmp))
 	rdHashPath := hex.EncodeToString(hasher.Sum(nil))
 
-	beego.Debug(FN, "passwd:", passwd)
-	beego.Debug(FN, "rdHashPath:", rdHashPath)
+	beego.Debug(FN, "rdHashPath:", rdHashPath, ", passwd:", passwd)
 	if passwd != rdHashPath {
 		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_INCORRECT_PASSWORD}
 		return
@@ -320,6 +339,41 @@ func LoginSms(login_name, sms string) (err error, uid int64) {
 	return
 }
 
+/**
+*	Check user
+*	Arguments
+*		uid		- user id
+*	Returns
+*		err		- error
+**/
+func CheckUser(uid int64) (err error) {
+	// FN := "[CheckUser] "
+
+	if uid < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	u := TblUser{Id: uid}
+	errT := o.Read(&u)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	if !u.Enable {
+		err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
+		return
+	}
+
+	return
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Internal Functions
@@ -445,41 +499,6 @@ func postSms(phone, sms string) (err error) {
 
 	beego.Warn(FN, "NOT Implement")
 	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
-
-	return
-}
-
-/**
-*	Check user
-*	Arguments
-*		uid		- user id
-*	Returns
-*		err		- error
-**/
-func CheckUser(uid int64) (err error) {
-	// FN := "[CheckUser] "
-
-	if uid < 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("uid:%d", uid)}
-		return
-	}
-
-	o := orm.NewOrm()
-	u := TblUser{Id: uid}
-	errT := o.Read(&u)
-	if nil != errT {
-		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("uid:%d", uid)}
-		} else {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		}
-		return
-	}
-
-	if !u.Enable {
-		err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
-		return
-	}
 
 	return
 }

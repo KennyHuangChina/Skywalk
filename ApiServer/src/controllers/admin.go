@@ -2,15 +2,15 @@ package controllers
 
 import (
 	// "encoding/json"
-	// "fmt"
 	"ApiServer/commdef"
 	"ApiServer/models"
-	"crypto/rand"
-	"encoding/hex"
+	// "fmt"
+	// "crypto/rand"
+	// "encoding/hex"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/cache"
 	"github.com/astaxie/beego/utils/captcha"
-	"io"
+	// "io"
 	// "net/http"
 	// "net/url"
 )
@@ -145,15 +145,10 @@ func (this *AdminController) GetSaltForUser() {
 		return
 	}
 
-	err, salt := models.GetSaltByName(username)
+	err, salt, r := models.GetSaltByName(username)
 	if nil == err {
 		result.Salt = salt
-		random := make([]byte, 16)
-		_, ioerr := io.ReadFull(rand.Reader, random)
-		if ioerr != nil {
-			beego.Error(FN, ioerr)
-		}
-		result.Random = hex.EncodeToString(random)
+		result.Random = r
 	}
 
 	// beego.Debug(FN, "salt:", result.Salt, ", random:", result.Random)
@@ -217,8 +212,10 @@ func (this *AdminController) Loginpass() {
 	/* Extract agreements */
 	loginName := this.GetString("ln")
 	password := this.GetString("pw")
-	random := this.GetString("rd")
-	beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", random:", random)
+	client, _ := this.GetInt("type") // client type. 0 - web; 1 - APP
+	psid := this.GetString("psid")   // secure picture id
+	pss := this.GetString("pss")     // secure picture result
+	beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", psid:", psid, ", pss:", pss, ", client:", client)
 
 	if 0 == len(loginName) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "login name could not be empty"}
@@ -227,14 +224,22 @@ func (this *AdminController) Loginpass() {
 
 	/* Processing */
 	// 1. check captcha MD5(GUID+Password) with client's secret
-	// err, userid := models.LoginAccout(loginName, password, random)
-	// if nil != err {
-	// 	return
-	// }
-	userid := int64(4)
+	if 0 == client {
+		if success := cpt.Verify(psid, pss); !success {
+			err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_CAPTCHA_FAIL}
+			return
+		}
+	}
+
+	// 2. check login
+	err, userid := models.LoginByPass(loginName, password)
+	if nil != err {
+		return
+	}
+	// userid := int64(4)
 	beego.Info(FN, "login success for user:", userid)
 
-	// 2. return session id
+	// 3. return session id
 	this.StartSession()
 	result.Sid = this.CruSession.SessionID()
 	// beego.Debug(FN, "result.Sid:", result.Sid)

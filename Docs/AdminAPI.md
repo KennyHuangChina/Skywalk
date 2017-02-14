@@ -19,7 +19,6 @@
   		* POST /v1/admin/loginpass
 	  		* ln			string 		// login name
 	  		* pw			string		// password
-	  		* rd			string		// random 
 	  		* typ			ing 		// client type. 0 - web; 1 - APP
 	  		* psid			string		// picture session id. ref to captcha GUID of API sec_pic
 	  		* pss			string 		// picture result
@@ -33,8 +32,7 @@
 
 ###3. Get User Salt
 	[Request]
-		* GET /v1/admin/salt?sid=xxx&un=xxx
-  			* sid			string 		// session id, from which the server could know who send the request
+		* GET /v1/admin/salt?un=xxx
 			* un			string 		// user login name
 	[Response]
 		* SUCCESS:200
@@ -111,10 +109,8 @@
 	[Private]		public
 	[Request]
   		* POST /v1/admin/logout
-  			* sid			string 		// session id, from which the server could know who send the request
 	[Response]
 		* SUCCESS:200 
-			* Uid			int			// new user id
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
