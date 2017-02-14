@@ -92,7 +92,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tofetch:%d", tofetch)}
 		return
 	}
-	if err = checkUser(uid); nil != err {
+	if err = CheckUser(uid); nil != err {
 		return
 	}
 
@@ -356,7 +356,7 @@ func SetHouseAgency(hid, aid int64) (err error) {
 		return
 	}
 
-	if err = checkUser(aid); nil != err {
+	if err = CheckUser(aid); nil != err {
 		return
 	}
 
@@ -485,11 +485,11 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 		return
 	}
 
-	if errT := checkUser(oid); nil != errT {
+	if errT := CheckUser(oid); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("owner:%d", oid)}
 		return
 	}
-	if errT := checkUser(aid); nil != errT {
+	if errT := CheckUser(aid); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
 		return
 	}
@@ -983,7 +983,7 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 	if nil != err {
 		return err
 	}
-	if err = checkUser(uid); nil != err {
+	if err = CheckUser(uid); nil != err {
 		return err
 	}
 

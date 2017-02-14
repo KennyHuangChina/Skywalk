@@ -29,7 +29,7 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
 		beego.ControllerComments{
-			Method: "Test",
+			Method: "TestLogin",
 			Router: `/test`,
 			AllowHTTPMethods: []string{"post"},
 			Params: nil})

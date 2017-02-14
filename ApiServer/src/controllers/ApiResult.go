@@ -199,24 +199,29 @@ func getLoginUser(c beego.Controller) (uid int64, err error) {
 	FN := "[getLoginUser] "
 
 	defer func() {
-		beego.Debug(FN, "uid:", uid)
+		if nil != err {
+			beego.Error(FN, "uid:", uid, ", err:", err)
+		}
 	}()
 
-	return 4, nil
-
-	// read uid from http request cookie
-	beego.Debug(FN, "c.CruSession:", c.CruSession)
+	// try to read uid from http request cookie
+	// beego.Debug(FN, "c.CruSession:", c.CruSession)
 	c.StartSession()
-	beego.Debug(FN, "c.CruSession:", c.CruSession)
+	// beego.Debug(FN, "c.CruSession:", c.CruSession)
 	if nil != c.CruSession {
-		sid := c.CruSession.SessionID()
-		beego.Debug(FN, "request.Sid:", sid)
+		/*sid :=*/ c.CruSession.SessionID()
+		// beego.Debug(FN, "request.Sid:", sid)
 		userId := c.GetSession("userid")
-		beego.Debug(FN, "userId:", userId)
+		// beego.Debug(FN, "userId:", userId)
 		if nil != userId {
 			switch userId.(type) {
 			case int64:
 				uid, _ = userId.(int64)
+				if uid > 0 {
+					err = models.CheckUser(uid)
+				} else {
+					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
+				}
 			default:
 				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Unknow type of userId"}
 			}
@@ -224,31 +229,37 @@ func getLoginUser(c beego.Controller) (uid int64, err error) {
 		}
 	}
 
-	// read uid from http request paramers
+	// Not get uid from session, try to read it from http request paramers
 	sid := c.GetString("sid")
+	// beego.Debug(FN, "sid:", sid)
 	if 0 == len(sid) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
 		return
 	}
 
 	session, errTmp := beego.GlobalSessions.GetSessionStore(sid)
+	// beego.Debug(FN, "session:", session)
 	if nil != errTmp {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN, ErrInfo: errTmp.Error()}
 		return
 	}
 
 	userId := session.Get("userid")
+	// beego.Debug(FN, "userId:", userId)
 	if nil != userId {
 		switch userId.(type) {
 		case int64:
 			uid, _ = userId.(int64)
+			if uid > 0 {
+				err = models.CheckUser(uid)
+			} else {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
+			}
 		default:
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Unknow type of userId"}
 		}
 		return
 	}
-
-	beego.Debug(FN, "TODO: check if the user is real")
 
 	return
 }

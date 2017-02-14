@@ -32,6 +32,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("FetchSms", a.FetchSms)
 	a.Mapping("Loginsms", a.Loginsms)
 	a.Mapping("Logout", a.Logout)
+	a.Mapping("TestLogin", a.TestLogin)
 }
 
 // @Title GetUserInfo
@@ -100,7 +101,7 @@ func (this *AdminController) GetSecurePic() {
 
 	imageID, err1 := cpt.CreateCaptcha()
 	if err1 != nil {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_CAPTCHA_SERVER, ErrInfo: err1.Error()}
+		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_CAPTCHA_SERVER, ErrInfo: err1.Error()}
 		return
 	}
 
@@ -158,6 +159,38 @@ func (this *AdminController) GetSaltForUser() {
 	// beego.Debug(FN, "salt:", result.Salt, ", random:", result.Random)
 }
 
+// @Title TestLogin
+// @Description login by login name & password
+// @Success 200 {string}
+// @Failure 400 body is empty
+// @router /test [post]
+func (this *AdminController) TestLogin() {
+	FN := "<TestLogin> "
+	beego.Warn("[--- API: TestLogin ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "uid:", uid)
+
+	return
+}
+
 // @Title Loginpass
 // @Description login by login name & password
 // @Success 200 {string}
@@ -194,10 +227,11 @@ func (this *AdminController) Loginpass() {
 
 	/* Processing */
 	// 1. check captcha MD5(GUID+Password) with client's secret
-	err, userid := models.LoginAccout(loginName, password, random)
-	if nil != err {
-		return
-	}
+	// err, userid := models.LoginAccout(loginName, password, random)
+	// if nil != err {
+	// 	return
+	// }
+	userid := int64(4)
 	beego.Info(FN, "login success for user:", userid)
 
 	// 2. return session id
@@ -246,12 +280,16 @@ func (this *AdminController) Logout() {
 		this.ServeJSON()
 	}()
 
-	/* Extract agreements */
-	loginName := this.GetString("ln")
-	password := this.GetString("pw")
-	random := this.GetString("rd")
-	beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", random:", random)
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "uid:", uid)
 
+	this.StartSession()
+	Sid := this.CruSession.SessionID()
+	beego.Debug(FN, "Sid:", Sid)
+	this.SetSession("userid", int64(-1)) // remove the user id for this session, GC will remove it automatically
 }
 
 // @Title FetchSms

@@ -456,8 +456,8 @@ func postSms(phone, sms string) (err error) {
 *	Returns
 *		err		- error
 **/
-func checkUser(uid int64) (err error) {
-	// FN := "[checkUser] "
+func CheckUser(uid int64) (err error) {
+	// FN := "[CheckUser] "
 
 	if uid < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("uid:%d", uid)}
@@ -495,7 +495,7 @@ func checkUser(uid int64) (err error) {
 func isAgency(uid int64) (err error, agency bool) {
 	FN := "[isAgency] "
 
-	err = checkUser(uid)
+	err = CheckUser(uid)
 	if nil != err {
 		return
 	}
@@ -530,7 +530,7 @@ func isAgency(uid int64) (err error, agency bool) {
 func isAdministrator(uid int64) (err error, admin bool) {
 	FN := "[isAdministrator] "
 
-	err = checkUser(uid)
+	err = CheckUser(uid)
 	if nil != err {
 		return
 	}
