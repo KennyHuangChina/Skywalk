@@ -91,6 +91,8 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
             // parent
             final LinearLayout linearLayout = new LinearLayout(this);
 //            View view = View.inflate(this, R.layout.listitem_household_deliverable, linearLayout);
+
+            // attachToRoot = false, return the view itself, otherwise return the root view
             View view = LayoutInflater.from(this).inflate(R.layout.listitem_household_deliverable, linearLayout, false);
             view.setId(i*3);
             view.setOnClickListener(mDeliverableItemClickedListener);

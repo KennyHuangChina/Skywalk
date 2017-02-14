@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
@@ -79,4 +81,22 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
 //            }).start();
         }
     };
+
+    public void onViewClick(View v) {
+//        commonFun.showToast_resId(this, v);
+        switch (v.getId()) {
+            case R.id.tv_price_analysis:
+            {
+                ExpandedView priceView = (ExpandedView) findViewById(R.id.ev_price_analysis);
+                if (priceView.getVisibility() == View.VISIBLE) {
+                    priceView.collapse();
+                    ((TextView)findViewById(R.id.tv_price_analysis)).setText("价格分析 v");
+                } else {
+                    priceView.expand();
+                    ((TextView)findViewById(R.id.tv_price_analysis)).setText("价格分析 ^");
+                }
+            }
+            break;
+        }
+    }
 }

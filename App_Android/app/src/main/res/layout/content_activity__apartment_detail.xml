@@ -98,9 +98,76 @@
 
         </LinearLayout>
 
-        <ImageView
+        <include layout="@layout/seperator_horizontal" />
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="match_parent"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:text="业主挂牌价"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#939499"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/tv_price_analysis"
+                    android:onClick="onViewClick"
+                    android:text="价格分析 ^"
+                    android:textColor="#00AE63"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+            <com.kjs.skywalk.control.ExpandedView
+                android:id="@+id/ev_price_analysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            </com.kjs.skywalk.control.ExpandedView>
+        </LinearLayout>
+
+        <include layout="@layout/seperator_horizontal"
+                 android:layout_width="match_parent"
+                 android:layout_height="18dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="3室1厅"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF3F29"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:text="户型"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#939499"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
 
 
         <!--<TextView-->
