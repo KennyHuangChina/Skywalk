@@ -1,4 +1,8 @@
 <resources>
+    <string name="button_text_restore_default">恢复默认</string>
+    <string name="button_text_ok">确定</string>
+
+
     <string name="app_name">App_Android</string>
     <string name="tab_menu_homepage">首页</string>
     <string name="tab_menu_apartment">找房</string>
