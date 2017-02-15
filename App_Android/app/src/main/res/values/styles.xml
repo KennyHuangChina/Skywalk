@@ -117,6 +117,19 @@
         <item name="android:textColor">#E90132</item>
     </style>
 
+    <!--高级搜索->筛选->条件-->
+    <style name="text_view_search_condition_filter_item" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/filter_background</item>
+        <item name="android:textSize">@dimen/text_size_search_condition_filter_item</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 
 
 
