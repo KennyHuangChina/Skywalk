@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Activity_HouseholdDeliverables;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
@@ -26,10 +29,10 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__apartment_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_share);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,7 +40,7 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         ArrayList<String> list = new ArrayList<>();
@@ -97,6 +100,70 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
                 }
             }
             break;
+
+            case R.id.tv_order:
+            {
+                // 预约看房
+                showOrderDlg();
+            }
+            break;
+
+            case R.id.tv_zufang:
+            {
+                // 我要租房
+                showYiJiaDlg();
+            }
+            break;
         }
+    }
+
+    private AlertDialog mOrderDlg;
+    private void showOrderDlg() {
+        if (mOrderDlg == null) {
+            mOrderDlg = new AlertDialog.Builder(this).create();
+        }
+        mOrderDlg.show();
+        mOrderDlg.setContentView(R.layout.dialog_apartment_order);
+
+        TextView tvBack = (TextView) mOrderDlg.findViewById(R.id.tv_back);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOrderDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mOrderDlg.findViewById(R.id.tv_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOrderDlg.dismiss();
+            }
+        });
+    }
+
+    private AlertDialog mYiJiaDlg;
+    private void showYiJiaDlg() {
+        if (mYiJiaDlg == null) {
+            mYiJiaDlg = new AlertDialog.Builder(this).create();
+        }
+        mYiJiaDlg.show();
+        mYiJiaDlg.setContentView(R.layout.dialog_apartment_yijia);
+
+        TextView tvBack = (TextView) mYiJiaDlg.findViewById(R.id.tv_back);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mYiJiaDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mYiJiaDlg.findViewById(R.id.tv_commit);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mYiJiaDlg.dismiss();
+            }
+        });
     }
 }

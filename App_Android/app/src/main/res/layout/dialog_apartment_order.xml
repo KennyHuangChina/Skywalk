@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/text_margin"
+    android:paddingRight="@dimen/text_margin">
+
+    <TextView
+        android:text="预约看房"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:gravity="center"/>
+
+    <include layout="@layout/seperator_horizontal" />
+
+    <TextView
+        android:text="看房日期"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="#000000"
+        android:textSize="14sp"/>
+
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:id="@+id/datePicker"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_marginBottom="10dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText3"
+        android:textColorHint="#D7D7D7"
+        android:textSize="12sp"
+        android:hint="请输入说明内容"/>
+
+    <include layout="@layout/seperator_horizontal" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:gravity="center">
+
+        <TextView
+            android:text="返回"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_back"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:contentDescription=""
+            android:background="#EFEFEF" />
+
+        <TextView
+            android:text="提交预约"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_confirm"
+            android:textColor="#00AF60"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -107,6 +107,36 @@
             android:paddingLeft="11dp"
             android:paddingRight="11dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp">
+
+                <TextView
+                    android:text="2200（元/月）"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:text="物业200（月）"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:text="降200"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:textColor="#32BE84"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -132,10 +162,10 @@
                 android:id="@+id/ev_price_analysis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-
             </com.kjs.skywalk.control.ExpandedView>
         </LinearLayout>
+
+
 
         <include layout="@layout/seperator_horizontal"
                  android:layout_width="match_parent"
