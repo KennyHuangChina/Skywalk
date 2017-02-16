@@ -48,6 +48,10 @@ class LogInByPassword extends CommunicationBase {
             return false;
         }
 
+        NativeCall pNC = NativeCall.GetNativeCaller();
+        byte[] pass = pNC.EncryptPassword(mPassword, "123456", mRadom, 1);
+        Log.w(TAG, "pass:" + pass);
+
         return true;
     }
 
