@@ -40,6 +40,7 @@ public class LogInOutFragment extends Fragment
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, "TestUserName");
         pMap.put(CommunicationParameterKey.CPK_PASSWORD, "TestPassword");
         pMap.put(CommunicationParameterKey.CPK_RANDOM, "TestRandom");
+        pMap.put(CommunicationParameterKey.CPK_USER_SALT, "123456");
         mManager.execute(CommunicationCommand.CC_LOG_IN_BY_PASSWORD, pMap, this, this);
     }
 

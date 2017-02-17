@@ -54,16 +54,19 @@ JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCal
         return NULL;
     }
     DP_LOG("md5Result:%s", md5Result);
+    PRINT_BUFF("md5Result", (const char*)md5Result, MD5_BYTES);
 
-    strcpy(szSrc, (const char*)md5Result);
+    memcpy(szSrc, md5Result, MD5_BYTES);
     strcat(szSrc, szRand);
     DP_LOG("szSrc:%s", szSrc);
+    PRINT_BUFF("szSrc", (const char*)md5Result, MD5_BYTES + strlen(szRand));
     md5Result = md5->Digest((unsigned char*)szSrc, strlen(szSrc));
     if (NULL == md5Result)
     {
         return NULL;
     }
     DP_LOG("md5Result:%s", md5Result);
+    PRINT_BUFF("md5Result", (const char*)md5Result, MD5_BYTES);
 
     // Export
     int nLen = strlen((const char*)md5Result);

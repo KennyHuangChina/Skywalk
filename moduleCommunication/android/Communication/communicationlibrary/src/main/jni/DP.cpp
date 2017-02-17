@@ -25,4 +25,28 @@ void SK_DP(const char * szFormat, ...)
     __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "%s", szBuffer);
     va_end(vl);
 }
+
+void PRINT_BUFF(const char* szBuffName, const char* pBuff, unsigned int nLen)
+{
+    if (NULL == pBuff || 0 == nLen)
+    {
+        return;
+    }
+
+    const int PRINT_LEN = 100;
+    char szTmp[10];
+    char szPrint[PRINT_LEN] = {0};
+    for (int i = 0; i < nLen; ++i) {
+        char tmp = *(pBuff + i);
+        sprintf(szTmp, "%.2x ", tmp);
+        strcat(szPrint, szTmp);
+        if (strlen(szPrint) >= PRINT_LEN - 4)
+        {
+            strcat(szPrint, " ...");
+            break;
+        }
+    }
+    DP_LOG("%s: %s", szBuffName, szPrint);
+}
+
 #endif  // ANDROID

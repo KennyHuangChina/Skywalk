@@ -52,6 +52,8 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                 String returnCode = "";
                 int retValue = InternalDefines.ERROR_CODE_OK;
                 HttpConnector http = new HttpConnector(mContext);
+                Log.i("(mServerURL:", mServerURL);
+                Log.i("(mCommandURL:", mCommandURL);
                 http.setURL(mServerURL, mCommandURL);
                 http.setRequestMethod(mMethodType);
                 http.setRequestData(mRequestData);

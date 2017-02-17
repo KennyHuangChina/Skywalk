@@ -1,7 +1,9 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.util.Base64;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,10 +17,12 @@ import java.util.HashMap;
 
 class LogInByPassword extends CommunicationBase {
 
+    private int mVersion = 1;
+    private int mType = 1; // client type: 0 - web; 1 - APP
+    private String mSalt = "";  // user salt get from server
     private String mUserName = "";
     private String mPassword = "";
     private String mRadom = "";
-    private String mType = "1";
 
     LogInByPassword(Context context) {
         super(context);
@@ -31,7 +35,8 @@ class LogInByPassword extends CommunicationBase {
     public boolean checkParameter(HashMap<String, String> map) {
         if(!map.containsKey(CommunicationParameterKey.CPK_USER_NAME) ||
                 !map.containsKey(CommunicationParameterKey.CPK_PASSWORD) ||
-                !map.containsKey(CommunicationParameterKey.CPK_RANDOM)) {
+                !map.containsKey(CommunicationParameterKey.CPK_RANDOM) ||
+                !map.containsKey(CommunicationParameterKey.CPK_USER_SALT)) {
             return false;
         }
 
@@ -47,22 +52,37 @@ class LogInByPassword extends CommunicationBase {
         if(mRadom == null || mRadom.isEmpty()) {
             return false;
         }
+        mSalt = map.get(CommunicationParameterKey.CPK_USER_SALT);
+        if(mSalt == null || mSalt.isEmpty()) {
+            return false;
+        }
 
         NativeCall pNC = NativeCall.GetNativeCaller();
-        byte[] pass = pNC.EncryptPassword(mPassword, "123456", mRadom, 1);
+        byte[] pass = pNC.EncryptPassword(mPassword, mSalt, mRadom, mVersion);
+        if (null == pass) {
+            return false;
+        }
         Log.w(TAG, "pass:" + pass);
+//        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
+//        String strNewPass = new String(pass);
+        mPassword = Base64.encodeToString(pass, Base64.URL_SAFE);;
+        Log.d(TAG, "mPassword:" + mPassword);
 
         return true;
     }
 
     private void generateRequestData() {
+        mRequestData = ("ver=" +  mVersion);
+        mRequestData += "&";
         mRequestData = ("ln=" +  mUserName);
         mRequestData += "&";
-        mRequestData += ("pw=" + mPassword);
+        mRequestData += ("pw=" ); //+ mPassword);
         mRequestData += "&";
         mRequestData += ("rd=" + mRadom);
         mRequestData += "&";
         mRequestData += ("typ=" + mType);
+
+        Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
     @Override
@@ -75,7 +95,7 @@ class LogInByPassword extends CommunicationBase {
         Log.i(TAG, "doOperation");
 
         mCommandURL = "/v1/admin/loginpass";
-        mCommandURL += "/";
+//        mCommandURL += "/";
 
         generateRequestData();
 

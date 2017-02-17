@@ -13,6 +13,8 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
  */
 
 public class CommunicationManager {
+    final String TAG = "CommunicationManager";
+
     private Context mContext = null;
     private CommunicationBase mOperation = null;
     private SKCookieManager mCookieManager = null;
@@ -41,6 +43,7 @@ public class CommunicationManager {
         }
 
         if(!mOperation.checkParameter(map)) {
+            Log.w(TAG, "Fail to check parameters");
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
 

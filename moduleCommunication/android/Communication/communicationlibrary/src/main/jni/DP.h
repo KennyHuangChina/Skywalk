@@ -6,6 +6,7 @@
 #define COMMUNICATION_DP_H
 
 extern void SK_DP(const char * szFormat, ...);
+extern void PRINT_BUFF(const char* szBuffName, const char* pBuff, unsigned int nLen);
 
 #ifdef __linux__
 
