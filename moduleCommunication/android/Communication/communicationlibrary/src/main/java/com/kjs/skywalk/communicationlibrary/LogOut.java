@@ -18,6 +18,7 @@ class LogOut extends CommunicationBase {
         super(context);
         TAG = "LogOut";
         Log.i(TAG, "Constructor");
+        mAPI = CommunicationCommand.CC_LOG_OUT;
         mMethodType = "POST";
     }
 

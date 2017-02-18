@@ -103,6 +103,13 @@
         android:layout_weight="1"
         android:layout_below="@id/linearLayout2">
 
+                        <Button
+            android:text="Get User Salt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonGetUserSalt"
+            android:layout_weight="1" />
+
         <Button
             android:text="Test"
             android:layout_width="wrap_content"

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
@@ -30,6 +31,7 @@ public class LogInOutFragment extends Fragment
     private String mResultString = "";
 
     TextView mTextViewResult = null;
+    EditText mEditUserName = null;
 
     public LogInOutFragment() {
     }
@@ -56,6 +58,14 @@ public class LogInOutFragment extends Fragment
         mManager.execute(CommunicationCommand.CC_TEST, pMap, this, this);
     }
 
+    private void doGetUserSalt() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        String sName = mEditUserName.getText().toString();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, sName);
+        mManager.execute(CommunicationCommand.CC_GET_USER_SALT, pMap, this, this);
+    }
+
     private void clearResultDisplay() {
         mResultString = "";
         mTextViewResult.setText("");
@@ -67,6 +77,7 @@ public class LogInOutFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_log_in_out, container, false);
         mTextViewResult = (TextView)view.findViewById(R.id.textViewResult);
+        mEditUserName = (EditText)view.findViewById(R.id.editTextUserName);
         Button loginButton = (Button)view.findViewById(R.id.buttonLogin);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +104,16 @@ public class LogInOutFragment extends Fragment
             {
                 clearResultDisplay();
                 doTest();
+            }
+        });
+
+        Button btnGetUserSalt = (Button)view.findViewById(R.id.buttonGetUserSalt);
+        btnGetUserSalt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                clearResultDisplay();
+                doGetUserSalt();
             }
         });
         return view;
@@ -137,6 +158,13 @@ public class LogInOutFragment extends Fragment
                 showResult(command, map);
             } else {
                 Log.e(TAG, "Command "+ CommunicationCommand.CC_LOG_IN_BY_PASSWORD + " finished with error: " + description);
+            }
+        } else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
+            if(returnCode.equals("0")) {
+                Log.i(TAG, "OK to get user falt");
+                showResult(command, map);
+            } else {
+                Log.e(TAG, "Command:"+ command + " finished with error: " + description);
             }
         }
     }

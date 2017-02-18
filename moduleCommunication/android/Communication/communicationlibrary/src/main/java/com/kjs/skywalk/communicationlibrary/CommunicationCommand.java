@@ -7,6 +7,7 @@ package com.kjs.skywalk.communicationlibrary;
 public class CommunicationCommand {
     public static String CC_GET_BRIEF_PUBLIC_HOUSE_INFO         = "CommandGetBriefPublicHouseInfo";
     public static String CC_LOG_IN_BY_PASSWORD                  = "CommandLogInByPassword";
+    public static String CC_GET_USER_SALT                       = "CommandGetUserSalt";
     public static String CC_LOG_OUT                             = "CommandLogOut";
 
 

@@ -26,6 +26,7 @@ class GetBriefPublicHouseInfo extends CommunicationBase {
         TAG = "GetBriefPublicHouseInfo";
         Log.i(TAG, "Constructor");
         mMethodType = "GET";
+        mAPI = CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO;
     }
 
     private void generateRequestData() {

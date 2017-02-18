@@ -17,7 +17,8 @@ import org.json.JSONObject;
 
 class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.CheckParameter,
         InternalDefines.CreateResultMap, InternalDefines.BeforeConnect, InternalDefines.AfterConnect, InternalDefines.ConnectFailed{
-    protected String TAG = "";
+    protected String TAG = "CommunicationBase";
+    protected String mAPI = "";
     protected Context mContext = null;
     protected String mMethodType = "";
     protected String mServerURL = "";
@@ -62,7 +63,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                     String strError = InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Can't connect to server. error: " +  strError);
                     returnCode = "" + retValue;
-                    mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, null);
+                    mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
                     doConnectFailed(http);
                     return;
                 }
@@ -72,7 +73,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                     String strError = InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Can't connect to server. error: " +  strError);
                     returnCode = "" + retValue;
-                    mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, null);
+                    mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
                     doConnectFailed(http);
                     return;
                 }
@@ -83,7 +84,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                 if(jObject == null) {
                     String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
                     returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
-                    mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, null);
+                    mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
                     doConnectFailed(http);
                     return;
                 }
@@ -92,7 +93,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
 
                 String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
-                mCommandListener.onCommandFinished(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, returnCode, strError, map);
+                mCommandListener.onCommandFinished(mAPI, returnCode, strError, map);
 
                 doAfterConnect(http);
 

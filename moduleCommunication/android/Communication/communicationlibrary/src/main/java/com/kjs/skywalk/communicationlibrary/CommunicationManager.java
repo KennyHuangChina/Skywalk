@@ -65,6 +65,8 @@ public class CommunicationManager {
             operation = new LogOut(mContext);
         } else if(command.equals(CommunicationCommand.CC_TEST)) {
             operation = new CommandTest(mContext);
+        } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_SALT)) {
+            operation = new CmdGetUserSalt(mContext);
         }
 
         return operation;

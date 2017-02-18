@@ -28,6 +28,7 @@ class LogInByPassword extends CommunicationBase {
         super(context);
         TAG = "LogInByPassword";
         Log.i(TAG, "Constructor");
+        mAPI = CommunicationCommand.CC_LOG_IN_BY_PASSWORD;
         mMethodType = "POST";
         mSessionID = "xxxxx";
     }
