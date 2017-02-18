@@ -225,15 +225,28 @@ class HttpConnector {
 
                 String list[] = strRequestData.split("&");
                 for(int i= 0; i < list.length; i ++) {
-                    String tmp[] = list[i].split("=");
-                    if (tmp.length == 2) {
-                        String name = tmp[0];
-                        String value = tmp[1];
-                        wr.writeBytes(BOUNDARY_START);
-                        String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", name, value);
-                        Log.i(InternalDefines.TAG_HTTPConnector, strLine);
-                        wr.writeBytes(strLine);
+                    String tmpString = list[i];
+                    int nPos = tmpString.indexOf("=");
+                    if(nPos >= 0) {
+                        String str0 = tmpString.substring(0, nPos);
+                        String str1 = tmpString.substring(nPos + 1, tmpString.length());
+                        if(str0 != null && !str0.isEmpty()) {
+                            wr.writeBytes(BOUNDARY_START);
+                            String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", str0, str1);
+                            Log.i(InternalDefines.TAG_HTTPConnector, strLine);
+                            wr.writeBytes(strLine);
+                        }
                     }
+
+//                    String tmp[] = list[i].split("=");
+//                    if (tmp.length == 2) {
+//                        String name = tmp[0];
+//                        String value = tmp[1];
+//                        wr.writeBytes(BOUNDARY_START);
+//                        String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", name, value);
+//                        Log.i(InternalDefines.TAG_HTTPConnector, strLine);
+//                        wr.writeBytes(strLine);
+//                    }
                 }
 
                 if(uploadFile) {
