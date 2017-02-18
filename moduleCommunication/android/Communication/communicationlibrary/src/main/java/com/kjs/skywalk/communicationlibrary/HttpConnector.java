@@ -114,7 +114,8 @@ class HttpConnector {
         }
 
         String url = mStringServerURL + mStringURL ;
-        if(!mRequestData.isEmpty()) {
+        if (mMethod.equals("GET") && !mRequestData.isEmpty()) {
+            // Kenny: only the "Get" http request could put the arguments in request URL
             url += "?" + mRequestData;
         }
 
@@ -190,7 +191,7 @@ class HttpConnector {
         return mErrorDescription;
     }
 
-    public int sendRequest(String strRequestData) {
+    public int sendRequest() {
         if(mConnection == null) {
             return InternalDefines.ERROR_CODE_HTTP_CONNECTION;
         }
@@ -223,7 +224,8 @@ class HttpConnector {
 //                mConnection.setFixedLengthStreamingMode(strRequestData.length());
                 DataOutputStream wr = new DataOutputStream (mConnection.getOutputStream());
 
-                String list[] = strRequestData.split("&");
+                if (!mRequestData.isEmpty()) {
+                    String list[] = mRequestData.split("&");
                 for(int i= 0; i < list.length; i ++) {
                     String tmpString = list[i];
                     int nPos = tmpString.indexOf("=");
@@ -247,6 +249,7 @@ class HttpConnector {
 //                        Log.i(InternalDefines.TAG_HTTPConnector, strLine);
 //                        wr.writeBytes(strLine);
 //                    }
+                }
                 }
 
                 if(uploadFile) {

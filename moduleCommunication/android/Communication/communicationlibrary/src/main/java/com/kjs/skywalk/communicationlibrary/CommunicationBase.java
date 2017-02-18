@@ -67,7 +67,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                     return;
                 }
 
-                if((retValue = http.sendRequest(mRequestData)) != InternalDefines.ERROR_CODE_OK) {
+                if((retValue = http.sendRequest()) != InternalDefines.ERROR_CODE_OK) {
                     http.disconnect();
                     String strError = InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Can't connect to server. error: " +  strError);

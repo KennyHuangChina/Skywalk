@@ -76,6 +76,7 @@ class LogInByPassword extends CommunicationBase {
         mRequestData += "&";
         mRequestData = ("ln=" +  mUserName);
         mRequestData += "&";
+//        mRequestData += ("pw=123456abcdefg")
         mRequestData += ("pw=" + mPassword);
         mRequestData += "&";
         mRequestData += ("rd=" + mRadom);
