@@ -88,6 +88,12 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
     public void onViewClick(View v) {
 //        commonFun.showToast_resId(this, v);
         switch (v.getId()) {
+            case  R.id.fab_back:
+            {
+                finish();
+            }
+            break;
+
             case R.id.tv_price_analysis:
             {
                 ExpandedView priceView = (ExpandedView) findViewById(R.id.ev_price_analysis);
@@ -111,6 +117,12 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
             case R.id.tv_zufang:
             {
                 // 我要租房
+            }
+            break;
+
+            case R.id.tv_yijia:
+            {
+                // 议价
                 showYiJiaDlg();
             }
             break;
@@ -166,4 +178,6 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
             }
         });
     }
+
+
 }

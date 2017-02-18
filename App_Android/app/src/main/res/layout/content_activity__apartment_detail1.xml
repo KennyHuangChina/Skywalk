@@ -638,8 +638,10 @@
             android:textColor="#485053"/>
 
         <TextView
+            android:id="@+id/tv_yijia"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:onClick="onViewClick"
             android:gravity="center"
             android:drawableTop="@drawable/yijia"
             android:text="议价"

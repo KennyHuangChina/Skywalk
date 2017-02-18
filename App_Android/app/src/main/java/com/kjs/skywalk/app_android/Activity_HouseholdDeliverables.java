@@ -222,4 +222,14 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         }
     };
 
+    public void onViewClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_apartment_name:
+            {
+                finish();
+            }
+            break;
+        }
+    }
+
 }

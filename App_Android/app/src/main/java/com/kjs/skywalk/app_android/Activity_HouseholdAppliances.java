@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,10 +22,20 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         int l = s.length();
         styleText.setSpan(new TextAppearanceSpan(this, R.style.textstyle_large), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         styleText.setSpan(new TextAppearanceSpan(this, R.style.textstyle_small), 5, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ((TextView)findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
+        ((TextView) findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
 
-        ListView lvHouseApp = (ListView)findViewById(R.id.lvHouseholdAppliance);
+        ListView lvHouseApp = (ListView) findViewById(R.id.lvHouseholdAppliance);
         listitem_adapter_household_appliance adapter = new listitem_adapter_household_appliance(this);
         lvHouseApp.setAdapter(adapter);
+    }
+
+    public void onViewClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_apartment_name:
+            {
+                finish();
+            }
+            break;
+        }
     }
 }

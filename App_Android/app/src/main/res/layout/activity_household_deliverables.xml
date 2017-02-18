@@ -12,6 +12,7 @@
         android:id="@+id/tv_apartment_name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:onClick="onViewClick"
         android:drawableLeft="@drawable/nav_back"
         android:paddingLeft="15dp"
         android:background="#FFFFFF"

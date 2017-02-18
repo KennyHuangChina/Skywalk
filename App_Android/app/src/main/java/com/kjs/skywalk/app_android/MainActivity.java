@@ -118,9 +118,6 @@ public class MainActivity extends AppCompatActivity {
 //                    mBvMsgInTab.hide();
 //                }
 
-//                Intent intent = new Intent(this, Activity_HouseholdAppliances.class);
-//                startActivity(intent);
-
                 Intent intent = new Intent(this, Activity_HouseholdDeliverables.class);
                 startActivity(intent);
             }
@@ -128,7 +125,10 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.tv_apartment:
             {
-                Intent intent = new Intent(this, Activity_ApartmentDetail.class);
+//                Intent intent = new Intent(this, Activity_ApartmentDetail.class);
+//                startActivity(intent);
+
+                Intent intent = new Intent(this, Activity_HouseholdAppliances.class);
                 startActivity(intent);
 
                 setNewMessageCount(5);
