@@ -30,6 +30,7 @@ func (a *AdminController) URLMapping() {
 
 	a.Mapping("Loginpass", a.Loginpass)
 	a.Mapping("FetchSms", a.FetchSms)
+	a.Mapping("Relogin", a.Relogin)
 	a.Mapping("Loginsms", a.Loginsms)
 	a.Mapping("Logout", a.Logout)
 	a.Mapping("TestLogin", a.TestLogin)
@@ -186,6 +187,68 @@ func (this *AdminController) TestLogin() {
 	return
 }
 
+// @Title Relogin
+// @Description User relogin automatically when session expired, by previous session id
+// @Success 200 {string}
+// @Failure 400 body is empty
+// @router /relogin/:id [post]
+func (this *AdminController) Relogin() {
+	FN := "<Relogin> "
+	beego.Warn("[--- API: Relogin ---]")
+
+	var result ResAdminLogin
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/* Extract agreements */
+	sid := this.GetString(":id")
+	ver, _ := this.GetInt("ver")
+	loginName := this.GetString("ln")
+	rand := this.GetString("rd")
+
+	/* Processing */
+
+	// 2. check login
+	err, userid := models.Relogin(ver, loginName, rand, sid)
+	if nil != err {
+		return
+	}
+	// userid := int64(4)
+	beego.Info(FN, "login success for user:", userid)
+
+	// 3. return session id
+	this.StartSession()
+	result.Sid = this.CruSession.SessionID()
+	// beego.Debug(FN, "result.Sid:", result.Sid)
+	// cookie := &http.Cookie{
+	// 	Name:     beego.BConfig.WebConfig.Session.SessionName, // beego.SessionName,
+	// 	Value:    url.QueryEscape(result.Sid),
+	// 	Path:     "/",
+	// 	HttpOnly: true,
+	// 	Secure:   beego.EnableHttpTLS,
+	// 	Domain: beego.BConfig.WebConfig.Session.SessionDomain,
+	// }
+	// if beego.SessionCookieLifeTime > 0 {
+	// 	cookie.MaxAge = beego.SessionCookieLifeTime
+	// 	cookie.Expires = time.Now().Add(time.Duration(beego.SessionCookieLifeTime) * time.Second)
+	// }
+	// // NOTE by Gavin:SetCookie must be called before ResponseWriter.WriteHeader
+	// // because ResponseWriter.Header will never accept header modification after Wri
+	// http.SetCookie(this.Ctx.ResponseWriter, cookie)
+	this.SetSession("userid", userid)
+	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
+}
+
 // @Title Loginpass
 // @Description login by login name & password
 // @Success 200 {string}
@@ -246,7 +309,10 @@ func (this *AdminController) Loginpass() {
 	}
 
 	// 2. check login
-	err, userid := models.LoginByPass(loginName, password, rand)
+	this.StartSession()
+	result.Sid = this.CruSession.SessionID()
+	// result.Sid = "1234567890" // for relogin testing
+	err, userid := models.LoginByPass(loginName, password, rand, result.Sid)
 	if nil != err {
 		return
 	}
@@ -254,8 +320,8 @@ func (this *AdminController) Loginpass() {
 	beego.Info(FN, "login success for user:", userid)
 
 	// 3. return session id
-	this.StartSession()
-	result.Sid = this.CruSession.SessionID()
+	// this.StartSession()
+	// result.Sid = this.CruSession.SessionID()
 	// beego.Debug(FN, "result.Sid:", result.Sid)
 	// cookie := &http.Cookie{
 	// 	Name:     beego.BConfig.WebConfig.Session.SessionName, // beego.SessionName,

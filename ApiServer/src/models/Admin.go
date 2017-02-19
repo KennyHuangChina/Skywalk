@@ -106,6 +106,70 @@ func GetSaltByName(un string) (err error, salt, rand string) {
 }
 
 /**
+*	User relogin automatically when session expired, by previous session id
+*	Parameters:
+*		ver			- version number
+*		loginName	- login name
+*		sid			- session id when last login
+*		rand		- random
+*	Return Values:
+*		err		- error info
+*		uid		- actual user id.
+*					> 0: point to a acutal user, = 0 point to "system",
+*					< 0: user not exist
+ */
+func Relogin(ver int, loginName, rand, sid string) (err error, uid int64) {
+	FN := "[Relogin] "
+	beego.Debug(FN, "sid:", sid, ", ver:", ver, ", loginName:", loginName, ", rand:", rand)
+
+	defer func() {
+		if nil != err {
+			uid = -1
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* arguments checking */
+	if 0 == len(loginName) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "login name could not be empty"}
+		return
+	}
+	if 0 == len(rand) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "random not set"}
+		return
+	}
+	if 0 == len(sid) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "session not set"}
+		return
+	}
+
+	/* processing */
+	o := orm.NewOrm()
+
+	user := TblUser{LoginName: loginName}
+	if errT := o.Read(&user, "LoginName"); nil != errT {
+		// beego.Error(FN, errT)
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("user:", loginName)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+	if !user.Enable {
+		err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
+		return
+	}
+
+	if err = userReloginVerChk(ver, loginName, rand, user.Session, sid); nil != err {
+		return
+	}
+
+	uid = user.Id
+	return
+}
+
+/**
 *	Login by user & password
 *	Parameters:
 *		loginName
@@ -117,9 +181,9 @@ func GetSaltByName(un string) (err error, salt, rand string) {
 *					> 0: point to a acutal user, = 0 point to "system",
 *					< 0: user not exist
  */
-func LoginByPass(loginName, passwd, rand string) (err error, uid int64) {
+func LoginByPass(loginName, passwd, rand, sid string) (err error, uid int64) {
 	FN := "[LoginByPass] "
-	beego.Debug(FN, "loginName:", loginName, ", passwd:", passwd, ", rand:", rand)
+	beego.Debug(FN, "loginName:", loginName, ", passwd:", passwd, ", rand:", rand, ", sid:", sid)
 
 	pwd, _ := base64.URLEncoding.DecodeString(passwd)
 	// beego.Debug(FN, "pwd:", pwd)
@@ -127,7 +191,6 @@ func LoginByPass(loginName, passwd, rand string) (err error, uid int64) {
 	beego.Debug(FN, "passwd:", passwd)
 
 	defer func() {
-		// beego.Warn(FN, "Remove the salt_tmp any way")
 		if nil != err {
 			uid = -1
 			beego.Error(FN, err)
@@ -153,7 +216,7 @@ func LoginByPass(loginName, passwd, rand string) (err error, uid int64) {
 	if err1 := o.Read(&user, "LoginName"); nil != err1 {
 		// beego.Error(FN, err1)
 		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("user:", loginName)}
 		} else {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
 		}
@@ -196,6 +259,10 @@ func LoginByPass(loginName, passwd, rand string) (err error, uid int64) {
 		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_INCORRECT_PASSWORD}
 		return
 	}
+
+	// record the session for login
+	user.Session = sid
+	/*numb _, errTmp =*/ o.Update(&user, "Session")
 
 	return
 }

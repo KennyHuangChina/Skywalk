@@ -116,3 +116,19 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
+
+###9. Relogin: User relogin automatically when session expired, by previous session id
+	[Scope]			APP
+	[Private]		public
+	[Request]
+  		* POST /v1/admin/relogin/:id
+	  		* :id			string		// last session id
+	  		* ver			int			// version number
+	  		* ln			string		// login name, phone number or login name
+	  		* rd			string		// random
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description

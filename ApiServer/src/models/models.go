@@ -22,6 +22,7 @@ type TblUser struct {
 	Phone     string `orm:"size(50)"`                // secondary phone
 	Head      string `orm:"size(50)"`                // url of head portrait
 	Enable    bool   `orm:"default(true); not null"` // is this user enabled now. Administrator could enable or disable a user
+	Session   string `orm:"size(50)"`
 	// Role      int    // USER_TYPE_xxx
 }
 
