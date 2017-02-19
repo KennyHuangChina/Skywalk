@@ -218,7 +218,7 @@ func (this *AdminController) Loginpass() {
 	pss := this.GetString("pss")    // secure picture result
 	// beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", psid:", psid, ", pss:", pss, ", client:", client)
 
-	if 10 != ver {
+	if 1 != ver {
 		err = commdef.SwError{ErrCode: commdef.ERR_LOWER_CLIENT, ErrInfo: fmt.Sprintf("ver:%d", ver)}
 		return
 	}
