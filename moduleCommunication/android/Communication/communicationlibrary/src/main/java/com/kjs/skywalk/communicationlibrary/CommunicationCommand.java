@@ -9,6 +9,7 @@ public class CommunicationCommand {
     public static String CC_LOG_IN_BY_PASSWORD                  = "CommandLogInByPassword";
     public static String CC_GET_USER_SALT                       = "CommandGetUserSalt";
     public static String CC_LOG_OUT                             = "CommandLogOut";
+    public static String CC_RELOGIN                             = "CommandRelogin";
 
 
     public static String CC_TEST                                = "CommandTest";

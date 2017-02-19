@@ -69,6 +69,13 @@ public class LogInOutFragment extends Fragment
         mManager.execute(CommunicationCommand.CC_GET_USER_SALT, pMap, this, this);
     }
 
+    private void doRelogin() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
+        mManager.execute(CommunicationCommand.CC_RELOGIN, pMap, this, this);
+    }
+
     private void clearResultDisplay() {
         mResultString = "";
         mTextViewResult.setText("");
@@ -118,6 +125,16 @@ public class LogInOutFragment extends Fragment
             {
                 clearResultDisplay();
                 doGetUserSalt();
+            }
+        });
+
+        Button btnRelogin = (Button)view.findViewById(R.id.btnRelogin);
+        btnRelogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                clearResultDisplay();
+                doRelogin();
             }
         });
         return view;

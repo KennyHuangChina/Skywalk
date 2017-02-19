@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
@@ -15,8 +16,12 @@ import org.json.JSONObject;
  * Created by Jackie on 2017/1/20.
  */
 
-class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.CheckParameter,
-        InternalDefines.CreateResultMap, InternalDefines.BeforeConnect, InternalDefines.AfterConnect, InternalDefines.ConnectFailed{
+class CommunicationBase implements  InternalDefines.DoOperation,
+                                    InternalDefines.CheckParameter,
+                                    InternalDefines.CreateResultMap,
+                                    InternalDefines.BeforeConnect,
+                                    InternalDefines.AfterConnect,
+                                    InternalDefines.ConnectFailed{
     protected String TAG = "CommunicationBase";
     protected String mAPI = "";
     protected Context mContext = null;
@@ -130,5 +135,15 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
     @Override
     public int doConnectFailed(HttpConnector http) {
         return 0;
+    }
+
+    protected String generateRandom() {
+        String strRand = "";
+        Random rdm = new Random(System.currentTimeMillis());
+        int intRd = Math.abs((int)(rdm.nextDouble() * 1000000));
+        strRand = "" + intRd;
+        Log.i(TAG, "strRand:" + strRand);
+
+        return strRand;
     }
 }

@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCall_GeneratePassword
   (JNIEnv *, jobject, jstring, jstring, jstring, jint);
 
+/*
+ * Class:     com_kjs_skywalk_communicationlibrary_NativeCall
+ * Method:    GenerateReloginSession
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCall_GenerateReloginSession
+  (JNIEnv *, jobject, jstring, jstring, jstring, jint);
+
 #ifdef __cplusplus
 }
 #endif

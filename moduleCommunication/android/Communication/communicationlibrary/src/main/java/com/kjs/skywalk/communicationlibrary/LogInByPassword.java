@@ -66,7 +66,7 @@ class LogInByPassword extends CommunicationBase {
         Log.w(TAG, "pass:" + pass);
 //        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
 //        String strNewPass = new String(pass);
-        mPassword = Base64.encodeToString(pass, Base64.URL_SAFE);;
+        mPassword = Base64.encodeToString(pass, Base64.URL_SAFE);
         Log.d(TAG, "mPassword:" + mPassword);
 
         return true;

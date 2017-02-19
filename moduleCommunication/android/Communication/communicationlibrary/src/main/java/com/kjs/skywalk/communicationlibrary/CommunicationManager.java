@@ -67,6 +67,10 @@ public class CommunicationManager {
             operation = new CommandTest(mContext);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_SALT)) {
             operation = new CmdGetUserSalt(mContext);
+        } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_RELOGIN)) {
+            operation = new CmdRelogin(mContext);
+        } else {
+            Log.e(TAG, "Unknown command:" + command);
         }
 
         return operation;
