@@ -213,6 +213,7 @@ func (this *AdminController) Loginpass() {
 	ver, _ := this.GetInt("ver")
 	loginName := this.GetString("ln")
 	password := this.GetString("pw")
+	rand := this.GetString("rd")
 	client, _ := this.GetInt("typ") // client type. 0 - web; 1 - APP
 	psid := this.GetString("psid")  // secure picture id
 	pss := this.GetString("pss")    // secure picture result
@@ -226,6 +227,14 @@ func (this *AdminController) Loginpass() {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "login name could not be empty"}
 		return
 	}
+	if 0 == len(rand) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "random not set"}
+		return
+	}
+	if 0 == len(password) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "password not set"}
+		return
+	}
 
 	/* Processing */
 	// 1. check captcha MD5(GUID+Password) with client's secret
@@ -237,7 +246,7 @@ func (this *AdminController) Loginpass() {
 	}
 
 	// 2. check login
-	err, userid := models.LoginByPass(loginName, password)
+	err, userid := models.LoginByPass(loginName, password, rand)
 	if nil != err {
 		return
 	}

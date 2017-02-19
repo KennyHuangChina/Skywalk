@@ -33,7 +33,10 @@ func (se *SwError) FillError() {
 	// case ERR_COMMON_ID_NOT_EXIST:
 	// 	fallthrough
 	default:
-		se.HttpRespcode = 500 // TODO: this is a example to remapping the Cidana error code to http response code
+		// 400: Bad Request, The server cannot or will not process the request due to an apparent client error
+		// (e.g., malformed request syntax, too large size, invalid request message framing,
+		//  or deceptive request routing)
+		se.HttpRespcode = 400 // TODO: this is a example to remapping the skywalk error code to http response code
 	}
 	// beego.Error("se:", se)
 }

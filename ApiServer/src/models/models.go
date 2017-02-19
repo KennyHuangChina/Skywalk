@@ -16,7 +16,6 @@ type TblUser struct {
 	LoginName string `orm:"size(64)"` // login name, user phone
 	Name      string `orm:"size(64)"`
 	Salt      string `orm:"size(32)"`
-	SaltTmp   string `orm:"size(32)"`                // temp salt, just for this time using
 	PassLogin string `orm:"size(50)"`                // login password. md5(pass+salt)
 	PassTrasn string `orm:"size(50)"`                // transaction password
 	IdNo      string `orm:"size(50)"`                // ID number or passport number

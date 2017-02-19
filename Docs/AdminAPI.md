@@ -20,6 +20,7 @@
 	  		* ver			int			// version number
 	  		* ln			string 		// login name
 	  		* pw			string		// password
+	  		* rd			string		// random
 	  		* typ			ing 		// client type. 0 - web; 1 - APP
 	  		* psid			string		// picture session id. ref to captcha GUID of API sec_pic
 	  		* pss			string 		// picture result
