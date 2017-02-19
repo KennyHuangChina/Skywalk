@@ -17,6 +17,7 @@
 ###2. User Login by password
 	[Request]
   		* POST /v1/admin/loginpass
+	  		* ver			int			// version number
 	  		* ln			string 		// login name
 	  		* pw			string		// password
 	  		* typ			ing 		// client type. 0 - web; 1 - APP

@@ -4,7 +4,7 @@ import (
 	// "encoding/json"
 	"ApiServer/commdef"
 	"ApiServer/models"
-	// "fmt"
+	"fmt"
 	// "crypto/rand"
 	// "encoding/hex"
 	"github.com/astaxie/beego"
@@ -210,13 +210,18 @@ func (this *AdminController) Loginpass() {
 	}()
 
 	/* Extract agreements */
+	ver, _ := this.GetInt("ver")
 	loginName := this.GetString("ln")
 	password := this.GetString("pw")
-	client, _ := this.GetInt("type") // client type. 0 - web; 1 - APP
-	psid := this.GetString("psid")   // secure picture id
-	pss := this.GetString("pss")     // secure picture result
-	beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", psid:", psid, ", pss:", pss, ", client:", client)
+	client, _ := this.GetInt("typ") // client type. 0 - web; 1 - APP
+	psid := this.GetString("psid")  // secure picture id
+	pss := this.GetString("pss")    // secure picture result
+	// beego.Debug(FN, "LoginName:", loginName, ", password:", password, ", psid:", psid, ", pss:", pss, ", client:", client)
 
+	if 10 != ver {
+		err = commdef.SwError{ErrCode: commdef.ERR_LOWER_CLIENT, ErrInfo: fmt.Sprintf("ver:%d", ver)}
+		return
+	}
 	if 0 == len(loginName) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "login name could not be empty"}
 		return

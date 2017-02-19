@@ -4,6 +4,7 @@ import (
 	"ApiServer/commdef"
 	"crypto/md5"
 	crand "crypto/rand"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"github.com/astaxie/beego"
@@ -124,6 +125,12 @@ func GetSaltByName(un string) (err error, salt, rand string) {
  */
 func LoginByPass(loginName, passwd string) (err error, uid int64) {
 	FN := "[LoginByPass] "
+	beego.Debug(FN, "loginName:", loginName, ", passwd:", passwd)
+
+	pwd, _ := base64.URLEncoding.DecodeString(passwd)
+	// beego.Debug(FN, "pwd:", pwd)
+	passwd = string(pwd)
+	beego.Debug(FN, "passwd:", passwd)
 
 	uid = -1
 
@@ -163,7 +170,7 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 		return
 	}
 	uid = user.Id
-	beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
+	// beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
 
 	if 0 == len(user.SaltTmp) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "tmp salt not set, please call GetSaltByName() first"}
@@ -181,7 +188,7 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 	hasher2.Write([]byte(rdHashPass1))
 	hasher2.Write([]byte(user.SaltTmp))
 	rdHashPass2 := hex.EncodeToString(hasher2.Sum(nil))
-	beego.Debug(FN, "rdHashPass2:", rdHashPass2, ", passwd:", passwd)
+	// beego.Debug(FN, "rdHashPass2:", rdHashPass2, ", passwd:", passwd)
 	if rdHashPass2 == passwd {
 		// beego.Error(FN_NAME, "password couldn't be empty")
 		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_INCORRECT_PASSWORD, ErrInfo: "Empty password"}
