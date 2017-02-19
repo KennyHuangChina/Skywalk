@@ -32,6 +32,10 @@ public class LogInOutFragment extends Fragment
 
     TextView mTextViewResult = null;
     EditText mEditUserName = null;
+    EditText mEditPassword = null;
+
+    private String mSalt = "";
+    private String mRand = "";
 
     public LogInOutFragment() {
     }
@@ -39,10 +43,10 @@ public class LogInOutFragment extends Fragment
     private void doLogin() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, "TestUserName");
-        pMap.put(CommunicationParameterKey.CPK_PASSWORD, "TestPassword");
-        pMap.put(CommunicationParameterKey.CPK_RANDOM, "TestRandom");
-        pMap.put(CommunicationParameterKey.CPK_USER_SALT, "123456");
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_PASSWORD, mEditPassword.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_RANDOM, mRand);
+        pMap.put(CommunicationParameterKey.CPK_USER_SALT, mSalt);
         mManager.execute(CommunicationCommand.CC_LOG_IN_BY_PASSWORD, pMap, this, this);
     }
 
@@ -61,8 +65,7 @@ public class LogInOutFragment extends Fragment
     private void doGetUserSalt() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        String sName = mEditUserName.getText().toString();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, sName);
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
         mManager.execute(CommunicationCommand.CC_GET_USER_SALT, pMap, this, this);
     }
 
@@ -78,6 +81,7 @@ public class LogInOutFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_log_in_out, container, false);
         mTextViewResult = (TextView)view.findViewById(R.id.textViewResult);
         mEditUserName = (EditText)view.findViewById(R.id.editTextUserName);
+        mEditPassword = (EditText)view.findViewById(R.id.editTextPassword);
         Button loginButton = (Button)view.findViewById(R.id.buttonLogin);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +166,9 @@ public class LogInOutFragment extends Fragment
         } else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
             if(returnCode.equals("0")) {
                 Log.i(TAG, "OK to get user falt");
+
+                mSalt = map.get("Salt");
+                mRand = map.get("Random");
                 showResult(command, map);
             } else {
                 Log.e(TAG, "Command:"+ command + " finished with error: " + description);

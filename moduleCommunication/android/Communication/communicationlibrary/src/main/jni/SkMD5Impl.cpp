@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "SkMD5Impl.h"
 #include "DigUtil.h"
+#include "DP.h"
 
 SkMD5Abstract* GetMD5Instance(void * ctx)
 {
@@ -28,14 +29,16 @@ unsigned char* SkMD5Impl::Digest(unsigned char * in, int inSize)  // virtual = 0
     vector<unsigned char> vtOut;
     if (NULL == SkDigestUtil::Digest((JNIEnv *)mEnv, in, inSize, vtOut))
     {
+        DP_ERR("Fail to create digest");
         return NULL;
     }
 
     if (vtOut.size() != MD5_BYTES)
     {
+        DP_ERR("error size:%d", vtOut.size());
         return NULL;
     }
 
     memcpy(mMD5Buf, &vtOut[0], MD5_BYTES);
-    return mMD5Buf;
+    return SkDigestUtil::Digest2Bcd((const char*)&mMD5Buf[0], MD5_BYTES, mMD5String, sizeof(mMD5String)/sizeof(mMD5String[0]));
 }

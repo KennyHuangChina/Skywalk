@@ -17,7 +17,6 @@ import java.util.HashMap;
 
 class LogInByPassword extends CommunicationBase {
 
-    private int mVersion = 1;
     private int mType = 1; // client type: 0 - web; 1 - APP
     private String mSalt = "";  // user salt get from server
     private String mUserName = "";
@@ -31,6 +30,7 @@ class LogInByPassword extends CommunicationBase {
         mAPI = CommunicationCommand.CC_LOG_IN_BY_PASSWORD;
         mMethodType = "POST";
         mSessionID = "xxxxx";
+        mVersion = 1;
     }
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
@@ -75,7 +75,7 @@ class LogInByPassword extends CommunicationBase {
     private void generateRequestData() {
         mRequestData = ("ver=" +  mVersion);
         mRequestData += "&";
-        mRequestData = ("ln=" +  mUserName);
+        mRequestData += ("ln=" +  mUserName);
         mRequestData += "&";
 //        mRequestData += ("pw=123456abcdefg")
         mRequestData += ("pw=" + mPassword);

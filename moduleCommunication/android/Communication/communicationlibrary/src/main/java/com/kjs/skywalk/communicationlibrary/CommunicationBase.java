@@ -29,7 +29,9 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
     protected CIProgressListener mProgressListener = null;
     protected CICommandListener mCommandListener = null;
 
+    // common header items
     protected String mSessionID = "";
+    protected int    mVersion = 0;      // API version number
     protected SKCookieManager mCookieManager = null;
 
     CommunicationBase(Context context) {

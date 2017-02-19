@@ -22,5 +22,6 @@ private:
 private:
     void * mEnv;
     unsigned char mMD5Buf[MD5_BYTES];
+    unsigned char mMD5String[2 * MD5_BYTES + 1];
 };
 #endif //COMMUNICATION_SKMD5IMPL_H

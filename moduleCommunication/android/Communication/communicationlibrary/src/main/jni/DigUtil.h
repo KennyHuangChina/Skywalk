@@ -20,6 +20,7 @@ public:
     static const char * Base64Encode(JNIEnv * env, unsigned char * input, int inSize, string & output);
     static const char * Digest(JNIEnv * env, const char * input, string & output);
     static unsigned char * Digest(JNIEnv * env, unsigned char * input, int inSize, vector<unsigned char> & output);
+    static unsigned  char* Digest2Bcd(const char* pDigest, unsigned int nDigLen, unsigned char* szBcd, unsigned int nBcdSize);
 };
 
 #endif //COMMUNICATION_DIGUTIL_H
