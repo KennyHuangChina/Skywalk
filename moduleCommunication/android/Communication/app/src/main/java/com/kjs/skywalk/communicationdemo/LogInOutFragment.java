@@ -123,6 +123,25 @@ public class LogInOutFragment extends Fragment
         return view;
     }
 
+    private void showError(String strCmd, String errCode, String errDesc) {
+
+        mResultString = "";
+        if(strCmd != null || !strCmd.isEmpty()) {
+            mResultString = strCmd;
+            mResultString += "\n\n\n";
+        }
+
+        mResultString += errCode;
+        mResultString += "\n\n";
+        mResultString += errDesc;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTextViewResult.setText(mResultString);
+            }
+        });
+    }
+
     private void showResult(String command, HashMap<String, String> map) {
         if(command != null || !command.isEmpty()) {
             mResultString = command;
@@ -162,6 +181,7 @@ public class LogInOutFragment extends Fragment
                 showResult(command, map);
             } else {
                 Log.e(TAG, "Command "+ CommunicationCommand.CC_LOG_IN_BY_PASSWORD + " finished with error: " + description);
+                showError(command, returnCode, description);
             }
         } else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
             if(returnCode.equals("0")) {
@@ -172,6 +192,7 @@ public class LogInOutFragment extends Fragment
                 showResult(command, map);
             } else {
                 Log.e(TAG, "Command:"+ command + " finished with error: " + description);
+                showError(command, returnCode, description);
             }
         }
     }

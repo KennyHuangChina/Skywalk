@@ -63,7 +63,7 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
                 doBeforeConnect(http);
                 if((retValue = http.connect()) != InternalDefines.ERROR_CODE_OK) {
                     String strError = InternalDefines.getErrorDescription(retValue);
-                    Log.e(TAG, "Can't connect to server. error: " +  strError);
+                    Log.e(TAG, "Fail to connect to server. error: " +  strError);
                     returnCode = "" + retValue;
                     mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
                     doConnectFailed(http);
@@ -72,9 +72,9 @@ class CommunicationBase implements InternalDefines.DoOperation, InternalDefines.
 
                 if((retValue = http.sendRequest()) != InternalDefines.ERROR_CODE_OK) {
                     http.disconnect();
-                    String strError = InternalDefines.getErrorDescription(retValue);
-                    Log.e(TAG, "Can't connect to server. error: " +  strError);
-                    returnCode = "" + retValue;
+                    String strError = http.getErrorDescription();   // InternalDefines.getErrorDescription(retValue);
+                    Log.e(TAG, "Fail to send request to server. error: " +  strError);
+                    returnCode = "[" + retValue + "] " + http.getErrorCode();
                     mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
                     doConnectFailed(http);
                     return;
