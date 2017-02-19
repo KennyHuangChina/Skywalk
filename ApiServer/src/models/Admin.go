@@ -99,13 +99,6 @@ func GetSaltByName(un string) (err error, salt, rand string) {
 		return
 	}
 
-	user.SaltTmp = r
-	/*numb*/ _, errT := o.Update(&user, "SaltTmp")
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		return
-	}
-
 	salt = user.Salt
 	rand = r
 
@@ -117,37 +110,34 @@ func GetSaltByName(un string) (err error, salt, rand string) {
 *	Parameters:
 *		loginName
 *		passwd
+*		rand
 *	Return Values:
 *		err		- error info
 *		uid		- actual user id.
 *					> 0: point to a acutal user, = 0 point to "system",
 *					< 0: user not exist
  */
-func LoginByPass(loginName, passwd string) (err error, uid int64) {
+func LoginByPass(loginName, passwd, rand string) (err error, uid int64) {
 	FN := "[LoginByPass] "
-	beego.Debug(FN, "loginName:", loginName, ", passwd:", passwd)
+	beego.Debug(FN, "loginName:", loginName, ", passwd:", passwd, ", rand:", rand)
 
 	pwd, _ := base64.URLEncoding.DecodeString(passwd)
 	// beego.Debug(FN, "pwd:", pwd)
 	passwd = string(pwd)
 	beego.Debug(FN, "passwd:", passwd)
 
-	uid = -1
-
-	o := orm.NewOrm()
-
 	defer func() {
 		// beego.Warn(FN, "Remove the salt_tmp any way")
-		if uid > 0 {
-			u := TblUser{Id: uid, SaltTmp: ""}
-			num, errT := o.Update(&u, "SaltTmp")
-			beego.Debug(FN, "num:", num, ", errT:", errT)
-		}
 		if nil != err {
 			uid = -1
 			beego.Error(FN, err)
 		}
 	}()
+
+	/* agrguments checking */
+
+	/* Processing */
+	o := orm.NewOrm()
 
 	// check if the password user keyined is empty
 	if 0 == len(passwd) {
@@ -169,16 +159,16 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 		}
 		return
 	}
-	uid = user.Id
-	// beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
-
-	if 0 == len(user.SaltTmp) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "tmp salt not set, please call GetSaltByName() first"}
+	if !user.Enable {
+		err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
 		return
 	}
 
+	uid = user.Id
+	// beego.Debug(FN, "user.Pass:", user.PassLogin, ", user.Salt:", user.Salt)
+
 	// check if the password user keyined is empty
-	// md5(md5(pass+salt)+SaltTmp)
+	// md5(md5(pass+salt)+random)
 	hasher1 := md5.New()
 	hasher1.Write([]byte(user.Salt))
 	hasher1.Write([]byte(""))
@@ -186,7 +176,7 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 
 	hasher2 := md5.New()
 	hasher2.Write([]byte(rdHashPass1))
-	hasher2.Write([]byte(user.SaltTmp))
+	hasher2.Write([]byte(rand))
 	rdHashPass2 := hex.EncodeToString(hasher2.Sum(nil))
 	// beego.Debug(FN, "rdHashPass2:", rdHashPass2, ", passwd:", passwd)
 	if rdHashPass2 == passwd {
@@ -197,11 +187,12 @@ func LoginByPass(loginName, passwd string) (err error, uid int64) {
 
 	hasher := md5.New() // md5(pass+random)
 	hasher.Write([]byte(user.PassLogin))
-	hasher.Write([]byte(user.SaltTmp))
+	hasher.Write([]byte(rand))
 	rdHashPath := hex.EncodeToString(hasher.Sum(nil))
 
-	beego.Debug(FN, "rdHashPath:", rdHashPath, ", passwd:", passwd)
+	// beego.Debug(FN, "rdHashPath:", rdHashPath, ", passwd:", passwd)
 	if passwd != rdHashPath {
+		beego.Error(FN, "rdHashPath:", rdHashPath, ", passwd:", passwd)
 		err = commdef.SwError{ErrCode: commdef.ERR_USERLOGIN_INCORRECT_PASSWORD}
 		return
 	}
