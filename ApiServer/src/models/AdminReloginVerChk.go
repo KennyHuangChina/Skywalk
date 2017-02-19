@@ -55,12 +55,11 @@ func userReloginVerChk_1(loginName, rand, sid string) (err error, sig string) {
 
 	MD5res := ""
 	for i := 0; i < 23; i++ {
-
-		beego.Debug(FN, "===> ", i+1)
-		beego.Debug(FN, "Md5Src:", Md5Src)
-		// beego.Debug(FN, "Md5Src:", string(Md5Src))
+		// beego.Debug(FN, "===> ", i+1)
+		// beego.Debug(FN, "Md5Src:", Md5Src)
+		// // beego.Debug(FN, "Md5Src:", string(Md5Src))
 		MD5res = generateMD5(string(Md5Src))
-		beego.Debug(FN, "MD5res:", MD5res)
+		// beego.Debug(FN, "MD5res:", MD5res)
 
 		// nLen := len(MD5res)
 		// beego.Debug(FN, "MD5res[:", nLen, "]:", MD5res[:nLen])
@@ -70,6 +69,7 @@ func userReloginVerChk_1(loginName, rand, sid string) (err error, sig string) {
 	}
 
 	sig = MD5res
+	// beego.Debug(FN, "sig:", sig)
 
 	return
 }

@@ -112,15 +112,16 @@ func GetSaltByName(un string) (err error, salt, rand string) {
 *		loginName	- login name
 *		sid			- session id when last login
 *		rand		- random
+*		newSid		- current session
 *	Return Values:
 *		err		- error info
 *		uid		- actual user id.
 *					> 0: point to a acutal user, = 0 point to "system",
 *					< 0: user not exist
  */
-func Relogin(ver int, loginName, rand, sid string) (err error, uid int64) {
+func Relogin(ver int, loginName, rand, sid, newSid string) (err error, uid int64) {
 	FN := "[Relogin] "
-	beego.Debug(FN, "sid:", sid, ", ver:", ver, ", loginName:", loginName, ", rand:", rand)
+	beego.Debug(FN, "sid:", sid, ", ver:", ver, ", loginName:", loginName, ", rand:", rand, ", newSid:", newSid)
 
 	defer func() {
 		if nil != err {
@@ -160,12 +161,19 @@ func Relogin(ver int, loginName, rand, sid string) (err error, uid int64) {
 		err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
 		return
 	}
+	if 0 == len(user.Session) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
+		return
+	}
 
 	if err = userReloginVerChk(ver, loginName, rand, user.Session, sid); nil != err {
 		return
 	}
 
 	uid = user.Id
+
+	// update session for relogin
+	err = updateUserSession(uid, newSid)
 	return
 }
 
@@ -261,8 +269,36 @@ func LoginByPass(loginName, passwd, rand, sid string) (err error, uid int64) {
 	}
 
 	// record the session for login
-	user.Session = sid
-	/*numb _, errTmp =*/ o.Update(&user, "Session")
+	err = updateUserSession(uid, sid)
+	return
+}
+
+/**
+*	Loout
+*	Parameters:
+*		uid		- user id
+*	Return Values:
+*		err		- error info
+ */
+func Logout(uid int64) (err error) {
+	FN := "[LoginByPass] "
+	beego.Debug(FN, "uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* agrguments checking */
+
+	/* Processing */
+	if err = CheckUser(uid); nil != err {
+		return
+	}
+
+	// clear the session for login
+	err = updateUserSession(uid, "")
 
 	return
 }
@@ -417,7 +453,7 @@ func LoginSms(login_name, sms string) (err error, uid int64) {
 *	Returns
 *		err		- error
 **/
-func CheckUser(uid int64) (err error) {
+func CheckUser(uid int64) (err error /*, user TblUser*/) {
 	// FN := "[CheckUser] "
 
 	if uid < 0 {
@@ -442,6 +478,7 @@ func CheckUser(uid int64) (err error) {
 		return
 	}
 
+	// user = u
 	return
 }
 
@@ -450,6 +487,30 @@ func CheckUser(uid int64) (err error) {
 //		Internal Functions
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func updateUserSession(uid int64, sid string) (err error) {
+
+	o := orm.NewOrm()
+
+	user := TblUser{Id: uid}
+	errT := o.Read(&user)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	user.Session = sid
+	/*numb*/ _, errT = o.Update(&user, "Session")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to update session:%s for user:%d, err:%s", sid, uid, errT.Error())}
+	}
+
+	return
+}
+
 func checkPhoneNo(phone string) (err error) {
 	FN := "[checkPhoneNo] "
 	beego.Trace(FN, "phone:", phone)

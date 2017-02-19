@@ -217,9 +217,9 @@ func (this *AdminController) Relogin() {
 	rand := this.GetString("rd")
 
 	/* Processing */
-
-	// 2. check login
-	err, userid := models.Relogin(ver, loginName, rand, sid)
+	this.StartSession()
+	curSid := this.CruSession.SessionID()
+	err, userid := models.Relogin(ver, loginName, rand, sid, curSid)
 	if nil != err {
 		return
 	}
@@ -227,26 +227,9 @@ func (this *AdminController) Relogin() {
 	beego.Info(FN, "login success for user:", userid)
 
 	// 3. return session id
-	this.StartSession()
+	// this.StartSession()
 	result.Sid = this.CruSession.SessionID()
-	// beego.Debug(FN, "result.Sid:", result.Sid)
-	// cookie := &http.Cookie{
-	// 	Name:     beego.BConfig.WebConfig.Session.SessionName, // beego.SessionName,
-	// 	Value:    url.QueryEscape(result.Sid),
-	// 	Path:     "/",
-	// 	HttpOnly: true,
-	// 	Secure:   beego.EnableHttpTLS,
-	// 	Domain: beego.BConfig.WebConfig.Session.SessionDomain,
-	// }
-	// if beego.SessionCookieLifeTime > 0 {
-	// 	cookie.MaxAge = beego.SessionCookieLifeTime
-	// 	cookie.Expires = time.Now().Add(time.Duration(beego.SessionCookieLifeTime) * time.Second)
-	// }
-	// // NOTE by Gavin:SetCookie must be called before ResponseWriter.WriteHeader
-	// // because ResponseWriter.Header will never accept header modification after Wri
-	// http.SetCookie(this.Ctx.ResponseWriter, cookie)
 	this.SetSession("userid", userid)
-	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
 }
 
 // @Title Loginpass
@@ -375,6 +358,8 @@ func (this *AdminController) Logout() {
 	Sid := this.CruSession.SessionID()
 	beego.Debug(FN, "Sid:", Sid)
 	this.SetSession("userid", int64(-1)) // remove the user id for this session, GC will remove it automatically
+
+	models.Logout(uid)
 }
 
 // @Title FetchSms
