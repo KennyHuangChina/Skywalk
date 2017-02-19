@@ -128,7 +128,7 @@ public class LogInOutFragment extends Fragment
         mResultString = "";
         if(strCmd != null || !strCmd.isEmpty()) {
             mResultString = strCmd;
-            mResultString += "\n\n\n";
+            mResultString += "\n\n";
         }
 
         mResultString += errCode;
@@ -145,7 +145,7 @@ public class LogInOutFragment extends Fragment
     private void showResult(String command, HashMap<String, String> map) {
         if(command != null || !command.isEmpty()) {
             mResultString = command;
-            mResultString += "\n\n\n";
+            mResultString += "\n\n";
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -175,25 +175,18 @@ public class LogInOutFragment extends Fragment
 
     @Override
     public void onCommandFinished(String command, String returnCode, String description, HashMap<String, String> map) {
-        if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
-            if(returnCode.equals("0")) {
-                Log.i(TAG, "Login Success");
-                showResult(command, map);
-            } else {
-                Log.e(TAG, "Command "+ CommunicationCommand.CC_LOG_IN_BY_PASSWORD + " finished with error: " + description);
+        if (!returnCode.equals("0")) {
+            Log.e(TAG, "Command:"+ command + " finished with error: " + description);
                 showError(command, returnCode, description);
+            return;
             }
-        } else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
-            if(returnCode.equals("0")) {
-                Log.i(TAG, "OK to get user falt");
 
+        Log.e(TAG, "Command:"+ command + " finished successes");
+        showResult(command, map);
+
+        if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
                 mSalt = map.get("Salt");
                 mRand = map.get("Random");
-                showResult(command, map);
-            } else {
-                Log.e(TAG, "Command:"+ command + " finished with error: " + description);
-                showError(command, returnCode, description);
-            }
         }
     }
 

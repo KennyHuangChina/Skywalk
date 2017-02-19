@@ -80,14 +80,16 @@
         android:layout_below="@id/linearLayout1">
 
         <Button
-            android:text="Login"
+            android:text="2) Login"
+            android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonLogin"
             android:layout_weight="1" />
 
         <Button
-            android:text="Logout"
+            android:text="4) Logout"
+            android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonLogout"
@@ -104,14 +106,15 @@
         android:layout_below="@id/linearLayout2">
 
                         <Button
-            android:text="Get User Salt"
+            android:text="1) Get User Salt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonGetUserSalt"
-            android:layout_weight="1" />
+            android:layout_weight="1"                         android:textAllCaps="false" />
 
         <Button
-            android:text="Test"
+            android:text="3) Test"
+            android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonTest"
