@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -73,14 +74,18 @@ public class commonFun {
 
     public static void showToast_resEntryName(Context context, View v) {
         String strVName = v.getResources().getResourceEntryName(v.getId());
-        Toast.makeText(context, "res entry name: " + strVName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "res entry name: " + strVName, Toast.LENGTH_SHORT).show();
+        Snackbar.make(v, "res entry name: " + strVName, Snackbar.LENGTH_SHORT).show();
     }
 
     public static void showToast_resId(Context context, View v) {
-        Toast.makeText(context, String.format("res id: %d(%#x)", v.getId(), v.getId()), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, String.format("res id: %d(%#x)", v.getId(), v.getId()), Toast.LENGTH_SHORT).show();
+        Snackbar.make(v, String.format("res id: %d(%#x)", v.getId(), v.getId()), Snackbar.LENGTH_SHORT).show();
     }
 
     public static void showToast_resIag(Context context, View v) {
-        Toast.makeText(context, "res tag: " + v.getTag(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "res tag: " + v.getTag(), Toast.LENGTH_SHORT).show();
+        Snackbar.make(v, "res tag: " + v.getTag(), Snackbar.LENGTH_SHORT).show();
+
     }
 }

@@ -24,6 +24,10 @@ import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
 import com.kjs.skywalk.control.BadgeView;
 
+import java.util.ArrayList;
+
+import me.iwf.photopicker.PhotoPreview;
+
 public class MainActivity extends AppCompatActivity {
     private fragmentHomePage mFragHomePage = null;
     private fragmentApartment mFragApartment = null;
@@ -132,6 +136,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 setNewMessageCount(5);
+            }
+            break;
+
+            case R.id.iv_title:
+            {
+//                startActivity(new Intent(this, Activity_ImagePreview.class));
+                ArrayList<String> images = new ArrayList<>();
+                images.add("/sdcard/testpics/1.png");
+                PhotoPreview.builder()
+                        .setPhotos(images)
+                        .setCurrentItem(0)
+                        .start(this);
             }
             break;
         }
