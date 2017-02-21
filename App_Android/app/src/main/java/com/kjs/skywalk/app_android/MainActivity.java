@@ -158,6 +158,14 @@ public class MainActivity extends AppCompatActivity {
         mFragApartment.searchConditionFilterItemClicked(view);
     }
 
+    public void onSearchConditionHouseTypeItemClicked(View view) {
+        mFragApartment.searchConditionHouseTypeItemClicked(view);
+    }
+
+    public void onSearchConditionPriceItemClicked(View view) {
+        mFragApartment.searchConditionPriceItemClicked(view);
+    }
+
     private void setNewMessageCount(int count) {
         if (mBvMsg == null) {
             ImageView imMessage = (ImageView)findViewById(R.id.im_message);

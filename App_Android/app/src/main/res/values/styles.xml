@@ -131,6 +131,28 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <!--高级搜索->房型-->
+    <style name="text_view_search_condition_house_type_item" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:paddingLeft">17dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_search_condition_house_type_item</item>
+        <item name="android:textColor">@drawable/selector_search_condition_house_type_item_text_color</item>
+        <item name="android:onClick">onSearchConditionHouseTypeItemClicked</item>
+    </style>
+
+    <!--高级搜索->价格-->
+    <style name="text_view_search_condition_price_item" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:paddingLeft">17dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_search_condition_price_item</item>
+        <item name="android:textColor">@drawable/selector_search_condition_price_item_text_color</item>
+        <item name="android:onClick">onSearchConditionPriceItemClicked</item>
+    </style>
+
 
 
 

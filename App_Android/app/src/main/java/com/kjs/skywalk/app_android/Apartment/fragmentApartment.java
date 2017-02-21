@@ -2,12 +2,15 @@ package com.kjs.skywalk.app_android.Apartment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -18,6 +21,9 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.R;
 
 import org.w3c.dom.Text;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -36,10 +42,42 @@ public class fragmentApartment extends Fragment {
     private RelativeLayout mSeperator = null;
 
     private PopupWindowSearchConditionFilter mPopSearchConditionFilter = null;
+    private PopupWindowSearchConditionPrice mPopSearchConditionPrice = null;
+    private PopupWindowSearchConditionHouseType mPopSearchConditionHourseType = null;
     @Nullable
 
     public void searchConditionFilterItemClicked(View view) {
         view.setSelected(!view.isSelected());
+    }
+
+    public void searchConditionHouseTypeItemClicked(View view) {
+        view.setSelected(!view.isSelected());
+    }
+
+    public void searchConditionPriceItemClicked(View view) {
+        view.setSelected(true);
+        ViewGroup parent = (ViewGroup)view.getParent();
+        for(int i = 0; i < parent.getChildCount(); i ++) {
+            View v = parent.getChildAt(i);
+            if(v.getId() != view.getId()) {
+                v.setSelected(false);
+            }
+        }
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPopSearchConditionPrice.dismiss();
+                    }
+                });
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, 200);
     }
 
     @Override
@@ -80,9 +118,11 @@ public class fragmentApartment extends Fragment {
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            PopupWindowSearchConditionPrice pop = new PopupWindowSearchConditionPrice(getActivity().getBaseContext());
-            pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
-            pop.showAsDropDown(mLinearLayoutConditionContainer);
+            if(mPopSearchConditionPrice ==null) {
+                mPopSearchConditionPrice = new PopupWindowSearchConditionPrice(getActivity().getBaseContext());
+            }
+            mPopSearchConditionPrice.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
+            mPopSearchConditionPrice.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
 
@@ -92,9 +132,11 @@ public class fragmentApartment extends Fragment {
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            PopupWindowSearchConditionHouseType pop = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
-            pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
-            pop.showAsDropDown(mLinearLayoutConditionContainer);
+            if(mPopSearchConditionHourseType == null) {
+                mPopSearchConditionHourseType = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
+            }
+            mPopSearchConditionHourseType.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
+            mPopSearchConditionHourseType.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
 
