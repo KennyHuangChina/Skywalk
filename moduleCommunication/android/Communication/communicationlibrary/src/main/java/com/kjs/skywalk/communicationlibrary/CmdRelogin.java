@@ -51,6 +51,10 @@ public class CmdRelogin extends CommunicationBase {
         if (null == mUserName || mUserName.isEmpty()) {
             return false;
         }
+        if (mSession.isEmpty() /*0 == mSession.length()*/) {
+            Log.e(TAG, "mSession is empty");
+            return false;
+        }
 //        mSession = map.get(CommunicationParameterKey.CPK_SESSION_ID);
 //        if (null == mSession || mSession.isEmpty()) {
 //            return false;
@@ -91,7 +95,10 @@ public class CmdRelogin extends CommunicationBase {
                            CommunicationInterface.CIProgressListener progressListener)
     {
 //        Log.i(TAG, "doOperation");
-
+        if (mSession.isEmpty()) {
+            Log.e(TAG, "mSession is empty");
+            return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
+        }
         // POST /v1/admin/relogin/:id
         mCommandURL = "/v1/admin/relogin/" + mSession;
 

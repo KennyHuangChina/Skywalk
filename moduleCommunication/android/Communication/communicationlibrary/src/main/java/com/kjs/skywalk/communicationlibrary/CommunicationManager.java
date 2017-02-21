@@ -62,7 +62,7 @@ public class CommunicationManager {
         } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
             operation = new LogInByPassword(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
-            operation = new LogOut(mContext);
+            operation = new CmdLogout(mContext);
         } else if(command.equals(CommunicationCommand.CC_TEST)) {
             operation = new CommandTest(mContext);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_SALT)) {

@@ -3,6 +3,7 @@ package com.kjs.skywalk.communicationlibrary;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -11,12 +12,12 @@ import java.util.HashMap;
  * Created by Jackie on 2017/1/24.
  */
 
-class LogOut extends CommunicationBase {
+class CmdLogout extends CommunicationBase {
     private String mType = "1";
 
-    LogOut(Context context) {
+    CmdLogout(Context context) {
         super(context);
-        TAG = "LogOut";
+        TAG = "Logout";
         Log.i(TAG, "Constructor");
         mAPI = CommunicationCommand.CC_LOG_OUT;
         mMethodType = "POST";
@@ -33,6 +34,13 @@ class LogOut extends CommunicationBase {
 
     @Override
     public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
+        // Clear the current login session
+       SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
+        if (null == sessStore) {
+            return null;
+        }
+        sessStore.save("");
+
         return null;
     }
 

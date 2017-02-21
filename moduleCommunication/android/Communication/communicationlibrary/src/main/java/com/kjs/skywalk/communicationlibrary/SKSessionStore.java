@@ -25,7 +25,8 @@ class SKSessionStore {
     }
 
     public static void save(String session) {
-        if(session == null || session.isEmpty()) {
+        // empty session means clear session locally saved
+        if(session == null /*|| session.isEmpty()*/) {
             return;
         }
 
