@@ -10,4 +10,7 @@
     <color name="colorTextNormal">#242224</color>
     <color name="colorTextTint">#939499</color>
 
+    <color name="colorTextBackgroundSelected">#ECFFF7</color>
+
+
 </resources>

@@ -88,6 +88,7 @@
                     android:layout_marginTop="8dp"
                     android:weightSum="4">
                     <TextView
+                        android:id="@+id/textView_jin_ri_ke_kan"
                         android:text="今日可看"
                         style="@style/text_view_search_condition_filter_item" />
 
@@ -146,6 +147,7 @@
                         android:text="50平以下"
                         style="@style/text_view_search_condition_filter_item" />
                     <TextView
+                        android:id="@+id/textView_50_70"
                         android:text="50-70平"
                         style="@style/text_view_search_condition_filter_item" />
                     <TextView
