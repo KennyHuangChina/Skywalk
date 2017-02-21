@@ -34,7 +34,14 @@ public class fragmentApartment extends Fragment {
     private TextView mTextViewConditionHouseType = null;
     private TextView mTextViewConditionFilter = null;
     private RelativeLayout mSeperator = null;
+
+    private PopupWindowSearchConditionFilter mPopSearchConditionFilter = null;
     @Nullable
+
+    public void searchConditionFilterItemClicked(View view) {
+        view.setSelected(!view.isSelected());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_apartment, container, false);
@@ -97,9 +104,11 @@ public class fragmentApartment extends Fragment {
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            PopupWindowSearchConditionFilter pop = new PopupWindowSearchConditionFilter(getActivity().getBaseContext());
-            pop.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
-            pop.showAsDropDown(mLinearLayoutConditionContainer);
+            if(mPopSearchConditionFilter == null) {
+                mPopSearchConditionFilter = new PopupWindowSearchConditionFilter(getActivity().getBaseContext());
+            }
+            mPopSearchConditionFilter.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
+            mPopSearchConditionFilter.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
 }
