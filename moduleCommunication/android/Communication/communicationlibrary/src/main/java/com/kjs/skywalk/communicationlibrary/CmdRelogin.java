@@ -3,6 +3,9 @@ package com.kjs.skywalk.communicationlibrary;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 //import CommunicationBase;
@@ -13,7 +16,7 @@ import java.util.HashMap;
 
 public class CmdRelogin extends CommunicationBase {
 
-    private String mSession = "1234567890";
+    private String mSession = "";   // "1234567890";
     private String mUserName = "";
     private String mRadom = "";
 
@@ -27,6 +30,11 @@ public class CmdRelogin extends CommunicationBase {
 
         // generate a random
         mRadom = generateRandom();
+        // Load session for previous login
+        SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
+        if (null != sessStore) {
+            mSession = sessStore.get();
+        }
     }
 
     @Override
@@ -92,5 +100,21 @@ public class CmdRelogin extends CommunicationBase {
 
 //        Log.i(TAG, "doOperation ... out");
         return CommunicationError.CE_ERROR_NO_ERROR;
+    }
+
+    @Override
+    public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
+        // Store the current login session
+        try {
+            SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
+            if (null == sessStore) {
+                return null;
+            }
+            String loginSession = jObject.getString("Sid");
+            sessStore.save(loginSession);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

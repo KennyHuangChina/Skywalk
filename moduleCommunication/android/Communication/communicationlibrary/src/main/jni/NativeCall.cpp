@@ -125,12 +125,12 @@ JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCal
 
     unsigned char * md5Result = NULL;
     for (int i = 0; i < 23; ++i) {
-        DP_LOG("md5Result(%d):%s", i + 1, md5Result);
+//        DP_LOG("md5Result(%d):%s", i + 1, md5Result);
         md5Result = md5->Digest((unsigned char*)szSrc, strlen(szSrc));
         if (NULL == md5Result) {
             return NULL;
         }
-        DP_LOG("md5Result(%d):%s", i + 1, md5Result);
+//        DP_LOG("md5Result(%d):%s", i + 1, md5Result);
         strcpy(szSrc, (const char*)md5Result);
     }
     DP_LOG("Final md5Result:%s", md5Result);

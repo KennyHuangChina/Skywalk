@@ -16,7 +16,7 @@ class SKSessionStore {
         mContext = context;
     }
 
-    public static synchronized SKSessionStore getManager(Context context) {
+    public static synchronized SKSessionStore getInstance(Context context) {
         if(mSKManager == null) {
             mSKManager = new SKSessionStore(context);
         }
@@ -39,7 +39,7 @@ class SKSessionStore {
     public static String get() {
         SharedPreferences sp= mContext.getSharedPreferences("Session", Context.MODE_PRIVATE);
         String session = sp.getString("SessionId", "");
-        Log.i(InternalDefines.TAG_COMMUNICATION_SESSION_STORE, "\tSessionId->" + session);
+        Log.i(InternalDefines.TAG_COMMUNICATION_SESSION_STORE, "\tGet SessionId->" + session);
 
         return session;
     }

@@ -1,6 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.util.Base64;
@@ -89,6 +90,17 @@ class LogInByPassword extends CommunicationBase {
 
     @Override
     public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
+        // Store current login session to local
+        try {
+            SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
+            if (null == sessStore) {
+                return null;
+            }
+            String loginSession = jObject.getString("Sid");
+            sessStore.save(loginSession);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
