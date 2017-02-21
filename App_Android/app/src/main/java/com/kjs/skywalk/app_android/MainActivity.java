@@ -25,7 +25,11 @@ import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
 import com.kjs.skywalk.control.BadgeView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
 
@@ -48,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        // copy file from "asset/testPics/" to "cache" dir
+        commonFun.copyAssets(this, "testPics", getCacheDir().getAbsolutePath());
 
         // bind
         mTvHomePage = (TextView) findViewById(R.id.tv_homepage);
@@ -143,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.iv_title:
             {
 //                startActivity(new Intent(this, Activity_ImagePreview.class));
-                ArrayList<String> images = new ArrayList<>();
-                images.add("/sdcard/testpics/1.png");
+
+                ArrayList<String> images = commonFun.getTestPicList(this);
                 PhotoPreview.builder()
                         .setPhotos(images)
                         .setCurrentItem(0)
