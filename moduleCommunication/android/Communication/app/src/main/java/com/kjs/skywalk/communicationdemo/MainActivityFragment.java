@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
+import com.kjs.skywalk.communicationlibrary.ResBase;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +30,7 @@ public class MainActivityFragment extends Fragment
     private String mResultString = "";
 
     TextView mTextViewResult = null;
+    EditText mEditTestName = null;
 
     public MainActivityFragment() {
     }
@@ -37,6 +40,8 @@ public class MainActivityFragment extends Fragment
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, "3");
         mManager.execute(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditTestName.getText().toString());
+        mManager.execute(CommunicationCommand.CC_GET_PROPERTY_LIST, pMap, this, this);
     }
 
     @Override
@@ -46,6 +51,7 @@ public class MainActivityFragment extends Fragment
 
         Button testButton = (Button)view.findViewById(R.id.test);
         mTextViewResult = (TextView) view.findViewById(R.id.textViewResult);
+        mEditTestName = (EditText) view.findViewById(R.id.editText);
         testButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -88,6 +94,10 @@ public class MainActivityFragment extends Fragment
                 mTextViewResult.setText(mResultString);
             }
         });
+    }
+
+    @Override
+    public void onCommandFinished1(String command, String returnCode, String description, ResBase result) {
     }
 
     @Override

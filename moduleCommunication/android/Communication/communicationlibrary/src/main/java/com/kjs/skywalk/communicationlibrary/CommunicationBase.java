@@ -97,10 +97,12 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 }
 
                 HashMap<String, String> map = doCreateResultMap(jObject);
+                ResBase result = doParseResult(jObject);
 
                 String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
                 mCommandListener.onCommandFinished(mAPI, returnCode, strError, map);
+                mCommandListener.onCommandFinished1(mAPI, returnCode, strError, result);
 
                 doAfterConnect(http);
 
@@ -117,6 +119,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     @Override
     public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
+        return null;
+    }
+    @Override
+    public ResBase doParseResult(JSONObject jObject) {
         return null;
     }
 

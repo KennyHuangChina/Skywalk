@@ -13,6 +13,33 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/test">
 
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:weightSum="1">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="test Name"
+            android:ems="10"
+            android:id="@+id/editText" />
+
+        <Button
+            android:text="Start Test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/test"
+            android:onClick="onStartTestClicked"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,16 +50,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:scrollbars="vertical"
-            android:scrollbarStyle="outsideOverlay" />
-    </ScrollView>
+            android:scrollbarStyle="outsideOverlay"
+            android:layout_weight="0.39" />
 
-    <Button
-        android:text="Start Test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test"
-        android:onClick="onStartTestClicked"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+    </LinearLayout>
 
 </RelativeLayout>
