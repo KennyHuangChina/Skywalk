@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -122,6 +124,31 @@ public class commonFun {
         }
 
         return fileLst;
+    }
+
+    // change SharedPreferences save path
+    private static void changeSharedPreferencesPath(Context context) {
+        Field field;
+        try {
+            field = ContextWrapper.class.getDeclaredField("mBase");
+            field.setAccessible(true);
+
+            Object obj = field.get(context);
+
+            field = obj.getClass().getDeclaredField("mPreferencesDir");
+            field.setAccessible(true);
+
+            File file = new File("/sdcard/sailortest");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
+            field.set(obj, file);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

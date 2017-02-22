@@ -6,7 +6,8 @@
     tools:context="${relativePackage}.${activityClass}"
     >
 
-  <include layout="@layout/__picker_toolbar"/>
+  <include layout="@layout/__picker_toolbar"
+      android:visibility="gone"/>
 
   <FrameLayout
       android:id="@+id/container"
