@@ -69,7 +69,7 @@ public class SKLocalSettings {
 
         }
         public void save() {
-            
+
         }
     }
 }
