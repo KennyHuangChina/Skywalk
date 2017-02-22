@@ -94,9 +94,11 @@
 		* SUCCESS:200 
 			* Total    		int		// total number
 			* Count			int		// how many items fetched
-			* properties	array
-				* Id		int		// property id
-				* PropName	string	// property name
+			* Properties	array
+				* Id			int		// property id
+				* PropName		string	// property name
+				* PropAddress	string	// property address
+				* PropDesc		string	// property description
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

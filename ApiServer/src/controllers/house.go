@@ -634,17 +634,16 @@ func (this *HouseController) GetPropertyList() {
 	/*
 	 *	Extract agreements
 	 */
-	uid, err := getLoginUser(this.Controller)
-	if nil != err {
-		return
-	}
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
 
 	name := this.GetString("name")
 	begin, _ := this.GetInt64("bgn")
 	count, _ := this.GetInt64("cnt")
-	sid := this.GetString("sid")
 
-	beego.Debug(FN, "type:", name, ", begin:", begin, ", count:", count, ", sid:", sid, ", uid:", uid)
+	beego.Debug(FN, "type:", name, ", begin:", begin, ", count:", count) //, ", uid:", uid)
 
 	/*
 	 *	Processing
