@@ -55,31 +55,7 @@ public class fragmentApartment extends Fragment {
     }
 
     public void searchConditionPriceItemClicked(View view) {
-        ViewGroup parent = (ViewGroup)view.getParent();
-        for(int i = 0; i < parent.getChildCount(); i ++) {
-            View v = parent.getChildAt(i);
-            if(v.getId() == view.getId()) {
-                v.setSelected(true);
-                //mPopSearchConditionPrice.setCurrentSelection(v);
-            } else {
-                v.setSelected(false);
-            }
-        }
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPopSearchConditionPrice.dismiss();
-                    }
-                });
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.schedule(task, 200);
+        mPopSearchConditionPrice.onItemClicked(view);
     }
 
     @Override
