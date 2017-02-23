@@ -186,6 +186,8 @@ func GetPropertyList(pn string, begin, fetch int64) (err error, total, fetched i
 	beego.Debug(FN, "ps_tmp:", ps_tmp)
 
 	ps = ps_tmp
+	fetched = numb
+	beego.Debug(FN, "numb:", numb)
 	return
 }
 
