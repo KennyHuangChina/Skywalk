@@ -27,16 +27,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="test Name"
+            android:text=""
             android:ems="10"
             android:id="@+id/editText" />
 
         <Button
-            android:text="Start Test"
+            android:text="Get List Count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/test"
-            android:onClick="onStartTestClicked"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:text="Get List Item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/getList"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 

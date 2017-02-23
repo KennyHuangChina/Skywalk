@@ -13,6 +13,8 @@ import java.util.HashMap;
 public class CmdGetPropertyList extends CommunicationBase {
 
     private String mPropertyName = "";
+    private int mBeginPosi = 0;
+    private int mFetchCount = 0;
 
     CmdGetPropertyList(Context context) {
         super(context);
@@ -24,6 +26,10 @@ public class CmdGetPropertyList extends CommunicationBase {
 
     private void generateRequestData() {
         mRequestData = ("name=" + mPropertyName);
+        mRequestData += "&";
+        mRequestData += ("bgn=" + mBeginPosi);
+        mRequestData += "&";
+        mRequestData += ("cnt=" + mFetchCount);
         Log.d(TAG, "mRequestData: " + mPropertyName);
     }
 
@@ -53,6 +59,21 @@ public class CmdGetPropertyList extends CommunicationBase {
         if (null == mPropertyName /*|| mPropertyName.isEmpty()*/) {
             return false;
         }
+        String strBegin = map.get(CommunicationParameterKey.CPK_LIST_BEGIN);
+        if (null != strBegin) {
+            mBeginPosi = Integer.parseInt(strBegin);
+            if (mBeginPosi < 0) {
+                mBeginPosi = 0;
+            }
+        }
+        String strFetchCnt = map.get(CommunicationParameterKey.CPK_LIST_CNT);
+        if (null != strFetchCnt) {
+            mFetchCount = Integer.parseInt(strFetchCnt);
+            if (mFetchCount < 0) {
+                mFetchCount = 0;
+            }
+        }
+
         return true;
     }
 
@@ -60,31 +81,6 @@ public class CmdGetPropertyList extends CommunicationBase {
     public ResBase doParseResult(JSONObject jObject) {
         ResGetPropertyList result = new ResGetPropertyList(jObject);
         return result;
-    }
-
-    @Override
-    public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
-//        return super.doCreateResultMap(jObject);
-        HashMap<String, String> map = new HashMap<String, String>();
-        try {
-            map.put("Total", jObject.getString("Total"));
-            map.put("Count", jObject.getString("Count"));
-            JSONArray list = jObject.getJSONArray("Properties");
-            if (null == list) {
-                return null;
-            }
-
-            for (int n = 0; n < list.length(); n++) {
-
-            }
-
-            map.put("Id", jObject.getString("Id"));
-            map.put("PropName", jObject.getString("PropName"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return map;
     }
 
     @Override

@@ -8,20 +8,14 @@ import java.util.ArrayList;
 /**
  * Created by kenny on 2017/2/22.
  */
-public class ResGetPropertyList extends ResBase {
-    private int mTotal = 0;
-    private int mCount = 0;
-    private ArrayList<ProperryInfo> mList = null;
+public class ResGetPropertyList extends ResList {
 
     ResGetPropertyList(JSONObject obj) {
-        mList = new ArrayList();
         parse(obj);
     }
 
-    private int parse(JSONObject obj) {
+    protected int parseList(JSONObject obj) {
         try {
-            mTotal = obj.getInt("Total");
-            mCount = obj.getInt("Count");
             JSONArray array = obj.getJSONArray("Properties");
             if (null == array) {
                 return -1;
@@ -35,7 +29,9 @@ public class ResGetPropertyList extends ResBase {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            return -1;
         }
+
         return 0;
     }
 
