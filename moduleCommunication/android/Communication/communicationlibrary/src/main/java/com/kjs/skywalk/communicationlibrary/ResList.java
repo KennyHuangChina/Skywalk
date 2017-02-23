@@ -16,6 +16,7 @@ public class ResList extends ResBase {
     private int mTotal = 0;
     private int mFetched = 0;
     protected ArrayList<Object> mList = null;
+    protected boolean mForceGetList = false;
 
     ResList() {
         mList = new ArrayList();
@@ -26,15 +27,17 @@ public class ResList extends ResBase {
     }
 
     protected int parse(JSONObject obj) {
-        try {
-            mTotal = obj.getInt("Total");
-            mFetched = obj.getInt("Count");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return -1;
+        if (!mForceGetList) {
+            try {
+                mTotal = obj.getInt("Total");
+                mFetched = obj.getInt("Count");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return -1;
+            }
         }
 
-        if (mFetched > 0) {
+        if (mForceGetList || mFetched > 0) {
             return parseList(obj);
         }
 
@@ -46,5 +49,22 @@ public class ResList extends ResBase {
     }
 
     public int GetTotalNumber() { return mTotal; }
-    public int GetFetchedNumber() { return mFetched; }
+    public int GetFetchedNumber() {
+        return (mFetched > 0) ? mFetched : (mForceGetList ? mList.size() : 0);
+    }
+
+    public String toString() {
+        super.toString();
+
+        if (!mForceGetList) {
+            mString += ("Total: " + mTotal + "\n");
+            mString += ("Fetched: " + mFetched + "\n");
+        }
+
+        return ListString();
+    }
+
+    protected String ListString() {
+        return "";
+    }
 }

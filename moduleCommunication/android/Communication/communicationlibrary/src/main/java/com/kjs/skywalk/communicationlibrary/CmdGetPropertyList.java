@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 //import CommunicationBase;
 
-public class CmdGetPropertyList extends CommunicationBase {
+class CmdGetPropertyList extends CommunicationBase {
 
     private String mPropertyName = "";
     private int mBeginPosi = 0;

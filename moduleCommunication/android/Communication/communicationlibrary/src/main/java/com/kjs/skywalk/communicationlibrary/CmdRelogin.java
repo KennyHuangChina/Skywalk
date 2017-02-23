@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Created by kenny on 2017/2/19.
  */
 
-public class CmdRelogin extends CommunicationBase {
+class CmdRelogin extends CommunicationBase {
 
     private String mSession = "";   // "1234567890";
     private String mUserName = "";

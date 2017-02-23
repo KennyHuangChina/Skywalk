@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/2/18.
  */
 
-public class CmdGetUserSalt extends CommunicationBase {
+class CmdGetUserSalt extends CommunicationBase {
 
     private String mUserName = "";
 

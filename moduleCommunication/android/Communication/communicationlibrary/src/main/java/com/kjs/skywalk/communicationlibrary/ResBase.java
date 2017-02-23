@@ -7,4 +7,11 @@ package com.kjs.skywalk.communicationlibrary;
 public class ResBase {
     int  mErrCode = -1; // Unknown
     String mErrDesc = "";
+    String mString = "";
+
+    public String toString() {
+        mString += ("mErrCode: " + mErrCode + "\n");
+        mString += ("mErrDesc: " + mErrDesc + "\n");
+        return mString;
+    }
 }
