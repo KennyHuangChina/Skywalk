@@ -53,8 +53,9 @@ public class ResList extends ResBase {
         return (mFetched > 0) ? mFetched : (mForceGetList ? mList.size() : 0);
     }
 
-    public String toString() {
-        super.toString();
+    @Override
+    public String DebugString() {
+        super.DebugString();
 
         if (!mForceGetList) {
             mString += ("Total: " + mTotal + "\n");

@@ -45,16 +45,9 @@ class CmdGetUserSalt extends CommunicationBase {
     }
 
     @Override
-    public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
-        HashMap<String, String> map = new HashMap<String, String>();
-        try {
-            map.put("Salt", jObject.getString("Salt"));
-            map.put("Random", jObject.getString("Random"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return map;
+    public IApiResult doParseResult(JSONObject jObject) {
+        ResGetUserSalt result = new ResGetUserSalt(jObject);
+        return result;
     }
 
     @Override

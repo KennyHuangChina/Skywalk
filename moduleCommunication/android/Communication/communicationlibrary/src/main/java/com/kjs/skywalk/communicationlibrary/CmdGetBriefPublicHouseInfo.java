@@ -64,7 +64,7 @@ class CmdGetBriefPublicHouseInfo extends CommunicationBase {
     }
 
     @Override
-    public ResBase doParseResult(JSONObject jObject) {
+    public IApiResult doParseResult(JSONObject jObject) {
         ResHousePublicBriefInfo result = new ResHousePublicBriefInfo(jObject);
         return result;
     }

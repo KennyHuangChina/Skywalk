@@ -80,8 +80,20 @@ public class ResHousePublicBriefInfo extends ResList {
         return 0;
     }
 
-    public String toString() {
-        super.toString();
+    public int GetHouseId() { return mHouseId; }
+    public String GetProperty() { return mPropertyName; }
+    public String GetPropertyAddr() { return mPropertyAddr; }
+    public int GetBedrooms() { return mBedrooms; }
+    public int GetLivingrooms() { return mLivingRooms; }
+    public int GetBathrooms() { return mBathrooms; }
+    public int GetAcreage() { return mAcreage; }
+    public int GetRental() { return mRental; }
+    public int GetPricing() { return mPricing; }
+    public int GetCoverImage() { return mCoverImg; }
+
+    @Override
+    public String DebugString() {
+        super.DebugString();
 
         mString += (" house id: " + mHouseId + "\n");
         mString += (" property: " + mPropertyName + "\n");
@@ -96,6 +108,7 @@ public class ResHousePublicBriefInfo extends ResList {
         return mString;
     }
 
+    @Override
     protected String ListString() {
         for (int i = 0; i < mList.size(); i++) {
             mString += "   Tag(" + (i + 1) + ") -- " + mList.get(i).toString();

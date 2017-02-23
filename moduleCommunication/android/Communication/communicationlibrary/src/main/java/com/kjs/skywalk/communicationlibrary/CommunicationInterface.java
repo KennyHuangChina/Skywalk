@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class CommunicationInterface {
     public interface CICommandListener {
         void onCommandFinished(final String command, final String returnCode, final String description, final HashMap<String, String> map);
-        void onCommandFinished1(final String command, final String returnCode, final String description, final ResBase res);
+        void onCommandFinished1(final String command, final String returnCode, final String description, final IApiResult res);
     }
 
     public interface CIProgressListener {
