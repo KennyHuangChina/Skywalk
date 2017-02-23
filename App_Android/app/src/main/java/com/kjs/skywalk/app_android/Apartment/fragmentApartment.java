@@ -43,7 +43,7 @@ public class fragmentApartment extends Fragment {
 
     private PopupWindowSearchConditionFilter mPopSearchConditionFilter = null;
     private PopupWindowSearchConditionPrice mPopSearchConditionPrice = null;
-    private PopupWindowSearchConditionHouseType mPopSearchConditionHourseType = null;
+    private PopupWindowSearchConditionHouseType mPopSearchConditionHouseType = null;
     @Nullable
 
     public void searchConditionFilterItemClicked(View view) {
@@ -51,15 +51,17 @@ public class fragmentApartment extends Fragment {
     }
 
     public void searchConditionHouseTypeItemClicked(View view) {
-        view.setSelected(!view.isSelected());
+        mPopSearchConditionHouseType.onItemClicked(view);
     }
 
     public void searchConditionPriceItemClicked(View view) {
-        view.setSelected(true);
         ViewGroup parent = (ViewGroup)view.getParent();
         for(int i = 0; i < parent.getChildCount(); i ++) {
             View v = parent.getChildAt(i);
-            if(v.getId() != view.getId()) {
+            if(v.getId() == view.getId()) {
+                v.setSelected(true);
+                //mPopSearchConditionPrice.setCurrentSelection(v);
+            } else {
                 v.setSelected(false);
             }
         }
@@ -132,11 +134,11 @@ public class fragmentApartment extends Fragment {
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            if(mPopSearchConditionHourseType == null) {
-                mPopSearchConditionHourseType = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
+            if(mPopSearchConditionHouseType == null) {
+                mPopSearchConditionHouseType = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
             }
-            mPopSearchConditionHourseType.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
-            mPopSearchConditionHourseType.showAsDropDown(mLinearLayoutConditionContainer);
+            mPopSearchConditionHouseType.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
+            mPopSearchConditionHouseType.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
 
