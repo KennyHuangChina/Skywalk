@@ -46,4 +46,8 @@ public class IApiResults {
         int GetId();
         String GetName();
     }
+
+    public interface ILogin {
+        String GetSession();
+    }
 }

@@ -110,7 +110,7 @@ class CmdRelogin extends CommunicationBase {
     }
 
     @Override
-    public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(JSONObject jObject) {
         // Store the current login session
         try {
             SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
@@ -121,7 +121,10 @@ class CmdRelogin extends CommunicationBase {
             sessStore.save(loginSession);
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+
+        ResLogin result = new ResLogin(jObject);
+        return result;
     }
 }

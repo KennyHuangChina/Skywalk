@@ -60,7 +60,7 @@ public class CommunicationManager {
         if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
             operation = new CmdGetBriefPublicHouseInfo(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
-            operation = new LogInByPassword(mContext);
+            operation = new CmdLoginByPassword(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
             operation = new CmdLogout(mContext);
         } else if(command.equals(CommunicationCommand.CC_TEST)) {

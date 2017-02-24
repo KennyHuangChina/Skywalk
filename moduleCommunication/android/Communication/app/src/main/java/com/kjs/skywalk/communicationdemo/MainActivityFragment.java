@@ -38,14 +38,7 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestGetApi() {
-//        doTestGetApi_GetBriefPublicHouseInfo();
-        doTestGetApi_GetUserSalt();
-    }
-    private void doTestGetApi_GetUserSalt() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditText.getText().toString());
-        mManager.execute(CommunicationCommand.CC_GET_USER_SALT, pMap, this, this);
+        doTestGetApi_GetBriefPublicHouseInfo();
     }
     private void doTestGetApi_GetBriefPublicHouseInfo() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
@@ -153,9 +146,6 @@ public class MainActivityFragment extends Fragment
                 IApiResults.IHouseTag tag = (IApiResults.IHouseTag)arry.get(0);
                 tag.GetName();
             }
-        }  else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
-            IApiResults.IGetUserSalt res = (IApiResults.IGetUserSalt)result;
-            res.GetSalt();
         }
         mResultString = result.DebugString();
 

@@ -16,7 +16,7 @@ import java.util.HashMap;
  * Created by admin on 2017/1/23.
  */
 
-class LogInByPassword extends CommunicationBase {
+class CmdLoginByPassword extends CommunicationBase {
 
     private int mType = 1; // client type: 0 - web; 1 - APP
     private String mSalt = "";  // user salt get from server
@@ -24,9 +24,9 @@ class LogInByPassword extends CommunicationBase {
     private String mPassword = "";
     private String mRadom = "";
 
-    LogInByPassword(Context context) {
+    CmdLoginByPassword(Context context) {
         super(context);
-        TAG = "LogInByPassword";
+        TAG = "CmdLoginByPassword";
         Log.i(TAG, "Constructor");
         mAPI = CommunicationCommand.CC_LOG_IN_BY_PASSWORD;
         mMethodType = "POST";
@@ -89,7 +89,7 @@ class LogInByPassword extends CommunicationBase {
     }
 
     @Override
-    public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(JSONObject jObject) {
         // Store current login session to local
         try {
             SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
@@ -100,8 +100,11 @@ class LogInByPassword extends CommunicationBase {
             sessStore.save(loginSession);
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+
+        ResLogin result = new ResLogin(jObject);
+        return result;
     }
 
     @Override

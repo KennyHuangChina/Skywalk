@@ -204,7 +204,9 @@ public class LogInOutFragment extends Fragment
             mSalt = slt.GetSalt();
             mRand = slt.GetRandom();
         }
-        mResultString = result.DebugString();
+        if (null != result) {
+            mResultString = result.DebugString();
+        }
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
