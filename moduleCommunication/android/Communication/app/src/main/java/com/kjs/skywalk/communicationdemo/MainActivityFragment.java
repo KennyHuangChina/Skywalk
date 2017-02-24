@@ -14,8 +14,10 @@ import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
-import com.kjs.skywalk.communicationlibrary.ResBase;
+import com.kjs.skywalk.communicationlibrary.IApiResult;
 import com.kjs.skywalk.communicationlibrary.ResGetPropertyList;
+import com.kjs.skywalk.communicationlibrary.ResGetUserSalt;
+import com.kjs.skywalk.communicationlibrary.ResHousePublicBriefInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,34 +34,37 @@ public class MainActivityFragment extends Fragment
     private String mResultString = "";
 
     private TextView mTextViewResult = null;
-    private EditText mEditGetListCnt = null;
+    private EditText mEditText = null;
     private int mListTotal = 0;
 
     public MainActivityFragment() {
     }
 
-    private void doTest_getListTotal() {
-//        doTest_GetBriefPublicHouseInfo();
-        doTest_GetpropertyList();
+    private void doTestGetApi() {
+//        doTestGetApi_GetBriefPublicHouseInfo();
+        doTestGetApi_GetUserSalt();
     }
-    private void doTest_GetBriefPublicHouseInfo() {
+    private void doTestGetApi_GetUserSalt() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "3");
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditText.getText().toString());
+        mManager.execute(CommunicationCommand.CC_GET_USER_SALT, pMap, this, this);
+    }
+    private void doTestGetApi_GetBriefPublicHouseInfo() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "2");
         mManager.execute(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
     }
 
-    private void doTest_GetpropertyList() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditGetListCnt.getText().toString());
-        mManager.execute(CommunicationCommand.CC_GET_PROPERTY_LIST, pMap, this, this);
+    private void doTestGetList() {
+        doTestGetList_PropertyList();
     }
 
-    private void doTest_getListItem() {
+    private void doTestGetList_PropertyList() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditGetListCnt.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditText.getText().toString());
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "0");
         pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + mListTotal);
         mManager.execute(CommunicationCommand.CC_GET_PROPERTY_LIST, pMap, this, this);
@@ -70,9 +75,9 @@ public class MainActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        Button testButton = (Button)view.findViewById(R.id.test);
+        Button testButton = (Button)view.findViewById(R.id.testList);
         mTextViewResult = (TextView) view.findViewById(R.id.textViewResult);
-        mEditGetListCnt = (EditText) view.findViewById(R.id.editText);
+        mEditText = (EditText) view.findViewById(R.id.editText);
         testButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -80,18 +85,18 @@ public class MainActivityFragment extends Fragment
             {
                 mResultString = "";
                 mTextViewResult.setText("");
-                doTest_getListTotal();
+                doTestGetList();
             }
         });
-        Button btnGetList = (Button)view.findViewById(R.id.getList);
-        btnGetList.setOnClickListener(new View.OnClickListener()
+        Button btnTestGetApi = (Button)view.findViewById(R.id.testGetApi);
+        btnTestGetApi.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 mResultString = "";
                 mTextViewResult.setText("");
-                doTest_getListItem();
+                doTestGetApi();
             }
         });;
 
@@ -130,30 +135,33 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished1(String command, String returnCode, String description, ResBase result) {
+    public void onCommandFinished1(String command, String returnCode, String description, IApiResult result) {
         if(command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
             ResGetPropertyList res = (ResGetPropertyList)result;
             int nTotal = res.GetTotalNumber();
             mListTotal = nTotal;
-            int nFetched = res.GetFetchedNumber();
-            ArrayList<Object> propLst = res.GetPropertyList();
-            if (null != propLst) {
-                for (int n = 0; n < propLst.size(); n++) {
-                    ResGetPropertyList.ProperryInfo prop = (ResGetPropertyList.ProperryInfo)propLst.get(n);
-                    int propId = prop.GetId();
-                    String propName = prop.GetName();
-                    String propAddr = prop.GetAddress();
-                    String propDesc = prop.GetDesc();
-                }
-            }
+        } else if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
+            ResHousePublicBriefInfo res = (ResHousePublicBriefInfo)result;
+            res.GetHouseId();
+        }  else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
+            ResGetUserSalt res = (ResGetUserSalt)result;
+            res.GetSalt();
         }
+        mResultString = result.DebugString();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTextViewResult.setText(mResultString);
+            }
+        });
     }
 
     @Override
     public void onCommandFinished(String command, String returnCode, String description, HashMap<String, String> map) {
         if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
             if(returnCode.equals("0")) {
-                showResult(command, map);
+//                showResult(command, map);
             } else {
                 Log.e(TAG, "Command "+ CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO + " finished with error: " + description);
             }

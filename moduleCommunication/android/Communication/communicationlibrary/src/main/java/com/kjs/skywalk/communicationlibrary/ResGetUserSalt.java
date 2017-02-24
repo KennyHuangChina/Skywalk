@@ -22,6 +22,9 @@ public class ResGetUserSalt extends ResBase {
     public String DebugString() {
         super.DebugString();
 
+        mString += "  Salt: " + mSalt + "\n";
+        mString += "  Random: " + mRandom + "\n";
+
         return mString;
     }
 

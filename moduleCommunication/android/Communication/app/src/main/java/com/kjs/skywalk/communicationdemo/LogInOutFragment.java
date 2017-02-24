@@ -14,7 +14,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
-import com.kjs.skywalk.communicationlibrary.ResBase;
+import com.kjs.skywalk.communicationlibrary.IApiResult;
 
 import org.w3c.dom.Text;
 
@@ -192,7 +192,7 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished1(String command, String returnCode, String description, ResBase result) {
+    public void onCommandFinished1(String command, String returnCode, String description, IApiResult result) {
     }
 
     @Override

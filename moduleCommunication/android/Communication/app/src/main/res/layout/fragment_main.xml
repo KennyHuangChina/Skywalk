@@ -32,18 +32,20 @@
             android:id="@+id/editText" />
 
         <Button
-            android:text="Get List Count"
+            android:text="Test List"
+            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/test"
+            android:id="@+id/testList"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
         <Button
-            android:text="Get List Item"
+            android:text="Test Get API"
+            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/getList"
+            android:id="@+id/testGetApi"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
