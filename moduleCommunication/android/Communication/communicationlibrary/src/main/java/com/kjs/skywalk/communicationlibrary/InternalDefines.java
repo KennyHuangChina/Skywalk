@@ -19,8 +19,7 @@ class InternalDefines {
     public interface CheckParameter {
         boolean checkParameter(HashMap<String, String> map);
     }
-    public interface CreateResultMap {
-        HashMap<String, String> doCreateResultMap(JSONObject jObject);
+    public interface CreateResult {
         IApiResults.ICommon doParseResult(JSONObject jObject);
     }
     public interface BeforeConnect {

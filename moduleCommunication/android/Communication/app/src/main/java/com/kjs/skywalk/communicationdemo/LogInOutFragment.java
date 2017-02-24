@@ -190,7 +190,7 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished1(String command, String returnCode, String description, IApiResults.ICommon result) {
+    public void onCommandFinished(String command, String returnCode, String description, IApiResults.ICommon result) {
         if (!returnCode.equals("0")) {
             Log.e(TAG, "Command:"+ command + " finished with error: " + description);
             showError(command, returnCode, description);
@@ -214,23 +214,6 @@ public class LogInOutFragment extends Fragment
                 mTextViewResult.setText(mResultString);
             }
         });
-    }
-
-    @Override
-    public void onCommandFinished(String command, String returnCode, String description, HashMap<String, String> map) {
-        if (!returnCode.equals("0")) {
-            Log.e(TAG, "Command:"+ command + " finished with error: " + description);
-                showError(command, returnCode, description);
-            return;
-        }
-
-        Log.e(TAG, "Command:"+ command + " finished successes");
-        showResult(command, map);
-
-//        if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
-//                mSalt = map.get("Salt");
-//                mRand = map.get("Random");
-//        }
     }
 
     @Override

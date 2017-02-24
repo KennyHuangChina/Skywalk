@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.CheckParameter,
-                                    InternalDefines.CreateResultMap,
+                                    InternalDefines.CreateResult,
                                     InternalDefines.BeforeConnect,
                                     InternalDefines.AfterConnect,
                                     InternalDefines.ConnectFailed{
@@ -96,13 +96,11 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     return;
                 }
 
-                HashMap<String, String> map = doCreateResultMap(jObject);
                 IApiResults.ICommon result = doParseResult(jObject);
 
                 String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
-                mCommandListener.onCommandFinished(mAPI, returnCode, strError, map);
-                mCommandListener.onCommandFinished1(mAPI, returnCode, strError, result);
+                mCommandListener.onCommandFinished(mAPI, returnCode, strError, result);
 
                 doAfterConnect(http);
 
@@ -117,10 +115,6 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         return false;
     }
 
-    @Override
-    public HashMap<String, String> doCreateResultMap(JSONObject jObject) {
-        return null;
-    }
     @Override
     public IApiResults.ICommon doParseResult(JSONObject jObject) {
         return null;

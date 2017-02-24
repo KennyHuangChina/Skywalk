@@ -125,7 +125,7 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished1(String command, String returnCode, String description, IApiResults.ICommon result) {
+    public void onCommandFinished(String command, String returnCode, String description, IApiResults.ICommon result) {
         if(command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
             IApiResults.IResultList res = (IApiResults.IResultList)result;
             int nTotal = res.GetTotalNumber();
@@ -155,17 +155,6 @@ public class MainActivityFragment extends Fragment
                 mTextViewResult.setText(mResultString);
             }
         });
-    }
-
-    @Override
-    public void onCommandFinished(String command, String returnCode, String description, HashMap<String, String> map) {
-        if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
-            if(returnCode.equals("0")) {
-//                showResult(command, map);
-            } else {
-                Log.e(TAG, "Command "+ CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO + " finished with error: " + description);
-            }
-        }
     }
 
     @Override
