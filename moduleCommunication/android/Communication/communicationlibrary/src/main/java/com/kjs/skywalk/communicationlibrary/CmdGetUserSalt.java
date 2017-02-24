@@ -45,7 +45,7 @@ class CmdGetUserSalt extends CommunicationBase {
     }
 
     @Override
-    public IApiResult doParseResult(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(JSONObject jObject) {
         ResGetUserSalt result = new ResGetUserSalt(jObject);
         return result;
     }

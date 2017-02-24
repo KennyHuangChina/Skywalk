@@ -14,9 +14,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
-import com.kjs.skywalk.communicationlibrary.IApiResult;
-
-import org.w3c.dom.Text;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -192,7 +190,28 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished1(String command, String returnCode, String description, IApiResult result) {
+    public void onCommandFinished1(String command, String returnCode, String description, IApiResults.ICommon result) {
+        if (!returnCode.equals("0")) {
+            Log.e(TAG, "Command:"+ command + " finished with error: " + description);
+            showError(command, returnCode, description);
+            return;
+        }
+        Log.e(TAG, "Command:"+ command + " finished successes");
+//        showResult(command, map);
+
+        if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
+            IApiResults.IGetUserSalt slt = (IApiResults.IGetUserSalt)result;
+            mSalt = slt.GetSalt();
+            mRand = slt.GetRandom();
+        }
+        mResultString = result.DebugString();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTextViewResult.setText(mResultString);
+            }
+        });
     }
 
     @Override
@@ -201,15 +220,15 @@ public class LogInOutFragment extends Fragment
             Log.e(TAG, "Command:"+ command + " finished with error: " + description);
                 showError(command, returnCode, description);
             return;
-            }
+        }
 
         Log.e(TAG, "Command:"+ command + " finished successes");
         showResult(command, map);
 
-        if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
-                mSalt = map.get("Salt");
-                mRand = map.get("Random");
-        }
+//        if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
+//                mSalt = map.get("Salt");
+//                mRand = map.get("Random");
+//        }
     }
 
     @Override

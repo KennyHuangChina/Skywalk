@@ -97,7 +97,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 }
 
                 HashMap<String, String> map = doCreateResultMap(jObject);
-                IApiResult result = doParseResult(jObject);
+                IApiResults.ICommon result = doParseResult(jObject);
 
                 String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
@@ -122,7 +122,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         return null;
     }
     @Override
-    public IApiResult doParseResult(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(JSONObject jObject) {
         return null;
     }
 

@@ -21,7 +21,7 @@ class InternalDefines {
     }
     public interface CreateResultMap {
         HashMap<String, String> doCreateResultMap(JSONObject jObject);
-        IApiResult doParseResult(JSONObject jObject);
+        IApiResults.ICommon doParseResult(JSONObject jObject);
     }
     public interface BeforeConnect {
         int doBeforeConnect(HttpConnector http);

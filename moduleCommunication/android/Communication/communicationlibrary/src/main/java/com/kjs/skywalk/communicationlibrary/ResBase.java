@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/2/22.
  */
 
-public class ResBase implements IApiResult {
+class ResBase implements IApiResults.ICommon {
     int  mErrCode = -1; // Unknown
     String mErrDesc = "";
     String mString = "";

@@ -14,10 +14,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
-import com.kjs.skywalk.communicationlibrary.IApiResult;
-import com.kjs.skywalk.communicationlibrary.ResGetPropertyList;
-import com.kjs.skywalk.communicationlibrary.ResGetUserSalt;
-import com.kjs.skywalk.communicationlibrary.ResHousePublicBriefInfo;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,16 +132,29 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished1(String command, String returnCode, String description, IApiResult result) {
+    public void onCommandFinished1(String command, String returnCode, String description, IApiResults.ICommon result) {
         if(command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
-            ResGetPropertyList res = (ResGetPropertyList)result;
+            IApiResults.IResultList res = (IApiResults.IResultList)result;
             int nTotal = res.GetTotalNumber();
             mListTotal = nTotal;
+            int nFetched = res.GetFetchedNumber();
+            if (nFetched > 0 ) {
+                ArrayList<Object> arry = res.GetList();
+                IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo)arry.get(0);
+                prop.GetName();
+            }
         } else if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
-            ResHousePublicBriefInfo res = (ResHousePublicBriefInfo)result;
+            IApiResults.IHouseDigest res = (IApiResults.IHouseDigest)result;
             res.GetHouseId();
+
+            IApiResults.IResultList lst = (IApiResults.IResultList)result;
+            if (lst.GetFetchedNumber() > 0) {
+                ArrayList<Object> arry = lst.GetList();
+                IApiResults.IHouseTag tag = (IApiResults.IHouseTag)arry.get(0);
+                tag.GetName();
+            }
         }  else if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
-            ResGetUserSalt res = (ResGetUserSalt)result;
+            IApiResults.IGetUserSalt res = (IApiResults.IGetUserSalt)result;
             res.GetSalt();
         }
         mResultString = result.DebugString();

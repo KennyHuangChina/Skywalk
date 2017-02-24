@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by kenny on 2017/2/23.
  */
 
-public class ResList extends ResBase {
+class ResList extends ResBase implements IApiResults.IResultList {
     private int mTotal = 0;
     private int mFetched = 0;
     protected ArrayList<Object> mList = null;
@@ -48,9 +48,18 @@ public class ResList extends ResBase {
         return 0;
     }
 
-    public int GetTotalNumber() { return mTotal; }
+    @Override
+    public int GetTotalNumber() {
+        return (mTotal > 0) ? mTotal : (mForceGetList ? mList.size() : 0);
+    }
+    @Override
     public int GetFetchedNumber() {
         return (mFetched > 0) ? mFetched : (mForceGetList ? mList.size() : 0);
+    }
+
+    @Override
+    public ArrayList<Object> GetList() {
+        return mList;
     }
 
     @Override
@@ -66,6 +75,6 @@ public class ResList extends ResBase {
     }
 
     protected String ListString() {
-        return "";
+        return mString;
     }
 }

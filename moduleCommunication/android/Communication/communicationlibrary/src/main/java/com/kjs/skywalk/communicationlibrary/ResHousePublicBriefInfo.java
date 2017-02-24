@@ -10,7 +10,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/2/23.
  */
 
-public class ResHousePublicBriefInfo extends ResList {
+class ResHousePublicBriefInfo extends ResList implements IApiResults.IHouseDigest {
     int mHouseId = 0;
     String mPropertyName = "";
     String mPropertyAddr = "";
@@ -80,15 +80,25 @@ public class ResHousePublicBriefInfo extends ResList {
         return 0;
     }
 
+    @Override
     public int GetHouseId() { return mHouseId; }
+    @Override
     public String GetProperty() { return mPropertyName; }
+    @Override
     public String GetPropertyAddr() { return mPropertyAddr; }
+    @Override
     public int GetBedrooms() { return mBedrooms; }
+    @Override
     public int GetLivingrooms() { return mLivingRooms; }
+    @Override
     public int GetBathrooms() { return mBathrooms; }
+    @Override
     public int GetAcreage() { return mAcreage; }
+    @Override
     public int GetRental() { return mRental; }
+    @Override
     public int GetPricing() { return mPricing; }
+    @Override
     public int GetCoverImage() { return mCoverImg; }
 
     @Override
@@ -116,7 +126,7 @@ public class ResHousePublicBriefInfo extends ResList {
         return "";
     }
 
-    public class HouseTag {
+    public class HouseTag implements IApiResults.IHouseTag {
         int mTagId = 0;
         String mTagName = "";
 
@@ -129,7 +139,9 @@ public class ResHousePublicBriefInfo extends ResList {
             }
         }
 
+        @Override
         public int GetId() { return mTagId; }
+        @Override
         public String GetName() { return mTagName; }
 
         public String toString() {

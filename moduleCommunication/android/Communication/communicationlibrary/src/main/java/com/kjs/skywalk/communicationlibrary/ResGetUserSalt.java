@@ -9,7 +9,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/2/23.
  */
 
-public class ResGetUserSalt extends ResBase {
+class ResGetUserSalt extends ResBase implements IApiResults.IGetUserSalt {
 //    private String mUserName = "";
     private String mSalt = "";
     private String mRandom = "";
@@ -45,6 +45,9 @@ public class ResGetUserSalt extends ResBase {
         return 0;
     }
 
+    @Override
     public String GetSalt() { return mSalt; }
+
+    @Override
     public String GetRandom() { return mRandom; }
 }

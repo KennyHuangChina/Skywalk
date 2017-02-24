@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by kenny on 2017/2/22.
  */
-public class ResGetPropertyList extends ResList {
+class ResGetPropertyList extends ResList {
 
     ResGetPropertyList(JSONObject obj) {
         parse(obj);
@@ -35,7 +35,14 @@ public class ResGetPropertyList extends ResList {
         return 0;
     }
 
-    public class ProperryInfo {
+    protected String ListString() {
+        for (int n = 0; n < mList.size(); n++) {
+            mString += ("    item(" + n + "): " + ((ProperryInfo)mList.get(n)).DebugString() + "\n");
+        }
+        return mString;
+    }
+
+    class ProperryInfo implements IApiResults.IPropertyInfo {
         private int       mId         = 0;
         private String    mName       = "";
         private String    mAddress    = "";
@@ -52,9 +59,17 @@ public class ResGetPropertyList extends ResList {
             }
         }
 
+        @Override
         public int GetId() { return mId; }
+        @Override
         public String GetName() { return mName; }
+        @Override
         public String GetAddress() { return mAddress; }
+        @Override
         public String GetDesc() { return mDesciption; }
+
+        public String DebugString() {
+            return " id: " + mId + ", name: " + mName + ", addr: " + mAddress + ", desc: " + mDesciption;
+        }
     }
 }
