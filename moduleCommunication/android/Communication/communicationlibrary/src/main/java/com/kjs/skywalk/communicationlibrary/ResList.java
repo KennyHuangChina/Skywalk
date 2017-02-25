@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by kenny on 2017/2/23.
  */
 
-class ResList extends ResBase implements IApiResults.IResultList {
+class ResList implements InternalDefines.IDebugString4ListItem {
     private int mTotal = 0;
     private int mFetched = 0;
     protected ArrayList<Object> mList = null;
@@ -22,59 +22,58 @@ class ResList extends ResBase implements IApiResults.IResultList {
         mList = new ArrayList();
     }
 
-    public ArrayList<Object> GetPropertyList() {
-        return mList;
+    protected String DebugList() {
+        String strList = "";
+        if (!mForceGetList) {
+            strList += ("Total: " + mTotal + "\n");
+            strList += ("Fetched: " + mFetched + "\n");
+        }
+
+        for (int n = 0; n < mList.size(); n++) {
+            strList += ("  <" + n + "> " + ListItem2String(mList.get(n)) + "\n");
+        }
+
+        return strList;
     }
 
-    protected int parse(JSONObject obj) {
+    protected int parseList(JSONObject obj) {
+        if (null == obj) {
+            return -1;
+        }
         if (!mForceGetList) {
             try {
                 mTotal = obj.getInt("Total");
                 mFetched = obj.getInt("Count");
             } catch (JSONException e) {
                 e.printStackTrace();
-                return -1;
+                return -2;
             }
         }
 
         if (mForceGetList || mFetched > 0) {
-            return parseList(obj);
+            return parseListItems(obj);
         }
 
         return 0;
     }
 
-    protected int parseList(JSONObject obj) {
-        return 0;
-    }
-
-    @Override
-    public int GetTotalNumber() {
+    protected int GetTotalNumber() {
         return (mTotal > 0) ? mTotal : (mForceGetList ? mList.size() : 0);
     }
-    @Override
-    public int GetFetchedNumber() {
+    protected int GetFetchedNumber() {
         return (mFetched > 0) ? mFetched : (mForceGetList ? mList.size() : 0);
     }
-
-    @Override
-    public ArrayList<Object> GetList() {
+    protected ArrayList<Object> GetList() {
         return mList;
     }
 
     @Override
-    public String DebugString() {
-        super.DebugString();
-
-        if (!mForceGetList) {
-            mString += ("Total: " + mTotal + "\n");
-            mString += ("Fetched: " + mFetched + "\n");
-        }
-
-        return ListString();
+    public int parseListItems(JSONObject obj) {
+        return 0;
     }
 
-    protected String ListString() {
-        return mString;
+    @Override
+    public String ListItem2String(Object item) {
+        return "";
     }
 }

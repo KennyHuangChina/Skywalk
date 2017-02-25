@@ -32,6 +32,15 @@ class InternalDefines {
         int doConnectFailed(HttpConnector http);
     }
 
+    interface IDebugString4ListItem {
+        int parseListItems(JSONObject obj);
+        String ListItem2String(Object item);
+    }
+
+    interface IListItemInfoInner {
+        String ListItemInfo2String();
+    }
+
     //Log Tags defines
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
     public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";

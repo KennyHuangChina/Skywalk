@@ -1,5 +1,6 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -11,6 +12,13 @@ class ResBase implements IApiResults.ICommon {
     String mErrDesc = "";
     String mString = "";
 
+    ResBase() {
+    }
+
+    ResBase(JSONObject jObject) {
+        parse(jObject);
+    }
+
     @Override
     public String DebugString() {
         mString += ("mErrCode: " + mErrCode + "\n");
@@ -19,6 +27,17 @@ class ResBase implements IApiResults.ICommon {
     }
 
     protected int parse(JSONObject obj) {
+        if (null == obj) {
+            return -1;
+        }
+        try {
+            mErrCode = obj.getInt("ErrCode");
+            mErrDesc = obj.getString("ErrString");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return -2;
+        }
+
         return 0;
     }
 }

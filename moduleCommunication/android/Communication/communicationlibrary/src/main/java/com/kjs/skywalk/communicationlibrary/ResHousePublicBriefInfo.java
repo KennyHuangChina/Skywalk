@@ -6,11 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by kenny on 2017/2/23.
  */
 
-class ResHousePublicBriefInfo extends ResList implements IApiResults.IHouseDigest {
+class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IResultList {
     int mHouseId = 0;
     String mPropertyName = "";
     String mPropertyAddr = "";
@@ -21,10 +23,12 @@ class ResHousePublicBriefInfo extends ResList implements IApiResults.IHouseDiges
     int mRental = 0;
     int mPricing = 0;
     int mCoverImg = 0;
-
+    TagList mList = null;
 
     ResHousePublicBriefInfo(JSONObject obj) {
-        mForceGetList = true;
+        super(obj);
+//        mForceGetList = true;
+        mList = new TagList();
         parse(obj);
     }
 
@@ -61,22 +65,22 @@ class ResHousePublicBriefInfo extends ResList implements IApiResults.IHouseDiges
     }
 
     protected int parseList(JSONObject obj) {
-        JSONArray array = null;
-        try {
-            array = obj.getJSONArray("Tags");
-            if (null == array) {
-                return -1;
-            }
-            for (int i = 0; i < array.length(); i++) {
-                HouseTag newTag = new HouseTag(array.getJSONObject(i));
-                if (null == newTag) {
-                    return -2;
-                }
-                mList.add(newTag);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        JSONArray array = null;
+//        try {
+//            array = obj.getJSONArray("Tags");
+//            if (null == array) {
+//                return -1;
+//            }
+//            for (int i = 0; i < array.length(); i++) {
+//                HouseTag newTag = new HouseTag(array.getJSONObject(i));
+//                if (null == newTag) {
+//                    return -2;
+//                }
+//                mList.add(newTag);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         return 0;
     }
 
@@ -118,35 +122,58 @@ class ResHousePublicBriefInfo extends ResList implements IApiResults.IHouseDiges
         return mString;
     }
 
-    @Override
+//    @Override
     protected String ListString() {
-        for (int i = 0; i < mList.size(); i++) {
-            mString += "   Tag(" + (i + 1) + ") -- " + mList.get(i).toString();
-        }
+//        for (int i = 0; i < mList.size(); i++) {
+//            mString += "   Tag(" + (i + 1) + ") -- " + mList.get(i).toString();
+//        }
         return "";
     }
 
-    public class HouseTag implements IApiResults.IHouseTag {
-        int mTagId = 0;
-        String mTagName = "";
+    @Override
+    public int GetTotalNumber() {
+        return 0;
+    }
 
-        HouseTag(JSONObject obj) {
-            try {
-                mTagId = obj.getInt("TagId");
-                mTagName = obj.getString("TagDesc");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    @Override
+    public int GetFetchedNumber() {
+        return 0;
+    }
+
+    @Override
+    public ArrayList<Object> GetList() {
+        return null;
+    }
+
+    class TagList extends ResList {
+        TagList() {
+            super();
         }
 
-        @Override
-        public int GetId() { return mTagId; }
-        @Override
-        public String GetName() { return mTagName; }
+        class HouseTag implements IApiResults.IHouseTag {
+            int mTagId = 0;
+            String mTagName = "";
 
-        public String toString() {
-            String str = "" + mTagId + ": " + mTagName + "\n";
-            return str;
+            HouseTag(JSONObject obj) {
+                super();
+                try {
+                    mTagId = obj.getInt("TagId");
+                    mTagName = obj.getString("TagDesc");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public int GetId() { return mTagId; }
+            @Override
+            public String GetName() { return mTagName; }
+
+            public String toString() {
+                String str = "" + mTagId + ": " + mTagName + "\n";
+                return str;
+            }
         }
     }
 }
+

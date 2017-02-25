@@ -348,6 +348,7 @@ class HttpConnector {
                     JSONObject json = new JSONObject(new String(response, 0, ret));
                     mErrorCode = json.getInt("ErrCode");
                     mErrorDescription = json.getString("ErrString");
+                    mJsonObj = json;
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                     try {

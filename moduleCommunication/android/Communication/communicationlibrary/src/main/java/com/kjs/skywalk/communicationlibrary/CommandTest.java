@@ -30,7 +30,10 @@ class CommandTest extends CommunicationBase {
     }
 
     @Override
-    public IApiResults.ICommon doParseResult(JSONObject jObject) { return null; }
+    public IApiResults.ICommon doParseResult(JSONObject jObject) {
+        ResBase result = new ResBase(jObject);
+        return result;
+    }
 
     @Override
     public int doOperation(HashMap<String, String> map, CommunicationInterface.CICommandListener commandListener, CommunicationInterface.CIProgressListener progressListener) {

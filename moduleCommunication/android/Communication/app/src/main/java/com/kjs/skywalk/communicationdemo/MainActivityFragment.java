@@ -126,6 +126,10 @@ public class MainActivityFragment extends Fragment
 
     @Override
     public void onCommandFinished(String command, String returnCode, String description, IApiResults.ICommon result) {
+        if (null == result) {
+            Log.w(TAG, "result is null");
+            return;
+        }
         if(command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
             IApiResults.IResultList res = (IApiResults.IResultList)result;
             int nTotal = res.GetTotalNumber();

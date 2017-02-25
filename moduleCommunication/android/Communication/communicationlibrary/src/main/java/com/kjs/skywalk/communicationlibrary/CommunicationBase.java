@@ -80,7 +80,13 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     String strError = http.getErrorDescription();   // InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Fail to send request to server. error: " +  strError);
                     returnCode = "[" + retValue + "] " + http.getErrorCode();
-                    mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
+                    JSONObject jObject = http.getJsonObject();
+                    if (null != jObject) {
+                        IApiResults.ICommon result = doParseResult(jObject);
+                        mCommandListener.onCommandFinished(mAPI, returnCode, strError, result);
+                    } else {
+                        mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
+                    }
                     doConnectFailed(http);
                     return;
                 }
