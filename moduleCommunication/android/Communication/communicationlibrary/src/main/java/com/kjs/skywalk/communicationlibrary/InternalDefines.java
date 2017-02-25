@@ -32,7 +32,7 @@ class InternalDefines {
         int doConnectFailed(HttpConnector http);
     }
 
-    interface IDebugString4ListItem {
+    interface IListInner {
         int parseListItems(JSONObject obj);
         String ListItem2String(Object item);
     }

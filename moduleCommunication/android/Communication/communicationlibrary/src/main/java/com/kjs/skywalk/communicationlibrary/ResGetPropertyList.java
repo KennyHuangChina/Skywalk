@@ -24,7 +24,7 @@ class ResGetPropertyList extends ResBase implements IApiResults.IResultList {
             return nRes;
         }
 
-        // parse list
+        // parse property list
         nRes = mPropList.parseList(obj);
         if (0 != nRes) {
             return nRes;
@@ -41,13 +41,6 @@ class ResGetPropertyList extends ResBase implements IApiResults.IResultList {
         }
         return mString;
     }
-
-//    protected String ListString() {
-////        for (int n = 0; n < mList.size(); n++) {
-////            mString += ("    item(" + n + "): " + ((ProperryInfo)mList.get(n)).DebugString() + "\n");
-////        }
-//        return mString;
-//    }
 
     @Override
     public int GetTotalNumber() {

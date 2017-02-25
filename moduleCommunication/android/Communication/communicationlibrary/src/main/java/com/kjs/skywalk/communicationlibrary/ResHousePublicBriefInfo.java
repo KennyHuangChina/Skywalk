@@ -13,26 +13,29 @@ import java.util.ArrayList;
  */
 
 class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IResultList {
-    int mHouseId = 0;
-    String mPropertyName = "";
-    String mPropertyAddr = "";
-    int mBedrooms = 0;
-    int mLivingRooms = 0;
-    int mBathrooms = 0;
-    int mAcreage = 0;
-    int mRental = 0;
-    int mPricing = 0;
-    int mCoverImg = 0;
-    TagList mList = null;
+    private int mHouseId = 0;
+    private String mPropertyName = "";
+    private String mPropertyAddr = "";
+    private int mBedrooms = 0;
+    private int mLivingRooms = 0;
+    private int mBathrooms = 0;
+    private int mAcreage = 0;
+    private int mRental = 0;
+    private int mPricing = 0;
+    private int mCoverImg = 0;
+    private TagList mTagList = null;
 
     ResHousePublicBriefInfo(JSONObject obj) {
-        super(obj);
-//        mForceGetList = true;
-        mList = new TagList();
+        mTagList = new TagList();
         parse(obj);
     }
 
     protected int parse(JSONObject obj) {
+        int nRes = super.parse(obj);
+        if (0 != nRes) {
+            return nRes;
+        }
+
         JSONObject objDigest = null;
         try {
             objDigest = obj.getJSONObject("HouseDigest");
@@ -44,6 +47,7 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
             return -1;
         }
 
+        // parse house digest info
         try {
             mHouseId = objDigest.getInt("Id");
             mPropertyName = objDigest.getString("Property");
@@ -61,26 +65,12 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
             return -2;
         }
 
-        return super.parse(objDigest);
-    }
+        // parse property list
+        nRes = mTagList.parseList(objDigest);
+        if (0 != nRes) {
+            return nRes;
+        }
 
-    protected int parseList(JSONObject obj) {
-//        JSONArray array = null;
-//        try {
-//            array = obj.getJSONArray("Tags");
-//            if (null == array) {
-//                return -1;
-//            }
-//            for (int i = 0; i < array.length(); i++) {
-//                HouseTag newTag = new HouseTag(array.getJSONObject(i));
-//                if (null == newTag) {
-//                    return -2;
-//                }
-//                mList.add(newTag);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
         return 0;
     }
 
@@ -119,15 +109,12 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         mString += (" Rental: " + mRental + "\n");
         mString += (" Pricing: " + mPricing + "\n");
         mString += (" CoverImg: " + mCoverImg + "\n");
-        return mString;
-    }
 
-//    @Override
-    protected String ListString() {
-//        for (int i = 0; i < mList.size(); i++) {
-//            mString += "   Tag(" + (i + 1) + ") -- " + mList.get(i).toString();
-//        }
-        return "";
+        if (null != mTagList) {
+            mString += mTagList.DebugList();
+        }
+
+        return mString;
     }
 
     @Override
@@ -147,10 +134,39 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
 
     class TagList extends ResList {
         TagList() {
-            super();
+            mForceGetList = true;   // list without properties: total & fetched
         }
 
-        class HouseTag implements IApiResults.IHouseTag {
+        @Override
+        public int parseListItems(JSONObject obj) {
+            try {
+                JSONArray array = obj.getJSONArray("Tags");
+                if (null == array) {
+                    return -1;
+                }
+                for (int n = 0; n < array.length(); n++) {
+                    HouseTag newProp = new HouseTag(array.getJSONObject(n));
+                    if (null == newProp) {
+                        return -2;
+                    }
+                    mList.add(newProp);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return -3;
+            }
+
+            return 0;
+        }
+        @Override
+        public String ListItem2String(Object item) {
+            if (null == item) {
+                return "";
+            }
+            return ((HouseTag)item).ListItemInfo2String();
+        }
+
+        class HouseTag implements IApiResults.IHouseTag, InternalDefines.IListItemInfoInner {
             int mTagId = 0;
             String mTagName = "";
 
@@ -172,6 +188,10 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
             public String toString() {
                 String str = "" + mTagId + ": " + mTagName + "\n";
                 return str;
+            }
+            @Override
+            public String ListItemInfo2String() {
+                return "" + mTagId + ": " + mTagName + "\n";
             }
         }
     }

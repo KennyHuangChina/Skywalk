@@ -12,11 +12,11 @@ import java.util.ArrayList;
  * Created by kenny on 2017/2/23.
  */
 
-class ResList implements InternalDefines.IDebugString4ListItem {
+class ResList implements InternalDefines.IListInner {
     private int mTotal = 0;
     private int mFetched = 0;
     protected ArrayList<Object> mList = null;
-    protected boolean mForceGetList = false;
+    protected boolean mForceGetList = false;    // true: list without properties: total & fetched; false - list with properties: total & fetched
 
     ResList() {
         mList = new ArrayList();
