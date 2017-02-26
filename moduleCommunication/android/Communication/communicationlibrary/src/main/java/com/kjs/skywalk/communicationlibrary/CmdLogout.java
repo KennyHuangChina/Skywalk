@@ -33,7 +33,7 @@ class CmdLogout extends CommunicationBase {
     }
 
     @Override
-    public IApiResults.ICommon doParseResult(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         // Clear the current login session
        SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
         if (null == sessStore) {

@@ -20,7 +20,7 @@ class InternalDefines {
         boolean checkParameter(HashMap<String, String> map);
     }
     public interface CreateResult {
-        IApiResults.ICommon doParseResult(JSONObject jObject);
+        IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject);
     }
     public interface BeforeConnect {
         int doBeforeConnect(HttpConnector http);
@@ -60,12 +60,28 @@ class InternalDefines {
     public static final int     ERROR_CODE_HTTP_REQUEST_FAILED              = 0x80001003;
     public static final int     ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND       = 0x80001004;
     public static final int     ERROR_CODE_HTTP_UNKNOWN_HOST                = 0x80001005;
+    public static final int     ERROR_CODE_CONNECTION_REFUSED               = 0x80001006;
+    public static final int     ERROR_CODE_SCOCKET_TIMEOUT                  = 0x80001007;
+    public static final int     ERROR_CODE_NETWORK_UNREACH                  = 0x80001008;
+    public static final int     ERROR_CODE_HOST_UNREACH                     = 0x80001009;
+    public static final int     ERROR_CODE_PROTOCOL                         = 0x8000100A;
 
     //Error Description
     private static HashMap<Integer, String> errorMap;
 
     static {
         errorMap = new HashMap<Integer, String>();
+        errorMap.put(ERROR_CODE_HTTP_INVALID_URL, "ERROR_CODE_HTTP_INVALID_URL");
+        errorMap.put(ERROR_CODE_HTTP_CONNECTION, "ERROR_CODE_HTTP_CONNECTION");
+        errorMap.put(ERROR_CODE_HTTP_CONNECTION_SSL, "ERROR_CODE_HTTP_CONNECTION_SSL");
+        errorMap.put(ERROR_CODE_HTTP_REQUEST_FAILED, "ERROR_CODE_HTTP_REQUEST_FAILED");
+        errorMap.put(ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND, "ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND");
+        errorMap.put(ERROR_CODE_HTTP_UNKNOWN_HOST, "ERROR_CODE_HTTP_UNKNOWN_HOST");
+        errorMap.put(ERROR_CODE_CONNECTION_REFUSED, "ERROR_CODE_CONNECTION_REFUSED");
+        errorMap.put(ERROR_CODE_SCOCKET_TIMEOUT, "ERROR_CODE_SCOCKET_TIMEOUT");
+        errorMap.put(ERROR_CODE_NETWORK_UNREACH, "ERROR_CODE_NETWORK_UNREACH");
+        errorMap.put(ERROR_CODE_HOST_UNREACH, "ERROR_CODE_HOST_UNREACH");
+        errorMap.put(ERROR_CODE_PROTOCOL, "ERROR_CODE_PROTOCOL");
     }
 
     public static String getErrorDescription(int errCode) {

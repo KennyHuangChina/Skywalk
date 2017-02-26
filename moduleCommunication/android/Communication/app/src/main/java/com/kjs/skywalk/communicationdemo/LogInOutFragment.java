@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
@@ -190,22 +191,24 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(String command, String returnCode, String description, IApiResults.ICommon result) {
-        if (!returnCode.equals("0")) {
-            Log.e(TAG, "Command:"+ command + " finished with error: " + description);
-            showError(command, returnCode, description);
+    public void onCommandFinished(String command, IApiResults.ICommon result) {
+        if (null == result) {
+            Log.w(TAG, "result is null");
             return;
         }
-        Log.e(TAG, "Command:"+ command + " finished successes");
-//        showResult(command, map);
+        mResultString = "Request: " + command + "\n" + result.DebugString();
 
-        if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
-            IApiResults.IGetUserSalt slt = (IApiResults.IGetUserSalt)result;
-            mSalt = slt.GetSalt();
-            mRand = slt.GetRandom();
-        }
-        if (null != result) {
-            mResultString = result.DebugString();
+        if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
+            Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
+//            showError(command, returnCode, description);
+//            return;
+        } else {
+            Log.e(TAG, "Command:"+ command + " finished successes");
+            if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
+                IApiResults.IGetUserSalt slt = (IApiResults.IGetUserSalt)result;
+                mSalt = slt.GetSalt();
+                mRand = slt.GetRandom();
+            }
         }
 
         getActivity().runOnUiThread(new Runnable() {

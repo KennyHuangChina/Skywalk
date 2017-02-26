@@ -21,6 +21,7 @@ class CommandTest extends CommunicationBase {
     CommandTest(Context context) {
         super(context);
         TAG = "CommandTest";
+        mAPI = CommunicationCommand.CC_TEST;
         Log.i(TAG, "Constructor");
         mMethodType = "POST";
     }
@@ -30,8 +31,8 @@ class CommandTest extends CommunicationBase {
     }
 
     @Override
-    public IApiResults.ICommon doParseResult(JSONObject jObject) {
-        ResBase result = new ResBase(jObject);
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
+        ResBase result = new ResBase(nErrCode, jObject);
         return result;
     }
 

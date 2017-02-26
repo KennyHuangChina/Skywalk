@@ -110,7 +110,7 @@ class CmdRelogin extends CommunicationBase {
     }
 
     @Override
-    public IApiResults.ICommon doParseResult(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         // Store the current login session
         try {
             SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
@@ -124,7 +124,7 @@ class CmdRelogin extends CommunicationBase {
             return null;
         }
 
-        ResLogin result = new ResLogin(jObject);
+        ResLogin result = new ResLogin(nErrCode, jObject);
         return result;
     }
 }

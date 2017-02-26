@@ -60,53 +60,49 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 String returnCode = "";
                 int retValue = InternalDefines.ERROR_CODE_OK;
                 HttpConnector http = new HttpConnector(mContext);
-                Log.i("(mServerURL:", mServerURL);
-                Log.i("(mCommandURL:", mCommandURL);
                 http.setURL(mServerURL, mCommandURL);
                 http.setRequestMethod(mMethodType);
                 http.setRequestData(mRequestData);
+
                 doBeforeConnect(http);
-                if((retValue = http.connect()) != InternalDefines.ERROR_CODE_OK) {
+                if ((retValue = http.connect()) != InternalDefines.ERROR_CODE_OK) {
                     String strError = InternalDefines.getErrorDescription(retValue);
                     Log.e(TAG, "Fail to connect to server. error: " +  strError);
                     returnCode = "" + retValue;
-                    mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
+                    mCommandListener.onCommandFinished(mAPI, null);
                     doConnectFailed(http);
                     return;
                 }
 
-                if((retValue = http.sendRequest()) != InternalDefines.ERROR_CODE_OK) {
-                    http.disconnect();
-                    String strError = http.getErrorDescription();   // InternalDefines.getErrorDescription(retValue);
-                    Log.e(TAG, "Fail to send request to server. error: " +  strError);
-                    returnCode = "[" + retValue + "] " + http.getErrorCode();
-                    JSONObject jObject = http.getJsonObject();
-                    if (null != jObject) {
-                        IApiResults.ICommon result = doParseResult(jObject);
-                        mCommandListener.onCommandFinished(mAPI, returnCode, strError, result);
-                    } else {
-                        mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
-                    }
-                    doConnectFailed(http);
-                    return;
-                }
-
+                retValue = http.sendRequest();
                 http.disconnect();
 
-                JSONObject jObject = http.getJsonObject();
-                if(jObject == null) {
-                    String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
-                    returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
-                    mCommandListener.onCommandFinished(mAPI, returnCode, strError, null);
+                if (retValue != InternalDefines.ERROR_CODE_OK) {
+                    String strError = http.getErrorDescription();   // InternalDefines.getErrorDescription(retValue);
+                    Log.e(TAG, "Fail to send request to server. error: " +  strError);
+//                    returnCode = "[" + retValue + "] " + http.getErrorCode();
+                    int nErrCode = http.getErrorCode();
+                    JSONObject jObject = http.getJsonObject();
+                    IApiResults.ICommon result = doParseResult(nErrCode, jObject);
+                    mCommandListener.onCommandFinished(mAPI, result);
                     doConnectFailed(http);
                     return;
                 }
 
-                IApiResults.ICommon result = doParseResult(jObject);
+                JSONObject jObject = http.getJsonObject();
+                if (jObject == null) {
+//                    String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
+//                    returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+                    mCommandListener.onCommandFinished(mAPI, null);
+                    doConnectFailed(http);
+                    return;
+                }
+
+                IApiResults.ICommon result = doParseResult(InternalDefines.ERROR_CODE_OK, jObject);
 
                 String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
-                mCommandListener.onCommandFinished(mAPI, returnCode, strError, result);
+                mCommandListener.onCommandFinished(mAPI, result);
 
                 doAfterConnect(http);
 
@@ -122,7 +118,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     }
 
     @Override
-    public IApiResults.ICommon doParseResult(JSONObject jObject) {
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         return null;
     }
 

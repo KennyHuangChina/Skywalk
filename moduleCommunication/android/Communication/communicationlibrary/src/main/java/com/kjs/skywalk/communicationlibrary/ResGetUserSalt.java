@@ -14,7 +14,8 @@ class ResGetUserSalt extends ResBase implements IApiResults.IGetUserSalt {
     private String mSalt = "";
     private String mRandom = "";
 
-    ResGetUserSalt(JSONObject jObject) {
+    ResGetUserSalt(int nErrCode, JSONObject jObject) {
+        super(nErrCode);
         parse(jObject);
     }
 
@@ -28,12 +29,7 @@ class ResGetUserSalt extends ResBase implements IApiResults.IGetUserSalt {
         return mString;
     }
 
-    protected int parse(JSONObject obj) {
-        int nRet = super.parse(obj);
-        if (0 != nRet) {
-            return nRet;
-        }
-
+    protected int parseResult(JSONObject obj) {
         try {
             mSalt = obj.getString("Salt");
             mRandom = obj.getString("Random");

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
@@ -51,7 +52,6 @@ class HttpConnector {
     private String mUploadFile = "";
     private URL mURL = null;
     private HttpURLConnection mConnection = null;
-    private String mResponseString = "";
     private boolean mReadCookie = false;
     private boolean mWriteCookie = false;
     private SKCookieManager mCookieManager = null;
@@ -197,8 +197,7 @@ class HttpConnector {
         }
 
         mJsonObj = null;
-        mResponseString = "";
-        if(mWriteCookie) {
+        if (mWriteCookie) {
             String cookie = mCookieManager.getCookie(mConnection.getURL().toString());
             Log.i(InternalDefines.TAG_HTTPConnector, "Send Cookie: " + cookie);
             if (cookie != null && !cookie.isEmpty()) {
@@ -207,12 +206,12 @@ class HttpConnector {
         }
 
         try {
-            if(mMethod.equals("POST")) {
+            if (mMethod.equals("POST")) {
                 File srcFile = null;
                 boolean uploadFile = false;
-                if(!mUploadFile.isEmpty()) {
+                if (!mUploadFile.isEmpty()) {
                     srcFile = new File(mUploadFile);
-                    if(srcFile.exists()) {
+                    if (srcFile.exists()) {
                         uploadFile = true;
                     }
                 }
@@ -222,24 +221,23 @@ class HttpConnector {
                 mConnection.setUseCaches(false);
                 mConnection.setRequestProperty("Content-type", "multipart/form-data;boundary=" + BOUNDARY_STRING);
 //                mConnection.setFixedLengthStreamingMode(strRequestData.length());
-                DataOutputStream wr = new DataOutputStream (mConnection.getOutputStream());
+                DataOutputStream wr = new DataOutputStream(mConnection.getOutputStream());
 
                 if (!mRequestData.isEmpty()) {
                     String list[] = mRequestData.split("&");
-                for(int i= 0; i < list.length; i ++) {
-                    String tmpString = list[i];
-                    int nPos = tmpString.indexOf("=");
-                    if(nPos >= 0) {
-                        String str0 = tmpString.substring(0, nPos);
-                        String str1 = tmpString.substring(nPos + 1, tmpString.length());
-                        if(str0 != null && !str0.isEmpty()) {
-                            wr.writeBytes(BOUNDARY_START);
-                            String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", str0, str1);
-                            Log.i(InternalDefines.TAG_HTTPConnector, strLine);
-                            wr.writeBytes(strLine);
+                    for (int i = 0; i < list.length; i++) {
+                        String tmpString = list[i];
+                        int nPos = tmpString.indexOf("=");
+                        if (nPos >= 0) {
+                            String str0 = tmpString.substring(0, nPos);
+                            String str1 = tmpString.substring(nPos + 1, tmpString.length());
+                            if (str0 != null && !str0.isEmpty()) {
+                                wr.writeBytes(BOUNDARY_START);
+                                String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", str0, str1);
+                                Log.i(InternalDefines.TAG_HTTPConnector, strLine);
+                                wr.writeBytes(strLine);
+                            }
                         }
-                    }
-
 //                    String tmp[] = list[i].split("=");
 //                    if (tmp.length == 2) {
 //                        String name = tmp[0];
@@ -249,10 +247,10 @@ class HttpConnector {
 //                        Log.i(InternalDefines.TAG_HTTPConnector, strLine);
 //                        wr.writeBytes(strLine);
 //                    }
-                }
+                    }
                 }
 
-                if(uploadFile) {
+                if (uploadFile) {
                     DataInputStream fileIS;
                     try {
                         wr.writeBytes(BOUNDARY_START);
@@ -282,88 +280,109 @@ class HttpConnector {
                 wr.writeBytes(BOUNDARY_END);
                 wr.writeBytes("\r\n");
                 wr.flush();
-            } else if(mMethod.equals("GET")) {
+            } else if (mMethod.equals("GET")) {
                 mConnection.setRequestMethod(mMethod);
                 mConnection.setDoOutput(false);
             }
 
-            if(mReadCookie) {
+            if (mReadCookie) {
                 Map<String, List<String>> map = mConnection.getHeaderFields();
                 String cookieFromServer = mConnection.getHeaderField("Set-Cookie");
                 mCookieManager.setCookie(mConnection.getURL().toString(), cookieFromServer);
             }
 
             InputStream in = new BufferedInputStream(mConnection.getInputStream());
-            byte[] response = new byte[256];
-            while (true) {
-                int ret;
-                try {
-                    ret = in.read(response);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                    break;
-                }
-                if (ret > 0) {
-                    String temp = new String(response, 0, ret);
-                    mResponseString += temp;
-                } else {
-                    break;
-                }
-            }
+            mJsonObj = getResponsObject(in);
+            return InternalDefines.ERROR_CODE_OK;
 
-            try {
-                JSONObject json = new JSONObject(mResponseString);
-                mErrorCode = json.getInt("ErrCode");
-                mErrorDescription = json.getString("ErrString");
-                if(json.has("Token")) {
-                    mToken = json.getString("Token");
-                } else {
-                    mToken = "";
-                }
-
-                mJsonObj = json;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mErrorCode = -1;
-                mErrorDescription = "Unknown Error";
-                return InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
-            }
+        } catch (ProtocolException e1) {
+            e1.printStackTrace();
+            mErrorCode = InternalDefines.ERROR_CODE_PROTOCOL;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mErrorCode = InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
         } catch (UnknownHostException eHost) {
             eHost.printStackTrace();
-            return InternalDefines.ERROR_CODE_HTTP_UNKNOWN_HOST;
+            mErrorCode = InternalDefines.ERROR_CODE_HTTP_UNKNOWN_HOST;
         } catch (IOException e) {
             e.printStackTrace();
+            if (-1 != (mErrorCode = checkIOException(e))) {
+                return mErrorCode;
+            }
+
             InputStream in = new BufferedInputStream(mConnection.getErrorStream());
-            byte[] response = new byte[256];
-            int ret = 0;
             try {
-                ret = in.read(response);
+                mJsonObj = getResponsObject(in);
             } catch (IOException e1) {
                 e1.printStackTrace();
-                mErrorCode = -1;
-                mErrorDescription = "Unknown Error";
-            }
-            if (ret > 0) {  // server rejected this device to register
+                mErrorCode = InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+            } catch (JSONException e1) {
+                e1.printStackTrace();
                 try {
-                    JSONObject json = new JSONObject(new String(response, 0, ret));
-                    mErrorCode = json.getInt("ErrCode");
-                    mErrorDescription = json.getString("ErrString");
-                    mJsonObj = json;
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    try {
-                        mErrorCode = mConnection.getResponseCode();
-                        mErrorDescription = mConnection.getResponseMessage();
-                    } catch (IOException e2) {
-                        mErrorCode = -1;
-                        mErrorDescription = "Unknown Error";
-                    }
+                    mErrorCode = mConnection.getResponseCode();
+//                    mErrorDescription = mConnection.getResponseMessage();
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                    mErrorCode = InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
                 }
             }
-            return InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+        }
+        return mErrorCode;
+    }
+
+    private JSONObject getResponsObject(InputStream is) throws IOException, JSONException {
+        String RespondString = "";
+        byte[] response = new byte[1400];
+        JSONObject json = null;
+
+//        try {
+            while (true) {
+                int ret = is.read(response);
+                if (ret > 0) {
+                    String temp = new String(response, 0, ret);
+                    RespondString += temp;
+                } else {
+                    break;
+                }
+            }
+
+            if (RespondString.length() > 0) {
+                json = new JSONObject(RespondString);
+                mErrorCode = json.getInt("ErrCode");
+                mErrorDescription = json.getString("ErrString");
+            }
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+        return json;
+    }
+
+    private int checkIOException(IOException exception) {
+        int nErrCode = -1;
+        if (exception instanceof java.net.SocketTimeoutException) {
+            nErrCode = InternalDefines.ERROR_CODE_SCOCKET_TIMEOUT;
+        } else if (exception instanceof java.net.ConnectException) {
+            String err = exception.getMessage();
+            if (err.indexOf("ENETUNREACH") >= 0) {
+                nErrCode = InternalDefines.ERROR_CODE_NETWORK_UNREACH;
+            } else if (err.indexOf("EHOSTUNREACH") >= 0) {
+                nErrCode = InternalDefines.ERROR_CODE_HOST_UNREACH;
+            } else if (err.indexOf("ECONNREFUSED") >= 0) {
+                nErrCode = InternalDefines.ERROR_CODE_CONNECTION_REFUSED;
+            } else {
+                Log.w(InternalDefines.TAG_HTTPConnector, "error string: " + err);
+            }
+        } else if (exception instanceof java.io.FileNotFoundException) {
+            // file not found, but this is real result returned by server, so we need to do
+            //   further checking by respond string of request
+        } else {
+            Log.w(InternalDefines.TAG_HTTPConnector, "Untyped exception");
         }
 
-        return InternalDefines.ERROR_CODE_OK;
+        return nErrCode;
     }
 
     private int getRawID(Context context, String name)

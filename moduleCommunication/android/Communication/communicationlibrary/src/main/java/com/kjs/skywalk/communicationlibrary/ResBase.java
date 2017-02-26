@@ -8,15 +8,27 @@ import org.json.JSONObject;
  */
 
 class ResBase implements IApiResults.ICommon {
-    int  mErrCode = -1; // Unknown
-    String mErrDesc = "";
-    String mString = "";
+    protected  int      mErrCode    = -1; // Unknown
+    protected  String   mErrDesc    = "";
+    protected  String   mString     = "";
 
-    ResBase() {
+    ResBase(int nErrCode) {
+        mErrCode = nErrCode;
     }
 
-    ResBase(JSONObject jObject) {
+    ResBase(int nErrCode, JSONObject jObject) {
+        mErrCode = nErrCode;
         parse(jObject);
+    }
+
+    @Override
+    public int GetErrCode() {
+        return mErrCode;
+    }
+
+    @Override
+    public String GetErrDesc() {
+        return mErrDesc;
     }
 
     @Override
@@ -27,17 +39,24 @@ class ResBase implements IApiResults.ICommon {
     }
 
     protected int parse(JSONObject obj) {
-        if (null == obj) {
-            return -1;
-        }
-        try {
-            mErrCode = obj.getInt("ErrCode");
-            mErrDesc = obj.getString("ErrString");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return -2;
+        if (null != obj) {  // decode error and information from jason object
+            try {
+                mErrCode = obj.getInt("ErrCode");
+                mErrDesc = obj.getString("ErrString");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return -2;
+            }
+            return parseResult(obj);
+
+        } else {    // use the error code passed in
+            mErrDesc = InternalDefines.getErrorDescription(mErrCode);
         }
 
+        return 0;
+    }
+
+    protected int parseResult(JSONObject obj) {
         return 0;
     }
 }

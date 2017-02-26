@@ -78,8 +78,8 @@ class CmdGetPropertyList extends CommunicationBase {
     }
 
     @Override
-    public IApiResults.ICommon doParseResult(JSONObject jObject) {
-        ResGetPropertyList result = new ResGetPropertyList(jObject);
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
+        ResGetPropertyList result = new ResGetPropertyList(nErrCode, jObject);
         return result;
     }
 

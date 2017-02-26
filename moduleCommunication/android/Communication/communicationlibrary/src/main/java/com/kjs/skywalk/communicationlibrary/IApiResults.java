@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class IApiResults {
     public interface ICommon {
+        int GetErrCode();
+        String GetErrDesc();
         String DebugString();
     }
 

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
@@ -125,33 +126,40 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(String command, String returnCode, String description, IApiResults.ICommon result) {
+    public void onCommandFinished(String command, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
         }
-        if(command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
-            IApiResults.IResultList res = (IApiResults.IResultList)result;
-            int nTotal = res.GetTotalNumber();
-            mListTotal = nTotal;
-            int nFetched = res.GetFetchedNumber();
-            if (nFetched > 0 ) {
-                ArrayList<Object> arry = res.GetList();
-                IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo)arry.get(0);
-                prop.GetName();
-            }
-        } else if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
-            IApiResults.IHouseDigest res = (IApiResults.IHouseDigest)result;
-            res.GetHouseId();
+        mResultString = "Request: " + command + "\n" + result.DebugString();
 
-            IApiResults.IResultList lst = (IApiResults.IResultList)result;
-            if (lst.GetFetchedNumber() > 0) {
-                ArrayList<Object> arry = lst.GetList();
-                IApiResults.IHouseTag tag = (IApiResults.IHouseTag)arry.get(0);
-                tag.GetName();
+        if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
+            Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
+//            showError(command, returnCode, description);
+//            return;
+        } else {
+            if (command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
+                IApiResults.IResultList res = (IApiResults.IResultList) result;
+                int nTotal = res.GetTotalNumber();
+                mListTotal = nTotal;
+                int nFetched = res.GetFetchedNumber();
+                if (nFetched > 0) {
+                    ArrayList<Object> arry = res.GetList();
+                    IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
+                    prop.GetName();
+                }
+            } else if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
+                IApiResults.IHouseDigest res = (IApiResults.IHouseDigest) result;
+                res.GetHouseId();
+
+                IApiResults.IResultList lst = (IApiResults.IResultList) result;
+                if (lst.GetFetchedNumber() > 0) {
+                    ArrayList<Object> arry = lst.GetList();
+                    IApiResults.IHouseTag tag = (IApiResults.IHouseTag) arry.get(0);
+                    tag.GetName();
+                }
             }
         }
-        mResultString = result.DebugString();
 
         getActivity().runOnUiThread(new Runnable() {
             @Override

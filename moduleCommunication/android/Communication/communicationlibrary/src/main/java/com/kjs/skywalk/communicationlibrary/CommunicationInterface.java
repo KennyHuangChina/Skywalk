@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class CommunicationInterface {
     public interface CICommandListener {
-        void onCommandFinished(final String command, final String returnCode, final String description, final IApiResults.ICommon res);
+        void onCommandFinished(final String command, final IApiResults.ICommon res);
     }
 
     public interface CIProgressListener {

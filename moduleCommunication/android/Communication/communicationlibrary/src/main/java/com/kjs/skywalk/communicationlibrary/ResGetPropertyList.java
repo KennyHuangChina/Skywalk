@@ -12,25 +12,15 @@ class ResGetPropertyList extends ResBase implements IApiResults.IResultList {
 
     private PropertyList mPropList = null;
 
-    ResGetPropertyList(JSONObject obj) {
-//        super(obj);
+    ResGetPropertyList(int nErrCode, JSONObject obj) {
+        super(nErrCode);
         mPropList = new PropertyList();
         parse(obj);
     }
 
-    protected int parse(JSONObject obj) {
-        int nRes = super.parse(obj);
-        if (0 != nRes) {
-            return nRes;
-        }
-
+    protected int parseResult(JSONObject obj) {
         // parse property list
-        nRes = mPropList.parseList(obj);
-        if (0 != nRes) {
-            return nRes;
-        }
-
-        return 0;
+        return mPropList.parseList(obj);
     }
 
     @Override

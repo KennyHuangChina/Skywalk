@@ -25,30 +25,17 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
     private int mCoverImg = 0;
     private TagList mTagList = null;
 
-    ResHousePublicBriefInfo(JSONObject obj) {
+    ResHousePublicBriefInfo(int nErrCode, JSONObject obj) {
+        super(nErrCode);
         mTagList = new TagList();
         parse(obj);
     }
 
-    protected int parse(JSONObject obj) {
-        int nRes = super.parse(obj);
-        if (0 != nRes) {
-            return nRes;
-        }
-
+    protected int parseResult(JSONObject obj) {
         JSONObject objDigest = null;
         try {
             objDigest = obj.getJSONObject("HouseDigest");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return -1;
-        }
-        if (null == objDigest) {
-            return -1;
-        }
-
-        // parse house digest info
-        try {
+            // parse house digest info
             mHouseId = objDigest.getInt("Id");
             mPropertyName = objDigest.getString("Property");
             mPropertyAddr = objDigest.getString("PropertyAddr");
@@ -62,16 +49,11 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
 
         } catch (JSONException e) {
             e.printStackTrace();
-            return -2;
+            return -1;
         }
 
-        // parse property list
-        nRes = mTagList.parseList(objDigest);
-        if (0 != nRes) {
-            return nRes;
-        }
-
-        return 0;
+        // parse house tag list
+        return mTagList.parseList(objDigest);
     }
 
     @Override

@@ -12,18 +12,18 @@ import org.json.JSONObject;
 public class ResLogin extends ResBase implements IApiResults.ILogin {
     private String mSession = "";
 
-    ResLogin(JSONObject jObject) {
+    ResLogin(int nErrCode, JSONObject jObject) {
+        super(nErrCode);
         parse(jObject);
     }
 
-    protected int parse(JSONObject obj) {
+    protected int parseResult(JSONObject obj) {
         try {
             mSession = obj.getString("Sid");
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
         }
-
         return 0;
     }
 
