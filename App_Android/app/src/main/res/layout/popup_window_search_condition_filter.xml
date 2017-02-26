@@ -11,102 +11,15 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/buttons">
+        android:layout_above="@+id/buttons"
+        android:id="@+id/scrollViewFilterContainer">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" >
-                    <TextView
-                        android:text="房源标签"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/text_size_search_condition_filter_title"
-                        android:textColor="@android:color/black"
-                        android:paddingLeft="14dp"
-                        android:gravity="center_vertical"
-                        android:id="@+id/textViewTitleSourceTag" />
-                </RelativeLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp">
-                    <TextView
-                        android:text="上门实勘"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="满五唯一"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="满两年"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="南北通透"
-                        style="@style/text_view_search_condition_filter_item" />
-                </LinearLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="21">
-                    <TextView
-                        android:text="无贷款"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="电梯房"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="靠近学校"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="靠近地铁"
-                        style="@style/text_view_search_condition_filter_item" />
-                </LinearLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginTop="8dp"
-                    android:weightSum="4">
-                    <TextView
-                        android:id="@+id/textView_jin_ri_ke_kan"
-                        android:text="今日可看"
-                        style="@style/text_view_search_condition_filter_item" />
-
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible"/>
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible"/>
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible"/>
-
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/items_source_tag_search_condition_filter" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -117,69 +30,7 @@
                 android:layout_marginRight="14dp"
                 android:background="#E5E5E5" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" >
-                    <TextView
-                        android:text="面积"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/text_size_search_condition_filter_title"
-                        android:textColor="@android:color/black"
-                        android:paddingLeft="14dp"
-                        android:gravity="center_vertical"
-                        android:id="@+id/textViewTitleAreas" />
-                </RelativeLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp">
-                    <TextView
-                        android:text="50平以下"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:id="@+id/textView_50_70"
-                        android:text="50-70平"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="70-90平"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="90-120平"
-                        style="@style/text_view_search_condition_filter_item" />
-                </LinearLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="21">
-                    <TextView
-                        android:text="120-150平"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="150-200平"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="200平以上"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible"/>
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/items_area_search_condition_filter" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -190,46 +41,7 @@
                 android:layout_marginRight="14dp"
                 android:background="#E5E5E5" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" >
-                    <TextView
-                        android:text="房龄"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/text_size_search_condition_filter_title"
-                        android:textColor="@android:color/black"
-                        android:paddingLeft="14dp"
-                        android:gravity="center_vertical"
-                        android:id="@+id/textViewTitleHouseAge" />
-                </RelativeLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp">
-                    <TextView
-                        android:text="五年以内"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="5-10年"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="10-20年"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="20年+"
-                        style="@style/text_view_search_condition_filter_item" />
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/items_house_age_search_condition_filter" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -240,47 +52,7 @@
                 android:layout_marginRight="14dp"
                 android:background="#E5E5E5" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" >
-                    <TextView
-                        android:text="产权年限"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/text_size_search_condition_filter_title"
-                        android:textColor="@android:color/black"
-                        android:paddingLeft="14dp"
-                        android:gravity="center_vertical"
-                        android:id="@+id/textViewTitlePropertyYears" />
-                </RelativeLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp">
-                    <TextView
-                        android:text="40年"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="50年"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="70年"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible"/>
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/items_property_years_search_condition_filter" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -291,47 +63,7 @@
                 android:layout_marginRight="14dp"
                 android:background="#E5E5E5" />
 
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" >
-                    <TextView
-                        android:text="楼高"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/text_size_search_condition_filter_title"
-                        android:textColor="@android:color/black"
-                        android:paddingLeft="14dp"
-                        android:gravity="center_vertical"
-                        android:id="@+id/textViewTitleHouseHeight" />
-                </RelativeLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp">
-                    <TextView
-                        android:text="洋房(1-3)"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="多层(4-6)"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="小高层(7-11)"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="高层(12+)"
-                        style="@style/text_view_search_condition_filter_item" />
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/items_house_height_search_condition_filter" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -342,70 +74,7 @@
                 android:layout_marginRight="14dp"
                 android:background="#E5E5E5" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" >
-                    <TextView
-                        android:text="楼层高"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/text_size_search_condition_filter_title"
-                        android:textColor="@android:color/black"
-                        android:paddingLeft="14dp"
-                        android:gravity="center_vertical"
-                        android:id="@+id/textViewTitleFloor" />
-                </RelativeLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="21"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp">
-                    <TextView
-                        android:text="底层区"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="中层区"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="高层区"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text="非顶层"
-                        style="@style/text_view_search_condition_filter_item" />
-                </LinearLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="21">
-                    <TextView
-                        android:text="非底层"
-                        style="@style/text_view_search_condition_filter_item" />
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible" />
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible" />
-                    <TextView
-                        android:text=""
-                        style="@style/text_view_search_condition_filter_item"
-                        android:visibility="invisible"/>
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/items_floor_search_condition_filter" />
 
             <LinearLayout
                 android:orientation="vertical"
