@@ -57,6 +57,14 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // check network status
+                ConnectionDetector cd = new ConnectionDetector(mContext);
+                if (!cd.isConnectingToInternet()) {
+                    IApiResults.ICommon result = doParseResult(InternalDefines.ERROR_CODE_NETWORK_NOTAVAILABLE, null);
+                    mCommandListener.onCommandFinished(mAPI, result);
+                    return;
+                }
+
                 String returnCode = "";
                 int retValue = InternalDefines.ERROR_CODE_OK;
                 HttpConnector http = new HttpConnector(mContext);

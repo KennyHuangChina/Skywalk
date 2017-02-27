@@ -65,23 +65,25 @@ class InternalDefines {
     public static final int     ERROR_CODE_NETWORK_UNREACH                  = 0x80001008;
     public static final int     ERROR_CODE_HOST_UNREACH                     = 0x80001009;
     public static final int     ERROR_CODE_PROTOCOL                         = 0x8000100A;
+    public static final int     ERROR_CODE_NETWORK_NOTAVAILABLE             = 0x8000100B;
 
     //Error Description
     private static HashMap<Integer, String> errorMap;
 
     static {
         errorMap = new HashMap<Integer, String>();
-        errorMap.put(ERROR_CODE_HTTP_INVALID_URL, "ERROR_CODE_HTTP_INVALID_URL");
-        errorMap.put(ERROR_CODE_HTTP_CONNECTION, "ERROR_CODE_HTTP_CONNECTION");
-        errorMap.put(ERROR_CODE_HTTP_CONNECTION_SSL, "ERROR_CODE_HTTP_CONNECTION_SSL");
-        errorMap.put(ERROR_CODE_HTTP_REQUEST_FAILED, "ERROR_CODE_HTTP_REQUEST_FAILED");
-        errorMap.put(ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND, "ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND");
-        errorMap.put(ERROR_CODE_HTTP_UNKNOWN_HOST, "ERROR_CODE_HTTP_UNKNOWN_HOST");
-        errorMap.put(ERROR_CODE_CONNECTION_REFUSED, "ERROR_CODE_CONNECTION_REFUSED");
-        errorMap.put(ERROR_CODE_SCOCKET_TIMEOUT, "ERROR_CODE_SCOCKET_TIMEOUT");
-        errorMap.put(ERROR_CODE_NETWORK_UNREACH, "ERROR_CODE_NETWORK_UNREACH");
-        errorMap.put(ERROR_CODE_HOST_UNREACH, "ERROR_CODE_HOST_UNREACH");
-        errorMap.put(ERROR_CODE_PROTOCOL, "ERROR_CODE_PROTOCOL");
+        errorMap.put(ERROR_CODE_HTTP_INVALID_URL, "ERROR_CODE_HTTP_INVALID_URL: invalid http url");
+        errorMap.put(ERROR_CODE_HTTP_CONNECTION, "ERROR_CODE_HTTP_CONNECTION: error http connection");
+        errorMap.put(ERROR_CODE_HTTP_CONNECTION_SSL, "ERROR_CODE_HTTP_CONNECTION_SSL: error https connection");
+        errorMap.put(ERROR_CODE_HTTP_REQUEST_FAILED, "ERROR_CODE_HTTP_REQUEST_FAILED: sending http request failed");
+        errorMap.put(ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND, "ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND: http resource not found");
+        errorMap.put(ERROR_CODE_HTTP_UNKNOWN_HOST, "ERROR_CODE_HTTP_UNKNOWN_HOST: unknown host");
+        errorMap.put(ERROR_CODE_CONNECTION_REFUSED, "ERROR_CODE_CONNECTION_REFUSED: connection get refused");
+        errorMap.put(ERROR_CODE_SCOCKET_TIMEOUT, "ERROR_CODE_SCOCKET_TIMEOUT: socket timeout");
+        errorMap.put(ERROR_CODE_NETWORK_UNREACH, "ERROR_CODE_NETWORK_UNREACH: network is unreachable");
+        errorMap.put(ERROR_CODE_HOST_UNREACH, "ERROR_CODE_HOST_UNREACH: host is unreachalbe");
+        errorMap.put(ERROR_CODE_PROTOCOL, "ERROR_CODE_PROTOCOL: inalid protocol");
+        errorMap.put(ERROR_CODE_NETWORK_NOTAVAILABLE, "ERROR_CODE_NETWORK_NOTAVAILABLE: network is now not availiable");
     }
 
     public static String getErrorDescription(int errCode) {

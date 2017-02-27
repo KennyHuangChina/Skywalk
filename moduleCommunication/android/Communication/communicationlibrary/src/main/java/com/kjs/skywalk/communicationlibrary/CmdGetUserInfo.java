@@ -42,8 +42,13 @@ class CmdGetUserInfo extends CommunicationBase {
             return false;
         }
 
-        mUserId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-        if (mUserId <= 0) {
+        try {
+            mUserId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
+            if (mUserId <= 0) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
