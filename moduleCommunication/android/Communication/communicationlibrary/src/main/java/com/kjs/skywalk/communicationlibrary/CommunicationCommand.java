@@ -8,6 +8,7 @@ public class CommunicationCommand {
     public static String CC_GET_BRIEF_PUBLIC_HOUSE_INFO         = "CommandGetBriefPublicHouseInfo";
     public static String CC_LOG_IN_BY_PASSWORD                  = "CommandLogInByPassword";
     public static String CC_GET_USER_SALT                       = "CommandGetUserSalt";
+    public static String CC_GET_USER_INFO                       = "CommandGetUserInfo";
     public static String CC_LOG_OUT                             = "CommandLogOut";
     public static String CC_RELOGIN                             = "CommandRelogin";
     public static String CC_GET_PROPERTY_LIST                   = "CommandGetPropertyList";

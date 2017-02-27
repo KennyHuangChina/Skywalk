@@ -73,6 +73,8 @@ public class CommunicationManager {
             operation = new CmdGetPropertyList(mContext);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_SMS_CODE)) {
             operation = new CmdGetSmsCode(mContext);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_INFO)) {
+            operation = new CmdGetUserInfo(mContext);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

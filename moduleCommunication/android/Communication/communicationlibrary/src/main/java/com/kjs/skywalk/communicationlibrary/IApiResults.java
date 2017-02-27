@@ -56,4 +56,14 @@ public class IApiResults {
     public interface IGetSmsCode {
         String GetSmsCode();
     }
+
+    public interface IGetUserInfo {
+        int GetId();
+        String GetName();
+        String GetPhoneNo();
+        String GetIdNo();
+        String GetHead();
+        String GerRole();
+        String GetRoleDesc();
+    }
 }

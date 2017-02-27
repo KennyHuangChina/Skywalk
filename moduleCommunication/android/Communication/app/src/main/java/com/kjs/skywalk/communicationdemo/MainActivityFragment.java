@@ -39,13 +39,20 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestGetApi() {
-        doTestGetApi_GetBriefPublicHouseInfo();
+//        doTestGetApi_GetBriefPublicHouseInfo();
+        doTestGetApi_GetUserInfo();
     }
     private void doTestGetApi_GetBriefPublicHouseInfo() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "2");
+        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); // "2");
         mManager.execute(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
+    }
+    private void doTestGetApi_GetUserInfo() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); //"4");
+        mManager.execute(CommunicationCommand.CC_GET_USER_INFO, pMap, this, this);
     }
 
     private void doTestGetList() {
