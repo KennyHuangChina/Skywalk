@@ -52,4 +52,8 @@ public class IApiResults {
     public interface ILogin {
         String GetSession();
     }
+
+    public interface IGetSmsCode {
+        String GetSmsCode();
+    }
 }

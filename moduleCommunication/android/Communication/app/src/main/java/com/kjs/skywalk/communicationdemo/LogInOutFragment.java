@@ -76,6 +76,13 @@ public class LogInOutFragment extends Fragment
         mManager.execute(CommunicationCommand.CC_RELOGIN, pMap, this, this);
     }
 
+    private void doGetSmsCode() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
+        mManager.execute(CommunicationCommand.CC_GET_SMS_CODE, pMap, this, this);
+    }
+
     private void clearResultDisplay() {
         mResultString = "";
         mTextViewResult.setText("");
@@ -137,6 +144,17 @@ public class LogInOutFragment extends Fragment
                 doRelogin();
             }
         });
+
+        Button btnGetSmsCode = (Button)view.findViewById(R.id.btnGetSmsCode);
+        btnGetSmsCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                clearResultDisplay();
+                doGetSmsCode();
+            }
+        });
+
         return view;
     }
 

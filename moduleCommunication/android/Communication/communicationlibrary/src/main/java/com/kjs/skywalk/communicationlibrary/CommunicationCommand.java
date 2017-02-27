@@ -11,6 +11,7 @@ public class CommunicationCommand {
     public static String CC_LOG_OUT                             = "CommandLogOut";
     public static String CC_RELOGIN                             = "CommandRelogin";
     public static String CC_GET_PROPERTY_LIST                   = "CommandGetPropertyList";
+    public static String CC_GET_SMS_CODE                        = "CommandGetSmsCode";
 
 
     public static String CC_TEST                                = "CommandTest";

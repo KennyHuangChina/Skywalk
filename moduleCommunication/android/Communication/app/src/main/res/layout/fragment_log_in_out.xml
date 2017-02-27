@@ -136,6 +136,14 @@
             android:id="@+id/btnRelogin"
             android:layout_weight="1"
             android:textAllCaps="false" />
+
+        <Button
+            android:text="6) Get SMS code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnGetSmsCode"
+            android:layout_weight="1"
+            android:textAllCaps="false" />
     </LinearLayout>
 
     <ScrollView
