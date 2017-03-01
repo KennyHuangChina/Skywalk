@@ -50,6 +50,14 @@ public class LogInOutFragment extends Fragment
         mManager.execute(CommunicationCommand.CC_LOG_IN_BY_PASSWORD, pMap, this, this);
     }
 
+    private void doLoginSms() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_SMS_CODE, mEditPassword.getText().toString());
+        mManager.execute(CommunicationCommand.CC_LOG_IN_BY_SMS, pMap, this, this);
+    }
+
     private void doLogout() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -152,6 +160,16 @@ public class LogInOutFragment extends Fragment
             {
                 clearResultDisplay();
                 doGetSmsCode();
+            }
+        });
+
+        Button btnLoginSms = (Button)view.findViewById(R.id.btnLoginBySms);
+        btnLoginSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                clearResultDisplay();
+                doLoginSms();
             }
         });
 

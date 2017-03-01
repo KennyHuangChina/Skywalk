@@ -15,4 +15,5 @@ public class CommunicationParameterKey {
     public static String CPK_PROPERTY_NAME  = "PropertyName";
     public static String CPK_LIST_BEGIN     = "BeginPosition";
     public static String CPK_LIST_CNT       = "FetchCount";
+    public static String CPK_SMS_CODE       = "SMS";
 }

@@ -26,7 +26,6 @@ class CmdRelogin extends CommunicationBase {
 //        Log.i(TAG, "Constructor");
         mAPI = CommunicationCommand.CC_RELOGIN;
         mMethodType = "POST";
-        mVersion =1;
 
         // generate a random
         mRadom = generateRandom();
@@ -117,7 +116,12 @@ class CmdRelogin extends CommunicationBase {
             if (null == sessStore) {
                 return null;
             }
-            String loginSession = jObject.getString("Sid");
+            // if login not success, the Sid field will be empty, which means the Sid stored before
+            //    will be cleaned, just like what API Logout did
+            String loginSession = "";
+            if (null != jObject) {
+                loginSession = jObject.getString("Sid");
+            }
             sessStore.save(loginSession);
         } catch (JSONException e) {
             e.printStackTrace();

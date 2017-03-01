@@ -144,6 +144,14 @@
             android:id="@+id/btnGetSmsCode"
             android:layout_weight="1"
             android:textAllCaps="false" />
+
+        <Button
+            android:text="7) Login by SMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnLoginBySms"
+            android:layout_weight="1"
+            android:textAllCaps="false" />
     </LinearLayout>
 
     <ScrollView

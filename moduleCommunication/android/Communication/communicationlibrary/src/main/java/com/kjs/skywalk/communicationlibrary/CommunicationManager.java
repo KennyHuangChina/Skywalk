@@ -61,6 +61,8 @@ public class CommunicationManager {
             operation = new CmdGetBriefPublicHouseInfo(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
             operation = new CmdLoginByPassword(mContext);
+        } else if (command.equalsIgnoreCase(CommunicationCommand.CC_LOG_IN_BY_SMS)) {
+            operation = new CmdLoginBySms(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
             operation = new CmdLogout(mContext);
         } else if(command.equals(CommunicationCommand.CC_TEST)) {

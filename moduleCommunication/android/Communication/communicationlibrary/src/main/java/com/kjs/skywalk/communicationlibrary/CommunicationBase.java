@@ -38,10 +38,12 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected String mSessionID = "";
     protected int    mVersion = 0;      // API version number
     protected SKCookieManager mCookieManager = null;
+    protected String mRadom = "";
 
     CommunicationBase(Context context) {
         Log.i(TAG, "Communication Base Constructor");
         mContext = context;
+        mVersion = 1;   // please set it in sub-class if its version is not 1
         mUtils = new MyUtils(context);
         mServerURL = ServerURL.mServerUri;
 
