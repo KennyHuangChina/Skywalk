@@ -878,7 +878,7 @@ func (this *HouseController) ModifyHouse() {
 	acreage, _ := this.GetInt("Acreage")
 	_4sale, _ := this.GetBool("4sale")
 	_4rent, _ := this.GetBool("4rent")
-	hif := commdef.HouseInfo{Id: hid, Property: prop, BuddingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
+	hif := commdef.HouseInfo{Id: hid, Property: prop, BuildingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
 		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage, ForSale: _4sale, ForRent: _4rent}
 
 	/*
@@ -933,7 +933,7 @@ func (this *HouseController) AddHouse() {
 	acreage, _ := this.GetInt("Acreage")
 	_4sale, _ := this.GetBool("4sale")
 	_4rent, _ := this.GetBool("4rent")
-	hif := commdef.HouseInfo{Property: prop, BuddingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
+	hif := commdef.HouseInfo{Property: prop, BuildingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
 		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage, ForSale: _4sale, ForRent: _4rent}
 
 	/*

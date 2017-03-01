@@ -55,6 +55,7 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 	uif.Id = u.Id
 	uif.Name = u.Name
 	uif.IdNo = u.IdNo
+	beego.Warn(FN, "TODO: Phone is private info, should be displayed by only someone, please check login user")
 	uif.Phone = u.Phone
 	uif.HeadPortrait = u.Head
 	// uif.Role = u.Role

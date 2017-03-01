@@ -65,7 +65,7 @@ type HouseDigest struct {
 type HouseInfo struct {
 	Id          int64
 	Property    int64
-	BuddingNo   int
+	BuildingNo  int
 	FloorTotal  int
 	FloorThis   int
 	HouseNo     string

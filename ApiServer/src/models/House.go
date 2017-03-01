@@ -254,7 +254,7 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 
 	hif.Id = house.Id
 	hif.Property = house.Property.Id
-	hif.BuddingNo = house.BuildingNo
+	hif.BuildingNo = house.BuildingNo
 	hif.FloorTotal = house.FloorTotal
 	hif.FloorThis = house.FloorThis
 	hif.HouseNo = house.HouseNo
@@ -292,7 +292,7 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 
 	// if the house id(property + building + house_no) is conflict
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuddingNo).Filter("HouseNo", hif.HouseNo)
+	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	h := TblHouse{}
 	errT := qs.One(&h)
 	if nil != errT {
@@ -301,7 +301,7 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 	}
 	beego.Debug(FN, "h.Id:", h.Id, ", hif.Id:", hif.Id)
 	if h.Id != hif.Id {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuddingNo, hif.HouseNo)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
 		return
 	}
 
@@ -311,7 +311,7 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no=%d, floor_total=%d, floor_this=%d,
 								house_no='%s', bedrooms=%d, livingrooms=%d, bathrooms=%d, acreage=%d, 
 								modify_time='%s', for_sale=%t, for_rent=%t WHERE id=%d`,
-		hif.Property, hif.BuddingNo, hif.FloorTotal, hif.FloorThis, hif.HouseNo, hif.Bedrooms, hif.Livingrooms, hif.Bathrooms,
+		hif.Property, hif.BuildingNo, hif.FloorTotal, hif.FloorThis, hif.HouseNo, hif.Bedrooms, hif.Livingrooms, hif.Bathrooms,
 		hif.Acreage, modifyTime, hif.ForSale, hif.ForRent, hif.Id)
 	res, errT := o.Raw(sql).Exec()
 	if nil != errT {
@@ -495,10 +495,10 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 	}
 
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuddingNo).Filter("HouseNo", hif.HouseNo)
+	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	bExist := qs.Exist()
 	if bExist {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuddingNo, hif.HouseNo)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
 		return
 	}
 
@@ -507,7 +507,7 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 	sql := fmt.Sprintf(`INSERT INTO tbl_house(property_id, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, 
 									bathrooms, acreage, owner_id, agency_id, submit_time, for_sale, for_rent) 
 							VALUES(%d, %d, '%s', %d, %d, %d, %d, %d, %d, %d, %d, '%s', %t, %t)`,
-		hif.Property, hif.BuddingNo, hif.HouseNo, hif.FloorTotal, hif.FloorThis, hif.Bedrooms, hif.Livingrooms,
+		hif.Property, hif.BuildingNo, hif.HouseNo, hif.FloorTotal, hif.FloorThis, hif.Bedrooms, hif.Livingrooms,
 		hif.Bathrooms, hif.Acreage, oid, aid, submitTime, hif.ForSale, hif.ForRent)
 	res, errT := o.Raw(sql).Exec()
 	if nil != errT {
@@ -1294,8 +1294,8 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property:%d", hif.Property)}
 		return
 	}
-	if hif.BuddingNo <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building_no:%d", hif.BuddingNo)}
+	if hif.BuildingNo <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building_no:%d", hif.BuildingNo)}
 		return
 	}
 	if hif.FloorTotal <= 0 {
