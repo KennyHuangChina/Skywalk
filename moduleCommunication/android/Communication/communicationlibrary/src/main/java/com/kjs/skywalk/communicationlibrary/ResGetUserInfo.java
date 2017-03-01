@@ -53,7 +53,7 @@ class ResGetUserInfo extends ResBase implements IApiResults.IGetUserInfo {
     }
 
     @Override
-    public int GetId() {
+    public int GetUserId() {
         return mId;
     }
 

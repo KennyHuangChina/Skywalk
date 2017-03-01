@@ -40,7 +40,14 @@ public class MainActivityFragment extends Fragment
 
     private void doTestGetApi() {
 //        doTestGetApi_GetBriefPublicHouseInfo();
-        doTestGetApi_GetUserInfo();
+//        doTestGetApi_GetUserInfo();
+        doTestGetApi_GetHouseInfo();
+    }
+    private void doTestGetApi_GetHouseInfo() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); // "2");
+        mManager.execute(CommunicationCommand.CC_GET_GET_HOUSE_INFO, pMap, this, this);
     }
     private void doTestGetApi_GetBriefPublicHouseInfo() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());

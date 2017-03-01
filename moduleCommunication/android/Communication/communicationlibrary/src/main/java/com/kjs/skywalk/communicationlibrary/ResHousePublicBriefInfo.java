@@ -163,7 +163,7 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
             }
 
             @Override
-            public int GetId() { return mTagId; }
+            public int GetTagId() { return mTagId; }
             @Override
             public String GetName() { return mTagName; }
 

@@ -61,7 +61,7 @@ public class CommunicationManager {
             operation = new CmdGetBriefPublicHouseInfo(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
             operation = new CmdLoginByPassword(mContext);
-        } else if (command.equalsIgnoreCase(CommunicationCommand.CC_LOG_IN_BY_SMS)) {
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_LOG_IN_BY_SMS)) {
             operation = new CmdLoginBySms(mContext);
         } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
             operation = new CmdLogout(mContext);
@@ -77,6 +77,8 @@ public class CommunicationManager {
             operation = new CmdGetSmsCode(mContext);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_INFO)) {
             operation = new CmdGetUserInfo(mContext);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_HOUSE_INFO)) {
+            operation = new CmdGetHouseInfo(mContext);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }
