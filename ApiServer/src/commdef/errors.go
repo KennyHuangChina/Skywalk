@@ -21,6 +21,8 @@ func (se *SwError) FillError() {
 	case ERR_NONE:
 		se.HttpRespcode = 200
 	// TODO: mapping the http response code with API resulut code here
+	case ERR_COMMON_NOT_LOGIN:
+		se.HttpRespcode = 401
 	case ERR_COMMON_BAD_ARGUMENT:
 		se.HttpRespcode = 400
 	case ERR_USERLOGIN_CAPTCHA_SERVER:

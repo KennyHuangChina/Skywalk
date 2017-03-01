@@ -1068,20 +1068,20 @@ func (this *HouseController) GetHouseDigestInfo() {
 	/*
 	 *	Extract agreements
 	 */
-	uid, err := getLoginUser(this.Controller)
-	if nil != err {
-		return
-	}
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
 	version := this.GetString("ver")
 	hid, _ := this.GetInt64(":id")
-	sid := this.GetString("sid")
+	// sid := this.GetString("sid")
 
-	beego.Debug(FN, "ver:", version, ", hid:", hid, ", sid:", sid, ", uid:", uid)
+	beego.Debug(FN, "ver:", version, ", hid:", hid) //, ", sid:", sid, ", uid:", uid)
 
 	/*
 	 *	Processing
 	 */
-	err, hd := models.GetHouseDigestInfo(hid, uid)
+	err, hd := models.GetHouseDigestInfo(hid)
 	if nil == err {
 		result.HouseDigest = hd
 	}

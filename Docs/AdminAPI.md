@@ -96,11 +96,16 @@
 	[Private]		public
 	[Request]
   		* POST /v1/admin/loginsms
-  			* ln		// login name. It should is phone number
-  			* sms		// sms code
+	  		* ver			int 		// API version
+	  		* ln			string 		// login name. should be phone number
+  			* sms			string 		// sms code
+	  		//* rd			string		// random
+	  		* typ			ing 		// client type. 0 - web; 1 - APP
+	  		* psid			string		// picture session id. ref to captcha GUID of API sec_pic
+	  		* pss			string 		// picture result
 	[Response]
 		* SUCCESS:200 
-			* Uid			int			// new user id
+			* Sid			string		// session id
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description

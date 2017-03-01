@@ -23,12 +23,13 @@ const (
 /**
 *	Get user information by id
 *	Arguments:
-*		id - user id
+*		id 	- user id to fetch
+*		ln	- login user. 	> 0: real login user; = 0: system; < 0: no user specified
 *	Returns
 *		err - error info
 *		uif - user info
  */
-func GetUserInfo(id int64) (err error, uif commdef.UserInfo) {
+func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 	FN := "[GetUserInfo] "
 	beego.Trace(FN, "id:", id)
 
@@ -387,13 +388,14 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 *	Arguments:
 *		login_name 	- login name
 *		sms			- sms code
+*		Sid			- login session id
 *	Returns
 *		err 	- error info
 *		uid 	- user id
  */
-func LoginSms(login_name, sms string) (err error, uid int64) {
+func LoginSms(login_name, sms, Sid string) (err error, uid int64) {
 	FN := "[loginsms] "
-	beego.Trace(FN, "login user:", login_name)
+	beego.Trace(FN, "login user:", login_name, ", sms:", sms, ", sid:", Sid)
 
 	uid = 0
 
@@ -442,6 +444,8 @@ func LoginSms(login_name, sms string) (err error, uid int64) {
 	} else {
 		uid = user.Id
 	}
+
+	beego.Warn(FN, "NOT IMPLEMENT")
 
 	return
 }

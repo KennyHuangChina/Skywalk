@@ -59,19 +59,25 @@ func (this *AdminController) GetUserInfo() {
 		this.ServeJSON()
 	}()
 
+	lu, err := getLoginUser(this.Controller) // login user id
+	if nil != err {
+		// return
+	}
+	beego.Debug(FN, "lu:", lu)
+
 	/*
 	 *	Extract agreements
 	 */
-	version := this.GetString("ver")
+	// version := this.GetString("ver")
 	uid, _ := this.GetInt64(":id")
-	sid := this.GetString("sid")
+	// sid := this.GetString("sid")
 
-	beego.Debug(FN, "ver:", version, ", uid:", uid, ", sid:", sid)
+	beego.Debug(FN, "uid:", uid)
 
 	/*
 	 *	Processing
 	 */
-	err, uif := models.GetUserInfo(uid)
+	err, uif := models.GetUserInfo(uid, lu)
 	if nil == err {
 		result.UserInfo = uif
 	}
@@ -248,6 +254,7 @@ func (this *AdminController) Loginpass() {
 		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
+			result.Sid = ""
 		}
 
 		// export result
@@ -406,13 +413,14 @@ func (this *AdminController) Loginsms() {
 	FN := "<Loginsms> "
 	beego.Warn("[API --- Loginsms ---]")
 
-	var result ResAdminRegCust
+	var result ResAdminLogin
 	var err error
 
 	defer func() {
 		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
+			result.Sid = ""
 		}
 
 		// beego.Debug(FN, "result:", result)
@@ -427,10 +435,23 @@ func (this *AdminController) Loginsms() {
 	beego.Debug(FN, "login_name:", login_name, ", sms code:", sms_code)
 
 	/* Process */
-	err, uid := models.LoginSms(login_name, sms_code)
-	if nil == err {
-		result.Uid = uid
+	// err, uid := models.LoginSms(login_name, sms_code)
+	// if nil == err {
+	// 	result.Uid = uid
+	// }
+
+	// 2. check login
+	this.StartSession()
+	result.Sid = this.CruSession.SessionID()
+	// result.Sid = "1234567890" // for relogin testing
+	err, userid := models.LoginSms(login_name, sms_code, result.Sid)
+	if nil != err {
+		return
 	}
+	// userid := int64(4)
+	beego.Info(FN, "login success for user:", userid)
+	this.SetSession("userid", userid)
+	// commdefin.ApiResult(commdefin.ERR_NONE, this.Controller, &result.ResCommon)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

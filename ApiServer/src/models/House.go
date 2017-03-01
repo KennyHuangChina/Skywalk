@@ -167,7 +167,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 *		err - error info
 *		hd 	- house digest info
  */
-func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
+func GetHouseDigestInfo(hid int64) (err error, hd commdef.HouseDigest) {
 	FN := "[GetHouseDigestInfo] "
 	beego.Trace(FN, "hid:", hid)
 
@@ -1246,7 +1246,7 @@ func getHouseCoverImg(hid int64) (err error, pic int64) {
 *		hid		- house id
 *	Returns
 *		err 	- error info
-*		aic		- agency id
+*		aid		- agency id
 *		agency	- agency name
 **/
 func getHouseAgency(hid int64) (err error, aid int64, agency string) {
@@ -1268,7 +1268,7 @@ func getHouseAgency(hid int64) (err error, aid int64, agency string) {
 	}
 
 	aid = h.Agency.Id
-	err, uif := GetUserInfo(aid)
+	err, uif := GetUserInfo(aid, -1)
 	if nil != err {
 		return
 	}
