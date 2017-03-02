@@ -40,15 +40,19 @@
         </activity>
         <activity android:name=".Activity_ImagePreview">
         </activity>
-
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"/>
         <activity
-            android:name="me.iwf.photopicker.PhotoPickerActivity"
-            />
-
-        <activity
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:name="me.iwf.photopicker.PhotoPagerActivity"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name=".Activity_rentals_expiration"
+            android:label="@string/title_activity_rentals_expiration"
+            android:parentActivityName="android.support.v7.app.AppCompatActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.support.v7.app.AppCompatActivity"/>
+        </activity>
     </application>
 
 </manifest>

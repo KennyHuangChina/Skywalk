@@ -126,7 +126,8 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/selector_search_condition_filter</item>
         <item name="android:textSize">@dimen/text_size_search_condition_filter_item</item>
-        <item name="android:textColor">@drawable/selector_search_condition_filter_item_text_color</item>
+        <item name="android:textColor">@drawable/selector_search_condition_filter_item_text_color
+        </item>
         <item name="android:onClick">onSearchConditionFilterItemClicked</item>
         <item name="android:layout_weight">1</item>
     </style>
@@ -138,7 +139,9 @@
         <item name="android:paddingLeft">17dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">@dimen/text_size_search_condition_house_type_item</item>
-        <item name="android:textColor">@drawable/selector_search_condition_house_type_item_text_color</item>
+        <item name="android:textColor">
+            @drawable/selector_search_condition_house_type_item_text_color
+        </item>
         <item name="android:onClick">onSearchConditionHouseTypeItemClicked</item>
     </style>
 
@@ -149,20 +152,10 @@
         <item name="android:paddingLeft">17dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">@dimen/text_size_search_condition_price_item</item>
-        <item name="android:textColor">@drawable/selector_search_condition_price_item_text_color</item>
+        <item name="android:textColor">@drawable/selector_search_condition_price_item_text_color
+        </item>
         <item name="android:onClick">onSearchConditionPriceItemClicked</item>
     </style>
-
-
-
-
-
-
-
-
-
-
-
 
 
     <!--150万-->
@@ -184,11 +177,12 @@
     </style>
 
     <!--世贸蝶湖湾175栋2202室-->
-    <style name="textstyle_large" >
+    <style name="textstyle_large">
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#242224</item>
     </style>
-    <style name="textstyle_small" >
+
+    <style name="textstyle_small">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#242224</item>
     </style>
