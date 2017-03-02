@@ -1017,17 +1017,17 @@ func (this *HouseController) GetHouseList() {
 	/*
 	 *	Extract agreements
 	 */
-	uid, err := getLoginUser(this.Controller)
-	if nil != err {
-		return
-	}
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
 
 	tp, _ := this.GetInt("type")
 	begin, _ := this.GetInt64("bgn")
 	count, _ := this.GetInt64("cnt")
-	sid := this.GetString("sid")
+	// sid := this.GetString("sid")
 
-	beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", sid:", sid, ", uid:", uid)
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", sid:", sid, ", uid:", uid)
 
 	/*
 	 *	Processing
