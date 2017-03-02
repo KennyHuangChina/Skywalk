@@ -30,7 +30,7 @@ class CmdGetPropertyList extends CommunicationBase {
         mRequestData += ("bgn=" + mBeginPosi);
         mRequestData += "&";
         mRequestData += ("cnt=" + mFetchCount);
-        Log.d(TAG, "mRequestData: " + mPropertyName);
+        Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
     @Override

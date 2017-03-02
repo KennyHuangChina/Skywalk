@@ -70,9 +70,18 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestGetList() {
-        doTestGetList_PropertyList();
+//        doTestGetList_PropertyList();
+        doTestGetList_HouseList();
     }
 
+    private void doTestGetList_HouseList() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, mEditText.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "0");
+        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + mListTotal);
+        mManager.execute(CommunicationCommand.CC_GET_HOUSE_LIST, pMap, this, this);
+    }
     private void doTestGetList_PropertyList() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -169,6 +178,18 @@ public class MainActivityFragment extends Fragment
                     IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
                     prop.GetName();
                 }
+            } else if (command.equals(CommunicationCommand.CC_GET_HOUSE_LIST)) {
+                    IApiResults.IResultList res = (IApiResults.IResultList) result;
+                    int nTotal = res.GetTotalNumber();
+                    mListTotal = nTotal;
+                    int nFetched = res.GetFetchedNumber();
+                    if (nFetched > 0) {
+                        ArrayList<Object> HouseIDs = res.GetList();
+                        for (int n = 0; n < HouseIDs.size(); n++) {
+                            Integer id = (Integer)HouseIDs.get(n);
+                            Log.d(TAG, "house(" + n + ") id:" + id + "\n");
+                        }
+                    }
             } else if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
                 IApiResults.IHouseDigest res = (IApiResults.IHouseDigest) result;
                 res.GetHouseId();
