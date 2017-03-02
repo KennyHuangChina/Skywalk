@@ -66,11 +66,9 @@ func (this *HouseController) GetPropertyInfo() {
 	}()
 
 	/*	Extract agreements */
-	version := this.GetString("ver")
 	pid, _ := this.GetInt64(":id")
-	sid := this.GetString("sid")
 
-	beego.Debug(FN, "ver:", version, ", pid:", pid, ", sid:", sid)
+	beego.Debug(FN, "pid:", pid)
 
 	/* Processing */
 	err, pif := models.GetPropertyInfo(pid)

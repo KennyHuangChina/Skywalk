@@ -25,8 +25,7 @@
 ###2. Get Property info
 	[Security]	public
 	[Request]
-  		* GET /v1/house/property/id?sid=xxx
-	  		* sid 			string	// session id, by which server could know who send the request
+  		* GET /v1/house/property/:id
 	[Response]
 		* SUCCESS:200 
 			* Id    		int		// property id

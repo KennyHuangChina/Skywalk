@@ -263,6 +263,8 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 	hif.Bathrooms = house.Bathrooms
 	hif.Acreage = house.Acreage
 
+	beego.Warn(FN, "TODO: some house informations are privicy, like building no, floor, house no, and so on, need to check the login user")
+
 	return
 }
 
