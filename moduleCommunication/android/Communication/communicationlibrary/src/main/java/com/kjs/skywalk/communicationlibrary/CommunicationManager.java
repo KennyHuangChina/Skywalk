@@ -79,6 +79,8 @@ public class CommunicationManager {
             operation = new CmdGetUserInfo(mContext);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_HOUSE_INFO)) {
             operation = new CmdGetHouseInfo(mContext);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_PROPERTY_INFO)) {
+            operation = new CmdGetPropertyInfo(mContext);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

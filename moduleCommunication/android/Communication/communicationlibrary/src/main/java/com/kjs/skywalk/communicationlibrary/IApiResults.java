@@ -79,4 +79,11 @@ public class IApiResults {
         int Bathrooms();    // how many bathrooms within house
         int Acreage();      // house acreage, 100x than real value. for example 11537 mean 115.37 m2
     }
+
+    public interface IGetPropertyInfo {
+        int GetPropertyId();
+        String GetPropertyName();
+        String GetPropertyAddress();
+        String GetPropertyDesc();
+    }
 }

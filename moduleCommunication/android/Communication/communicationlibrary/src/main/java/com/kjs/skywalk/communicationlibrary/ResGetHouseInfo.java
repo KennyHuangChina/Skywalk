@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/3/1.
  */
 
-public class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
+class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private int mHouseId;      // house id
     private int mProId;        // property id which the house belong to
     private int mBuildingNo;   // the building number the house belong to
@@ -27,6 +27,7 @@ public class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInf
     @Override
     public String DebugString() {
         super.DebugString();
+
         mString += "  hosue id: " + mHouseId + "\n";
         mString += "  property: " + mProId + "\n";
         mString += "  building: " + mBuildingNo + "\n";

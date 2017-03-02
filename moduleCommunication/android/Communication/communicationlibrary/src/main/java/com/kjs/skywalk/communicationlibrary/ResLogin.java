@@ -9,7 +9,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/2/24.
  */
 
-public class ResLogin extends ResBase implements IApiResults.ILogin {
+class ResLogin extends ResBase implements IApiResults.ILogin {
     private String mSession = "";
 
     ResLogin(int nErrCode, JSONObject jObject) {

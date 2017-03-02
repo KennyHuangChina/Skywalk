@@ -18,6 +18,7 @@ public class CommunicationCommand {
     public static String CC_GET_BRIEF_PUBLIC_HOUSE_INFO         = "CommandGetBriefPublicHouseInfo";
     public static String CC_GET_GET_HOUSE_INFO                  = "CommandGetHouseInfo";
     public static String CC_GET_PROPERTY_LIST                   = "CommandGetPropertyList";
+    public static String CC_GET_GET_PROPERTY_INFO               = "CommandGetPropertyInfo";
 
 
     public static String CC_TEST                                = "CommandTest";

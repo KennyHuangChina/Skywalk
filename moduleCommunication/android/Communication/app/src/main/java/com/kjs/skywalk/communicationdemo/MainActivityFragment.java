@@ -41,7 +41,14 @@ public class MainActivityFragment extends Fragment
     private void doTestGetApi() {
 //        doTestGetApi_GetBriefPublicHouseInfo();
 //        doTestGetApi_GetUserInfo();
-        doTestGetApi_GetHouseInfo();
+//        doTestGetApi_GetHouseInfo();
+        doTestGetApi_GetPropertyInfo();
+    }
+    private void doTestGetApi_GetPropertyInfo() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); // "2");
+        mManager.execute(CommunicationCommand.CC_GET_GET_PROPERTY_INFO, pMap, this, this);
     }
     private void doTestGetApi_GetHouseInfo() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
