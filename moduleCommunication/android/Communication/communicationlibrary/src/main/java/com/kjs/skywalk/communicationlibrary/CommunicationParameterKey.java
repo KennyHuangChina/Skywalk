@@ -14,6 +14,8 @@ public class CommunicationParameterKey {
     public static String CPK_SMS_CODE       = "SMS";
 
     public static String CPK_PROPERTY_NAME  = "PropertyName";
+    public static String CPK_PROPERTY_ADDR  = "PropertyAddress";
+    public static String CPK_PROPERTY_DESC  = "PropertyDescription";
     public static String CPK_LIST_BEGIN     = "BeginPosition";
     public static String CPK_LIST_CNT       = "FetchCount";
     public static String CPK_HOUSE_TYPE     = "HouseType";

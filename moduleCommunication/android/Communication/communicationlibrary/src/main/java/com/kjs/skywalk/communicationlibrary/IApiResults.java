@@ -86,4 +86,8 @@ public class IApiResults {
         String GetPropertyAddress();
         String GetPropertyDesc();
     }
+
+    public interface IAddRes {
+        int GetId();
+    }
 }

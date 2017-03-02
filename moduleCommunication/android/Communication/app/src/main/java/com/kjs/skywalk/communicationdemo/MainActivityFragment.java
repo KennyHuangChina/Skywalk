@@ -33,9 +33,24 @@ public class MainActivityFragment extends Fragment
 
     private TextView mTextViewResult = null;
     private EditText mEditText = null;
+    private EditText mEditText1 = null;
+    private EditText mEditText2 = null;
     private int mListTotal = 0;
 
     public MainActivityFragment() {
+    }
+
+
+    private void doTestAddApi() {
+        doTestAddApi_AddProperty();
+    }
+    private void doTestAddApi_AddProperty() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditText.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, mEditText1.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, mEditText2.getText().toString());
+        mManager.execute(CommunicationCommand.CC_GET_ADD_PROPERTY, pMap, this, this);
     }
 
     private void doTestGetApi() {
@@ -99,6 +114,9 @@ public class MainActivityFragment extends Fragment
         Button testButton = (Button)view.findViewById(R.id.testList);
         mTextViewResult = (TextView) view.findViewById(R.id.textViewResult);
         mEditText = (EditText) view.findViewById(R.id.editText);
+        mEditText1 = (EditText) view.findViewById(R.id.editText1);
+        mEditText2 = (EditText) view.findViewById(R.id.editText2);
+
         testButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -119,7 +137,19 @@ public class MainActivityFragment extends Fragment
                 mTextViewResult.setText("");
                 doTestGetApi();
             }
-        });;
+        });
+
+        Button btnTestAddApi = (Button)view.findViewById(R.id.testAddApi);
+        btnTestAddApi.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mResultString = "";
+                mTextViewResult.setText("");
+                doTestAddApi();
+            }
+        });
 
         return view;
     }
