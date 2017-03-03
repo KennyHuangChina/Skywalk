@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/3/2.
  */
 
-class ResGetPropertyInfo extends ResBase implements IApiResults.IGetPropertyInfo {
+class ResGetPropertyInfo extends ResBase implements IApiResults.IPropertyInfo {
     private int mPropId = 0;
     private String mPropName = "";
     private String mPropAddress = "";
@@ -50,22 +50,22 @@ class ResGetPropertyInfo extends ResBase implements IApiResults.IGetPropertyInfo
     }
 
     @Override
-    public int GetPropertyId() {
+    public int GetId() {
         return mPropId;
     }
 
     @Override
-    public String GetPropertyName() {
+    public String GetName() {
         return mPropName;
     }
 
     @Override
-    public String GetPropertyAddress() {
+    public String GetAddress() {
         return mPropAddress;
     }
 
     @Override
-    public String GetPropertyDesc() {
+    public String GetDesc() {
         return mPropDesc;
     }
 }

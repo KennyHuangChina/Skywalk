@@ -80,13 +80,6 @@ public class IApiResults {
         int Acreage();      // house acreage, 100x than real value. for example 11537 mean 115.37 m2
     }
 
-    public interface IGetPropertyInfo {
-        int GetPropertyId();
-        String GetPropertyName();
-        String GetPropertyAddress();
-        String GetPropertyDesc();
-    }
-
     public interface IAddRes {
         int GetId();
     }
