@@ -61,10 +61,12 @@ class CmdAddProperty extends CommunicationBase {
         if (map.containsKey(CommunicationParameterKey.CPK_PROPERTY_ADDR)) {
             mPropAddr = map.get(CommunicationParameterKey.CPK_PROPERTY_ADDR);
         }
+        mPropAddr = String2Base64(mPropAddr);
 
         if (map.containsKey(CommunicationParameterKey.CPK_PROPERTY_DESC)) {
             mPropDesc = map.get(CommunicationParameterKey.CPK_PROPERTY_DESC);
         }
+        mPropDesc = String2Base64(mPropDesc);
 
         return true;
     }
