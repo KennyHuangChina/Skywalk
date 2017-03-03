@@ -79,6 +79,8 @@ public class CommunicationManager {
             operation = new CmdGetHouseList(mContext);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_HOUSE_INFO)) {
             operation = new CmdGetHouseInfo(mContext);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER)) {
+            operation = new CmdCommitHouseByOwner(mContext);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_ADD_PROPERTY)) {
             operation = new CmdAddProperty(mContext);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
