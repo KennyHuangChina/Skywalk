@@ -12,13 +12,15 @@ import (
 *	add property
 *	Arguments:
 *		prop	- property name
+*		addr 	- property address
+*		desc	- property description
 *	Returns
 *		err 	- error info
 *		id		- new property id
  */
-func AddProperty(prop string) (err error, id int64) {
+func AddProperty(prop, addr, desc string) (err error, id int64) {
 	FN := "[AddProperty] "
-	beego.Trace(FN, "prop:", prop)
+	beego.Debug(FN, "prop:", prop, ", addr:", addr, ", desc:", desc)
 
 	defer func() {
 		if nil != err {

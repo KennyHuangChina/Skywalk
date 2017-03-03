@@ -4,6 +4,7 @@ import (
 	// "encoding/json"
 	"ApiServer/commdef"
 	"ApiServer/models"
+	"encoding/base64"
 	"fmt"
 	"github.com/astaxie/beego"
 )
@@ -149,18 +150,32 @@ func (this *HouseController) AddProperty() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
-	if nil != err {
-		return
-	}
+	// /*uid*/ _, err = getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
 
 	prop := this.GetString("prop")
-	beego.Debug(FN, "prop:", prop)
+	addr := this.GetString("addr")
+	desc := this.GetString("desc")
+	beego.Debug(FN, "prop:", prop, ", addr:", addr, ", desc:", desc)
+	// beego.Debug(FN, "prop:", []byte(prop))
+
+	tmp, _ := base64.URLEncoding.DecodeString(prop)
+	prop = string(tmp)
+	tmp, _ = base64.URLEncoding.DecodeString(addr)
+	addr = string(tmp)
+	tmp, _ = base64.URLEncoding.DecodeString(desc)
+	desc = string(tmp)
+	beego.Debug(FN, "prop:", prop, ", addr:", addr, ", desc:", desc)
+	// for k, v := range prop {
+	// 	beego.Warn(FN, "k:", k, ", v:", v, ",", string(v))
+	// }
 
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddProperty(prop)
+	err, id := models.AddProperty(prop, addr, desc)
 	if nil == err {
 		result.Id = id
 	}

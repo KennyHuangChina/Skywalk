@@ -106,7 +106,9 @@
 	[Security]	private
 	[Request]
   		* POST /v1/house/property
-	  		* prop			string 	// property name
+	  		* prop			string 		// property name
+	  		* addr			string 		// property address
+	  		* desc			string 		// property description
 	[Response]
 		* SUCCESS:200 
 			* Id    		int		// new property id
