@@ -1,8 +1,11 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -157,5 +160,36 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         Log.i(TAG, "strRand:" + strRand);
 
         return strRand;
+    }
+
+    // Convert string to BASE64
+    protected String String2Base64(String str) {
+        byte[] bstr = new byte[0];
+        try {
+            bstr = str.getBytes(("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return Base64.encodeToString(bstr, Base64.URL_SAFE);
+    }
+
+    // Convert string to URL safe
+    String getUrlSafeString(String str) {
+        // A StringBuffer Object
+        StringBuffer sb = new StringBuffer();
+        sb.append(str);
+        String Utf8String = "";
+        String UrlsafeString = "";
+        try {
+            Utf8String = new String(sb.toString().getBytes("UTF-8"));
+            UrlsafeString = URLEncoder.encode(Utf8String, "UTF-8");
+            System.out.println("utf-8 编码：" + UrlsafeString) ;
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // return to String Formed
+        return UrlsafeString;
     }
 }

@@ -1,10 +1,13 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -18,7 +21,7 @@ class CmdAddProperty extends CommunicationBase {
 
     CmdAddProperty(Context context) {
         super(context);
-        TAG = "CmdLoginBySms";
+        TAG = "CmdAddProperty";
 //        Log.i(TAG, "Constructor");
         mAPI = CommunicationCommand.CC_GET_ADD_PROPERTY;
         mMethodType = "POST";
@@ -49,6 +52,11 @@ class CmdAddProperty extends CommunicationBase {
         }
 
         mPropName = map.get(CommunicationParameterKey.CPK_PROPERTY_NAME);
+        Log.d(TAG, "mPropName: " + mPropName);
+//        mPropName = getUTF8XMLString(mPropName);
+//        Log.d(TAG, "mPropName: " + mPropName);
+        mPropName = String2Base64(mPropName);
+        Log.d(TAG, "mPropName: " + mPropName);
 
         if (map.containsKey(CommunicationParameterKey.CPK_PROPERTY_ADDR)) {
             mPropAddr = map.get(CommunicationParameterKey.CPK_PROPERTY_ADDR);
@@ -68,12 +76,13 @@ class CmdAddProperty extends CommunicationBase {
     }
 
     private void generateRequestData() {
-        mRequestData = ("prop=" +  mPropName);
+        mRequestData = ("prop=" + mPropName);
         mRequestData += "&";
-        mRequestData += ("addr=" +  mPropAddr);
+        mRequestData += ("addr=" + mPropAddr);
         mRequestData += "&";
-        mRequestData += ("desc=" +  mPropDesc);
+        mRequestData += ("desc=" + mPropDesc);
 
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 }
+
