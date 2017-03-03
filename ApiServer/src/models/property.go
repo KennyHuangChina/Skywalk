@@ -35,9 +35,16 @@ func AddProperty(prop, addr, desc string) (err error, id int64) {
 
 	o := orm.NewOrm()
 
-	p := TblProperty{Name: prop}
-	errt := o.Read(&p, "Name")
-	if nil == errt { // property already exist
+	// p := TblProperty{Name: prop}
+	// errt := o.Read(&p, "Name")
+	// if nil == errt { // property already exist
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE}
+	// 	return
+	// }
+
+	// maybe the property name is partial identical with one or some properties already exist
+	qs := o.QueryTable("tbl_property")
+	if qs.Filter("Name__contains", prop).Exist() {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE}
 		return
 	}
