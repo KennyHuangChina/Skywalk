@@ -167,10 +167,7 @@ func (this *HouseController) AddProperty() {
 	addr = string(tmp)
 	tmp, _ = base64.URLEncoding.DecodeString(desc)
 	desc = string(tmp)
-	beego.Debug(FN, "prop:", prop, ", addr:", addr, ", desc:", desc)
-	// for k, v := range prop {
-	// 	beego.Warn(FN, "k:", k, ", v:", v, ",", string(v))
-	// }
+	// beego.Debug(FN, "prop:", prop, ", addr:", addr, ", desc:", desc)
 
 	/*
 	 *	Processing

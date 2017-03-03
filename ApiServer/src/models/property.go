@@ -43,7 +43,7 @@ func AddProperty(prop, addr, desc string) (err error, id int64) {
 	}
 
 	// add into table
-	n := TblProperty{Name: prop}
+	n := TblProperty{Name: prop, Address: addr, Desc: desc}
 	newId, errT := o.Insert(&n)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
