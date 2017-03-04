@@ -57,8 +57,8 @@ public class MainActivityFragment extends Fragment
         pMap.put(CommunicationParameterKey.CPK_BEDROOMS, "2");
         pMap.put(CommunicationParameterKey.CPK_BATHROOMS, "3");
         pMap.put(CommunicationParameterKey.CPK_ACREAGE, "15678");
-        pMap.put(CommunicationParameterKey.CPK_4SALE, "0");
-        pMap.put(CommunicationParameterKey.CPK_4RENT, "1");
+        pMap.put(CommunicationParameterKey.CPK_4SALE, "false");
+        pMap.put(CommunicationParameterKey.CPK_4RENT, "true");
         pMap.put(CommunicationParameterKey.CPK_AGENT, "0");
         mManager.execute(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER, pMap, this, this);
     }
