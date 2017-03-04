@@ -271,14 +271,14 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 /**
 *	Add New House
 *	Arguments:
-*		hid - house id
-*		pid	- property id
+*		hif - house info
+*		uid	- login user id
 *	Returns
 *		err - error info
 *		id 	- new house info
  */
-func ModifyHouse(hif *commdef.HouseInfo) (err error) {
-	FN := "[AddHouse] "
+func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
+	FN := "[ModifyHouse] "
 	beego.Trace(FN, "hif:", hif)
 
 	defer func() {
@@ -291,20 +291,23 @@ func ModifyHouse(hif *commdef.HouseInfo) (err error) {
 	if err = checkHouseInfo(hif, false); nil != err {
 		return
 	}
+	beego.Warn(FN, "TDOO: Permission checking, Only the house owner and its agency could modify the house")
+	// if nil != errT {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+	// 	return
+	// }
 
 	// if the house id(property + building + house_no) is conflict
 	o := orm.NewOrm()
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	h := TblHouse{}
 	errT := qs.One(&h)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		return
-	}
-	beego.Debug(FN, "h.Id:", h.Id, ", hif.Id:", hif.Id)
-	if h.Id != hif.Id {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
-		return
+	if nil == errT {
+		beego.Debug(FN, "h.Id:", h.Id, ", hif.Id:", hif.Id)
+		if h.Id != hif.Id {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
+			return
+		}
 	}
 
 	// Update
@@ -493,6 +496,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("owner:%d", oid)}
 		return
 	}
+
 	// Agency
 	// Kenny: when house owner commit new house, they could not assign the agency,
 	// 			so the agency 0 is possible.
@@ -500,36 +504,6 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
 	// 	return
 	// }
-
-	// property
-	if err, _ = GetPropertyInfo(hif.Property); nil != err {
-		return
-	}
-	// house infos
-	if hif.BuildingNo <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building no:%d", hif.BuildingNo)}
-		return
-	}
-	if hif.FloorTotal < 1 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("total floor:%d", hif.FloorTotal)}
-		return
-	}
-	if hif.FloorThis < 1 || hif.FloorThis > hif.FloorTotal {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("floor:%d", hif.FloorThis)}
-		return
-	}
-	if 0 == hif.Bedrooms && 0 == hif.Livingrooms && 0 == hif.Bathrooms {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("bedrooms:%d, livingrooms:%d, bathrooms:%d", hif.Bedrooms, hif.Livingrooms, hif.Bathrooms)}
-		return
-	}
-	if hif.Acreage < 100 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("acreage:%d", hif.Acreage)}
-		return
-	}
-	if aid < 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agent:%d", aid)}
-		return
-	}
 
 	/* processing */
 	o := orm.NewOrm()
@@ -1360,7 +1334,12 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("bathrooms:%d", hif.Bathrooms)}
 		return
 	}
-	if hif.Acreage <= 0 {
+	if 0 == hif.Bedrooms && 0 == hif.Livingrooms && 0 == hif.Bathrooms {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT,
+			ErrInfo: fmt.Sprintf("Bedrooms:%d, Livingrooms:%d, bathrooms:%d", hif.Bedrooms, hif.Livingrooms, hif.Bathrooms)}
+		return
+	}
+	if hif.Acreage <= 100 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("acreage:%d", hif.Acreage)}
 		return
 	}
@@ -1382,14 +1361,8 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	}
 
 	// property id
-	o := orm.NewOrm()
-	p := TblProperty{Id: hif.Property}
-	errT := o.Read(&p)
-	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+	if err, _ = GetPropertyInfo(hif.Property); nil != err {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Property:%d", hif.Property)}
-		return
-	} else if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
 

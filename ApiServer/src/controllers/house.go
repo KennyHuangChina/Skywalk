@@ -871,7 +871,7 @@ func (this *HouseController) ModifyHouse() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
+	uid, err := getLoginUser(this.Controller)
 	if nil != err {
 		return
 	}
@@ -894,7 +894,7 @@ func (this *HouseController) ModifyHouse() {
 	/*
 	 *	Processing
 	 */
-	err = models.ModifyHouse(&hif)
+	err = models.ModifyHouse(&hif, uid)
 	if nil == err {
 		// result.Id = id
 	}
