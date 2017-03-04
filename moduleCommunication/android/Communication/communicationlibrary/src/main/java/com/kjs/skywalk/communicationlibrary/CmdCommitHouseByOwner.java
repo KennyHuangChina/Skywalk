@@ -72,6 +72,10 @@ class CmdCommitHouseByOwner extends CommunicationBase {
         try {
             mPropId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_PROPERTY_ID));
             mBuilding = Integer.parseInt(map.get(CommunicationParameterKey.CPK_BUILDING_NO));
+            if (mBuilding <= 0) {
+                Log.e(TAG, "Invalid building no:" + mBuilding);
+                return false;
+            }
             mHouseNo = map.get(CommunicationParameterKey.CPK_HOUSE_NO);
             if (TextUtils.isEmpty(mHouseNo)) {
                 // Kenny; house no could be empty for townhouse or villa

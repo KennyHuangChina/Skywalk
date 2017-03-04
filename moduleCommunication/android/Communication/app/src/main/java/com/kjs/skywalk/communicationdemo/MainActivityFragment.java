@@ -42,7 +42,25 @@ public class MainActivityFragment extends Fragment
 
 
     private void doTestAddApi() {
-        doTestAddApi_AddProperty();
+//        doTestAddApi_AddProperty();
+        doTestAddApi_CommitHouseByOwner();
+    }
+    private void doTestAddApi_CommitHouseByOwner() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, "1");
+        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, "177");
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, "2305");
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, "35");
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, "23");
+        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, "4");
+        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, "2");
+        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, "3");
+        pMap.put(CommunicationParameterKey.CPK_ACREAGE, "15678");
+        pMap.put(CommunicationParameterKey.CPK_4SALE, "0");
+        pMap.put(CommunicationParameterKey.CPK_4RENT, "1");
+        pMap.put(CommunicationParameterKey.CPK_AGENT, "0");
+        mManager.execute(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER, pMap, this, this);
     }
     private void doTestAddApi_AddProperty() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
