@@ -287,15 +287,26 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 		}
 	}()
 
+	// Persission checking
+	bPermission := false
+	_, house := checkHouse(hif.Id)
+	beego.Debug(FN, "owner:", house.Owner.Id, ", agency:", house.Agency.Id)
+	if house.Owner.Id == uid || house.Agency.Id == uid {
+		bPermission = true
+	} else {
+		if _, bAdmin := isAdministrator(uid); bAdmin {
+			bPermission = true
+		}
+	}
+	if !bPermission {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
 	/*	argument checking */
 	if err = checkHouseInfo(hif, false); nil != err {
 		return
 	}
-	beego.Warn(FN, "TDOO: Permission checking, Only the house owner and its agency could modify the house")
-	// if nil != errT {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
-	// 	return
-	// }
 
 	// if the house id(property + building + house_no) is conflict
 	o := orm.NewOrm()
