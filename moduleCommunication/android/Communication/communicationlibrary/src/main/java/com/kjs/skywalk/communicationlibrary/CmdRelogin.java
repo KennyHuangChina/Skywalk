@@ -20,11 +20,10 @@ class CmdRelogin extends CommunicationBase {
     private String mUserName = "";
     private String mRadom = "";
 
-    CmdRelogin(Context context) {
-        super(context);
+    CmdRelogin(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdRelogin";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_RELOGIN;
         mMethodType = "POST";
 
         // generate a random

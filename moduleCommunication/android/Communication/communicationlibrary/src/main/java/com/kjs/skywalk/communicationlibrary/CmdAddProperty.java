@@ -19,11 +19,10 @@ class CmdAddProperty extends CommunicationBase {
     private String mPropAddr = "";
     private String mPropDesc = "";
 
-    CmdAddProperty(Context context) {
-        super(context);
+    CmdAddProperty(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdAddProperty";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_GET_ADD_PROPERTY;
         mMethodType = "POST";
     }
 

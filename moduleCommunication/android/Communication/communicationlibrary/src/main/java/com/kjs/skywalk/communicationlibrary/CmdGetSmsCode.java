@@ -17,11 +17,10 @@ class CmdGetSmsCode extends CommunicationBase {
     private String mSmsCode = "";
     private String mUserName = "";
 
-    CmdGetSmsCode(Context context) {
-        super(context);
+    CmdGetSmsCode(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdGetSmsCode";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_GET_SMS_CODE;
         mMethodType = "GET";
     }
 

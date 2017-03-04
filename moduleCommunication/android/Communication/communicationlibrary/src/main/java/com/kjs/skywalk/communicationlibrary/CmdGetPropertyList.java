@@ -16,11 +16,10 @@ class CmdGetPropertyList extends CommunicationBase {
     private int mBeginPosi = 0;
     private int mFetchCount = 0;
 
-    CmdGetPropertyList(Context context) {
-        super(context);
+    CmdGetPropertyList(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdGetPropertyList";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_GET_PROPERTY_LIST;
         mMethodType = "GET";
     }
 

@@ -17,11 +17,10 @@ class CmdGetUserSalt extends CommunicationBase {
 
     private String mUserName = "";
 
-    CmdGetUserSalt(Context context) {
-        super(context);
+    CmdGetUserSalt(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdGetUserSalt";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_GET_USER_SALT;
         mMethodType = "GET";
     }
 

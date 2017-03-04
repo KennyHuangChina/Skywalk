@@ -23,11 +23,10 @@ class CmdLoginByPassword extends CommunicationBase {
     private String mUserName = "";
     private String mPassword = "";
 
-    CmdLoginByPassword(Context context) {
-        super(context);
+    CmdLoginByPassword(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdLoginByPassword";
-        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_LOG_IN_BY_PASSWORD;
+//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
         mSessionID = "xxxxx";
     }

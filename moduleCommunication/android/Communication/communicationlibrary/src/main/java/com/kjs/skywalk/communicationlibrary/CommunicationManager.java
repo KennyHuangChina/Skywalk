@@ -58,35 +58,35 @@ public class CommunicationManager {
     private CommunicationBase createOperation(String command) {
         CommunicationBase operation = null;
         if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
-            operation = new CmdGetBriefPublicHouseInfo(mContext);
+            operation = new CmdGetBriefPublicHouseInfo(mContext, command);
         } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
-            operation = new CmdLoginByPassword(mContext);
+            operation = new CmdLoginByPassword(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_LOG_IN_BY_SMS)) {
-            operation = new CmdLoginBySms(mContext);
+            operation = new CmdLoginBySms(mContext, command);
         } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
-            operation = new CmdLogout(mContext);
+            operation = new CmdLogout(mContext, command);
         } else if(command.equals(CommunicationCommand.CC_TEST)) {
-            operation = new CommandTest(mContext);
+            operation = new CommandTest(mContext, command);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_SALT)) {
-            operation = new CmdGetUserSalt(mContext);
+            operation = new CmdGetUserSalt(mContext, command);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_RELOGIN)) {
-            operation = new CmdRelogin(mContext);
+            operation = new CmdRelogin(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_SMS_CODE)) {
-            operation = new CmdGetSmsCode(mContext);
+            operation = new CmdGetSmsCode(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_INFO)) {
-            operation = new CmdGetUserInfo(mContext);
+            operation = new CmdGetUserInfo(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_HOUSE_LIST)) {
-            operation = new CmdGetHouseList(mContext);
+            operation = new CmdGetHouseList(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_HOUSE_INFO)) {
-            operation = new CmdGetHouseInfo(mContext);
+            operation = new CmdGetHouseInfo(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER)) {
-            operation = new CmdCommitHouseByOwner(mContext);
+            operation = new CmdCommitHouseByOwner(mContext, command);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_ADD_PROPERTY)) {
-            operation = new CmdAddProperty(mContext);
+            operation = new CmdAddProperty(mContext, command);
         } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
-            operation = new CmdGetPropertyList(mContext);
+            operation = new CmdGetPropertyList(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_PROPERTY_INFO)) {
-            operation = new CmdGetPropertyInfo(mContext);
+            operation = new CmdGetPropertyInfo(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

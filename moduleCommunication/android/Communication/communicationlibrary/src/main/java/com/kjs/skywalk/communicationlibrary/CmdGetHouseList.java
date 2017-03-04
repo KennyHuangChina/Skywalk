@@ -17,11 +17,10 @@ class CmdGetHouseList extends CommunicationBase {
     private int mBeginPosi = 0;
     private int mFetchCount = 0;
 
-    CmdGetHouseList(Context context) {
-        super(context);
+    CmdGetHouseList(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdGetHouseList";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_GET_HOUSE_LIST;
         mMethodType = "GET";
     }
 

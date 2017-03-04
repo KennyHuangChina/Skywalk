@@ -25,27 +25,28 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.BeforeConnect,
                                     InternalDefines.AfterConnect,
                                     InternalDefines.ConnectFailed{
-    protected String TAG = "CommunicationBase";
-    protected String mAPI = "";
-    protected Context mContext = null;
-    protected String mMethodType = "";
-    protected String mServerURL = "";
-    protected String mCommandURL = "";
-    protected String mRequestData = "";
+    protected   String  TAG         = "CommunicationBase";
+    private     String  mAPI        = "";
+    protected   Context mContext    = null;
+    protected   String  mMethodType = "";
+    protected   String  mServerURL  = "";
+    protected   String  mCommandURL = "";
+    protected   String  mRequestData = "";
 
-    protected MyUtils mUtils = null;
-    protected CIProgressListener mProgressListener = null;
-    protected CICommandListener mCommandListener = null;
+    protected MyUtils               mUtils              = null;
+    protected CIProgressListener    mProgressListener   = null;
+    protected CICommandListener     mCommandListener    = null;
 
     // common header items
-    protected String mSessionID = "";
-    protected int    mVersion = 0;      // API version number
-    protected SKCookieManager mCookieManager = null;
-    protected String mRadom = "";
+    protected String            mSessionID      = "";
+    protected int               mVersion        = 0;      // API version number
+    protected SKCookieManager   mCookieManager  = null;
+    protected String            mRadom          = "";
 
-    CommunicationBase(Context context) {
+    CommunicationBase(Context context, String strAPI) {
         Log.i(TAG, "Communication Base Constructor");
         mContext = context;
+        mAPI = strAPI;
         mVersion = 1;   // please set it in sub-class if its version is not 1
         mUtils = new MyUtils(context);
         mServerURL = ServerURL.mServerUri;

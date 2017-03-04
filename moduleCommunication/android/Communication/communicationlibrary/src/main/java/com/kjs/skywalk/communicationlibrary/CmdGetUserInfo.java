@@ -13,11 +13,10 @@ import java.util.HashMap;
 class CmdGetUserInfo extends CommunicationBase {
     private int mUserId = 0;
 
-    CmdGetUserInfo(Context context) {
-        super(context);
+    CmdGetUserInfo(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "CmdGetUserInfo";
 //        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_GET_USER_INFO;
         mMethodType = "GET";
     }
 

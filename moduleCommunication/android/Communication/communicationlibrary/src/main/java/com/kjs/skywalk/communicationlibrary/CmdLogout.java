@@ -15,11 +15,10 @@ import java.util.HashMap;
 class CmdLogout extends CommunicationBase {
     private String mType = "1";
 
-    CmdLogout(Context context) {
-        super(context);
+    CmdLogout(Context context, String strAPI) {
+        super(context, strAPI);
         TAG = "Logout";
-        Log.i(TAG, "Constructor");
-        mAPI = CommunicationCommand.CC_LOG_OUT;
+//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
     }
 
