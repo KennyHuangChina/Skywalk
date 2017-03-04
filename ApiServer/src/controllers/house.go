@@ -17,7 +17,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseInfo", h.GetHouseInfo)
 	h.Mapping("GetHouseDigestInfo", h.GetHouseDigestInfo)
 	h.Mapping("GetHouseList", h.GetHouseList)
-	h.Mapping("AddHouse", h.AddHouse)
+	h.Mapping("CommitHouseByOwner", h.CommitHouseByOwner)
 	h.Mapping("ModifyHouse", h.ModifyHouse)
 	h.Mapping("CertHouse", h.CertHouse)
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
@@ -900,14 +900,14 @@ func (this *HouseController) ModifyHouse() {
 	}
 }
 
-// @Title AddHouse
-// @Description add new house
+// @Title CommitHouseByOwner
+// @Description commit new house by owner
 // @Success 200 {string}
 // @Failure 403 body is empty
 // @router /commit [post]
-func (this *HouseController) AddHouse() {
-	FN := "[AddHouse] "
-	beego.Warn("[--- API: AddHouse ---]")
+func (this *HouseController) CommitHouseByOwner() {
+	FN := "[CommitHouseByOwner] "
+	beego.Warn("[--- API: CommitHouseByOwner ---]")
 
 	var result ResAddResource
 	var err error
@@ -949,7 +949,7 @@ func (this *HouseController) AddHouse() {
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddHouse(&hif, uid, agent)
+	err, id := models.CommitHouseByOwner(&hif, uid, agent)
 	if nil == err {
 		result.Id = id
 	}

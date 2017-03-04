@@ -462,8 +462,9 @@ func CertHouse(hid int64) (err error) {
 }
 
 /**
-*	Add New House
+*	Commit house by owner
 *	Arguments:
+*		hif	- house info input
 *		oid - house owner id
 *		pid	- property id
 *		aid	- agency id
@@ -471,8 +472,8 @@ func CertHouse(hid int64) (err error) {
 *		err - error info
 *		id 	- new house info
  */
-func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
-	FN := "[AddHouse] "
+func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
+	FN := "[CommitHouseByOwner] "
 	beego.Trace(FN, "hif:", hif)
 
 	defer func() {
@@ -487,15 +488,50 @@ func AddHouse(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 		return
 	}
 
+	// owner
 	if errT := CheckUser(oid); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("owner:%d", oid)}
 		return
 	}
-	if errT := CheckUser(aid); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
+	// Agency
+	// Kenny: when house owner commit new house, they could not assign the agency,
+	// 			so the agency 0 is possible.
+	// if errT := CheckUser(aid); nil != errT {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
+	// 	return
+	// }
+
+	// property
+	if err, _ = GetPropertyInfo(hif.Property); nil != err {
+		return
+	}
+	// house infos
+	if hif.BuildingNo <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building no:%d", hif.BuildingNo)}
+		return
+	}
+	if hif.FloorTotal < 1 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("total floor:%d", hif.FloorTotal)}
+		return
+	}
+	if hif.FloorThis < 1 || hif.FloorThis > hif.FloorTotal {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("floor:%d", hif.FloorThis)}
+		return
+	}
+	if 0 == hif.Bedrooms && 0 == hif.Livingrooms && 0 == hif.Bathrooms {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("bedrooms:%d, livingrooms:%d, bathrooms:%d", hif.Bedrooms, hif.Livingrooms, hif.Bathrooms)}
+		return
+	}
+	if hif.Acreage < 100 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("acreage:%d", hif.Acreage)}
+		return
+	}
+	if aid < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agent:%d", aid)}
 		return
 	}
 
+	/* processing */
 	o := orm.NewOrm()
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	bExist := qs.Exist()
