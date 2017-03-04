@@ -57,19 +57,19 @@ public class CommunicationManager {
 
     private CommunicationBase createOperation(String command) {
         CommunicationBase operation = null;
-        if(command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
+        if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
             operation = new CmdGetBriefPublicHouseInfo(mContext, command);
-        } else if(command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
+        } else if (command.equals(CommunicationCommand.CC_LOG_IN_BY_PASSWORD)) {
             operation = new CmdLoginByPassword(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_LOG_IN_BY_SMS)) {
             operation = new CmdLoginBySms(mContext, command);
-        } else if(command.equals(CommunicationCommand.CC_LOG_OUT)) {
+        } else if (command.equals(CommunicationCommand.CC_LOG_OUT)) {
             operation = new CmdLogout(mContext, command);
-        } else if(command.equals(CommunicationCommand.CC_TEST)) {
+        } else if (command.equals(CommunicationCommand.CC_TEST)) {
             operation = new CommandTest(mContext, command);
-        } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_SALT)) {
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_USER_SALT)) {
             operation = new CmdGetUserSalt(mContext, command);
-        } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_RELOGIN)) {
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_RELOGIN)) {
             operation = new CmdRelogin(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_SMS_CODE)) {
             operation = new CmdGetSmsCode(mContext, command);
@@ -81,9 +81,11 @@ public class CommunicationManager {
             operation = new CmdGetHouseInfo(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER)) {
             operation = new CmdCommitHouseByOwner(mContext, command);
-        } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_ADD_PROPERTY)) {
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_AMEND_HOUSE)) {
+            operation = new CmdAmendHouse(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_ADD_PROPERTY)) {
             operation = new CmdAddProperty(mContext, command);
-        } else if(command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
             operation = new CmdGetPropertyList(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_PROPERTY_INFO)) {
             operation = new CmdGetPropertyInfo(mContext, command);

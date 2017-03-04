@@ -40,6 +40,26 @@ public class MainActivityFragment extends Fragment
     public MainActivityFragment() {
     }
 
+    private void doTestModifyApi() {
+        doTestModifyApi_ModifyHouse();
+    }
+    private void doTestModifyApi_ModifyHouse() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, "2");
+        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, "56");
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, "1606");
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, "35");
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, "16");
+        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, "2");
+        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, "4");
+        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, "3");
+        pMap.put(CommunicationParameterKey.CPK_ACREAGE, "17788");
+        pMap.put(CommunicationParameterKey.CPK_4SALE, "false");
+        pMap.put(CommunicationParameterKey.CPK_4RENT, "true");
+        mManager.execute(CommunicationCommand.CC_GET_AMEND_HOUSE, pMap, this, this);
+    }
 
     private void doTestAddApi() {
 //        doTestAddApi_AddProperty();
@@ -166,6 +186,18 @@ public class MainActivityFragment extends Fragment
                 mResultString = "";
                 mTextViewResult.setText("");
                 doTestAddApi();
+            }
+        });
+
+        Button btnTestModifyApi = (Button)view.findViewById(R.id.testModifyApiApi);
+        btnTestModifyApi.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mResultString = "";
+                mTextViewResult.setText("");
+                doTestModifyApi();
             }
         });
 

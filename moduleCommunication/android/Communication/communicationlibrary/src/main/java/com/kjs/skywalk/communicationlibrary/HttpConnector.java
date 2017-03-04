@@ -206,7 +206,7 @@ class HttpConnector {
         }
 
         try {
-            if (mMethod.equals("POST")) {
+            if (mMethod.equals("POST") || mMethod.equals("PUT")) {
                 File srcFile = null;
                 boolean uploadFile = false;
                 if (!mUploadFile.isEmpty()) {
