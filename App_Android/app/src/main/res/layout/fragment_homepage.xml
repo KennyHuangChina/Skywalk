@@ -59,6 +59,7 @@
                 android:layout_weight="250" >
                 <ImageView
                     android:contentDescription="@string/tab_menu_msg"
+                    android:onClick="onClickResponse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"

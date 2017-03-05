@@ -162,6 +162,12 @@ public class MainActivity extends AppCompatActivity {
                         .start(this);
             }
             break;
+
+            case R.id.im_message:
+            {
+                showTestMenu(v);
+            }
+            break;
         }
     }
 
