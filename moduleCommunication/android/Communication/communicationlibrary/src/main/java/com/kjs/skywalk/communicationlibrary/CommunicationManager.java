@@ -83,6 +83,8 @@ public class CommunicationManager {
             operation = new CmdCommitHouseByOwner(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_AMEND_HOUSE)) {
             operation = new CmdAmendHouse(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_CERT_HOUSE)) {
+            operation = new CmdCertificateHouse(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_ADD_PROPERTY)) {
             operation = new CmdAddProperty(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_PROPERTY_LIST)) {

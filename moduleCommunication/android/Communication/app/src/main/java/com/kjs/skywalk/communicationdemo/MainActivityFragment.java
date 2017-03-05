@@ -41,7 +41,15 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestModifyApi() {
-        doTestModifyApi_ModifyHouse();
+//        doTestModifyApi_ModifyHouse();
+        doTestModifyApi_CertificateHouse();
+    }
+    private void doTestModifyApi_CertificateHouse() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, "已经和业主核实，同意发布");
+        mManager.execute(CommunicationCommand.CC_GET_CERT_HOUSE, pMap, this, this);
     }
     private void doTestModifyApi_ModifyHouse() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());

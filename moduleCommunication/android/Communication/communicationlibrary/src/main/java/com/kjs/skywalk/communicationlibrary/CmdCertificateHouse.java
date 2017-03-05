@@ -1,0 +1,64 @@
+package com.kjs.skywalk.communicationlibrary;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+/**
+ * Created by kenny on 2017/3/5.
+ */
+
+class CmdCertificateHouse extends CommunicationBase {
+    private int     mHouseId        = 0;
+    private String  mCertComment    = "";
+
+    CmdCertificateHouse(Context context, String strAPI) {
+        super(context, strAPI);
+    }
+
+    @Override
+    public int doOperation(HashMap<String, String> map,
+                           CommunicationInterface.CICommandListener commandListener,
+                           CommunicationInterface.CIProgressListener progressListener) {
+        Log.i(TAG, "doOperation");
+        mCommandURL = "/v1/house/cert/" + mHouseId;
+        generateRequestData();
+        super.doOperation(map, commandListener, progressListener);
+
+        Log.i(TAG, "doOperation ... out");
+        return CommunicationError.CE_ERROR_NO_ERROR;
+    }
+
+    @Override
+    public boolean checkParameter(HashMap<String, String> map) {
+        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
+                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT)) {
+            return false;
+        }
+
+        try {
+            mHouseId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
+            mCertComment = map.get(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
+        ResBase result = new ResBase(nErrCode, jObject);
+        return result;
+    }
+
+    private void generateRequestData() {
+        mRequestData = ("cc=" + mCertComment);
+        Log.d(TAG, "mRequestData: " + mRequestData);
+    }
+}
