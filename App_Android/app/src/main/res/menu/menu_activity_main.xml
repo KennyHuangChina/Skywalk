@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="出租进度-到期"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_setting2"
+        android:orderInCategory="100"
+        android:title="出租进度-议价"
+        app:showAsAction="never"/>
 </menu>

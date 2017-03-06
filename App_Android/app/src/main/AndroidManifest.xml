@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.kjs.skywalk.app_android">
+    package="com.kjs.skywalk.app_android">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,22 +13,21 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <receiver android:name=".NotificationBroadcastReceiver">
             <intent-filter>
-                <action android:name="notification_cancelled"/>
-                <action android:name="notification_clicked"/>
+                <action android:name="notification_cancelled" />
+                <action android:name="notification_clicked" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Activity_HouseholdAppliances"/>
-        <activity android:name=".Activity_HouseholdDeliverables">
-        </activity>
+        <activity android:name=".Activity_HouseholdAppliances" />
+        <activity android:name=".Activity_HouseholdDeliverables"></activity>
         <activity
             android:name=".Apartment.Activity_ApartmentDetail"
             android:label="@string/title_activity__apartment_detail"
@@ -36,14 +35,13 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.support.v7.app.AppCompatActivity"/>
+                android:value="android.support.v7.app.AppCompatActivity" />
         </activity>
-        <activity android:name=".Activity_ImagePreview">
-        </activity>
-        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"/>
+        <activity android:name=".Activity_ImagePreview"></activity>
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />
         <activity
             android:name="me.iwf.photopicker.PhotoPagerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Activity_rentals_expiration"
             android:label="@string/title_activity_rentals_expiration"
@@ -51,8 +49,9 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.support.v7.app.AppCompatActivity"/>
+                android:value="android.support.v7.app.AppCompatActivity" />
         </activity>
+        <activity android:name=".Activity_rentals_progress_yijia"></activity>
     </application>
 
 </manifest>

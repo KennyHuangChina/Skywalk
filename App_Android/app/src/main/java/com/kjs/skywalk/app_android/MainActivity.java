@@ -274,6 +274,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_expiration.class));
                     }
                     break;
+
+                    case R.id.action_setting2:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_rentals_progress_yijia.class));
+                    }
+                    break;
                 }
                 return false;
             }
