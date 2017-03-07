@@ -12,4 +12,12 @@
         android:orderInCategory="100"
         android:title="出租进度-议价"
         app:showAsAction="never"/>
+
+
+
+    <item
+        android:id="@+id/action_setting100"
+        android:orderInCategory="100"
+        android:title="出租进度-交房-抄表"
+        app:showAsAction="never"/>
 </menu>

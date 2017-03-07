@@ -52,6 +52,15 @@
                 android:value="android.support.v7.app.AppCompatActivity" />
         </activity>
         <activity android:name=".Activity_rentals_progress_yijia"></activity>
+        <activity
+            android:name=".Activity_rentals_jiaofang_chaobiao"
+            android:label="@string/title_activity_rentals_jiaofang_chaobiao"
+            android:parentActivityName="android.support.v7.app.AppCompatActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.support.v7.app.AppCompatActivity" />
+        </activity>
     </application>
 
 </manifest>

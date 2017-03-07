@@ -280,6 +280,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_progress_yijia.class));
                     }
                     break;
+
+                    case R.id.action_setting100:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_rentals_jiaofang_chaobiao.class));
+                        break;
+                    }
                 }
                 return false;
             }

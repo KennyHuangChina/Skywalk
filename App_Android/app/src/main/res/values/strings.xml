@@ -115,4 +115,6 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_rentals_expiration">Activity_rentals_expiration</string>
+    <string name="title_activity_rentals_jiaofang_chaobiao">Activity_rentals_jiaofang_chaobiao</string>
+
 </resources>
