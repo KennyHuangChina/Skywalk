@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:text="租金"/>
+
+        <EditText
+            android:id="@+id/et_zujin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="50dp"
+            android:textSize="15sp"
+            android:inputType="text"
+            android:gravity="right|center_vertical"
+            android:ems="10"
+            android:background="@drawable/shape_rect_with_edge" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:textSize="15sp"
+            android:text="元/月"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:text="物业费"/>
+
+        <EditText
+            android:id="@+id/et_wuyefei"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="50dp"
+            android:textSize="15sp"
+            android:inputType="text"
+            android:gravity="right|center_vertical"
+            android:ems="10"
+            android:background="@drawable/shape_rect_with_edge" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:textSize="15sp"
+            android:text="元/月"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center">
+
+        <TextView
+            android:text="取消"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_cancel"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:contentDescription=""
+            android:background="#EFEFEF" />
+
+        <TextView
+            android:text="提交新价格"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_confirm"
+            android:textColor="#00AF60"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </LinearLayout>
+</LinearLayout>

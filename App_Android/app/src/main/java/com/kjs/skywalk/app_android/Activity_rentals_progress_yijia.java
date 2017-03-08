@@ -26,7 +26,7 @@ public class Activity_rentals_progress_yijia extends AppCompatActivity {
 
             case R.id.tv_refuse:
             {
-                finish();
+                showRefuseDlg();
             }
             break;
 
@@ -38,13 +38,13 @@ public class Activity_rentals_progress_yijia extends AppCompatActivity {
 
             case R.id.tv_reoffer:
             {
-                finish();
+                showReOfferDlg();
             }
             break;
 
             case R.id.tv_transform:
             {
-                finish();
+                showTransformDlg();
             }
             break;
 
@@ -72,6 +72,81 @@ public class Activity_rentals_progress_yijia extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mInputPwdDlg.dismiss();
+            }
+        });
+    }
+
+    private AlertDialog mRefuseDlg;
+    private void showRefuseDlg() {
+        if (mRefuseDlg == null) {
+            mRefuseDlg = new AlertDialog.Builder(this).create();
+        }
+        mRefuseDlg.show();
+        mRefuseDlg.setContentView(R.layout.dialog_rentals_progress_refuse);
+
+        TextView tvBack = (TextView) mRefuseDlg.findViewById(R.id.tv_cancel);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRefuseDlg.dismiss();
+            }
+        });
+
+        TextView tvRefuse = (TextView) mRefuseDlg.findViewById(R.id.tv_refuse);
+        tvRefuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRefuseDlg.dismiss();
+            }
+        });
+    }
+
+    private AlertDialog mReOfferDlg;
+    private void showReOfferDlg() {
+        if (mReOfferDlg == null) {
+            mReOfferDlg = new AlertDialog.Builder(this).create();
+        }
+        mReOfferDlg.show();
+        mReOfferDlg.setContentView(R.layout.dialog_rentals_progress_reoffer);
+
+        TextView tvBack = (TextView) mReOfferDlg.findViewById(R.id.tv_cancel);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mReOfferDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mReOfferDlg.findViewById(R.id.tv_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mReOfferDlg.dismiss();
+            }
+        });
+    }
+
+    private AlertDialog mTransformDlg;
+    private void showTransformDlg() {
+        if (mTransformDlg == null) {
+            mTransformDlg = new AlertDialog.Builder(this).create();
+        }
+        mTransformDlg.show();
+        mTransformDlg.setContentView(R.layout.dialog_rentals_progress_transform);
+
+        TextView tvBack = (TextView) mTransformDlg.findViewById(R.id.tv_cancel);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTransformDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mTransformDlg.findViewById(R.id.tv_transform);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTransformDlg.dismiss();
             }
         });
     }
