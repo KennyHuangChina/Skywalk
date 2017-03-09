@@ -78,10 +78,11 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"
                 android:background="@drawable/shape_rect_with_edge">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="90"/>
+                    android:layout_weight="80"/>
 
                 <TextView
                     android:layout_width="0dp"
