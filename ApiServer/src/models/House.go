@@ -862,6 +862,11 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 		return err
 	}
 
+	// only the agency and administrator could recommend/unrecommend
+	// if !isHouseAgency(h, uid) || (_, bAdmin := isAdministrator(uid); !bAdmin) {
+	// 	return
+	// }
+
 	switch act {
 	case 1: // recomment
 		beego.Debug(FN, "Recommend house:", hid)
@@ -880,29 +885,23 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 		// right checking
 		nullTime := time.Time{}
 		// beego.Debug(FN, "nullTime:", nullTime, ", h.PublishTime:", h.PublishTime)
-		if nil == interface{}(h.PublishTime) || nullTime == h.PublishTime { // can not publish house not published
+		if nil == interface{}(h.PublishTime) || nullTime == h.PublishTime { // can not publish the house that not published
 			beego.Debug(FN, "not published")
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "house not published"}
 			return
 		}
 
 		beego.Debug(FN, "h.Agency.Id:", h.Agency.Id)
-		bOK := false
-		if h.Agency.Id == uid {
-			bOK = true // agency could recommend houses represent by himself
+		permission := 0
+		if h.Agency.Id == uid { // agency could recommend houses represent by himself
+			permission = 1
 		} else {
-			errT, bAdmin := isAdministrator(uid)
-			beego.Debug(FN, "errT:", errT, ", bAdmin:", bAdmin)
-			if nil != errT {
-				err = errT
-				return
-			}
-			if bAdmin { // administrator could recomment any house
-				bOK = true
+			if _, bAdmin := isAdministrator(uid); bAdmin { // administrator could recomment any house
+				permission = 2
 			}
 		}
-		beego.Debug(FN, "bOK:", bOK)
-		if !bOK {
+		beego.Debug(FN, "permission:", permission)
+		if 0 == permission {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
 			return
 		}
@@ -929,20 +928,15 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 			return
 		}
 		// right checking
-		bOK := false
+		permission := 0
 		if r.Who == uid {
-			bOK = true
+			permission = 1
 		} else {
-			errT, bAdmin := isAdministrator(uid)
-			if nil != errT {
-				err = errT
-				return
-			}
-			if bAdmin {
-				bOK = true
+			if _, bAdmin := isAdministrator(uid); bAdmin {
+				permission = 2
 			}
 		}
-		if !bOK {
+		if 0 == permission {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
 			return
 		}
