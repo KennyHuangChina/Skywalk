@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 class CmdCertificateHouse extends CommunicationBase {
     private int     mHouseId        = 0;
+    private boolean mPass           = false;
     private String  mCertComment    = "";
 
     CmdCertificateHouse(Context context, String strAPI) {
@@ -36,13 +37,15 @@ class CmdCertificateHouse extends CommunicationBase {
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT)) {
+                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT) ||
+                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_PASS) ) {
             return false;
         }
 
         try {
             mHouseId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            mCertComment = map.get(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT);
+            mCertComment = String2Base64(map.get(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT));
+            mPass = Boolean.parseBoolean(map.get(CommunicationParameterKey.CPK_HOUSE_CERT_PASS));
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;
@@ -59,6 +62,8 @@ class CmdCertificateHouse extends CommunicationBase {
 
     private void generateRequestData() {
         mRequestData = ("cc=" + mCertComment);
+        mRequestData += "&";
+        mRequestData += ("ps=" +  mPass);
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 }

@@ -36,6 +36,7 @@ public class MainActivityFragment extends Fragment
     private EditText mEditText1 = null;
     private EditText mEditText2 = null;
     private int mListTotal = 0;
+    private boolean mCertificate = false;
 
     public MainActivityFragment() {
     }
@@ -48,7 +49,13 @@ public class MainActivityFragment extends Fragment
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, "已经和业主核实，同意发布");
+        if (mCertificate) {
+            pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, "已经和业主核实，同意发布");
+        } else {
+            pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, "撤销发布");
+        }
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_PASS, mCertificate ? "true" : "false");
+        mCertificate = !mCertificate;
         mManager.execute(CommunicationCommand.CC_GET_CERT_HOUSE, pMap, this, this);
     }
     private void doTestModifyApi_ModifyHouse() {
