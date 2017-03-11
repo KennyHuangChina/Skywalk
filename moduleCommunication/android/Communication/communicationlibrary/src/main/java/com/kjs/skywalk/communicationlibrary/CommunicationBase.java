@@ -133,7 +133,8 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        return null;
+        ResBase result = new ResBase(nErrCode, jObject);
+        return result;
     }
 
     @Override

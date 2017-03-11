@@ -111,12 +111,6 @@ class CmdAmendHouse extends CommunicationBase {
         return true;
     }
 
-    @Override
-    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResBase result = new ResBase(nErrCode, jObject);
-        return result;
-    }
-
     private void generateRequestData() {
         mRequestData = ("prop=" + mPropId);
         mRequestData += "&";

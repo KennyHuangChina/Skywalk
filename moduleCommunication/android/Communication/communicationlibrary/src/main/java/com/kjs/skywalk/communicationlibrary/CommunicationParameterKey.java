@@ -35,4 +35,6 @@ public class CommunicationParameterKey {
 
     public static String CPK_HOUSE_CERT_PASS    = "HouseCertPass";
     public static String CPK_HOUSE_CERT_COMMENT = "HouseCertComment";
+
+    public static String CPK_HOUSE_COVER_IMG = "HouseCoverImage";
 }

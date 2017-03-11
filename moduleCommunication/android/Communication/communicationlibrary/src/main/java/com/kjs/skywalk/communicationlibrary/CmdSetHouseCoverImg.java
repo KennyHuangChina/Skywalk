@@ -1,7 +1,6 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -9,16 +8,18 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Created by kenny on 2017/3/5.
+ * Created by kenny on 2017/3/11.
  */
 
-class CmdCertificateHouse extends CommunicationBase {
-    private int     mHouseId        = 0;
-    private boolean mPass           = false;
-    private String  mCertComment    = "";
+class CmdSetHouseCoverImg extends CommunicationBase {
+    private int mHouse      = 0;
+    private int mCoverImg   = 0;
 
-    CmdCertificateHouse(Context context, String strAPI) {
+    CmdSetHouseCoverImg(Context context, String strAPI) {
         super(context, strAPI);
+        TAG = "CmdAddProperty";
+//        Log.i(TAG, "Constructor");
+        mMethodType = "PUT";
     }
 
     @Override
@@ -26,7 +27,9 @@ class CmdCertificateHouse extends CommunicationBase {
                            CommunicationInterface.CICommandListener commandListener,
                            CommunicationInterface.CIProgressListener progressListener) {
         Log.i(TAG, "doOperation");
-        mCommandURL = "/v1/house/cert/" + mHouseId;
+
+        mCommandURL = "/v1/house/covimg/" + mHouse;
+//        mCommandURL += "/";
         generateRequestData();
         super.doOperation(map, commandListener, progressListener);
 
@@ -37,15 +40,13 @@ class CmdCertificateHouse extends CommunicationBase {
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT) ||
-                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_PASS) ) {
+                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_COVER_IMG) ) {
             return false;
         }
 
         try {
-            mHouseId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            mCertComment = String2Base64(map.get(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT));
-            mPass = Boolean.parseBoolean(map.get(CommunicationParameterKey.CPK_HOUSE_CERT_PASS));
+            mHouse = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
+            mCoverImg = Integer.parseInt(map.get(CommunicationParameterKey.CPK_HOUSE_COVER_IMG));
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;
@@ -55,9 +56,7 @@ class CmdCertificateHouse extends CommunicationBase {
     }
 
     private void generateRequestData() {
-        mRequestData = ("cc=" + mCertComment);
-        mRequestData += "&";
-        mRequestData += ("ps=" +  mPass);
+        mRequestData = ("img=" + mCoverImg);
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 }

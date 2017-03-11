@@ -24,6 +24,7 @@ public class CommunicationCommand {
     public static String CC_GET_COMMIT_HOUSE_BY_OWNER           = "CommandCommitHouseByOwner";
     public static String CC_GET_AMEND_HOUSE                     = "CommandAmendHouseInfo";
     public static String CC_GET_CERT_HOUSE                      = "CommandCertificateHouse";
+    public static String CC_GET_SET_HOUSE_COVER_IMAGE           = "CommandSetHouseCoverImage";
 
 
     public static String CC_TEST                                = "CommandTest";

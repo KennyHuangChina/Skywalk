@@ -43,7 +43,15 @@ public class MainActivityFragment extends Fragment
 
     private void doTestModifyApi() {
 //        doTestModifyApi_ModifyHouse();
-        doTestModifyApi_CertificateHouse();
+//        doTestModifyApi_CertificateHouse();
+        doTestModifyApi_SetHouseCoverImage();
+    }
+    private void doTestModifyApi_SetHouseCoverImage() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_COVER_IMG, "30");
+        mManager.execute(CommunicationCommand.CC_GET_SET_HOUSE_COVER_IMAGE, pMap, this, this);
     }
     private void doTestModifyApi_CertificateHouse() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
