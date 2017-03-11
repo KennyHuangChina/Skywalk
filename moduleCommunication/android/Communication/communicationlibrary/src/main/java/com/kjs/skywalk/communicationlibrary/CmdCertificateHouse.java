@@ -19,6 +19,8 @@ class CmdCertificateHouse extends CommunicationBase {
 
     CmdCertificateHouse(Context context, String strAPI) {
         super(context, strAPI);
+        TAG = "CmdCertificateHouse";
+        mMethodType = "POST";
     }
 
     @Override

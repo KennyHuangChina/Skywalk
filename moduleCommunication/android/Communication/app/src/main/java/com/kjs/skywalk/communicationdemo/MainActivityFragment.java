@@ -44,8 +44,19 @@ public class MainActivityFragment extends Fragment
     private void doTestModifyApi() {
 //        doTestModifyApi_ModifyHouse();
 //        doTestModifyApi_CertificateHouse();
-        doTestModifyApi_SetHouseCoverImage();
+//        doTestModifyApi_SetHouseCoverImage();
+        doTestModifyApi_AddProperty();
     }
+    private void doTestModifyApi_AddProperty() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "7");
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditText.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, mEditText1.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, mEditText2.getText().toString());
+        mManager.execute(CommunicationCommand.CC_MODIFY_PROPERTY, pMap, this, this);
+    }
+
     private void doTestModifyApi_SetHouseCoverImage() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -111,7 +122,7 @@ public class MainActivityFragment extends Fragment
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, mEditText.getText().toString());
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, mEditText1.getText().toString());
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, mEditText2.getText().toString());
-        mManager.execute(CommunicationCommand.CC_GET_ADD_PROPERTY, pMap, this, this);
+        mManager.execute(CommunicationCommand.CC_ADD_PROPERTY, pMap, this, this);
     }
 
     private void doTestGetApi() {

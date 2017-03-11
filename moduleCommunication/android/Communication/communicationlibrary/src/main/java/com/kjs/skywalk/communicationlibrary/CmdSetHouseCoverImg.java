@@ -17,7 +17,7 @@ class CmdSetHouseCoverImg extends CommunicationBase {
 
     CmdSetHouseCoverImg(Context context, String strAPI) {
         super(context, strAPI);
-        TAG = "CmdAddProperty";
+        TAG = "CmdSetHouseCoverImg";
 //        Log.i(TAG, "Constructor");
         mMethodType = "PUT";
     }
