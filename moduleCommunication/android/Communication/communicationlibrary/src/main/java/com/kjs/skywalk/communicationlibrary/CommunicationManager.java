@@ -87,6 +87,8 @@ public class CommunicationManager {
             operation = new CmdCertificateHouse(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_SET_HOUSE_COVER_IMAGE)) {
             operation = new CmdSetHouseCoverImg(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_RECOMMEND_HOUSE)) {
+            operation = new CmdRecommendHouse(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_PROPERTY)) {
             operation = new CmdAddProperty(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_MODIFY_PROPERTY)) {
