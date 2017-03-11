@@ -104,21 +104,27 @@ func (this *HouseController) UpdateProperty() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
+	uid, err := getLoginUser(this.Controller)
 	if nil != err {
 		return
 	}
 
 	pid, _ := this.GetInt64(":id")
-	name := this.GetString("name")
+	prop := this.GetString("prop")
+	tmp, _ := base64.URLEncoding.DecodeString(prop)
+	prop = string(tmp)
 	addr := this.GetString("addr")
+	tmp, _ = base64.URLEncoding.DecodeString(addr)
+	addr = string(tmp)
 	desc := this.GetString("desc")
+	tmp, _ = base64.URLEncoding.DecodeString(desc)
+	desc = string(tmp)
 	// beego.Debug(FN, "pid:", pid)
 
 	/*
 	 *	Processing
 	 */
-	err = models.ModifyProperty(pid, name, addr, desc)
+	err = models.ModifyProperty(uid, pid, prop, addr, desc)
 	if nil == err {
 		// result.Id = id
 	}
@@ -150,10 +156,10 @@ func (this *HouseController) AddProperty() {
 	/*
 	 *	Extract agreements
 	 */
-	// /*uid*/ _, err = getLoginUser(this.Controller)
-	// if nil != err {
-	// 	return
-	// }
+	/*uid*/ _, err = getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
 
 	prop := this.GetString("prop")
 	addr := this.GetString("addr")

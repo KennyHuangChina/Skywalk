@@ -192,7 +192,7 @@
 	[Security]	private
 	[Request]
   		* PUT /v1/house/property/:id
-	  		* name    		string		// property name
+	  		* prop    		string		// property name
 	  		* addr 			string		// property location
 	  		* desc    		string		// property description
 	[Response]

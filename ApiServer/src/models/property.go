@@ -9,7 +9,7 @@ import (
 )
 
 /**
-*	add property
+*	add property. Anyone loginned could add new property
 *	Arguments:
 *		prop	- property name
 *		addr 	- property address
@@ -66,6 +66,7 @@ func AddProperty(prop, addr, desc string) (err error, id int64) {
 /**
 *	Update property info
 *	Arguments:
+*		uid		- login user
 *		pid		- property id
 *		name	- property name
 *		addr	- property address
@@ -73,7 +74,7 @@ func AddProperty(prop, addr, desc string) (err error, id int64) {
 *	Returns
 *		err 	- error info
  */
-func ModifyProperty(pid int64, name, addr, desc string) (err error) {
+func ModifyProperty(uid, pid int64, name, addr, desc string) (err error) {
 	FN := "[ModifyProperty] "
 	beego.Trace(FN, "pid:", pid, ", name:", name, ", addr:", addr, ", desc:", desc)
 
@@ -84,40 +85,48 @@ func ModifyProperty(pid int64, name, addr, desc string) (err error) {
 	}()
 
 	/* Argeuments checking */
-	if pid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property id:%d", pid)}
+	err, _ = GetPropertyInfo(pid)
+	if nil != err {
 		return
 	}
 	if 0 == len(name) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property name:%d", pid)}
 		return
 	}
-
-	o := orm.NewOrm()
-
-	// pid exist?
-	p := TblProperty{Id: pid}
-	errT := o.Read(&p)
-	if nil != errT { // property already exist
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property id:%d", pid)}
+	if 0 == len(addr) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("address:%d", addr)}
+		return
+	}
+	if 0 == len(desc) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("description:%d", desc)}
 		return
 	}
 
-	// new name duplicate?
-	t := TblProperty{Name: name}
-	errT = o.Read(&t, "Name")
-	// beego.Debug(FN, "t.Id:", t.Id)
-	if nil == errT && t.Id != pid {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property id:%d", pid)}
+	/* permission checking */
+	// only the agency and administrator could modify property info
+	bPermission := false
+	if _, bAgency := isAgency(uid); bAgency {
+		bPermission = true
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		bPermission = true
+	}
+	if !bPermission {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	// new name duplicate with other property?
+	// maybe the property name is partial identical with one or some properties already exist
+	qs := o.QueryTable("tbl_property")
+	if qs.Filter("Name__contains", name).Exist() {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property id:%d", pid)}
 		return
 	}
 
 	// Update
-	p.Id = pid
-	p.Name = name
-	p.Address = addr
-	p.Desc = desc
-	/*numb*/ _, errT = o.Update(&p, "Name", "Address", "Desc")
+	/*numb*/ _, errT := o.Update(&TblProperty{Id: pid, Name: name, Address: addr, Desc: desc}, "Name", "Address", "Desc")
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
@@ -217,6 +226,11 @@ func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
 			beego.Error(FN, err)
 		}
 	}()
+
+	if pid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property id:%d", pid)}
+		return
+	}
 
 	o := orm.NewOrm()
 
