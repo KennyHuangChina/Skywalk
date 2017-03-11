@@ -240,3 +240,40 @@ func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
 
 	return
 }
+
+/*********************************************************************************************************
+*
+*	Internal Functions
+*
+**********************************************************************************************************/
+/**
+*	Get house property name
+*	Arguments:
+*		hid		- house id
+*	Returns
+*		err 	- error info
+*		prop	- property name
+**/
+func getHouseProperty(hid int64) (err error, prop string) {
+	FN := "[getHouseProperty] "
+	beego.Trace(FN, "hid:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+
+	sql := fmt.Sprintf("SELECT name FROM tbl_house AS house, tbl_property AS prop WHERE house.id=%d AND house.property_id=prop.id", hid)
+	Name := ""
+	errT := o.Raw(sql).QueryRow(&Name)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	prop = Name
+	return
+}
