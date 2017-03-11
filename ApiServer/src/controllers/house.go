@@ -692,17 +692,21 @@ func (this *HouseController) CertHouse() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
+	uid, err := getLoginUser(this.Controller)
 	if nil != err {
 		return
 	}
 
 	hid, _ := this.GetInt64(":id")
+	pass, _ := this.GetBool("ps")
+	comment := this.GetString("cc")
+	tmp, _ := base64.URLEncoding.DecodeString(comment)
+	comment = string(tmp)
 
 	/*
 	 *	Processing
 	 */
-	err = models.CertHouse(hid)
+	err = models.CertHouse(hid, uid, pass, comment)
 	if nil == err {
 		// result.Id = id
 	}

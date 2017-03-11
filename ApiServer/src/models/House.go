@@ -437,13 +437,16 @@ func SetHouseCoverImage(hid, cid int64) (err error) {
 /**
 *	Certify House
 *	Arguments:
-*		hid - house id
+*		hid 	- house id
+*		uid		- who made the certification
+*		pass	- certificate result, pass or not
+*		comment	- certificate comment
 *	Returns
 *		err - error info
  */
-func CertHouse(hid int64) (err error) {
+func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	FN := "[CertHouse] "
-	beego.Trace(FN, "hid:", hid)
+	beego.Trace(FN, "hid:", hid, ", uid:", uid, ", pass:", pass, ", comment:", comment)
 
 	defer func() {
 		if nil != err {
@@ -455,22 +458,56 @@ func CertHouse(hid int64) (err error) {
 	if err, _ = checkHouse(hid); nil != err {
 		return
 	}
+	if 0 == len(comment) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "No comments"}
+		return
+	}
 
-	beego.Warn(FN, "Permission checking ...")
+	/* Permission checking */
+	// Only the house agency and administrator could certificate house
+	err, bAgency := isAgency(uid)
+	if nil != err {
+		return
+	} else if !bAgency {
+		beego.Debug(FN, "not agency")
+		bAdmin := false
+		if err, bAdmin = isAdministrator(uid); nil != err {
+			return
+		} else if !bAdmin {
+			beego.Debug(FN, "not administrator")
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+			return
+		}
+	}
 
+	// Processing
 	o := orm.NewOrm()
 
-	// Update
-	tPublish := time.Now() //.UTC()
-	publishTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tPublish.Year(), tPublish.Month(), tPublish.Day(), tPublish.Hour(), tPublish.Minute(), tPublish.Second())
-	sql := fmt.Sprintf(`UPDATE tbl_house SET publish_time='%s' WHERE id=%d`, publishTime, hid)
+	// add new record in TblHouseCert
+	hc := TblHouseCert{House: hid, Who: uid, Comment: comment, Pass: pass}
+	/*nId*/ _, errT := o.Insert(&hc)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	sql := ""
+	if pass {
+		// Update & publish
+		tPublish := time.Now() //.UTC()
+		publishTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tPublish.Year(), tPublish.Month(), tPublish.Day(), tPublish.Hour(), tPublish.Minute(), tPublish.Second())
+		sql = fmt.Sprintf(`UPDATE tbl_house SET publish_time='%s' WHERE id=%d`, publishTime, hid)
+	} else {
+		// revoke the publish
+		sql = fmt.Sprintf(`UPDATE tbl_house SET publish_time=NULL WHERE id=%d`, hid)
+	}
 	res, errT := o.Raw(sql).Exec()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
 	numb, _ := res.RowsAffected()
-	beego.Debug(FN, "numb:", numb)
+	beego.Debug(FN, "affect", numb, "records")
 
 	return
 }

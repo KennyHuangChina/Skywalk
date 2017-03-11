@@ -104,6 +104,22 @@ func (h *TblHouse) TableUnique() [][]string {
 	}
 }
 
+type TblHouseCert struct {
+	Id      int64
+	House   int64     // house id
+	Who     int64     // who made the certification
+	When    time.Time `orm:"auto_now_add;type(datetime)"` // when made the certification
+	Comment string    `orm:"size(20)"`                    // certification comments
+	Pass    bool      // certificat result, pass or not
+}
+
+func (h *TblHouseCert) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+		[]string{"When"},
+	}
+}
+
 type TblRental struct {
 	Id           int64
 	HouseId      int64
@@ -314,7 +330,7 @@ func init() {
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
-		new(TblDeliverables), new(TblHouseDeliverable),
+		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),

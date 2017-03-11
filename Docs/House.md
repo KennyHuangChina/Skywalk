@@ -167,6 +167,8 @@
 	[Security]	private
 	[Request]
   		* POST /v1/house/cert/:id
+	  		* cc			string		// certificate comment
+	  		* ps			bool		// certificate result, pass or not
 	[Response]
 		* SUCCESS:200 
 		* ERR: 4XX,5XX
