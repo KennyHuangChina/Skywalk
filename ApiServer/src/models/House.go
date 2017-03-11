@@ -358,7 +358,7 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 *		err - error info
  */
 func SetHouseAgency(hid, aid int64) (err error) {
-	FN := "[CertHouse] "
+	FN := "[SetHouseAgency] "
 	beego.Trace(FN, "hid:", hid, ", aid:", aid)
 
 	defer func() {
@@ -396,12 +396,13 @@ func SetHouseAgency(hid, aid int64) (err error) {
 *	Arguments:
 *		hid - house id
 *		cid	- cover image id
+*		uid	- login user
 *	Returns
 *		err - error info
  */
-func SetHouseCoverImage(hid, cid int64) (err error) {
-	FN := "[CertHouse] "
-	beego.Trace(FN, "hid:", hid, ", cid:", cid)
+func SetHouseCoverImage(hid, cid, uid int64) (err error) {
+	FN := "[SetHouseCoverImage] "
+	beego.Trace(FN, "hid:", hid, ", cid:", cid, ", uid:", uid)
 
 	defer func() {
 		if nil != err {
@@ -410,7 +411,8 @@ func SetHouseCoverImage(hid, cid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	if err, _ = checkHouse(hid); nil != err {
+	err, h := checkHouse(hid)
+	if nil != err {
 		return
 	}
 
@@ -418,7 +420,20 @@ func SetHouseCoverImage(hid, cid int64) (err error) {
 		return
 	}
 
-	beego.Warn(FN, "Permission checking ...")
+	/* Permission checking */
+	// Only the house owner, it's agency and administrator could set the cover image
+	bPermission := false
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+		bPermission = true
+	} else {
+		if _, bAdmin := isAdministrator(uid); bAdmin {
+			bPermission = true
+		}
+	}
+	if !bPermission {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
 
 	// Update
 	o := orm.NewOrm()
@@ -1436,4 +1451,26 @@ func checkHouse(hid int64) (err error, h TblHouse) {
 
 	h = hT
 	return
+}
+
+func isHouseOwner(h TblHouse, uid int64) bool {
+	// FN := "[isHouseOwner] "
+
+	if h.Owner.Id == uid {
+		return true
+	}
+
+	return false
+}
+
+func isHouseAgency(h TblHouse, uid int64) bool {
+	// FN := "[isHouseAgency] "
+
+	if h.Agency.Id == uid {
+		if _, bAgency := isAgency(uid); bAgency {
+			return true
+		}
+	}
+
+	return false
 }

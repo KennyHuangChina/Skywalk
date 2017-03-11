@@ -740,7 +740,7 @@ func (this *HouseController) SetHouseCoverImage() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
+	uid, err := getLoginUser(this.Controller)
 	if nil != err {
 		return
 	}
@@ -751,7 +751,7 @@ func (this *HouseController) SetHouseCoverImage() {
 	/*
 	 *	Processing
 	 */
-	err = models.SetHouseCoverImage(hid, cid)
+	err = models.SetHouseCoverImage(hid, cid, uid)
 	if nil == err {
 		// result.Id = id
 	}
