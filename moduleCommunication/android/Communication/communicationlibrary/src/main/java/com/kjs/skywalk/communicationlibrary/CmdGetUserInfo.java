@@ -21,17 +21,9 @@ class CmdGetUserInfo extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-//        Log.i(TAG, "doOperation");
-
+    public String getRequestURL() {
         mCommandURL = "/v1/admin/user/" + mUserId;
-
-        super.doOperation(map, commandListener, progressListener);
-
-//        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
+        return mCommandURL;
     }
 
     @Override

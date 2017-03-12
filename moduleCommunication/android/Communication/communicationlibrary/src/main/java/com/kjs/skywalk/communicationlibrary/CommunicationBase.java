@@ -60,6 +60,12 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         mCommandListener = commandListener;
         mProgressListener = progressListener;
 
+        if (null == getRequestURL()) {
+            Log.e(TAG, "No URL set");
+            return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
+        }
+        generateRequestData();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -123,7 +129,17 @@ class CommunicationBase implements  InternalDefines.DoOperation,
             }
         }).start();
 
-        return 0;
+        return CommunicationError.CE_ERROR_NO_ERROR;
+    }
+
+    @Override
+    public String getRequestURL() {
+        return null;
+    }
+
+    @Override
+    public void generateRequestData() {
+        mRequestData = "";
     }
 
     @Override

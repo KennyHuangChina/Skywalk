@@ -38,7 +38,13 @@ class CmdGetUserSalt extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/admin/salt";
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("un=" + mUserName);
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
@@ -47,21 +53,5 @@ class CmdGetUserSalt extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetUserSalt result = new ResGetUserSalt(nErrCode, jObject);
         return result;
-    }
-
-    @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener)
-    {
-//        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/admin/salt";
-
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-//        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
     }
 }

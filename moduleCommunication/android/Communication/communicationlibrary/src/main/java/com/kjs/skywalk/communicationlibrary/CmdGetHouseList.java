@@ -25,21 +25,6 @@ class CmdGetHouseList extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-//        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/house/list";
-
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-//        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
-    }
-
-    @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_HOUSE_TYPE)) {
             return false;
@@ -68,7 +53,14 @@ class CmdGetHouseList extends CommunicationBase {
         return result;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/list";
+        return mCommandURL;
+    }
+
+    @Override
+    public void generateRequestData() {
         mRequestData = ("type=" + mType);
         mRequestData += "&";
         mRequestData += ("bgn=" + mBeginPosi);

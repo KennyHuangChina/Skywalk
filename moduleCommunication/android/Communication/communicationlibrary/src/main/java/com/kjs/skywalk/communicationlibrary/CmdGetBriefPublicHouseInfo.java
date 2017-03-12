@@ -28,8 +28,10 @@ class CmdGetBriefPublicHouseInfo extends CommunicationBase {
         mMethodType = "GET";
     }
 
-    private void generateRequestData() {
-        mRequestData = "";
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/digest/" + mParamID;
+        return mCommandURL;
     }
 
     @Override
@@ -44,22 +46,6 @@ class CmdGetBriefPublicHouseInfo extends CommunicationBase {
         }
 
        return true;
-    }
-
-    @Override
-    public int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/house/digest";
-        mCommandURL += "/" + mParamID;
-
-        generateRequestData();
-
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-
-        return CommunicationError.CE_ERROR_NO_ERROR;
     }
 
     @Override

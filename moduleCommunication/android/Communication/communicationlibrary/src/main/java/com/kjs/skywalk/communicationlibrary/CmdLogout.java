@@ -27,8 +27,10 @@ class CmdLogout extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
-        mRequestData = "";
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/admin/logout";
+        return mCommandURL;
     }
 
     @Override
@@ -41,20 +43,5 @@ class CmdLogout extends CommunicationBase {
         sessStore.save("");
 
         return null;
-    }
-
-    @Override
-    public int doOperation(HashMap<String, String> map, CommunicationInterface.CICommandListener commandListener, CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/admin/logout";
-
-        generateRequestData();
-
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-
-        return CommunicationError.CE_ERROR_NO_ERROR;
     }
 }

@@ -77,7 +77,13 @@ class CmdRelogin extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/admin/relogin/" + mSession;
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("ln=" + mUserName);
         mRequestData += "&";
         mRequestData += ("ver=" + mVersion);
@@ -92,19 +98,11 @@ class CmdRelogin extends CommunicationBase {
                            CommunicationInterface.CICommandListener commandListener,
                            CommunicationInterface.CIProgressListener progressListener)
     {
-//        Log.i(TAG, "doOperation");
         if (mSession.isEmpty()) {
             Log.e(TAG, "mSession is empty");
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
-        // POST /v1/admin/relogin/:id
-        mCommandURL = "/v1/admin/relogin/" + mSession;
-
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-//        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
+        return super.doOperation(map, commandListener, progressListener);
     }
 
     @Override

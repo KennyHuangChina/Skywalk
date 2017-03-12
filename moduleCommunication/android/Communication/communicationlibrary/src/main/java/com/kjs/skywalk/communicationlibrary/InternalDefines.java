@@ -15,6 +15,8 @@ class InternalDefines {
 
     public interface DoOperation {
         int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener);
+        String getRequestURL();
+        void generateRequestData();
     }
     public interface CheckParameter {
         boolean checkParameter(HashMap<String, String> map);

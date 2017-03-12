@@ -27,21 +27,19 @@ class CmdAddProperty extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
+    public String getRequestURL() {
         mCommandURL = "/v1/house/property";
-//        mCommandURL += "/";
+        return mCommandURL;
+    }
 
-        generateRequestData();
-
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-
-        return CommunicationError.CE_ERROR_NO_ERROR;
+    @Override
+    public void generateRequestData() {
+        mRequestData = ("prop=" + mPropName);
+        mRequestData += "&";
+        mRequestData += ("addr=" + mPropAddr);
+        mRequestData += "&";
+        mRequestData += ("desc=" + mPropDesc);
+        Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
     @Override
@@ -74,16 +72,6 @@ class CmdAddProperty extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResAddProperty result = new ResAddProperty(nErrCode, jObject);
         return result;
-    }
-
-    private void generateRequestData() {
-        mRequestData = ("prop=" + mPropName);
-        mRequestData += "&";
-        mRequestData += ("addr=" + mPropAddr);
-        mRequestData += "&";
-        mRequestData += ("desc=" + mPropDesc);
-
-        Log.d(TAG, "mRequestData: " + mRequestData);
     }
 }
 

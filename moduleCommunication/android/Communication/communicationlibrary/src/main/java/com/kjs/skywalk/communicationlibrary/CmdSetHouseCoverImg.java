@@ -23,21 +23,6 @@ class CmdSetHouseCoverImg extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/house/covimg/" + mHouse;
-//        mCommandURL += "/";
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
-    }
-
-    @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
                 !map.containsKey(CommunicationParameterKey.CPK_HOUSE_COVER_IMG) ) {
@@ -55,7 +40,13 @@ class CmdSetHouseCoverImg extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/covimg/" + mHouse;
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("img=" + mCoverImg);
         Log.d(TAG, "mRequestData: " + mRequestData);
     }

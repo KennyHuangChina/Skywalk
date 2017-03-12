@@ -23,28 +23,19 @@ class CmdGetPropertyList extends CommunicationBase {
         mMethodType = "GET";
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/property/list";
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("name=" + mPropertyName);
         mRequestData += "&";
         mRequestData += ("bgn=" + mBeginPosi);
         mRequestData += "&";
         mRequestData += ("cnt=" + mFetchCount);
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-//        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/house/property/list";
-
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-//        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
     }
 
     @Override

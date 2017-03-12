@@ -23,21 +23,6 @@ class CmdModifyPropertyInfo extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/house/property/" + mPropId;
-//        mCommandURL += "/";
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
-    }
-
-    @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
                 !map.containsKey(CommunicationParameterKey.CPK_PROPERTY_NAME) ||
@@ -81,7 +66,13 @@ class CmdModifyPropertyInfo extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/property/" + mPropId;
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("prop=" + mPropName);
         mRequestData += "&";
         mRequestData += ("addr=" + mPropAddr);

@@ -38,7 +38,13 @@ class CmdGetSmsCode extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/admin/fetchsms";
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("ln=" + mUserName);
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
@@ -47,21 +53,5 @@ class CmdGetSmsCode extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetSmsCode result = new ResGetSmsCode(nErrCode, jObject);
         return result;
-    }
-
-    @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener)
-    {
-//        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/admin/fetchsms";
-
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-//        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
     }
 }

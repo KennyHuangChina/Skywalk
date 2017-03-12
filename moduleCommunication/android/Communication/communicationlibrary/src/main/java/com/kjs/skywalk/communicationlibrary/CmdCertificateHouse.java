@@ -24,19 +24,6 @@ class CmdCertificateHouse extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-        mCommandURL = "/v1/house/cert/" + mHouseId;
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
-    }
-
-    @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
                 !map.containsKey(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT) ||
@@ -56,7 +43,14 @@ class CmdCertificateHouse extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/cert/" + mHouseId;
+        return mCommandURL;
+    }
+
+    @Override
+    public void generateRequestData() {
         mRequestData = ("cc=" + mCertComment);
         mRequestData += "&";
         mRequestData += ("ps=" +  mPass);

@@ -31,24 +31,6 @@ class CmdLoginBySms extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/admin/loginsms";
-//        mCommandURL += "/";
-
-        generateRequestData();
-
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-
-        return CommunicationError.CE_ERROR_NO_ERROR;
-    }
-
-    @Override
     public boolean checkParameter(HashMap<String, String> map) {
 //        return super.checkParameter(map);
         if(!map.containsKey(CommunicationParameterKey.CPK_USER_NAME) ||
@@ -93,7 +75,13 @@ class CmdLoginBySms extends CommunicationBase {
         return result;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/admin/loginsms";
+        return mCommandURL;
+    }
+    @Override
+    public void generateRequestData() {
         mRequestData = ("ver=" +  mVersion);
         mRequestData += "&";
         mRequestData += ("ln=" +  mLoginName);

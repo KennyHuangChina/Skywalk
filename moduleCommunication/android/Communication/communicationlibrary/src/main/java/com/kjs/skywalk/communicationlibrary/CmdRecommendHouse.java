@@ -21,21 +21,6 @@ class CmdRecommendHouse extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener) {
-        Log.i(TAG, "doOperation");
-
-        mCommandURL = "/v1/house/recommend/" + mHouseId;
-//        mCommandURL += "/";
-        generateRequestData();
-        super.doOperation(map, commandListener, progressListener);
-
-        Log.i(TAG, "doOperation ... out");
-        return CommunicationError.CE_ERROR_NO_ERROR;
-    }
-
-    @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
                 !map.containsKey(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT) ) {
@@ -61,7 +46,14 @@ class CmdRecommendHouse extends CommunicationBase {
         return true;
     }
 
-    private void generateRequestData() {
+    @Override
+    public String getRequestURL() {
+        mCommandURL = "/v1/house/recommend/" + mHouseId;
+        return mCommandURL;
+    }
+
+    @Override
+    public void generateRequestData() {
         mRequestData = ("act=" + mAct);
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
