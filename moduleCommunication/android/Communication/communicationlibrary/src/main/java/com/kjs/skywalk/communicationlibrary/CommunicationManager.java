@@ -101,6 +101,8 @@ public class CommunicationManager {
             operation = new CmdGetPropertyInfo(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_DELIVERABLE)) {
             operation = new CmdAddDeliverable(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_DELIVERABLE_LIST)) {
+            operation = new CmdGetDeliverableList(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

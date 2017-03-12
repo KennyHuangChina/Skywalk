@@ -33,6 +33,7 @@ public class CommunicationCommand {
 
     // Deliverables
     public static String CC_ADD_DELIVERABLE                     = "CommandAddDeliverable";
+    public static String CC_GET_DELIVERABLE_LIST                = "CommandGetDeliverableList";
 
     public static String CC_TEST                                = "CommandTest";
 }

@@ -30,7 +30,7 @@ class ResList implements InternalDefines.IListInner {
         }
 
         for (int n = 0; n < mList.size(); n++) {
-            strList += ("  <" + n + "> " + ListItem2String(mList.get(n)) + "\n");
+            strList += ("  <" + n + "> " + getListItem2String(mList.get(n)) + "\n");
         }
 
         return strList;
@@ -72,8 +72,10 @@ class ResList implements InternalDefines.IListInner {
         return 0;
     }
 
-    @Override
-    public String ListItem2String(Object item) {
-        return "";
+    protected String getListItem2String(Object item) {
+        if (null == item) {
+            return "";
+        }
+        return ((InternalDefines.IListItemInfoInner)item).ListItemInfo2String();
     }
 }

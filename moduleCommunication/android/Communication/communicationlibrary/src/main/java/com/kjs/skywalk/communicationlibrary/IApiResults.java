@@ -83,4 +83,9 @@ public class IApiResults {
     public interface IAddRes {
         int GetId();
     }
+
+    public interface IListIdName {
+        int GetId();
+        String GetName();
+    }
 }

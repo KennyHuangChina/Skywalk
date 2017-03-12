@@ -140,13 +140,6 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
 
             return 0;
         }
-        @Override
-        public String ListItem2String(Object item) {
-            if (null == item) {
-                return "";
-            }
-            return ((HouseTag)item).ListItemInfo2String();
-        }
 
         class HouseTag implements IApiResults.IHouseTag, InternalDefines.IListItemInfoInner {
             int mTagId = 0;

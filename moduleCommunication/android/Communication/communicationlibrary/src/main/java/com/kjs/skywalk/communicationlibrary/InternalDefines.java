@@ -36,7 +36,6 @@ class InternalDefines {
 
     interface IListInner {
         int parseListItems(JSONObject obj);
-        String ListItem2String(Object item);
     }
 
     interface IListItemInfoInner {

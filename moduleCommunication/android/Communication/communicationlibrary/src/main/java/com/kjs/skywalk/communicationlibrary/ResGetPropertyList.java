@@ -56,6 +56,8 @@ class ResGetPropertyList extends ResBase implements IApiResults.IResultList {
         return null;
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //
     class PropertyList extends ResList {
 
         PropertyList() {
@@ -84,14 +86,8 @@ class ResGetPropertyList extends ResBase implements IApiResults.IResultList {
             return 0;
         }
 
-        @Override
-        public String ListItem2String(Object item) {
-            if (null == item) {
-                return "";
-            }
-            return ((ProperryInfo)item).ListItemInfo2String();
-        }
-
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //
         class ProperryInfo implements IApiResults.IPropertyInfo, InternalDefines.IListItemInfoInner {
             private int       mId         = 0;
             private String    mName       = "";

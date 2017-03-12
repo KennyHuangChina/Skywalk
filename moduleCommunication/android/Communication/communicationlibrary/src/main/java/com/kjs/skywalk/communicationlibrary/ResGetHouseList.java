@@ -86,8 +86,7 @@ class ResGetHouseList extends ResBase implements IApiResults.IResultList {
             return 0;
         }
 
-        @Override
-        public String ListItem2String(Object item) {
+        protected String getListItem2String(Object item) {
             if (null == item) {
                 return "";
             }
