@@ -109,6 +109,8 @@ public class CommunicationManager {
             operation = new CmdGetHouseDeliverables(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_FACILITY_TYPE)) {
             operation = new CmdAddFacilityType(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_FACILITY_TYPE_LIST)) {
+            operation = new CmdGetFacilityTypeList(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }
