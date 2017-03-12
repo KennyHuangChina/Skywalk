@@ -482,6 +482,9 @@ func (this *HouseController) AddFacilityType() {
 	}
 
 	name := this.GetString("name")
+	// beego.Debug(FN, "name:", name)
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
 	beego.Debug(FN, "name:", name)
 
 	/*
