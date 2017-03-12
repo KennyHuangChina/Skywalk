@@ -16,28 +16,13 @@
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_info_title"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:onClick="onViewClick"
-            android:drawableLeft="@drawable/nav_back"
-            android:background="#FFFFFF"
-            android:gravity="center"
-            android:text="出租进度-到期"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
-        </TextView>
+            style="@style/textStyle_page_title"
+            android:text="出租进度-到期"/>
 
         <TextView
             android:id="@+id/tv_apartment_name"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:onClick="onViewClick"
-            android:background="#FFFFFF"
-            android:gravity="center_vertical"
-            android:text="世茂蝶湖湾 175栋3212室"
-            android:textColor="#000000"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            style="@style/textStyle_page_apartmentName"
+            android:text="世茂蝶湖湾 175栋3212室" >
         </TextView>
 
         <include layout="@layout/seperator_horizontal"
