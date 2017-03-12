@@ -92,7 +92,15 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tofetch:%d", tofetch)}
 		return
 	}
-	if err = CheckUser(uid); nil != err {
+	permission := 0
+	if _, bAgency := isAgency(uid); bAgency {
+		permission = 1
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		permission = 2
+	}
+	beego.Debug(FN, "permission:", permission)
+	if 0 == permission {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
 
