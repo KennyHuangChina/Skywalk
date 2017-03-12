@@ -251,7 +251,8 @@
   		* GET /v1/house/delivelst
 	[Response]
 		* SUCCESS:200 
-			* Deliverable	array
+			* Total			int			// total number
+			* List			array
 				* Id		int			// deliverable id
 				* Name		string		// deliverable name
 		* ERR: 4XX,5XX
@@ -268,8 +269,7 @@
 	  		* desc			string		// description 
   	[Response]
 		* SUCCESS:200 
-			* Deliverable	array
-				* Id		int			// new house deliverable id
+			* Id			int			// new house deliverable id
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

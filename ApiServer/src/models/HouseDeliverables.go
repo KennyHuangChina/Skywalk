@@ -93,8 +93,12 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 	} else {
 		// check if this house deliverable exist
 		bExist = o.QueryTable("tbl_house_deliverable").Filter("House", hid).Filter("Deliverable", did).Exist()
-		if (0 == qty && !bExist) || (qty > 0 && bExist) {
+		beego.Debug(FN, "bExist:", bExist)
+		if 0 == qty && !bExist {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
+			return
+		} else if qty > 0 && bExist { //
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
 			return
 		}
 	}
@@ -138,6 +142,7 @@ func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
 		}
 	}()
 
+	// permission checking, all system user could fetch
 	o := orm.NewOrm()
 
 	var dl []TblDeliverables

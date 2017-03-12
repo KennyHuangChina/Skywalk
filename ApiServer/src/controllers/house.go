@@ -616,6 +616,8 @@ func (this *HouseController) NewHouseDeliverable() {
 	did, _ := this.GetInt64("did")
 	qty, _ := this.GetInt("qty")
 	desc := this.GetString("desc")
+	tmp, _ := base64.URLEncoding.DecodeString(desc)
+	desc = string(tmp)
 
 	/*
 	 *	Processing
