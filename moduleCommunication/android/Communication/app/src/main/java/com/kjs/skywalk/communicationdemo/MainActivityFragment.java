@@ -106,7 +106,17 @@ public class MainActivityFragment extends Fragment
     private void doTestAddApi() {
 //        doTestAddApi_AddProperty();
 //        doTestAddApi_CommitHouseByOwner();
-        doTestAddApi_AddDeliverable();
+//        doTestAddApi_AddDeliverable();
+        doTestAddApi_AddHouseDeliverable();
+    }
+    private void doTestAddApi_AddHouseDeliverable() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_DELIVERABLE_ID, mEditText1.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_QTY, mEditText2.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_DESC, "交付物说明");
+        mManager.execute(CommunicationCommand.CC_ADD_HOUSE_DELIVERABLE, pMap, this, this);
     }
     private void doTestAddApi_AddDeliverable() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
