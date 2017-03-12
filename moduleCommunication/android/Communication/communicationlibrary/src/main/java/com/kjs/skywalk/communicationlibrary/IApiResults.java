@@ -88,4 +88,11 @@ public class IApiResults {
         int GetId();
         String GetName();
     }
+
+    public interface IDeliverableInfo {
+        int GetId();
+        String GetName();
+        int GetQty();
+        String GetDesc();
+    }
 }

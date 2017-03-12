@@ -47,8 +47,9 @@ class ResBase implements IApiResults.ICommon {
                 e.printStackTrace();
                 return -2;
             }
-            return parseResult(obj);
-
+            if (0 == mErrCode) {
+                return parseResult(obj);
+            }
         } else {    // use the error code passed in
             mErrDesc = InternalDefines.getErrorDescription(mErrCode);
         }
