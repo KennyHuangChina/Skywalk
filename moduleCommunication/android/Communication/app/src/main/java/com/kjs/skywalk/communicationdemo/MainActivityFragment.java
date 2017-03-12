@@ -166,9 +166,17 @@ public class MainActivityFragment extends Fragment
 
     private void doTestGetList() {
 //        doTestGetList_PropertyList();
-        doTestGetList_HouseList();
+//        doTestGetList_HouseList();
+        doTestGetList_BehalfHouseList();
     }
-
+    private void doTestGetList_BehalfHouseList() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, mEditText.getText().toString());
+        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "0");
+        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + mListTotal);
+        mManager.execute(CommunicationCommand.CC_GET_BEHALF_HOUSE_LIST, pMap, this, this);
+    }
     private void doTestGetList_HouseList() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -300,7 +308,8 @@ public class MainActivityFragment extends Fragment
                     IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
                     prop.GetName();
                 }
-            } else if (command.equals(CommunicationCommand.CC_GET_HOUSE_LIST)) {
+            } else if (command.equals(CommunicationCommand.CC_GET_HOUSE_LIST) ||
+                    command.equals(CommunicationCommand.CC_GET_BEHALF_HOUSE_LIST)) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;

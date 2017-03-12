@@ -17,6 +17,7 @@ public class CommunicationCommand {
     // House
     public static String CC_GET_BRIEF_PUBLIC_HOUSE_INFO         = "CommandGetBriefPublicHouseInfo";
     public static String CC_GET_HOUSE_LIST                      = "CommandGetHouseList";
+    public static String CC_GET_BEHALF_HOUSE_LIST               = "CommandGetBehalfHouseList";
     public static String CC_GET_GET_HOUSE_INFO                  = "CommandGetHouseInfo";
     public static String CC_GET_COMMIT_HOUSE_BY_OWNER           = "CommandCommitHouseByOwner";
     public static String CC_GET_AMEND_HOUSE                     = "CommandAmendHouseInfo";
