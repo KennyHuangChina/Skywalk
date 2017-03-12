@@ -31,6 +31,8 @@ public class CommunicationCommand {
     public static String CC_ADD_PROPERTY                        = "CommandAddProperty";
     public static String CC_MODIFY_PROPERTY                     = "CommandModifyProperty";
 
+    // Deliverables
+    public static String CC_ADD_DELIVERABLE                     = "CommandAddDeliverable";
 
     public static String CC_TEST                                = "CommandTest";
 }

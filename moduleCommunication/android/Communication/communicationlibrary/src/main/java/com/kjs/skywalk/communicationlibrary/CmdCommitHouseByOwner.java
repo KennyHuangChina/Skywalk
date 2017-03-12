@@ -102,7 +102,7 @@ class CmdCommitHouseByOwner extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResAddProperty result = new ResAddProperty(nErrCode, jObject);
+        ResAddResource result = new ResAddResource(nErrCode, jObject);
         return result;
     }
 

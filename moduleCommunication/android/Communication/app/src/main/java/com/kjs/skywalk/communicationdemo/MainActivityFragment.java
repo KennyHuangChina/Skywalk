@@ -105,7 +105,14 @@ public class MainActivityFragment extends Fragment
 
     private void doTestAddApi() {
 //        doTestAddApi_AddProperty();
-        doTestAddApi_CommitHouseByOwner();
+//        doTestAddApi_CommitHouseByOwner();
+        doTestAddApi_AddDeliverable();
+    }
+    private void doTestAddApi_AddDeliverable() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_NAME, mEditText.getText().toString());
+        mManager.execute(CommunicationCommand.CC_ADD_DELIVERABLE, pMap, this, this);
     }
     private void doTestAddApi_CommitHouseByOwner() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());

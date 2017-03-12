@@ -99,6 +99,8 @@ public class CommunicationManager {
             operation = new CmdGetPropertyList(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_PROPERTY_INFO)) {
             operation = new CmdGetPropertyInfo(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_DELIVERABLE)) {
+            operation = new CmdAddDeliverable(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

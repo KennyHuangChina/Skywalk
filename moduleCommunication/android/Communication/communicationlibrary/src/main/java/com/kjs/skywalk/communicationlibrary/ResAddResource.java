@@ -7,10 +7,10 @@ import org.json.JSONObject;
  * Created by kenny on 2017/3/2.
  */
 
-class ResAddProperty extends ResBase implements IApiResults.IAddRes {
-    private int mPropId = 0;
+class ResAddResource extends ResBase implements IApiResults.IAddRes {
+    private int mNewResrcId = 0;
 
-    ResAddProperty(int nErrCode, JSONObject jObject) {
+    ResAddResource(int nErrCode, JSONObject jObject) {
         super(nErrCode);
         parse(jObject);
     }
@@ -18,14 +18,14 @@ class ResAddProperty extends ResBase implements IApiResults.IAddRes {
     @Override
     public String DebugString() {
         super.DebugString();
-        mString += "  new property id: " + mPropId + "\n";
+        mString += "  new resource id: " + mNewResrcId + "\n";
         return mString;
     }
 
     @Override
     protected int parseResult(JSONObject obj) {
         try {
-            mPropId = obj.getInt("Id");
+            mNewResrcId = obj.getInt("Id");
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
@@ -35,6 +35,6 @@ class ResAddProperty extends ResBase implements IApiResults.IAddRes {
 
     @Override
     public int GetId() {
-        return mPropId;
+        return mNewResrcId;
     }
 }
