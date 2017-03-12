@@ -14,30 +14,16 @@
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_info_title"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:onClick="onViewClick"
-            android:drawableLeft="@drawable/nav_back"
-            android:background="#FFFFFF"
-            android:gravity="center"
-            android:text="出租进度-签约"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            style="@style/textStyle_page_title"
+            android:text="出租进度-签约">
         </TextView>
 
         <include layout="@layout/seperator_horizontal"/>
 
         <TextView
             android:id="@+id/tv_apartment_name"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:onClick="onViewClick"
-            android:background="#FFFFFF"
-            android:gravity="center_vertical"
-            android:text="世茂蝶湖湾 175栋3212室"
-            android:textColor="#000000"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            style="@style/textStyle_page_apartmentName"
+            android:text="世茂蝶湖湾 175栋3212室" >
         </TextView>
 
         <include layout="@layout/seperator_horizontal"
@@ -45,95 +31,61 @@
                  android:layout_height="5dp"/>
 
         <TextView
+            style="@style/textStyle_page_blockTitle"
+            android:layout_marginTop="10dp"
+            android:text="租金及支付"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:text="租金及支付"
-            android:gravity="center_vertical"
-            android:textColor="#000000"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="租金"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="租金"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorTextTint"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="2200元/月"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="2200元/月"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="物业费"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="物业费"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorTextTint"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="200元/月"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="200元/月"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="付款周期"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorTextTint"/>
+                style="@style/textStyle_page_blockKey"
+                android:text="付款周期"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="季付"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="季付"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="首期租金"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="首期租金"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorTextTint"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="2016-12-12前支付"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="2016-12-12前支付"/>
         </RelativeLayout>
 
         <ImageView
@@ -145,53 +97,36 @@
             android:background="#E5E5E5" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
+            style="@style/textStyle_page_blockTitle"
             android:layout_marginTop="10dp"
-            android:text="经纪费"
-            android:gravity="center_vertical"
-            android:textColor="#000000"/>
+            android:text="经纪费"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="出租方需支付"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorTextTint"/>
+                style="@style/textStyle_page_blockKey"
+                android:text="出租方需支付"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="1100元"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="1100元"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="承租方需支付"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorTextTint"/>
+                style="@style/textStyle_page_blockKey"
+                android:text="承租方需支付"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="1100元"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="1100元"/>
         </RelativeLayout>
 
         <ImageView
@@ -204,23 +139,16 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="押金"
-                android:gravity="left|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockKey"
+                android:text="押金"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="4400元"
-                android:gravity="right|center_vertical"
-                android:textColor="#000000"/>
+                style="@style/textStyle_page_blockValue"
+                android:text="4400元"/>
         </RelativeLayout>
 
     </LinearLayout>
