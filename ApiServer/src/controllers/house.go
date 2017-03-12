@@ -56,12 +56,12 @@ func (this *HouseController) GetPropertyInfo() {
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
 		// export result
-		api_result(err, this.Controller, &result.ResCommon)
 		this.Data["json"] = result
 		this.ServeJSON()
 	}()
@@ -525,6 +525,8 @@ func (this *HouseController) AddDeliverable() {
 	}
 
 	name := this.GetString("name")
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
 	beego.Debug(FN, "name:", name)
 
 	/*
@@ -1120,12 +1122,12 @@ func (this *HouseController) GetHouseInfo() {
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
 		// export result
-		api_result(err, this.Controller, &result.ResCommon)
 		this.Data["json"] = result
 		this.ServeJSON()
 	}()

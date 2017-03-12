@@ -49,12 +49,12 @@ func (this *AdminController) GetUserInfo() {
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
 		// export result
-		api_result(err, this.Controller, &result.ResCommon)
 		this.Data["json"] = result
 		this.ServeJSON()
 	}()
@@ -96,12 +96,12 @@ func (this *AdminController) GetSecurePic() {
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
 		// export result
-		api_result(err, this.Controller, &result.ResCommon)
 		this.Data["json"] = result
 		this.ServeJSON()
 	}()
@@ -133,12 +133,12 @@ func (this *AdminController) GetSaltForUser() {
 	var err error
 
 	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
 
 		// export result
-		api_result(err, this.Controller, &result.ResCommon)
 		this.Data["json"] = result
 		this.ServeJSON()
 	}()
