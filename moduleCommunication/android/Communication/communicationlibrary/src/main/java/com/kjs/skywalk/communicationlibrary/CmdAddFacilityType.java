@@ -11,18 +11,18 @@ import java.util.HashMap;
  * Created by kenny on 2017/3/12.
  */
 
-class CmdAddDeliverable extends CommunicationBase {
+class CmdAddFacilityType extends CommunicationBase {
     private String mName = "";
 
-    CmdAddDeliverable(Context context, String strAPI) {
+    CmdAddFacilityType(Context context, String strAPI) {
         super(context, strAPI);
-        TAG = "CmdAddDeliverable";
+        TAG = "CmdAddFacilityType";
         mMethodType = "POST";
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/deliverable";
+        mCommandURL = "/v1/house/facilitytype";
         return mCommandURL;
     }
 

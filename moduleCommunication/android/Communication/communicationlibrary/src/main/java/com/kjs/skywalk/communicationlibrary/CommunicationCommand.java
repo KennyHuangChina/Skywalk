@@ -37,5 +37,8 @@ public class CommunicationCommand {
     public static String CC_ADD_HOUSE_DELIVERABLE               = "CommandAddHouseDeliver";
     public static String CC_GET_HOUSE_DELIVERABLES              = "CommandGetHouseDelivers";
 
+    // Facilities
+    public static String CC_ADD_FACILITY_TYPE                   = "CommandAddFacilityType";
+
     public static String CC_TEST                                = "CommandTest";
 }
