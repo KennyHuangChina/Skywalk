@@ -41,6 +41,7 @@ public class CommunicationParameterKey {
     public static String CPK_NAME               = "Name";
     public static String CPK_QTY                = "Quantity";
     public static String CPK_DESC               = "Description";
+    public static String CPK_TYPE               = "Type";
 
     public static String CPK_DELIVERABLE_ID     = "DeliverableId";
 }
