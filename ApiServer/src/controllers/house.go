@@ -437,8 +437,10 @@ func (this *HouseController) AddFacility() {
 		return
 	}
 
-	name := this.GetString("name")
 	ft, _ := this.GetInt64("type")
+	name := this.GetString("name")
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
 	// beego.Debug(FN, "name:", name, ", ft:", ft)
 
 	/*

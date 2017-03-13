@@ -268,6 +268,13 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 		}
 	}()
 
+	// permission checking: only the administrator could add facility
+	if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
 	/*	argument checking */
 	if 0 == len(name) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
@@ -283,15 +290,6 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 	bExist := o.QueryTable("tbl_facilitys").Filter("Type", ft).Filter("Name__contains", name).Exist()
 	if bExist {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("facility type:%d, name:%s", ft, name)}
-		return
-	}
-
-	err, bAdmin := isAdministrator(uid)
-	if nil != err {
-		return
-	}
-	if !bAdmin {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
 
