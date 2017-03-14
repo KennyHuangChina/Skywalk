@@ -63,7 +63,8 @@
         </activity>
         <activity android:name=".Activity_rentals_progress_contracted" />
         <activity android:name=".Activity_rentals_progress_contractedBoth" />
-        <activity android:name=".Activity_rentals_progress_contractedDeposit"></activity>
+        <activity android:name=".Activity_rentals_progress_contractedDeposit" />
+        <activity android:name=".Activity_rentals_progress_contractedConfirm"></activity>
     </application>
 
 </manifest>
