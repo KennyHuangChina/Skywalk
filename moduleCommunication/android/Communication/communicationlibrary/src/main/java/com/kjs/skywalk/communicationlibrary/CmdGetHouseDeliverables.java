@@ -14,8 +14,8 @@ import java.util.HashMap;
 class CmdGetHouseDeliverables extends CommunicationBase {
     private int mHouseId = 0;
 
-    CmdGetHouseDeliverables(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdGetHouseDeliverables(Context context) {
+        super(context, "GetHouseDeliverables");
         TAG = "CmdGetHouseDeliverables";
         mMethodType = "GET";
     }

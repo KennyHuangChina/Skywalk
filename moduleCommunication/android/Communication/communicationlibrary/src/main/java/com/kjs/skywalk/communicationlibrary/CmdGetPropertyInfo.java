@@ -13,8 +13,8 @@ class CmdGetPropertyInfo extends CommunicationBase {
 
     private int mPropertyId = 0;    // property id
 
-    CmdGetPropertyInfo(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdGetPropertyInfo(Context context) {
+        super(context, "CmdGetPropertyInfo");
         TAG = "CmdGetPropertyInfo";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

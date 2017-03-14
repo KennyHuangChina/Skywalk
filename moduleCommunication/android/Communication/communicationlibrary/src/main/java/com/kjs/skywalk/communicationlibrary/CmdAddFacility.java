@@ -15,8 +15,8 @@ class CmdAddFacility extends CommunicationBase {
     private String  mName = "";
     private int     mType = 0;
 
-    CmdAddFacility(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdAddFacility(Context context) {
+        super(context, "AddFacility");
         TAG = "CmdAddFacility";
         mMethodType = "POST";
     }

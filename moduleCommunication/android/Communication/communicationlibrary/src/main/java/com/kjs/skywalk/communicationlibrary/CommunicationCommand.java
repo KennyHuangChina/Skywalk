@@ -23,25 +23,25 @@ public class CommunicationCommand {
     public static String CC_GET_AMEND_HOUSE                     = "CommandAmendHouseInfo";
     public static String CC_GET_CERT_HOUSE                      = "CommandCertificateHouse";
     public static String CC_GET_SET_HOUSE_COVER_IMAGE           = "CommandSetHouseCoverImage";
-    public static String CC_GET_RECOMMEND_HOUSE                 = "CommandRecommendHouse";
+//    public static String CC_GET_RECOMMEND_HOUSE                 = "CommandRecommendHouse";
 
     // Property
     public static String CC_GET_PROPERTY_LIST                   = "CommandGetPropertyList";
-    public static String CC_GET_GET_PROPERTY_INFO               = "CommandGetPropertyInfo";
-    public static String CC_ADD_PROPERTY                        = "CommandAddProperty";
-    public static String CC_MODIFY_PROPERTY                     = "CommandModifyProperty";
+//    public static String CC_GET_GET_PROPERTY_INFO               = "CommandGetPropertyInfo";
+//    public static String CC_ADD_PROPERTY                        = "CommandAddProperty";
+//    public static String CC_MODIFY_PROPERTY                     = "CommandModifyProperty";
 
     // Deliverables
-    public static String CC_ADD_DELIVERABLE                     = "CommandAddDeliverable";
-    public static String CC_GET_DELIVERABLE_LIST                = "CommandGetDeliverableList";
-    public static String CC_ADD_HOUSE_DELIVERABLE               = "CommandAddHouseDeliver";
-    public static String CC_GET_HOUSE_DELIVERABLES              = "CommandGetHouseDelivers";
+//    public static String CC_ADD_DELIVERABLE                     = "CommandAddDeliverable";
+//    public static String CC_GET_DELIVERABLE_LIST                = "CommandGetDeliverableList";
+//    public static String CC_ADD_HOUSE_DELIVERABLE               = "CommandAddHouseDeliver";
+//    public static String CC_GET_HOUSE_DELIVERABLES              = "CommandGetHouseDelivers";
 
     // Facilities
-    public static String CC_ADD_FACILITY_TYPE                   = "CommandAddFacilityType";
-    public static String CC_GET_FACILITY_TYPE_LIST              = "CommandGetFacilityTypeList";
-    public static String CC_ADD_FACILITY                        = "CommandAddFacility";
-    public static String CC_GET_FACILITY_LIST                   = "CommandGetFacilityList";
+//    public static String CC_ADD_FACILITY_TYPE                   = "CommandAddFacilityType";
+//    public static String CC_GET_FACILITY_TYPE_LIST              = "CommandGetFacilityTypeList";
+//    public static String CC_ADD_FACILITY                        = "CommandAddFacility";
+//    public static String CC_GET_FACILITY_LIST                   = "CommandGetFacilityList";
 
     public static String CC_TEST                                = "CommandTest";
 }

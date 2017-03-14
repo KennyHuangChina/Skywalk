@@ -14,8 +14,8 @@ import java.util.HashMap;
 class CmdAddFacilityType extends CommunicationBase {
     private String mName = "";
 
-    CmdAddFacilityType(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdAddFacilityType(Context context) {
+        super(context, "AddFacilityType");
         TAG = "CmdAddFacilityType";
         mMethodType = "POST";
     }

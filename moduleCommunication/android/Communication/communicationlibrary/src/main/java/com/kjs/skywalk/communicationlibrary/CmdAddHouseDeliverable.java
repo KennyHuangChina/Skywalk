@@ -17,8 +17,8 @@ class CmdAddHouseDeliverable extends CommunicationBase {
     private int     mDelivQty       = 0;    // deliverable quantity
     private String  mDesc           = "";   // deliverable description
 
-    CmdAddHouseDeliverable(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdAddHouseDeliverable(Context context) {
+        super(context, "CmdAddHouseDeliverable");
         TAG = "CmdAddHouseDeliverable";
         mMethodType = "POST";
     }

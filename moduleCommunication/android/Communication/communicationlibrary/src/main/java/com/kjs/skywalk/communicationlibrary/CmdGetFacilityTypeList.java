@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 class CmdGetFacilityTypeList extends CommunicationBase {
 
-    CmdGetFacilityTypeList(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdGetFacilityTypeList(Context context) {
+        super(context, "GetFacilityTypeList");
         TAG = "CmdGetFacilityTypeList";
         mMethodType = "GET";
     }

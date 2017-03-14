@@ -14,8 +14,8 @@ class CmdRecommendHouse extends CommunicationBase {
     private int mAct        = 0;   // 1 - recommend; 2 - unrecommend
     private int mHouseId    = 0;
 
-    CmdRecommendHouse(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdRecommendHouse(Context context) {
+        super(context, "CmdRecommendHouse");
         TAG = "CmdRecommendHouse";
         mMethodType = "PUT";
     }

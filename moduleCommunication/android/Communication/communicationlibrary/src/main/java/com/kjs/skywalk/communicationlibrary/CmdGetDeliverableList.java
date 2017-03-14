@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 class CmdGetDeliverableList extends CommunicationBase {
 
-    CmdGetDeliverableList(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdGetDeliverableList(Context context) {
+        super(context, "CmdGetDeliverableList");
         TAG = "CmdGetDeliverableList";
         mMethodType = "GET";
     }

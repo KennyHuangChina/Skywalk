@@ -24,7 +24,8 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.CreateResult,
                                     InternalDefines.BeforeConnect,
                                     InternalDefines.AfterConnect,
-                                    InternalDefines.ConnectFailed{
+                                    InternalDefines.ConnectFailed,
+                                    InternalDefines.IApiName {
     protected   String  TAG         = "CommunicationBase";
     private     String  mAPI        = "";
     protected   Context mContext    = null;
@@ -209,5 +210,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         }
         // return to String Formed
         return UrlsafeString;
+    }
+
+    @Override
+    public String GetApiName() {
+        return mAPI;
     }
 }

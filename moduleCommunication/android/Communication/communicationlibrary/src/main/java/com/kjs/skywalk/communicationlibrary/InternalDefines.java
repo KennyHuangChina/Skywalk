@@ -42,6 +42,10 @@ class InternalDefines {
         String ListItemInfo2String();
     }
 
+    interface IApiName {
+        String GetApiName();
+    }
+
     //Log Tags defines
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
     public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";

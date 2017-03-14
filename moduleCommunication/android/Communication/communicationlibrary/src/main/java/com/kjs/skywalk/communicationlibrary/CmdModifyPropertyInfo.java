@@ -16,8 +16,8 @@ class CmdModifyPropertyInfo extends CommunicationBase {
     private String  mPropAddr   = "";
     private String  mPropDesc   = "";
 
-    CmdModifyPropertyInfo(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdModifyPropertyInfo(Context context) {
+        super(context, "CmdModifyPropertyInfo");
         TAG = "CmdModifyPropertyInfo";
         mMethodType = "PUT";
     }

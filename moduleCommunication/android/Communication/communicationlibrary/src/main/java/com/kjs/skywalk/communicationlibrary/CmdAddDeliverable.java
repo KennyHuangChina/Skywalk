@@ -14,8 +14,8 @@ import java.util.HashMap;
 class CmdAddDeliverable extends CommunicationBase {
     private String mName = "";
 
-    CmdAddDeliverable(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdAddDeliverable(Context context) {
+        super(context, "AddDeliverable");
         TAG = "CmdAddDeliverable";
         mMethodType = "POST";
     }

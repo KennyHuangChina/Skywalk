@@ -15,11 +15,11 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
 public class CommunicationManager {
     final String TAG = "CommunicationManager";
 
-    private Context mContext = null;
-    private CommunicationBase mOperation = null;
-    private SKCookieManager mCookieManager = null;
+    private Context             mContext        = null;
+    private CommunicationBase   mOperation      = null;
+    private SKCookieManager     mCookieManager  = null;
 
-    private MyUtils mUtils = null;
+    private MyUtils             mUtils          = null;
 
     public CommunicationManager(Context context) {
         mContext = context;
@@ -89,32 +89,6 @@ public class CommunicationManager {
             operation = new CmdCertificateHouse(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_SET_HOUSE_COVER_IMAGE)) {
             operation = new CmdSetHouseCoverImg(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_RECOMMEND_HOUSE)) {
-            operation = new CmdRecommendHouse(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_PROPERTY)) {
-            operation = new CmdAddProperty(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_MODIFY_PROPERTY)) {
-            operation = new CmdModifyPropertyInfo(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
-            operation = new CmdGetPropertyList(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_GET_PROPERTY_INFO)) {
-            operation = new CmdGetPropertyInfo(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_DELIVERABLE)) {
-            operation = new CmdAddDeliverable(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_DELIVERABLE_LIST)) {
-            operation = new CmdGetDeliverableList(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_HOUSE_DELIVERABLE)) {
-            operation = new CmdAddHouseDeliverable(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_HOUSE_DELIVERABLES)) {
-            operation = new CmdGetHouseDeliverables(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_FACILITY_TYPE)) {
-            operation = new CmdAddFacilityType(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_FACILITY_TYPE_LIST)) {
-            operation = new CmdGetFacilityTypeList(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_FACILITY)) {
-            operation = new CmdAddFacility(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_FACILITY_LIST)) {
-            operation = new CmdGetFacilityList(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }
