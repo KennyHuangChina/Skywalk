@@ -26,8 +26,8 @@ class CmdAmendHouse extends CommunicationBase {
     private boolean mSale           = false;// commit for sale
     private boolean mRent           = false;// commit for rent
 
-    CmdAmendHouse(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdAmendHouse(Context context) {
+        super(context, "CmdAmendHouse");
         TAG = "CmdAmendHouse";
 //        Log.i(TAG, "Constructor");
         mMethodType = "PUT";

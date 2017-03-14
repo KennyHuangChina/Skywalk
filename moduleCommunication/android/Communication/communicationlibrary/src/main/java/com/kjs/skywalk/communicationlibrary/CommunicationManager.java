@@ -83,12 +83,6 @@ public class CommunicationManager {
             operation = new CmdGetHouseInfo(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER)) {
             operation = new CmdCommitHouseByOwner(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_AMEND_HOUSE)) {
-            operation = new CmdAmendHouse(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_CERT_HOUSE)) {
-            operation = new CmdCertificateHouse(mContext, command);
-        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_SET_HOUSE_COVER_IMAGE)) {
-            operation = new CmdSetHouseCoverImg(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

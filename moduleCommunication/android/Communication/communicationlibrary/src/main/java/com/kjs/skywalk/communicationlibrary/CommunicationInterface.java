@@ -18,7 +18,10 @@ public class CommunicationInterface {
     }
 
     public interface ICommand {
+        int AmendHouse(HouseInfo houseInfo);
         int RecommendHouse(int house_id, int action);
+        int SetHouseCoverImg(int house_id, int img_id);
+        int CertificateHouse(int house_id, boolean bPass, String sCertComment);
 
         int GetPropertyListByName(String sName, int nBegin, int nCount);
         int AddProperty(String sName, String sAddr, String sDesc);

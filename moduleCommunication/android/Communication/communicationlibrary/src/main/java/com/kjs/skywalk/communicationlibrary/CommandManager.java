@@ -55,11 +55,49 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int AmendHouse(HouseInfo houseInfo) {
+        mOperation = new CmdRecommendHouse(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(houseInfo.mHouseId));
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, String.valueOf(houseInfo.mPropId));
+        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, String.valueOf(houseInfo.mBuilding));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, houseInfo.mHouseNo);
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, String.valueOf(houseInfo.mFloorTotal));
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, String.valueOf(houseInfo.mFloorThis));
+        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, String.valueOf(houseInfo.mLivingrooms));
+        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, String.valueOf(houseInfo.mBedrooms));
+        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, String.valueOf(houseInfo.mBathrooms));
+        pMap.put(CommunicationParameterKey.CPK_ACREAGE, String.valueOf(houseInfo.mAcreage));
+        pMap.put(CommunicationParameterKey.CPK_4SALE, String.valueOf(houseInfo.mForSale));
+        pMap.put(CommunicationParameterKey.CPK_4RENT, String.valueOf(houseInfo.mForRent));
+        return execute(pMap);
+    }
+
+    @Override
     public int RecommendHouse(int house_id, int action) {
         mOperation = new CmdRecommendHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
         pMap.put(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT, String.valueOf(action));
+        return execute(pMap);
+    }
+
+    @Override
+    public int SetHouseCoverImg(int house_id, int img_id) {
+        mOperation = new CmdSetHouseCoverImg(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_COVER_IMG, String.valueOf(img_id));
+        return execute(pMap);
+    }
+
+    @Override
+    public int CertificateHouse(int house_id, boolean bPass, String sCertComment) {
+        mOperation = new CmdCertificateHouse(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, sCertComment);
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_PASS, String.valueOf(bPass));
         return execute(pMap);
     }
 

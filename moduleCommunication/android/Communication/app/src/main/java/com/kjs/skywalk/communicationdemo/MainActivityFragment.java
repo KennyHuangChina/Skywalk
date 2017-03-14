@@ -16,6 +16,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
+import com.kjs.skywalk.communicationlibrary.HouseInfo;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
@@ -43,53 +44,36 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestModifyApi() {
-//        doTestModifyApi_ModifyHouse();
-//        doTestModifyApi_CertificateHouse();
-//        doTestModifyApi_SetHouseCoverImage();
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
         CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
                                     mEditText1.getText().toString(),
                                     mEditText2.getText().toString());
         CmdMgr.RecommendHouse(Integer.parseInt(mEditText.getText().toString()),
                                 Integer.parseInt(mEditText1.getText().toString()));
-    }
-    private void doTestModifyApi_SetHouseCoverImage() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_COVER_IMG, "30");
-        mManager.execute(CommunicationCommand.CC_GET_SET_HOUSE_COVER_IMAGE, pMap, this, this);
-    }
-    private void doTestModifyApi_CertificateHouse() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
-        if (mCertificate) {
-            pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, "已经和业主核实，同意发布");
-        } else {
-            pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, "撤销发布");
-        }
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_PASS, mCertificate ? "true" : "false");
+        CmdMgr.SetHouseCoverImg(Integer.parseInt(mEditText.getText().toString()),
+                                Integer.parseInt(mEditText1.getText().toString()));
+        CmdMgr.CertificateHouse(Integer.parseInt(mEditText.getText().toString()), mCertificate,
+                                mCertificate ? "已经和业主核实，同意发布" : "撤销发布");
         mCertificate = !mCertificate;
-        mManager.execute(CommunicationCommand.CC_GET_CERT_HOUSE, pMap, this, this);
+
+        doTestModifyApi_ModifyHouse(CmdMgr);
     }
-    private void doTestModifyApi_ModifyHouse() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "6");
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, "2");
-        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, "56");
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, "1606");
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, "35");
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, "16");
-        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, "2");
-        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, "4");
-        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, "3");
-        pMap.put(CommunicationParameterKey.CPK_ACREAGE, "17788");
-        pMap.put(CommunicationParameterKey.CPK_4SALE, "false");
-        pMap.put(CommunicationParameterKey.CPK_4RENT, "true");
-        mManager.execute(CommunicationCommand.CC_GET_AMEND_HOUSE, pMap, this, this);
-    }
+    private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
+        HouseInfo houseInfo = new HouseInfo();
+        houseInfo.mHouseId = 6;
+        houseInfo.mPropId = 2;
+        houseInfo.mBuilding = 56;
+        houseInfo.mHouseNo = "1606";
+        houseInfo.mFloorTotal = 35;
+        houseInfo.mFloorThis = 16;
+        houseInfo.mLivingrooms = 2;
+        houseInfo.mBedrooms = 4;
+        houseInfo.mBathrooms = 3;
+        houseInfo.mAcreage = 17788;
+        houseInfo.mForSale = false;
+        houseInfo.mForRent = true;
+        CmdMgr.AmendHouse(houseInfo);
+   }
 
     private void doTestAddApi() {
 //        doTestAddApi_CommitHouseByOwner();
