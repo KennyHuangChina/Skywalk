@@ -202,7 +202,14 @@ public class MainActivityFragment extends Fragment
 //        doTestGetList_BehalfHouseList();
 //        doTestGetList_DeliverableList();
 //        doTestGetApi_GetHouseDeliverableList();
-        doTestGetApi_GetFacilityTypeList();
+//        doTestGetApi_GetFacilityTypeList();
+        doTestGetApi_GetFacilityList();
+    }
+    private void doTestGetApi_GetFacilityList() {
+        CommunicationManager mManager = new CommunicationManager(this.getContext());
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_TYPE, mEditText.getText().toString());
+        mManager.execute(CommunicationCommand.CC_GET_FACILITY_LIST, pMap, this, this);
     }
     private void doTestGetApi_GetFacilityTypeList() {
         CommunicationManager mManager = new CommunicationManager(this.getContext());

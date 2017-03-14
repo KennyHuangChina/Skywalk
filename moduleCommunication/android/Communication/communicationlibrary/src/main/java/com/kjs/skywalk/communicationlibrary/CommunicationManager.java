@@ -113,6 +113,8 @@ public class CommunicationManager {
             operation = new CmdGetFacilityTypeList(mContext, command);
         } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_ADD_FACILITY)) {
             operation = new CmdAddFacility(mContext, command);
+        } else if (command.equals/*IgnoreCase*/(CommunicationCommand.CC_GET_FACILITY_LIST)) {
+            operation = new CmdGetFacilityList(mContext, command);
         } else {
             Log.e(TAG, "Unknown command:" + command);
         }

@@ -95,4 +95,10 @@ public class IApiResults {
         int GetQty();
         String GetDesc();
     }
+
+    public interface IFacilityInfo {
+        int GetId();
+        String GetName();
+        String GetType();
+    }
 }

@@ -41,6 +41,7 @@ public class CommunicationCommand {
     public static String CC_ADD_FACILITY_TYPE                   = "CommandAddFacilityType";
     public static String CC_GET_FACILITY_TYPE_LIST              = "CommandGetFacilityTypeList";
     public static String CC_ADD_FACILITY                        = "CommandAddFacility";
+    public static String CC_GET_FACILITY_LIST                   = "CommandGetFacilityList";
 
     public static String CC_TEST                                = "CommandTest";
 }
