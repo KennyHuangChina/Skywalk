@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_progress_contracted"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/text_margin"
+    android:paddingRight="@dimen/text_margin"
+    tools:context="com.kjs.skywalk.app_android.Activity_rentals_progress_contracted">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="押金">
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_apartment_name"
+            style="@style/textStyle_page_apartmentName"
+            android:text="世茂蝶湖湾 175栋3212室" >
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="押金"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="4400元"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
+        <TextView
+            style="@style/textStyle_page_blockTitle"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorFontSelected"
+            android:text="注意"/>
+
+        <TextView
+            style="@style/textStyle_page_blockKey"
+            android:lineSpacingMultiplier="1.5"
+            android:text="1. 押金主要是用于保障出租房和承租方双方的利益，由平台代为保管。\n2. 押金由承租方先行支付，退房的时候由平台直接退还给承租方。\n3. 押金由两部分组成：一部分为租房押金，金额为一个月房租；剩余部分为水电押金。"/>
+
+    </LinearLayout>
+</RelativeLayout>

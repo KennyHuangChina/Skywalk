@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/RelativeLayoutTag"
+        android:layout_height="30dp" >
+        <TextView
+            android:text="面积"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_search_condition_filter_title"
+            android:textColor="@android:color/black"
+            android:paddingLeft="14dp"
+            android:gravity="center_vertical"
+            android:id="@+id/textViewTitleSourceTag" />
+    </RelativeLayout>
+    <TableLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp">
+
+        <TableRow android:layout_marginBottom="8dp">
+            <TextView
+                android:text="50平以下"
+                style="@style/text_view_search_condition_filter_item" />
+
+            <TextView
+                android:text="50-70平"
+                style="@style/text_view_search_condition_filter_item" />
+
+            <TextView
+                android:text="70-90平"
+                style="@style/text_view_search_condition_filter_item" />
+
+            <TextView
+                android:text="90-120平"
+                style="@style/text_view_search_condition_filter_item" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="120-150平"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:text="150-200平"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:text="200平以上"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:text=""
+                android:visibility="invisible"
+                style="@style/text_view_search_condition_filter_item" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>

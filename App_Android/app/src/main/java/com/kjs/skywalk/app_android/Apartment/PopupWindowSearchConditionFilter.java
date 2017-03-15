@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
@@ -20,20 +22,44 @@ import org.w3c.dom.Text;
 
 class PopupWindowSearchConditionFilter extends PopupWindow {
     private Context mContext = null;
+    private View mView = null;
 
     public PopupWindowSearchConditionFilter(Context context) {
         super(context);
         mContext = context;
 
-        View view = LayoutInflater.from(context).inflate(R.layout.popup_window_search_condition_filter, null);
-        setContentView(view);
+        mView = LayoutInflater.from(context).inflate(R.layout.popup_window_search_condition_filter, null);
+        setContentView(mView);
         setFocusable(true);
         setTouchable(true);
         setBackgroundDrawable(null);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        TextView view1 = (TextView) view.findViewById(R.id.textView_jin_ri_ke_kan);
-        view1.setSelected(true);
-        TextView view2 = (TextView) view.findViewById(R.id.textView_50_70);
-        view2.setSelected(true);
+        TextView buttonOk = (TextView)mView.findViewById(R.id.textViewButtonOK);
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        TextView buttonDefault = (TextView)mView.findViewById(R.id.textViewButtonDefault);
+        buttonDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cleanSelection();
+            }
+        });
+    }
+
+    private void cleanChildren(ViewGroup viewGroup) {
+        for(int i = 0; i < viewGroup.getChildCount(); i ++) {
+            View v = viewGroup.getChildAt(i);
+            v.setSelected(false);
+        }
+    }
+
+    private void cleanSelection() {
+        ScrollView container = (ScrollView)mView.findViewById(R.id.scrollViewFilterContainer);
+        cleanChildren(container);
     }
 }

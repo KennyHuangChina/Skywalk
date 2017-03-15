@@ -11,5 +11,11 @@
     <dimen name="text_size_search_condition_filter_title">14sp</dimen>
     <dimen name="text_size_search_condition_filter_item">12sp</dimen>
 
+    <!-- dimens for search condition hourse type popup window -->
+    <dimen name="text_size_search_condition_house_type_item">14sp</dimen>
+
+    <!-- dimens for search condition price popup window -->
+    <dimen name="text_size_search_condition_price_item">14sp</dimen>
+
 
 </resources>

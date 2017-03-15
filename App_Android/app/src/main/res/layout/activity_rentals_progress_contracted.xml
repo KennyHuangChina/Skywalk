@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_rentals_progress_contracted"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/text_margin"
+                android:paddingRight="@dimen/text_margin"
+                tools:context="com.kjs.skywalk.app_android.Activity_rentals_progress_contracted">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="出租进度-签约">
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_apartment_name"
+            style="@style/textStyle_page_apartmentName"
+            android:text="世茂蝶湖湾 175栋3212室" >
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"
+                 android:layout_width="match_parent"
+                 android:layout_height="5dp"/>
+
+        <TextView
+            style="@style/textStyle_page_blockTitle"
+            android:layout_marginTop="10dp"
+            android:text="租金及支付"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="租金"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="2200元/月"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="物业费"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="200元/月"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="付款周期"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="季付"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="首期租金"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="2016-12-12前支付"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:contentDescription=""
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#E5E5E5" />
+
+        <TextView
+            style="@style/textStyle_page_blockTitle"
+            android:layout_marginTop="10dp"
+            android:text="经纪费"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="出租方需支付"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="1100元"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="承租方需支付"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="1100元"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:contentDescription=""
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#E5E5E5" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="押金"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="4400元"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_next"
+        android:onClick="onViewClick"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:background="#00AE63"
+        android:text="下一步"/>
+
+</RelativeLayout>

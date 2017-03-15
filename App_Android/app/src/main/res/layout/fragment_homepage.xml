@@ -28,7 +28,16 @@
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:adjustViewBounds="true"
-                android:layout_weight="248" />
+                android:textSize="14sp"
+                android:layout_weight="203" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:contentDescription=""
+                android:background="#E5E5E5" />
 
             <!--textSize 42px-->
             <EditText
@@ -50,10 +59,11 @@
                 android:layout_weight="250" >
                 <ImageView
                     android:contentDescription="@string/tab_menu_msg"
+                    android:onClick="onClickResponse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:layout_centerInParent="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentRight="true"
                     app:srcCompat="@drawable/message"
                     android:id="@+id/im_message" />
             </RelativeLayout>
@@ -70,24 +80,13 @@
             android:onClick="onClickResponse"
             android:id="@+id/iv_title" />
 
-        <!--238px-->
-        <com.kjs.skywalk.control.ListView_NoScroll
-            android:id="@+id/lv_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_below="@+id/iv_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+        <!--260px-->
         <LinearLayout
+            android:id="@+id/ll_entrance"
             android:orientation="horizontal"
-            android:background="#33ffffff"
             android:layout_width="match_parent"
-            android:layout_height="79dp"
-            android:layout_below="@+id/ll_title"
-            android:layout_marginTop="141dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp">
+            android:layout_height="87dp"
+            android:layout_below="@+id/iv_title">
 
             <TextView
                 android:id="@+id/tv_rent"
@@ -101,6 +100,14 @@
                 android:textColor="@drawable/tab_menu_text"
                 android:textSize="12sp"
                 android:onClick="onClickResponse" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:contentDescription=""
+                android:background="#E5E5E5" />
 
             <TextView
                 android:id="@+id/tv_apartment"
@@ -116,6 +123,22 @@
                 android:onClick="onClickResponse" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/iv_seperator"
+            android:layout_below="@+id/ll_entrance"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:contentDescription=""
+            android:background="#E5E5E5" />
+
+        <!--238px-->
+        <com.kjs.skywalk.control.ListView_NoScroll
+            android:id="@+id/lv_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_below="@+id/iv_seperator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
 

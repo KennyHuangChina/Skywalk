@@ -10,8 +10,12 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,7 +29,11 @@ import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
 import com.kjs.skywalk.control.BadgeView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
 
@@ -48,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        // copy file from "asset/testPics/" to "cache" dir
+        commonFun.copyAssets(this, "testPics", getCacheDir().getAbsolutePath());
 
         // bind
         mTvHomePage = (TextView) findViewById(R.id.tv_homepage);
@@ -143,12 +154,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.iv_title:
             {
 //                startActivity(new Intent(this, Activity_ImagePreview.class));
-                ArrayList<String> images = new ArrayList<>();
-                images.add("/sdcard/testpics/1.png");
+
+                ArrayList<String> images = commonFun.getTestPicList(this);
                 PhotoPreview.builder()
                         .setPhotos(images)
                         .setCurrentItem(0)
                         .start(this);
+            }
+            break;
+
+            case R.id.im_message:
+            {
+                showTestMenu(v);
             }
             break;
         }
@@ -156,6 +173,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void onSearchConditionFilterItemClicked(View view) {
         mFragApartment.searchConditionFilterItemClicked(view);
+    }
+
+    public void onSearchConditionHouseTypeItemClicked(View view) {
+        mFragApartment.searchConditionHouseTypeItemClicked(view);
+    }
+
+    public void onSearchConditionPriceItemClicked(View view) {
+        mFragApartment.searchConditionPriceItemClicked(view);
     }
 
     private void setNewMessageCount(int count) {
@@ -215,5 +240,62 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(type, builder.build());
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_setting1:
+            {
+                startActivity(new Intent(this, Activity_rentals_expiration.class));
+            }
+            break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+        return true;
+    }
+
+    private void showTestMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_main, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.action_setting1:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_rentals_expiration.class));
+                    }
+                    break;
+
+                    case R.id.action_setting2:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_rentals_progress_yijia.class));
+                    }
+                    break;
+
+                    case R.id.action_setting3:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_rentals_progress_contracted.class));
+                    }
+                    break;
+
+                    case R.id.action_setting100:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_rentals_jiaofang_chaobiao.class));
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 }

@@ -21,9 +21,11 @@ import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
 
-//http://www.cnblogs.com/yangqiangyu/p/5143590.html
-//https://github.com/singwhatiwanna/banner/tree/master/app/src/main
+import me.iwf.photopicker.PhotoPreview;
+
 public class Activity_ApartmentDetail extends AppCompatActivity {
+
+    private ArrayList<String> mImageLst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,28 +45,30 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
-        ArrayList<String> list = new ArrayList<>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-
-        sView.setImages(list, mSvListener);
+        mImageLst = commonFun.getTestPicList(this);
+        sView.setImages(mImageLst, mSvListener);
     }
 
     private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
         @Override
         public void onImageClick(int pos, View view) {
-            commonFun.showToast_resIag(Activity_ApartmentDetail.this, view);
+            PhotoPreview.builder()
+                    .setPhotos(mImageLst)
+                    .setCurrentItem(pos)
+                    .start(Activity_ApartmentDetail.this);
         }
 
         @Override
         public void onImageDisplay(final String imgUrl, final ImageView imageView) {
 
             String tag = (String) imageView.getTag();
-            int resId = getResources().getIdentifier("decorate" + tag, "drawable", getPackageName());
-            kjsLogUtil.i(String.format("tag is %s, resId is %#x", tag, resId));
+//            int resId = getResources().getIdentifier("decorate" + tag, "drawable", getPackageName());
+//            kjsLogUtil.i(String.format("tag is %s, resId is %#x", tag, resId));
+//            imageView.setImageResource(resId);
 
-            imageView.setImageResource(resId);
+             kjsLogUtil.i(String.format("clicked tag: %s", tag));
+            imageView.setImageBitmap(commonFun.getBitmapFromLocal(tag));
+
 
 
 

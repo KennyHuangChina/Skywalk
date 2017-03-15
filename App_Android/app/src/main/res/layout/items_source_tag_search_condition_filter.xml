@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/RelativeLayoutTag"
+        android:layout_height="30dp" >
+        <TextView
+            android:text="房源标签"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_search_condition_filter_title"
+            android:textColor="@android:color/black"
+            android:paddingLeft="14dp"
+            android:gravity="center_vertical"
+            android:id="@+id/textViewTitleSourceTag" />
+    </RelativeLayout>
+    <TableLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp">
+
+        <TableRow android:layout_marginBottom="8dp">
+            <TextView
+                android:text="上门实勘"
+                style="@style/text_view_search_condition_filter_item" />
+
+            <TextView
+                android:text="满五唯一"
+                style="@style/text_view_search_condition_filter_item" />
+
+            <TextView
+                android:text="满两年"
+                style="@style/text_view_search_condition_filter_item" />
+
+            <TextView
+                android:text="南北通透"
+                style="@style/text_view_search_condition_filter_item" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="8dp">
+            <TextView
+                android:text="无贷款"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:text="电梯房"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:text="靠近学校"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:text="靠近地铁"
+                style="@style/text_view_search_condition_filter_item" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/textView_jin_ri_ke_kan"
+                android:text="今日可看"
+                style="@style/text_view_search_condition_filter_item" />
+            <TextView
+                android:visibility="invisible"
+                android:text=""
+                style="@style/text_view_search_condition_filter_item"/>
+            <TextView
+                android:visibility="invisible"
+                android:text=""
+                style="@style/text_view_search_condition_filter_item"/>
+            <TextView
+                android:visibility="invisible"
+                android:text=""
+                style="@style/text_view_search_condition_filter_item"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

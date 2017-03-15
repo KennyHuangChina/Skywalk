@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_progress_contracted"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/text_margin"
+    android:paddingRight="@dimen/text_margin"
+    tools:context="com.kjs.skywalk.app_android.Activity_rentals_progress_contracted">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="出租进度-签约">
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_apartment_name"
+            style="@style/textStyle_page_apartmentName"
+            android:text="世茂蝶湖湾 175栋3212室" >
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="房屋租赁合同"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="NO.2016112"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_rect_stroke_background_orange"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:text="查看完整合同"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="业主"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="流年"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="客人"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="荼蘼"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="出租日期"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="2016.11.12~2017.11.12（1年）"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical" >
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:text="租金"/>
+
+            <TextView
+                style="@style/textStyle_page_blockValue"
+                android:text="2000元/月"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#E5E5E5"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我已仔细阅读《房屋租赁合同》并理解全部含义"/>
+
+            <LinearLayout
+                android:id="@+id/llBottom"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="20dp"
+                    android:onClick="onViewClick"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_rect_background_green"
+                    android:text="续租">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onViewClick"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_rect_background_orange"
+                    android:text="预约退房">
+                </TextView>
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

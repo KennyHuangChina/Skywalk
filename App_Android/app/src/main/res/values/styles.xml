@@ -12,7 +12,7 @@
     <style name="TextView_section_title" parent="@android:style/Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">23sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">#394142</item>
     </style>
 
@@ -21,7 +21,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawableRight">@drawable/arrow_right</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">#979aa1</item>
     </style>
 
@@ -33,7 +33,7 @@
 
     <!--姑苏白杨湾街道 / 3室2厅 / 88 m²-->
     <style name="TextView_apartment_description" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textColor">#939499</item>
     </style>
 
@@ -126,21 +126,36 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/selector_search_condition_filter</item>
         <item name="android:textSize">@dimen/text_size_search_condition_filter_item</item>
-        <item name="android:textColor">@drawable/selector_search_condition_filter_item_text_color</item>
+        <item name="android:textColor">@drawable/selector_search_condition_filter_item_text_color
+        </item>
         <item name="android:onClick">onSearchConditionFilterItemClicked</item>
         <item name="android:layout_weight">1</item>
     </style>
 
+    <!--高级搜索->房型-->
+    <style name="text_view_search_condition_house_type_item" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:paddingLeft">17dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_search_condition_house_type_item</item>
+        <item name="android:textColor">
+            @drawable/selector_search_condition_house_type_item_text_color
+        </item>
+        <item name="android:onClick">onSearchConditionHouseTypeItemClicked</item>
+    </style>
 
-
-
-
-
-
-
-
-
-
+    <!--高级搜索->价格-->
+    <style name="text_view_search_condition_price_item" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:paddingLeft">17dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_search_condition_price_item</item>
+        <item name="android:textColor">@drawable/selector_search_condition_price_item_text_color
+        </item>
+        <item name="android:onClick">onSearchConditionPriceItemClicked</item>
+    </style>
 
 
     <!--150万-->
@@ -162,14 +177,59 @@
     </style>
 
     <!--世贸蝶湖湾175栋2202室-->
-    <style name="textstyle_large" >
+    <style name="textstyle_large">
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#242224</item>
     </style>
-    <style name="textstyle_small" >
+
+    <style name="textstyle_small">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#242224</item>
     </style>
+
+    <!--出租进度-签约-->
+    <style name="textStyle_page_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:onClick">onViewClick</item>
+        <item name="android:drawableLeft">@drawable/nav_back</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--世茂蝶湖湾 175栋3212室-->
+    <style name="textStyle_page_apartmentName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <!--业主信息-->
+    <style name="textStyle_page_blockTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <!--出租人-->
+    <style name="textStyle_page_blockKey">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:textColor">@color/colorTextTint</item>
+    </style>
+
+    <!--荼蘼之恋-->
+    <style name="textStyle_page_blockValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 

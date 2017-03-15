@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_expiration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:context="com.kjs.skywalk.app_android.Activity_rentals_expiration">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="出租进度-到期"/>
+
+        <TextView
+            android:id="@+id/tv_apartment_name"
+            style="@style/textStyle_page_apartmentName"
+            android:text="世茂蝶湖湾 175栋3212室" >
+        </TextView>
+
+        <include layout="@layout/seperator_horizontal"
+                 android:layout_width="match_parent"
+                 android:layout_height="5dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:onClick="onViewClick"
+            android:gravity="center"
+            android:text="你的出租房即将于">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:onClick="onViewClick"
+            android:gravity="center"
+            android:textColor="#00ff00"
+            android:text="2017-01-01">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:onClick="onViewClick"
+            android:gravity="center"
+            android:text="到期">
+        </TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:onClick="onViewClick"
+            android:gravity="center_vertical"
+            android:text="请于到期前办理">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:onClick="onViewClick"
+            android:gravity="center"
+            android:background="@drawable/rounded_rect_background_green"
+            android:text="续租">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:onClick="onViewClick"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:background="@drawable/rounded_rect_background_orange"
+            android:text="预约退房">
+        </TextView>
+
+    </LinearLayout>
+
+</RelativeLayout>
