@@ -19,7 +19,7 @@ class CommandTest extends CommunicationBase {
     private String mType = "1";
 
     CommandTest(Context context) {
-        super(context, "CommandTest");
+        super(context, CommunicationInterface.CmdID.CMD_TEST);
         TAG = "CommandTest";
 //        Log.i(TAG, "Constructor");
         mMethodType = "POST";

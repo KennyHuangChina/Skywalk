@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
-import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.HouseInfo;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
@@ -21,11 +19,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment
-        implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
+        implements CICommandListener, CIProgressListener{
 
     private final String TAG = "MainActivityFragment";
     private MainActivity mainActivity = null;
@@ -62,7 +63,6 @@ public class MainActivityFragment extends Fragment
    }
 
     private void doTestAddApi() {
-//        doTestAddApi_AddFacility();
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
         CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
         CmdMgr.AddDeliverable(mEditText.getText().toString());
@@ -185,7 +185,7 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(String command, IApiResults.ICommon result) {
+    public void onCommandFinished(int command, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
@@ -197,7 +197,7 @@ public class MainActivityFragment extends Fragment
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            if (command.equals(CommunicationCommand.CC_GET_PROPERTY_LIST)) {
+            if (CMD_GET_PROPERTY_LIST == command) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -207,8 +207,7 @@ public class MainActivityFragment extends Fragment
                     IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
                     prop.GetName();
                 }
-            } else if (command.equals(CommunicationCommand.CC_GET_HOUSE_LIST) ||
-                    command.equals(CommunicationCommand.CC_GET_BEHALF_HOUSE_LIST)) {
+            } else if (command == CMD_GET_HOUSE_LIST || command == CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
@@ -220,7 +219,7 @@ public class MainActivityFragment extends Fragment
                             Log.d(TAG, "house(" + n + ") id:" + id + "\n");
                         }
                     }
-            } else if (command.equals(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO)) {
+            } else if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
                 IApiResults.IHouseDigest res = (IApiResults.IHouseDigest) result;
                 res.GetHouseId();
 
@@ -242,7 +241,7 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onProgressChanged(String command, String percent, HashMap<String, String> map) {
+    public void onProgressChanged(int command, String percent, HashMap<String, String> map) {
 
     }
 }

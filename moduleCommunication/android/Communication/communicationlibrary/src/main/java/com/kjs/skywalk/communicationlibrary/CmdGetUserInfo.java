@@ -14,7 +14,7 @@ class CmdGetUserInfo extends CommunicationBase {
     private int mUserId = 0;
 
     CmdGetUserInfo(Context context) {
-        super(context, "CmdGetUserInfo");
+        super(context, CommunicationInterface.CmdID.CMD_GET_USER_INFO);
         TAG = "CmdGetUserInfo";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

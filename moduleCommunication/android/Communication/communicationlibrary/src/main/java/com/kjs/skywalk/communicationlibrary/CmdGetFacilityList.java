@@ -15,7 +15,7 @@ class CmdGetFacilityList extends CommunicationBase {
     private int mType = 0;  // 0 means all type
 
     CmdGetFacilityList(Context context) {
-        super(context, "GetFacilityList");
+        super(context, CommunicationInterface.CmdID.CMD_GET_FACILITY_LIST);
         TAG = "CmdGetFacilityList";
         mMethodType = "GET";
     }

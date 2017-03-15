@@ -14,7 +14,7 @@ class CmdGetPropertyInfo extends CommunicationBase {
     private int mPropertyId = 0;    // property id
 
     CmdGetPropertyInfo(Context context) {
-        super(context, "CmdGetPropertyInfo");
+        super(context, CommunicationInterface.CmdID.CMD_GET_PROPERTY_INFO);
         TAG = "CmdGetPropertyInfo";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

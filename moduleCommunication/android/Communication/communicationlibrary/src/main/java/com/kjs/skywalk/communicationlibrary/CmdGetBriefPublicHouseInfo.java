@@ -22,7 +22,7 @@ class CmdGetBriefPublicHouseInfo extends CommunicationBase {
     private String mParamID = "";
 
     CmdGetBriefPublicHouseInfo(Context context){
-        super(context, "CmdGetBriefPublicHouseInfo");
+        super(context, CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO);
         TAG = "GetBriefPublicHouseInfo";
         Log.i(TAG, "Constructor");
         mMethodType = "GET";

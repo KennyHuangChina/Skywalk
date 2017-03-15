@@ -10,11 +10,11 @@ import java.util.HashMap;
 
 public class CommunicationInterface {
     public interface CICommandListener {
-        void onCommandFinished(final String command, final IApiResults.ICommon res);
+        void onCommandFinished(final int command, final IApiResults.ICommon res);
     }
 
     public interface CIProgressListener {
-        void onProgressChanged(final String command, final String percent, HashMap<String, String> map);
+        void onProgressChanged(final int command, final String percent, HashMap<String, String> map);
     }
 
     public interface ICommand {
@@ -51,5 +51,47 @@ public class CommunicationInterface {
         int GetFacilityTypeList();
         int AddFacility(int nType, String sName);
         int GetFacilityList(int nType);
+    }
+
+    public static class CmdID {
+        // Admin
+        public static int CMD_LOGIN_BY_PASSWORD     = 0x1001;
+        public static int CMD_LOGIN_BY_SMS          = 0x1002;
+        public static int CMD_GET_USER_SALT         = 0x1003;
+        public static int CMD_GET_USER_INFO         = 0x1004;
+        public static int CMD_LOG_OUT               = 0x1005;
+        public static int CMD_RELOGIN               = 0x1006;
+        public static int CMD_GET_SMS_CODE          = 0x1007;
+
+        // House
+        public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001;
+        public static int CMD_GET_HOUSE_LIST                = 0x2002;
+        public static int CMD_GET_BEHALF_HOUSE_LIST         = 0x2003;
+        public static int CMD_GET_HOUSE_INFO                = 0x2004;
+        public static int CMD_COMMIT_HOUSE_BY_OWNER         = 0x2005;
+        public static int CMD_AMEND_HOUSE                   = 0x2006;
+        public static int CMD_CERTIFY_HOUSE                 = 0x2007;
+        public static int CMD_GET_SET_HOUSE_COVER_IMAGE     = 0x2008;
+        public static int CMD_GET_RECOMMEND_HOUSE           = 0x2009;
+
+        // Property
+        public static int CMD_GET_PROPERTY_LIST     = 0x3001;
+        public static int CMD_GET_PROPERTY_INFO     = 0x3002;
+        public static int CMD_ADD_PROPERTY          = 0x3003;
+        public static int CMD_MODIFY_PROPERTY       = 0x3004;
+
+        // Deliverables
+        public static int CMD_ADD_DELIVERABLE        = 0x4001;
+        public static int CMD_GET_DELIVERABLE_LIST   = 0x4002;
+        public static int CMD_ADD_HOUSE_DELIVERABLE  = 0x4003;
+        public static int CMD_GET_HOUSE_DELIVERABLES = 0x4004;
+
+        // Facilities
+        public static int CMD_ADD_FACILITY_TYPE      = 0x5001;
+        public static int CMD_GET_FACILITY_TYPE_LIST = 0x5002;
+        public static int CMD_ADD_FACILITY           = 0x5003;
+        public static int CMD_GET_FACILITY_LIST      = 0x5004;
+
+        public static int CMD_TEST                   = 0x0001;
     }
 }

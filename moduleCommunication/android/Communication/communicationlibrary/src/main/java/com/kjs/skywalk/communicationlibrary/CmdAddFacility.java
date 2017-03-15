@@ -16,7 +16,7 @@ class CmdAddFacility extends CommunicationBase {
     private int     mType = 0;
 
     CmdAddFacility(Context context) {
-        super(context, "AddFacility");
+        super(context, CommunicationInterface.CmdID.CMD_ADD_FACILITY);
         TAG = "CmdAddFacility";
         mMethodType = "POST";
     }

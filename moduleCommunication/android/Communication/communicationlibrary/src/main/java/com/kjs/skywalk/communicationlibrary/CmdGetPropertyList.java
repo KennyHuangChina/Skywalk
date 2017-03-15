@@ -17,7 +17,7 @@ class CmdGetPropertyList extends CommunicationBase {
     private int mFetchCount = 0;
 
     CmdGetPropertyList(Context context) {
-        super(context, "CmdGetPropertyList");
+        super(context, CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST);
         TAG = "CmdGetPropertyList";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

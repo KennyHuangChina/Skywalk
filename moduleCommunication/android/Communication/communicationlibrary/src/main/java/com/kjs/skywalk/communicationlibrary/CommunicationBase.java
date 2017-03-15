@@ -15,6 +15,8 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandList
 
 import org.json.JSONObject;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
+
 /**
  * Created by Jackie on 2017/1/20.
  */
@@ -27,7 +29,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.ConnectFailed,
                                     InternalDefines.IApiName {
     protected   String  TAG         = "CommunicationBase";
-    private     String  mAPI        = "";
+    private     int     mAPI        = CmdID.CMD_TEST;
     protected   Context mContext    = null;
     protected   String  mMethodType = "";
     protected   String  mServerURL  = "";
@@ -44,10 +46,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected SKCookieManager   mCookieManager  = null;
     protected String            mRadom          = "";
 
-    CommunicationBase(Context context, String strAPI) {
+    CommunicationBase(Context context, int cmdId) {
         Log.i(TAG, "Communication Base Constructor");
         mContext = context;
-        mAPI = strAPI;
+        mAPI = cmdId;
         mVersion = 1;   // please set it in sub-class if its version is not 1
         mUtils = new MyUtils(context);
         mServerURL = ServerURL.mServerUri;
@@ -214,6 +216,6 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     @Override
     public String GetApiName() {
-        return mAPI;
+        return "" + mAPI;
     }
 }

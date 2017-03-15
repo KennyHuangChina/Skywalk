@@ -15,7 +15,7 @@ class CmdGetHouseDeliverables extends CommunicationBase {
     private int mHouseId = 0;
 
     CmdGetHouseDeliverables(Context context) {
-        super(context, "GetHouseDeliverables");
+        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES);
         TAG = "CmdGetHouseDeliverables";
         mMethodType = "GET";
     }

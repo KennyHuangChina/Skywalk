@@ -11,9 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
-import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
@@ -210,7 +210,7 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(String command, IApiResults.ICommon result) {
+    public void onCommandFinished(int command, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
@@ -223,7 +223,7 @@ public class LogInOutFragment extends Fragment
 //            return;
         } else {
             Log.e(TAG, "Command:"+ command + " finished successes");
-            if (command.equals(CommunicationCommand.CC_GET_USER_SALT)) {
+            if (command == CmdID.CMD_GET_USER_SALT) {
                 IApiResults.IGetUserSalt slt = (IApiResults.IGetUserSalt)result;
                 mSalt = slt.GetSalt();
                 mRand = slt.GetRandom();
@@ -239,7 +239,7 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onProgressChanged(String command, String percent, HashMap<String, String> map) {
+    public void onProgressChanged(int command, String percent, HashMap<String, String> map) {
 
     }
 }

@@ -18,7 +18,7 @@ class CmdCertificateHouse extends CommunicationBase {
     private String  mCertComment    = "";
 
     CmdCertificateHouse(Context context) {
-        super(context, "CmdCertificateHouse");
+        super(context, CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE);
         TAG = "CmdCertificateHouse";
         mMethodType = "POST";
     }

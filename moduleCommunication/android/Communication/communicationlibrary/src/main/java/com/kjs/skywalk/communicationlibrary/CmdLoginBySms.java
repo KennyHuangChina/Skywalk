@@ -21,7 +21,7 @@ class CmdLoginBySms extends CommunicationBase {
     private String  mPicResult      = "";   // picture result
 
     CmdLoginBySms(Context context) {
-        super(context, "CmdLoginBySms");
+        super(context, CommunicationInterface.CmdID.CMD_LOGIN_BY_SMS);
         TAG = "CmdLoginBySms";
 //        Log.i(TAG, "Constructor");
         mMethodType = "POST";

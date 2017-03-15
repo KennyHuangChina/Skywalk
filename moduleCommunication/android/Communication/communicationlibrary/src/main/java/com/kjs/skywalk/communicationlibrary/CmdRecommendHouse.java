@@ -15,7 +15,7 @@ class CmdRecommendHouse extends CommunicationBase {
     private int mHouseId    = 0;
 
     CmdRecommendHouse(Context context) {
-        super(context, "CmdRecommendHouse");
+        super(context, CommunicationInterface.CmdID.CMD_GET_RECOMMEND_HOUSE);
         TAG = "CmdRecommendHouse";
         mMethodType = "PUT";
     }

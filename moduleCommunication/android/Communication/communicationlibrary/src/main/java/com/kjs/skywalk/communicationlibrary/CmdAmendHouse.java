@@ -27,7 +27,7 @@ class CmdAmendHouse extends CommunicationBase {
     private boolean mRent           = false;// commit for rent
 
     CmdAmendHouse(Context context) {
-        super(context, "CmdAmendHouse");
+        super(context, CommunicationInterface.CmdID.CMD_AMEND_HOUSE);
         TAG = "CmdAmendHouse";
 //        Log.i(TAG, "Constructor");
         mMethodType = "PUT";

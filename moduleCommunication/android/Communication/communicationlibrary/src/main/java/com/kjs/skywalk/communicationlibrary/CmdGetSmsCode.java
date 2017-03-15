@@ -18,7 +18,7 @@ class CmdGetSmsCode extends CommunicationBase {
     private String mUserName = "";
 
     CmdGetSmsCode(Context context) {
-        super(context, "CmdGetSmsCode");
+        super(context, CommunicationInterface.CmdID.CMD_GET_SMS_CODE);
         TAG = "CmdGetSmsCode";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

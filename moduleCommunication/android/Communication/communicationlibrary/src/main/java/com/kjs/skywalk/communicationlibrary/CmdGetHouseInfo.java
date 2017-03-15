@@ -14,7 +14,7 @@ class CmdGetHouseInfo extends CommunicationBase {
     private int mHouseId;      // house id
 
     CmdGetHouseInfo(Context context) {
-        super(context, "CmdGetHouseInfo");
+        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO);
         TAG = "CmdGetHouseInfo";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

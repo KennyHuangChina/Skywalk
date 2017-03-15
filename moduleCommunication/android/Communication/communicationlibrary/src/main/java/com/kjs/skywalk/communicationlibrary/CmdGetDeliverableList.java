@@ -13,7 +13,7 @@ import java.util.HashMap;
 class CmdGetDeliverableList extends CommunicationBase {
 
     CmdGetDeliverableList(Context context) {
-        super(context, "CmdGetDeliverableList");
+        super(context, CommunicationInterface.CmdID.CMD_GET_DELIVERABLE_LIST);
         TAG = "CmdGetDeliverableList";
         mMethodType = "GET";
     }
