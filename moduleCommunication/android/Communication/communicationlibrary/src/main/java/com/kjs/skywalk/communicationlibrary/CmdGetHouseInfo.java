@@ -13,8 +13,8 @@ import java.util.HashMap;
 class CmdGetHouseInfo extends CommunicationBase {
     private int mHouseId;      // house id
 
-    CmdGetHouseInfo(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdGetHouseInfo(Context context) {
+        super(context, "CmdGetHouseInfo");
         TAG = "CmdGetHouseInfo";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";

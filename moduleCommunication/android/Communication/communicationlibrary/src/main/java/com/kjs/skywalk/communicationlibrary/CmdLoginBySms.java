@@ -20,8 +20,8 @@ class CmdLoginBySms extends CommunicationBase {
     private String  mPicSessionId   = "";   // picture session id. ref to captcha GUID of API sec_pic
     private String  mPicResult      = "";   // picture result
 
-    CmdLoginBySms(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdLoginBySms(Context context) {
+        super(context, "CmdLoginBySms");
         TAG = "CmdLoginBySms";
 //        Log.i(TAG, "Constructor");
         mMethodType = "POST";

@@ -14,8 +14,8 @@ import java.util.HashMap;
 class CmdGetBehalfHouses extends CmdGetHouseList {
 //    protected int mType = 0;  // 0: all; 1: to rent; 2: rented; 3: to sale
 
-    CmdGetBehalfHouses(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdGetBehalfHouses(Context context) {
+        super(context, "CmdGetBehalfHouses");
         TAG = "CmdGetBehalfHouses";
         mMethodType = "GET";
     }

@@ -10,11 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
-import com.kjs.skywalk.communicationlibrary.CommunicationManager;
-import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
@@ -41,54 +40,38 @@ public class LogInOutFragment extends Fragment
     }
 
     private void doLogin() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
-        pMap.put(CommunicationParameterKey.CPK_PASSWORD, mEditPassword.getText().toString());
-        pMap.put(CommunicationParameterKey.CPK_RANDOM, mRand);
-        pMap.put(CommunicationParameterKey.CPK_USER_SALT, mSalt);
-        mManager.execute(CommunicationCommand.CC_LOG_IN_BY_PASSWORD, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.LoginByPassword(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mRand, mSalt);
     }
 
     private void doLoginSms() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
-        pMap.put(CommunicationParameterKey.CPK_SMS_CODE, mEditPassword.getText().toString());
-        mManager.execute(CommunicationCommand.CC_LOG_IN_BY_SMS, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.LoginBySms(mEditUserName.getText().toString(), mEditPassword.getText().toString());
     }
 
     private void doLogout() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        mManager.execute(CommunicationCommand.CC_LOG_OUT, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.Logout();
     }
 
     private void doTest() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        mManager.execute(CommunicationCommand.CC_TEST, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.CommandTest();
     }
 
     private void doGetUserSalt() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
-        mManager.execute(CommunicationCommand.CC_GET_USER_SALT, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.GetUserSalt(mEditUserName.getText().toString());
     }
 
     private void doRelogin() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
-        mManager.execute(CommunicationCommand.CC_RELOGIN, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.Relogin(mEditUserName.getText().toString());
     }
 
     private void doGetSmsCode() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mEditUserName.getText().toString());
-        mManager.execute(CommunicationCommand.CC_GET_SMS_CODE, pMap, this, this);
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.GetSmsCode(mEditUserName.getText().toString());
     }
 
     private void clearResultDisplay() {

@@ -14,8 +14,6 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationCommand;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
-import com.kjs.skywalk.communicationlibrary.CommunicationManager;
-import com.kjs.skywalk.communicationlibrary.CommunicationParameterKey;
 import com.kjs.skywalk.communicationlibrary.HouseInfo;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
@@ -59,24 +57,11 @@ public class MainActivityFragment extends Fragment
         doTestModifyApi_ModifyHouse(CmdMgr);
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
-        HouseInfo houseInfo = new HouseInfo();
-        houseInfo.mHouseId = 6;
-        houseInfo.mPropId = 2;
-        houseInfo.mBuilding = 56;
-        houseInfo.mHouseNo = "1606";
-        houseInfo.mFloorTotal = 35;
-        houseInfo.mFloorThis = 16;
-        houseInfo.mLivingrooms = 2;
-        houseInfo.mBedrooms = 4;
-        houseInfo.mBathrooms = 3;
-        houseInfo.mAcreage = 17788;
-        houseInfo.mForSale = false;
-        houseInfo.mForRent = true;
-        CmdMgr.AmendHouse(houseInfo);
+        HouseInfo houseInfo = new HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);
+       CmdMgr.AmendHouse(houseInfo);
    }
 
     private void doTestAddApi() {
-//        doTestAddApi_CommitHouseByOwner();
 //        doTestAddApi_AddFacility();
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
         CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
@@ -86,75 +71,26 @@ public class MainActivityFragment extends Fragment
                                     Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
         CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
-    }
-    private void doTestAddApi_CommitHouseByOwner() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, "1");
-        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, "177");
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, "2305");
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, "35");
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, "23");
-        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, "4");
-        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, "2");
-        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, "3");
-        pMap.put(CommunicationParameterKey.CPK_ACREAGE, "15678");
-        pMap.put(CommunicationParameterKey.CPK_4SALE, "false");
-        pMap.put(CommunicationParameterKey.CPK_4RENT, "true");
-        pMap.put(CommunicationParameterKey.CPK_AGENT, "0");
-        mManager.execute(CommunicationCommand.CC_GET_COMMIT_HOUSE_BY_OWNER, pMap, this, this);
+
+        HouseInfo houseInfo = new HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true);
+        CmdMgr.CommitHouseByOwner(houseInfo, 0);
     }
     private void doTestGetApi() {
-//        doTestGetApi_GetBriefPublicHouseInfo();
-//        doTestGetApi_GetUserInfo();
-//        doTestGetApi_GetHouseInfo();
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
-        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
     }
-    private void doTestGetApi_GetHouseInfo() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); // "2");
-        mManager.execute(CommunicationCommand.CC_GET_GET_HOUSE_INFO, pMap, this, this);
-    }
-    private void doTestGetApi_GetBriefPublicHouseInfo() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); // "2");
-        mManager.execute(CommunicationCommand.CC_GET_BRIEF_PUBLIC_HOUSE_INFO, pMap, this, this);
-    }
-    private void doTestGetApi_GetUserInfo() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, mEditText.getText().toString()); //"4");
-        mManager.execute(CommunicationCommand.CC_GET_USER_INFO, pMap, this, this);
-    }
-
     private void doTestGetList() {
-//        doTestGetList_HouseList();
-//        doTestGetList_BehalfHouseList();
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
-        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
-        CmdMgr.GetDeliverableList();
-        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
+//        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
+//        CmdMgr.GetDeliverableList();
+//        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetFacilityTypeList();
-        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
-    }
-    private void doTestGetList_BehalfHouseList() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, mEditText.getText().toString());
-        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "0");
-        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + mListTotal);
-        mManager.execute(CommunicationCommand.CC_GET_BEHALF_HOUSE_LIST, pMap, this, this);
-    }
-    private void doTestGetList_HouseList() {
-        CommunicationManager mManager = new CommunicationManager(this.getContext());
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, mEditText.getText().toString());
-        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "0");
-        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + mListTotal);
-        mManager.execute(CommunicationCommand.CC_GET_HOUSE_LIST, pMap, this, this);
+//        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
+//        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+        CmdMgr.GetHouseList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
     }
 
     @Override

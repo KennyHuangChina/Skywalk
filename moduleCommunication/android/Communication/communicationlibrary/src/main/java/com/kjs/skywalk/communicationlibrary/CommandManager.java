@@ -55,6 +55,107 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int GetSmsCode(String userName) {
+        mOperation = new CmdGetSmsCode(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetUserInfo(int uid) {
+        mOperation = new CmdGetUserInfo(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "" + uid);
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetUserSalt(String userName) {
+        mOperation = new CmdGetUserSalt(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
+        return execute(pMap);
+    }
+
+    @Override
+    public int LoginByPassword(String user, String pass, String rand, String salt) {
+        mOperation = new CmdLoginByPassword(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
+        pMap.put(CommunicationParameterKey.CPK_PASSWORD, pass);
+        pMap.put(CommunicationParameterKey.CPK_RANDOM, rand);
+        pMap.put(CommunicationParameterKey.CPK_USER_SALT, salt);
+        return execute(pMap);
+    }
+
+    @Override
+    public int LoginBySms(String user, String smsCode) {
+        mOperation = new CmdLoginBySms(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
+        pMap.put(CommunicationParameterKey.CPK_SMS_CODE, smsCode);
+        return execute(pMap);
+    }
+
+    @Override
+    public int Logout() {
+        mOperation = new CmdRelogin(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
+
+    @Override
+    public int Relogin(String userName) {
+        mOperation = new CmdRelogin(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
+        return execute(pMap);
+    }
+
+    @Override
+    public int CommandTest() {
+        mOperation = new CommandTest(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetBriefPublicHouseInfo(int houseId) {
+        mOperation = new CmdGetBriefPublicHouseInfo(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, "" + houseId);
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetHouseInfo(int houseId) {
+        mOperation = new CmdGetHouseInfo(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(houseId));
+        return execute(pMap);
+    }
+
+    @Override
+    public int CommitHouseByOwner(HouseInfo houseInfo, int agency) {
+        mOperation = new CmdCommitHouseByOwner(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, String.valueOf(houseInfo.mPropId));
+        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, String.valueOf(houseInfo.mBuilding));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, houseInfo.mHouseNo);
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, String.valueOf(houseInfo.mFloorTotal));
+        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, String.valueOf(houseInfo.mFloorThis));
+        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, String.valueOf(houseInfo.mLivingrooms));
+        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, String.valueOf(houseInfo.mBedrooms));
+        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, String.valueOf(houseInfo.mBathrooms));
+        pMap.put(CommunicationParameterKey.CPK_ACREAGE, String.valueOf(houseInfo.mAcreage));
+        pMap.put(CommunicationParameterKey.CPK_4SALE, String.valueOf(houseInfo.mForSale));
+        pMap.put(CommunicationParameterKey.CPK_4RENT, String.valueOf(houseInfo.mForRent));
+        pMap.put(CommunicationParameterKey.CPK_AGENT, String.valueOf(agency));
+        return execute(pMap);
+    }
+
+    @Override
     public int AmendHouse(HouseInfo houseInfo) {
         mOperation = new CmdRecommendHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -98,6 +199,26 @@ public class CommandManager implements CommunicationInterface.ICommand {
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
         pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, sCertComment);
         pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_PASS, String.valueOf(bPass));
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetBehalfHouses(int type, int begin, int cnt) {
+        mOperation = new CmdGetBehalfHouses(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
+        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
+        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + cnt);
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetHouseList(int type, int begin, int cnt) {
+        mOperation = new CmdGetHouseList(mContext, "GetHouseList");
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
+        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
+        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + cnt);
         return execute(pMap);
     }
 

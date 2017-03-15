@@ -17,4 +17,23 @@ public class HouseInfo {
     public int mAcreage = 0;
     public boolean mForSale = false;
     public boolean mForRent = false;
+
+    public HouseInfo() {
+    }
+
+    public HouseInfo(int hid, int pid, int bld, String hno, int ftotal, int fthis, int lr,
+                     int bedr, int bathr, int acre, boolean sale, boolean rent) {
+        mHouseId = hid;
+        mPropId = pid;
+        mBuilding = bld;
+        mHouseNo = hno;
+        mFloorTotal = ftotal;
+        mFloorThis = fthis;
+        mLivingrooms = lr;
+        mBedrooms = bedr;
+        mBathrooms = bathr;
+        mAcreage = acre;
+        mForSale = sale;
+        mForRent = rent;
+    }
 }

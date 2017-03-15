@@ -20,8 +20,8 @@ class CmdRelogin extends CommunicationBase {
     private String mUserName = "";
     private String mRadom = "";
 
-    CmdRelogin(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdRelogin(Context context) {
+        super(context, "CmdRelogin");
         TAG = "CmdRelogin";
 //        Log.i(TAG, "Constructor");
         mMethodType = "POST";

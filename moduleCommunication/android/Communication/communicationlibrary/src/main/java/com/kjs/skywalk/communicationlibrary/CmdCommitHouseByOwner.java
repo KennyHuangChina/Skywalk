@@ -26,8 +26,8 @@ class CmdCommitHouseByOwner extends CommunicationBase {
     private boolean mRent           = false;// commit for rent
     private int     mAgent          = 0;    // agent id. 0 means no agent assigned
 
-    CmdCommitHouseByOwner(Context context, String strAPI) {
-        super(context, strAPI);
+    CmdCommitHouseByOwner(Context context) {
+        super(context, "CmdCommitHouseByOwner");
         TAG = "CmdCommitHouseByOwner";
 //        Log.i(TAG, "Constructor");
         mMethodType = "POST";

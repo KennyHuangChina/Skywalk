@@ -18,8 +18,8 @@ class CommandTest extends CommunicationBase {
     private String mRadom = "";
     private String mType = "1";
 
-    CommandTest(Context context, String strAPI) {
-        super(context, strAPI);
+    CommandTest(Context context) {
+        super(context, "CommandTest");
         TAG = "CommandTest";
 //        Log.i(TAG, "Constructor");
         mMethodType = "POST";

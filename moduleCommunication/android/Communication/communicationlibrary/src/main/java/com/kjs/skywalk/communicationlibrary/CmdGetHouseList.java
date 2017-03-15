@@ -17,7 +17,7 @@ class CmdGetHouseList extends CommunicationBase {
     protected int mFetchCount = 0;
 
     CmdGetHouseList(Context context, String strAPI) {
-        super(context, strAPI);
+        super(context, "CmdGetHouseList");
         TAG = "CmdGetHouseList";
 //        Log.i(TAG, "Constructor");
         mMethodType = "GET";
