@@ -123,7 +123,7 @@
                     style="@style/textStyle_page_blockValue"
                     android:textColorHint="@color/colorEditTextTint"
                     android:background="#FFFFFFFF"
-                    android:hint="4400元"/>
+                    android:hint="选择小区"/>
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
@@ -137,7 +137,32 @@
                 <TextView
                     style="@style/textStyle_page_blockKey"
                     android:textColor="@color/colorTextNormal"
-                    android:text="小区名称"/>
+                    android:text="楼栋号"/>
+                <EditText
+                    style="@style/textStyle_page_blockEdit"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:layout_toLeftOf="@+id/tv_unit"
+                    android:hint="501"/>
+                <TextView
+                    android:id="@+id/tv_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="栋"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="楼层"/>
                 <EditText
                     style="@style/textStyle_page_blockValue"
                     android:textColorHint="@color/colorEditTextTint"
@@ -156,12 +181,12 @@
                 <TextView
                     style="@style/textStyle_page_blockKey"
                     android:textColor="@color/colorTextNormal"
-                    android:text="小区名称"/>
+                    android:text="门牌号"/>
                 <EditText
                     style="@style/textStyle_page_blockValue"
                     android:textColorHint="@color/colorEditTextTint"
                     android:background="#FFFFFFFF"
-                    android:hint="4400元"/>
+                    android:hint="输入房号"/>
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
@@ -175,12 +200,12 @@
                 <TextView
                     style="@style/textStyle_page_blockKey"
                     android:textColor="@color/colorTextNormal"
-                    android:text="小区名称"/>
+                    android:text="产证面积"/>
                 <EditText
                     style="@style/textStyle_page_blockValue"
                     android:textColorHint="@color/colorEditTextTint"
                     android:background="#FFFFFFFF"
-                    android:hint="4400元"/>
+                    android:hint="输入产证面积"/>
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
@@ -194,31 +219,12 @@
                 <TextView
                     style="@style/textStyle_page_blockKey"
                     android:textColor="@color/colorTextNormal"
-                    android:text="小区名称"/>
+                    android:text="户型"/>
                 <EditText
                     style="@style/textStyle_page_blockValue"
                     android:textColorHint="@color/colorEditTextTint"
                     android:background="#FFFFFFFF"
-                    android:hint="4400元"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="小区名称"/>
-                <EditText
-                    style="@style/textStyle_page_blockValue"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:background="#FFFFFFFF"
-                    android:hint="4400元"/>
+                    android:hint="请选择"/>
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
