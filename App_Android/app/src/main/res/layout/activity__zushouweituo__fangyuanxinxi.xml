@@ -141,34 +141,72 @@
                 <EditText
                     style="@style/textStyle_page_blockEdit"
                     android:textColorHint="@color/colorEditTextTint"
-                    android:layout_toLeftOf="@+id/tv_unit"
+                    android:layout_toLeftOf="@+id/tv_loudong_unit"
                     android:hint="501"/>
                 <TextView
-                    android:id="@+id/tv_unit"
+                    android:id="@+id/tv_loudong_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_marginLeft="5dp"
                     android:text="栋"/>
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="楼层"/>
-                <EditText
-                    style="@style/textStyle_page_blockValue"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:background="#FFFFFFFF"
-                    android:hint="4400元"/>
-            </RelativeLayout>
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="楼层"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_louceng_unit"
+                        android:hint="1"/>
+                    <TextView
+                        android:id="@+id/tv_louceng_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="层"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="共"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_loucengs_unit"
+                        android:hint="5"/>
+                    <TextView
+                        android:id="@+id/tv_loucengs_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="层"/>
+                </RelativeLayout>
+            </LinearLayout>
 
             <include layout="@layout/seperator_horizontal"/>
 
@@ -202,10 +240,17 @@
                     android:textColor="@color/colorTextNormal"
                     android:text="产证面积"/>
                 <EditText
-                    style="@style/textStyle_page_blockValue"
+                    style="@style/textStyle_page_blockEdit"
                     android:textColorHint="@color/colorEditTextTint"
-                    android:background="#FFFFFFFF"
+                    android:layout_toLeftOf="@+id/tv_chanzheng_unit"
                     android:hint="输入产证面积"/>
+                <TextView
+                    android:id="@+id/tv_chanzheng_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="㎡"/>
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
@@ -229,11 +274,38 @@
 
             <include layout="@layout/seperator_horizontal"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="装修"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="请选择"/>
+            </RelativeLayout>
 
+            <include layout="@layout/seperator_horizontal"/>
 
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_next"
+        android:onClick="onViewClick"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:background="#00AE63"
+        android:text="下一步"/>
 </RelativeLayout>
