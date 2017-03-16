@@ -292,6 +292,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_jiaofang_chaobiao.class));
                         break;
                     }
+
+                    case R.id.action_setting101:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Weituoqueren.class));
+                        break;
+                    }
                 }
                 return false;
             }

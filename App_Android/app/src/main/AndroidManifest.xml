@@ -66,6 +66,7 @@
         <activity android:name=".Activity_rentals_progress_contractedDeposit" />
         <activity android:name=".Activity_rentals_progress_contractedConfirm" />
         <activity android:name=".Activity_Zushouweituo_Fangyuanxinxi"></activity>
+        <activity android:name=".Activity_Weituoqueren"></activity>
     </application>
 
 </manifest>
