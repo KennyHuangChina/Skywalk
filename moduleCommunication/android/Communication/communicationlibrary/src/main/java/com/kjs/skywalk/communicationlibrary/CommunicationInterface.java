@@ -2,6 +2,7 @@ package com.kjs.skywalk.communicationlibrary;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -18,6 +19,7 @@ public class CommunicationInterface {
     }
 
     public interface ICommand {
+        // user admin
         int GetSmsCode(String userName);
         int GetUserInfo(int uid);
         int GetUserSalt(String userName);
@@ -27,6 +29,7 @@ public class CommunicationInterface {
         int Relogin(String userName);
         int CommandTest();
 
+        // house
         int GetBriefPublicHouseInfo(int houseId);
         int GetHouseInfo(int houseId);
         int CommitHouseByOwner(HouseInfo houseInfo, int agency);
@@ -37,20 +40,24 @@ public class CommunicationInterface {
         int GetBehalfHouses(int type, int begin, int cnt);
         int GetHouseList(int type, int begin, int cnt);
 
+        // Property, community
         int GetPropertyListByName(String sName, int nBegin, int nCount);
         int AddProperty(String sName, String sAddr, String sDesc);
         int GetPropertyInfo(int nPropId);
         int ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);
 
+        // house deliverables for rent
         int AddDeliverable(String sName);
         int GetDeliverableList();
         int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);
         int GetHouseDeliverables(int house_id);
 
+        // house facilities
         int AddFacilityType(String sTypeName);
         int GetFacilityTypeList();
         int AddFacility(int nType, String sName);
         int GetFacilityList(int nType);
+        int AddHouseFacility(int house, ArrayList<FacilityItem> list);
     }
 
     public static class CmdID {
@@ -91,6 +98,7 @@ public class CommunicationInterface {
         public static int CMD_GET_FACILITY_TYPE_LIST = 0x5002;
         public static int CMD_ADD_FACILITY           = 0x5003;
         public static int CMD_GET_FACILITY_LIST      = 0x5004;
+        public static int CMD_ADD_HOUSE_FACILITY     = 0x5005;
 
         public static int CMD_TEST                   = 0x0001;
     }

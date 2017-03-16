@@ -3,6 +3,7 @@ package com.kjs.skywalk.communicationlibrary;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -324,6 +325,14 @@ public class CommandManager implements CommunicationInterface.ICommand {
         mOperation = new CmdGetFacilityList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
+        return execute(pMap);
+    }
+
+    @Override
+    public int AddHouseFacility(int house, ArrayList<FacilityItem> list) {
+        mOperation = new CmdAddHouseFacility(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+//        pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
         return execute(pMap);
     }
 }
