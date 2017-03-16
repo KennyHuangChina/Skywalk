@@ -5,12 +5,15 @@ import (
 	"ApiServer/commdef"
 	"ApiServer/models"
 	"fmt"
+	"html/template"
+	// "text/template"
 	// "crypto/rand"
 	// "encoding/hex"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/cache"
 	"github.com/astaxie/beego/utils/captcha"
 	// "io"
+	// "os"
 	// "net/http"
 	// "net/url"
 )
@@ -33,7 +36,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Relogin", a.Relogin)
 	a.Mapping("Loginsms", a.Loginsms)
 	a.Mapping("Logout", a.Logout)
-	a.Mapping("TestLogin", a.TestLogin)
+	a.Mapping("Test", a.Test)
 }
 
 // @Title GetUserInfo
@@ -161,34 +164,60 @@ func (this *AdminController) GetSaltForUser() {
 	// beego.Debug(FN, "salt:", result.Salt, ", random:", result.Random)
 }
 
-// @Title TestLogin
-// @Description login by login name & password
+type Person struct {
+	UserName string
+}
+type Info struct {
+	Title string
+	Name  string
+	Site  string
+}
+
+// @Title Test
+// @Description test function
 // @Success 200 {string}
 // @Failure 400 body is empty
-// @router /test [post]
-func (this *AdminController) TestLogin() {
-	FN := "<TestLogin> "
-	beego.Warn("[--- API: TestLogin ---]")
+// @router /test [get]
+func (this *AdminController) Test() {
+	FN := "<Test> "
+	beego.Warn("[--- API: Test ---]")
 
-	var result ResCommon
-	var err error
+	// beego.Warn(FN, fmt.Sprintf("this.Controller.Ctx: %+v", this.Controller.Ctx))
+	// beego.Warn(FN, fmt.Sprintf("this.Controller.Ctx.ResponseWriter: %+v", this.Controller.Ctx.ResponseWriter))
 
-	defer func() {
-		err = api_result(err, this.Controller, &result)
-		if nil != err {
-			beego.Error(FN, err.Error())
-		}
+	user := this.GetString("name")
 
-		// export result
-		this.Data["json"] = result
-		this.ServeJSON()
-	}()
+	// tmpl := template.New("templete example")
+	// tmpl, _ = tmpl.Parse("hello {{.UserName}}!")
+	// p := Person{UserName: user}
+	// // t.Execute(os.Stdout, p)
+	// tmpl.Execute(this.Controller.Ctx.ResponseWriter, p)
 
-	uid, err := getLoginUser(this.Controller)
+	// t, _ = t.Parse(`<html lang="en">
+	// 					<head>
+	// 						<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	// 						<title>Test Template</title>
+	// 					</head>
+	// 					<body>
+	// 						<H1>Hello {{.UserName}}!</H1>
+	// 						<br>Powered by beego 1.7.1
+	// 					</body>
+	// 				</html>`)
+	// tmpl, _ := template.ParseFiles("test.tpl" /*, nil*/) //解析模板文件
+	// p := Person{UserName: user}
+	// // t.Execute(os.Stdout, p)
+	// tmpl.Execute(this.Controller.Ctx.ResponseWriter, p)
+
+	tplFile := "views/home.html"
+	info := Info{"个人网站", user, "http://www.sample.com/"}
+	tmpl, err := template.ParseFiles(tplFile)
 	if nil != err {
+		beego.Error(FN, "err:", err)
+		this.Data["json"] = fmt.Sprintf("Error: %s", err)
+		this.ServeJSON()
 		return
 	}
-	beego.Debug(FN, "uid:", uid)
+	tmpl.Execute(this.Controller.Ctx.ResponseWriter, info)
 
 	return
 }
