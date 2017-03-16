@@ -30,60 +30,203 @@
             android:paddingRight="@dimen/page_right_margin"
             android:orientation="horizontal">
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/fangyuan_s"/>
+                android:gravity="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/fangyuan_s"
+                android:text="房源"/>
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_weight="1"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/shape_dash_line"/>
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/jiage_n"/>
+                android:gravity="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/jiage_n"
+                android:text="价格"/>
+
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="2dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_dash_line"/>
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/daili_n"/>
+                android:gravity="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/daili_n"
+                android:text="代理"/>
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="2dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_dash_line"/>
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/feiyong_n"/>
+                android:gravity="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/feiyong_n"
+                android:text="费用"/>
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="2dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_dash_line"/>
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/wancheng_n"/>
+                android:gravity="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/wancheng_n"
+                android:text="完成"/>
         </LinearLayout>
 
         <include layout="@layout/seperator_horizontal"
             android:layout_width="match_parent"
             android:layout_height="7dp"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"  >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="小区名称"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="4400元"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="小区名称"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="4400元"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="小区名称"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="4400元"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="小区名称"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="4400元"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="小区名称"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="4400元"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="小区名称"/>
+                <EditText
+                    style="@style/textStyle_page_blockValue"
+                    android:textColorHint="@color/colorEditTextTint"
+                    android:background="#FFFFFFFF"
+                    android:hint="4400元"/>
+            </RelativeLayout>
+
+            <include layout="@layout/seperator_horizontal"/>
+
+
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
