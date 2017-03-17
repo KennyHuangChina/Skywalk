@@ -6,6 +6,13 @@ import (
 
 func init() {
 
+	beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"],
+		beego.ControllerComments{
+			Method: "GetHouseFacilities",
+			Router: `/facility/house/:id`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
 		beego.ControllerComments{
 			Method: "GetUserInfo",
@@ -122,13 +129,6 @@ func init() {
 		beego.ControllerComments{
 			Method: "GetFacilityTypeList",
 			Router: `/facitypelst`,
-			AllowHTTPMethods: []string{"get"},
-			Params: nil})
-
-	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
-		beego.ControllerComments{
-			Method: "GetHouseFacilities",
-			Router: `/housefacilities/:id`,
 			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 
