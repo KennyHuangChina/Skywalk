@@ -11,28 +11,17 @@ import java.util.HashMap;
 /**
  * Created by kenny on 2017/3/16.
  */
-class FacilityItem {
-    public int      mFId    = 0;    // facility id
-    public int      mQty    = 0;    // facility quantity
-    public String   mDesc   = "";   // facility description
-
-    FacilityItem(int id, int qty, String desc) {
-        mFId = id;
-        mQty = qty;
-        mDesc = desc;
-    }
-}
-
 class CmdAddHouseFacility extends CommunicationBase {
     private int mHouse = 0;
-    private int mNumb = 0;
-    private ArrayList<FacilityItem> mList = null;
+//    private int mNumb = 0;
+    private ArrayList<CommunicationInterface.FacilityItem> mList = null;
 
-    CmdAddHouseFacility(Context context) {
+    CmdAddHouseFacility(Context context, int house, ArrayList<CommunicationInterface.FacilityItem> list) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_HOUSE_FACILITY);
         TAG = "CmdAddHouseFacility";
         mMethodType = "POST";
-        mList = new ArrayList<FacilityItem>();
+        mHouse = house;
+        mList = list;   // new ArrayList<CommunicationInterface.FacilityItem>();
     }
 
     @Override
@@ -43,42 +32,29 @@ class CmdAddHouseFacility extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("numb=" + mNumb);
-        mRequestData += "&";
-//        mRequestData += ("type=" + mType);
+        mRequestData = ("numb=" + mList.size());
+        for (int n = 0; n < mList.size(); n++) {
+            mRequestData += "&";
+            CommunicationInterface.FacilityItem item = mList.get(n);
+            mRequestData += ("fid_" + n + "=" + item.mFId);
+            mRequestData += "&";
+            mRequestData += ("fqty_" + n + "=" + item.mQty);
+            mRequestData += "&";
+            mRequestData += ("fdesc_" + n + "=" + String2Base64(item.mDesc));
+        }
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_COUNT) ) {
+        if (mHouse <= 0) {
+            Log.e(TAG, "mHouse: " + mHouse);
             return false;
         }
-
-        try {
-            mHouse = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            mNumb = Integer.parseInt(map.get(CommunicationParameterKey.CPK_COUNT));
-            if (mNumb <= 0) {
-                return false;
-            }
-            for (int i = 0; i < mNumb; i++) {
-                String keyId = "fid_" + i;
-                String keyQty = "fqty_" + i;
-                String keyDesc = "fdesc_" + i;
-                if (!map.containsKey(keyId) || !map.containsKey(keyQty) || !map.containsKey(keyDesc)) {
-                    return false;
-                }
-                int fid = Integer.parseInt(map.get(keyId));
-                int qty = Integer.parseInt(map.get(keyQty));
-                FacilityItem newFacility = new FacilityItem(fid, qty, map.get(keyDesc));
-                mList.add(newFacility);
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        if (null == mList || 0 == mList.size()) {
+            Log.e(TAG, "No facilities assigned for house");
             return false;
         }
-
         return true;
     }
 

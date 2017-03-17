@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
-import com.kjs.skywalk.communicationlibrary.HouseInfo;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
@@ -58,22 +58,29 @@ public class MainActivityFragment extends Fragment
         doTestModifyApi_ModifyHouse(CmdMgr);
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
-        HouseInfo houseInfo = new HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);
-       CmdMgr.AmendHouse(houseInfo);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);
+        CmdMgr.AmendHouse(houseInfo);
    }
 
     private void doTestAddApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
-        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
-        CmdMgr.AddDeliverable(mEditText.getText().toString());
-        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
-                                    Integer.parseInt(mEditText1.getText().toString()),
-                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
+//        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
+//        CmdMgr.AddDeliverable(mEditText.getText().toString());
+//        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
+//                                    Integer.parseInt(mEditText1.getText().toString()),
+//                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
-        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
+//        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
+//
+//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true);
+//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
-        HouseInfo houseInfo = new HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true);
-        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+        // test AddHouse
+        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
+        list.add(new CommunicationInterface.FacilityItem(6, 2, "沙发茶几说明"));
+        list.add(new CommunicationInterface.FacilityItem(4, 3, "电视机说明"));
+        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
+        CmdMgr.AddHouseFacility(6, list);
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);

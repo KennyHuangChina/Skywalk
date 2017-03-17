@@ -138,40 +138,16 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int CommitHouseByOwner(HouseInfo houseInfo, int agency) {
-        mOperation = new CmdCommitHouseByOwner(mContext);
+    public int CommitHouseByOwner(CommunicationInterface.HouseInfo houseInfo, int agency) {
+        mOperation = new CmdCommitHouseByOwner(mContext, houseInfo, agency);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, String.valueOf(houseInfo.mPropId));
-        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, String.valueOf(houseInfo.mBuilding));
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, houseInfo.mHouseNo);
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, String.valueOf(houseInfo.mFloorTotal));
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, String.valueOf(houseInfo.mFloorThis));
-        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, String.valueOf(houseInfo.mLivingrooms));
-        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, String.valueOf(houseInfo.mBedrooms));
-        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, String.valueOf(houseInfo.mBathrooms));
-        pMap.put(CommunicationParameterKey.CPK_ACREAGE, String.valueOf(houseInfo.mAcreage));
-        pMap.put(CommunicationParameterKey.CPK_4SALE, String.valueOf(houseInfo.mForSale));
-        pMap.put(CommunicationParameterKey.CPK_4RENT, String.valueOf(houseInfo.mForRent));
-        pMap.put(CommunicationParameterKey.CPK_AGENT, String.valueOf(agency));
         return execute(pMap);
     }
 
     @Override
-    public int AmendHouse(HouseInfo houseInfo) {
-        mOperation = new CmdRecommendHouse(mContext);
+    public int AmendHouse(CommunicationInterface.HouseInfo houseInfo) {
+        mOperation = new CmdAmendHouse(mContext, houseInfo);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(houseInfo.mHouseId));
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ID, String.valueOf(houseInfo.mPropId));
-        pMap.put(CommunicationParameterKey.CPK_BUILDING_NO, String.valueOf(houseInfo.mBuilding));
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_NO, houseInfo.mHouseNo);
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_TOTA, String.valueOf(houseInfo.mFloorTotal));
-        pMap.put(CommunicationParameterKey.CPK_FLOOR_THIS, String.valueOf(houseInfo.mFloorThis));
-        pMap.put(CommunicationParameterKey.CPK_LIVINGROOMS, String.valueOf(houseInfo.mLivingrooms));
-        pMap.put(CommunicationParameterKey.CPK_BEDROOMS, String.valueOf(houseInfo.mBedrooms));
-        pMap.put(CommunicationParameterKey.CPK_BATHROOMS, String.valueOf(houseInfo.mBathrooms));
-        pMap.put(CommunicationParameterKey.CPK_ACREAGE, String.valueOf(houseInfo.mAcreage));
-        pMap.put(CommunicationParameterKey.CPK_4SALE, String.valueOf(houseInfo.mForSale));
-        pMap.put(CommunicationParameterKey.CPK_4RENT, String.valueOf(houseInfo.mForRent));
         return execute(pMap);
     }
 
@@ -329,10 +305,9 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int AddHouseFacility(int house, ArrayList<FacilityItem> list) {
-        mOperation = new CmdAddHouseFacility(mContext);
+    public int AddHouseFacility(int house, ArrayList<CommunicationInterface.FacilityItem> list) {
+        mOperation = new CmdAddHouseFacility(mContext, house, list);
         HashMap<String, String> pMap = new HashMap<String, String>();
-//        pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
         return execute(pMap);
     }
 }

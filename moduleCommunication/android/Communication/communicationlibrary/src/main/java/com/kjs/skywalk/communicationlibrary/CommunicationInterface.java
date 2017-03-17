@@ -1,5 +1,8 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -18,6 +21,10 @@ public class CommunicationInterface {
         void onProgressChanged(final int command, final String percent, HashMap<String, String> map);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //         -- Command definitions --
+    //
     public interface ICommand {
         // user admin
         int GetSmsCode(String userName);
@@ -101,5 +108,99 @@ public class CommunicationInterface {
         public static int CMD_ADD_HOUSE_FACILITY     = 0x5005;
 
         public static int CMD_TEST                   = 0x0001;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //         -- API data definitions --
+    //
+    // used in CommitHouse, AmendHouse
+    static public class HouseInfo {
+        public int mHouseId = 0;
+        public int mPropId = 0;
+        public int mBuilding = 0;
+        public String mHouseNo = "";
+        public int mFloorTotal = 0;
+        public int mFloorThis = 0;
+        public int mLivingrooms = 0;
+        public int mBedrooms = 0;
+        public int mBathrooms = 0;
+        public int mAcreage = 0;
+        public boolean mForSale = false;
+        public boolean mForRent = false;
+
+        public HouseInfo() {
+        }
+
+        public HouseInfo(int hid, int pid, int bld, String hno, int ftotal, int fthis, int lr,
+                         int bedr, int bathr, int acre, boolean sale, boolean rent) {
+            mHouseId = hid;
+            mPropId = pid;
+            mBuilding = bld;
+            mHouseNo = hno;
+            mFloorTotal = ftotal;
+            mFloorThis = fthis;
+            mLivingrooms = lr;
+            mBedrooms = bedr;
+            mBathrooms = bathr;
+            mAcreage = acre;
+            mForSale = sale;
+            mForRent = rent;
+        }
+
+        public boolean CheckHoseInfo(String TAG, boolean bAdd) {
+            // mHouseId could be zero, cause it maybe a "Add" operation
+            if (mHouseId < 0 || (!bAdd && 0 == mHouseId)) {
+                Log.e(TAG, "mHouseId:" + mHouseId);
+                return false;
+            }
+            if (mPropId <= 0) {
+                Log.e(TAG, "mPropId:" + mPropId);
+                return false;
+            }
+            if (mBuilding <= 0) {
+                Log.e(TAG, "mBuilding:" + mBuilding);
+                return false;
+            }
+            if (TextUtils.isEmpty(mHouseNo)) {
+                // Kenny; house no could be empty for townhouse or villa
+//                Log.e(TAG, "No house no specified");
+//                return false;
+            }
+            if (mFloorTotal < 1) {
+                Log.e(TAG, "mFloorTotal:" + mFloorTotal);
+                return false;
+            }
+            if (mFloorThis < 1 || mFloorThis > mFloorTotal) {
+                Log.e(TAG, "mFloorThis:" + mFloorThis);
+                return false;
+            }
+            if (mLivingrooms <= 0 && mBedrooms <= 0 && mBathrooms <= 0) {
+                Log.e(TAG, "Invalid livingroom:" + mLivingrooms + ", bedroom:" + mBedrooms + ", bathroom:" + mBathrooms);
+                return false;
+            }
+            // acreage value is 100 times than actual acreage
+            if (mAcreage < 100){
+                Log.e(TAG, "Invalid acreage:" + mAcreage);
+                return false;
+            }
+//            mSale
+//            mRent
+
+            return true;
+        }
+    }
+
+    // used in AddHouseFacilities
+    static public class FacilityItem {
+        public int      mFId    = 0;    // facility id
+        public int      mQty    = 0;    // facility quantity
+        public String   mDesc   = "";   // facility description
+
+        public FacilityItem(int id, int qty, String desc) {
+            mFId = id;
+            mQty = qty;
+            mDesc = desc;
+        }
     }
 }
