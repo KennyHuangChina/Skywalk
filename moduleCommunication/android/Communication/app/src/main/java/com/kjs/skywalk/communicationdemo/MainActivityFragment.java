@@ -97,7 +97,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-        CmdMgr.GetHouseList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+//        CmdMgr.GetHouseList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
     }
 
     @Override

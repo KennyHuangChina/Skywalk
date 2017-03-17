@@ -101,4 +101,11 @@ public class IApiResults {
         String GetName();
         String GetType();
     }
-}
+
+    public interface IHouseFacilityInfo {
+        int GetId();
+        String GetName();
+        String GetType();
+        int GetQty();
+        String GetDesc();
+    }}

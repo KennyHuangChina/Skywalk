@@ -266,7 +266,7 @@ public class CommandManager implements CommunicationInterface.ICommand {
 
     @Override
     public int GetHouseDeliverables(int house_id) {
-        mOperation = new CmdGetHouseDeliverables(mContext);
+        mOperation = new CmdGetHouseDeliverables(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id)); // "2");
         return execute(pMap);
@@ -307,6 +307,13 @@ public class CommandManager implements CommunicationInterface.ICommand {
     @Override
     public int AddHouseFacility(int house, ArrayList<CommunicationInterface.FacilityItem> list) {
         mOperation = new CmdAddHouseFacility(mContext, house, list);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
+
+    @Override
+    public int GetHouseFacilityList(int house) {
+        mOperation = new CmdGetHouseFacilityList(mContext, house);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }

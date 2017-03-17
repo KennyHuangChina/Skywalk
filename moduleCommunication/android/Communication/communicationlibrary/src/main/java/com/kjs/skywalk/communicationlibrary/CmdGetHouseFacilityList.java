@@ -8,23 +8,28 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Created by kenny on 2017/3/12.
+ * Created by kenny on 2017/3/17.
  */
 
-class CmdGetHouseDeliverables extends CommunicationBase {
+class CmdGetHouseFacilityList extends CommunicationBase {
     private int mHouseId = 0;
 
-    CmdGetHouseDeliverables(Context context, int house) {
-        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES);
-        TAG = "CmdGetHouseDeliverables";
+    CmdGetHouseFacilityList(Context context, int house) {
+        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST);
+        TAG = "CmdGetHouseFacilityList";
         mMethodType = "GET";
         mHouseId = house;
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/hdl/" + mHouseId;
+        mCommandURL = "/v1/house/housefacilities/" + mHouseId;
         return mCommandURL;
+    }
+
+    @Override
+    public void generateRequestData() {
+        super.generateRequestData();
     }
 
     @Override
@@ -38,7 +43,7 @@ class CmdGetHouseDeliverables extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResHouseDeliverables res = new ResHouseDeliverables(nErrCode, jObject);
+        ResHouseFacilityList res = new ResHouseFacilityList(nErrCode, jObject);
         return res;
     }
 }
