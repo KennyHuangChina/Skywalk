@@ -392,6 +392,9 @@ func (this *HouseController) AddHouseFacilities() {
 		qty, _ := this.GetInt(item)
 		item = fmt.Sprintf("fdesc_%d", i)
 		desc := this.GetString(item)
+		tmp, _ := base64.URLEncoding.DecodeString(desc)
+		desc = string(tmp)
+
 		newItem := commdef.AddHouseFacility{Facility: fid, Qty: qty, Desc: desc}
 
 		al = append(al, newItem)
