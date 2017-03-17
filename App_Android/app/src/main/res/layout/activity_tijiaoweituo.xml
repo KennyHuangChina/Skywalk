@@ -12,9 +12,27 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentBottom="true"
         android:background="#efefef"
-        android:id="@+id/relativeLayout">
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/checkBoxStyle"
+            android:text="@string/checkbox_text_tijiaoweituo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:textSize="14sp"
+            android:textColor="#282628"
+            android:gravity="left"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -27,7 +45,9 @@
             android:layout_alignParentBottom="true"
             android:textColor="#ffffff"
             android:background="@drawable/rounded_rect_background_green"
-            android:text="同意并提交委托" />
+            android:text="同意并提交委托"
+            android:id="@+id/textView2" />
+
     </RelativeLayout>
 
     <LinearLayout
