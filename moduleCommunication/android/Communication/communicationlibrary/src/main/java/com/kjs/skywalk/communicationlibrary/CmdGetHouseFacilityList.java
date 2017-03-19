@@ -23,7 +23,7 @@ class CmdGetHouseFacilityList extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/housefacilities/" + mHouseId;
+        mCommandURL = "/v1/accessory/house/" + mHouseId + "/facilities";
         return mCommandURL;
     }
 
