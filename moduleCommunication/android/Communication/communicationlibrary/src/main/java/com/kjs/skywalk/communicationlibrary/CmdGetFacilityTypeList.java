@@ -20,7 +20,7 @@ class CmdGetFacilityTypeList extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/facitypelst";
+        mCommandURL = "/v1/accessory/facitypelst";
         return mCommandURL;
     }
 
