@@ -307,11 +307,13 @@
                     android:layout_centerVertical="true"
                     android:text="有无房贷"/>
                 <ToggleButton
-                    android:id="@+id/toggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="ToggleButton" />
+                    android:background="@drawable/toggle_selector"
+                    android:textOn=""
+                    android:textOff=""
+                    android:checked="true"
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <include layout="@layout/seperator_horizontal"/>
@@ -328,9 +330,12 @@
                     android:layout_centerVertical="true"
                     android:text="是否唯一"/>
                 <ToggleButton
-                    android:id="@+id/toggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_selector"
+                    android:textOn=""
+                    android:textOff=""
+                    android:checked="false"
                     android:layout_alignParentRight="true"
                     android:text="ToggleButton" />
             </RelativeLayout>
