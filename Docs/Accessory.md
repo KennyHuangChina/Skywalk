@@ -121,7 +121,7 @@
 ### 9. Add House Facility (By house owner, agency and administrator)
 	[Security]	private
 	[Request]
-  		* POST /v1/house/housefacilities/:id
+  		* POST /v1/accessory/house/:id/facilities
 	  		* numb			int			// facility number
 	  		* fid_0			int			// facility_0 id
 	  		* fqty_0		int			// facility_0 quantity
