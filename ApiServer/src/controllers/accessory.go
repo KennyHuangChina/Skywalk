@@ -14,9 +14,56 @@ type AccessoryController struct {
 }
 
 func (a *AccessoryController) URLMapping() {
+	a.Mapping("AddFacility", a.AddFacility)
 	a.Mapping("GetFacilityList", a.GetFacilityList)
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
+}
+
+// @Title AddFacility
+// @Description add new facility type
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /facility [post]
+func (this *AccessoryController) AddFacility() {
+	FN := "[AddFacility] "
+	beego.Warn("[--- API: AddFacility ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	ft, _ := this.GetInt64("type")
+	name := this.GetString("name")
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
+	// beego.Debug(FN, "name:", name, ", ft:", ft)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddFacility(name, ft, uid)
+	if nil == err {
+		result.Id = id
+	}
 }
 
 // @Title GetFacilityList

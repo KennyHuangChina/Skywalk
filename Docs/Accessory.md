@@ -90,7 +90,7 @@
 ### 7. New Facility (By administrator)
 	[Security]	private
 	[Request]
-  		* POST /v1/house/facility
+  		* POST /v1/accessory/facility
 	  		* name			string		// facility name
 	  		* type			int			// facility type id
   	[Response]
