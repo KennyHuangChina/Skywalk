@@ -104,7 +104,7 @@
 ### 8. Get Facility List (By login user)
 	[Security]	private
 	[Request]
-  		* GET /v1/house/facilitys?type=
+  		* GET /v1/accessory/facilitys?type=
 	  		* type			int		// facility type id. 0 means all type
   	[Response]
 		* SUCCESS:200
