@@ -62,7 +62,7 @@
 ### 5. New Facility Type (By administrator)
 	[Security]	private
 	[Request]
-  		* POST /v1/house/facilitytype
+  		* POST /v1/accessory/facility/type
 	  		* name				string	// facility type name
   	[Response]
 		* SUCCESS:200 
@@ -75,7 +75,7 @@
 ### 6. Get Facility Type List (By logined user)
 	[Security]	private
 	[Request]
-  		* GET /v1/house/facitypelst
+  		* GET /v1/accessory/facitypelst
   	[Response]
 		* SUCCESS:200 
 			* Total				int			// total type quantity

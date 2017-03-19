@@ -14,10 +14,98 @@ type AccessoryController struct {
 }
 
 func (a *AccessoryController) URLMapping() {
+	a.Mapping("AddFacilityType", a.AddFacilityType)
+	a.Mapping("GetFacilityTypeList", a.GetFacilityTypeList)
 	a.Mapping("AddFacility", a.AddFacility)
 	a.Mapping("GetFacilityList", a.GetFacilityList)
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
+}
+
+// @Title AddFacilityType
+// @Description add new facility type
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /facility/type [post]
+func (this *AccessoryController) AddFacilityType() {
+	FN := "[AddFacilityType] "
+	beego.Warn("[--- API: AddFacilityType ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	name := this.GetString("name")
+	// beego.Debug(FN, "name:", name)
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
+	beego.Debug(FN, "name:", name)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddFacilityType(name, uid)
+	if nil == err {
+		result.Id = id
+	}
+}
+
+// @Title GetFacilityTypeList
+// @Description get facility type list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /facitypelst [get]
+func (this *AccessoryController) GetFacilityTypeList() {
+	FN := "[GetFacilityTypeList] "
+	beego.Warn("[--- API: GetFacilityTypeList ---]")
+
+	var result ResGetCommonList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	/*
+	 *	Processing
+	 */
+	err, lst := models.GetFacilityTypeList(uid)
+	if nil == err {
+		result.List = lst
+	}
 }
 
 // @Title AddFacility
