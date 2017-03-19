@@ -9,7 +9,7 @@ func init() {
 	beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"],
 		beego.ControllerComments{
 			Method: "GetHouseFacilities",
-			Router: `/facility/house/:id`,
+			Router: `/house/:id/facilities`,
 			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 

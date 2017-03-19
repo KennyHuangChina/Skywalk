@@ -140,7 +140,7 @@
 ### 10. Get House Facility List (By house owner, agency and administrator)
 	[Security]	public
 	[Request]
-  		* GET /v1/accessory/facility/house/:id
+  		* GET /v1/accessory/house/:id/facilities
   	[Response]
 		* SUCCESS:200
 	  		* Total			int			// facility item quantity

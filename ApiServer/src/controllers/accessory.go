@@ -21,7 +21,7 @@ func (a *AccessoryController) URLMapping() {
 // @Description get house facility list
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /facility/house/:id [get]
+// @router /house/:id/facilities [get]
 func (this *AccessoryController) GetHouseFacilities() {
 	FN := "[GetHouseFacilities] "
 	beego.Warn("[--- API: GetHouseFacilities ---]")

@@ -120,9 +120,14 @@ func GetHouseFacilities(hid int64) (err error, lst []commdef.HouseFacility) {
 	o := orm.NewOrm()
 
 	var l []commdef.HouseFacility
-	/*numb*/ _, errT := o.Raw(sql).QueryRows(&l)
+	numb, errT := o.Raw(sql).QueryRows(&l)
+	// beego.Debug(FN, "numb:", numb, ", err:", errT)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	if 0 == numb {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house:%d", hid)}
 		return
 	}
 
