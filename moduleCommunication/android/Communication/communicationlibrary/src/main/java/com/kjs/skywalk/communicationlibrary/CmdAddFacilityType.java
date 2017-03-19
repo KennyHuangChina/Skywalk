@@ -22,7 +22,7 @@ class CmdAddFacilityType extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/facilitytype";
+        mCommandURL = "/v1/accessory/facility/type";
         return mCommandURL;
     }
 
