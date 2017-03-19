@@ -22,7 +22,7 @@ class CmdGetFacilityList extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/facilitys";
+        mCommandURL = "/v1/accessory/facilitys";
         return mCommandURL;
     }
 
@@ -39,7 +39,11 @@ class CmdGetFacilityList extends CommunicationBase {
         }
 
         try {
-            mType = Integer.parseInt(map.get(CommunicationParameterKey.CPK_TYPE));
+            String sType = map.get(CommunicationParameterKey.CPK_TYPE);
+            if (0 == sType.length()) {
+                sType = "0";
+            }
+            mType = Integer.parseInt(sType);
             if (mType < 0) {
                 Log.e(TAG, "mType: " + mType);
                 return false;
