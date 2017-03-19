@@ -70,17 +70,17 @@ public class MainActivityFragment extends Fragment
 //                                    Integer.parseInt(mEditText1.getText().toString()),
 //                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
-//        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
+        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
 //
 //        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true);
 //        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
-        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
-        list.add(new CommunicationInterface.FacilityItem(6, 2, "沙发茶几说明"));
-        list.add(new CommunicationInterface.FacilityItem(4, 3, "电视机说明"));
-        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
-        CmdMgr.AddHouseFacility(6, list);
+//        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
+//        list.add(new CommunicationInterface.FacilityItem(6, 2, "沙发茶几说明"));
+//        list.add(new CommunicationInterface.FacilityItem(4, 3, "电视机说明"));
+//        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
+//        CmdMgr.AddHouseFacility(6, list);
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
