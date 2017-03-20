@@ -46,7 +46,7 @@
 ### 4. Get House deliverable list (By logined user)
 	[Security]	private
 	[Request]
-  		* GET /v1/house/hdl/:id
+  		* GET /v1/accessory/house/:id/deliverables
   	[Response]
 		* SUCCESS:200 
 			* DeliverableList	array
