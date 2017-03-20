@@ -65,10 +65,10 @@ public class MainActivityFragment extends Fragment
     private void doTestAddApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
-//        CmdMgr.AddDeliverable(mEditText.getText().toString());
-        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
-                                    Integer.parseInt(mEditText1.getText().toString()),
-                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
+        CmdMgr.AddDeliverable(mEditText.getText().toString());
+//        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
+//                                    Integer.parseInt(mEditText1.getText().toString()),
+//                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
 //
