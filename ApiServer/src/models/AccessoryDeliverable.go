@@ -47,3 +47,39 @@ func GetHouseDeliverableList(uid, hid int64) (err error, lst []commdef.HouseDeli
 	lst = l
 	return
 }
+
+/**
+*	Add New Deliverable
+*	Arguments:
+*		uid 	- login user id
+*	Returns
+*		err 	- error info
+*		lst 	- deliverable list
+**/
+func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
+	FN := "[GetDeliverables] "
+	beego.Trace(FN, "uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// permission checking, all system user could fetch
+	o := orm.NewOrm()
+
+	var dl []TblDeliverables
+	/*numb*/ _, errT := o.QueryTable("tbl_deliverables").All(&dl)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	for _, v := range dl {
+		newItem := commdef.CommonListItem{Id: v.Id, Name: v.Name}
+		lst = append(lst, newItem)
+	}
+	// lst = dl
+	return
+}

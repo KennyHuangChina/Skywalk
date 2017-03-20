@@ -16,7 +16,7 @@
 ###2. Get deliverable list (By logined user)
 	[Security]	private
 	[Request]
-  		* GET /v1/house/delivelst
+  		* GET /v1/accessory/deliverables
 	[Response]
 		* SUCCESS:200 
 			* Total			int			// total number

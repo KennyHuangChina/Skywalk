@@ -14,6 +14,7 @@ type AccessoryController struct {
 }
 
 func (a *AccessoryController) URLMapping() {
+	a.Mapping("GetDeliverableList", a.GetDeliverableList)
 	a.Mapping("NewHouseDeliverable", a.NewHouseDeliverable)
 	a.Mapping("GetHouseDeliverableList", a.GetHouseDeliverableList)
 
@@ -23,6 +24,47 @@ func (a *AccessoryController) URLMapping() {
 	a.Mapping("GetFacilityList", a.GetFacilityList)
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
+}
+
+// @Title GetDeliverableList
+// @Description add new deliverable
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /deliverables [get]
+func (this *AccessoryController) GetDeliverableList() {
+	FN := "[GetDeliverableList] "
+	beego.Warn("[--- API: GetDeliverableList ---]")
+
+	var result ResGetCommonList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	/*
+	 *	Processing
+	 */
+	err, lst := models.GetDeliverables(uid)
+	if nil == err {
+		result.Total = int64(len(lst))
+		result.List = lst
+	}
 }
 
 // @Title NewHouseDeliverable
