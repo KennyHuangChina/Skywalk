@@ -31,7 +31,7 @@
 ### 3. Add deliverable for house (By logined user)
 	[Security]	private
 	[Request]
-  		* POST /v1/house/housedeliv/:id
+  		* POST /v1/accessory/house/:id/deliverable
 	  		* did			int			// deliverable id
 	  		* qty			int			// quantity. 0 means delete this house deliverable
 	  		* desc			string		// description 

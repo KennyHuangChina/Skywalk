@@ -14,6 +14,7 @@ type AccessoryController struct {
 }
 
 func (a *AccessoryController) URLMapping() {
+	a.Mapping("NewHouseDeliverable", a.NewHouseDeliverable)
 	a.Mapping("GetHouseDeliverableList", a.GetHouseDeliverableList)
 
 	a.Mapping("AddFacilityType", a.AddFacilityType)
@@ -22,6 +23,53 @@ func (a *AccessoryController) URLMapping() {
 	a.Mapping("GetFacilityList", a.GetFacilityList)
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
+}
+
+// @Title NewHouseDeliverable
+// @Description add new house deliverable
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /house/:id/deliverable [post]
+func (this *AccessoryController) NewHouseDeliverable() {
+	FN := "[NewHouseDeliverable] "
+	beego.Warn("[--- API: NewHouseDeliverable ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	did, _ := this.GetInt64("did")
+	qty, _ := this.GetInt("qty")
+	desc := this.GetString("desc")
+	tmp, _ := base64.URLEncoding.DecodeString(desc)
+	desc = string(tmp)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddHouseDeliverable(uid, hid, did, qty, desc)
+	if nil == err {
+		result.Id = id
+	}
 }
 
 // @Title GetHouseDeliverableList
