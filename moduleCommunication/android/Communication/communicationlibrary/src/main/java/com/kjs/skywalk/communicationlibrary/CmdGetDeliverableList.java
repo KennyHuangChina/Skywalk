@@ -20,7 +20,7 @@ class CmdGetDeliverableList extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/delivelst";
+        mCommandURL = "/v1/accessory/deliverables";
         return mCommandURL;
     }
 

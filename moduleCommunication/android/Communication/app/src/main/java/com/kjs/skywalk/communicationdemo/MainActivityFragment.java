@@ -92,8 +92,8 @@ public class MainActivityFragment extends Fragment
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
-//        CmdMgr.GetDeliverableList();
-        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
+        CmdMgr.GetDeliverableList();
+//        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
