@@ -287,6 +287,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
+                    case R.id.action_setting4:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
+                    }
+                    break;
+
                     case R.id.action_setting100:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_jiaofang_chaobiao.class));
