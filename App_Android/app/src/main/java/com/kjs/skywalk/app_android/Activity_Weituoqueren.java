@@ -47,12 +47,13 @@ public class Activity_Weituoqueren extends Activity {
             }
         });
 
-        mWebView.loadUrl("http://www.baidu.com/");
+        //mWebView.loadUrl("http://www.baidu.com/");
+        mWebView.loadUrl("file:////sdcard/test.html");
     }
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title:
+            case R.id.textViewCommit:
             {
                 finish();
             }

@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="120dp"
         android:background="#efefef"
         android:id="@+id/relativeLayout"
         android:layout_alignParentBottom="true"
@@ -46,7 +46,7 @@
             android:textColor="#ffffff"
             android:background="@drawable/rounded_rect_background_green"
             android:text="同意并提交委托"
-            android:id="@+id/textView2" />
+            android:id="@+id/textViewCommit" />
 
     </RelativeLayout>
 
