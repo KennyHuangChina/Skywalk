@@ -3,7 +3,7 @@
 ### 1. Add deliverable (By administrator)
 	[Security]	private
 	[Request]
-  		* POST /v1/house/deliverable
+  		* POST /v1/accessory/deliverable
 	  		* name			string		// new deliverable name
 	[Response]
 		* SUCCESS:200 

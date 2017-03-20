@@ -8,6 +8,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"],
 		beego.ControllerComments{
+			Method: "AddDeliverable",
+			Router: `/deliverable`,
+			AllowHTTPMethods: []string{"post"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AccessoryController"],
+		beego.ControllerComments{
 			Method: "GetDeliverableList",
 			Router: `/deliverables`,
 			AllowHTTPMethods: []string{"get"},
@@ -164,13 +171,6 @@ func init() {
 		beego.ControllerComments{
 			Method: "AddProperty",
 			Router: `/property`,
-			AllowHTTPMethods: []string{"post"},
-			Params: nil})
-
-	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
-		beego.ControllerComments{
-			Method: "AddDeliverable",
-			Router: `/deliverable`,
 			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 

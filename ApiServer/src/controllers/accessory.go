@@ -14,6 +14,7 @@ type AccessoryController struct {
 }
 
 func (a *AccessoryController) URLMapping() {
+	a.Mapping("AddDeliverable", a.AddDeliverable)
 	a.Mapping("GetDeliverableList", a.GetDeliverableList)
 	a.Mapping("NewHouseDeliverable", a.NewHouseDeliverable)
 	a.Mapping("GetHouseDeliverableList", a.GetHouseDeliverableList)
@@ -24,6 +25,51 @@ func (a *AccessoryController) URLMapping() {
 	a.Mapping("GetFacilityList", a.GetFacilityList)
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
+}
+
+// @Title AccessoryController
+// @Description add new deliverable
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /deliverable [post]
+func (this *AccessoryController) AddDeliverable() {
+	FN := "[AddDeliverable] "
+	beego.Warn("[--- API: AddDeliverable ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	name := this.GetString("name")
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
+	beego.Debug(FN, "name:", name)
+
+	/*
+	 *	Processing
+	 */
+	err, id := models.AddDeliverable(name, uid)
+	if nil == err {
+		result.Id = id
+	}
 }
 
 // @Title GetDeliverableList
