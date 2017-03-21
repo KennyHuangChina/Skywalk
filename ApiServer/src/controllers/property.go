@@ -14,8 +14,57 @@ type PropertyController struct {
 }
 
 func (p *PropertyController) URLMapping() {
+	p.Mapping("GetPropertyList", p.GetPropertyList)
 	p.Mapping("AddProperty", p.AddProperty)
 	p.Mapping("UpdateProperty", p.UpdateProperty)
+}
+
+// @Title GetPropertyList
+// @Description get property list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /list [get]
+func (this *PropertyController) GetPropertyList() {
+	FN := "[GetPropertyList] "
+	beego.Warn("[--- API: GetPropertyList ---]")
+
+	var result ResGetPropertyList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
+
+	name := this.GetString("name")
+	begin, _ := this.GetInt64("bgn")
+	count, _ := this.GetInt64("cnt")
+
+	beego.Debug(FN, "type:", name, ", begin:", begin, ", count:", count) //, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, total, fetched, pl := models.GetPropertyList(name, begin, count)
+	if nil == err {
+		result.Total = total
+		result.Count = fetched
+		result.Properties = pl
+	}
 }
 
 // @Title AddProperty

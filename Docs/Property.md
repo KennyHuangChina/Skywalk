@@ -2,7 +2,7 @@
 ###5. List properties
 	[Security]	public
 	[Request]
-  		* GET /v1/house/property/list?name=<>&bgn=<>&cnt=<>
+  		* GET /v1/property/list?name=<>&bgn=<>&cnt=<>
 	  		* name			string 	// property name, whole or partial
 	  		* bgn			int		// from which item to fetch
 	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number

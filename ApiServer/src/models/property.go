@@ -188,7 +188,7 @@ func GetPropertyList(pn string, begin, fetch int64) (err error, total, fetched i
 		return
 	}
 
-	sql := "SELECT id, name AS prop_name FROM tbl_property"
+	sql := "SELECT id, name AS prop_name, address AS prop_address, p.desc AS prop_desc FROM tbl_property AS p"
 	if len(pn) > 0 || pn != "" {
 		sql = fmt.Sprintf("%s WHERE name LIKE '%%%s%%'", sql, pn)
 	}
