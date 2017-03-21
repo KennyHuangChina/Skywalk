@@ -22,7 +22,7 @@ class CmdGetPropertyInfo extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/property/" + mPropertyId;
+        mCommandURL = "/v1/property/" + mPropertyId;
         return mCommandURL;
     }
 

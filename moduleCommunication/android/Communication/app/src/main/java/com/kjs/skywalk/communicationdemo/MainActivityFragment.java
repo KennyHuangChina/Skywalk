@@ -84,10 +84,10 @@ public class MainActivityFragment extends Fragment
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
-//        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
