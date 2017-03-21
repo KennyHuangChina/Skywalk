@@ -28,7 +28,7 @@ class CmdAddProperty extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/property";
+        mCommandURL = "/v1/property/new";
         return mCommandURL;
     }
 
