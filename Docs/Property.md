@@ -38,7 +38,7 @@
 ### 11. Update property info (By house owner and agency)
 	[Security]	private
 	[Request]
-  		* PUT /v1/house/property/:id
+  		* PUT /v1/property/:id/info
 	  		* prop    		string		// property name
 	  		* addr 			string		// property location
 	  		* desc    		string		// property description

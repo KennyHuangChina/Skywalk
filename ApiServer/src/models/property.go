@@ -121,7 +121,7 @@ func ModifyProperty(uid, pid int64, name, addr, desc string) (err error) {
 	// maybe the property name is partial identical with one or some properties already exist
 	qs := o.QueryTable("tbl_property")
 	if qs.Filter("Name__contains", name).Exist() {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property id:%d", pid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property name:%s", name)}
 		return
 	}
 

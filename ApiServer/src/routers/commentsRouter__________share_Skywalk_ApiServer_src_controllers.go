@@ -162,13 +162,6 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
 		beego.ControllerComments{
-			Method: "UpdateProperty",
-			Router: `/property/:id`,
-			AllowHTTPMethods: []string{"put"},
-			Params: nil})
-
-	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
-		beego.ControllerComments{
 			Method: "AddProperty",
 			Router: `/property`,
 			AllowHTTPMethods: []string{"post"},
@@ -263,6 +256,13 @@ func init() {
 			Method: "AddPic",
 			Router: `/newpic`,
 			AllowHTTPMethods: []string{"post"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:PropertyController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:PropertyController"],
+		beego.ControllerComments{
+			Method: "UpdateProperty",
+			Router: `/:id/info`,
+			AllowHTTPMethods: []string{"put"},
 			Params: nil})
 
 }

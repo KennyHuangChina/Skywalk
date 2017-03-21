@@ -19,6 +19,11 @@ func init() {
 				&controllers.HouseController{},
 			),
 		),
+		beego.NSNamespace("/property",
+			beego.NSInclude(
+				&controllers.PropertyController{},
+			),
+		),
 		beego.NSNamespace("/accessory",
 			beego.NSInclude(
 				&controllers.AccessoryController{},
