@@ -68,7 +68,7 @@ class CmdModifyPropertyInfo extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/property/" + mPropId;
+        mCommandURL = "/v1/property/" + mPropId + "/info";
         return mCommandURL;
     }
     @Override

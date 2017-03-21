@@ -47,15 +47,15 @@ public class MainActivityFragment extends Fragment
         CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
                                     mEditText1.getText().toString(),
                                     mEditText2.getText().toString());
-        CmdMgr.RecommendHouse(Integer.parseInt(mEditText.getText().toString()),
-                                Integer.parseInt(mEditText1.getText().toString()));
-        CmdMgr.SetHouseCoverImg(Integer.parseInt(mEditText.getText().toString()),
-                                Integer.parseInt(mEditText1.getText().toString()));
-        CmdMgr.CertificateHouse(Integer.parseInt(mEditText.getText().toString()), mCertificate,
-                                mCertificate ? "已经和业主核实，同意发布" : "撤销发布");
-        mCertificate = !mCertificate;
+//        CmdMgr.RecommendHouse(Integer.parseInt(mEditText.getText().toString()),
+//                                Integer.parseInt(mEditText1.getText().toString()));
+//        CmdMgr.SetHouseCoverImg(Integer.parseInt(mEditText.getText().toString()),
+//                                Integer.parseInt(mEditText1.getText().toString()));
+//        CmdMgr.CertificateHouse(Integer.parseInt(mEditText.getText().toString()), mCertificate,
+//                                mCertificate ? "已经和业主核实，同意发布" : "撤销发布");
+//        mCertificate = !mCertificate;
 
-        doTestModifyApi_ModifyHouse(CmdMgr);
+//        doTestModifyApi_ModifyHouse(CmdMgr);
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);
