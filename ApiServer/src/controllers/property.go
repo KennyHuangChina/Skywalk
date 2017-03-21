@@ -14,9 +14,45 @@ type PropertyController struct {
 }
 
 func (p *PropertyController) URLMapping() {
+	p.Mapping("GetPropertyInfo", p.GetPropertyInfo)
 	p.Mapping("GetPropertyList", p.GetPropertyList)
 	p.Mapping("AddProperty", p.AddProperty)
 	p.Mapping("UpdateProperty", p.UpdateProperty)
+}
+
+// @Title GetPropertyInfo
+// @Description get property info by id
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id [get]
+func (this *PropertyController) GetPropertyInfo() {
+	FN := "[GetPropertyInfo] "
+	beego.Warn("[--- API: GetPropertyInfo ---]")
+
+	var result ResGetPropInfo
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*	Extract agreements */
+	pid, _ := this.GetInt64(":id")
+
+	beego.Debug(FN, "pid:", pid)
+
+	/* Processing */
+	err, pif := models.GetPropertyInfo(pid)
+	if nil == err {
+		result.PropInfo = pif
+	}
 }
 
 // @Title GetPropertyList

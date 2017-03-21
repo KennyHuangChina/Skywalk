@@ -24,44 +24,6 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
 	h.Mapping("GetBehalfList", h.GetBehalfList)
-
-	h.Mapping("GetPropertyInfo", h.GetPropertyInfo)
-
-}
-
-// @Title GetPropertyInfo
-// @Description get property info by id
-// @Success 200 {string}
-// @Failure 403 body is empty
-// @router /property/:id [get]
-func (this *HouseController) GetPropertyInfo() {
-	FN := "[GetPropertyInfo] "
-	beego.Warn("[--- API: GetPropertyInfo ---]")
-
-	var result ResGetPropInfo
-	var err error
-
-	defer func() {
-		err = api_result(err, this.Controller, &result.ResCommon)
-		if nil != err {
-			beego.Error(FN, err.Error())
-		}
-
-		// export result
-		this.Data["json"] = result
-		this.ServeJSON()
-	}()
-
-	/*	Extract agreements */
-	pid, _ := this.GetInt64(":id")
-
-	beego.Debug(FN, "pid:", pid)
-
-	/* Processing */
-	err, pif := models.GetPropertyInfo(pid)
-	if nil == err {
-		result.PropInfo = pif
-	}
 }
 
 // @Title CertHouse

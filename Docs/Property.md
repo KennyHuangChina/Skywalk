@@ -51,7 +51,7 @@
 ###2. Get Property info
 	[Security]	public
 	[Request]
-  		* GET /v1/house/property/:id
+  		* GET /v1/property/:id
 	[Response]
 		* SUCCESS:200 
 			* Id    		int		// property id
