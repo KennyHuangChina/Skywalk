@@ -6,6 +6,8 @@
     <dimen name="fab_margin">10dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+    <dimen name="page_left_margin">15dp</dimen>
+    <dimen name="page_right_margin">15dp</dimen>
 
     <!-- dimens for search condition filter popup window -->
     <dimen name="text_size_search_condition_filter_title">14sp</dimen>

@@ -117,4 +117,6 @@
     <string name="title_activity_rentals_expiration">Activity_rentals_expiration</string>
     <string name="title_activity_rentals_jiaofang_chaobiao">Activity_rentals_jiaofang_chaobiao</string>
 
+    <string name="checkbox_text_tijiaoweituo">我已阅读《委托确认书》，理解并同意其条款</string>
+
 </resources>

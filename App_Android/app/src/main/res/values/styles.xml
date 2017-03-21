@@ -193,8 +193,11 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:onClick">onViewClick</item>
         <item name="android:drawableLeft">@drawable/nav_back</item>
+        <item name="android:textColor">#242224</item>
         <item name="android:background">#FFFFFF</item>
         <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/page_left_margin</item>
+        <item name="android:paddingRight">@dimen/page_right_margin</item>
     </style>
 
     <!--世茂蝶湖湾 175栋3212室-->
@@ -220,6 +223,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:textColor">@color/colorTextTint</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!--荼蘼之恋-->
@@ -228,10 +232,23 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:textColor">#000000</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="textStyle_page_blockEdit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">#FFFFFFFF</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="checkBoxStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_checkbox</item>
+        <item name="android:paddingLeft">5dp</item>
+    </style>
 </resources>
