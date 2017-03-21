@@ -13,5 +13,6 @@
 
     <color name="colorTextBackgroundSelected">#ECFFF7</color>
 
+    <color name="colorBackgroundCommon">#EFEFEF</color>
 
 </resources>

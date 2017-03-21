@@ -20,11 +20,30 @@
         android:contentDescription=""
         android:background="#EFEFEF" />
 
-    <NumberPicker
-        android:layout_width="200dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/np_deliverable" />
+        android:orientation="horizontal">
+        <com.kjs.skywalk.control.kjsNumberPicker
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/np_unit_shi" />
+        <com.kjs.skywalk.control.kjsNumberPicker
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/np_unit_ting" />
+        <com.kjs.skywalk.control.kjsNumberPicker
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/np_unit_wei" />
+    </LinearLayout>
+
 
     <ImageView
         android:layout_width="match_parent"
