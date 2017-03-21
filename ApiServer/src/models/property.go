@@ -45,7 +45,7 @@ func AddProperty(prop, addr, desc string) (err error, id int64) {
 	// maybe the property name is partial identical with one or some properties already exist
 	qs := o.QueryTable("tbl_property")
 	if qs.Filter("Name__contains", prop).Exist() {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property name:%s", prop)}
 		return
 	}
 

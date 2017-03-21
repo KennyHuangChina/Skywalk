@@ -23,7 +23,7 @@
 ### 6. Add New property
 	[Security]	private
 	[Request]
-  		* POST /v1/house/property
+  		* POST /v1/property/new
 	  		* prop			string 		// property name
 	  		* addr			string 		// property address
 	  		* desc			string 		// property description
