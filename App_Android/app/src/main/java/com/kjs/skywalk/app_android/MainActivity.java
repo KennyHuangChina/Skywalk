@@ -304,6 +304,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_Weituoqueren.class));
                         break;
                     }
+
+                    case R.id.action_setting102:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Finish.class));
+                        break;
+                    }
                 }
                 return false;
             }
