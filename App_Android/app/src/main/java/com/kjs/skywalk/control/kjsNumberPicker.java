@@ -26,6 +26,7 @@ public class kjsNumberPicker extends NumberPicker {
 
     public kjsNumberPicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+//        setDividerColor(this);
     }
 
     @Override
@@ -46,23 +47,28 @@ public class kjsNumberPicker extends NumberPicker {
 
     public void setTextAttr(View view) {
         if(view instanceof EditText) {
-            ((EditText)view).setTextColor(0x242224);
-            ((EditText)view).setTextSize(42);
+            ((EditText)view).setTextColor(Color.parseColor("#242224"));
+            ((EditText)view).setTextSize(14);
         }
     }
 
-    public void setDividerColor(NumberPicker numberPicker) {
-        NumberPicker picker = numberPicker;
+    public void setDividerColor() {
+        setDividerColor(Color.parseColor("#EFEFEF"));
+    }
+
+    public void setDividerColor(int color) {
+        NumberPicker picker = this;
         Field[] pickerFields = NumberPicker.class.getDeclaredFields();
         for(Field pField : pickerFields) {
             if (pField.getName().equals("mSelectionDivider")) {
                 pField.setAccessible(true);
                 try {
-                    pField.set(picker, new ColorDrawable(Color.parseColor("#ffffff")));
+                    pField.set(picker, new ColorDrawable(color));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+
 }

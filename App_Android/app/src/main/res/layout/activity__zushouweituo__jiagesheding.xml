@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity__zushouweituo__jiagesheding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context="com.kjs.skywalk.app_android.Activity_Zushouweituo_Jiagesheding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="租售委托-价格设定"/>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <include layout="@layout/layout_zushou_progress2"
+            android:visibility="visible"/>
+
+        <include layout="@layout/seperator_horizontal"
+                 android:layout_width="match_parent"
+                 android:layout_height="7dp"/>
+
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"  >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/icn_chuzu"
+                        android:text="委托出租"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="挂牌租金"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_guapai_unit"
+                        android:hint="501"/>
+                    <TextView
+                        android:id="@+id/tv_guapai_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="元/月"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="最低租金"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_zuidi_unit"
+                        android:hint="501"/>
+                    <TextView
+                        android:id="@+id/tv_zuidi_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="元/月"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:layout_centerVertical="true"
+                        android:text="是否物业费"/>
+                    <ToggleButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="10dp"
+                        android:minHeight="10dp"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/toggle_selector"
+                        android:textOn=""
+                        android:textOff=""
+                        android:checked="true"
+                        android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="物业费"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_wuye_unit"
+                        android:hint="501"/>
+                    <TextView
+                        android:id="@+id/tv_wuye_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="元/月"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="7dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/icn_chushou"
+                        android:text="委托出售"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="挂牌售价"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_guapaishoujia_unit"
+                        android:hint="501"/>
+                    <TextView
+                        android:id="@+id/tv_guapaishoujia_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="元/月"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="最低售价"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_zuidishoujia_unit"
+                        android:hint="501"/>
+                    <TextView
+                        android:id="@+id/tv_zuidishoujia_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="元/月"/>
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackgroundCommon"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/page_left_margin"
+            android:paddingRight="@dimen/page_right_margin">
+
+            <TextView
+                style="@style/textStyle_page_blockTitle"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/colorFontSelected"
+                android:text="价格说明"/>
+
+            <TextView
+                style="@style/textStyle_page_blockKey"
+                android:textSize="12sp"
+                android:lineSpacingMultiplier="1.5"
+                android:text="1. 定金是您确定房屋的凭证，设定合适的定金，能有效避免业主随意毁约，从而充分保护您的权益。\n 2. 定金无需此时立即缴纳，而是在业主同意您的《租房意向》后缴纳。"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/tv_prev"
+                    android:onClick="onViewClick"
+                    android:layout_width="111dp"
+                    android:layout_height="45dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="#ffffff"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:background="#7F00AE63"
+                    android:text="上一步"/>
+
+                <TextView
+                    android:id="@+id/tv_next"
+                    android:onClick="onViewClick"
+                    android:layout_width="210dp"
+                    android:layout_height="45dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="#ffffff"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:background="#00AE63"
+                    android:text="下一步"/>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -82,16 +82,18 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         npShi.setDisplayedValues(arrShi);
         npShi.setMinValue(0);
         npShi.setMaxValue(arrShi.length - 1);
+        npShi.setDividerColor();
 
         npTing.setDisplayedValues(arrTing);
         npTing.setMinValue(0);
         npTing.setMaxValue(arrTing.length - 1);
+        npTing.setDividerColor();
 
         npWei.setDisplayedValues(arrWei);
         npWei.setMinValue(0);
         npWei.setMaxValue(arrWei.length - 1);
+        npWei.setDividerColor();
 
-        npWei.setValue(3);
         npWei.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {

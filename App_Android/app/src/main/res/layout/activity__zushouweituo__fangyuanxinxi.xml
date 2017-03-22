@@ -22,7 +22,7 @@
 
         <include layout="@layout/seperator_horizontal"/>
 
-        <include layout="@layout/layout_zushou_progress"/>
+        <include layout="@layout/layout_zushou_progress1"/>
 
         <include layout="@layout/seperator_horizontal"
             android:layout_width="match_parent"
@@ -237,7 +237,8 @@
                     android:layout_height="wrap_content"
                     android:onClick="onViewClick"
                     android:layout_gravity="center_vertical"
-                    android:drawablePadding="10dp"                    android:drawableRight="@drawable/icon_date"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/icon_date"
                     android:layout_alignParentRight="true"
                     android:textSize="14sp"
                     android:textColor="@color/colorTextNormal"
