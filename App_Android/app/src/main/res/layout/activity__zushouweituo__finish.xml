@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_expiration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+
+    tools:context="com.kjs.skywalk.app_android.Activity_rentals_expiration">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="租售委托-完成"/>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <include layout="@layout/layout_zushou_progress5"/>
+
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="100dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"  >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="您已经成功委托"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="世贸蝶湖湾175栋2108室"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:onClick="onViewClick"
+                            android:gravity="center"
+                            android:textColor="#9d9c9d"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/rounded_rect_stroke_background_gray"
+                            android:text="出租"
+                            android:id="@+id/textViewChuzu" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:onClick="onViewClick"
+                            android:gravity="center"
+                            android:textColor="#ffffff"
+                            android:layout_alignParentLeft="true"
+                            android:background="@drawable/rounded_rect_background_green"
+                            android:text="出售"
+                            android:id="@+id/textViewChushou" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="16sp"
+                    android:textColor="#9d9c9d"
+                    android:text="我们会有专人与您联系，协助您完成房源发布，请保持手机畅通！"/>
+
+                <include layout="@layout/seperator_horizontal"/>
+        </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBackgroundCommon">
+
+        <TextView
+            android:id="@+id/tv_next"
+            android:onClick="onViewClick"
+            android:layout_width="330dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="25dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="#00AE63"
+            android:text="下一步"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
