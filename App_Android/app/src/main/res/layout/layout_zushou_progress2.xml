@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="87dp"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/page_left_margin"
+    android:paddingRight="@dimen/page_right_margin"
+    android:paddingTop="10dp"
+    android:visibility="visible"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/fangyuan_s"
+        android:text="房源"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/dash_line_s"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/jiage_s"
+        android:text="价格"/>
+
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:layerType="software"
+        android:background="@drawable/shape_dash_line"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/daili_n"
+        android:text="代理"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:layerType="software"
+        android:background="@drawable/shape_dash_line"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/feiyong_n"
+        android:text="费用"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:layerType="software"
+        android:background="@drawable/shape_dash_line"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/wancheng_n"
+        android:text="完成"/>
+</LinearLayout>
