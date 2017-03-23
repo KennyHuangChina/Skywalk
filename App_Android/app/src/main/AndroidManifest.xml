@@ -67,8 +67,8 @@
         <activity android:name=".Activity_rentals_progress_contractedConfirm"/>
         <activity android:name=".Activity_Zushouweituo_Fangyuanxinxi"/>
         <activity android:name=".Activity_Weituoqueren"/>
-        <activity android:name=".Activity_Zushouweituo_Jiagesheding">
-        </activity>
+        <activity android:name=".Activity_Zushouweituo_Finish"/>
+        <activity android:name=".Activity_Zushouweituo_Jiagesheding" />
     </application>
 
 </manifest>

@@ -10,10 +10,33 @@
 
     tools:context="com.kjs.skywalk.app_android.Activity_rentals_expiration">
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBackgroundCommon">
+
+        <TextView
+            android:id="@+id/tv_close"
+            android:onClick="onViewClick"
+            android:layout_width="330dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="25dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="#00AE63"
+            android:text="关闭"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_above="@id/relativeLayout"
         android:id="@+id/linearLayout">
         <TextView
             android:id="@+id/tv_info_title"
@@ -30,8 +53,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="100dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,34 +135,100 @@
                     android:textColor="#9d9c9d"
                     android:text="我们会有专人与您联系，协助您完成房源发布，请保持手机畅通！"/>
 
-                <include layout="@layout/seperator_horizontal"/>
-        </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#dfdfdf">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_centerInParent="true"
+                        android:text="接下来您可以继续"
+                        android:textColor="@color/colorTextNormal" />
+                </RelativeLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/tupian"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorTextNormal"
+                            android:text="上传房源图片"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#9d9c9d"
+                            android:textSize="12sp"
+                            android:text="1张漂亮的房源照片比100句广告词效果更好"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/xinxi"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorTextNormal"
+                            android:text="完善房源信息"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#9d9c9d"
+                            android:textSize="12sp"
+                            android:text="如果您今日有空, 就可以去完善房源信息咯"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
         </ScrollView>
 
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorBackgroundCommon">
-
-        <TextView
-            android:id="@+id/tv_next"
-            android:onClick="onViewClick"
-            android:layout_width="330dp"
-            android:layout_height="45dp"
-            android:layout_marginBottom="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:background="#00AE63"
-            android:text="下一步"/>
-    </RelativeLayout>
-
 
 </RelativeLayout>
