@@ -5,15 +5,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
-        android:text="这是标题"
-        android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:id="@+id/tv_deliverable_name"
-        android:textAlignment="center"
-        android:textSize="21sp"
-        android:gravity="center"/>
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
