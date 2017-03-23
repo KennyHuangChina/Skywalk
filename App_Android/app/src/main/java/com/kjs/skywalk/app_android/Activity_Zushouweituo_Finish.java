@@ -18,7 +18,7 @@ public class Activity_Zushouweituo_Finish extends Activity {
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title:
+            case R.id.tv_close:
             {
                 finish();
             }
