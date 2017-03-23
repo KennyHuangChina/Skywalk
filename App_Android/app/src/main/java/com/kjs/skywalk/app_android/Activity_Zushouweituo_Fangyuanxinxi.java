@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,12 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             case R.id.tv_date_selector:
             {
                 showDateSelectorDlg();
+            }
+            break;
+
+            case R.id.tv_next:
+            {
+                startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
             break;
         }
