@@ -15,4 +15,6 @@
 
     <color name="colorBackgroundCommon">#EFEFEF</color>
 
+    <color name="colorListViewSelection">#ebfff6</color>
+
 </resources>

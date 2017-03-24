@@ -69,6 +69,7 @@
         <activity android:name=".Activity_Weituoqueren"/>
         <activity android:name=".Activity_Zushouweituo_Finish"/>
         <activity android:name=".Activity_Zushouweituo_Jiagesheding"/>
+        <activity android:name=".Activity_Zushouweituo_Xuanzedaili"/>
         <activity android:name=".Activity_Zushouweituo_shenhe">
         </activity>
     </application>

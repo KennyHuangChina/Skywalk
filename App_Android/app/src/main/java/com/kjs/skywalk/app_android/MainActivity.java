@@ -310,6 +310,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Finish.class));
                         break;
                     }
+
+                    case R.id.action_setting103:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Xuanzedaili.class));
+                        break;
+                    }
                 }
                 return false;
             }

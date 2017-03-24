@@ -251,4 +251,36 @@
         <item name="android:button">@drawable/selector_checkbox</item>
         <item name="android:paddingLeft">5dp</item>
     </style>
+
+    <!--代理人-->
+    <style name="textViewAgentName" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/colorTextNormal</item>
+    </style>
+
+    <style name="textViewAgentIDCard" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/colorTextTint</item>
+    </style>
+
+    <style name="textViewAgentConyezigeYear" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/colorTextTint</item>
+    </style>
+
+    <style name="textViewScoreText" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/colorTextNormal</item>
+    </style>
+
+    <style name="textViewScore" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#ff3d19</item>
+    </style>
 </resources>
