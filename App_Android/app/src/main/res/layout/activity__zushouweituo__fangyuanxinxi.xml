@@ -39,256 +39,225 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"  >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="小区名称"/>
-                <EditText
-                    style="@style/textStyle_page_blockValue"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:background="#FFFFFFFF"
-                    android:hint="选择小区"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="楼栋号"/>
-                <EditText
-                    style="@style/textStyle_page_blockEdit"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:layout_toLeftOf="@+id/tv_loudong_unit"
-                    android:hint="501"/>
-                <TextView
-                    android:id="@+id/tv_loudong_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="5dp"
-                    android:text="栋"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_right_margin"
                     android:gravity="center_vertical" >
                     <TextView
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
-                        android:text="楼层"/>
+                        android:text="小区名称"/>
                     <EditText
-                        style="@style/textStyle_page_blockEdit"
+                        style="@style/textStyle_page_blockValue"
                         android:textColorHint="@color/colorEditTextTint"
-                        android:layout_toLeftOf="@+id/tv_louceng_unit"
-                        android:hint="1"/>
-                    <TextView
-                        android:id="@+id/tv_louceng_unit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
-                        android:text="层"/>
+                        android:background="#FFFFFFFF"
+                        android:hint="选择小区"/>
                 </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
-                    <TextView
-                        style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="共"/>
-                    <EditText
-                        style="@style/textStyle_page_blockEdit"
-                        android:textColorHint="@color/colorEditTextTint"
-                        android:layout_toLeftOf="@+id/tv_loucengs_unit"
-                        android:hint="5"/>
-                    <TextView
-                        android:id="@+id/tv_loucengs_unit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
-                        android:text="层"/>
-                </RelativeLayout>
-            </LinearLayout>
 
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="门牌号"/>
-                <EditText
-                    style="@style/textStyle_page_blockValue"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:background="#FFFFFFFF"
-                    android:hint="输入房号"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="产证面积"/>
-                <EditText
-                    style="@style/textStyle_page_blockEdit"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:layout_toLeftOf="@+id/tv_chanzheng_unit"
-                    android:hint="输入产证面积"/>
-                <TextView
-                    android:id="@+id/tv_chanzheng_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="5dp"
-                    android:text="㎡"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="户型"/>
-                <TextView
-                    android:id="@+id/tv_huxing_selector"
-                    style="@style/textStyle_page_blockValue"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:onClick="onViewClick"
-                    android:hint="请选择"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="装修"/>
-                <EditText
-                    style="@style/textStyle_page_blockValue"
-                    android:textColorHint="@color/colorEditTextTint"
-                    android:background="#FFFFFFFF"
-                    android:hint="请选择"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin"
-                android:gravity="center_vertical" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="购买日期"/>
-                <TextView
-                    android:id="@+id/tv_date_selector"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onViewClick"
-                    android:layout_gravity="center_vertical"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_date"
-                    android:layout_alignParentRight="true"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="2016-12-12"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin" >
-                <TextView
-                    style="@style/textStyle_page_blockKey"
-                    android:textColor="@color/colorTextNormal"
-                    android:layout_centerVertical="true"
-                    android:text="有无房贷"/>
-                <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="10dp"
-                    android:minHeight="10dp"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/toggle_selector"
-                    android:textOn=""
-                    android:textOff=""
-                    android:checked="true"
-                    android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-
-            <include layout="@layout/seperator_horizontal"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/page_left_margin"
-                android:paddingRight="@dimen/page_right_margin">
+                <include layout="@layout/seperator_horizontal"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="楼栋号"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_loudong_unit"
+                        android:hint="501"/>
+                    <TextView
+                        android:id="@+id/tv_loudong_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="栋"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/page_left_margin"
+                        android:paddingRight="@dimen/page_right_margin"
+                        android:gravity="center_vertical" >
+                        <TextView
+                            style="@style/textStyle_page_blockKey"
+                            android:textColor="@color/colorTextNormal"
+                            android:text="楼层"/>
+                        <EditText
+                            style="@style/textStyle_page_blockEdit"
+                            android:textColorHint="@color/colorEditTextTint"
+                            android:layout_toLeftOf="@+id/tv_louceng_unit"
+                            android:hint="1"/>
+                        <TextView
+                            android:id="@+id/tv_louceng_unit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="5dp"
+                            android:text="层"/>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/page_left_margin"
+                        android:paddingRight="@dimen/page_right_margin"
+                        android:gravity="center_vertical" >
+                        <TextView
+                            style="@style/textStyle_page_blockKey"
+                            android:textColor="@color/colorTextNormal"
+                            android:text="共"/>
+                        <EditText
+                            style="@style/textStyle_page_blockEdit"
+                            android:textColorHint="@color/colorEditTextTint"
+                            android:layout_toLeftOf="@+id/tv_loucengs_unit"
+                            android:hint="5"/>
+                        <TextView
+                            android:id="@+id/tv_loucengs_unit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="5dp"
+                            android:text="层"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="门牌号"/>
+                    <EditText
+                        style="@style/textStyle_page_blockValue"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:background="#FFFFFFFF"
+                        android:hint="输入房号"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="产证面积"/>
+                    <EditText
+                        style="@style/textStyle_page_blockEdit"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:layout_toLeftOf="@+id/tv_chanzheng_unit"
+                        android:hint="输入产证面积"/>
+                    <TextView
+                        android:id="@+id/tv_chanzheng_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="㎡"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="户型"/>
+                    <TextView
+                        android:id="@+id/tv_huxing_selector"
+                        style="@style/textStyle_page_blockValue"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:onClick="onViewClick"
+                        android:hint="请选择"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="装修"/>
+                    <EditText
+                        style="@style/textStyle_page_blockValue"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:background="#FFFFFFFF"
+                        android:hint="请选择"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="购买日期"/>
+                    <TextView
+                        android:id="@+id/tv_date_selector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onViewClick"
+                        android:layout_gravity="center_vertical"
+                        android:drawablePadding="10dp"
+                        android:drawableRight="@drawable/icon_date"
+                        android:layout_alignParentRight="true"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="2016-12-12"/>
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin" >
                     <TextView
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
                         android:layout_centerVertical="true"
-                        android:text="是否唯一"/>
+                        android:text="有无房贷"/>
                     <ToggleButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -298,22 +267,52 @@
                         android:background="@drawable/toggle_selector"
                         android:textOn=""
                         android:textOff=""
-                        android:checked="false"
-                        android:layout_alignParentRight="true" />
+                        android:checked="true"
+                        android:layout_alignParentRight="true"/>
                 </RelativeLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/colorTextTint"
-                    android:textSize="12sp"
-                    android:layout_centerVertical="true"
-                    android:text="该房源是否是您唯一的房屋，与是否有贷款无关"/>
-            </LinearLayout>
-
 
                 <include layout="@layout/seperator_horizontal"/>
-        </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            style="@style/textStyle_page_blockKey"
+                            android:textColor="@color/colorTextNormal"
+                            android:layout_centerVertical="true"
+                            android:text="是否唯一"/>
+                        <ToggleButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="10dp"
+                            android:minHeight="10dp"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/toggle_selector"
+                            android:textOn=""
+                            android:textOff=""
+                            android:checked="false"
+                            android:layout_alignParentRight="true" />
+                    </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/colorTextTint"
+                        android:textSize="12sp"
+                        android:layout_centerVertical="true"
+                        android:text="该房源是否是您唯一的房屋，与是否有贷款无关"/>
+                </LinearLayout>
+
+                <include layout="@layout/seperator_horizontal"/>
+            </LinearLayout>
 
         </ScrollView>
 

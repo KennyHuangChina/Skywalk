@@ -48,14 +48,194 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_alignParentRight="true"
-                android:textColor="#9D9C9D"
+                android:textColor="@color/colorText"
                 android:textSize="15sp"
                 android:text="修改"/>
 
         </RelativeLayout>
 
-
         <include layout="@layout/seperator_horizontal"/>
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"  >
+
+                <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/page_left_margin"
+                android:paddingRight="@dimen/page_right_margin"
+                android:gravity="center_vertical" >
+                <TextView
+                    style="@style/textStyle_page_blockKey"
+                    android:textColor="@color/colorText"
+                    android:text="小区名称"/>
+                <TextView
+                    style="@style/textStyle_page_blockValue"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="世贸蝶湖湾"/>
+
+            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="房号"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="171栋2301室"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="楼层"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="11/11F"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="产证面积"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="115m²"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="户型"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="3房2厅2卫"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="有无房贷"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="有"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="是否唯一"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="不是"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="业主"/>
+                    <TextView
+                        android:id="@+id/tv_date_selector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onViewClick"
+                        android:layout_gravity="center_vertical"
+                        android:drawablePadding="10dp"
+                        android:drawableRight="@drawable/icon_phone"
+                        android:layout_alignParentRight="true"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="张三 13023423456"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:gravity="center_vertical" >
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:textColor="@color/colorText"
+                        android:text="业主等级时间"/>
+                    <TextView
+                        style="@style/textStyle_page_blockValue"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="2016-12-14 10:32:44"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:background="#E5E5E5"
+                    android:textColor="@color/colorFontSelected"
+                    android:textSize="14sp"
+                    android:text="请联系业主，核实以上信息是否正确"/>
+
+
+                <include layout="@layout/seperator_horizontal"/>
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 </RelativeLayout>
