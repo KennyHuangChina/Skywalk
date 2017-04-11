@@ -47,6 +47,11 @@
         android:orderInCategory="100"
         android:title="租售委托-选择代理人"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_setting104"
+        android:orderInCategory="100"
+        android:title="租售委托-选择服务"
+        app:showAsAction="never"/>
 
 
 </menu>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_expiration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+
+    tools:context="com.kjs.skywalk.app_android.Activity_rentals_expiration">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBackgroundCommon">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal" >
+            <TextView
+                android:id="@+id/tv_prev"
+                android:onClick="onViewClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="25dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:background="@drawable/rounded_rect_background_light_green"
+                android:text="上一步"/>
+
+            <TextView
+                android:id="@+id/tv_next"
+                android:onClick="onViewClick"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="45dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="25dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:background="@drawable/rounded_rect_background_green"
+                android:text="下一步"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/relativeLayout">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="租售委托-选择服务"/>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <include layout="@layout/layout_zushou_progress4"/>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSelection"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#dfdfdf">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginLeft="15dp"
+                android:layout_centerInParent="true"
+                android:text="请选择需要我们提供的服务"
+                android:textColor="@color/colorTextNormal" />
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>
