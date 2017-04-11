@@ -48,7 +48,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
                     new HouseholdDeliverable(R.drawable.deliverable_xinbaoxiangyaoshi, "信报箱钥匙", 1),
                     new HouseholdDeliverable(R.drawable.deliverable_baoxianguiyaoshi, "保险柜钥匙", 1),
                     new HouseholdDeliverable(R.drawable.deliverable_ranqika, "燃气卡", 3)
-            )
+        )
     );
     //
 
@@ -81,7 +81,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private void loadUI() {
         LinearLayout llDeliverables = (LinearLayout) findViewById(R.id.ll_deliverables);
 
-        int rows = mHouseDeliverables.size() / 3;
+        int rows = mHouseDeliverables.size();
         loadItems(llDeliverables, rows);
     }
 
@@ -93,30 +93,13 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 //            View view = View.inflate(this, R.layout.listitem_household_deliverable, linearLayout);
 
             // attachToRoot = false, return the view itself, otherwise return the root view
+            int index = i;
             View view = LayoutInflater.from(this).inflate(R.layout.listitem_household_deliverable, linearLayout, false);
-            view.setId(i*3);
+            view.setId(index);
             view.setOnClickListener(mDeliverableItemClickedListener);
-            ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(i*3).mIcon);
-            ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(i*3).mDesc);
-            ((TextView)view.findViewById(R.id.tv_number)).setText("x" + mHouseDeliverables.get(i*3).mNum);
-            linearLayout.addView(view);
-
-//            view = View.inflate(this, R.layout.listitem_household_deliverable, linearLayout);
-            view = LayoutInflater.from(this).inflate(R.layout.listitem_household_deliverable, linearLayout, false);
-            view.setId(i*3+1);
-            view.setOnClickListener(mDeliverableItemClickedListener);
-            ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(i*3+1).mIcon);
-            ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(i*3+1).mDesc);
-            ((TextView)view.findViewById(R.id.tv_number)).setText("x" + mHouseDeliverables.get(i*3+1).mNum);
-            linearLayout.addView(view);
-
-//            view = View.inflate(this, R.layout.listitem_household_deliverable, linearLayout);
-            view = LayoutInflater.from(this).inflate(R.layout.listitem_household_deliverable, linearLayout, false);
-            view.setId(i*3+2);
-            view.setOnClickListener(mDeliverableItemClickedListener);
-            ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(i*3+2).mIcon);
-            ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(i*3+2).mDesc);
-            ((TextView)view.findViewById(R.id.tv_number)).setText("x" + mHouseDeliverables.get(i*3+2).mNum);
+            ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(index).mIcon);
+            ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(index).mDesc);
+            ((TextView)view.findViewById(R.id.tv_number)).setText("x" + mHouseDeliverables.get(index).mNum);
             linearLayout.addView(view);
 
             ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
