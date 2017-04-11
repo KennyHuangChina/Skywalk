@@ -1,5 +1,5 @@
 # Property Info APIs
-###5. List properties
+###1. List properties
 	[Security]	public
 	[Request]
   		* GET /v1/property/list?name=<>&bgn=<>&cnt=<>
@@ -20,7 +20,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 6. Add New property
+### 2. Add New property
 	[Security]	private
 	[Request]
   		* POST /v1/property/new
@@ -35,7 +35,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 11. Update property info (By house owner and agency)
+### 3. Update property info (By house owner and agency)
 	[Security]	private
 	[Request]
   		* PUT /v1/property/:id/info
@@ -48,7 +48,7 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
-###2. Get Property info
+###4. Get Property info
 	[Security]	public
 	[Request]
   		* GET /v1/property/:id

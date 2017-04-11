@@ -23,7 +23,7 @@
 ##
 
 
-###3. Get brief public house info
+###2. Get brief public house info
 	[Security]	public
 	[Request]
   		* GET /v1/house/digest/id?sid=xxxxx
@@ -48,7 +48,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-###4. Get house list
+###3. Get house list
 	[Security]	public
 	[Request]
   		* GET /v1/house/list?type=<>?bgn=<>&cnt=<>&sid=xxxxx
@@ -68,7 +68,7 @@
 ##
 
 
-### 7. Add New House (By owner)
+### 4. Add New House (By owner)
 	[Security]	private
 	[Request]
   		* POST /v1/house/commit
@@ -92,7 +92,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 8. modify House (By owner and agency)
+### 5. modify House (By owner and agency)
 	[Security]	private
 	[Request]
   		* PUT /v1/house/:id
@@ -114,7 +114,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 9. certificate House (By agency)
+### 6. certificate House (By agency)
 	[Security]	private
 	[Request]
   		* POST /v1/house/cert/:id
@@ -127,7 +127,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 10. Set House cover image (By house owner and agency)
+### 7. Set House cover image (By house owner and agency)
 	[Security]	private
 	[Request]
   		* PUT /v1/house/covimg/:id
@@ -139,7 +139,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 12. recommend/unrecommend house (By agency)
+### 8. recommend/unrecommend house (By agency)
 	[Security]	private
 	[Request]
   		* PUT /v1/house/recommend/:id
@@ -151,7 +151,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 13. My represent houses (By agency)
+### 9. My represent houses (By agency)
 	[Security]	private
 	[Request]
   		* GET /v1/house/behalf?type=<>?bgn=<>&cnt=<>
