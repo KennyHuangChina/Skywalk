@@ -70,6 +70,7 @@
         <activity android:name=".Activity_Zushouweituo_Finish"/>
         <activity android:name=".Activity_Zushouweituo_Jiagesheding"/>
         <activity android:name=".Activity_Zushouweituo_Xuanzedaili"/>
+        <activity android:name=".Activity_Zushouweituo_SelectService"/>
         <activity android:name=".Activity_Zushouweituo_shenhe">
         </activity>
     </application>
