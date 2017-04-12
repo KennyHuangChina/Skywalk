@@ -24,30 +24,21 @@ import java.util.Arrays;
 
 public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private AlertDialog mDeliverableEdtDlg;
+    private ListView    mLvDeliverables;
     // test data
-    static class HouseholdDeliverable {
-        int mIcon;
-        String mDesc;
-        int mNum;
 
-        public HouseholdDeliverable(int icon, String description, int number) {
-            mIcon = icon;
-            mDesc = description;
-            mNum = number;
-        }
-    }
 
-    private final static ArrayList<HouseholdDeliverable> mHouseDeliverables = new ArrayList<HouseholdDeliverable>(
+    private final static ArrayList<AdapterDeliverables.Deliverable> mHouseDeliverables = new ArrayList<AdapterDeliverables.Deliverable>(
             Arrays.asList(
-                    new HouseholdDeliverable(R.drawable.deliverable_damenyaoshi, "大门钥匙", 1),
-                    new HouseholdDeliverable(R.drawable.deliverable_menjinka, "门禁卡", 2),
-                    new HouseholdDeliverable(R.drawable.deliverable_shuidianka, "水电卡/存折", 1),
-                    new HouseholdDeliverable(R.drawable.deliverable_youxiandianshi, "有线电视用户证", 1),
-                    new HouseholdDeliverable(R.drawable.deliverable_shuibiaoxiangyaoshi, "水表箱钥匙", 1),
-                    new HouseholdDeliverable(R.drawable.deliverable_dianbiaoxiangyaoshi, "电表箱钥匙", 3),
-                    new HouseholdDeliverable(R.drawable.deliverable_xinbaoxiangyaoshi, "信报箱钥匙", 1),
-                    new HouseholdDeliverable(R.drawable.deliverable_baoxianguiyaoshi, "保险柜钥匙", 1),
-                    new HouseholdDeliverable(R.drawable.deliverable_ranqika, "燃气卡", 3)
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_damenyaoshi, "大门钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_menjinka, "门禁卡", 2),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_shuidianka, "水电卡/存折", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_youxiandianshi, "有线电视用户证", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_shuibiaoxiangyaoshi, "水表箱钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_dianbiaoxiangyaoshi, "电表箱钥匙", 3),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_xinbaoxiangyaoshi, "信报箱钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_baoxianguiyaoshi, "保险柜钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_ranqika, "燃气卡", 3)
         )
     );
     //
@@ -79,10 +70,19 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
     private void loadUI() {
-        LinearLayout llDeliverables = (LinearLayout) findViewById(R.id.ll_deliverables);
+        mLvDeliverables = (ListView) findViewById(R.id.lv_deliverables);
+        AdapterDeliverables adapter = new AdapterDeliverables(this);
+        adapter.updateDeliverablesList(mHouseDeliverables);
+        mLvDeliverables.setAdapter(adapter);
 
-        int rows = mHouseDeliverables.size();
-        loadItems(llDeliverables, rows);
+
+
+
+
+//        LinearLayout llDeliverables = (LinearLayout) findViewById(R.id.ll_deliverables);
+//
+//        int rows = mHouseDeliverables.size();
+//        loadItems(llDeliverables, rows);
     }
 
     private void loadItems(ViewGroup layout, int rows) {
@@ -99,7 +99,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
             view.setOnClickListener(mDeliverableItemClickedListener);
             ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(index).mIcon);
             ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(index).mDesc);
-            ((TextView)view.findViewById(R.id.tv_number)).setText("x" + mHouseDeliverables.get(index).mNum);
+            ((TextView)view.findViewById(R.id.tv_number)).setText("" + mHouseDeliverables.get(index).mNum);
             linearLayout.addView(view);
 
             ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -110,7 +110,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     private void showDeliverableEditDlg(final View vDeliverable) {
         int itemIndex = vDeliverable.getId();
-        HouseholdDeliverable deliverable = mHouseDeliverables.get(itemIndex);
+        AdapterDeliverables.Deliverable deliverable = mHouseDeliverables.get(itemIndex);
         int curValue = deliverable.mNum;
         String name = deliverable.mDesc;
 
@@ -155,7 +155,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     private void showDeliverableNewDlg() {
         int itemIndex = 0;  // for test
-        HouseholdDeliverable deliverable = mHouseDeliverables.get(itemIndex);
+        AdapterDeliverables.Deliverable deliverable = mHouseDeliverables.get(itemIndex);
         int curValue = deliverable.mNum;
         String name = deliverable.mDesc;
 

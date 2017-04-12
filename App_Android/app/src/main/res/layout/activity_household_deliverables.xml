@@ -62,17 +62,26 @@
         <!--android:layout_alignParentStart="true">-->
     <!--</TextView>-->
 
-    <ScrollView
+    <ListView
+        android:id="@+id/lv_deliverables"
+        android:layout_below="@+id/rl_titlebar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_titlebar" >
-        <LinearLayout
-            android:id="@+id/ll_deliverables"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent">
+
+
+    </ListView>
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/rl_titlebar" >-->
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_deliverables"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:layout_width="wrap_content"-->
