@@ -25,8 +25,8 @@ import java.util.Arrays;
 public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private AlertDialog mDeliverableEdtDlg;
     private ListView    mLvDeliverables;
-    private TextView    mTvModify;
-    private TextView    mTvFinish;
+    private TextView    mTvModifyFinish;
+    private Boolean     mIsModifyMode;
     // test data
 
 
@@ -58,6 +58,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         styleText.setSpan(new TextAppearanceSpan(this, R.style.textstyle_small), 5, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ((TextView)findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
 
+        mIsModifyMode = false;
         loadUI();
 
         // add button
@@ -72,8 +73,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
     private void loadUI() {
-        mTvModify = (TextView) findViewById(R.id.tv_modify);
-        mTvFinish = (TextView) findViewById(R.id.tv_finish);
+        mTvModifyFinish = (TextView) findViewById(R.id.tv_modify_finish);
 
         mLvDeliverables = (ListView) findViewById(R.id.lv_deliverables);
         AdapterDeliverables adapter = new AdapterDeliverables(this);
@@ -217,18 +217,17 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
                 finish();
             }
             break;
-            case R.id.tv_modify:
+            case R.id.tv_modify_finish:
             {
-                v.setVisibility(View.GONE);
-                mTvFinish.setVisibility(View.VISIBLE);
+                mIsModifyMode = !mIsModifyMode;
+                if (mIsModifyMode) {
+                    mTvModifyFinish.setText("完成");
+                } else {
+                    mTvModifyFinish.setText("编辑");
+                }
             }
             break;
-            case R.id.tv_finish:
-            {
-                v.setVisibility(View.GONE);
-                mTvModify.setVisibility(View.VISIBLE);
-            }
-            break;
+
         }
     }
 
