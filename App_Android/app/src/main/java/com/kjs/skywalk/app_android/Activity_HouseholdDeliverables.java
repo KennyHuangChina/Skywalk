@@ -25,6 +25,8 @@ import java.util.Arrays;
 public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private AlertDialog mDeliverableEdtDlg;
     private ListView    mLvDeliverables;
+    private TextView    mTvModify;
+    private TextView    mTvFinish;
     // test data
 
 
@@ -70,6 +72,9 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
     private void loadUI() {
+        mTvModify = (TextView) findViewById(R.id.tv_modify);
+        mTvFinish = (TextView) findViewById(R.id.tv_finish);
+
         mLvDeliverables = (ListView) findViewById(R.id.lv_deliverables);
         AdapterDeliverables adapter = new AdapterDeliverables(this);
         adapter.updateDeliverablesList(mHouseDeliverables);
@@ -207,9 +212,21 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_apartment_name:
+            case R.id.tv_back:
             {
                 finish();
+            }
+            break;
+            case R.id.tv_modify:
+            {
+                v.setVisibility(View.GONE);
+                mTvFinish.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.tv_finish:
+            {
+                v.setVisibility(View.GONE);
+                mTvModify.setVisibility(View.VISIBLE);
             }
             break;
         }
