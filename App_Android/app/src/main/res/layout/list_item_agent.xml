@@ -17,10 +17,10 @@
         android:layout_width="105dp"
         android:layout_height="80dp"
         android:contentDescription=""
-        android:layout_marginTop="21dp"
-        android:layout_marginBottom="10dp"
         android:scaleType="fitXY"
-        android:id="@+id/imageViewAgent" />
+        android:id="@+id/imageViewAgent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 
     <LinearLayout
         android:orientation="vertical"

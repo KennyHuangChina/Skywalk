@@ -25,6 +25,8 @@ import java.util.Arrays;
 public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private AlertDialog mDeliverableEdtDlg;
     private ListView    mLvDeliverables;
+    private TextView    mTvModifyFinish;
+    private Boolean     mIsModifyMode;
     // test data
 
 
@@ -56,6 +58,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         styleText.setSpan(new TextAppearanceSpan(this, R.style.textstyle_small), 5, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ((TextView)findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
 
+        mIsModifyMode = false;
         loadUI();
 
         // add button
@@ -70,6 +73,8 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
     private void loadUI() {
+        mTvModifyFinish = (TextView) findViewById(R.id.tv_modify_finish);
+
         mLvDeliverables = (ListView) findViewById(R.id.lv_deliverables);
         AdapterDeliverables adapter = new AdapterDeliverables(this);
         adapter.updateDeliverablesList(mHouseDeliverables);
@@ -207,11 +212,22 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_apartment_name:
+            case R.id.tv_back:
             {
                 finish();
             }
             break;
+            case R.id.tv_modify_finish:
+            {
+                mIsModifyMode = !mIsModifyMode;
+                if (mIsModifyMode) {
+                    mTvModifyFinish.setText("完成");
+                } else {
+                    mTvModifyFinish.setText("编辑");
+                }
+            }
+            break;
+
         }
     }
 

@@ -91,6 +91,96 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                                android:id="@+id/textViewSearchConditionRegion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:drawableEnd="@drawable/service_prefer"
+                                android:gravity="center_vertical"
+                                android:text="安心服务"
+                                android:textColor="#ff7121"
+                                android:textSize="17sp" />
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="费用：一个月租金"
+                                android:gravity="center_vertical|right"
+                                android:textColor="@color/colorTextNormal"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="5dp"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorTextNormal"
+                                android:text="1. 保证房屋出租一年以上"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorText"
+                                android:textSize="13sp"
+                                android:text="如果中途未到期退租，再次出租免除上期末未履约的时间  例如：本期客人半年退租，则下次出租后，业主所出的经纪费会减去本期未履约的6个月"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="5dp"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorTextNormal"
+                                android:text="2. 水电欠费无忧"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorText"
+                                android:textSize="13sp"
+                                android:text="如果租客中途跑路，其造成的房屋水电费欠费由公司承担"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="5dp"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorTextNormal"
+                                android:text="3. 节省时间和精力"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="13sp"
+                                android:textColor="@color/colorText"
+                                android:text="出租过程中房子有任何问题需要处理，都由公司来协助处理"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 </RelativeLayout>
