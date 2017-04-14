@@ -27,6 +27,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private ListView    mLvDeliverables;
     private TextView    mTvModifyFinish;
     private Boolean     mIsModifyMode;
+    AdapterDeliverables mDeliverablesAdapter;
     // test data
 
 
@@ -76,9 +77,9 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         mTvModifyFinish = (TextView) findViewById(R.id.tv_modify_finish);
 
         mLvDeliverables = (ListView) findViewById(R.id.lv_deliverables);
-        AdapterDeliverables adapter = new AdapterDeliverables(this);
-        adapter.updateDeliverablesList(mHouseDeliverables);
-        mLvDeliverables.setAdapter(adapter);
+        mDeliverablesAdapter = new AdapterDeliverables(this);
+        mDeliverablesAdapter.updateDeliverablesList(mHouseDeliverables);
+        mLvDeliverables.setAdapter(mDeliverablesAdapter);
 
 
 
@@ -225,6 +226,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
                 } else {
                     mTvModifyFinish.setText("编辑");
                 }
+                mDeliverablesAdapter.setEditMode(mIsModifyMode);
             }
             break;
 
