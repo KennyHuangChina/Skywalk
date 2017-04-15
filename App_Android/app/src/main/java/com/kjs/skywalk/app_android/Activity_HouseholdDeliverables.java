@@ -91,73 +91,73 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 //        loadItems(llDeliverables, rows);
     }
 
-    private void loadItems(ViewGroup layout, int rows) {
+//    private void loadItems(ViewGroup layout, int rows) {
+//
+//        for (int i = 0; i < rows; i++) {
+//            // parent
+//            final LinearLayout linearLayout = new LinearLayout(this);
+////            View view = View.inflate(this, R.layout.listitem_household_deliverable, linearLayout);
+//
+//            // attachToRoot = false, return the view itself, otherwise return the root view
+//            int index = i;
+//            View view = LayoutInflater.from(this).inflate(R.layout.listitem_household_deliverable, linearLayout, false);
+//            view.setId(index);
+//            view.setOnClickListener(mDeliverableItemClickedListener);
+//            ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(index).mIcon);
+//            ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(index).mDesc);
+//            ((TextView)view.findViewById(R.id.tv_number)).setText("" + mHouseDeliverables.get(index).mNum);
+//            linearLayout.addView(view);
+//
+//            ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            layout.addView(linearLayout, params);
+//
+//        }
+//    }
 
-        for (int i = 0; i < rows; i++) {
-            // parent
-            final LinearLayout linearLayout = new LinearLayout(this);
-//            View view = View.inflate(this, R.layout.listitem_household_deliverable, linearLayout);
-
-            // attachToRoot = false, return the view itself, otherwise return the root view
-            int index = i;
-            View view = LayoutInflater.from(this).inflate(R.layout.listitem_household_deliverable, linearLayout, false);
-            view.setId(index);
-            view.setOnClickListener(mDeliverableItemClickedListener);
-            ((ImageView)view.findViewById(R.id.iv_icon)).setImageResource(mHouseDeliverables.get(index).mIcon);
-            ((TextView)view.findViewById(R.id.tv_description)).setText(mHouseDeliverables.get(index).mDesc);
-            ((TextView)view.findViewById(R.id.tv_number)).setText("" + mHouseDeliverables.get(index).mNum);
-            linearLayout.addView(view);
-
-            ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layout.addView(linearLayout, params);
-
-        }
-    }
-
-    private void showDeliverableEditDlg(final View vDeliverable) {
-        int itemIndex = vDeliverable.getId();
-        AdapterDeliverables.Deliverable deliverable = mHouseDeliverables.get(itemIndex);
-        int curValue = deliverable.mNum;
-        String name = deliverable.mDesc;
-
-        if (mDeliverableEdtDlg == null) {
-            mDeliverableEdtDlg = new AlertDialog.Builder(this).create();
-        }
-        mDeliverableEdtDlg.show();
-        mDeliverableEdtDlg.setContentView(R.layout.dialog_deliverable_editor);
-
-        TextView tvName = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_deliverable_name);
-        tvName.setText(name);
-
-        final NumberPicker npDeliverable = (NumberPicker) mDeliverableEdtDlg.findViewById(R.id.np_deliverable);
-        npDeliverable.setMinValue(1);
-        npDeliverable.setMaxValue(10);
-        npDeliverable.setValue(curValue);
-        npDeliverable.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//                Toast.makeText(Activity_HouseholdDeliverables.this, oldVal + " to " + newVal, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        TextView tvBack = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_back);
-        tvBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDeliverableEdtDlg.dismiss();
-            }
-        });
-
-        TextView tvConfirm = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_confirm);
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((TextView)vDeliverable.findViewById(R.id.tv_number)).setText("x" + npDeliverable.getValue());
-                mDeliverableEdtDlg.dismiss();
-            }
-        });
-
-    }
+//    private void showDeliverableEditDlg(final View vDeliverable) {
+//        int itemIndex = vDeliverable.getId();
+//        AdapterDeliverables.Deliverable deliverable = mHouseDeliverables.get(itemIndex);
+//        int curValue = deliverable.mNum;
+//        String name = deliverable.mDesc;
+//
+//        if (mDeliverableEdtDlg == null) {
+//            mDeliverableEdtDlg = new AlertDialog.Builder(this).create();
+//        }
+//        mDeliverableEdtDlg.show();
+//        mDeliverableEdtDlg.setContentView(R.layout.dialog_deliverable_editor);
+//
+//        TextView tvName = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_deliverable_name);
+//        tvName.setText(name);
+//
+//        final NumberPicker npDeliverable = (NumberPicker) mDeliverableEdtDlg.findViewById(R.id.np_deliverable);
+//        npDeliverable.setMinValue(1);
+//        npDeliverable.setMaxValue(10);
+//        npDeliverable.setValue(curValue);
+//        npDeliverable.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+//            @Override
+//            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+////                Toast.makeText(Activity_HouseholdDeliverables.this, oldVal + " to " + newVal, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        TextView tvBack = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_back);
+//        tvBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mDeliverableEdtDlg.dismiss();
+//            }
+//        });
+//
+//        TextView tvConfirm = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_confirm);
+//        tvConfirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((TextView)vDeliverable.findViewById(R.id.tv_number)).setText("x" + npDeliverable.getValue());
+//                mDeliverableEdtDlg.dismiss();
+//            }
+//        });
+//
+//    }
 
     private void showDeliverableNewDlg() {
         int itemIndex = 0;  // for test
@@ -171,45 +171,50 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         mDeliverableEdtDlg.show();
         mDeliverableEdtDlg.setContentView(R.layout.dialog_deliverable_new);
 
-        TextView tvName = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_deliverable_name);
-        tvName.setText(name);
+        ListView lvDeliverables = (ListView) mDeliverableEdtDlg.findViewById(R.id.lv_deliverables);
+        AdapterDeliverables deliverablesAdapter = new AdapterDeliverables(this);
+        deliverablesAdapter.updateDeliverablesList(mHouseDeliverables);
+        lvDeliverables.setAdapter(deliverablesAdapter);
+        deliverablesAdapter.setNumberDisplay(false);
 
-        final NumberPicker npDeliverable = (NumberPicker) mDeliverableEdtDlg.findViewById(R.id.np_deliverable);
-        npDeliverable.setMinValue(1);
-        npDeliverable.setMaxValue(10);
-        npDeliverable.setValue(curValue);
-        npDeliverable.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//                Toast.makeText(Activity_HouseholdDeliverables.this, oldVal + " to " + newVal, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        TextView tvBack = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_back);
-        tvBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDeliverableEdtDlg.dismiss();
-            }
-        });
-
-        TextView tvConfirm = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_confirm);
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDeliverableEdtDlg.dismiss();
-            }
-        });
+//        TextView tvName = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_deliverable_name);
+//        tvName.setText(name);
+//
+//        final NumberPicker npDeliverable = (NumberPicker) mDeliverableEdtDlg.findViewById(R.id.np_deliverable);
+//        npDeliverable.setMinValue(1);
+//        npDeliverable.setMaxValue(10);
+//        npDeliverable.setValue(curValue);
+//        npDeliverable.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+//            @Override
+//            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+////                Toast.makeText(Activity_HouseholdDeliverables.this, oldVal + " to " + newVal, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        TextView tvBack = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_back);
+//        tvBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mDeliverableEdtDlg.dismiss();
+//            }
+//        });
+//
+//        TextView tvConfirm = (TextView) mDeliverableEdtDlg.findViewById(R.id.tv_confirm);
+//        tvConfirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mDeliverableEdtDlg.dismiss();
+//            }
+//        });
 
     }
 
-    private View.OnClickListener mDeliverableItemClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-//            commonFun.showToast_resId(Activity_HouseholdDeliverables.this, v);
-            showDeliverableEditDlg(v);
-        }
-    };
+//    private View.OnClickListener mDeliverableItemClickedListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            showDeliverableEditDlg(v);
+//        }
+//    };
 
     public void onViewClick(View v) {
         switch (v.getId()) {

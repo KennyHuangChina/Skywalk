@@ -34,6 +34,7 @@ class AdapterDeliverables extends BaseAdapter {
     private Context mContext = null;
     private ArrayList<Deliverable> mDeliverableLst;
     private boolean mIsEditMode = false;
+    private boolean mIsNumberShow = true;
 
     public AdapterDeliverables(Context context) {
         super();
@@ -98,6 +99,12 @@ class AdapterDeliverables extends BaseAdapter {
             holder.tvDecrease.setVisibility(View.INVISIBLE);
         }
 
+        if (mIsNumberShow) {
+            holder.tvNumber.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvNumber.setVisibility(View.GONE);
+        }
+
         final int pos = position;
         final TextView tvNumber = holder.tvNumber;
         holder.tvPlus.setOnClickListener(new View.OnClickListener() {
@@ -127,5 +134,12 @@ class AdapterDeliverables extends BaseAdapter {
             notifyDataSetChanged();
         }
         mIsEditMode = isEditMode;
+    }
+
+    public void setNumberDisplay(boolean isShow) {
+        if (mIsNumberShow != isShow) {
+            notifyDataSetChanged();
+        }
+        mIsNumberShow = isShow;
     }
 }
