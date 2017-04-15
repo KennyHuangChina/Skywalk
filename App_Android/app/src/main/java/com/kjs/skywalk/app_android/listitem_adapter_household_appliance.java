@@ -14,6 +14,20 @@ import android.widget.TextView;
  */
 
 public class listitem_adapter_household_appliance extends BaseAdapter {
+    static class ApplianceItem {
+        int mIcon;
+        String mName;
+        String mDesc;
+        int mNum;
+
+        public ApplianceItem(int icon, String name, String description, int number) {
+            mIcon = icon;
+            mName = name;
+            mDesc = description;
+            mNum = number;
+        }
+    }
+
     private Context mContext;
 
     public listitem_adapter_household_appliance(Context context) {
