@@ -94,23 +94,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rect_stroke_background_select_service">
+                    <ImageView
+                        android:id="@+id/imageViewSelection"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:visibility="visible"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/selected_item"
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_margin="15dp">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <com.kjs.skywalk.control.TextView_DrawableRightCenter
-                                android:id="@+id/textViewSearchConditionRegion"
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:adjustViewBounds="true"
@@ -176,6 +185,59 @@
                                 android:textSize="13sp"
                                 android:textColor="@color/colorText"
                                 android:text="出租过程中房子有任何问题需要处理，都由公司来协助处理"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="15dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:gravity="center_vertical"
+                                android:text="标准服务"
+                                android:textColor="#ff7121"
+                                android:textSize="17sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="费用：半个月租金"
+                                android:gravity="center_vertical|right"
+                                android:textColor="@color/colorTextNormal"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="5dp"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorTextNormal"
+                                android:text="1. 提供标准的中介服务"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="13sp"
+                                android:textColor="@color/colorText"
+                                android:text="公司帮您带客户看房，订立出租合约，交房给客户后，服务即完成，中途房租未到期退出，再次出租则视为新的一次服务，您依然要付经纪费"/>
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
