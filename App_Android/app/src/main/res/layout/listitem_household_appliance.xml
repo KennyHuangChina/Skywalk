@@ -22,7 +22,7 @@
             android:textSize="14sp"
             android:textColor="@color/colorTextNormal"
             android:drawablePadding="10dp"
-            android:drawableLeft="@drawable/icn_shafa"
+            android:drawableLeft="@drawable/sofa_n"
             android:text="家具：沙发+茶几"/>
         <TextView
             android:id="@+id/tv_appl_num"

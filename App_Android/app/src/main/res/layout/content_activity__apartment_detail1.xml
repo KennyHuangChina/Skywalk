@@ -439,7 +439,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:src="@drawable/dingwei"
+            android:src="@drawable/location_d"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/imageViewEntrance"
             android:id="@+id/imageViewLocation" />
@@ -448,7 +448,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:src="@drawable/icon_entrance"
+            android:src="@drawable/right_n"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:id="@+id/imageViewEntrance" />
@@ -727,7 +727,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="关注"
-            android:drawableTop="@drawable/guanzhu"
+            android:drawableTop="@drawable/watch_off"
             android:textSize="12sp"
             android:textColor="#485053"/>
 
@@ -737,7 +737,7 @@
             android:layout_height="wrap_content"
             android:onClick="onViewClick"
             android:gravity="center"
-            android:drawableTop="@drawable/yijia"
+            android:drawableTop="@drawable/negotiate_n"
             android:text="议价"
             android:textSize="12sp"
             android:textColor="#485053"/>

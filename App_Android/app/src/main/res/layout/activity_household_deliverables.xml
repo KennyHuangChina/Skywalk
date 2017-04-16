@@ -23,7 +23,7 @@
             android:onClick="onViewClick"
             android:paddingRight="20dp"
             android:gravity="center"
-            android:src="@drawable/nav_back"/>
+            android:src="@drawable/left_n"/>
 
         <TextView
             android:id="@+id/tv_apartment_name"
@@ -54,7 +54,7 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="50dp"-->
         <!--android:onClick="onViewClick"-->
-        <!--android:drawableLeft="@drawable/nav_back"-->
+        <!--android:drawableLeft="@drawable/left_n"-->
         <!--android:paddingLeft="15dp"-->
         <!--android:background="#FFFFFF"-->
         <!--android:gravity="center"-->
@@ -87,7 +87,7 @@
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/fab_new"-->
+        <!--android:src="@drawable/new_n"-->
         <!--android:layout_alignParentBottom="true"-->
         <!--android:layout_alignParentRight="true"-->
         <!--android:layout_marginRight="15dp"-->
@@ -104,7 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00000000"
-        android:src="@drawable/fab_new"
+        android:src="@drawable/new_n"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"

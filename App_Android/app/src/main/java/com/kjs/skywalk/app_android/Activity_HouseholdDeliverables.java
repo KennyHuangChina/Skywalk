@@ -33,15 +33,15 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     private final static ArrayList<AdapterDeliverables.Deliverable> mHouseDeliverables = new ArrayList<AdapterDeliverables.Deliverable>(
             Arrays.asList(
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_damenyaoshi, "大门钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_menjinka, "门禁卡", 2),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_shuidianka, "水电卡/存折", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_youxiandianshi, "有线电视用户证", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_shuibiaoxiangyaoshi, "水表箱钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_dianbiaoxiangyaoshi, "电表箱钥匙", 3),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_xinbaoxiangyaoshi, "信报箱钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_baoxianguiyaoshi, "保险柜钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.deliverable_ranqika, "燃气卡", 3)
+                    new AdapterDeliverables.Deliverable(R.drawable.door_n, "大门钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.card_n, "门禁卡", 2),
+                    new AdapterDeliverables.Deliverable(R.drawable.card1_n, "水电卡/存折", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.tv_n, "有线电视用户证", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.water1_n, "水表箱钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.power3_n, "电表箱钥匙", 3),
+                    new AdapterDeliverables.Deliverable(R.drawable.mail_box_n, "信报箱钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.coffer_n, "保险柜钥匙", 1),
+                    new AdapterDeliverables.Deliverable(R.drawable.gas_n, "燃气卡", 3)
         )
     );
     //

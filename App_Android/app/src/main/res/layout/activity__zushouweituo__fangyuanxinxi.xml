@@ -239,7 +239,7 @@
                         android:onClick="onViewClick"
                         android:layout_gravity="center_vertical"
                         android:drawablePadding="10dp"
-                        android:drawableRight="@drawable/icon_date"
+                        android:drawableRight="@drawable/date_n"
                         android:layout_alignParentRight="true"
                         android:textSize="14sp"
                         android:textColor="@color/colorTextNormal"

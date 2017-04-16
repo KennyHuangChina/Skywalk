@@ -15,7 +15,7 @@
         android:gravity="center"
         android:textSize="12sp"
         android:drawablePadding="5dp"
-        android:drawableTop="@drawable/fangyuan_s"
+        android:drawableTop="@drawable/house_n"
         android:text="房源"/>
 
     <ImageView
@@ -31,7 +31,7 @@
         android:gravity="center"
         android:textSize="12sp"
         android:drawablePadding="5dp"
-        android:drawableTop="@drawable/jiage_n"
+        android:drawableTop="@drawable/price_d"
         android:text="价格"/>
 
 
@@ -48,7 +48,7 @@
         android:gravity="center"
         android:textSize="12sp"
         android:drawablePadding="5dp"
-        android:drawableTop="@drawable/daili_n"
+        android:drawableTop="@drawable/people_d"
         android:text="代理"/>
 
     <ImageView
@@ -64,7 +64,7 @@
         android:gravity="center"
         android:textSize="12sp"
         android:drawablePadding="5dp"
-        android:drawableTop="@drawable/feiyong_n"
+        android:drawableTop="@drawable/fee_d"
         android:text="费用"/>
 
     <ImageView
@@ -80,6 +80,6 @@
         android:gravity="center"
         android:textSize="12sp"
         android:drawablePadding="5dp"
-        android:drawableTop="@drawable/wancheng_n"
+        android:drawableTop="@drawable/select1_d"
         android:text="完成"/>
 </LinearLayout>

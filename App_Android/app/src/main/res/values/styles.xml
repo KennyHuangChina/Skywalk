@@ -20,7 +20,7 @@
     <style name="TextView_section_title_all" parent="@android:style/Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableRight">@drawable/arrow_right</item>
+        <item name="android:drawableRight">@drawable/right_n</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#979aa1</item>
     </style>
@@ -192,7 +192,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:onClick">onViewClick</item>
-        <item name="android:drawableLeft">@drawable/nav_back</item>
+        <item name="android:drawableLeft">@drawable/left_n</item>
         <item name="android:textColor">@color/colorTextNormal</item>
         <item name="android:background">#FFFFFF</item>
         <item name="android:gravity">center</item>

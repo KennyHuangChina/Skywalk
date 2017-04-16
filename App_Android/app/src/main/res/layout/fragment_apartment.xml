@@ -16,7 +16,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/nav_back"
+                app:srcCompat="@drawable/left_n"
                 android:id="@+id/imageViewBack"
                 android:layout_centerInParent="true"/>
 
@@ -32,8 +32,8 @@
                 android:background="#efefef"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:searchIcon="@drawable/search"
-                android:searchHintIcon="@drawable/search"
+                android:searchIcon="@drawable/search_n"
+                android:searchHintIcon="@drawable/search_n"
                 android:queryHint="@string/fragment_search_input_hint" />
         </RelativeLayout>
 
@@ -46,7 +46,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/dingwei_normal"
+                app:srcCompat="@drawable/location2_n"
                 android:layout_centerInParent="true"
                 android:id="@+id/imageViewLocation" />
         </RelativeLayout>
@@ -59,7 +59,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/message_2"
+                app:srcCompat="@drawable/message_n"
                 android:layout_centerInParent="true"
                 android:id="@+id/imageViewMessage" />
         </RelativeLayout>
@@ -80,7 +80,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/dropdown"
+            android:drawableEnd="@drawable/down_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -92,7 +92,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/dropdown"
+            android:drawableEnd="@drawable/down_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -104,7 +104,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/dropdown"
+            android:drawableEnd="@drawable/down_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -116,7 +116,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/dropdown"
+            android:drawableEnd="@drawable/down_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -139,7 +139,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/sort"
+            android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -151,7 +151,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/sort"
+            android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -163,7 +163,7 @@
             android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/sort"
+            android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
@@ -178,7 +178,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/display_mode"
+            app:srcCompat="@drawable/show_grid"
             android:id="@+id/imageViewDisplayMode"
             android:layout_gravity="center"
             android:layout_weight="1" />

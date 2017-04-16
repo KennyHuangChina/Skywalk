@@ -17,9 +17,9 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
     // test data
     private final static ArrayList<listitem_adapter_household_appliance.ApplianceItem> mHouseAppliances = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>(
             Arrays.asList(
-                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.icn_shafa, "家具：沙发+茶几", "咖啡色真皮沙发2个，茶几1个，靠垫4个",1),
-                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.icn_tv, "电器：电视机", "康佳29寸纯屏", 1),
-                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.icn_tableware, "厨具：灶具/油烟机", "林内灶具x1 美帝DT310油烟机", 1)
+                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.sofa_n, "家具：沙发+茶几", "咖啡色真皮沙发2个，茶几1个，靠垫4个",1),
+                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.tv3_n, "电器：电视机", "康佳29寸纯屏", 1),
+                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.tableware_n, "厨具：灶具/油烟机", "林内灶具x1 美帝DT310油烟机", 1)
             )
     );
     //

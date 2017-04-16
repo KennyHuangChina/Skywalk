@@ -52,7 +52,7 @@
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
                         android:gravity="center_vertical"
-                        android:drawableLeft="@drawable/icn_chuzu"
+                        android:drawableLeft="@drawable/house2_n"
                         android:text="委托出租"/>
                 </RelativeLayout>
 
@@ -174,7 +174,7 @@
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
                         android:gravity="center_vertical"
-                        android:drawableLeft="@drawable/icn_chushou"
+                        android:drawableLeft="@drawable/sale_n"
                         android:text="委托出售"/>
                 </RelativeLayout>
 

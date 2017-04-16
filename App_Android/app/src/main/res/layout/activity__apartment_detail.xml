@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:onClick="onViewClick"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/fab_back"/>
+        android:src="@drawable/left1_n"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_share"
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:layout_gravity="top|right"
-        android:src="@drawable/fab_share"
+        android:src="@drawable/left1_n"
         app:backgroundTint="#56abe4"
         app:rippleColor="#56abe4"
         app:elevation="6dp"

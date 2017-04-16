@@ -164,7 +164,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/tupian"/>
+                        android:src="@drawable/photo_n"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/xinxi"/>
+                        android:src="@drawable/list_n"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
