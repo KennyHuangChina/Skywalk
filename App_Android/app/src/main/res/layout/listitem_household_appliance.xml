@@ -14,7 +14,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal" >
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/tv_appl_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
@@ -25,6 +25,7 @@
             android:drawableLeft="@drawable/icn_shafa"
             android:text="家具：沙发+茶几"/>
         <TextView
+            android:id="@+id/tv_appl_num"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,6 +42,7 @@
         android:background="#E5E5E5" />
 
     <TextView
+        android:id="@+id/tv_appl_desc"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="left|center_vertical"
