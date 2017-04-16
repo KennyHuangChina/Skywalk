@@ -9,11 +9,29 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by sailor.zhou on 2017/1/15.
  */
 
 public class listitem_adapter_household_appliance extends BaseAdapter {
+    private ArrayList<ApplianceItem> mApplianceItemLst;
+
+    static class ApplianceItem {
+        int mIcon;
+        String mName;
+        String mDesc;
+        int mNum;
+
+        public ApplianceItem(int icon, String name, String description, int number) {
+            mIcon = icon;
+            mName = name;
+            mDesc = description;
+            mNum = number;
+        }
+    }
+
     private Context mContext;
 
     public listitem_adapter_household_appliance(Context context) {
@@ -23,7 +41,8 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+//        return 1;
+        return mApplianceItemLst.size();
     }
 
     @Override
@@ -37,7 +56,9 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
     }
 
     class ViewHolder {
-        TextView tvContentName;
+        TextView tvApplName;
+        TextView tvApplNum;
+        TextView tvApplDesc;
     }
 
     @Override
@@ -48,17 +69,35 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.listitem_household_appliance, null);
 
             holder = new ViewHolder();
-            holder.tvContentName = (TextView) view.findViewById(R.id.title);
+            holder.tvApplName = (TextView) view.findViewById(R.id.tv_appl_name);
+            holder.tvApplNum = (TextView) view.findViewById(R.id.tv_appl_num);
+            holder.tvApplDesc = (TextView) view.findViewById(R.id.tv_appl_desc);
+
+
+
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        if(i == 1) {
-            Drawable drawable = commonFun.getDrawableFromLocal(mContext, "/sdcard/skywalk/canju.png");
-//        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            holder.tvContentName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        }
+        ApplianceItem item = mApplianceItemLst.get(i);
+        holder.tvApplName.setText(item.mName);
+        holder.tvApplNum.setText(String.valueOf(item.mNum));
+        holder.tvApplDesc.setText(item.mDesc);
+
+        Drawable drawable = mContext.getResources().getDrawable(item.mIcon, null);
+        holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+//        if(i == 2) {
+//            Drawable drawable_ex = commonFun.getDrawableFromLocal(mContext, "/sdcard/skywalk/canju.png");
+//            holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable_ex, null, null, null);
+//        }
+
         return view;
+    }
+
+    public void updateApplianceItemList(ArrayList<ApplianceItem> list) {
+        mApplianceItemLst = list;
+        this.notifyDataSetChanged();
     }
 }
