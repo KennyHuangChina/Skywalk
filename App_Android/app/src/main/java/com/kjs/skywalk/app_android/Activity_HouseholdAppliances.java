@@ -1,11 +1,14 @@
 package com.kjs.skywalk.app_android;
 
+import android.graphics.drawable.Drawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +43,13 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         ListView lvHouseApp = (ListView) findViewById(R.id.lvHouseholdAppliance);
         listitem_adapter_household_appliance adapter = new listitem_adapter_household_appliance(this);
         adapter.updateApplianceItemList(mHouseAppliances);
-       lvHouseApp.setAdapter(adapter);
+        lvHouseApp.setAdapter(adapter);
+        lvHouseApp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                showApplianceEdtDlg(i);
+            }
+        });
     }
 
     public void onViewClick(View v) {
@@ -50,6 +59,30 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
                 finish();
             }
             break;
+            case R.id.ib_new:
+            {
+                finish();
+            }
+            break;
         }
+    }
+
+    private AlertDialog mApplianceNewDlg;
+    private AlertDialog mApplianceEdtDlg;
+    private void showApplianceEdtDlg(int appl_item_index) {
+        listitem_adapter_household_appliance.ApplianceItem applItem = mHouseAppliances.get(appl_item_index);
+
+        if (mApplianceEdtDlg == null) {
+            mApplianceEdtDlg = new AlertDialog.Builder(this).create();
+        }
+        mApplianceEdtDlg.show();
+        mApplianceEdtDlg.setContentView(R.layout.dialog_appliances_editor);
+
+        TextView tvName = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_appl_name);
+        tvName.setText(applItem.mName);
+        Drawable drawable = getResources().getDrawable(applItem.mIcon, null);
+        tvName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+        // tod0
     }
 }
