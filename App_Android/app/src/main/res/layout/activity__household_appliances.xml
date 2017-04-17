@@ -25,13 +25,20 @@
         android:layout_below="@+id/tv_apartment_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:dividerHeight="8dp"
         android:divider="#00000000"
         android:background="#EFEFEF"
         android:layout_marginTop="8dp">
-
-
     </ListView>
+
+    <ImageButton
+        android:id="@+id/ib_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:src="@drawable/new_n"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="22dp"/>
 </RelativeLayout>
