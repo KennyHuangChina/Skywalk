@@ -52,6 +52,11 @@
         android:orderInCategory="100"
         android:title="租售委托-选择服务"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_setting105"
+        android:orderInCategory="100"
+        android:title="证件审核"
+        app:showAsAction="never"/>
 
 
 </menu>
