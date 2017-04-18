@@ -35,6 +35,7 @@
         android:id="@+id/ib_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onViewClick"
         android:background="#00000000"
         android:src="@drawable/new_n"
         android:layout_alignParentBottom="true"

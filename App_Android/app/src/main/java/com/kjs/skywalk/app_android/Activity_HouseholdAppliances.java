@@ -9,6 +9,7 @@ import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -61,13 +62,12 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
             break;
             case R.id.ib_new:
             {
-                finish();
+                showApplianceNewDlg();
             }
             break;
         }
     }
 
-    private AlertDialog mApplianceNewDlg;
     private AlertDialog mApplianceEdtDlg;
     private void showApplianceEdtDlg(int appl_item_index) {
         final listitem_adapter_household_appliance.ApplianceItem applItem = mHouseAppliances.get(appl_item_index);
@@ -127,5 +127,16 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
                 mApplianceEdtDlg.dismiss();
             }
         });
+    }
+
+    ArrayAdapter<String> mAdapterCategory = null;
+
+    private AlertDialog mApplianceNewDlg;
+    private void showApplianceNewDlg() {
+        if (mApplianceNewDlg == null) {
+            mApplianceNewDlg = new AlertDialog.Builder(this).create();
+        }
+        mApplianceNewDlg.show();
+        mApplianceNewDlg.setContentView(R.layout.dialog_appliances_new);
     }
 }
