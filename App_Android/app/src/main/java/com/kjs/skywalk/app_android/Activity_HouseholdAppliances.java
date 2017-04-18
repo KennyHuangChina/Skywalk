@@ -1,5 +1,7 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +9,10 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -21,7 +26,7 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
     // test data
     private final static ArrayList<listitem_adapter_household_appliance.ApplianceItem> mHouseAppliances = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>(
             Arrays.asList(
-                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.sofa_n, "家具：沙发+茶几", "咖啡色真皮沙发2个，茶几1个，靠垫4个",1),
+                    new listitem_adapter_household_appliance.ApplianceItem(R.drawable.sofa_n, "家具：沙发+茶几", "咖啡色真皮沙发2个，茶几1个，靠垫4个", 1),
                     new listitem_adapter_household_appliance.ApplianceItem(R.drawable.tv3_n, "电器：电视机", "康佳29寸纯屏", 1),
                     new listitem_adapter_household_appliance.ApplianceItem(R.drawable.tableware_n, "厨具：灶具/油烟机", "林内灶具x1 美帝DT310油烟机", 1)
             )
@@ -55,13 +60,11 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_apartment_name:
-            {
+            case R.id.tv_apartment_name: {
                 finish();
             }
             break;
-            case R.id.ib_new:
-            {
+            case R.id.ib_new: {
                 showApplianceNewDlg();
             }
             break;
@@ -69,6 +72,7 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
     }
 
     private AlertDialog mApplianceEdtDlg;
+
     private void showApplianceEdtDlg(int appl_item_index) {
         final listitem_adapter_household_appliance.ApplianceItem applItem = mHouseAppliances.get(appl_item_index);
 
@@ -129,8 +133,6 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         });
     }
 
-    ArrayAdapter<String> mAdapterCategory = null;
-
     private AlertDialog mApplianceNewDlg;
     private void showApplianceNewDlg() {
         if (mApplianceNewDlg == null) {
@@ -138,5 +140,57 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         }
         mApplianceNewDlg.show();
         mApplianceNewDlg.setContentView(R.layout.dialog_appliances_new);
+    }
+
+    // SpinnerAdapter not use now, reserve for future use
+    private class SpinnerAdapter extends ArrayAdapter<String> {
+        Context context;
+        String[] items = new String[]{};
+
+        public SpinnerAdapter(final Context context,
+                              final int textViewResourceId, final String[] objects) {
+            super(context, textViewResourceId, objects);
+            this.items = objects;
+            this.context = context;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_item, parent, false);
+            }
+
+            TextView tv = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextColor(Color.BLUE);
+            tv.setTextSize(30);
+            return convertView;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_item, parent, false);
+            }
+
+            // android.R.id.text1 is default text view in resource of the android.
+            // android.R.layout.simple_spinner_item is default layout in resources of android.
+
+            TextView tv = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextColor(Color.BLUE);
+            tv.setTextSize(30);
+            return convertView;
+        }
     }
 }
