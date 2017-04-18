@@ -1113,7 +1113,7 @@ func getHouseAgency(hid int64) (err error, aid int64, agency string) {
 	}
 
 	aid = h.Agency.Id
-	err, uif := GetUserInfo(aid, -1)
+	err, uif := getUser(aid)
 	if nil != err {
 		return
 	}
@@ -1243,4 +1243,28 @@ func isHouseAgency(h TblHouse, uid int64) bool {
 	}
 
 	return false
+}
+
+/**
+*	get all houses belong to specified landlord
+*	Arguments:
+*		oid - landlord id
+*	Returns
+*		hl 	- house list belong to the landlord specified
+ */
+func getHouseListByOwner(oid int64) (err error, hl []TblHouse) {
+	FN := "[getHouseListByOwner] "
+	beego.Trace(FN, "oid:", oid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house").Filter("Owner__Id", oid)
+	/*num*/ _, err = qs.All(&hl)
+
+	return
 }

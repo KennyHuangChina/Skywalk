@@ -31,7 +31,7 @@ const (
  */
 func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 	FN := "[GetUserInfo] "
-	beego.Trace(FN, "id:", id)
+	beego.Trace(FN, "id:", id, ", ln:", ln)
 
 	defer func() {
 		if nil != err {
@@ -39,27 +39,38 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 		}
 	}()
 
-	o := orm.NewOrm()
-
-	u := TblUser{Id: id}
-	if err1 := o.Read(&u); nil != err1 {
-		// beego.Error(FN, err1)
-		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
-		} else {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
-		}
+	err, u := getUser(id)
+	if nil != err {
 		return
+	}
+
+	// permission checking
+	// Only the house owner himself, his agency and administrator could view the private info,
+	//	like user's phone and login name which actually is user's phone number, id number
+	//	all other people could just view the user's public info, including name, head portaint, role
+	bPrivacy := false
+	if id == ln { // login user is landlord himself
+		beego.Debug(FN, "landlord himself")
+		bPrivacy = true
+	} else if _, bAdmin := isAdministrator(ln); bAdmin { // login user is administrator
+		beego.Debug(FN, "admin")
+		bPrivacy = true
+	} else if bAgency := isOwnerAgency(id, ln); bAgency { // login user is agency of this landlord
+		beego.Debug(FN, "agency")
+		bPrivacy = true
 	}
 
 	uif.Id = u.Id
 	uif.Name = u.Name
-	uif.IdNo = u.IdNo
-	beego.Warn(FN, "TODO: Phone is private info, should be displayed by only someone, please check login user")
-	uif.Phone = u.Phone
 	uif.HeadPortrait = u.Head
 	// uif.Role = u.Role
 	uif.Role2Desc() // uif.RoleDesc
+	if bPrivacy {
+		beego.Debug(FN, "bPrivacy:", bPrivacy)
+		uif.IdNo = u.IdNo
+		uif.Phone = u.Phone
+	}
+	beego.Debug(FN, fmt.Sprintf("uid:%+v", uif))
 
 	return
 }
@@ -705,6 +716,82 @@ func isAdministrator(uid int64) (err error, admin bool) {
 
 	if nCnt > 0 {
 		admin = true
+	}
+
+	return
+}
+
+/**
+*	Get user info by id
+*	Arguments:
+*		uid - user id to fetch
+*	Returns
+*		uif - user info
+ */
+func getUser(uid int64) (err error, u TblUser) {
+	FN := "[getUser] "
+	beego.Trace(FN, "uid:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+
+	u1 := TblUser{Id: uid}
+	if err1 := o.Read(&u1); nil != err1 {
+		// beego.Error(FN, err1)
+		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+		}
+		return
+	}
+
+	u = u1
+	return
+}
+
+/**
+*	Check if the aid is the real "Agency" of uid who is landlord
+*	Arguments:
+*		uid - landlord id
+*		aid	- agency id to check
+*	Returns
+*		bAgency - is agency or not
+ */
+func isOwnerAgency(uid, aid int64) (bAgency bool) {
+	FN := "[isOwnerAgency] "
+	beego.Trace(FN, "uid:", uid, ", aid:", aid)
+
+	// defer func() {
+	// 	if nil != err {
+	// 		beego.Error(FN, err)
+	// 	}
+	// }()
+
+	err, b := isAgency(aid)
+	if nil != err || !b {
+		beego.Error(FN, "err:", err, ", is agency:", b)
+		return
+	}
+
+	// check all houses belong to this landlord
+	err, hl := getHouseListByOwner(uid)
+	if nil != err {
+		beego.Error(FN, "err:", err)
+		return
+	}
+	beego.Debug(FN, "house count:", len(hl))
+
+	for _, v := range hl {
+		if isHouseAgency(v, aid) {
+			bAgency = true
+			break
+		}
 	}
 
 	return
