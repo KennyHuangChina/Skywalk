@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Activity_HouseholdAppliances extends AppCompatActivity {
-
+    listitem_adapter_household_appliance mApplAdapter;
     // test data
     private final static ArrayList<listitem_adapter_household_appliance.ApplianceItem> mHouseAppliances = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>(
             Arrays.asList(
@@ -41,9 +41,9 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
 
         ListView lvHouseApp = (ListView) findViewById(R.id.lvHouseholdAppliance);
-        listitem_adapter_household_appliance adapter = new listitem_adapter_household_appliance(this);
-        adapter.updateApplianceItemList(mHouseAppliances);
-        lvHouseApp.setAdapter(adapter);
+        mApplAdapter = new listitem_adapter_household_appliance(this);
+        mApplAdapter.updateApplianceItemList(mHouseAppliances);
+        lvHouseApp.setAdapter(mApplAdapter);
         lvHouseApp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -70,7 +70,7 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
     private AlertDialog mApplianceNewDlg;
     private AlertDialog mApplianceEdtDlg;
     private void showApplianceEdtDlg(int appl_item_index) {
-        listitem_adapter_household_appliance.ApplianceItem applItem = mHouseAppliances.get(appl_item_index);
+        final listitem_adapter_household_appliance.ApplianceItem applItem = mHouseAppliances.get(appl_item_index);
 
         if (mApplianceEdtDlg == null) {
             mApplianceEdtDlg = new AlertDialog.Builder(this).create();
@@ -78,11 +78,54 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         mApplianceEdtDlg.show();
         mApplianceEdtDlg.setContentView(R.layout.dialog_appliances_editor);
 
-        TextView tvName = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_appl_name);
+        final TextView tvName = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_appl_name);
         tvName.setText(applItem.mName);
         Drawable drawable = getResources().getDrawable(applItem.mIcon, null);
         tvName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
-        // tod0
+        final TextView tvNum = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_num);
+        tvNum.setText(String.valueOf(applItem.mNum));
+
+        final int appl_num = applItem.mNum;
+        TextView tvIncrease = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_increase);   // -
+        tvIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = Integer.parseInt(tvNum.getText().toString());
+                num++;
+                tvNum.setText(String.valueOf(num));
+            }
+        });
+
+        TextView tvDecrease = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_decrease); // +
+        tvDecrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = Integer.parseInt(tvNum.getText().toString());
+                if (num == 0)
+                    return;
+                num--;
+                tvNum.setText(String.valueOf(num));
+            }
+        });
+
+        TextView tvBack = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_back); // 返回
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mApplianceEdtDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mApplianceEdtDlg.findViewById(R.id.tv_confirm); // 修改
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = Integer.parseInt(tvNum.getText().toString());
+                applItem.mNum = num;
+                mApplAdapter.notifyDataSetChanged();
+                mApplianceEdtDlg.dismiss();
+            }
+        });
     }
 }

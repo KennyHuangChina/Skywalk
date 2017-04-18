@@ -5,8 +5,9 @@
               android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="38dp"
+        android:layout_gravity="center"
         android:id="@+id/tv_appl_name"
         android:textAlignment="center"
         android:textSize="14sp"
@@ -28,10 +29,12 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_decrease"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/decrease1_n"/>
         <TextView
+            android:id="@+id/tv_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -40,6 +43,7 @@
             android:textSize="14sp"
             android:textColor="@color/colorTextNormal"/>
         <TextView
+            android:id="@+id/tv_increase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/increase1_n"/>
@@ -59,11 +63,19 @@
         android:background="@drawable/shape_rect_with_edge"
         android:inputType="text" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="@dimen/page_left_margin"
+        android:paddingRight="@dimen/page_right_margin"
+        android:contentDescription=""
+        android:background="#EFEFEF" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:layout_marginTop="20dp"
         android:gravity="center">
 
         <TextView
