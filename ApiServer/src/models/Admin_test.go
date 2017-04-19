@@ -99,3 +99,23 @@ func Benchmark_GetSaltByName(b *testing.B) {
 		// Div(4, 5)
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- Logout --
+//
+func Test_Logout_1(t *testing.T) {
+	t.Log("Test Logout, user not exist")
+	if e := Logout(100000); e == nil {
+		t.Error("err: ", e)
+	} else {
+	}
+}
+
+func Test_Logout_2(t *testing.T) {
+	t.Log("Test Logout, user exist")
+	if e := Logout(6); e != nil {
+		t.Error("err: ", e)
+	} else {
+	}
+}

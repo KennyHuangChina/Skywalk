@@ -294,7 +294,7 @@ func LoginByPass(loginName, passwd, rand, sid string) (err error, uid int64) {
 *		err		- error info
  */
 func Logout(uid int64) (err error) {
-	FN := "[LoginByPass] "
+	FN := "[Logout] "
 	beego.Debug(FN, "uid:", uid)
 
 	defer func() {
@@ -306,9 +306,10 @@ func Logout(uid int64) (err error) {
 	/* agrguments checking */
 
 	/* Processing */
-	if err, _ = GetUser(uid); nil != err {
-		return
-	}
+	// Kenny: updateUserSession will check user by itself
+	// if err, _ = GetUser(uid); nil != err {
+	// 	return
+	// }
 
 	// clear the session for login
 	err = updateUserSession(uid, "")
