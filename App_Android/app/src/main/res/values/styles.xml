@@ -194,6 +194,7 @@
         <item name="android:onClick">onViewClick</item>
         <item name="android:drawableLeft">@drawable/left_n</item>
         <item name="android:textColor">@color/colorTextNormal</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:background">#FFFFFF</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">@dimen/page_left_margin</item>

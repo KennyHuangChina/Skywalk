@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_expiration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.kjs.skywalk.app_android.Activity_fangyuan_guanli">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="房源信息管理"/>
+    
+        <include layout="@layout/seperator_horizontal"/>
+        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="87dp">
+
+        </FrameLayout>
+
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="17dp"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/safety_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="房源认证"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="房源认证，让更多用户更快找到"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="72dp"
+                            android:layout_height="28dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:textColor="#ffffff"
+                            android:textSize="13sp"
+                            android:background="@drawable/rounded_rect_background_orange"
+                            android:text="立即认证"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/photo2_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="房源照片"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="上传您的房源照片，让更多人快速了解您的房屋"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/time_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="最佳看房时间"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="什么时候方便客户看房"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/night_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="勿扰时间"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="设置勿扰时间段，提醒他人勿打扰"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/obj2_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="出租交付"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="交付给中介或客人的物件，例如钥匙"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/house3_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="房屋设施"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="登记房屋内的设施"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/id_card2_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="生活账户"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="生活中使用的账户，包括水、电、气、有线电视"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/obj1_n"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="14sp"
+                            android:text="服务及收费标准"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/colorTextTint"
+                            android:textSize="12sp"
+                            android:text="选择您需要的服务"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_n"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
+
+
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+</RelativeLayout>
