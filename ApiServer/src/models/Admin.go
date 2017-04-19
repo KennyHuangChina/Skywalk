@@ -335,7 +335,7 @@ func FetchSms(login_name string) (err error, SmsCode string) {
 		if nil != err {
 			beego.Error(FN, err)
 		}
-		beego.Debug(FN, "SmsCode:", SmsCode)
+		// beego.Debug(FN, "SmsCode:", SmsCode)
 	}()
 
 	// argument checking

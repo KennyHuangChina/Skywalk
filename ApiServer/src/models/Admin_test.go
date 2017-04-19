@@ -1,6 +1,7 @@
 package models
 
 import (
+	// "github.com/astaxie/beego"
 	"testing"
 )
 
@@ -117,5 +118,75 @@ func Test_Logout_2(t *testing.T) {
 	if e := Logout(6); e != nil {
 		t.Error("err: ", e)
 	} else {
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- FetchSms --
+//
+func Test_FetchSms_1(t *testing.T) {
+	t.Log("Test FetchSms, phone number incorrect")
+
+	// beego.Debug("phone number is empty")
+	if e, sms := FetchSms(""); e == nil || len(sms) > 0 {
+		t.Error("err: ", e)
+	} else {
+		// t.Log("sms:", sms)
+	}
+
+	// phone number is not long enough
+	if e, sms := FetchSms("12345678"); e == nil || len(sms) > 0 {
+		t.Error("err: ", e)
+	} else {
+		// t.Log("sms:", sms)
+	}
+
+	// phone number is over long
+	if e, sms := FetchSms("12345678901234"); e == nil || len(sms) > 0 {
+		t.Error("err: ", e)
+	} else {
+		// t.Log("sms:", sms)
+	}
+
+	// phone number is not digital
+	if e, sms := FetchSms("1234567xyz9"); e == nil || len(sms) > 0 {
+		t.Error("err: ", e)
+	} else {
+		// t.Log("sms:", sms)
+	}
+
+	// phone number is not a valid "Phone Number", 13x, 15x, 177x, and so on
+	if e, sms := FetchSms("05306261804"); e == nil || len(sms) > 0 {
+		t.Error("err: ", e)
+	} else {
+		// t.Log("sms:", sms)
+	}
+	if e, sms := FetchSms("25306261804"); e == nil || len(sms) > 0 {
+		t.Error("err: ", e)
+	} else {
+		// t.Log("sms:", sms)
+	}
+}
+
+func Test_FetchSms_2(t *testing.T) {
+	t.Log("Test FetchSms, fail to post sms_code")
+
+	// Kenny: I have no idea how to test the sms-code posting
+	// 			maybe we need to cut off the network connection to sms getway, or set wrong sms getway
+	// if e, sms := FetchSms("15306261804"); e == nil || len(sms) > 0 {
+	// 	t.Error("err: ", e)
+	// } else {
+	// 	// t.Log("sms:", sms)
+	// }
+}
+
+func Test_FetchSms_3(t *testing.T) {
+	t.Log("Test FetchSms")
+
+	if e, sms := FetchSms("15306261804"); e != nil || 0 == len(sms) {
+		t.Error("err: ", e, ", sms:", sms)
+	} else {
+		t.Log("sms:", sms)
 	}
 }
