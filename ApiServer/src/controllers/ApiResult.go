@@ -218,7 +218,7 @@ func getLoginUser(c beego.Controller) (uid int64, err error) {
 			case int64:
 				uid, _ = userId.(int64)
 				if uid > 0 {
-					err = models.CheckUser(uid)
+					err, _ = models.GetUser(uid)
 				} else {
 					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
 				}
@@ -251,7 +251,7 @@ func getLoginUser(c beego.Controller) (uid int64, err error) {
 		case int64:
 			uid, _ = userId.(int64)
 			if uid > 0 {
-				err = models.CheckUser(uid)
+				err, _ = models.GetUser(uid)
 			} else {
 				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN}
 			}

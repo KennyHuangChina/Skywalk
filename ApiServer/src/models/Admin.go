@@ -39,7 +39,7 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 		}
 	}()
 
-	err, u := getUser(id)
+	err, u := GetUser(id)
 	if nil != err {
 		return
 	}
@@ -306,7 +306,7 @@ func Logout(uid int64) (err error) {
 	/* agrguments checking */
 
 	/* Processing */
-	if err = CheckUser(uid); nil != err {
+	if err, _ = GetUser(uid); nil != err {
 		return
 	}
 
@@ -463,14 +463,15 @@ func LoginSms(login_name, sms, Sid string) (err error, uid int64) {
 }
 
 /**
-*	Check user
+*	get user info by id
 *	Arguments
 *		uid		- user id
 *	Returns
 *		err		- error
+*		user	- user info
 **/
-func CheckUser(uid int64) (err error /*, user TblUser*/) {
-	// FN := "[CheckUser] "
+func GetUser(uid int64) (err error, user TblUser) {
+	// FN := "[GetUser] "
 
 	if uid < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("uid:%d", uid)}
@@ -494,7 +495,7 @@ func CheckUser(uid int64) (err error /*, user TblUser*/) {
 		return
 	}
 
-	// user = u
+	user = u
 	return
 }
 
@@ -662,7 +663,7 @@ func postSms(phone, sms string) (err error) {
 func isAgency(uid int64) (err error, agency bool) {
 	FN := "[isAgency] "
 
-	err = CheckUser(uid)
+	err, _ = GetUser(uid)
 	if nil != err {
 		return
 	}
@@ -697,7 +698,7 @@ func isAgency(uid int64) (err error, agency bool) {
 func isAdministrator(uid int64) (err error, admin bool) {
 	FN := "[isAdministrator] "
 
-	err = CheckUser(uid)
+	err, _ = GetUser(uid)
 	if nil != err {
 		return
 	}
@@ -718,40 +719,6 @@ func isAdministrator(uid int64) (err error, admin bool) {
 		admin = true
 	}
 
-	return
-}
-
-/**
-*	Get user info by id
-*	Arguments:
-*		uid - user id to fetch
-*	Returns
-*		uif - user info
- */
-func getUser(uid int64) (err error, u TblUser) {
-	FN := "[getUser] "
-	beego.Trace(FN, "uid:", uid)
-
-	defer func() {
-		if nil != err {
-			beego.Error(FN, err)
-		}
-	}()
-
-	o := orm.NewOrm()
-
-	u1 := TblUser{Id: uid}
-	if err1 := o.Read(&u1); nil != err1 {
-		// beego.Error(FN, err1)
-		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
-		} else {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
-		}
-		return
-	}
-
-	u = u1
 	return
 }
 

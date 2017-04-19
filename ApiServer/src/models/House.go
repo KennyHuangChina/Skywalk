@@ -380,7 +380,7 @@ func SetHouseAgency(hid, aid int64) (err error) {
 		return
 	}
 
-	if err = CheckUser(aid); nil != err {
+	if err, _ = GetUser(aid); nil != err {
 		return
 	}
 
@@ -564,7 +564,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	}
 
 	// owner
-	if errT := CheckUser(oid); nil != errT {
+	if errT, _ := GetUser(oid); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("owner:%d", oid)}
 		return
 	}
@@ -572,7 +572,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	// Agency
 	// Kenny: when house owner commit new house, they could not assign the agency,
 	// 			so the agency 0 is possible.
-	// if errT := CheckUser(aid); nil != errT {
+	// if errT := GetUser(aid); nil != errT {
 	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
 	// 	return
 	// }
@@ -866,7 +866,7 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 	if nil != err {
 		return err
 	}
-	if err = CheckUser(uid); nil != err {
+	if err, _ = GetUser(uid); nil != err {
 		return err
 	}
 
@@ -1113,7 +1113,7 @@ func getHouseAgency(hid int64) (err error, aid int64, agency string) {
 	}
 
 	aid = h.Agency.Id
-	err, uif := getUser(aid)
+	err, uif := GetUser(aid)
 	if nil != err {
 		return
 	}
