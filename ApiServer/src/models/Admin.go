@@ -647,7 +647,7 @@ func generateSmsCode() (smsCode string) {
 func postSms(phone, sms string) (err error) {
 	FN := "[postSms] "
 
-	beego.Warn(FN, "NOT Implement")
+	beego.Warn(FN, "NOT Implement, please modify test code once it get implements")
 	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 
 	return

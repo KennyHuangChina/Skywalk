@@ -999,7 +999,7 @@ func getRecommendHouseList(begin, count int64) (err error, total, fetched int64,
 	}
 
 	// fetch exact house list
-	if begin > total {
+	if begin >= total {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "begin position out of range"}
 		return
 	}
@@ -1007,7 +1007,7 @@ func getRecommendHouseList(begin, count int64) (err error, total, fetched int64,
 	// fetching
 	beego.Warn(FN, "TODO: all() will be restricted by limit, and return max 1000 records")
 	var hids []TblHouseRecommend
-	numb, errT := qs.OrderBy("When").All(&hids)
+	numb, errT := qs.Limit(count, begin).OrderBy("When").All(&hids)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
