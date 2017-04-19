@@ -68,3 +68,34 @@ func Benchmark_GetUserInfo(b *testing.B) {
 		// Div(4, 5)
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetSaltByName --
+//
+func Test_GetSaltByName_1(t *testing.T) {
+	t.Log("Test GetSaltByName, user not exist")
+	if e, salt, rand := GetSaltByName("unknown"); e == nil {
+		t.Error("err: ", e)
+		t.Error("salt:", salt, ", rand:", rand)
+	} else {
+		t.Log("salt:", salt, ", rand:", rand)
+	}
+}
+
+func Test_GetSaltByName_2(t *testing.T) {
+	t.Log("Test GetSaltByName, user exist")
+	if e, salt, rand := GetSaltByName("15306261804"); e != nil || 0 == len(salt) || 0 == len(rand) {
+		t.Error("err: ", e)
+		t.Error("salt:", salt, ", rand:", rand)
+	} else {
+		t.Log("salt:", salt, ", rand:", rand)
+	}
+}
+
+func Benchmark_GetSaltByName(b *testing.B) {
+	for i := 0; i < b.N; i++ { //use b.N for looping
+		GetSaltByName("13777777777")
+		// Div(4, 5)
+	}
+}
