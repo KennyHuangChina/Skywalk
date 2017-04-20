@@ -92,6 +92,11 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tofetch:%d", tofetch)}
 		return
 	}
+
+	/* Permission checking
+	1) Agency could just see houses are behalfed by him
+	2) Administrator could see all houses
+	*/
 	permission := 0
 	if _, bAgency := isAgency(uid); bAgency {
 		permission = 1
@@ -128,7 +133,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 		return
 	}
 	total = cnt
-	// beego.Debug(FN, "total:", total)
+	beego.Debug(FN, "total:", total)
 
 	if 0 == tofetch { // user just want to know the total number
 		return

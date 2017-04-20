@@ -127,3 +127,38 @@ func Test_getNewHouseList_1(t *testing.T) {
 	}
 	t.Log("IDs:", ids)
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetBehalfList --
+//
+func Test_GetBehalfList_1(t *testing.T) {
+	t.Log("Test GetBehalfList, Invalid Arguments")
+
+	// begin position < 0
+	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, -1, 0, 0); e == nil {
+		t.Error("Failed, err: ", e)
+	}
+	// fetch count < 0
+	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, -1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+	}
+
+	// login user has nothing to do with this house, neither agency of this house nor administrator
+	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 9); e == nil {
+		t.Error("Failed, err: ", e)
+	}
+
+	//
+	e, total /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 4)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+	}
+	t.Log("total:", total)
+
+	//
+	t.Log("Test Case: begin position beyond total")
+	if e, total /*fetched*/, _, _ = GetBehalfList(commdef.BEHALF_TYPE_ALL, total, 1, 4); e == nil {
+		t.Error("Failed, err: ", e)
+	}
+}
