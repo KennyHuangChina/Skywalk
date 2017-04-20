@@ -24,8 +24,9 @@
         <include layout="@layout/seperator_horizontal"/>
         
         <FrameLayout
+            android:id="@+id/info_container"
             android:layout_width="match_parent"
-            android:layout_height="87dp">
+            android:layout_height="wrap_content">
 
         </FrameLayout>
 
