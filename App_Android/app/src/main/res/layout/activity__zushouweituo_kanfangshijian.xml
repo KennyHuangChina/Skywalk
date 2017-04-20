@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rentals_expiration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+
+    tools:context="com.kjs.skywalk.app_android.Activity_Zushouweituo_Kanfangshijian">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBackgroundCommon">
+
+        <TextView
+            android:id="@+id/tv_close"
+            android:onClick="onViewClick"
+            android:layout_width="330dp"
+            android:layout_height="45dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="#00AE63"
+            android:text="保存"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@id/relativeLayout"
+        android:id="@+id/linearLayout">
+        <TextView
+            android:id="@+id/tv_info_title"
+            style="@style/textStyle_page_title"
+            android:text="世贸蝶湖湾175栋2302室"/>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textSize="16sp"
+                    android:text="设定方便的看房时间"/>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textColor="@color/colorTextNormal"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:textSize="16sp"
+                android:text="工作日"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="上午"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="2dp"
+                        android:background="@drawable/rounded_rect_stroke_background_gray"/>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="中午"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:background="@drawable/rounded_rect_stroke_background_gray"/>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="晚上"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/rounded_rect_background_orange"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textSize="16sp"
+                    android:text="周末、节假日"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="上午"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="2dp"
+                        android:background="@drawable/rounded_rect_stroke_background_gray"/>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="中午"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:background="@drawable/rounded_rect_background_orange"/>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="晚上"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="center"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/rounded_rect_background_orange"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textSize="16sp"
+                    android:text="其它时间"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignParentBottom="true">
+
+                    <EditText
+                        android:id="@+id/editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:gravity="top"
+                        android:textSize="15sp"
+                        android:ems="10"
+                        android:background="#efefef"
+                        android:hint="请填写您方便的看房时间"
+                        android:inputType="textMultiLine"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textSize="16sp"
+                    android:text="交钥匙给经纪公司"/>
+
+                <include layout="@layout/seperator_horizontal"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textSize="16sp"
+                    android:text="我们建议您将钥匙交给经纪公司"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorText"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:textSize="16sp"
+                    android:text="1. 您不再需要一次一次陪客人看房，这将大大节省您的宝贵时间和精力"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/colorText"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textSize="16sp"
+                    android:text="2. 您的房屋状态和进度，在平台上都能看到，一目了然"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -75,6 +75,8 @@
         <activity android:name=".Activity_shenhe_zhengjian"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity android:name=".Activity_fangyuan_guanli"></activity>
+        <activity android:name=".Activity_Zushouweituo_Kanfangshijian"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
     </application>
 
 </manifest>

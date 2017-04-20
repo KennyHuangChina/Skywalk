@@ -57,6 +57,11 @@
         android:orderInCategory="100"
         android:title="证件审核"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_setting106"
+        android:orderInCategory="100"
+        android:title="看房时间"
+        app:showAsAction="never"/>
 
 
 </menu>
