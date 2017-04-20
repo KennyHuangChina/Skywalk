@@ -98,3 +98,32 @@ func Test_getDeductedHouseList_1(t *testing.T) {
 	}
 	t.Log("IDs:", ids)
 }
+
+func Test_getNewHouseList_1(t *testing.T) {
+	t.Log("Test getNewHouseList")
+
+	// get total number
+	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_New, 0, 0)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("total:", total)
+
+	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_New, total, 1)
+	if e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	nCount := total
+	if total > 10 {
+		nCount = 10
+	}
+	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_New, 0, nCount)
+	if e != nil || fetched != nCount {
+		t.Error("Failed, err: ", e, ", fetched:", fetched)
+		return
+	}
+	t.Log("IDs:", ids)
+}
