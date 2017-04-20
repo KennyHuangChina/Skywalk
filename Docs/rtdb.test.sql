@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: rtdb
 -- ------------------------------------------------------
--- Server version	5.7.13-0ubuntu0.16.04.2
+-- Server version	5.7.17-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -132,7 +132,7 @@ CREATE TABLE `tbl_house` (
 
 LOCK TABLES `tbl_house` WRITE;
 /*!40000 ALTER TABLE `tbl_house` DISABLE KEYS */;
-INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',2,1,1,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-31 17:48:49',1,1,1),(3,177,35,17,'1505',3,2,2,13148,0,1,4,4,'2017-01-26 12:31:55',NULL,NULL,2,0,0),(4,56,32,16,'1605',3,2,2,13148,0,2,4,6,'2017-01-31 17:41:20',NULL,NULL,0,0,1),(6,56,35,16,'1606',4,2,3,17788,30,2,2,1,'2017-03-04 20:10:03','2017-03-11 20:22:22','2017-03-04 23:30:49',0,0,1);
+INSERT INTO `tbl_house` VALUES (2,175,35,17,'1505',2,1,1,13148,2,1,4,4,'2017-01-26 07:39:04','2017-01-27 21:24:38','2017-01-31 17:48:49',1,1,1),(3,177,35,17,'1505',3,2,2,13148,0,1,4,4,'2017-01-26 12:31:55','2017-04-13 00:00:00',NULL,2,0,0),(4,56,32,16,'1605',3,2,2,13148,0,2,4,6,'2017-01-31 17:41:20',NULL,NULL,0,0,1),(6,56,35,16,'1606',4,2,3,17788,30,2,2,1,'2017-03-04 20:10:03','2017-04-19 00:00:00','2017-03-04 23:30:49',0,0,1);
 /*!40000 ALTER TABLE `tbl_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -463,7 +463,7 @@ CREATE TABLE `tbl_sms_code` (
   `expire` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `phone` (`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -472,6 +472,7 @@ CREATE TABLE `tbl_sms_code` (
 
 LOCK TABLES `tbl_sms_code` WRITE;
 /*!40000 ALTER TABLE `tbl_sms_code` DISABLE KEYS */;
+INSERT INTO `tbl_sms_code` VALUES (1,'15306261804','998341','2017-04-20 17:06:30');
 /*!40000 ALTER TABLE `tbl_sms_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -533,7 +534,7 @@ CREATE TABLE `tbl_user` (
 
 LOCK TABLES `tbl_user` WRITE;
 /*!40000 ALTER TABLE `tbl_user` DISABLE KEYS */;
-INSERT INTO `tbl_user` VALUES (4,'15306261804','','f1c0fb8578e356746e0f98ce07b7a27f','b2c031f342560c15c1ffaef567672ef7','','','15306261804','',10,'','',1,'fd128c7a30e423849825319f1f301178'),(5,'13862601604','','','','','','','',0,'','',1,''),(6,'13888888888','','','','','','13888888888','',0,'','',1,''),(9,'13777777777','','','','','','13777777777','',0,'','',1,'');
+INSERT INTO `tbl_user` VALUES (4,'15306261804','','f1c0fb8578e356746e0f98ce07b7a27f','b2c031f342560c15c1ffaef567672ef7','','','15306261804','',10,'','',1,'fd128c7a30e423849825319f1f301178'),(5,'13862601604','','','','','','','',0,'','',1,''),(6,'13888888888','','kennytest','','','','13888888888','',0,'','',1,''),(9,'13777777777','','','','','','13777777777','',0,'','',1,'');
 /*!40000 ALTER TABLE `tbl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -596,4 +597,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-18 23:18:29
+-- Dump completed on 2017-04-20 17:00:12
