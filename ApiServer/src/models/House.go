@@ -752,6 +752,11 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 		return
 	}
 
+	if begin >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "begin position out of range"}
+		return
+	}
+
 	// fetch records
 	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch_numb)
 	var hs []DeductedHouse
