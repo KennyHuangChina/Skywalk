@@ -2,6 +2,7 @@ package models
 
 import (
 	"ApiServer/commdef"
+	"fmt"
 	// "github.com/astaxie/beego"
 	"testing"
 )
@@ -230,4 +231,26 @@ func Test_GetBehalfList_1(t *testing.T) {
 		t.Error("Failed, err: ", e)
 		return
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetHouseDigestInfo --
+//
+func Test_GetHouseDigestInfo(t *testing.T) {
+	t.Log("Test GetHouseDigestInfo")
+
+	t.Log("<Case> house does not exist")
+	if e, _ := GetHouseDigestInfo(10000000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> house actual exist")
+	e, hd := GetHouseDigestInfo(2)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("house:", fmt.Sprintf("%+v", hd))
 }
