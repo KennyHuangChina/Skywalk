@@ -97,19 +97,20 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	1) Agency could just see houses are behalfed by him
 	2) Administrator could see all houses
 	*/
-	permission := 0
-	if _, bAgency := isAgency(uid); bAgency {
-		permission = 1
-	} else if _, bAdmin := isAdministrator(uid); bAdmin {
-		permission = 2
-	}
-	beego.Debug(FN, "permission:", permission)
-	if 0 == permission {
+	_, bAgency := isAgency(uid)
+	_, bAdmin := isAdministrator(uid)
+	beego.Debug(FN, "bAgency:", bAgency, ", bAdmin:", bAdmin)
+	if !bAdmin && !bAgency {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
 
-	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM tbl_house WHERE agency_id='%d'", uid)
+	sql_cnt := "SELECT COUNT(*) AS count FROM tbl_house WHERE"
+	if bAgency && !bAdmin {
+		sql_cnt = sql_cnt + fmt.Sprintf(" agency_id='%d' ", uid)
+	} else {
+		sql_cnt = sql_cnt + " 1"
+	}
 	switch typ {
 	case commdef.BEHALF_TYPE_ALL:
 		sql_cnt = sql_cnt + " AND for_rent=1"
@@ -146,7 +147,12 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	}
 
 	// fetch real houses
-	sql := fmt.Sprintf("SELECT id FROM tbl_house WHERE agency_id='%d'", uid)
+	sql := "SELECT id FROM tbl_house WHERE "
+	if bAgency && !bAdmin {
+		sql = sql + fmt.Sprintf(" agency_id='%d' ", uid)
+	} else {
+		sql = sql + " 1"
+	}
 	switch typ {
 	case commdef.BEHALF_TYPE_ALL:
 		sql = sql + " AND for_rent=1"

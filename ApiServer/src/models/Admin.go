@@ -666,6 +666,7 @@ func isAgency(uid int64) (err error, agency bool) {
 
 	err, _ = GetUser(uid)
 	if nil != err {
+		beego.Error(FN, "err:", err)
 		return
 	}
 
@@ -701,6 +702,7 @@ func isAdministrator(uid int64) (err error, admin bool) {
 
 	err, _ = GetUser(uid)
 	if nil != err {
+		beego.Error(FN, "err:", err)
 		return
 	}
 
