@@ -112,6 +112,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM tbl_house WHERE agency_id='%d'", uid)
 	switch typ {
 	case commdef.BEHALF_TYPE_ALL:
+		sql_cnt = sql_cnt + " AND for_rent=1"
 	case commdef.BEHALF_TYPE_TO_RENT:
 		sql_cnt = sql_cnt + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
 	case commdef.BEHALF_TYPE_RENTED:
@@ -148,6 +149,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	sql := fmt.Sprintf("SELECT id FROM tbl_house WHERE agency_id='%d'", uid)
 	switch typ {
 	case commdef.BEHALF_TYPE_ALL:
+		sql = sql + " AND for_rent=1"
 	case commdef.BEHALF_TYPE_TO_RENT:
 		sql = sql + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
 	case commdef.BEHALF_TYPE_RENTED:

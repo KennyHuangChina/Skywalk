@@ -135,16 +135,16 @@ func Test_getNewHouseList_1(t *testing.T) {
 func Test_GetBehalfList_1(t *testing.T) {
 	t.Log("Test GetBehalfList, Invalid Arguments")
 
-	// begin position < 0
+	t.Log("<Case> begin position < 0")
 	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, -1, 0, 0); e == nil {
 		t.Error("Failed, err: ", e)
 	}
-	// fetch count < 0
+	t.Log("<Case> fetch count < 0")
 	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, -1, 0); e == nil {
 		t.Error("Failed, err: ", e)
 	}
 
-	// login user has nothing to do with this house, neither agency of this house nor administrator
+	t.Log("<Case> login user has nothing to do with this house, neither agency of this house nor administrator")
 	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 9); e == nil {
 		t.Error("Failed, err: ", e)
 	}
@@ -156,9 +156,51 @@ func Test_GetBehalfList_1(t *testing.T) {
 	}
 	t.Log("total:", total)
 
-	//
-	t.Log("Test Case: begin position beyond total")
+	t.Log("<Case> begin position beyond total")
 	if e, total /*fetched*/, _, _ = GetBehalfList(commdef.BEHALF_TYPE_ALL, total, 1, 4); e == nil {
+		t.Error("Failed, err: ", e)
+	}
+
+	t.Log("<Case> all behalfed houses")
+	e, total, fetched, hs := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, total, 4)
+	t.Log("fetched:", fetched, ", houses:", hs)
+	if e != nil || total != fetched {
+		t.Error("Failed, err: ", e)
+	}
+
+	t.Log("<Case> all behalfed houses to rent")
+	e, total, fetched, _ = GetBehalfList(commdef.BEHALF_TYPE_TO_RENT, 0, 0, 4)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+	}
+	t.Log("total:", total)
+	e, total, fetched, hs = GetBehalfList(commdef.BEHALF_TYPE_TO_RENT, 0, total, 4)
+	t.Log("fetched:", fetched, ", houses:", hs)
+	if e != nil || total != fetched {
+		t.Error("Failed, err: ", e)
+	}
+
+	t.Log("<Case> all behalfed houses rented")
+	e, total, fetched, _ = GetBehalfList(commdef.BEHALF_TYPE_RENTED, 0, 0, 4)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+	}
+	t.Log("total:", total)
+	e, total, fetched, hs = GetBehalfList(commdef.BEHALF_TYPE_RENTED, 0, total, 4)
+	t.Log("fetched:", fetched, ", houses:", hs)
+	if e != nil || total != fetched {
+		t.Error("Failed, err: ", e)
+	}
+
+	t.Log("<Case> all behalfed houses to sale")
+	e, total, fetched, _ = GetBehalfList(commdef.BEHALF_TYPE_TO_SALE, 0, 0, 4)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+	}
+	t.Log("total:", total)
+	e, total, fetched, hs = GetBehalfList(commdef.BEHALF_TYPE_TO_SALE, 0, total, 4)
+	t.Log("fetched:", fetched, ", houses:", hs)
+	if e != nil || total != fetched {
 		t.Error("Failed, err: ", e)
 	}
 }
