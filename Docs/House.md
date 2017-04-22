@@ -2,17 +2,22 @@
 
 ##
 ###1. Get house info
-	[Security]	public
+	[Security]	public/private
 	[Request]
-  		* GET /v1/house/:id
+  		* GET /v1/house/:id?p=1
+	  		* p					bool	// if get private info. 1: get; 0: not get
 	[Response]
 		* SUCCESS:200 
 			* Id    			int		// house id
 			* Property			int		// property id which the house belong to
-			* BuildingNo		int		// the building number the house belong to
+			* BuildingNo		int		// the building number the house belong to. private info. 
 			* FloorTotal		int 	// total floors
-			* FloorThis			int		// exact floor the house resident
-			* HouseNo			string		// exact house number. like house 1305# 
+			* FloorThis			int		// exact floor the house resident. private info, 
+											1)  < FloorTotal, actual floor of house
+											2)	= FloorTotal + 1, means low storied
+											3)	= FloorTotal + 2, means middle storied
+											4)	= FloorTotal + 3, means high storied
+			* HouseNo			string		// exact house number. like house 1305#. private info 
 			* Bedrooms			int		// how many bedrooms whitin house
 			* Livingrooms		int		// how many living rooms within house
 			* Bathrooms			int		// how many bathrooms within house

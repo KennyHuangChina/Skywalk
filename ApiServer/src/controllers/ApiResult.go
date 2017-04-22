@@ -198,6 +198,7 @@ func api_result(err error, controller beego.Controller, data *ResCommon) (errRet
 func getLoginUser(c beego.Controller) (uid int64, err error) {
 	FN := "[getLoginUser] "
 
+	uid = -1
 	defer func() {
 		if nil != err {
 			beego.Error(FN, "uid:", uid, ", err:", err)

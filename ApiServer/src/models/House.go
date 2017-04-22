@@ -242,14 +242,15 @@ func GetHouseDigestInfo(hid int64) (err error, hd commdef.HouseDigest) {
 /**
 *	Get house information by id
 *	Arguments:
-*		id - house id
+*		hid - house id
+*		uid	- login user id
 *	Returns
 *		err - error info
 *		hif - house info
 **/
-func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
+func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
 	FN := "[GetHouseInfo] "
-	beego.Trace(FN, "hid:", hid)
+	beego.Trace(FN, "house:", hid, ", login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -270,21 +271,40 @@ func GetHouseInfo(hid int64) (err error, hif commdef.HouseInfo) {
 		return
 	}
 
-	// beego.Debug(FN, "house:", house)
-	// beego.Debug(FN, "property:", house.Property)
+	// permission checking. Only house owner, agency and administrator could see the private info
+	bPriv := false
+	if uid > 0 {
+		if isHouseAgency(house, uid) || isHouseOwner(house, uid) {
+			bPriv = true
+		} else if _, bAdmin := isAdministrator(uid); bAdmin {
+			bPriv = true
+		}
+	}
+	beego.Debug(FN, "bPriv:", bPriv)
 
 	hif.Id = house.Id
 	hif.Property = house.Property.Id
-	hif.BuildingNo = house.BuildingNo
 	hif.FloorTotal = house.FloorTotal
-	hif.FloorThis = house.FloorThis
-	hif.HouseNo = house.HouseNo
 	hif.Bedrooms = house.Bedrooms
 	hif.Livingrooms = house.Livingrooms
 	hif.Bathrooms = house.Bathrooms
 	hif.Acreage = house.Acreage
 
-	beego.Warn(FN, "TODO: some house informations are privicy, like building no, floor, house no, and so on, need to check the login user")
+	if bPriv { // get privite info
+		hif.BuildingNo = house.BuildingNo
+		hif.FloorThis = house.FloorThis
+		hif.HouseNo = house.HouseNo
+	} else { // hide the privite info
+		hif.BuildingNo = 0
+		hif.HouseNo = ""
+		if house.FloorThis*3 < hif.FloorTotal {
+			hif.FloorThis = hif.FloorTotal + 1 // low storied
+		} else if house.FloorThis*3 >= hif.FloorTotal && house.FloorThis*3 < hif.FloorTotal*2 {
+			hif.FloorThis = hif.FloorTotal + 2 // middle storied
+		} else {
+			hif.FloorThis = hif.FloorTotal + 3 // high storied
+		}
+	}
 
 	return
 }

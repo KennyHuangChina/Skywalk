@@ -487,16 +487,23 @@ func (this *HouseController) GetHouseInfo() {
 	/*
 	 *	Extract agreements
 	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		// return
+	}
 	version := this.GetString("ver")
 	hid, _ := this.GetInt64(":id")
-	sid := this.GetString("sid")
+	pri, _ := this.GetInt("p")
 
-	beego.Debug(FN, "ver:", version, ", hid:", hid, ", sid:", sid)
+	beego.Debug(FN, "ver:", version, ", hid:", hid, ", private:", pri)
+	if 0 == pri {
+		uid = -1
+	}
 
 	/*
 	 *	Processing
 	 */
-	err, hif := models.GetHouseInfo(hid)
+	err, hif := models.GetHouseInfo(hid, uid)
 	if nil == err {
 		result.HouseInfo = hif
 	}
