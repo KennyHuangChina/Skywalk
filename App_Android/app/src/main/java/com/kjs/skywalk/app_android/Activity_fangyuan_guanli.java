@@ -52,4 +52,14 @@ public class Activity_fangyuan_guanli extends AppCompatActivity {
             }
         });
     }
+
+    public void onViewClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_info_title:
+            {
+                finish();
+            }
+            break;
+        }
+    }
 }

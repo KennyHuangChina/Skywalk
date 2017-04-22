@@ -18,6 +18,7 @@
         android:id="@+id/linearLayout">
         <TextView
             android:id="@+id/tv_info_title"
+            android:onClick="onViewClick"
             style="@style/textStyle_page_title"
             android:text="房源信息管理"/>
     
