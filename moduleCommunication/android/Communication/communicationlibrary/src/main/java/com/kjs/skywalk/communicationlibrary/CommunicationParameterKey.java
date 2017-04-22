@@ -32,6 +32,7 @@ class CommunicationParameterKey {
     public static String CPK_4SALE          = "4Sale";
     public static String CPK_4RENT          = "4Rent";
     public static String CPK_AGENT          = "Agent";
+    public static String CPK_PRIVATE_INFO   = "GetPrivtInfo";
 
     public static String CPK_HOUSE_CERT_PASS        = "HouseCertPass";
     public static String CPK_HOUSE_CERT_COMMENT     = "HouseCertComment";

@@ -5,7 +5,7 @@ class ServerURL {
 //    public static final String mServerUri= "http://192.168.31.239:8080";
     public static final String mProtocol = "http";
 //    public static final String mHost = "skywalk-dev";
-    public static final String mHost = "192.168.0.102";
+    public static final String mHost = "192.168.0.123";
     public static final String mPort = "8080";
     public static final String mServerUri = mProtocol + "://" + mHost + ":" + mPort;
 }

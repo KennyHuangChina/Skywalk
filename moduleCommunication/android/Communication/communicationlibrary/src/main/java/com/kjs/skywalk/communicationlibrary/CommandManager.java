@@ -101,7 +101,7 @@ public class CommandManager implements CommunicationInterface.ICommand {
 
     @Override
     public int Logout() {
-        mOperation = new CmdRelogin(mContext);
+        mOperation = new CmdLogout(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }
@@ -130,10 +130,11 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int GetHouseInfo(int houseId) {
+    public int GetHouseInfo(int houseId, boolean bPrivtInfo) {
         mOperation = new CmdGetHouseInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(houseId));
+        pMap.put(CommunicationParameterKey.CPK_PRIVATE_INFO, String.valueOf(bPrivtInfo));
         return execute(pMap);
     }
 

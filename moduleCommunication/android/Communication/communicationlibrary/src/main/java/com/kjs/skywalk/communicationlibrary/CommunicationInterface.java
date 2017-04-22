@@ -38,7 +38,7 @@ public class CommunicationInterface {
 
         // house
         int GetBriefPublicHouseInfo(int houseId);
-        int GetHouseInfo(int houseId);
+        int GetHouseInfo(int houseId, boolean bPrivtInfo);
         int CommitHouseByOwner(HouseInfo houseInfo, int agency);
         int AmendHouse(HouseInfo houseInfo);
         int RecommendHouse(int house_id, int action);
