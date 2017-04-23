@@ -3,6 +3,7 @@ package com.kjs.skywalk.app_android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 
 /**
  * Created by admin on 2017/3/22.
@@ -10,10 +11,17 @@ import android.view.View;
 
 public class Activity_Search_Add extends Activity {
 
+    private ListView mListViewAgents = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__zushouweituo__select_service);
+        setContentView(R.layout.activity__search_house_add);
+
+        mListViewAgents = (ListView)findViewById(R.id.listViewContent);
+        mListViewAgents.setFocusable(false);
+        AdapterHouseSearchResult adapter = new AdapterHouseSearchResult(this);
+        mListViewAgents.setAdapter(adapter);
     }
 
     public void onViewClick(View v) {
