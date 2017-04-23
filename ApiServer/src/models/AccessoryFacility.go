@@ -109,7 +109,7 @@ func GetHouseFacilities(hid int64) (err error, lst []commdef.HouseFacility) {
 	}()
 
 	/*	argument checking */
-	if err, _ = checkHouse(hid); nil != err {
+	if err, _ = getHouse(hid); nil != err {
 		return
 	}
 
@@ -156,7 +156,7 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err erro
 
 	/*	argument checking */
 	// house
-	err, h := checkHouse(hid)
+	err, h := getHouse(hid)
 	if nil != err {
 		return
 	}

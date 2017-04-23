@@ -258,16 +258,8 @@ func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
 		}
 	}()
 
-	o := orm.NewOrm()
-
-	house := TblHouse{Id: hid}
-	if err1 := o.Read(&house); nil != err1 {
-		// beego.Error(FN, err1)
-		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
-		} else {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
-		}
+	err, house := getHouse(hid)
+	if nil != err {
 		return
 	}
 
@@ -320,7 +312,7 @@ func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
  */
 func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 	FN := "[ModifyHouse] "
-	beego.Trace(FN, "hif:", hif)
+	beego.Trace(FN, "input house info:", fmt.Sprintf("%+v", hif), ", login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -328,24 +320,18 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 		}
 	}()
 
-	// Persission checking
-	bPermission := false
-	_, house := checkHouse(hif.Id)
-	beego.Debug(FN, "owner:", house.Owner.Id, ", agency:", house.Agency.Id)
-	if house.Owner.Id == uid || house.Agency.Id == uid {
-		bPermission = true
-	} else {
-		if _, bAdmin := isAdministrator(uid); bAdmin {
-			bPermission = true
-		}
-	}
-	if !bPermission {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+	/*	argument checking */
+	if err = checkHouseInfo(hif, false); nil != err {
 		return
 	}
 
-	/*	argument checking */
-	if err = checkHouseInfo(hif, false); nil != err {
+	_, house := getHouse(hif.Id)
+
+	// Persission checking, only landlord, it's agency and administrator coudl modify this house
+	if isHouseOwner(house, uid) || isHouseAgency(house, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
 
@@ -354,6 +340,7 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	h := TblHouse{}
 	errT := qs.One(&h)
+	// beego.Debug(FN, fmt.Sprintf("%+v", h))
 	if nil == errT {
 		beego.Debug(FN, "h.Id:", h.Id, ", hif.Id:", hif.Id)
 		if h.Id != hif.Id {
@@ -409,7 +396,7 @@ func SetHouseAgency(hid, aid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	if err, _ = checkHouse(hid); nil != err {
+	if err, _ = getHouse(hid); nil != err {
 		return
 	}
 
@@ -452,7 +439,7 @@ func SetHouseCoverImage(hid, cid, uid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	err, h := checkHouse(hid)
+	err, h := getHouse(hid)
 	if nil != err {
 		return
 	}
@@ -516,7 +503,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 		return
 	}
 
-	err, h := checkHouse(hid)
+	err, h := getHouse(hid)
 	if nil != err {
 		return
 	}
@@ -904,7 +891,7 @@ func RecommendHouse(hid, uid int64, act int) (err error) {
 	}()
 
 	/* Arguments checking*/
-	err, h := checkHouse(hid)
+	err, h := getHouse(hid)
 	if nil != err {
 		return err
 	}
@@ -1167,6 +1154,7 @@ func getHouseAgency(hid int64) (err error, aid int64, agency string) {
 *	Get house cover image
 *	Arguments:
 *		hif		- house information
+*		bAdd	- is adding operation
 *	Returns
 *		err 	- error info
 **/
@@ -1230,7 +1218,7 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	// do further checking
 	// house id
 	if !bAdd {
-		if err, _ = checkHouse(hif.Id); nil != err {
+		if err, _ = getHouse(hif.Id); nil != err {
 			return
 		}
 	}
@@ -1244,7 +1232,7 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	return
 }
 
-func checkHouse(hid int64) (err error, h TblHouse) {
+func getHouse(hid int64) (err error, h TblHouse) {
 	if hid <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
 		return

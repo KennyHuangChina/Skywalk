@@ -328,3 +328,187 @@ func Test_GetHouseInfo(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- ModifyHouse --
+//
+func Test_ModifyHouse(t *testing.T) {
+	t.Log("Test ModifyHouse")
+
+	t.Log("<Case> invalid arguments: property == 0")
+	hif := commdef.HouseInfo{Id: 2, Property: 0}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: property < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: building_no = 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 0}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: building_no < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorTotal = 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 0}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorTotal < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorThis = 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 0}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorThis < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorThis > FloorTotal")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 36}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Bedrooms < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Livingrooms < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 0, Livingrooms: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Bathrooms < 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 0,
+		Livingrooms: 0, Bathrooms: -1}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Bathrooms, livingrooms, bedrooms are all 0")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 0,
+		Livingrooms: 0, Bathrooms: 0}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Acreage <= 100")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 100}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> house does not exist")
+	hif = commdef.HouseInfo{Id: 100000000, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> property does not exist")
+	hif = commdef.HouseInfo{Id: 2, Property: 200000000, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> house duplicated")
+	hif = commdef.HouseInfo{Id: 2, Property: 1, BuildingNo: 177, FloorTotal: 35, FloorThis: 15, HouseNo: "1505",
+		Bedrooms: 2, Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+	if e := ModifyHouse(&hif, 9); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> user not login")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+	if e := ModifyHouse(&hif, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> login have no right to modify")
+	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+	if e := ModifyHouse(&hif, 2); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	lgusrs := []int64{9, 6, 4}
+	usrnames := []string{"Landlord", "Agency", "Administrator"}
+	steps := []int{1, 1, -2}
+	for k, v := range lgusrs {
+		t.Log("<Case> login user is", usrnames[k])
+		e, hd := GetHouseInfo(2, v) // get current info
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if 0 == hd.BuildingNo || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
+		bn := hd.BuildingNo
+		hd.BuildingNo = hd.BuildingNo + steps[k]
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if e := ModifyHouse(&hd, v); e != nil { // update house info
+			t.Error("Failed, err: ", e)
+			return
+		}
+		e, hd = GetHouseInfo(2, v) // get again
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		// t.Log("house:", fmt.Sprintf("%+v", hd))
+		t.Log("building no:(before)", bn, ", (after)", hd.BuildingNo)
+		if hd.BuildingNo != bn+steps[k] {
+			t.Error("error building no")
+			return
+		}
+	}
+}

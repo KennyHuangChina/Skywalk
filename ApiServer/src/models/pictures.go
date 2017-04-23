@@ -43,7 +43,7 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 
 	/* Arguments checking */
 	if 0 != hid {
-		errT, h := checkHouse(hid)
+		errT, h := getHouse(hid)
 		if nil != errT {
 			err = errT
 			return

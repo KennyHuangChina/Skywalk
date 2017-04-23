@@ -28,7 +28,7 @@ func GetHouseDeliverableList(uid, hid int64) (err error, lst []commdef.HouseDeli
 	}()
 
 	/* argument checking */
-	if err, _ = checkHouse(hid); nil != err {
+	if err, _ = getHouse(hid); nil != err {
 		return
 	}
 
@@ -159,7 +159,7 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 	}()
 
 	/* argument checking */
-	err, _ = checkHouse(hid)
+	err, _ = getHouse(hid)
 	if nil != err {
 		return
 	}
