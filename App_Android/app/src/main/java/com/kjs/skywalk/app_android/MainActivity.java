@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     case R.id.action_setting109:
                     {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
+                        startActivity(new Intent(MainActivity.this, Activity_Search_House.class));
                         break;
                     }
                 }
