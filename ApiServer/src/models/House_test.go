@@ -565,3 +565,57 @@ func Test_SetHouseAgency(t *testing.T) {
 	}
 	SetHouseAgency(2, 6, 4) // restore before agency
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- SetHouseCoverImage --
+//
+func Test_SetHouseCoverImage(t *testing.T) {
+	t.Log("Test SetHouseCoverImage")
+
+	t.Log("<Case> invalid arguments: house does not exist")
+	if e := SetHouseCoverImage(100000000, -1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: picture <= 0")
+	if e := SetHouseCoverImage(2, 0, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: picture does not exist")
+	if e := SetHouseCoverImage(2, 100000000, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// not landload, not it's agency, not administrator
+	t.Log("<Case> permission: regular user can not set cover image")
+	if e := SetHouseCoverImage(2, 30, 2); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: landload have right to set cover image")
+	if e := SetHouseCoverImage(2, 30, 9); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	SetHouseCoverImage(2, 31, 9) // restore
+
+	t.Log("<Case> permission: agency have right to set cover image")
+	if e := SetHouseCoverImage(2, 30, 6); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	SetHouseCoverImage(2, 31, 6) // restore
+
+	t.Log("<Case> permission: administrator have right to set cover image")
+	if e := SetHouseCoverImage(2, 30, 4); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	SetHouseCoverImage(2, 31, 4) // restore
+}
