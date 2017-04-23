@@ -619,3 +619,70 @@ func Test_SetHouseCoverImage(t *testing.T) {
 	}
 	SetHouseCoverImage(2, 31, 4) // restore
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- CertHouse --
+//
+func Test_CertHouse(t *testing.T) {
+	t.Log("Test CertHouse")
+
+	t.Log("<Case> invalid arguments: house does not exist")
+	if e := CertHouse(100000000, -1, false, "test"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: no comment")
+	if e := CertHouse(2, -1, false, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: already published")
+	if e := CertHouse(2, -1, true, "test pass"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: user not login")
+	if e := CertHouse(2, -1, false, "test pass"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: login user is landlord")
+	if e := CertHouse(2, 9, false, "test pass"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: login user is nither agency nor administrator")
+	if e := CertHouse(2, 2, false, "test pass"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> login user is agency, revoke certification")
+	if e := CertHouse(2, 6, false, "test pass"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("<Case> login user is agency, pass certification")
+	if e := CertHouse(2, 6, true, "certification passed"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> login user is administrator, revoke certification")
+	if e := CertHouse(2, 4, false, "test pass"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> login user is administrator, pass certification")
+	if e := CertHouse(2, 4, true, "certification passed"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}

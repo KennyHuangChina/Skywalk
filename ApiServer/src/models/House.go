@@ -510,24 +510,33 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 		return
 	}
 
+	// beego.Debug(FN, fmt.Sprintf("%+v", h))
+	nullTime := time.Time{}
+	// beego.Debug(FN, "publish time:", interface{}(h.PublishTime), ", is null:", nullTime == h.PublishTime)
+	if pass && nullTime != h.PublishTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "already published"}
+		return
+	}
+
 	/* Permission checking */
 	// Only the house agency and administrator could certificate house
-	bPermission := false
 	if isHouseAgency(h, uid) {
-		bPermission = true
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
 	} else {
-		bAdmin := false
-		if _, bAdmin = isAdministrator(uid); bAdmin {
-			bPermission = true
-		}
-	}
-	if !bPermission {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
 
 	// Processing
 	o := orm.NewOrm()
+	o.Begin()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
 
 	// add new record in TblHouseCert
 	hc := TblHouseCert{House: hid, Who: uid, Comment: comment, Pass: pass}
