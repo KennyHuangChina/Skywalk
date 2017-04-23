@@ -339,6 +339,21 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
                         break;
                     }
+                    case R.id.action_setting107:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Search_NoHistory.class));
+                        break;
+                    }
+                    case R.id.action_setting108:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
+                        break;
+                    }
+                    case R.id.action_setting109:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
+                        break;
+                    }
                 }
                 return false;
             }

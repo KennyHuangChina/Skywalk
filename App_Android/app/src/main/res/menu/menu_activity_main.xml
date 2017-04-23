@@ -68,6 +68,21 @@
         android:orderInCategory="100"
         android:title="看房时间"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_setting107"
+        android:orderInCategory="100"
+        android:title="选择小区"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_setting108"
+        android:orderInCategory="100"
+        android:title="选择小区"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_setting109"
+        android:orderInCategory="100"
+        android:title="选择小区"
+        app:showAsAction="never"/>
 
 
 </menu>
