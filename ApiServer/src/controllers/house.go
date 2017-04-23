@@ -190,7 +190,7 @@ func (this *HouseController) SetHouseAgency() {
 	/*
 	 *	Extract agreements
 	 */
-	/*uid*/ _, err = getLoginUser(this.Controller)
+	uid, err := getLoginUser(this.Controller)
 	if nil != err {
 		return
 	}
@@ -201,7 +201,7 @@ func (this *HouseController) SetHouseAgency() {
 	/*
 	 *	Processing
 	 */
-	err = models.SetHouseAgency(hid, aid)
+	err = models.SetHouseAgency(hid, aid, uid)
 	if nil == err {
 		// result.Id = id
 	}

@@ -512,3 +512,56 @@ func Test_ModifyHouse(t *testing.T) {
 		}
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- SetHouseAgency --
+//
+func Test_SetHouseAgency(t *testing.T) {
+	t.Log("Test SetHouseAgency")
+
+	t.Log("<Case> invalid arguments: house does not exist")
+	if e := SetHouseAgency(100000000, -1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: agency < 0")
+	if e := SetHouseAgency(2, -1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: agency does not exist")
+	if e := SetHouseAgency(2, 100000000, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// no owner, no administrator
+	t.Log("<Case> permission: regular people have no right to set agency")
+	if e := SetHouseAgency(2, 5, 2); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: agency have no right to set agency")
+	if e := SetHouseAgency(2, 5, 6); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: landlord have right to set agency")
+	if e := SetHouseAgency(2, 5, 9); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	SetHouseAgency(2, 6, 9) // restore before agency
+
+	t.Log("<Case> permission: administrator have right to set agency")
+	if e := SetHouseAgency(2, 5, 4); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	SetHouseAgency(2, 6, 4) // restore before agency
+}

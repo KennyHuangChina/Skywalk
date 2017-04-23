@@ -380,14 +380,15 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 /**
 *	Set house agency
 *	Arguments:
-*		hid - house id
-*		aid	- cover image id
+*		hid 	- house id
+*		aid		- agency id
+*		luid	- login user id
 *	Returns
-*		err - error info
+*		err 	- error info
  */
-func SetHouseAgency(hid, aid int64) (err error) {
+func SetHouseAgency(hid, aid, luid int64) (err error) {
 	FN := "[SetHouseAgency] "
-	beego.Trace(FN, "hid:", hid, ", aid:", aid)
+	beego.Trace(FN, "house:", hid, ", agency:", aid, ", login user:", luid)
 
 	defer func() {
 		if nil != err {
@@ -396,7 +397,8 @@ func SetHouseAgency(hid, aid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	if err, _ = getHouse(hid); nil != err {
+	err, h := getHouse(hid)
+	if nil != err {
 		return
 	}
 
@@ -404,7 +406,13 @@ func SetHouseAgency(hid, aid int64) (err error) {
 		return
 	}
 
-	beego.Warn(FN, "permission checking")
+	// Permission checking. Only the landload and administrator could assign agency for house
+	if isHouseOwner(h, luid) {
+	} else if _, bAdmin := isAdministrator(luid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("luid:%d", luid)}
+		return
+	}
 
 	// Update
 	o := orm.NewOrm()
