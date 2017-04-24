@@ -601,7 +601,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	}
 
 	// Agency
-	// Kenny: when house owner commit new house, they could not assign the agency,
+	// Kenny: when house owner commit new house, they may not assign the agency,
 	// 			so the agency 0 is possible.
 	// if errT := GetUser(aid); nil != errT {
 	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
@@ -637,6 +637,104 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	}
 
 	id = newId
+	return
+}
+
+/**
+*	Recommend/Unrecommend house
+*	Arguments:
+*		hid		- house id
+*		uid		- login user id
+*		act		- action. 1: recommend; 2: unrecommend
+*	Returns
+*		err 	- error info
+ */
+func RecommendHouse(hid, uid int64, act int) (err error) {
+	FN := "[RecommendHouse] "
+	beego.Trace(FN, "house:", hid, ", act:", act, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Arguments checking*/
+	if 1 != act && 2 != act {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("act:%d", act)}
+		return
+	}
+	err, h := getHouse(hid)
+	if nil != err {
+		return err
+	}
+	if err, _ = GetUser(uid); nil != err {
+		return err
+	}
+
+	/* Permission checking */
+	// Only the house agency and administrator could recommend house and revoke the recommendation
+	if isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+	// if the house has been published, no one ould recomment or unrecomment the house not been published
+	nullTime := time.Time{}
+	// beego.Debug(FN, "nullTime:", nullTime, ", h.PublishTime:", h.PublishTime)
+	if nil == interface{}(h.PublishTime) || nullTime == h.PublishTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "house not published"}
+		return
+	}
+
+	switch act {
+	case 1: // recomment
+		beego.Debug(FN, "Recommend house:", hid)
+		// checking
+		o := orm.NewOrm()
+		r := TblHouseRecommend{House: hid}
+		errT := o.Read(&r, "House")
+		if nil == errT { // found record
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("hid:%d already been recommended", hid)}
+			return
+		} else if errT != orm.ErrNoRows && errT != orm.ErrMissPK { // other errors
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+
+		// Recommend
+		r.Who = uid
+		r.When = time.Now()
+		if /*id*/ _, errT := o.Insert(&r); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	case 2: // unrecommend
+		// checking
+		beego.Debug(FN, "Unrecommend house:", hid)
+		o := orm.NewOrm()
+		r := TblHouseRecommend{House: hid}
+		errT := o.Read(&r, "House")
+		if nil != errT { // recommend house does not exist
+			if errT == orm.ErrNoRows || errT == orm.ErrMissPK { // not found
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+			} else {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			}
+			return
+		}
+		// unrecommend
+		if /*numb*/ _, errT := o.Delete(&TblHouseRecommend{Id: r.Id}); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("act:%d", act)}
+		return
+	}
+
+	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	return
 }
 
@@ -879,126 +977,6 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 	ids = hs
 	fetched = int64(len(ids))
 
-	return
-}
-
-/**
-*	Recommend/Unrecommend house
-*	Arguments:
-*		hid		- house id
-*		uid		- login user id
-*		act		- action. 1: recommend; 2: unrecommend
-*	Returns
-*		err 	- error info
- */
-func RecommendHouse(hid, uid int64, act int) (err error) {
-	FN := "[RecommendHouse] "
-	beego.Trace(FN, "hid:", hid, ", act:", act, ", uid:", uid)
-
-	defer func() {
-		if nil != err {
-			beego.Error(FN, err)
-		}
-	}()
-
-	/* Arguments checking*/
-	err, h := getHouse(hid)
-	if nil != err {
-		return err
-	}
-	if err, _ = GetUser(uid); nil != err {
-		return err
-	}
-
-	// only the agency and administrator could recommend/unrecommend
-	// if !isHouseAgency(h, uid) || (_, bAdmin := isAdministrator(uid); !bAdmin) {
-	// 	return
-	// }
-
-	switch act {
-	case 1: // recomment
-		beego.Debug(FN, "Recommend house:", hid)
-		// checking
-		o := orm.NewOrm()
-		r := TblHouseRecommend{House: hid}
-		errT := o.Read(&r, "House")
-		if nil == errT { // found record
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("hid:%d", hid)}
-			return
-		} else if errT != orm.ErrNoRows && errT != orm.ErrMissPK { // other errors
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-			return
-		}
-
-		// right checking
-		nullTime := time.Time{}
-		// beego.Debug(FN, "nullTime:", nullTime, ", h.PublishTime:", h.PublishTime)
-		if nil == interface{}(h.PublishTime) || nullTime == h.PublishTime { // can not publish the house that not published
-			beego.Debug(FN, "not published")
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "house not published"}
-			return
-		}
-
-		beego.Debug(FN, "h.Agency.Id:", h.Agency.Id)
-		permission := 0
-		if h.Agency.Id == uid { // agency could recommend houses represent by himself
-			permission = 1
-		} else {
-			if _, bAdmin := isAdministrator(uid); bAdmin { // administrator could recomment any house
-				permission = 2
-			}
-		}
-		beego.Debug(FN, "permission:", permission)
-		if 0 == permission {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
-			return
-		}
-
-		// Recommend
-		r.Who = uid
-		r.When = time.Now()
-		if /*id*/ _, errT := o.Insert(&r); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-			return
-		}
-	case 2: // unrecommend
-		// checking
-		beego.Debug(FN, "Unrecommend house:", hid)
-		o := orm.NewOrm()
-		r := TblHouseRecommend{House: hid}
-		errT := o.Read(&r, "House")
-		if nil != errT { // recommend house does not exist
-			if errT == orm.ErrNoRows || errT == orm.ErrMissPK { // not found
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
-			} else {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-			}
-			return
-		}
-		// right checking
-		permission := 0
-		if r.Who == uid {
-			permission = 1
-		} else {
-			if _, bAdmin := isAdministrator(uid); bAdmin {
-				permission = 2
-			}
-		}
-		if 0 == permission {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
-			return
-		}
-		// unrecommend
-		if /*numb*/ _, errT := o.Delete(&TblHouseRecommend{Id: r.Id}); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-			return
-		}
-	default:
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("act:%d", act)}
-		return
-	}
-
-	// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	return
 }
 

@@ -9,7 +9,7 @@ import (
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	-- GetUserInfo --
+//	-- GetHouseListByType --
 //
 func Test_GetHouseListByType_1(t *testing.T) {
 	t.Log("Test GetHouseListByType, Invalid Arguments")
@@ -682,6 +682,84 @@ func Test_CertHouse(t *testing.T) {
 
 	t.Log("<Case> login user is administrator, pass certification")
 	if e := CertHouse(2, 4, true, "certification passed"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- RecommendHouse --
+//
+func Test_RecommendHouse(t *testing.T) {
+	t.Log("Test RecommendHouse")
+
+	t.Log("<Case> invalid arguments: house does not exist")
+	if e := RecommendHouse(100000000, -1, 1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: no user login")
+	if e := RecommendHouse(2, -1, 1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: login user does not exist")
+	if e := RecommendHouse(2, 100000000, 1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: login user is landlord")
+	if e := RecommendHouse(2, 9, 3); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: login user is nither agency nor administrator")
+	if e := RecommendHouse(2, 2, 3); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: action")
+	if e := RecommendHouse(2, 6, 3); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if e := RecommendHouse(2, 4, 3); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: house not published")
+	if e := RecommendHouse(4, 6, 2); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: house has been recommended")
+	if e := RecommendHouse(2, 6, 1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> unrecommend house")
+	if e := RecommendHouse(2, 6, 2); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> recommend house")
+	if e := RecommendHouse(2, 6, 1); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: house not been recommended")
+	if e := RecommendHouse(6, 5, 2); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
