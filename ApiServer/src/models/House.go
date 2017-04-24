@@ -572,7 +572,6 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 *	Arguments:
 *		hif	- house info input
 *		oid - house owner id
-*		pid	- property id
 *		aid	- agency id
 *	Returns
 *		err - error info
@@ -580,7 +579,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
  */
 func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id int64) {
 	FN := "[CommitHouseByOwner] "
-	beego.Trace(FN, "hif:", hif)
+	beego.Trace(FN, "house:", fmt.Sprintf("%+v", hif), ", owner:", oid, ", agency:", aid)
 
 	defer func() {
 		if nil != err {
@@ -603,10 +602,12 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	// Agency
 	// Kenny: when house owner commit new house, they may not assign the agency,
 	// 			so the agency 0 is possible.
-	// if errT := GetUser(aid); nil != errT {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
-	// 	return
-	// }
+	if 0 != aid {
+		if errT, _ := GetUser(aid); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
+			return
+		}
+	}
 
 	/* processing */
 	o := orm.NewOrm()
@@ -635,6 +636,8 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
+
+	beego.Warn(FN, "post a message to house agency or administrator if no agency assigned")
 
 	id = newId
 	return
@@ -1284,6 +1287,45 @@ func getHouseListByOwner(oid int64) (err error, hl []TblHouse) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("tbl_house").Filter("Owner__Id", oid)
 	/*num*/ _, err = qs.All(&hl)
+
+	return
+}
+
+/**
+*	Delete the house specified (just for testing now)
+*	Arguments:
+*		hid 	- house id
+*		luid	- login user id
+*	Returns
+ */
+func delHouse(hid, luid int64) (err error) {
+	FN := "[delHouse] "
+	beego.Trace(FN, "house:", hid, ", login user:", luid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	err, _ = getHouse(hid)
+	if nil != err {
+		return
+	}
+
+	if _, bAdmin := isAdministrator(luid); !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("luid:%d", luid)}
+		return
+	}
+
+	// TODO
+	beego.Warn(FN, "checking house relation or just delete all of them along with house")
+
+	o := orm.NewOrm()
+	if /*num*/ _, err1 := o.Delete(&TblHouse{Id: hid}); err1 != nil {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+		return
+	}
 
 	return
 }

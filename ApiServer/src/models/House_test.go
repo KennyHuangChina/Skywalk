@@ -764,3 +764,164 @@ func Test_RecommendHouse(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- CommitHouseByOwner --
+//
+func Test_CommitHouseByOwner(t *testing.T) {
+	t.Log("Test CommitHouseByOwner")
+
+	t.Log("<Case> invalid arguments: property == 0")
+	hif := commdef.HouseInfo{Property: 0}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: property < 0")
+	hif = commdef.HouseInfo{Property: -1}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: building_no = 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 0}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: building_no < 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: -1}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorTotal = 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 0}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorTotal < 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: -1}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorThis = 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 0}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorThis < 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: -2}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: FloorThis > FloorTotal")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 36}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Bedrooms < 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: -1}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Livingrooms < 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 0, Livingrooms: -1}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Bathrooms < 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 0,
+		Livingrooms: 0, Bathrooms: -1}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Bathrooms, livingrooms, bedrooms are all 0")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 0,
+		Livingrooms: 0, Bathrooms: 0}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: Acreage <= 100")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 100}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: property does not exist")
+	hif = commdef.HouseInfo{Property: 200000000, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 12300}
+	if e, _ := CommitHouseByOwner(&hif, 9, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: house owner")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 12300}
+	if e, _ := CommitHouseByOwner(&hif, -1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if e, _ := CommitHouseByOwner(&hif, 900000000, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: house agency")
+	if e, _ := CommitHouseByOwner(&hif, 9, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if e, _ := CommitHouseByOwner(&hif, 9, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: house duplicated")
+	hif = commdef.HouseInfo{Property: 2, BuildingNo: 56, FloorTotal: 45, FloorThis: 16, HouseNo: "1605", Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 12300}
+	if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> commit new house")
+	hif = commdef.HouseInfo{Property: 7, BuildingNo: 156, FloorTotal: 45, FloorThis: 26, HouseNo: "2605", Bedrooms: 2,
+		Livingrooms: 1, Bathrooms: 1, Acreage: 12400}
+	e, id := CommitHouseByOwner(&hif, 9, 6)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new house:", id)
+	if e = delHouse(id, 4); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}
