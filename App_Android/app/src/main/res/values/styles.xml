@@ -342,4 +342,38 @@
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">#ff3d19</item>
     </style>
+
+    <!--类别：靠近小学-->
+    <style name="TextView_Kaojinxiaoxue" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_a572d4</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#A572D4</item>
+    </style>
+    <!--类别：电梯房-->
+    <style name="TextView_diantifang" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_31b2bd</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#31B2BD</item>
+    </style>
+    <!--类别：贷款状态-->
+    <style name="TextView_daikuan" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_ff8642</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#ff8642</item>
+    </style>
 </resources>
