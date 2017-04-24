@@ -2,14 +2,21 @@ package com.kjs.skywalk.app_android.Apartment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Activity_HouseholdDeliverables;
@@ -140,6 +147,29 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
         }
         mOrderDlg.show();
         mOrderDlg.setContentView(R.layout.dialog_apartment_order);
+
+        RadioGroup radioGroup = (RadioGroup) mOrderDlg.getWindow().findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected pos: " + i);
+            }
+        });
+
+//        Window window = mOrderDlg.getWindow();
+//        window.getDecorView().setPadding(0, 0, 0, 0);
+//        WindowManager.LayoutParams lp = window.getAttributes();
+//        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        window.setAttributes(lp);
+
+//        mOrderDlg.getWindow().getDecorView().setPadding(0, 0, 0, 0);
+//        WindowManager windowManager = getWindowManager();
+//        DisplayMetrics outMetrics = new DisplayMetrics();;
+//        windowManager.getDefaultDisplay().getMetrics(outMetrics);
+//        WindowManager.LayoutParams lp = mOrderDlg.getWindow().getAttributes();
+//        lp.width = outMetrics.widthPixels;
+//        mOrderDlg.getWindow().setAttributes(lp);
 
         TextView tvBack = (TextView) mOrderDlg.findViewById(R.id.tv_back);
         tvBack.setOnClickListener(new View.OnClickListener() {

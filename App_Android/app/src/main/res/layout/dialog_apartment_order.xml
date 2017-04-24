@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@drawable/rounded_rect_background_gray">
 
     <TextView
         android:text="预约看房"
@@ -30,6 +30,65 @@
             android:gravity="center_vertical"
             android:textColor="#000000"
             android:textSize="14sp"/>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dip" >
+                <RadioButton
+                    android:layout_width="68dp"
+                    android:layout_height="27dp"
+                    android:gravity="center"
+                    android:textColor="@drawable/radio_button_text_selector"
+                    android:singleLine="true"
+                    android:text="今天"
+                    android:button="@null"
+                    android:background="@drawable/radio_button_bk_selector" />
+                <ImageView
+                    android:tag="null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:layout_width="68dp"
+                    android:layout_height="27dp"
+                    android:gravity="center"
+                    android:textColor="@drawable/radio_button_text_selector"
+                    android:singleLine="true"
+                    android:text="明天"
+                    android:button="@null"
+                    android:background="@drawable/radio_button_bk_selector" />
+                <ImageView
+                    android:tag="null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:layout_width="68dp"
+                    android:layout_height="27dp"
+                    android:gravity="center"
+                    android:textColor="@drawable/radio_button_text_selector"
+                    android:singleLine="true"
+                    android:text="后天"
+                    android:button="@null"
+                    android:background="@drawable/radio_button_bk_selector" />
+                <ImageView
+                    android:tag="null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:layout_width="68dp"
+                    android:layout_height="27dp"
+                    android:gravity="center"
+                    android:textColor="@drawable/radio_button_text_selector"
+                    android:singleLine="true"
+                    android:text="其他"
+                    android:button="@null"
+                    android:background="@drawable/radio_button_bk_selector" />
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,6 +157,8 @@
                     android:layout_height="45dp"
                     android:background="@drawable/rounded_rect_background_gray"
                     android:gravity="center"
+                    android:drawableRight="@drawable/down2_n"
+                    android:paddingRight="15dp"
                     android:text="2017-03-03"/>
                 <ImageView
                     android:tag="null"
