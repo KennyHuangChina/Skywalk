@@ -19,8 +19,16 @@
         android:layout_height="23dp"
         android:layout_alignLeft="@+id/iv_apartment_thumb"
         android:layout_alignTop="@+id/iv_apartment_thumb"
-        android:layout_marginTop="3dp"
-        android:visibility="invisible"/>
+        android:layout_marginTop="3dp" />
+    <TextView
+        android:text="上门实勘"
+        android:layout_width="25dp"
+        android:layout_height="23dp"
+        android:textSize="9sp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:layout_alignLeft="@+id/imageViewFlag"
+        android:layout_alignTop="@+id/imageViewFlag"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -34,7 +42,7 @@
 
         <TextView
             style="@style/TextView_apartment_name"
-            android:text="证大大拇指广场"
+            android:text="泰元家园"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -42,7 +50,7 @@
 
         <TextView
             style="@style/TextView_apartment_description"
-            android:text="姑苏白杨湾街道 / 3室2厅 / 88 m²"
+            android:text="3室2厅 88 m² 3/5F"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -71,16 +79,61 @@
             android:layout_weight="1"
             android:gravity="center_vertical" >
             <TextView
-                android:text="150万"
-                android:id="@+id/tv_apartment_cost"
-                style="@style/TextView_cost"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="￥"
+                android:id="@+id/tv_apartment_mark"
+                android:textSize="10sp"
+                android:gravity="bottom"
+                android:textColor="#ff3d19" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2200"
+                android:layout_toRightOf="@id/tv_apartment_mark"
+                android:layout_alignBaseline="@+id/tv_apartment_mark"
+                android:gravity="bottom"
+                android:textColor="#ff3d19"
+                android:textSize="13sp"
+                android:id="@+id/tv_apartment_rent_price" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(元/月)"
+                android:layout_toRightOf="@id/tv_apartment_rent_price"
+                android:layout_alignBaseline="@+id/tv_apartment_rent_price"
+                android:id="@+id/tv_apartment_unit"
+                android:gravity="bottom"
+                android:textSize="10sp"
+                android:textColor="@color/colorTextNormal" />
 
             <TextView
-                android:text="25437元/平"
-                style="@style/TextView_unitcost"
-                android:layout_toRightOf="@+id/tv_apartment_cost"
-                android:layout_alignBaseline="@+id/tv_apartment_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="物业"
+                android:textSize="10sp"
+                android:id="@+id/tv_apartment_property_fee"
+                android:layout_toRightOf="@+id/tv_apartment_unit"
+                android:layout_alignBaseline="@+id/tv_apartment_unit"
+                android:textColor="@color/colorTextNormal"
                 android:layout_marginLeft="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200"
+                android:id="@+id/tv_apartment_property_price"
+                android:textSize="10sp"
+                android:textColor="#ff3d19"
+                android:layout_toRightOf="@+id/tv_apartment_property_fee"
+                android:layout_alignBaseline="@+id/tv_apartment_property_fee" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(月)"
+                android:textSize="10sp"
+                android:textColor="@color/colorTextNormal"
+                android:layout_toRightOf="@+id/tv_apartment_property_price"
+                android:layout_alignBaseline="@+id/tv_apartment_property_price" />
         </RelativeLayout>
 
 

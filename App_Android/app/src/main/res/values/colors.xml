@@ -9,8 +9,13 @@
 
     <color name="colorTextNormal">#242224</color>
     <color name="colorTextTint">#939499</color>
+    <color name="colorTextTint1">#CCCCCC</color>
     <color name="colorText">#9D9C9D</color>
     <color name="colorEditTextTint">#DADADA</color>
+    <color name="colorTextTitle">#000000</color>
+
+    <color name="colorButtonText">#939499</color>
+    <color name="colorButtonTextHighlight">#00af60</color>
 
     <color name="colorTextBackgroundSelected">#ECFFF7</color>
 
