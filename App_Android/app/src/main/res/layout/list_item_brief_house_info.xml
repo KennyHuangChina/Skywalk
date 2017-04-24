@@ -63,13 +63,18 @@
             android:gravity="center_vertical">
             <!--158x52px-->
             <TextView
-                android:text="随时看房"
+                android:text="靠近小学"
                 android:id="@+id/tv_content_category1"
-                style="@style/TextView_cg1" />
+                style="@style/TextView_Kaojinxiaoxue" />
             <TextView
-                android:text="满2年"
+                android:text="电梯房"
                 android:id="@+id/tv_content_category2"
-                style="@style/TextView_cg2"
+                style="@style/TextView_diantifang"
+                android:layout_marginLeft="5dp"/>
+            <TextView
+                android:text="无贷款"
+                android:id="@+id/tv_content_category3"
+                style="@style/TextView_daikuan"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
 
