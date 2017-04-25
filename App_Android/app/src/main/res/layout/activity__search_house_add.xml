@@ -61,17 +61,16 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
                         android:layout_weight="1"
                         android:paddingLeft="15dp"
                         android:text="没有我想要的小区"
                         android:textColor="@color/colorTextNormal"
-                        android:textSize="15sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_pass"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="27dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:background="@drawable/rounded_rect_stroke_background_green"
@@ -81,7 +80,7 @@
                         android:paddingRight="15dp"
                         android:text="点击添加"
                         android:textColor="#00ae63"
-                        android:textSize="15sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
                 <include layout="@layout/seperator_horizontal" />

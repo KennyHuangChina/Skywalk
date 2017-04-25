@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="71dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextNormal"
             android:layout_marginBottom="3dp"
             android:text="世贸蝶湖湾"/>
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textColor="@color/colorText"
             android:text="昆山市玉山镇新南中路288号"/>
 
