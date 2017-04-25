@@ -85,3 +85,31 @@ func Test_GetPropertyList(t *testing.T) {
 		t.Log("", k, ":", fmt.Sprintf("%+v", v))
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetPropertyInfo --
+//
+func Test_GetPropertyInfo(t *testing.T) {
+	t.Log("Test GetPropertyInfo")
+
+	t.Log("<Case> invalid arguments: pid <= 0")
+	if e, _ := GetPropertyInfo(-1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: property doe's not exist")
+	if e, _ := GetPropertyInfo(100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> get property by id")
+	e, p := GetPropertyInfo(2)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("property:", fmt.Sprintf("%+v", p))
+}

@@ -249,7 +249,6 @@ func GetPropertyInfo(pid int64) (err error, pif commdef.PropInfo) {
 		}
 		return
 	}
-
 	// beego.Debug(FN, "prop:", prop)
 
 	pif.Id = prop.Id
