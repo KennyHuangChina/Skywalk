@@ -24,3 +24,21 @@ func Test_GetHouseDeliverableList(t *testing.T) {
 		t.Log("", k, ":", fmt.Sprintf("%+v", v))
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetDeliverables --
+//
+func Test_GetDeliverables(t *testing.T) {
+	t.Log("Test GetDeliverables")
+
+	t.Log("<Case>")
+	e, ds := GetDeliverables(-1)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	for k, v := range ds {
+		t.Log("", k, ":", fmt.Sprintf("%+v", v))
+	}
+}
