@@ -13,22 +13,21 @@
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorBackgroundCommon">
 
         <TextView
             android:id="@+id/tv_close"
             android:onClick="onViewClick"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginBottom="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="15dp"
             android:textColor="#ffffff"
             android:textSize="15sp"
             android:gravity="center"
-            android:background="#00AE63"
+            android:background="@drawable/rounded_rect_background_green"
             android:text="关闭"/>
     </RelativeLayout>
 
@@ -65,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/colorTextNormal"
                     android:text="您已经成功委托"/>
 
@@ -74,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/colorTextNormal"
                     android:text="世贸蝶湖湾175栋2108室"/>
 
@@ -88,8 +87,8 @@
                         android:layout_weight="1"
                         android:layout_height="match_parent">
                         <TextView
-                            android:layout_width="80dp"
-                            android:layout_height="35dp"
+                            android:layout_width="57dp"
+                            android:layout_height="27dp"
                             android:layout_marginTop="15dp"
                             android:layout_marginBottom="15dp"
                             android:layout_marginLeft="15dp"
@@ -100,6 +99,7 @@
                             android:layout_alignParentRight="true"
                             android:background="@drawable/rounded_rect_stroke_background_gray"
                             android:text="出租"
+                            android:textSize="13sp"
                             android:id="@+id/textViewChuzu" />
                     </RelativeLayout>
 
@@ -108,8 +108,8 @@
                         android:layout_weight="1"
                         android:layout_height="match_parent">
                         <TextView
-                            android:layout_width="80dp"
-                            android:layout_height="35dp"
+                            android:layout_width="57dp"
+                            android:layout_height="27dp"
                             android:layout_marginTop="15dp"
                             android:layout_marginBottom="15dp"
                             android:layout_marginLeft="15dp"
@@ -131,18 +131,18 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     android:textColor="#9d9c9d"
                     android:text="我们会有专人与您联系，协助您完成房源发布，请保持手机畅通！"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:background="#dfdfdf">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginLeft="15dp"
                         android:layout_centerInParent="true"
                         android:text="接下来您可以继续"
@@ -151,10 +151,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="83dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
                     android:orientation="horizontal">
 
@@ -174,7 +172,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
+                            android:textSize="13sp"
                             android:textColor="@color/colorTextNormal"
                             android:text="上传房源图片"/>
 
@@ -190,10 +188,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="83dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
                     android:orientation="horizontal">
 
@@ -213,7 +209,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
+                            android:textSize="13sp"
                             android:textColor="@color/colorTextNormal"
                             android:text="完善房源信息"/>
 
