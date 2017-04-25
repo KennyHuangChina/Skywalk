@@ -113,3 +113,100 @@ func Test_GetPropertyInfo(t *testing.T) {
 	}
 	t.Log("property:", fmt.Sprintf("%+v", p))
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- ModifyProperty --
+//
+func Test_ModifyProperty(t *testing.T) {
+	t.Log("Test ModifyProperty")
+
+	t.Log("<Case> invalid arguments: name is empty")
+	if e := ModifyProperty(-1, 5, "", "", ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: address is empty")
+	if e := ModifyProperty(-1, 5, "1", "", ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: desc is empty")
+	if e := ModifyProperty(-1, 5, "1", "1", ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: user not login")
+	if e := ModifyProperty(-1, 5, "1", "1", "1"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> permission: regular user have no right to modify")
+	if e := ModifyProperty(2, 5, "1", "1", "1"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: property already exist")
+	if e := ModifyProperty(6, 5, "花", "1", "1"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> update by agency")
+	// backup
+	e, p := GetPropertyInfo(5)
+	if nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("old property: ", fmt.Sprintf("%+v", p))
+	// update
+	name := "test property"
+	addr := "test address"
+	desc := "test desc"
+	if e := ModifyProperty(6, 5, name, addr, desc); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	_, p1 := GetPropertyInfo(5)
+	t.Log("property: ", fmt.Sprintf("%+v", p1))
+	if p1.PropName != name || p1.PropAddress != addr || p1.PropDesc != desc {
+		t.Error("Failed")
+		return
+	}
+	// restore
+	if e := ModifyProperty(6, 5, p.PropName, p.PropAddress, p.PropDesc); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> update by administrator")
+	// backup
+	e, p = GetPropertyInfo(5)
+	if nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("old property: ", fmt.Sprintf("%+v", p))
+	// update
+	if e := ModifyProperty(4, 5, name, addr, desc); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	_, p1 = GetPropertyInfo(5)
+	t.Log("property: ", fmt.Sprintf("%+v", p1))
+	if p1.PropName != name || p1.PropAddress != addr || p1.PropDesc != desc {
+		t.Error("Failed")
+		return
+	}
+	// restore
+	if e := ModifyProperty(4, 5, p.PropName, p.PropAddress, p.PropDesc); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}

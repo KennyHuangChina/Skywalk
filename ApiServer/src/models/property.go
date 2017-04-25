@@ -76,7 +76,7 @@ func AddProperty(prop, addr, desc string) (err error, id int64) {
  */
 func ModifyProperty(uid, pid int64, name, addr, desc string) (err error) {
 	FN := "[ModifyProperty] "
-	beego.Trace(FN, "pid:", pid, ", name:", name, ", addr:", addr, ", desc:", desc)
+	beego.Trace(FN, "login user:", uid, ", property:", pid, ", name:", name, ", addr:", addr, ", desc:", desc)
 
 	defer func() {
 		if nil != err {
@@ -85,32 +85,27 @@ func ModifyProperty(uid, pid int64, name, addr, desc string) (err error) {
 	}()
 
 	/* Argeuments checking */
-	err, _ = GetPropertyInfo(pid)
-	if nil != err {
+	if err, _ = GetPropertyInfo(pid); nil != err {
 		return
 	}
 	if 0 == len(name) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property name:%d", pid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property name:%s", name)}
 		return
 	}
 	if 0 == len(addr) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("address:%d", addr)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("address:%s", addr)}
 		return
 	}
 	if 0 == len(desc) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("description:%d", desc)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("desc:%s", desc)}
 		return
 	}
 
 	/* permission checking */
 	// only the agency and administrator could modify property info
-	bPermission := false
 	if _, bAgency := isAgency(uid); bAgency {
-		bPermission = true
 	} else if _, bAdmin := isAdministrator(uid); bAdmin {
-		bPermission = true
-	}
-	if !bPermission {
+	} else {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
