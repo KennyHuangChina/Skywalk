@@ -210,3 +210,33 @@ func Test_ModifyProperty(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AddProperty --
+//
+func Test_AddProperty(t *testing.T) {
+	t.Log("Test AddProperty")
+
+	t.Log("<Case> invalid arguments: name is empty")
+	if e, _ := AddProperty("", "", ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> invalid arguments: property already exist")
+	if e, _ := AddProperty("花园", "", ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> add property")
+	e, nid := AddProperty("AddProperty", "", "")
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new property:", nid)
+
+	delProperty(nid, 4)
+}

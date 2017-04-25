@@ -290,3 +290,34 @@ func getHouseProperty(hid int64) (err error, prop string) {
 	prop = Name
 	return
 }
+
+func delProperty(pid, uid int64) (err error) {
+	FN := "[delProperty] "
+	beego.Trace(FN, "property:", pid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if err, _ = GetPropertyInfo(pid); nil != err {
+		return
+	}
+
+	if _, bAdmin := isAdministrator(uid); !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	// TODO
+	beego.Warn(FN, "checking property relation or just delete all of them along with property")
+
+	o := orm.NewOrm()
+	if /*num*/ _, err1 := o.Delete(&TblProperty{Id: pid}); err1 != nil {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+		return
+	}
+
+	return
+}
