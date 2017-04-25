@@ -163,7 +163,7 @@ func GetPropertyList(pn string, begin, fetch int64) (err error, total, fetched i
 		return
 	}
 	if fetch < 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("fetch:%d", fetch)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("fetch number:%d", fetch)}
 		return
 	}
 
@@ -185,6 +185,11 @@ func GetPropertyList(pn string, begin, fetch int64) (err error, total, fetched i
 	total = numb
 
 	if 0 == fetch { // user just want to know the total number
+		return
+	}
+
+	if begin >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin(%d) >= total(%d)", begin, total)}
 		return
 	}
 
