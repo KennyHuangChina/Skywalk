@@ -185,7 +185,7 @@
                     </LinearLayout>
 
                 </LinearLayout>
-
+                <include layout="@layout/seperator_horizontal"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="83dp"
@@ -221,6 +221,7 @@
                             android:text="如果您今日有空, 就可以去完善房源信息咯"/>
                     </LinearLayout>
                 </LinearLayout>
+                <include layout="@layout/seperator_horizontal"/>
             </LinearLayout>
         </ScrollView>
 
