@@ -18,6 +18,17 @@ import com.kjs.skywalk.app_android.R;
 class AdapterSearchResultList extends BaseAdapter {
     private Context mContext = null;
 
+    private static final int DISPLAY_GRID = 0;
+    private static final int DISPLAY_LIST= 1;
+    private int mDisplayType = DISPLAY_LIST;
+
+    public void setDisplayType(int displayType) {
+        if(displayType != mDisplayType) {
+        }
+
+        mDisplayType = displayType;
+    }
+
     public AdapterSearchResultList(Context context) {
         super();
         mContext = context;
@@ -47,7 +58,11 @@ class AdapterSearchResultList extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info, null);
+            if(mDisplayType == DISPLAY_LIST) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info, null);
+            } else {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info_grid, null);
+            }
             ImageView flagView = (ImageView)convertView.findViewById(R.id.imageViewFlag);
             flagView.setVisibility(View.VISIBLE);
             ImageView thumbView = (ImageView)convertView.findViewById(R.id.iv_apartment_thumb);
