@@ -44,9 +44,9 @@ public class MainActivityFragment extends Fragment
 
     private void doTestModifyApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
-        CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
-                                    mEditText1.getText().toString(),
-                                    mEditText2.getText().toString());
+//        CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
+//                                    mEditText1.getText().toString(),
+//                                    mEditText2.getText().toString());
 //        CmdMgr.RecommendHouse(Integer.parseInt(mEditText.getText().toString()),
 //                                Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.SetHouseCoverImg(Integer.parseInt(mEditText.getText().toString()),
@@ -56,6 +56,7 @@ public class MainActivityFragment extends Fragment
 //        mCertificate = !mCertificate;
 
 //        doTestModifyApi_ModifyHouse(CmdMgr);
+        CmdMgr.ModifyDeliverable(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);

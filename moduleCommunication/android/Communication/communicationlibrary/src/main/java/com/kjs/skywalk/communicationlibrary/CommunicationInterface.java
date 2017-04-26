@@ -56,6 +56,7 @@ public class CommunicationInterface {
         // house deliverables for rent
         int AddDeliverable(String sName);
         int GetDeliverableList();
+        int ModifyDeliverable(int dev_id, String sName);
         int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);
         int GetHouseDeliverables(int house_id);
 
@@ -98,8 +99,9 @@ public class CommunicationInterface {
         // Deliverables
         public static int CMD_ADD_DELIVERABLE        = 0x4001;
         public static int CMD_GET_DELIVERABLE_LIST   = 0x4002;
-        public static int CMD_ADD_HOUSE_DELIVERABLE  = 0x4003;
-        public static int CMD_GET_HOUSE_DELIVERABLES = 0x4004;
+        public static int CMD_EDIT_DELIVERABLE       = 0x4003;
+        public static int CMD_ADD_HOUSE_DELIVERABLE  = 0x4004;
+        public static int CMD_GET_HOUSE_DELIVERABLES = 0x4005;
 
         // Facilities
         public static int CMD_ADD_FACILITY_TYPE      = 0x5001;

@@ -255,6 +255,15 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int ModifyDeliverable(int dev_id, String sName) {
+        mOperation = new CmdModifyDeliverable(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(dev_id));
+        pMap.put(CommunicationParameterKey.CPK_NAME, sName);
+        return execute(pMap);
+    }
+
+    @Override
     public int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc) {
         mOperation = new CmdAddHouseDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
