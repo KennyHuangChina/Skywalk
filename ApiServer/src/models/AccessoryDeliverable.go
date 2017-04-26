@@ -137,6 +137,60 @@ func AddDeliverable(name string, uid int64) (err error, id int64) {
 }
 
 /**
+*	Modify Deliverable
+*	Arguments:
+*		uid 	- login user id
+*		did		- deliverable id
+*		name	- deliverable name
+*	Returns
+*		err - error info
+*		id 	- new deliverable id
+**/
+func EditDeliverable(name string, did, uid int64) (err error) {
+	FN := "[EditDeliverable] "
+	beego.Trace(FN, "deliverable:", did, ", name:", name, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if 0 == len(name) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+	if err, _ := getDeliverable(did); nil != err {
+		return err
+	}
+
+	// permission checking
+	if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	// check if the deliver name already exist
+	bExist := o.QueryTable("tbl_deliverables").Filter("Name__contains", name).Exclude("Id", did).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	// Update
+	/*numb*/ _, errT := o.Update(&TblDeliverables{Id: did, Name: name}, "Name")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
+/**
 *	Add New House Deliverable
 *	Arguments:
 *		uid 	- login user id
@@ -217,3 +271,34 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 *	Internal Functions
 *
 **********************************************************************************************************/
+func getDeliverable(did int64) (err error, d TblDeliverables) {
+	FN := "[getDeliverable] "
+	beego.Trace(FN, "did:", did)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if did <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("deliverable:%d", did)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	dT := TblDeliverables{Id: did}
+	errT := o.Read(&dT)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("did:%d", did)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	d = dT
+	return
+}

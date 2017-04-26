@@ -13,7 +13,7 @@
 	  		* ErrDesc		string		// error description
 
 
-###2. Get deliverable list (By logined user)
+### 2. Get deliverable list (By logined user)
 	[Security]	private
 	[Request]
   		* GET /v1/accessory/deliverables
@@ -27,6 +27,19 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
+### 3. Modify Deliverable (By administrator)
+	[Security]	private
+	[Request]
+  		* PUT /v1/accessory/deliverable/:id
+	[Response]
+	  		* name			string		// new deliverable name
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
+### 4. Delete Deliverable (By administrator)
 
 ### 3. Add deliverable for house (By logined user)
 	[Security]	private
