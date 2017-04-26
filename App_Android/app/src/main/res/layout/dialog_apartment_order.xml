@@ -35,10 +35,12 @@
                 android:id="@+id/radioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dip" >
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal" >
                 <RadioButton
-                    android:layout_width="68dp"
+                    android:id="@+id/rb_today"
+                    android:layout_width="60dp"
                     android:layout_height="27dp"
                     android:gravity="center"
                     android:textColor="@drawable/radio_button_text_selector"
@@ -52,7 +54,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
                 <RadioButton
-                    android:layout_width="68dp"
+                    android:id="@+id/rb_tomorrow"
+                    android:layout_width="60dp"
                     android:layout_height="27dp"
                     android:gravity="center"
                     android:textColor="@drawable/radio_button_text_selector"
@@ -66,7 +69,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
                 <RadioButton
-                    android:layout_width="68dp"
+                    android:id="@+id/rb_aftertomorrow"
+                    android:layout_width="60dp"
                     android:layout_height="27dp"
                     android:gravity="center"
                     android:textColor="@drawable/radio_button_text_selector"
@@ -80,7 +84,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
                 <RadioButton
-                    android:layout_width="68dp"
+                    android:id="@+id/rb_otherdays"
+                    android:checked="true"
+                    android:layout_width="60dp"
                     android:layout_height="27dp"
                     android:gravity="center"
                     android:textColor="@drawable/radio_button_text_selector"
@@ -92,71 +98,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="68dp"
-                    android:layout_height="27dp"
-                    android:onClick="onViewClick"
-                    android:gravity="center"
-                    android:textColor="@color/colorTextTint"
-                    android:background="@drawable/rounded_rect_background_gray"
-                    android:text="今天"/>
-                <ImageView
-                    android:tag="null"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="68dp"
-                    android:layout_height="27dp"
-                    android:onClick="onViewClick"
-                    android:gravity="center"
-                    android:textColor="@color/colorTextTint"
-                    android:background="@drawable/rounded_rect_background_gray"
-                    android:text="明天"/>
-                <ImageView
-                    android:tag="null"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="68dp"
-                    android:layout_height="27dp"
-                    android:onClick="onViewClick"
-                    android:gravity="center"
-                    android:textColor="@color/colorTextTint"
-                    android:background="@drawable/rounded_rect_background_gray"
-                    android:text="后天"/>
-                <ImageView
-                    android:tag="null"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="68dp"
-                    android:layout_height="27dp"
-                    android:onClick="onViewClick"
-                    android:gravity="center"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/rounded_rect_background_green1"
-                    android:text="其他"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:layout_height="60dp"
+                android:gravity="center"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="157dp"
+                    android:id="@+id/tv_date_selector"
+                    android:enabled="false"
+                    android:layout_width="139dp"
                     android:layout_height="45dp"
                     android:background="@drawable/rounded_rect_background_gray"
                     android:gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="#000000"
                     android:drawableRight="@drawable/down2_n"
                     android:paddingRight="15dp"
                     android:text="2017-03-03"/>
@@ -165,12 +118,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="157dp"
+                <Spinner
+                    android:id="@+id/sp_timeselector"
+                    android:layout_width="139dp"
                     android:layout_height="45dp"
                     android:background="@drawable/rounded_rect_background_gray"
                     android:gravity="center"
-                    android:text="9:00 - 9:30"/>
+                    android:entries="@array/appliance_category" >
+                </Spinner>
+
+                <!--<TextView-->
+                    <!--android:layout_width="139dp"-->
+                    <!--android:layout_height="45dp"-->
+                    <!--android:background="@drawable/rounded_rect_background_gray"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="9:00 - 9:30"/>-->
             </LinearLayout>
 
     </LinearLayout>
