@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -58,6 +59,12 @@ public class Activity_fangyuan_guanli extends AppCompatActivity {
             case R.id.tv_info_title:
             {
                 finish();
+            }
+            break;
+            case R.id.ll_fangyuanzhaopian:
+            {
+                // 房源照片
+                startActivity(new Intent(this, Activity_fangyuan_zhaopian.class));
             }
             break;
         }
