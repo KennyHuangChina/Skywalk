@@ -204,7 +204,7 @@ func EditDeliverable(name string, did, uid int64) (err error) {
 **/
 func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, id int64) {
 	FN := "[AddHouseDeliverable] "
-	beego.Trace(FN, "uid:", uid, ", hid", hid, ", did:", did, ", qty:", qty, ", desc:", desc)
+	beego.Trace(FN, "login user:", uid, ", house", hid, ", deliverable:", did, ", qty:", qty, ", desc:", desc)
 
 	defer func() {
 		if nil != err {
@@ -212,41 +212,43 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 		}
 	}()
 
-	/* argument checking */
-	err, _ = getHouse(hid)
+	/* Argument Checking */
+	err, h := getHouse(hid)
 	if nil != err {
 		return
 	}
-	if did <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("did:%d", did)}
+	if err, _ = getDeliverable(did); nil != err {
 		return
 	}
-	// check if the deliverable is real
-	o := orm.NewOrm()
-	bExist := o.QueryTable("tbl_deliverables").Filter("Id", did).Exist()
-	if !bExist {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("did:%d", did)}
-		return
-	}
-
 	if qty < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("qty:%d", qty)}
 		return
+	}
+
+	/* Permission Checking */
+	// only the landlorad, house agency, and administrator are capable to add deliverable for house
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
 	} else {
-		// check if this house deliverable exist
-		bExist = o.QueryTable("tbl_house_deliverable").Filter("House", hid).Filter("Deliverable", did).Exist()
-		beego.Debug(FN, "bExist:", bExist)
-		if 0 == qty && !bExist {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
-			return
-		} else if qty > 0 && bExist { //
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
-			return
-		}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	// check if this house deliverable exist
+	bExist := o.QueryTable("tbl_house_deliverable").Filter("House", hid).Filter("Deliverable", did).Exist()
+	beego.Debug(FN, "bExist:", bExist)
+	if 0 == qty && !bExist { // nothing to delete
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
+		return
+	} else if qty > 0 && bExist { // already exist
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("house:%d, deliverable:%d", hid, did)}
+		return
 	}
 
 	// processing
-	if qty > 0 {
+	if qty > 0 { // add
 		n := TblHouseDeliverable{House: hid, Deliverable: did, Qty: qty, Desc: desc}
 		nid, errT := o.Insert(&n)
 		if nil != errT {
@@ -254,7 +256,7 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 			return
 		}
 		id = nid
-	} else {
+	} else { // delete
 		numb, errT := o.QueryTable("tbl_house_deliverable").Filter("House", hid).Filter("Deliverable", did).Delete()
 		if nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}

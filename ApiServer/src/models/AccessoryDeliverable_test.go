@@ -192,4 +192,119 @@ func Test_AddDeliverable(t *testing.T) {
 	}
 }
 
-// AddHouseDeliverable
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AddHouseDeliverable --
+//
+func Test_AddHouseDeliverable(t *testing.T) {
+	t.Log("Test AddHouseDeliverable")
+
+	t.Log("<Case> Invalid argument: house < 0")
+	if e, _ := AddHouseDeliverable(-1, -1, 0, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: house = 0")
+	if e, _ := AddHouseDeliverable(-1, 0, 0, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: house does not exist")
+	if e, _ := AddHouseDeliverable(-1, 100000000, 0, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	hid := int64(2)
+
+	t.Log("<Case> Invalid argument: deliverable < 0")
+	if e, _ := AddHouseDeliverable(-1, hid, -1, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: deliverable = 0")
+	if e, _ := AddHouseDeliverable(-1, hid, 0, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: deliverable does not exist")
+	if e, _ := AddHouseDeliverable(-1, hid, 100000000, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: qty < 0")
+	if e, _ := AddHouseDeliverable(-1, hid, 5, -10, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: user not login")
+	if e, _ := AddHouseDeliverable(-1, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: user do not exist")
+	if e, _ := AddHouseDeliverable(100000000, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: regular user")
+	if e, _ := AddHouseDeliverable(2, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: agency, but not for this house")
+	if e, _ := AddHouseDeliverable(11, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: agency of this house, no record to delete")
+	if e, _ := AddHouseDeliverable(6, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: landlord of this house, no record to delete")
+	if e, _ := AddHouseDeliverable(9, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: administrator, no record to delete")
+	if e, _ := AddHouseDeliverable(5, hid, 5, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid Argument: administrator, house deliverable already exist")
+	if e, _ := AddHouseDeliverable(5, 4, 3, 10, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Add deliverable for house, success")
+	e, nid := AddHouseDeliverable(5, 4, 6, 10, "Test AddHouseDeliverable")
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new id:", nid)
+	t.Log("<Case> Add same deliverable for house, rejected")
+	if e, _ := AddHouseDeliverable(5, 4, 6, 10, "Test AddHouseDeliverable"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("<Case> remove the new house deliverable just add")
+	if e, _ := AddHouseDeliverable(5, 4, 6, 0, "AddHouseDeliverable"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}
