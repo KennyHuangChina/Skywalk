@@ -95,7 +95,7 @@ func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
 **/
 func AddDeliverable(name string, uid int64) (err error, id int64) {
 	FN := "[AddDeliverable] "
-	beego.Trace(FN, "name:", name, ", uid:", uid)
+	beego.Trace(FN, "name:", name, ", login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -300,5 +300,42 @@ func getDeliverable(did int64) (err error, d TblDeliverables) {
 	}
 
 	d = dT
+	return
+}
+
+func delDeliverable(did, lu int64) (err error) {
+	FN := "[delDeliverable] "
+	beego.Trace(FN, "deliverable:", did, ", login user:", lu)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if err, _ = getDeliverable(did); nil != err {
+		return
+	}
+
+	/* Permission Checking */
+	// Only the administrator could delete the deliverable
+	err, bAdmin := isAdministrator(lu)
+	if nil != err {
+		return
+	}
+	if !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("lu:%d", lu)}
+		return
+	}
+
+	/* Delete deliverable specified */
+	beego.Warn(FN, "checking deliverable relation or just delete all of them along with deliverable")
+
+	o := orm.NewOrm()
+	if /*num*/ _, err1 := o.Delete(&TblDeliverables{Id: did}); err1 != nil {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+		return
+	}
+
 	return
 }

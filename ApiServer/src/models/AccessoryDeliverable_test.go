@@ -133,6 +133,63 @@ func Test_EditDeliverable(t *testing.T) {
 	}
 }
 
-// AddDeliverable
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AddDeliverable --
+//
+func Test_AddDeliverable(t *testing.T) {
+	t.Log("Test AddDeliverable")
+
+	t.Log("<Case> Invalid argument: name not set")
+	if e, _ := AddDeliverable("", -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: user not login")
+	if e, _ := AddDeliverable("11", -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user does not exist")
+	if e, _ := AddDeliverable("11", 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a regualr user")
+	if e, _ := AddDeliverable("11", 2); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a agency")
+	if e, _ := AddDeliverable("11", 6); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: deliverable already exist")
+	if e, _ := AddDeliverable("钥匙", 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Add Deliverable")
+	// Add
+	name_add := "水电存折"
+	e, id := AddDeliverable(name_add, 5)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("id:", id)
+	// remove
+	if e := delDeliverable(id, 5); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}
 
 // AddHouseDeliverable
