@@ -16,14 +16,17 @@
             android:text="不限"
             android:tag="0"
             style="@style/text_view_search_condition_house_type_item"
-                android:id="@+id/textViewHouseType0" />
+            android:id="@+id/textViewHouseType0"
+            android:drawableRight="@drawable/select4_check" />
+
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
             android:text="一房"
             android:tag="1"
             style="@style/text_view_search_condition_house_type_item"
-            android:id="@+id/textViewHouseType1" />
+            android:id="@+id/textViewHouseType1"
+            android:drawableRight="@drawable/select4_check" />
 
         <include layout="@layout/seperator_horizontal" />
 
@@ -31,7 +34,8 @@
             android:text="两房"
             android:tag="2"
             style="@style/text_view_search_condition_house_type_item"
-            android:id="@+id/textViewHouseType2" />
+            android:id="@+id/textViewHouseType2"
+            android:drawableRight="@drawable/select4_check" />
 
         <include layout="@layout/seperator_horizontal" />
 
@@ -39,7 +43,8 @@
             android:text="三房"
             android:tag="3"
             style="@style/text_view_search_condition_house_type_item"
-            android:id="@+id/textViewHouseType3" />
+            android:id="@+id/textViewHouseType3"
+            android:drawableRight="@drawable/select4_check" />
 
         <include layout="@layout/seperator_horizontal" />
 
@@ -47,7 +52,8 @@
             android:text="四房"
             android:tag="4"
             style="@style/text_view_search_condition_house_type_item"
-            android:id="@+id/textViewHouseType4" />
+            android:id="@+id/textViewHouseType4"
+            android:drawableRight="@drawable/select4_check" />
 
         <include layout="@layout/seperator_horizontal" />
 
@@ -55,7 +61,8 @@
             android:text="五房及以上"
             android:tag="5"
             style="@style/text_view_search_condition_house_type_item"
-            android:id="@+id/textViewHouseType5" />
+            android:id="@+id/textViewHouseType5"
+            android:drawableRight="@drawable/select4_check" />
 
         <include layout="@layout/seperator_horizontal" />
 
@@ -66,7 +73,7 @@
                 android:text="确定"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:background="#41a766"
+                android:background="@drawable/rounded_rect_background_green"
                 android:textColor="#ffffff"
                 android:layout_centerInParent="true"
                 android:id="@+id/buttonOK"

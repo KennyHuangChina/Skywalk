@@ -1,12 +1,16 @@
 package com.kjs.skywalk.app_android.Apartment;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.kjsLogUtil;
@@ -40,20 +44,110 @@ class PopupWindowSearchConditionHouseType extends PopupWindow {
         init();
     }
 
+    private void select(int index) {
+        TextView v0 = (TextView) mView.findViewById(R.id.textViewHouseType0);
+        TextView v1 = (TextView)mView.findViewById(R.id.textViewHouseType1);
+        TextView v2 = (TextView)mView.findViewById(R.id.textViewHouseType2);
+        TextView v3 = (TextView)mView.findViewById(R.id.textViewHouseType3);
+        TextView v4 = (TextView)mView.findViewById(R.id.textViewHouseType4);
+        TextView v5 = (TextView)mView.findViewById(R.id.textViewHouseType5);
+
+        TextView v;
+        switch (index) {
+            case 0: {
+                v = v0;
+                break;
+            }
+            case 1: {
+                v = v1;
+                break;
+            }
+            case 2: {
+                v = v2;
+                break;
+            }
+            case 3: {
+                v = v3;
+                break;
+            }
+            case 4: {
+                v = v4;
+                break;
+            }
+            case 5: {
+                v = v5;
+                break;
+            }
+            default:
+                return;
+        }
+
+        Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.select4_check);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        v.setCompoundDrawables(null, null, drawable, null);
+        v.setTextColor(ContextCompat.getColor(mContext, R.color.colorFontSelected));
+        v.setSelected(true);
+    }
+
+    private void unselect(int index) {
+        TextView v0 = (TextView) mView.findViewById(R.id.textViewHouseType0);
+        TextView v1 = (TextView)mView.findViewById(R.id.textViewHouseType1);
+        TextView v2 = (TextView)mView.findViewById(R.id.textViewHouseType2);
+        TextView v3 = (TextView)mView.findViewById(R.id.textViewHouseType3);
+        TextView v4 = (TextView)mView.findViewById(R.id.textViewHouseType4);
+        TextView v5 = (TextView)mView.findViewById(R.id.textViewHouseType5);
+
+        TextView v;
+        switch (index) {
+            case 0: {
+                v = v0;
+                break;
+            }
+            case 1: {
+                v = v1;
+                break;
+            }
+            case 2: {
+                v = v2;
+                break;
+            }
+            case 3: {
+                v = v3;
+                break;
+            }
+            case 4: {
+                v = v4;
+                break;
+            }
+            case 5: {
+                v = v5;
+                break;
+            }
+            default:
+                return;
+        }
+
+        v.setCompoundDrawables(null, null, null, null);
+        v.setTextColor(Color.rgb(0, 0, 0));
+        v.setSelected(false);
+    }
+
     private void init() {
         //initialize selected condition
-        selectViewByIndex(0);
+        cleanSelection();
+        select(0);
     }
 
     private void save() {
         //save current condition
     }
     private void cleanSelection() {
-        LinearLayout container = (LinearLayout)mView.findViewById(R.id.houseTypeContainer);
-        for(int i = 0; i < container.getChildCount(); i ++) {
-            View v = container.getChildAt(i);
-            v.setSelected(false);
-        }
+        unselect(0);
+        unselect(1);
+        unselect(2);
+        unselect(3);
+        unselect(4);
+        unselect(5);
     }
 
     private int getSelectedItemCount() {
@@ -88,40 +182,35 @@ class PopupWindowSearchConditionHouseType extends PopupWindow {
     }
 
     public void onItemClicked(View view) {
-        view.setSelected(!view.isSelected());
+        Object obj = view.getTag();
+        if(obj == null) {
+            return;
+        }
+
+        int tag = Integer.valueOf((String)obj);
+        if(tag == 0) {
+            if(!view.isSelected()) {
+                cleanSelection();
+                select(0);
+                return;
+            }
+        }
+
+        if(view.isSelected()) {
+            unselect(tag);
+        } else {
+            select(tag);
+        }
 
         if(getSelectedItemCount() == 0) {
-            View v = (View)mView.findViewById(R.id.textViewHouseType0);
-            v.setSelected(true);
-
+            select(0);
             return;
         }
 
         View v = (View)mView.findViewById(R.id.textViewHouseType0);
         if(view.getId() != R.id.textViewHouseType0) {
             if(v.isSelected()) {
-                v.setSelected(false);
-            }
-        } else {
-            if(v.isSelected()) {
-                cleanSelection();
-                v.setSelected(true);
-            }
-        }
-    }
-
-    private void selectViewByIndex(int index) {
-        LinearLayout container = (LinearLayout)mView.findViewById(R.id.houseTypeContainer);
-        for(int i = 0; i < container.getChildCount(); i ++) {
-            View v = container.getChildAt(i);
-            Object obj = v.getTag();
-            if(obj == null) {
-                continue;
-            }
-
-            int tag = Integer.valueOf((String)obj);
-            if(tag == index) {
-                v.setSelected(true);
+                unselect(0);
             }
         }
     }
