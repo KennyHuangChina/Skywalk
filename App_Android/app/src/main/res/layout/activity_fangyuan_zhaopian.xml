@@ -14,4 +14,6 @@
 
     <include layout="@layout/seperator_horizontal"/>
 
+    <include layout="@layout/fragment_fangyuanzhaopian_group" />
+
 </LinearLayout>
