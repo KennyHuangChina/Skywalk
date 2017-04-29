@@ -72,14 +72,17 @@
         <activity android:name=".Activity_Zushouweituo_Xuanzedaili" />
         <activity android:name=".Activity_Zushouweituo_SelectService" />
         <activity android:name=".Activity_Zushouweituo_shenhe" />
-        <activity android:name=".Activity_shenhe_zhengjian"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity android:name=".Activity_fangyuan_guanli"></activity>
-        <activity android:name=".Activity_Zushouweituo_Kanfangshijian"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".Activity_shenhe_zhengjian"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity android:name=".Activity_fangyuan_guanli" />
+        <activity
+            android:name=".Activity_Zushouweituo_Kanfangshijian"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".Activity_Search_NoHistory" />
         <activity android:name=".Activity_Search_Add" />
         <activity android:name=".Activity_Search_House" />
+        <activity android:name=".Activity_fangyuan_zhaopian"></activity>
     </application>
 
 </manifest>

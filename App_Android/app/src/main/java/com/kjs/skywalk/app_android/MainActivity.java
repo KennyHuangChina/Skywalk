@@ -134,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //                    mBvMsgInTab.hide();
 //                }
 
-                Intent intent = new Intent(this, Activity_HouseholdDeliverables.class);
-                startActivity(intent);
+                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
             }
             break;
 
