@@ -14,42 +14,46 @@
 
         <TextView
             android:text="不限"
-            style="@style/text_view_search_condition_price_item"
+            style="@style/text_view_search_condition_item"
             android:tag="0"
             android:id="@+id/textViewNoLimit"
-            android:drawableRight="@drawable/select4_check"/>
+            android:onClick="onSearchConditionPriceItemClicked"/>
 
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
             android:text="100万以下"
-            style="@style/text_view_search_condition_price_item"
+            style="@style/text_view_search_condition_item"
             android:tag="1"
-            android:id="@+id/textViewPrice1" />
+            android:id="@+id/textViewPrice1"
+            android:onClick="onSearchConditionPriceItemClicked"/>
 
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
             android:text="100-150万"
-            style="@style/text_view_search_condition_price_item"
+            style="@style/text_view_search_condition_item"
             android:tag="2"
-            android:id="@+id/textViewPrice2" />
+            android:id="@+id/textViewPrice2"
+            android:onClick="onSearchConditionPriceItemClicked"/>
 
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
             android:text="150-200万"
-            style="@style/text_view_search_condition_price_item"
+            style="@style/text_view_search_condition_item"
             android:tag="3"
-            android:id="@+id/textViewPrice3" />
+            android:id="@+id/textViewPrice3"
+            android:onClick="onSearchConditionPriceItemClicked"/>
 
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
             android:text="200-300万"
-            style="@style/text_view_search_condition_price_item"
+            style="@style/text_view_search_condition_item"
             android:tag="4"
-            android:id="@+id/textViewPrice4" />
+            android:id="@+id/textViewPrice4"
+            android:onClick="onSearchConditionPriceItemClicked"/>
 
         <include layout="@layout/seperator_horizontal" />
 
