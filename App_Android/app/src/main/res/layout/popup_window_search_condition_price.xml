@@ -16,7 +16,8 @@
             android:text="不限"
             style="@style/text_view_search_condition_price_item"
             android:tag="0"
-            android:id="@+id/textViewNoLimit" />
+            android:id="@+id/textViewNoLimit"
+            android:drawableRight="@drawable/select4_check"/>
 
         <include layout="@layout/seperator_horizontal" />
 

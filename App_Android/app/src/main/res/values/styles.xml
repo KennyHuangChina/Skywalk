@@ -202,6 +202,7 @@
             @android:color/black
         </item>
         <item name="android:onClick">onSearchConditionHouseTypeItemClicked</item>
+        <item name="android:drawableRight">@drawable/select4_check</item>>
     </style>
 
     <!--高级搜索->价格-->
@@ -214,6 +215,7 @@
         <item name="android:textColor">@drawable/selector_search_condition_price_item_text_color
         </item>
         <item name="android:onClick">onSearchConditionPriceItemClicked</item>
+        <item name="android:drawableRight">@drawable/select4_check</item>
     </style>
 
 

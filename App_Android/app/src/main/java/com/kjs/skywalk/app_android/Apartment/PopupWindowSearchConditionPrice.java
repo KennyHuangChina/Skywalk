@@ -2,8 +2,11 @@ package com.kjs.skywalk.app_android.Apartment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKLocalSettings;
 
+import org.w3c.dom.Text;
+
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -68,11 +75,15 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
         ViewGroup parent = (ViewGroup)view.getParent();
         for(int i = 0; i < parent.getChildCount(); i ++) {
             View v = parent.getChildAt(i);
+            Object obj = v.getTag();
+            if(obj == null) {
+                continue;
+            }
             if(v.getId() == view.getId()) {
-                v.setSelected(true);
+                select((TextView)v);
                 //mPopSearchConditionPrice.setCurrentSelection(v);
             } else {
-                v.setSelected(false);
+                unselect((TextView)v);
             }
         }
 
@@ -107,11 +118,29 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
         mSettings.mPriceIndex = tag;
     }
 
+    private void unselect(TextView view) {
+        view.setCompoundDrawables(null, null, null, null);
+        view.setTextColor(Color.rgb(0, 0, 0));
+        view.setSelected(false);
+    }
+
+    private void select(TextView view) {
+        Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.select4_check);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        view.setCompoundDrawables(null, null, drawable, null);
+        view.setTextColor(ContextCompat.getColor(mContext, R.color.colorFontSelected));
+        view.setSelected(true);
+    }
+
     private void cleanSelection() {
         LinearLayout container = (LinearLayout)mView.findViewById(R.id.price_container);
         for(int i = 0; i < container.getChildCount(); i ++) {
             View v = container.getChildAt(i);
-            v.setSelected(false);
+            Object obj = v.getTag();
+            if(obj == null) {
+                continue;
+            }
+            unselect((TextView)v);
         }
     }
 
@@ -126,7 +155,7 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
 
             int tag = Integer.valueOf((String)obj);
             if(tag == index) {
-                v.setSelected(true);
+                select((TextView)v);
             }
         }
     }
