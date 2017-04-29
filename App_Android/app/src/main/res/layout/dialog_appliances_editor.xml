@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:layout_gravity="center"
+        android:id="@+id/tv_appl_name"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textColor="@color/colorTextTitle"
+        android:gravity="center"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingLeft="@dimen/page_left_margin"
+        android:paddingRight="@dimen/page_right_margin"
+        android:contentDescription=""
+        android:background="#EFEFEF" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_decrease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/decrease1_n"/>
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="3"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextNormal"/>
+        <TextView
+            android:id="@+id/tv_increase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/increase1_n"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="302dp"
+        android:layout_height="67dp"
+        android:hint="请输入相关说明"
+        android:textColorHint="@color/colorTextTint1"
+        android:textSize="12sp"
+        android:gravity="left|top"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="10dp"
+        android:ems="10"
+        android:background="@drawable/shape_rect_with_edge"
+        android:inputType="text" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="@dimen/page_left_margin"
+        android:paddingRight="@dimen/page_right_margin"
+        android:contentDescription=""
+        android:background="#EFEFEF" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:gravity="center">
+
+        <TextView
+            android:text="返回"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_back"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/colorButtonText"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:contentDescription=""
+            android:background="#EFEFEF" />
+
+        <TextView
+            android:text="修改"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_confirm"
+            android:textSize="14sp"
+            android:textColor="@color/colorButtonTextHighlight"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </LinearLayout>
+</LinearLayout>

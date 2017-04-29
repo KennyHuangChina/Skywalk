@@ -170,4 +170,9 @@ public class commonFun {
 //        Toast.makeText(context, "res tag: " + v.getTag(), Toast.LENGTH_SHORT).show();
         Snackbar.make(v, "res tag: " + v.getTag(), Snackbar.LENGTH_SHORT).show();
     }
+
+    public static void showToast_info(Context context, View v, String info) {
+//        Toast.makeText(context, "res tag: " + v.getTag(), Toast.LENGTH_SHORT).show();
+        Snackbar.make(v, info, Snackbar.LENGTH_SHORT).show();
+    }
 }

@@ -134,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //                    mBvMsgInTab.hide();
 //                }
 
-                Intent intent = new Intent(this, Activity_HouseholdDeliverables.class);
-                startActivity(intent);
+                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
             }
             break;
 
@@ -293,6 +292,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
+                    case R.id.action_setting5:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_guanli.class));
+                    }
+                    break;
+
                     case R.id.action_setting100:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_jiaofang_chaobiao.class));
@@ -320,6 +325,32 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_setting104:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_SelectService.class));
+                        break;
+                    }
+
+                    case R.id.action_setting105:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_shenhe_zhengjian.class));
+                        break;
+                    }
+                    case R.id.action_setting106:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
+                        break;
+                    }
+                    case R.id.action_setting107:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Search_NoHistory.class));
+                        break;
+                    }
+                    case R.id.action_setting108:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Search_Add.class));
+                        break;
+                    }
+                    case R.id.action_setting109:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Search_House.class));
                         break;
                     }
                 }

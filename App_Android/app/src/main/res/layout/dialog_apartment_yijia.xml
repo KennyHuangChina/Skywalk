@@ -2,108 +2,119 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:paddingLeft="@dimen/text_margin"
-              android:paddingRight="@dimen/text_margin">
+              android:layout_height="match_parent">
     <TextView
         android:text="请输入你期望的价格"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
+        android:layout_height="50dp"
         android:id="@+id/tv_deliverable_name"
         android:textAlignment="center"
-        android:textSize="21sp"
+        android:textSize="14sp"
+        android:textColor="#000000"
         android:gravity="center"/>
     
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="37dp">
+    <LinearLayout
+        android:layout_width="270dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/shape_rect_with_edge"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-        <TextView
-            android:text="租金"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-        <EditText
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/tv_unit"
-            android:gravity="center_vertical"
-            android:textSize="12sp"/>
+            <ImageView
+                android:id="@+id/iv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/price2_n"/>
 
-        <TextView
-            android:id="@+id/tv_unit"
-            android:text="元/月"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:textColor="#939499"
-            android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tv_zujin"
+                android:text="租金"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/iv_price"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="14sp"/>
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/et_zujin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/tv_price_unit"
+                android:layout_toRightOf="@+id/tv_zujin"
+                android:paddingRight="10dp"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:gravity="right|center_vertical"
+                android:ems="10"
+                android:background="@null" />
 
-    <include layout="@layout/seperator_horizontal" />
+            <TextView
+                android:id="@+id/tv_price_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:text="元/月"/>
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="37dp">
+        <include layout="@layout/seperator_horizontal"/>
 
-        <TextView
-            android:text="物业费"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-        <EditText
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/tv_unit1"
-            android:gravity="center_vertical"
-            android:textSize="12sp"/>
+            <ImageView
+                android:id="@+id/iv_tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/tel2_n"/>
 
-        <TextView
-            android:id="@+id/tv_unit1"
-            android:text="元/月"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:textColor="#939499"
-            android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tv_tel"
+                android:text="电话"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/iv_tel"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="14sp"/>
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/et_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/tv_tel"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:gravity="right|center_vertical"
+                android:ems="10"
+                android:background="@null" />
 
-    <include layout="@layout/seperator_horizontal" />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="37dp">
-
-        <TextView
-            android:id="@+id/tv_telephone_num"
-            android:text="联系电话"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
-
-        <EditText
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/tv_telephone_num"
-            android:gravity="center_vertical"
-            android:textSize="12sp"/>
-
-    </RelativeLayout>
-
-
+    </LinearLayout>
+    
     <include layout="@layout/seperator_horizontal" />
 
     <LinearLayout
@@ -116,6 +127,8 @@
             android:text="返回"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorTextTint"
+            android:textSize="14sp"
             android:id="@+id/tv_back"
             android:layout_weight="1"
             android:gravity="center"/>
@@ -131,7 +144,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_commit"
-            android:textColor="#00AF60"
+            android:textColor="@color/colorFontSelected"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:gravity="center"/>
     </LinearLayout>

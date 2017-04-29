@@ -20,33 +20,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
+            android:gravity="center"
             android:orientation="horizontal" >
             <TextView
                 android:id="@+id/tv_prev"
                 android:onClick="onViewClick"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="111dp"
                 android:layout_height="45dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="25dp"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:textColor="#ffffff"
                 android:textSize="15sp"
                 android:gravity="center"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/rounded_rect_background_light_green"
                 android:text="上一步"/>
 
             <TextView
                 android:id="@+id/tv_next"
                 android:onClick="onViewClick"
-                android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_width="209dp"
                 android:layout_height="45dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="25dp"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
                 android:textColor="#ffffff"
                 android:textSize="15sp"
                 android:gravity="center"
@@ -75,12 +70,12 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutSelection"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:background="#dfdfdf">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:layout_marginLeft="15dp"
                 android:layout_centerInParent="true"
                 android:text="请选择需要我们提供的服务"
@@ -127,7 +122,7 @@
                                 android:gravity="center_vertical"
                                 android:text="安心服务"
                                 android:textColor="#ff7121"
-                                android:textSize="17sp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/textView2"
@@ -137,7 +132,7 @@
                                 android:text="费用：一个月租金"
                                 android:gravity="center_vertical|right"
                                 android:textColor="@color/colorTextNormal"
-                                android:textSize="17sp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -148,41 +143,41 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginTop="5dp"
-                                android:textSize="15sp"
+                                android:textSize="14sp"
                                 android:textColor="@color/colorTextNormal"
                                 android:text="1. 保证房屋出租一年以上"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorText"
-                                android:textSize="13sp"
+                                android:textSize="12sp"
                                 android:text="如果中途未到期退租，再次出租免除上期末未履约的时间  例如：本期客人半年退租，则下次出租后，业主所出的经纪费会减去本期未履约的6个月"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginTop="5dp"
-                                android:textSize="15sp"
+                                android:textSize="14sp"
                                 android:textColor="@color/colorTextNormal"
                                 android:text="2. 水电欠费无忧"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorText"
-                                android:textSize="13sp"
+                                android:textSize="12sp"
                                 android:text="如果租客中途跑路，其造成的房屋水电费欠费由公司承担"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginTop="5dp"
-                                android:textSize="15sp"
+                                android:textSize="14sp"
                                 android:textColor="@color/colorTextNormal"
                                 android:text="3. 节省时间和精力"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="13sp"
+                                android:textSize="12sp"
                                 android:textColor="@color/colorText"
                                 android:text="出租过程中房子有任何问题需要处理，都由公司来协助处理"/>
                         </LinearLayout>
@@ -209,7 +204,7 @@
                                 android:gravity="center_vertical"
                                 android:text="标准服务"
                                 android:textColor="#ff7121"
-                                android:textSize="17sp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -218,7 +213,7 @@
                                 android:text="费用：半个月租金"
                                 android:gravity="center_vertical|right"
                                 android:textColor="@color/colorTextNormal"
-                                android:textSize="17sp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -229,13 +224,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginTop="5dp"
-                                android:textSize="15sp"
+                                android:textSize="14sp"
                                 android:textColor="@color/colorTextNormal"
                                 android:text="1. 提供标准的中介服务"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="13sp"
+                                android:textSize="12sp"
                                 android:textColor="@color/colorText"
                                 android:text="公司帮您带客户看房，订立出租合约，交房给客户后，服务即完成，中途房租未到期退出，再次出租则视为新的一次服务，您依然要付经纪费"/>
                         </LinearLayout>

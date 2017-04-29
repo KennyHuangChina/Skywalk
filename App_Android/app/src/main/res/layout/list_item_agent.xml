@@ -13,85 +13,92 @@
         android:src="@drawable/select2_n"
         />
 
-    <ImageView
-        android:layout_width="105dp"
-        android:layout_height="80dp"
-        android:contentDescription=""
-        android:scaleType="fitXY"
-        android:id="@+id/imageViewAgent"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
-
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:layout_alignTop="@+id/imageViewAgent"
-        android:layout_alignBottom="@+id/imageViewAgent"
-        android:layout_toRightOf="@+id/imageViewAgent"
-        android:layout_marginLeft="13dp">
-
-        <TextView
-            style="@style/textViewAgentName"
-            android:text="代理人"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical" />
-
-        <TextView
-            style="@style/textViewAgentIDCard"
-            android:text="身份证: 1000xxxxxxxxxx0000"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical" />
-
-        <TextView
-            style="@style/textViewAgentConyezigeYear"
-            android:text="从业资格: 5年"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical" />
+        android:padding="15dp">
+        <ImageView
+            android:layout_width="105dp"
+            android:layout_height="80dp"
+            android:contentDescription=""
+            android:scaleType="fitXY"
+            android:id="@+id/imageViewAgent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center_vertical" >
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
-                <TextView
-                    android:text="专业:"
-                    android:id="@+id/textViewZhuanye"
-                    style="@style/textViewScoreText"/>
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_alignTop="@+id/imageViewAgent"
+            android:layout_alignBottom="@+id/imageViewAgent"
+            android:layout_toRightOf="@+id/imageViewAgent"
+            android:layout_marginLeft="13dp">
 
-                <TextView
-                    android:text="4.5"
-                    style="@style/textViewScore"
-                    android:layout_marginLeft="10dp" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginLeft="15dp"
-                android:layout_width="0dp"
+            <TextView
+                style="@style/textViewAgentName"
+                android:text="代理人"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent">
-                <TextView
-                    android:text="态度:"
-                    android:id="@+id/textViewScoreText"
-                    style="@style/textViewScoreText"/>
+                android:gravity="center_vertical"
+                android:drawableRight="@drawable/sex_f"
+                android:drawablePadding="3dp"/>
 
-                <TextView
-                    android:text="4.9"
-                    style="@style/textViewScore"
-                    android:layout_marginLeft="10dp" />
+            <TextView
+                style="@style/textViewAgentIDCard"
+                android:text="身份证: 1000xxxxxxxxxx0000"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
+
+            <TextView
+                style="@style/textViewAgentConyezigeYear"
+                android:text="从业资格: 5年"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:text="专业:"
+                        android:id="@+id/textViewZhuanye"
+                        style="@style/textViewScoreText"/>
+
+                    <TextView
+                        android:text="4.5"
+                        style="@style/textViewScore"
+                        android:layout_marginLeft="10dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:text="态度:"
+                        android:id="@+id/textViewScoreText"
+                        style="@style/textViewScoreText"/>
+
+                    <TextView
+                        android:text="4.9"
+                        style="@style/textViewScore"
+                        android:layout_marginLeft="10dp" />
+                </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

@@ -2,14 +2,24 @@ package com.kjs.skywalk.app_android.Apartment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Activity_HouseholdDeliverables;
@@ -141,6 +151,81 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
         mOrderDlg.show();
         mOrderDlg.setContentView(R.layout.dialog_apartment_order);
 
+        final TextView tvDateSelector = (TextView) mOrderDlg.findViewById(R.id.tv_date_selector);
+        tvDateSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDateSelectorDlg();
+            }
+        });
+
+        // set date selector check status
+        Boolean isOtherDaysChecked = ((RadioButton)mOrderDlg.findViewById(R.id.rb_otherdays)).isChecked();
+        tvDateSelector.setEnabled(isOtherDaysChecked);
+
+        RadioGroup radioGroup = (RadioGroup) mOrderDlg.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                // log
+                if (radioGroup.findViewById(i) instanceof RadioButton) {
+                    RadioButton radBtn = (RadioButton) radioGroup.findViewById(i);
+                    commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected : " + radBtn.getText());
+                } else {
+                    commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected id: " + i);
+                }
+                //
+
+                switch (i)
+                {
+                    case R.id.rb_today:
+                        tvDateSelector.setEnabled(false);
+                        break;
+
+                    case R.id.rb_tomorrow:
+                        tvDateSelector.setEnabled(false);
+                        break;
+
+                    case R.id.rb_aftertomorrow:
+                        tvDateSelector.setEnabled(false);
+                        break;
+
+                    case R.id.rb_otherdays:
+                        tvDateSelector.setEnabled(true);
+                        break;
+                }
+
+            }
+        });
+
+        // initialize Bandwidth spinner
+        Spinner spTimeSelector = (Spinner)mOrderDlg.findViewById(R.id.sp_timeselector);
+        ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(this, R.layout.spinner_item);
+        adapterTime.add("8:30 - 9:00");
+        adapterTime.add("9:00 - 9:30");
+        adapterTime.add("9:30 - 10:00");
+        adapterTime.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spTimeSelector.setAdapter(adapterTime);
+        spTimeSelector.setSelection(1);
+
+
+
+
+//        Window window = mOrderDlg.getWindow();
+//        window.getDecorView().setPadding(0, 0, 0, 0);
+//        WindowManager.LayoutParams lp = window.getAttributes();
+//        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        window.setAttributes(lp);
+
+//        mOrderDlg.getWindow().getDecorView().setPadding(0, 0, 0, 0);
+//        WindowManager windowManager = getWindowManager();
+//        DisplayMetrics outMetrics = new DisplayMetrics();;
+//        windowManager.getDefaultDisplay().getMetrics(outMetrics);
+//        WindowManager.LayoutParams lp = mOrderDlg.getWindow().getAttributes();
+//        lp.width = outMetrics.widthPixels;
+//        mOrderDlg.getWindow().setAttributes(lp);
+
         TextView tvBack = (TextView) mOrderDlg.findViewById(R.id.tv_back);
         tvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,5 +268,28 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
         });
     }
 
+    private AlertDialog mDateSelectorDlg;
+    private void showDateSelectorDlg() {
+        if (mDateSelectorDlg == null) {
+            mDateSelectorDlg = new AlertDialog.Builder(this).create();
+        }
+        mDateSelectorDlg.show();
+        mDateSelectorDlg.setContentView(R.layout.dialog_fangyuanxinxi_dateselector);
 
+        TextView tvBack = (TextView) mDateSelectorDlg.findViewById(R.id.tv_back);
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDateSelectorDlg.dismiss();
+            }
+        });
+
+        TextView tvConfirm = (TextView) mDateSelectorDlg.findViewById(R.id.tv_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDateSelectorDlg.dismiss();
+            }
+        });
+    }
 }

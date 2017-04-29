@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kjs.skywalk.app_android.Activity_fangyuan_zhaopian">
+
+    <TextView
+        android:id="@+id/tv_info_title"
+        android:onClick="onViewClick"
+        style="@style/textStyle_page_title"
+        android:text="房源照片"/>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <include layout="@layout/fragment_fangyuanzhaopian_group" />
+
+</LinearLayout>

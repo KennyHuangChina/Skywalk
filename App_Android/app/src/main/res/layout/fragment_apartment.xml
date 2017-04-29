@@ -193,8 +193,6 @@
         android:gravity="center" >
         <com.kjs.skywalk.control.ListView_NoScroll
             android:id="@+id/listViewSearchResult"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </ScrollView>

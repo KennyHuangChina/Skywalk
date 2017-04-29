@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="40dp" >
+
+    <SearchView
+        android:id="@+id/search_view"
+        android:background="#efefef"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:searchIcon="@drawable/search_n"
+        android:searchHintIcon="@drawable/search_n"
+        android:closeIcon="@drawable/close2_n"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:queryHint="请输入小区名称" />
+
+</RelativeLayout>

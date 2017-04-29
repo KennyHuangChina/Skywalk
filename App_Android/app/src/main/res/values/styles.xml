@@ -65,9 +65,20 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_rect_background1</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#5aaaaf</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#32BE84</item>
     </style>
+    <!--<style name="tv_apartment_cg1" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
+        <!--<item name="android:gravity">center</item>-->
+        <!--<item name="android:background">@drawable/rounded_rect_background1</item>-->
+        <!--<item name="android:textSize">10sp</item>-->
+        <!--<item name="android:textColor">#5aaaaf</item>-->
+    <!--</style>-->
+
 
     <!--上门实勘-->
     <style name="tv_apartment_cg2" parent="@android:style/Widget.TextView">
@@ -77,9 +88,20 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_rect_background2</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textColor">#4CA3FF</item>
     </style>
+    <!--<style name="tv_apartment_cg2" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
+        <!--<item name="android:gravity">center</item>-->
+        <!--<item name="android:background">@drawable/rounded_rect_background2</item>-->
+        <!--<item name="android:textSize">10sp</item>-->
+        <!--<item name="android:textColor">#4CA3FF</item>-->
+    <!--</style>-->
+
 
     <!--靠近地铁-->
     <style name="tv_apartment_cg3" parent="@android:style/Widget.TextView">
@@ -89,9 +111,21 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_rect_background3</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textColor">#FF3F29</item>
     </style>
+    <!--<style name="tv_apartment_cg3" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
+        <!--<item name="android:gravity">center</item>-->
+        <!--<item name="android:background">@drawable/rounded_rect_background3</item>-->
+        <!--<item name="android:textSize">10sp</item>-->
+        <!--<item name="android:textColor">#FF3F29</item>-->
+    <!--</style>-->
+
+
 
     <!--电梯房-->
     <style name="tv_apartment_cg4" parent="@android:style/Widget.TextView">
@@ -101,9 +135,21 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_rect_background4</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textColor">#8D7DEF</item>
     </style>
+    <!--<style name="tv_apartment_cg4" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
+        <!--<item name="android:gravity">center</item>-->
+        <!--<item name="android:background">@drawable/rounded_rect_background4</item>-->
+        <!--<item name="android:textSize">10sp</item>-->
+        <!--<item name="android:textColor">#8D7DEF</item>-->
+    <!--</style>-->
+
+
 
     <!--无贷款-->
     <style name="tv_apartment_cg5" parent="@android:style/Widget.TextView">
@@ -113,9 +159,21 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_rect_background5</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#E90132</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#EA0233</item>
     </style>
+    <!--<style name="tv_apartment_cg5" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
+        <!--<item name="android:gravity">center</item>-->
+        <!--<item name="android:background">@drawable/rounded_rect_background5</item>-->
+        <!--<item name="android:textSize">10sp</item>-->
+        <!--<item name="android:textColor">#E90132</item>-->
+    <!--</style>-->
+
+
 
     <!--高级搜索->筛选->条件-->
     <style name="text_view_search_condition_filter_item" parent="@android:style/Widget.TextView">
@@ -194,6 +252,7 @@
         <item name="android:onClick">onViewClick</item>
         <item name="android:drawableLeft">@drawable/left_n</item>
         <item name="android:textColor">@color/colorTextNormal</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:background">#FFFFFF</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">@dimen/page_left_margin</item>
@@ -282,5 +341,39 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">#ff3d19</item>
+    </style>
+
+    <!--类别：靠近小学-->
+    <style name="TextView_Kaojinxiaoxue" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_a572d4</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#A572D4</item>
+    </style>
+    <!--类别：电梯房-->
+    <style name="TextView_diantifang" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_31b2bd</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#31B2BD</item>
+    </style>
+    <!--类别：贷款状态-->
+    <style name="TextView_daikuan" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_ff8642</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#ff8642</item>
     </style>
 </resources>

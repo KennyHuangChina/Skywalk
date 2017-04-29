@@ -25,7 +25,7 @@
             android:text="@string/checkbox_text_tijiaoweituo"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="#282628"
             android:gravity="left"
             android:layout_marginTop="15dp"
@@ -35,15 +35,14 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="45dp"
+            android:layout_margin="15dp"
+            android:layout_centerHorizontal="true"
             android:onClick="onViewClick"
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:textColor="#ffffff"
+            android:textSize="15sp"
             android:background="@drawable/rounded_rect_background_green"
             android:text="同意并提交委托"
             android:id="@+id/textViewCommit" />
