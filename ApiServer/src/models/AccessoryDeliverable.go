@@ -268,6 +268,77 @@ func AddHouseDeliverable(uid, hid, did int64, qty int, desc string) (err error, 
 	return
 }
 
+/**
+*	Modify House Deliverable
+*	Arguments:
+*		uid 	- login user id
+*		hdid	- house deliverable id
+*		qty		- deliverable quantity. 0 means delete this house deliverable
+*		desc	- deliverable description
+*	Returns
+*		err 	- error info
+**/
+func EditHouseDeliverable(hdid, uid int64, qty int, desc string) (err error) {
+	FN := "[AddHouseDeliverable] "
+	beego.Trace(FN, "login user:", uid, ", house deliverable:", hdid, ", qty:", qty, ", desc:", desc)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, hd := getHouseDeliverable(hdid)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf("%+v", hd))
+	if qty < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("qty:%d", qty)}
+		return
+	}
+
+	err, h := getHouse(hd.House)
+	if nil != err {
+		return
+	}
+
+	/* Permission Checking */
+	// only the landlorad, house agency, and administrator are capable to add deliverable for house
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+		beego.Debug(FN, "1")
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		beego.Debug(FN, "2")
+	} else {
+		beego.Debug(FN, "3")
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	// processing
+	if qty > 0 { // Update
+		hd.Qty = qty
+		hd.Desc = desc
+		/*numb*/ _, errT := o.Update(&hd)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	} else { // delete
+		numb, errT := o.QueryTable("tbl_house_deliverable").Filter("Id", hdid).Delete()
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(FN, "numb:", numb)
+	}
+
+	return
+}
+
 /*********************************************************************************************************
 *
 *	Internal Functions
@@ -339,5 +410,37 @@ func delDeliverable(did, lu int64) (err error) {
 		return
 	}
 
+	return
+}
+
+func getHouseDeliverable(hdid int64) (err error, d TblHouseDeliverable) {
+	FN := "[getHouseDeliverable] "
+	beego.Trace(FN, "hdid:", hdid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	if hdid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house deliverable:%d", hdid)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	dT := TblHouseDeliverable{Id: hdid}
+	errT := o.Read(&dT)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house deliverable:%d", hdid)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	d = dT
 	return
 }

@@ -41,7 +41,7 @@
 
 ### 4. Delete Deliverable (By administrator)
 
-### 3. Add deliverable for house (By logined user)
+### 5. Add deliverable for house (By logined user)
 	[Security]	private
 	[Request]
   		* POST /v1/accessory/house/:id/deliverable
@@ -55,8 +55,23 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
+### 6. Modify house deliverable (By logined user)
+	[Security]	private
+	[Request]
+  		* PUT /v1/accessory/deliverable/:id
+	  		* did			int			// deliverable id
+	  		* qty			int			// quantity. 0 means delete this house deliverable
+	  		* desc			string		// description 
+  	[Response]
+		* SUCCESS:200 
+			* Id			int			// new house deliverable id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
 
-### 4. Get House deliverable list (By logined user)
+### 7. delete house deliverable (By logined user)
+
+### 8. Get House deliverable list (By logined user)
 	[Security]	private
 	[Request]
   		* GET /v1/accessory/house/:id/deliverables

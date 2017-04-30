@@ -308,3 +308,115 @@ func Test_AddHouseDeliverable(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- EditHouseDeliverable --
+//
+func Test_EditHouseDeliverable(t *testing.T) {
+	t.Log("Test EditHouseDeliverable")
+
+	t.Log("<Case> Invalid argument: house deliverable < 0")
+	if e := EditHouseDeliverable(-1, -1, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: house deliverable = 0")
+	if e := EditHouseDeliverable(0, -1, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: house deliverable does not exist")
+	if e := EditHouseDeliverable(100000000, -1, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: user not login")
+	if e := EditHouseDeliverable(7, -1, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a regular user")
+	if e := EditHouseDeliverable(7, 9, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is agency, but not for this house")
+	if e := EditHouseDeliverable(7, 11, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// backup
+	e, hd := getHouseDeliverable(7)
+	if nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("before edit:", fmt.Sprintf("%+v", hd))
+
+	// landlord
+	t.Log("<Case> edit house deliverable by landlord")
+	desc := "test deliverable"
+	if e := EditHouseDeliverable(7, 2, hd.Qty+1, desc); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	_, hd1 := getHouseDeliverable(7)
+	t.Log("after edit:", fmt.Sprintf("%+v", hd1))
+	if hd1.Qty != hd.Qty+1 || hd1.Desc != desc {
+		t.Error("Failed to modify house deliverable")
+		return
+	}
+	// restore
+	if e := EditHouseDeliverable(7, 2, hd.Qty, hd.Desc); e != nil {
+		t.Error("Fail to restore, err: ", e)
+		return
+	}
+
+	// agency
+	t.Log("<Case> edit house deliverable by agency")
+	if e := EditHouseDeliverable(7, 1, hd.Qty+1, desc); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// administrator
+	t.Log("<Case> edit house deliverable by administrator")
+	if e := EditHouseDeliverable(7, 5, hd.Qty+1, desc); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	_, hd1 = getHouseDeliverable(7)
+	t.Log("after edit:", fmt.Sprintf("%+v", hd1))
+	if hd1.Qty != hd.Qty+1 || hd1.Desc != desc {
+		t.Error("Failed to modify house deliverable")
+		return
+	}
+	// restore
+	if e := EditHouseDeliverable(7, 5, hd.Qty, hd.Desc); e != nil {
+		t.Error("Fail to restore, err: ", e)
+		return
+	}
+
+	t.Log("<Case> delete the house deliver by editing qty = 0")
+	// add new one
+	e, nhd := AddHouseDeliverable(5, 6, 1, 2, "new deliverable")
+	if nil != e {
+		t.Error("Fail to add, err: ", e)
+		return
+	}
+	t.Log("new house deliverable:", nhd)
+	// remove
+	if e := EditHouseDeliverable(nhd, 5, 0, ""); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}
