@@ -111,3 +111,56 @@ func Test_EditFacilityType(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- DeleFacilityType --
+//
+func Test_DeleFacilityType(t *testing.T) {
+	t.Log("Test DeleFacilityType")
+
+	t.Log("<Case> Permission: user not login")
+	if e := DeleFacilityType(-1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user does not exist")
+	if e := DeleFacilityType(-1, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a regular user")
+	if e := DeleFacilityType(-1, 9); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a agency")
+	if e := DeleFacilityType(-1, 11); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid parameter: type < 0")
+	if e := DeleFacilityType(-1, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid parameter: type = 0")
+	if e := DeleFacilityType(0, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid parameter: type does not exist")
+	if e := DeleFacilityType(100000000, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("The actual delete testing, please ref to Test_AddFacilityType")
+
+	return
+}

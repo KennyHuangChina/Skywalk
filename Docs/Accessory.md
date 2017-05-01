@@ -126,6 +126,17 @@
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description
 
+### 12. delete Facility Type (By administrator)
+	[Security]	private
+	[Request]
+  		* DELETE /v1/accessory/facility/type/:id
+	  		* id 				int 		// facility type id
+  	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description
+
 ### 7. New Facility (By administrator)
 	[Security]	private
 	[Request]

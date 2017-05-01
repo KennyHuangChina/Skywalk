@@ -423,6 +423,49 @@ func EditFacilityType(name string, ftid, uid int64) (err error) {
 	return
 }
 
+/**
+*	Delete facility type
+*	Arguments:
+*		ftid	- facility type id
+*		uid 	- login user id
+*	Returns
+*		err 	- error info
+**/
+func DeleFacilityType(ftid, uid int64) (err error) {
+	FN := "[DeleFacilityType] "
+	beego.Trace(FN, "facility type:", ftid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// permission checking. Only administrator could delete the facility type
+	if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/*	argument checking */
+	if err, _ = getFacilityType(ftid); nil != err {
+		return
+	}
+
+	beego.Warn(FN, "Prevent deleting if this type has been used or delete cascaded")
+
+	// Delete
+	o := orm.NewOrm()
+	_, errT := o.Delete(&TblFacilityType{Id: ftid})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Internal Functions
