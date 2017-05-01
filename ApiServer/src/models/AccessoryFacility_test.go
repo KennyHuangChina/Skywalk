@@ -365,3 +365,56 @@ func Test_EditFacility(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- DelFacility --
+//
+func Test_DelFacility(t *testing.T) {
+	t.Log("Test DelFacility")
+
+	t.Log("<Case 1> Permission: user not login")
+	if e := DelFacility(-1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 2> Permission: user does not exist")
+	if e := DelFacility(-1, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 3> Permission: user is a regualr user")
+	if e := DelFacility(-1, 9); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 4> Permission: user is a agency")
+	if e := DelFacility(-1, 6); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 5> Invalid argument: facility < 0")
+	if e := DelFacility(-1, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 6> Invalid argument: facility = 0")
+	if e := DelFacility(0, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 7> Invalid argument: facility does not exist")
+	if e := DelFacility(100000000, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("The actual delete testing, please ref to Test_AddFacility")
+	return
+}

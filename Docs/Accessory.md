@@ -180,6 +180,17 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
+### 16. Delete Facility (By administrator)
+	[Security]	private
+	[Request]
+  		* DELETE /v1/accessory/facility/:id
+	  		* id			int 		// facility id
+  	[Response]
+		* SUCCESS:200
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
 
 ### 9. Add House Facility (By house owner, agency and administrator)
 	[Security]	private

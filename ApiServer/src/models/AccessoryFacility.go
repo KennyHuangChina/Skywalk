@@ -324,7 +324,7 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 }
 
 /**
-*	Add New facility
+*	Modify facility
 *	Arguments:
 *		uid 	- login user id
 *		fid 	- facility id
@@ -332,11 +332,10 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 *		ft		- facility type
 *	Returns
 *		err 	- error info
-*		id 		- new facility id
 **/
 func EditFacility(fid, ft, uid int64, name string) (err error) {
 	FN := "[AddFacility] "
-	beego.Trace(FN, "Facility:", fid, ", type:", ft, "name:", name, ", login user:", uid)
+	beego.Trace(FN, "Facility:", fid, ", type:", ft, ", name:", name, ", login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -344,7 +343,7 @@ func EditFacility(fid, ft, uid int64, name string) (err error) {
 		}
 	}()
 
-	// permission checking: only the administrator could add facility
+	// permission checking: only the administrator could modify facility
 	if _, bAdmin := isAdministrator(uid); bAdmin {
 	} else {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
@@ -374,6 +373,49 @@ func EditFacility(fid, ft, uid int64, name string) (err error) {
 
 	/* Processing: Update */
 	_, errT := o.Update(&TblFacilitys{Id: fid, Type: ft, Name: name})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
+/**
+*	Delete facility
+*	Arguments:
+*		uid 	- login user id
+*		fid 	- facility id
+*	Returns
+*		err 	- error info
+**/
+func DelFacility(fid, uid int64) (err error) {
+	FN := "[DelFacility] "
+	beego.Trace(FN, "Facility:", fid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// permission checking: only the administrator could delete facility
+	if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/*	argument checking */
+	if err, _ = getFacility(fid); nil != err {
+		return
+	}
+
+	o := orm.NewOrm()
+
+	/* Processing: Delete */
+	beego.Warn(FN, "Prevent deleting if this facility has been used or delete cascaded")
+	_, errT := o.Delete(&TblFacilitys{Id: fid})
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
