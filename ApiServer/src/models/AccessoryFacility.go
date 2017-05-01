@@ -73,6 +73,11 @@ func GetFacilityTypeList(uid int64) (err error, lst []commdef.CommonListItem) {
 
 	/*	argument checking */
 
+	/* permission */
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
 	// get facility type list
 	o := orm.NewOrm()
 
