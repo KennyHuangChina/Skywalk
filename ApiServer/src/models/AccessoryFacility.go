@@ -278,7 +278,7 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err erro
 **/
 func AddFacility(name string, ft, uid int64) (err error, id int64) {
 	FN := "[AddFacility] "
-	beego.Trace(FN, "name:", name, ", uid:", uid)
+	beego.Trace(FN, "name:", name, ", facility type:", ft, ", login user:", uid)
 
 	defer func() {
 		if nil != err {

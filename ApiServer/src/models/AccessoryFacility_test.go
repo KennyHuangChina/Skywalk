@@ -418,3 +418,81 @@ func Test_DelFacility(t *testing.T) {
 	t.Log("The actual delete testing, please ref to Test_AddFacility")
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AddFacility --
+//
+func Test_AddFacility(t *testing.T) {
+	t.Log("Test AddFacility")
+
+	t.Log("<Case 1> Permission: user not login")
+	if e, _ := AddFacility("", -1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 2> Permission: user does not exist")
+	if e, _ := AddFacility("", -1, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 3> Permission: user is a regualr user")
+	if e, _ := AddFacility("", -1, 9); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 4> Permission: user is a agency")
+	if e, _ := AddFacility("", -1, 6); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 5> Invalid argument: name is empty")
+	if e, _ := AddFacility("", -1, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 6> Invalid argument: type < 0")
+	if e, _ := AddFacility("test", -1, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 7> Invalid argument: type = 0")
+	if e, _ := AddFacility("test", 0, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 8> Invalid argument: type does not exist")
+	if e, _ := AddFacility("test", 100000000, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 9> Invalid argument: duplicated")
+	if e, _ := AddFacility("冰", 2, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 10> Add facility")
+	e, nid := AddFacility("宽带网络", 6, 5)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new facility:", nid)
+
+	t.Log("<Case 11> Delete facility just added a second ago")
+	if e := DelFacility(nid, 5); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}
