@@ -164,3 +164,62 @@ func Test_DeleFacilityType(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AddFacilityType --
+//
+func Test_AddFacilityType(t *testing.T) {
+	t.Log("Test AddFacilityType")
+
+	t.Log("<Case> Permission: user not login")
+	if e, _ := AddFacilityType("", -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user does not exist")
+	if e, _ := AddFacilityType("", 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a regular user")
+	if e, _ := AddFacilityType("", 9); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: login user is a agency")
+	if e, _ := AddFacilityType("", 11); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid parameter: type name is empty")
+	if e, _ := AddFacilityType("", 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid parameter: type name already exist")
+	if e, _ := AddFacilityType("试类", 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Add facility type")
+	e, nftid := AddFacilityType("test 测试 test", 5)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Delete facility type just added a second ago")
+	if e := DeleFacilityType(nftid, 5); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}

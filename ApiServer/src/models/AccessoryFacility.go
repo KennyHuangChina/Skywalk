@@ -334,7 +334,7 @@ func AddFacilityType(name string, uid int64) (err error, id int64) {
 		}
 	}()
 
-	// permission checking
+	// permission checking. Only the administrator could add new facility type
 	if _, bAdmin := isAdministrator(uid); bAdmin {
 	} else {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
