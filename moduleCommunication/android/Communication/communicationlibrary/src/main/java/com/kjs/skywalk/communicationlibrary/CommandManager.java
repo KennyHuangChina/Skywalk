@@ -290,6 +290,15 @@ public class CommandManager implements CommunicationInterface.ICommand {
         return execute(pMap);
     }
 
+    @Override
+    public int EditFacilityType(int typeId, String sTypeName) {
+        mOperation = new CmdModifyFacilityType(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(typeId));
+        pMap.put(CommunicationParameterKey.CPK_NAME, sTypeName);
+        return execute(pMap);
+    }
+
    @Override
     public int GetFacilityTypeList() {
         mOperation = new CmdGetFacilityTypeList(mContext);

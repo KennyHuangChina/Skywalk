@@ -62,7 +62,9 @@ public class CommunicationInterface {
 
         // house facilities
         int AddFacilityType(String sTypeName);
+        int EditFacilityType(int typeId, String sTypeName);
         int GetFacilityTypeList();
+
         int AddFacility(int nType, String sName);
         int GetFacilityList(int nType);
         int AddHouseFacility(int house, ArrayList<FacilityItem> list);
@@ -105,11 +107,12 @@ public class CommunicationInterface {
 
         // Facilities
         public static int CMD_ADD_FACILITY_TYPE      = 0x5001;
-        public static int CMD_GET_FACILITY_TYPE_LIST = 0x5002;
-        public static int CMD_ADD_FACILITY           = 0x5003;
-        public static int CMD_GET_FACILITY_LIST      = 0x5004;
-        public static int CMD_ADD_HOUSE_FACILITY     = 0x5005;
-        public static int CMD_GET_HOUSEFACILITY_LIST = 0x5006;
+        public static int CMD_EDIT_FACILITY_TYPE     = 0x5002;
+        public static int CMD_GET_FACILITY_TYPE_LIST = 0x5003;
+        public static int CMD_ADD_FACILITY           = 0x5004;
+        public static int CMD_GET_FACILITY_LIST      = 0x5005;
+        public static int CMD_ADD_HOUSE_FACILITY     = 0x5006;
+        public static int CMD_GET_HOUSEFACILITY_LIST = 0x5007;
 
         public static int CMD_TEST                   = 0x0001;
     }
