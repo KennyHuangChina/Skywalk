@@ -57,7 +57,10 @@ public class MainActivityFragment extends Fragment
 
 //        doTestModifyApi_ModifyHouse(CmdMgr);
 //        CmdMgr.ModifyDeliverable(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
-        CmdMgr.EditFacilityType(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
+//        CmdMgr.EditFacilityType(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
+        CmdMgr.EditFacility(Integer.parseInt(mEditText.getText().toString()),
+                Integer.parseInt(mEditText1.getText().toString()),
+                mEditText2.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);
