@@ -87,7 +87,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 5. New Facility Type (By administrator)
+### 9. New Facility Type (By administrator)
 	[Security]	private
 	[Request]
   		* POST /v1/accessory/facility/type
@@ -100,7 +100,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 6. Get Facility Type List (By logined user)
+### 10. Get Facility Type List (By logined user)
 	[Security]	private
 	[Request]
   		* GET /v1/accessory/facitypelst
@@ -114,6 +114,17 @@
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description
 
+### 11. Modify Facility Type (By administrator)
+	[Security]	private
+	[Request]
+  		* PUT /v1/accessory/facility/type/:id
+	  		* id 				int 		// facility type id
+	  		* name				string		// type name
+  	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description
 
 ### 7. New Facility (By administrator)
 	[Security]	private

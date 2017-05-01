@@ -29,7 +29,7 @@ func GetFacilityList(uid, ft int64) (err error, lst []commdef.Facility) {
 
 	/*	argument checking */
 	if 0 != ft {
-		if err = checkFacilityType(ft); nil != err {
+		if err, _ = getFacilityType(ft); nil != err {
 			return
 		}
 	}
@@ -290,7 +290,7 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
 		return
 	}
-	if err = checkFacilityType(ft); nil != err {
+	if err, _ = getFacilityType(ft); nil != err {
 		return
 	}
 
@@ -346,6 +346,9 @@ func AddFacilityType(name string, uid int64) (err error, id int64) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
 		return
 	}
+	// if err, _ = getFacilityType(ft); nil != err {
+	// 	return
+	// }
 
 	// check if the deliver name already exist
 	o := orm.NewOrm()
@@ -367,30 +370,84 @@ func AddFacilityType(name string, uid int64) (err error, id int64) {
 	return
 }
 
+/**
+*	Modify New facility type
+*	Arguments:
+*		ftid	- facility type id
+*		uid 	- login user id
+*		name	- facility type name
+*	Returns
+*		err 	- error info
+**/
+func EditFacilityType(name string, ftid, uid int64) (err error) {
+	FN := "[EditFacilityType] "
+	beego.Trace(FN, "name:", name, ", facility type:", ftid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// permission checking
+	if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/*	argument checking */
+	if 0 == len(name) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+	if err, _ = getFacilityType(ftid); nil != err {
+		return
+	}
+
+	// check if the target facility type name already exist
+	o := orm.NewOrm()
+	bExist := o.QueryTable("tbl_facility_type").Filter("Name__contains", name).Exclude("Id", ftid).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+
+	// Update
+	_, errT := o.Update(&TblFacilityType{Id: ftid, Name: name})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Internal Functions
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func checkFacilityType(ft int64) (err error) {
-	if ft <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("facility type:%d", ft)}
+func getFacilityType(ftid int64) (err error, ft TblFacilityType) {
+	if ftid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("facility type:%d", ftid)}
 		return
 	}
 
 	o := orm.NewOrm()
 
-	t := TblFacilityType{Id: ft}
+	t := TblFacilityType{Id: ftid}
 	errT := o.Read(&t)
 	if nil != errT {
 		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("facility type:%d", ft)}
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("facility type:%d", ftid)}
 		} else {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		}
 		return
 	}
 
+	ft = t
 	return
 }
 
