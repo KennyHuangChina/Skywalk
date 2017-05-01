@@ -277,3 +277,91 @@ func Test_GetFacilityList(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- EditFacility --
+//
+func Test_EditFacility(t *testing.T) {
+	t.Log("Test EditFacility")
+
+	t.Log("<Case 1> Permission: user not login")
+	if e := EditFacility(-1, -1, -1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 2> Permission: user does not exist")
+	if e := EditFacility(-1, -1, 100000000, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 3> Permission: user is a regualr user")
+	if e := EditFacility(-1, -1, 9, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 4> Permission: user is a agency")
+	if e := EditFacility(-1, -1, 6, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 5> Invalid argument: facility < 0")
+	if e := EditFacility(-1, -1, 5, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 6> Invalid argument: facility = 0")
+	if e := EditFacility(0, -1, 5, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 7> Invalid argument: facility does not exist")
+	if e := EditFacility(100000000, -1, 5, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 8> Invalid argument: name is empty")
+	if e := EditFacility(3, -1, 5, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 9> Invalid argument: type < 0")
+	if e := EditFacility(3, -1, 5, "test"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 10> Invalid argument: type = 0")
+	if e := EditFacility(3, 0, 5, "test"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 11> Invalid argument: duplicated")
+	if e := EditFacility(3, 2, 5, "电视"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 12> Modify facility")
+	if e := EditFacility(3, 6, 5, "电视机60吋"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case 13> Restore facility")
+	if e := EditFacility(3, 2, 5, "电冰箱"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}

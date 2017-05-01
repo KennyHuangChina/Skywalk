@@ -28,7 +28,9 @@ func (a *AccessoryController) URLMapping() {
 	a.Mapping("GetFacilityTypeList", a.GetFacilityTypeList)
 
 	a.Mapping("AddFacility", a.AddFacility)
+	a.Mapping("EditFacility", a.EditFacility)
 	a.Mapping("GetFacilityList", a.GetFacilityList)
+
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
 }
@@ -475,6 +477,52 @@ func (this *AccessoryController) AddFacility() {
 	err, id := models.AddFacility(name, ft, uid)
 	if nil == err {
 		result.Id = id
+	}
+}
+
+// @Title EditFacility
+// @Description modify facility
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /facility/:id [put]
+func (this *AccessoryController) EditFacility() {
+	FN := "[EditFacility] "
+	beego.Warn("[--- API: EditFacility ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	fid, _ := this.GetInt64(":id")
+	ft, _ := this.GetInt64("type")
+	name := this.GetString("name")
+	tmp, _ := base64.URLEncoding.DecodeString(name)
+	name = string(tmp)
+	// beego.Debug(FN, "name:", name, ", ft:", ft)
+
+	/*
+	 *	Processing
+	 */
+	err = models.EditFacility(fid, ft, uid, name)
+	if nil == err {
 	}
 }
 

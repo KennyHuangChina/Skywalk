@@ -167,6 +167,19 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
+### 15. Modify Facility (By administrator)
+	[Security]	private
+	[Request]
+  		* PUT /v1/accessory/facility/:id
+	  		* id			int 		// facility id
+	  		* name			string		// facility name
+	  		* type			int			// facility type id
+  	[Response]
+		* SUCCESS:200
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
 
 ### 9. Add House Facility (By house owner, agency and administrator)
 	[Security]	private

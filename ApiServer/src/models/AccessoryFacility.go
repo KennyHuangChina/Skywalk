@@ -200,7 +200,7 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err erro
 	}
 
 	for _, v := range fl {
-		if err = checkFacility(v.Facility); nil != err {
+		if err, _ = getFacility(v.Facility); nil != err {
 			return
 		}
 	}
@@ -320,6 +320,65 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 	}
 
 	id = nid
+	return
+}
+
+/**
+*	Add New facility
+*	Arguments:
+*		uid 	- login user id
+*		fid 	- facility id
+*		name	- facility name
+*		ft		- facility type
+*	Returns
+*		err 	- error info
+*		id 		- new facility id
+**/
+func EditFacility(fid, ft, uid int64, name string) (err error) {
+	FN := "[AddFacility] "
+	beego.Trace(FN, "Facility:", fid, ", type:", ft, "name:", name, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// permission checking: only the administrator could add facility
+	if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/*	argument checking */
+	if err, _ = getFacility(fid); nil != err {
+		return
+	}
+	if 0 == len(name) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
+		return
+	}
+	if err, _ = getFacilityType(ft); nil != err {
+		return
+	}
+
+	o := orm.NewOrm()
+
+	// check if type + facility name already exist
+	bExist := o.QueryTable("tbl_facilitys").Filter("Type", ft).Filter("Name__contains", name).Exclude("Id", fid).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("facility type:%d, name:%s", ft, name)}
+		return
+	}
+
+	/* Processing: Update */
+	_, errT := o.Update(&TblFacilitys{Id: fid, Type: ft, Name: name})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
 	return
 }
 
@@ -499,7 +558,7 @@ func getFacilityType(ftid int64) (err error, ft TblFacilityType) {
 	return
 }
 
-func checkFacility(fid int64) (err error) {
+func getFacility(fid int64) (err error, f TblFacilitys) {
 	if fid <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("facility:%d", fid)}
 		return
@@ -518,5 +577,6 @@ func checkFacility(fid int64) (err error) {
 		return
 	}
 
+	f = t
 	return
 }
