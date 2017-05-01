@@ -353,6 +353,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_Search_House.class));
                         break;
                     }
+                    case R.id.action_setting110:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_renzhengshuoming.class));
+                        break;
+                    }
                 }
                 return false;
             }
