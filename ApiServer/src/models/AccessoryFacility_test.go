@@ -223,3 +223,57 @@ func Test_AddFacilityType(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetFacilityList --
+//
+func Test_GetFacilityList(t *testing.T) {
+	t.Log("Test GetFacilityList")
+
+	t.Log("<Case> Invalid argument: type < 0")
+	if e, _ := GetFacilityList(-1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Invalid argument: facility type does not exist")
+	if e, _ := GetFacilityList(-1, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: user not logined")
+	if e, _ := GetFacilityList(-1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> Permission: user does not exist")
+	if e, _ := GetFacilityList(100000000, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("<Case> fetch all facilities")
+	e, fl := GetFacilityList(9, 0)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	for k, v := range fl {
+		t.Log("", k, ":", fmt.Sprintf("%+v", v))
+	}
+
+	t.Log("<Case> fetch a certain kind of facilities")
+	e, fl = GetFacilityList(9, 2)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	for k, v := range fl {
+		t.Log("", k, ":", fmt.Sprintf("%+v", v))
+	}
+
+	return
+}

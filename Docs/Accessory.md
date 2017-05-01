@@ -137,7 +137,7 @@
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description
 
-### 7. New Facility (By administrator)
+### 13. New Facility (By administrator)
 	[Security]	private
 	[Request]
   		* POST /v1/accessory/facility
@@ -151,7 +151,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 8. Get Facility List (By login user)
+### 14. Get Facility List (By login user)
 	[Security]	private
 	[Request]
   		* GET /v1/accessory/facilitys?type=

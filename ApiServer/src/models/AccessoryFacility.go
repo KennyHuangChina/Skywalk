@@ -19,7 +19,7 @@ import (
 **/
 func GetFacilityList(uid, ft int64) (err error, lst []commdef.Facility) {
 	FN := "[GetFacilityTypeList] "
-	beego.Trace(FN, "uid:", uid, ", ft:", ft)
+	beego.Trace(FN, "login user:", uid, ", facility type:", ft)
 
 	defer func() {
 		if nil != err {
@@ -28,12 +28,20 @@ func GetFacilityList(uid, ft int64) (err error, lst []commdef.Facility) {
 	}()
 
 	/*	argument checking */
+	// facility type = 0 means get all facilities
 	if 0 != ft {
 		if err, _ = getFacilityType(ft); nil != err {
 			return
 		}
 	}
 
+	/* Permission Checking */
+	// All logined user could get facility list
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	/* Fetching */
 	sql := "SELECT f.id, f.name, t.name AS type FROM tbl_facilitys AS f, tbl_facility_type AS t WHERE f.type=t.id"
 	if ft > 0 {
 		sql = sql + fmt.Sprintf(" AND type=%d", ft)
@@ -346,9 +354,6 @@ func AddFacilityType(name string, uid int64) (err error, id int64) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("name:%s", name)}
 		return
 	}
-	// if err, _ = getFacilityType(ft); nil != err {
-	// 	return
-	// }
 
 	// check if the deliver name already exist
 	o := orm.NewOrm()
