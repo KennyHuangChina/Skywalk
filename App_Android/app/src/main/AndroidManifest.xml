@@ -84,6 +84,7 @@
         <activity android:name=".Activity_Search_House" />
         <activity android:name=".Activity_fangyuan_renzhengshuoming"></activity>
         <activity android:name=".Activity_fangyuan_zhaopian"></activity>
+        <activity android:name=".Activity_Search" />
     </application>
 
 </manifest>

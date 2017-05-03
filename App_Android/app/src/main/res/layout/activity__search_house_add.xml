@@ -45,10 +45,7 @@
                 <com.kjs.skywalk.control.ListView_NoScroll
                     android:id="@+id/listViewContent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingBottom="10dp"/>
+                    android:layout_height="wrap_content" />
 
                 <include layout="@layout/seperator_horizontal" />
 

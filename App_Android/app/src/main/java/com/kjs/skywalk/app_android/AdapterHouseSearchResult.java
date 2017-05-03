@@ -8,21 +8,33 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Jackie on 2017/3/24.
  */
 
 public class AdapterHouseSearchResult extends BaseAdapter {
     private Context mContext = null;
+    private ArrayList<HouseData> mDataList;
 
     public AdapterHouseSearchResult(Context context) {
         super();
         mContext = context;
     }
 
+    public class HouseData {
+        String name;
+        String location;
+    }
+
+    public void setDataList(ArrayList<HouseData> list) {
+        mDataList = list;
+    }
+
     @Override
     public int getCount() {
-        return 1;
+        return 5;
     }
 
     @Override

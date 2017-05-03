@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="44"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/left_n"
+                android:id="@+id/imageViewBack" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="760"
+            android:layout_height="33dp"
+            android:gravity="center_vertical">
+
+            <SearchView
+                android:id="@+id/search_view"
+                android:background="#efefef"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:searchIcon="@drawable/search_n"
+                android:searchHintIcon="@drawable/search_n"
+                android:queryHint="@string/fragment_search_input_hint" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="44">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/location2_n"
+                android:layout_centerInParent="true"
+                android:id="@+id/imageViewLocation" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="44">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/message_n"
+                android:layout_centerInParent="true"
+                android:id="@+id/imageViewMessage" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:background="#eeeeee">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:text="小区"
+            android:textColor="@color/colorText"
+            android:textSize="12sp"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollViewResult"
+        android:gravity="center" >
+        <com.kjs.skywalk.control.ListView_NoScroll
+            android:id="@+id/listViewHint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ScrollView>
+    <include layout="@layout/seperator_horizontal" />
+</LinearLayout>
