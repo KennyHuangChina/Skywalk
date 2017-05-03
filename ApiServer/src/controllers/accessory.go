@@ -32,6 +32,7 @@ func (a *AccessoryController) URLMapping() {
 	a.Mapping("GetFacilityList", a.GetFacilityList)
 
 	a.Mapping("AddHouseFacilities", a.AddHouseFacilities)
+	a.Mapping("EditHouseFacility", a.EditHouseFacility)
 	a.Mapping("GetHouseFacilities", a.GetHouseFacilities)
 }
 
@@ -623,6 +624,50 @@ func (this *AccessoryController) AddHouseFacilities() {
 	 *	Processing
 	 */
 	err = models.AddHouseFacilities(uid, hid, al)
+	if nil == err {
+	}
+}
+
+// @Title EditHouseFacility
+// @Description add new house facility
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /housefacility/:id [put]
+func (this *AccessoryController) EditHouseFacility() {
+	FN := "[EditHouseFacility] "
+	beego.Warn("[--- API: EditHouseFacility ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	id, _ := this.GetInt64(":id")
+	fid, _ := this.GetInt64("fid")
+	qty, _ := this.GetInt("fqty")
+	desc := this.GetString("fdesc")
+
+	/*
+	 *	Processing
+	 */
+	err = models.EditHouseFacility(uid, id, fid, qty, desc)
 	if nil == err {
 	}
 }

@@ -149,6 +149,87 @@ func GetHouseFacilities(hid int64) (err error, lst []commdef.HouseFacility) {
 }
 
 /**
+*	Modify house facility info
+*	Arguments:
+*		uid - login user id
+*		id	- house facility id
+*		fid	- facility id
+*		qty	- quantity
+*		desc- description
+*	Returns
+*		err - error info
+**/
+func EditHouseFacility(uid, id, fid int64, qty int, desc string) (err error) {
+	FN := "[EditHouseFacility] "
+	beego.Trace(FN, "login user:", uid, ", house facility:", id, ", facility:", fid, ", qty:", qty, ", desc:", desc)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* argument checking */
+	if err, _ = getFacility(fid); nil != err {
+		return
+	}
+
+	err, hf := getHouseFacility(id)
+	if nil != err {
+		return
+	}
+
+	err, h := getHouse(hf.House)
+	if nil != err {
+		return
+	}
+
+	if qty < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("qty:%d", qty)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	// check if the house + facility already exist
+	bExist := o.QueryTable("tbl_house_facility").Filter("House", hf.House).Filter("Facility", fid).Exclude("Id", id).Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("house:%d, facility:%s", hf.House, fid)}
+		return
+	}
+
+	/* Permission checking */
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+	// only the landlord, house agency and administrator could modify the house facility
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	if 0 == qty { // delete this house facility
+		numb, errT := o.Delete(&TblHouseFacility{Id: id})
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(FN, fmt.Sprintf("Delete %d records", numb))
+	} else { // Update the house facility
+		_, errT := o.Update(&TblHouseFacility{Id: id, Facility: fid, Qty: qty, Desc: desc})
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	}
+
+	return
+}
+
+/**
 *	Add New house facilities
 *	Arguments:
 *		uid - login user id
@@ -620,5 +701,28 @@ func getFacility(fid int64) (err error, f TblFacilitys) {
 	}
 
 	f = t
+	return
+}
+
+func getHouseFacility(hfid int64) (err error, hf TblHouseFacility) {
+	if hfid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house facility:%d", hfid)}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	t := TblHouseFacility{Id: hfid}
+	errT := o.Read(&t)
+	if nil != errT {
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("facility:%d", hfid)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
+		return
+	}
+
+	hf = t
 	return
 }

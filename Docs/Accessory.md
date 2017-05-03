@@ -210,7 +210,6 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
-
 ### 18. Get House Facility List 
 	[Security]	public
 	[Request]
@@ -224,6 +223,19 @@
 		  		* Type		string		// facility type name
 		  		* Qty		ing 		// facility quantity
 		  		* Desc		string		// facility description
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
+### 19. Modify House Facility List (landlord, its agency, administrator) 
+	[Security]	private
+	[Request]
+  		* PUT /v1/accessory/housefacility/:id
+	  		* fid			int			// facility id
+	  		* fqty			int			// facility quantity
+	  		* fdesc			string		// facility description
+  	[Response]
+		* SUCCESS:200
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

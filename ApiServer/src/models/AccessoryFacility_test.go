@@ -546,3 +546,35 @@ func Test_GetHouseFacilities(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- EditHouseFacility --
+//
+func Test_EditHouseFacility(t *testing.T) {
+	t.Log("Test EditHouseFacility")
+	seq := 1
+
+	t.Log("<Case", seq, "> Invalid argument: facility < 0")
+	if e := EditHouseFacility(-1, -1, -1, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: facility = 0")
+	if e := EditHouseFacility(-1, -1, 0, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: facility does not exist")
+	if e := EditHouseFacility(-1, -1, 100000000, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	return
+}
