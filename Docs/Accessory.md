@@ -192,7 +192,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 9. Add House Facility (By house owner, agency and administrator)
+### 17*. Add House Facility (By house owner, agency and administrator)
 	[Security]	private
 	[Request]
   		* POST /v1/accessory/house/:id/facilities
@@ -211,7 +211,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 10. Get House Facility List (By house owner, agency and administrator)
+### 18. Get House Facility List 
 	[Security]	public
 	[Request]
   		* GET /v1/accessory/house/:id/facilities

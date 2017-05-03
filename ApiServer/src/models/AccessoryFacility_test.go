@@ -496,3 +496,53 @@ func Test_AddFacility(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetHouseFacilities --
+//
+func Test_GetHouseFacilities(t *testing.T) {
+	t.Log("Test GetHouseFacilities")
+
+	seq := 1
+	t.Log("<Case", seq, "> Invalid argument: house < 0")
+	if e, _ := GetHouseFacilities(-1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house = 0")
+	if e, _ := GetHouseFacilities(0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house does not exist")
+	if e, _ := GetHouseFacilities(100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house does not have any facility")
+	if e, _ := GetHouseFacilities(4); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> get house facility list")
+	e, hfl := GetHouseFacilities(6)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+	for k, v := range hfl {
+		t.Log("", k, ":", fmt.Sprintf("%+v", v))
+	}
+
+	return
+}
