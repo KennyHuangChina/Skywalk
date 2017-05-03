@@ -1,6 +1,6 @@
 package com.kjs.skywalk.app_android;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,7 +16,8 @@ import java.util.ArrayList;
  */
 
 public class fragmentFangYuanZhaoPianGroup extends Fragment {
-    private Group mGroup;
+//    private Group mGroup;
+    private  ArrayList<PicList> mPicList;
 
     static class PicList {
         String mDesc;
@@ -28,18 +29,22 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         }
     }
 
-    static class Group {
-        String mTitle;
-        ArrayList<PicList> mList;
+//    static class Group {
+//        String mTitle;
+//        ArrayList<PicList> mList;
+//
+//        public Group(String title,  ArrayList<PicList> list) {
+//            mTitle = title;
+//            mList = list;
+//        }
+//    }
 
-        public Group(String title,  ArrayList<PicList> list) {
-            mTitle = title;
-            mList = list;
-        }
-    }
+//    public void setGroup(Group group) {
+//        mGroup = group;
+//    }
 
-    public void setGroup(Group group) {
-        mGroup = group;
+    public void setPicList(ArrayList<PicList> picLst) {
+        mPicList = picLst;
     }
 
     @Nullable
@@ -47,18 +52,18 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fangyuanzhaopian_group, container, false);
 
-        TextView tvTitle = (TextView) view.findViewById(R.id.tv_title);
-        tvTitle.setText(mGroup.mTitle);
+//        TextView tvTitle = (TextView) view.findViewById(R.id.tv_title);
+//        tvTitle.setText(mGroup.mTitle);
 
         ImageView ivPic = (ImageView) view.findViewById(R.id.iv_pic);
         TextView tvPicDes = (TextView) view.findViewById(R.id.tv_pic_desc);
-        ivPic.setImageResource(mGroup.mList.get(0).mDrawable);
-        tvPicDes.setText("照片说明：" + mGroup.mList.get(0).mDesc);
+        ivPic.setImageResource(mPicList.get(0).mDrawable);
+        tvPicDes.setText("照片说明：" + mPicList.get(0).mDesc);
 
         ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
         TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
-        ivPic1.setImageResource(mGroup.mList.get(1).mDrawable);
-        tvPicDes1.setText("照片说明：" + mGroup.mList.get(1).mDesc);
+        ivPic1.setImageResource(mPicList.get(1).mDrawable);
+        tvPicDes1.setText("照片说明：" + mPicList.get(1).mDesc);
 
         return view;
     }
