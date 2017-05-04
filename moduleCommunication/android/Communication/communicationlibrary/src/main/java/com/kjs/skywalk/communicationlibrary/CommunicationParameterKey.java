@@ -46,4 +46,5 @@ class CommunicationParameterKey {
     public static String CPK_COUNT              = "Count";
 
     public static String CPK_DELIVERABLE_ID     = "DeliverableId";
+    public static String CPK_FACILITY_ID        = "FacilityId";
 }

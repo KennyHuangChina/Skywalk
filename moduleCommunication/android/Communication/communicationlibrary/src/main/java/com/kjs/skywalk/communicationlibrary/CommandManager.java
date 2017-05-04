@@ -341,6 +341,17 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int EditHouseFacility(int hfid, int fid, int qty, String desc) {
+        mOperation = new CmdModifyHouseFacility(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(hfid));
+        pMap.put(CommunicationParameterKey.CPK_FACILITY_ID, String.valueOf(fid));
+        pMap.put(CommunicationParameterKey.CPK_QTY, String.valueOf(qty));
+        pMap.put(CommunicationParameterKey.CPK_DESC, desc);
+        return execute(pMap);
+    }
+
+    @Override
     public int GetHouseFacilityList(int house) {
         mOperation = new CmdGetHouseFacilityList(mContext, house);
         HashMap<String, String> pMap = new HashMap<String, String>();

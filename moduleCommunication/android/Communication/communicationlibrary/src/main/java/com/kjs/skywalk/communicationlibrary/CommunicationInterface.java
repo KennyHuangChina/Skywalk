@@ -68,8 +68,10 @@ public class CommunicationInterface {
         int AddFacility(int nType, String sName);
         int EditFacility(int id, int nType, String sName);
         int GetFacilityList(int nType);
+
         int AddHouseFacility(int house, ArrayList<FacilityItem> list);
         int GetHouseFacilityList(int house);
+        int EditHouseFacility(int hfid, int fid, int qty, String desc);
     }
 
     public static class CmdID {
@@ -115,6 +117,7 @@ public class CommunicationInterface {
         public static int CMD_GET_FACILITY_LIST      = 0x5006;
         public static int CMD_ADD_HOUSE_FACILITY     = 0x5007;
         public static int CMD_GET_HOUSEFACILITY_LIST = 0x5008;
+        public static int CMD_EDIT_HOUSE_FACILITY    = 0x5009;
 
         public static int CMD_TEST                   = 0x0001;
     }
