@@ -179,10 +179,12 @@ func EditHouseFacility(uid, id, fid int64, qty int, desc string) (err error) {
 		return
 	}
 
+	beego.Debug(FN, "house:", hf.House)
 	err, h := getHouse(hf.House)
 	if nil != err {
 		return
 	}
+	beego.Debug(FN, "landlord:", h.Owner.Id, ", agency:", h.Agency.Id)
 
 	if qty < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("qty:%d", qty)}
@@ -194,7 +196,7 @@ func EditHouseFacility(uid, id, fid int64, qty int, desc string) (err error) {
 	// check if the house + facility already exist
 	bExist := o.QueryTable("tbl_house_facility").Filter("House", hf.House).Filter("Facility", fid).Exclude("Id", id).Exist()
 	if bExist {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("house:%d, facility:%s", hf.House, fid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("house:%d, facility:%d", hf.House, fid)}
 		return
 	}
 
@@ -219,7 +221,7 @@ func EditHouseFacility(uid, id, fid int64, qty int, desc string) (err error) {
 		}
 		beego.Debug(FN, fmt.Sprintf("Delete %d records", numb))
 	} else { // Update the house facility
-		_, errT := o.Update(&TblHouseFacility{Id: id, Facility: fid, Qty: qty, Desc: desc})
+		_, errT := o.Update(&TblHouseFacility{Id: id, Facility: fid, Qty: qty, Desc: desc}, "Facility", "Qty", "Desc")
 		if nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 			return

@@ -1,7 +1,7 @@
 package models
 
 import (
-	// "ApiServer/commdef"
+	"ApiServer/commdef"
 	"fmt"
 	// "github.com/astaxie/beego"
 	"testing"
@@ -571,6 +571,103 @@ func Test_EditHouseFacility(t *testing.T) {
 
 	t.Log("<Case", seq, "> Invalid argument: facility does not exist")
 	if e := EditHouseFacility(-1, -1, 100000000, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house facility < 0")
+	if e := EditHouseFacility(-1, -1, 3, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house facility = 0")
+	if e := EditHouseFacility(-1, 0, 3, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house facility does not exist")
+	if e := EditHouseFacility(-1, 100000000, 3, 0, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: qty < 0")
+	if e := EditHouseFacility(-1, 7, 3, -1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user not login")
+	if e := EditHouseFacility(-1, 7, 3, 1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user does not exist")
+	if e := EditHouseFacility(100000000, 7, 3, 1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user is a regular user")
+	if e := EditHouseFacility(9, 7, 3, 1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user is a agency, but not for this house")
+	if e := EditHouseFacility(11, 5, 4, 1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Update by administrator")
+	if e := EditHouseFacility(4, 5, 7, 10, "测试说明"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Restore by house agency")
+	if e := EditHouseFacility(6, 5, 4, 333, "fdesc_1111"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Add new facility by landlord")
+	hf := [...]commdef.AddHouseFacility{commdef.AddHouseFacility{Facility: int64(7), Qty: 3, Desc: "add desc"}}
+	if e := AddHouseFacilities(9, 2, hf[:]); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> remove the new facility by landlord")
+	e, hfl := GetHouseFacilities(2)
+	if nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	nid := int64(0)
+	for _, v := range hfl {
+		if v.Id > nid {
+			nid = v.Id
+		}
+	}
+	t.Log("nid:", nid)
+	if e := EditHouseFacility(9, nid, 7, 0, "fdesc_1111"); e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
