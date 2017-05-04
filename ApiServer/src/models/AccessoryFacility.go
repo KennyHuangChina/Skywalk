@@ -232,6 +232,62 @@ func EditHouseFacility(uid, id, fid int64, qty int, desc string) (err error) {
 }
 
 /**
+*	Delete a house facility
+*	Arguments:
+*		uid - login user id
+*		id	- house facility id
+*	Returns
+*		err - error info
+**/
+func DeleteHouseFacility(uid, id int64) (err error) {
+	FN := "[EditHouseFacility] "
+	beego.Trace(FN, "login user:", uid, ", house facility:", id)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* argument checking */
+	err, hf := getHouseFacility(id)
+	if nil != err {
+		return
+	}
+
+	beego.Debug(FN, "house:", hf.House)
+	err, h := getHouse(hf.House)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "landlord:", h.Owner.Id, ", agency:", h.Agency.Id)
+
+	/* Permission checking */
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+	// only the landlord, house agency and administrator could modify the house facility
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	// delete this house facility
+	numb, errT := o.Delete(&TblHouseFacility{Id: id})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf("Delete %d records", numb))
+
+	return
+}
+
+/**
 *	Add New house facilities
 *	Arguments:
 *		uid - login user id

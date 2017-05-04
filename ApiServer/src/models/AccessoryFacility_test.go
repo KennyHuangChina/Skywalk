@@ -675,3 +675,63 @@ func Test_EditHouseFacility(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- DeleteHouseFacility --
+//
+func Test_DeleteHouseFacility(t *testing.T) {
+	t.Log("Test DeleteHouseFacility")
+	seq := 1
+
+	t.Log("<Case", seq, "> Invalid argument: house facility < 0")
+	if e := DeleteHouseFacility(-1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house facility = 0")
+	if e := DeleteHouseFacility(-1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Invalid argument: house facility does not exist")
+	if e := DeleteHouseFacility(-1, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user not login")
+	if e := DeleteHouseFacility(-1, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user is a regular user")
+	if e := DeleteHouseFacility(11, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("<Case", seq, "> Permission: user is an agency, but not for this house")
+	if e := DeleteHouseFacility(2, 5); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq += 1
+
+	t.Log("Please ref to API Test_AddHouseFacilities for actual processing of DeleteHouseFacility")
+	// if e := DeleteHouseFacility(5, 5); e == nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
+	// seq += 1
+
+	return
+}

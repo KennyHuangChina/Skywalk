@@ -227,13 +227,23 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
-### 19. Modify House Facility List (landlord, its agency, administrator) 
+### 19. Modify House Facility (landlord, its agency, administrator) 
 	[Security]	private
 	[Request]
   		* PUT /v1/accessory/housefacility/:id
 	  		* fid			int			// facility id
 	  		* fqty			int			// facility quantity
 	  		* fdesc			string		// facility description
+  	[Response]
+		* SUCCESS:200
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
+### 20. Delete House Facility (landlord, its agency, administrator) 
+	[Security]	private
+	[Request]
+  		* DELETEDELETE /v1/accessory/housefacility/:id
   	[Response]
 		* SUCCESS:200
 		* ERR: 4XX,5XX
