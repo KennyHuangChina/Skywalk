@@ -7,18 +7,16 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:layout_height="43dp"
         android:gravity="center_vertical">
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="44"
-            android:layout_height="wrap_content"
+            android:layout_weight="81"
+            android:layout_height="match_parent"
             android:gravity="center_vertical">
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/left_n"
                 android:id="@+id/imageViewBack" />
@@ -28,27 +26,27 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="760"
-            android:layout_height="33dp"
+            android:layout_height="30dp"
             android:gravity="center_vertical">
 
             <SearchView
                 android:id="@+id/search_view"
                 android:background="#efefef"
                 android:layout_width="match_parent"
-                android:layout_height="29dp"
+                android:layout_height="match_parent"
                 android:searchIcon="@drawable/search_n"
                 android:searchHintIcon="@drawable/search_n"
-                android:queryHint="@string/fragment_search_input_hint" />
+                android:queryHint="输入小区名称" />
         </RelativeLayout>
 
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="44">
+            android:layout_weight="81"
+            android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/location2_n"
                 android:layout_centerInParent="true"
@@ -57,11 +55,11 @@
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="44">
+            android:layout_weight="81"
+            android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/message_n"
                 android:layout_centerInParent="true"
