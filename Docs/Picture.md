@@ -18,10 +18,10 @@
 
 ##
 ### 2. Add picture
-	[Security]	Private. house owner, agency
+	[Security]	Private. house owner, agency and administrator
 	[Request]
   		* POST /v1/pic/newpic
-	  		* house			int			// house id. could be Zero, which means picture is not related with house
+	  		* house			int			// house id. could be Zero, which means picture is not related with a certain house
 	  		* type			int			// picture type
 	  		* desc			string		// picture description
 	  		* pic			file 		// binary file to store the picture to upload

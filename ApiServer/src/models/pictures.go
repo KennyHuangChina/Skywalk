@@ -19,7 +19,7 @@ import (
 )
 
 /**
-*	Get picture url
+*	add new picture
 *	Arguments:
 *		hid 	- house id
 *		uid 	- login user id
@@ -33,7 +33,7 @@ import (
 **/
 func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid int64) {
 	FN := "[AddPicture] "
-	beego.Trace(FN, "hid:", hid, ", uid:", uid, ", pt:", pt, ", desc:", desc)
+	beego.Trace(FN, "house:", hid, ", user:", uid, ", pt:", pt, ", desc:", desc, ", pfn:", pfn, ", pbd:", pbd)
 
 	defer func() {
 		if nil != err {
@@ -48,8 +48,12 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 			err = errT
 			return
 		}
-		if h.Owner.Id != uid || h.Agency.Id != uid {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+		/* Permission checking */
+		// Only the house owner, its agency and administrator could add picture
+		if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+		} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("user:%d", uid)}
 			return
 		}
 	}
@@ -60,8 +64,7 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 	if 0 == len(pfn) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
 		return
-	}
-	if pos := strings.LastIndex(pfn, "/"); pos < 0 {
+	}	if pos := strings.LastIndex(pfn, "."); pos < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
 		return
 	}
@@ -76,7 +79,7 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 		return
 	}
 	if commdef.PIC_TYPE_HOUSE == majorType && 0 == hid {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house:%d for PIC_TYPE_HOUSE", hid)}
 		return
 	}
 	// check if the picture exist
@@ -89,9 +92,9 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 
 	/* Processing */
 	switch majorType {
-	case commdef.PIC_TYPE_USER:
 	case commdef.PIC_TYPE_HOUSE:
 		return addPicHouse(hid, minorType, desc, pfn, pbd)
+	case commdef.PIC_TYPE_USER:
 	case commdef.PIC_TYPE_RENTAL:
 	default:
 	}
@@ -210,7 +213,7 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 	FN := "[checkPictureType] "
 
 	if picType <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picType:%d", picType)}
 		return
 	}
 
