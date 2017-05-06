@@ -44,6 +44,8 @@
                         android:text="户型图"/>
 
                     <ImageView
+                        android:id="@+id/iv_huxing_photopicker"
+                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

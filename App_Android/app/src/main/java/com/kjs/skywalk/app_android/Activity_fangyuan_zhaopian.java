@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.iwf.photopicker.PhotoPicker;
+
 public class Activity_fangyuan_zhaopian extends AppCompatActivity {
     ViewPager mVPHuXing;
 
@@ -71,6 +73,18 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
             case R.id.tv_info_title:
             {
                 finish();
+            }
+            break;
+
+        }
+    }
+
+    public void onPhotoPickerClicked(View v) {
+        switch (v.getId()) {
+            case R.id.iv_huxing_photopicker:
+            {
+                PhotoPicker.builder()
+                        .start(Activity_fangyuan_zhaopian.this);
             }
             break;
 
