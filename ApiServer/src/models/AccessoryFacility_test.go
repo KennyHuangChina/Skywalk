@@ -648,26 +648,15 @@ func Test_EditHouseFacility(t *testing.T) {
 
 	t.Log("<Case", seq, "> Add new facility by landlord")
 	hf := [...]commdef.AddHouseFacility{commdef.AddHouseFacility{Facility: int64(7), Qty: 3, Desc: "add desc"}}
-	if e := AddHouseFacilities(9, 2, hf[:]); e != nil {
+	e, nid := AddHouseFacilities(9, 2, hf[:])
+	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	seq += 1
 
 	t.Log("<Case", seq, "> remove the new facility by landlord")
-	e, hfl := GetHouseFacilities(2)
-	if nil != e {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	nid := int64(0)
-	for _, v := range hfl {
-		if v.Id > nid {
-			nid = v.Id
-		}
-	}
-	t.Log("nid:", nid)
-	if e := EditHouseFacility(9, nid, 7, 0, "fdesc_1111"); e != nil {
+	if e := EditHouseFacility(9, nid[0], 7, 0, "fdesc_1111"); e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -689,42 +678,42 @@ func Test_DeleteHouseFacility(t *testing.T) {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	seq += 1
+	seq++
 
 	t.Log("<Case", seq, "> Invalid argument: house facility = 0")
 	if e := DeleteHouseFacility(-1, 0); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	seq += 1
+	seq++
 
 	t.Log("<Case", seq, "> Invalid argument: house facility does not exist")
 	if e := DeleteHouseFacility(-1, 100000000); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	seq += 1
+	seq++
 
 	t.Log("<Case", seq, "> Permission: user not login")
 	if e := DeleteHouseFacility(-1, 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	seq += 1
+	seq++
 
 	t.Log("<Case", seq, "> Permission: user is a regular user")
 	if e := DeleteHouseFacility(11, 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	seq += 1
+	seq++
 
 	t.Log("<Case", seq, "> Permission: user is an agency, but not for this house")
 	if e := DeleteHouseFacility(2, 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	seq += 1
+	seq++
 
 	t.Log("Please ref to API Test_AddHouseFacilities for actual processing of DeleteHouseFacility")
 	// if e := DeleteHouseFacility(5, 5); e == nil {
@@ -732,6 +721,149 @@ func Test_DeleteHouseFacility(t *testing.T) {
 	// 	return
 	// }
 	// seq += 1
+
+	return
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AddHouseFacilities --
+//
+func Test_AddHouseFacilities(t *testing.T) {
+	t.Log("Test AddHouseFacilities")
+	seq := 1
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: house < 0")
+	if e, _ := AddHouseFacilities(-1, -1, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: house = 0")
+	if e, _ := AddHouseFacilities(-1, 0, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: house does not exist")
+	if e, _ := AddHouseFacilities(-1, 100000000, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: user not login")
+	if e, _ := AddHouseFacilities(-1, 4, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: user does not exist")
+	if e, _ := AddHouseFacilities(100000000, 4, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission Checking: user is a regular user")
+	if e, _ := AddHouseFacilities(9, 4, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission Checking: user is an agency, but not for this house")
+	if e, _ := AddHouseFacilities(11, 4, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "Permission Checking: user is an agency of this house")
+	// if e, _ := AddHouseFacilities(6, 4, nil); e == nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
+	// seq++
+
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "Permission Checking: user is house owner")
+	// if e, _ := AddHouseFacilities(4, 4, nil); e == nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
+	// seq++
+
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "Permission Checking: user is an administrator")
+	// if e, _ := AddHouseFacilities(5, 4, nil); e == nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
+	// seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: no facility list assigned, nil")
+	if e, _ := AddHouseFacilities(5, 4, nil); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: no facility list assigned, empty")
+	hf := [...]commdef.AddHouseFacility{}
+	if e, _ := AddHouseFacilities(5, 4, hf[:]); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid argument: facility not found")
+	hf1 := [...]commdef.AddHouseFacility{commdef.AddHouseFacility{Facility: int64(100000000), Qty: 3, Desc: "add desc"}}
+	if e, _ := AddHouseFacilities(5, 4, hf1[:]); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	seq++
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "add facility to house that don't have any facility")
+	seq++
+	hf1[0].Facility = 7
+	e, ids := AddHouseFacilities(5, 4, hf1[:])
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new house facility ids:", ids)
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "add facility to house that already have facility")
+	seq++
+	hf2 := [...]commdef.AddHouseFacility{commdef.AddHouseFacility{Facility: 3, Qty: 33, Desc: "add desc 3"},
+		commdef.AddHouseFacility{Facility: 7, Qty: 77, Desc: "add desc 7"},
+		commdef.AddHouseFacility{Facility: 8, Qty: 88, Desc: "add desc 8"}}
+	e, ids2 := AddHouseFacilities(5, 4, hf2[:])
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new house facility ids:", ids2)
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Remove all house facilities added above")
+	seq++
+	for _, v := range ids {
+		t.Log("Delete new house facility:", v)
+		if e := DeleteHouseFacility(5, v); e != nil {
+			t.Error("Fail to remove house facility:", v, ", err: ", e)
+			return
+		}
+	}
+	for _, v := range ids2 {
+		t.Log("Delete new house facility:", v)
+		if e := DeleteHouseFacility(5, v); e != nil {
+			t.Error("Fail to remove house facility:", v, ", err: ", e)
+			return
+		}
+	}
 
 	return
 }

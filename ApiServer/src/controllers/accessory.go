@@ -623,7 +623,7 @@ func (this *AccessoryController) AddHouseFacilities() {
 	/*
 	 *	Processing
 	 */
-	err = models.AddHouseFacilities(uid, hid, al)
+	err, _ = models.AddHouseFacilities(uid, hid, al)
 	if nil == err {
 	}
 }

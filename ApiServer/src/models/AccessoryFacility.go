@@ -295,10 +295,11 @@ func DeleteHouseFacility(uid, id int64) (err error) {
 *		fl	- facility list
 *	Returns
 *		err - error info
+*		ids - new house facility id list
 **/
-func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err error) {
+func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err error, ids []int64) {
 	FN := "[AddHouseFacilities] "
-	beego.Trace(FN, "uid:", uid, ", fl:", fl)
+	beego.Trace(FN, "user:", uid, ", house:", hid, ", fl:", fmt.Sprintf("%+v", fl))
 
 	defer func() {
 		if nil != err {
@@ -313,27 +314,26 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err erro
 		return
 	}
 
-	// who could do this operation
-	bPermission := false
-	if h.Owner.Id == uid || h.Agency.Id == uid {
-		bPermission = true
-	} else {
-		errT, bAdmin := isAdministrator(uid)
-		if nil != errT {
-			err = errT
-			return
-		}
-		if bAdmin {
-			bPermission = true
-		}
+	if err, _ = GetUser(uid); nil != err {
+		return
 	}
-	if !bPermission {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+
+	/* Permission Checking */
+	// Only the house owner, its agency and administrator could add facility
+	// who could do this operation
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("user:%d", uid)}
 		return
 	}
 
 	// facility id
-	if nLen := len(fl); 0 == nLen {
+	nLen := 0
+	if nil != fl {
+		nLen = len(fl)
+	}
+	if 0 == nLen {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "no facility found"}
 		return
 	}
@@ -379,18 +379,33 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err erro
 	}()
 
 	// add new house facilities
-	var la []TblHouseFacility
-	for _, v := range al {
-		newItem := TblHouseFacility{House: hid, Facility: v.Facility, Qty: v.Qty, Desc: v.Desc}
-		la = append(la, newItem)
-	}
-	if len(la) > 0 {
-		/*numb*/ _, errT := o.InsertMulti(len(la), la)
-		if nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED} // , ErrInfo: fmt.Sprintf("add facility:", v.Facility)}
-			return
+	// Kenny: change to use prepareInset, instead of InsertMulti, in order to get the new record ids
+	if len(al) > 0 {
+		qs := o.QueryTable("tbl_house_facility")
+		i, _ := qs.PrepareInsert()
+		defer i.Close()
+		for k, v := range al {
+			beego.Debug(FN, k, ":", v)
+			nid, e := i.Insert(&TblHouseFacility{House: hid, Facility: v.Facility, Qty: v.Qty, Desc: v.Desc})
+			if nil != e {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("add facility:", v.Facility)}
+				return
+			}
+			ids = append(ids, nid)
 		}
 	}
+	// var la []TblHouseFacility
+	// for _, v := range al {
+	// 	newItem := TblHouseFacility{House: hid, Facility: v.Facility, Qty: v.Qty, Desc: v.Desc}
+	// 	la = append(la, newItem)
+	// }
+	// if len(la) > 0 {
+	// 	numb _, errT := o.InsertMulti(len(la), la)
+	// 	if nil != errT {
+	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED} // , ErrInfo: fmt.Sprintf("add facility:", v.Facility)}
+	// 		return
+	// 	}
+	// }
 
 	// update facilities already exist
 	for _, v := range ul {
