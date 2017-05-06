@@ -363,6 +363,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_Search.class));
                         break;
                     }
+                    case R.id.action_setting112:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_Search_Fangyuanliebiao.class));
+                        break;
+                    }
                 }
                 return false;
             }

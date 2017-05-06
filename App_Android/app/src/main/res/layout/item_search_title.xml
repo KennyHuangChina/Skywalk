@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="43dp"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="81"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/left_n"
+            android:id="@+id/imageViewBack" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="760"
+        android:layout_height="30dp"
+        android:gravity="center_vertical">
+
+        <SearchView
+            android:id="@+id/search_view"
+            android:background="#efefef"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:searchIcon="@drawable/search_n"
+            android:searchHintIcon="@drawable/search_n"
+            android:queryHint="输入小区名称" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="81"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/location2_n"
+            android:layout_centerInParent="true"
+            android:id="@+id/imageViewLocation" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="81"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/message_n"
+            android:layout_centerInParent="true"
+            android:id="@+id/imageViewMessage" />
+    </RelativeLayout>
+
+</LinearLayout>
