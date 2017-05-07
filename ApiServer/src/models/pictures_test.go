@@ -205,11 +205,10 @@ func Test_AddPicture(t *testing.T) {
 	// }
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Clean test, remove picture just added")
-	// e, _ = AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", "test.jpg", picBaseDir)
-	// if e == nil {
-	// 	t.Error("Failed, err: ", e)
-	// 	return
-	// }
+	if e = DelImage(nid, 4); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
 
 	beego.Warn("[Test_AddPicture] adding picture for other types")
 

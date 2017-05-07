@@ -31,3 +31,14 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+
+##
+### 3. Delete picture
+	[Security]	Private. house owner, agency and administrator
+	[Request]
+  		* DELETE /v1/pic/:id
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

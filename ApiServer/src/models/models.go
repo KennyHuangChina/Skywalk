@@ -298,6 +298,7 @@ type TblPicSet struct {
 
 func (ps *TblPicSet) TableIndex() [][]string {
 	return [][]string{
+		[]string{"PicId"},
 		[]string{"PicId", "Size"},
 	}
 }

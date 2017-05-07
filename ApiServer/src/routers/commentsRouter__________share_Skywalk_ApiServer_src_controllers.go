@@ -272,6 +272,13 @@ func init() {
 			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 
+	beego.GlobalControllerRouter["ApiServer/controllers:PictureController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:PictureController"],
+		beego.ControllerComments{
+			Method: "DelPic",
+			Router: `/:id`,
+			AllowHTTPMethods: []string{"delete"},
+			Params: nil})
+
 	beego.GlobalControllerRouter["ApiServer/controllers:PropertyController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:PropertyController"],
 		beego.ControllerComments{
 			Method: "GetPropertyInfo",

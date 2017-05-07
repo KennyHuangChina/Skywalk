@@ -182,9 +182,98 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 	return
 }
 
-// delete the image specified
-func DelImage(image string) (err error) {
+/**
+*	Delete picture
+*	Arguments:
+*		pic 	- picture id
+*		uid 	- login user id
+*	Returns
+*		err - error info
+**/
+func DelImage(pic, uid int64) (err error) {
 	FN := "[DelImage] "
+	beego.Debug(FN, "image:", pic, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Arguments checking */
+	err, _ = GetUser(uid)
+	if nil != err {
+		return
+	}
+	err, p := getPicture(pic)
+	if nil != err {
+		return
+	}
+
+	if p.TypeMajor == commdef.PIC_TYPE_HOUSE {
+		house := p.RefId
+		errT, h := getHouse(house)
+		if nil != errT {
+			err = errT
+			return
+		}
+		/* Permission checking */
+		// Only the house owner, its agency and administrator could remove the picture
+		if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+		} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+			return
+		}
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	// picture set
+	var psl []*TblPicSet
+	numb, errT := o.QueryTable("tbl_pic_set").Filter("PicId", pic).All(&psl)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, numb, "record in database")
+
+	for _, v := range psl {
+		DelImageFile(v.Url)
+	}
+	o.Begin()
+	defer func() {
+		if nil == err {
+			o.Commit()
+		} else {
+			o.Rollback()
+		}
+	}()
+
+	// ps := TblPicSet{PicId: pic}
+	// beego.Debug(FN, "picture to delete:", fmt.Sprintf("%+v", ps))
+	// numb, errT = o.Delete(&ps)
+	numb, errT = o.QueryTable("tbl_pic_set").Filter("PicId", pic).Delete()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "delete", numb, "records from picture set")
+
+	// picture
+	numb, errT = o.Delete(&TblPictures{Id: pic})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "delete", numb, "records from picture")
+
+	return
+}
+
+// delete the image specified
+func DelImageFile(image string) (err error) {
+	FN := "[DelImageFile] "
 	beego.Debug(FN, "image:", image)
 
 	defer func() {
@@ -211,6 +300,26 @@ func DelImage(image string) (err error) {
 //		Internal Functions
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func getPicture(pic int64) (err error, p TblPictures) {
+	FN := "[getPicture] "
+
+	if pic <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("pic:%d", pic)}
+		return
+	}
+
+	o := orm.NewOrm()
+	p1 := TblPictures{Id: pic}
+	if errT := o.Read(&p1); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	p = p1
+	beego.Debug(FN, fmt.Sprintf("%+v", p))
+	return
+}
+
 func checkPictureType(picType int) (err error, majorType, minorType int) {
 	FN := "[checkPictureType] "
 
@@ -278,10 +387,10 @@ func addPicHouse(hid int64, minorType int, desc, pfn, pbd string) (err error, ni
 			o.Rollback()
 			// delete the pictures created in this function
 			if len(psn) > 0 {
-				DelImage(pbd + psn)
+				DelImageFile(pbd + psn)
 			}
 			if len(pln) > 0 {
-				DelImage(pbd + pln)
+				DelImageFile(pbd + pln)
 			}
 		} else {
 			o.Commit()

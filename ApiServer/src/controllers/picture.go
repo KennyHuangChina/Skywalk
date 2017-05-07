@@ -24,6 +24,7 @@ type PictureController struct {
 func (p *PictureController) URLMapping() {
 	p.Mapping("GetPicUrl", p.GetPicUrl)
 	p.Mapping("AddPic", p.AddPic)
+	p.Mapping("DelPic", p.DelPic)
 }
 
 // @Title GetPicUrl
@@ -142,8 +143,46 @@ func (this *PictureController) AddPic() {
 	if nil == err {
 		result.Id = id
 	} else {
-		models.DelImage(picBaseDir + picFileName)
+		models.DelImageFile(picBaseDir + picFileName)
 	}
+}
+
+// @Title DelPic
+// @Description delete a picture
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id [delete]
+func (this *PictureController) DelPic() {
+	FN := "[DelPic] "
+	beego.Warn("[--- API: DelPic ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	pic, _ := this.GetInt64(":id")
+
+	err = models.DelImage(pic, uid)
+
+	return
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
