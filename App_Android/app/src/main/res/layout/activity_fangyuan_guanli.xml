@@ -80,6 +80,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
+                            android:id="@+id/tv_lijirenzheng"
+                            android:onClick="onViewClick"
                             android:layout_width="72dp"
                             android:layout_height="28dp"
                             android:layout_alignParentRight="true"
@@ -142,6 +144,8 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_kanfangshijian"
+                    android:onClick="onViewClick"
                     android:layout_width="match_parent"
                     android:layout_height="78dp"
                     android:gravity="center_vertical"
@@ -188,6 +192,8 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_wuraoshijian"
+                    android:onClick="onViewClick"
                     android:layout_width="match_parent"
                     android:layout_height="78dp"
                     android:gravity="center_vertical"
@@ -234,6 +240,8 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_chuzujiaofu"
+                    android:onClick="onViewClick"
                     android:layout_width="match_parent"
                     android:layout_height="78dp"
                     android:gravity="center_vertical"
@@ -280,6 +288,8 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_fangwusheshi"
+                    android:onClick="onViewClick"
                     android:layout_width="match_parent"
                     android:layout_height="78dp"
                     android:gravity="center_vertical"
@@ -326,6 +336,8 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_shegnhuozhanghu"
+                    android:onClick="onViewClick"
                     android:layout_width="match_parent"
                     android:layout_height="78dp"
                     android:gravity="center_vertical"
@@ -372,6 +384,8 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_fuwu"
+                    android:onClick="onViewClick"
                     android:layout_width="match_parent"
                     android:layout_height="78dp"
                     android:gravity="center_vertical"

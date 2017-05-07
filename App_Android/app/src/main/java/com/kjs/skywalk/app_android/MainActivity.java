@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //                    mBvMsgInTab.hide();
 //                }
 
-                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
+//                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
             }
             break;
 
@@ -143,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(this, Activity_ApartmentDetail.class);
 //                startActivity(intent);
 
-                Intent intent = new Intent(this, Activity_HouseholdAppliances.class);
-                startActivity(intent);
-
-                setNewMessageCount(5);
+//                Intent intent = new Intent(this, Activity_HouseholdAppliances.class);
+//                startActivity(intent);
+//
+//                setNewMessageCount(5);
             }
             break;
 
@@ -310,34 +310,34 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
 
-                    case R.id.action_setting102:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Finish.class));
-                        break;
-                    }
-
-                    case R.id.action_setting103:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Xuanzedaili.class));
-                        break;
-                    }
-
-                    case R.id.action_setting104:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_SelectService.class));
-                        break;
-                    }
+//                    case R.id.action_setting102:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Finish.class));
+//                        break;
+//                    }
+//
+//                    case R.id.action_setting103:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Xuanzedaili.class));
+//                        break;
+//                    }
+//
+//                    case R.id.action_setting104:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_SelectService.class));
+//                        break;
+//                    }
 
                     case R.id.action_setting105:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_shenhe_zhengjian.class));
                         break;
                     }
-                    case R.id.action_setting106:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
-                        break;
-                    }
+//                    case R.id.action_setting106:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
+//                        break;
+//                    }
                     case R.id.action_setting107:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_Search_NoHistory.class));
@@ -353,11 +353,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, Activity_Search_House.class));
                         break;
                     }
-                    case R.id.action_setting110:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_renzhengshuoming.class));
-                        break;
-                    }
+//                    case R.id.action_setting110:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_renzhengshuoming.class));
+//                        break;
+//                    }
                     case R.id.action_setting111:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_Search.class));

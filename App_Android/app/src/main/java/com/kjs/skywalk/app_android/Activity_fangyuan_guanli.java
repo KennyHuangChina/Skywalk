@@ -61,12 +61,52 @@ public class Activity_fangyuan_guanli extends AppCompatActivity {
                 finish();
             }
             break;
+            case R.id.tv_lijirenzheng:
+            {
+                // 立即认证
+                startActivity(new Intent(this, Activity_fangyuan_renzhengshuoming.class));
+            }
+            break;
             case R.id.ll_fangyuanzhaopian:
             {
                 // 房源照片
                 startActivity(new Intent(this, Activity_fangyuan_zhaopian.class));
             }
             break;
+            case R.id.ll_kanfangshijian:
+            {
+                // 最佳看房时间
+                startActivity(new Intent(this, Activity_Zushouweituo_Kanfangshijian.class));
+            }
+            break;
+            case R.id.ll_wuraoshijian:
+            {
+                // 勿扰时间
+            }
+            break;
+            case R.id.ll_chuzujiaofu:
+            {
+                // 出租交付
+                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
+            }
+            break;
+            case R.id.ll_fangwusheshi:
+            {
+                // 房屋设施
+                startActivity(new Intent(this, Activity_HouseholdAppliances.class));
+            }
+            break;
+            case R.id.ll_shegnhuozhanghu:
+            {
+                // 生活账户
+            }
+            break;
+            case R.id.ll_fuwu:
+            {
+                // 服务及收费标准
+            }
+            break;
+
         }
     }
 }
