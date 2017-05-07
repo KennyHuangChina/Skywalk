@@ -3,8 +3,10 @@ package models
 import (
 	"ApiServer/commdef"
 	"fmt"
-	// "github.com/astaxie/beego"
+	"github.com/astaxie/beego"
+	"os"
 	"testing"
+	"time"
 )
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,14 +178,83 @@ func Test_AddPicture(t *testing.T) {
 	}
 
 	/* add picure for house */
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Add house picture")
+	picBaseDir = "./"
+	// copy a image for testing
+	e, pfn := copyImage("./test.jpg")
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new picture:", pfn)
+	e, nid := AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", pfn, picBaseDir)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new picture:", nid)
+
+	// // add again, this time it should be error
 	// seq++
-	// t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: PIC_TYPE_HOUSE but house is not set")
-	// if e, _ := AddPicture(0, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_APPLIANCE, "picture desc", "ab.c", picBaseDir); e == nil {
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "Add house picture again, it should be error")
+	// e, _ = AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", "test.jpg", picBaseDir)
+	// if e == nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Clean test, remove picture just added")
+	// e, _ = AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", "test.jpg", picBaseDir)
+	// if e == nil {
 	// 	t.Error("Failed, err: ", e)
 	// 	return
 	// }
 
-	// add again, this time it should be error
+	beego.Warn("[Test_AddPicture] adding picture for other types")
 
+	return
+}
+
+func copyImage(src string) (err error, dest string) {
+
+	tNow := time.Now().UnixNano()
+	nfn := fmt.Sprintf("./test_%d.jpg", tNow)
+	beego.Debug("src:", src, ", new file:", nfn)
+
+	// create a new image name
+	dstFile, createErr := os.Create(nfn)
+	defer dstFile.Close()
+	if createErr != nil {
+		beego.Error(createErr)
+		return
+	}
+	// open the source file
+	srcFile, openErr := os.Open(src)
+	defer srcFile.Close()
+	if openErr != nil {
+		beego.Error(openErr)
+		return
+	}
+
+	// create a cache, 1024 byte
+	buf := make([]byte, 1024)
+	for {
+		len, readErr := srcFile.Read(buf)
+		if len == 0 {
+			break // EOF
+		}
+		if readErr != nil {
+			beego.Error(readErr)
+			return
+		}
+		_, writeErr := dstFile.Write(buf)
+		if writeErr != nil {
+			beego.Error(writeErr)
+			return
+		}
+	}
+
+	dest = nfn
 	return
 }

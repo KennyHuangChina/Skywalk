@@ -12,8 +12,8 @@ import (
 	"image/draw"
 	// "code.google.com/p/graphics-go/graphics"
 	"image"
-	// "image/png"
 	"image/jpeg"
+	"image/png"
 	"os"
 	"strings"
 )
@@ -33,7 +33,7 @@ import (
 **/
 func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid int64) {
 	FN := "[AddPicture] "
-	beego.Trace(FN, "house:", hid, ", user:", uid, ", pt:", pt, ", desc:", desc, ", pfn:", pfn, ", pbd:", pbd)
+	beego.Trace(FN, "house:", hid, ", user:", uid, ", picture type:", pt, ", desc:", desc, ", pic file name:", pfn, ", base dir:", pbd)
 
 	defer func() {
 		if nil != err {
@@ -64,7 +64,8 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 	if 0 == len(pfn) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
 		return
-	}	if pos := strings.LastIndex(pfn, "."); pos < 0 {
+	}
+	if pos := strings.LastIndex(pfn, "."); pos < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
 		return
 	}
@@ -184,6 +185,7 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 // delete the image specified
 func DelImage(image string) (err error) {
 	FN := "[DelImage] "
+	beego.Debug(FN, "image:", image)
 
 	defer func() {
 		if nil != err {
@@ -245,8 +247,9 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 	return
 }
 
-func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, nid int64) {
+func addPicHouse(hid int64, minorType int, desc, pfn, pbd string) (err error, nid int64) {
 	FN := "[addPicHouse] "
+	beego.Debug(FN, "house:", hid, ", minor type:", minorType, ", desc:", desc, ", pic file name:", pfn, ", base dir:", pbd)
 
 	defer func() {
 		if nil != err {
@@ -261,8 +264,8 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 		return
 	}
 	picName := pfn[:pos]
-	// extName := pfn[pos:]
-	// beego.Debug(FN, "picName:", picName, ", extName:", extName)
+	extName := pfn[pos:]
+	beego.Debug(FN, "pic:", picName, ", ext:", extName)
 
 	psn := ""
 	pln := ""
@@ -285,13 +288,14 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 		}
 	}()
 
-	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMiner: minotType, RefId: hid, Desc: desc}
+	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMiner: minorType, RefId: hid, Desc: desc}
 	id, errT := o.Insert(&newPic)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
 	nid = id
+	beego.Debug(FN, "new pic:", nid)
 
 	// watermark
 
@@ -304,6 +308,7 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	}
 
 	src, err, dx, dy := loadImage(pbd + pfn)
+	beego.Debug(FN, "original pic:", dx, "x", dy)
 	if nil != err {
 		return
 	}
@@ -312,6 +317,11 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	psn = picName + "_s.jpg" // + extName
 	sw, _ := beego.AppConfig.Int("small_pic_w")
 	sh, _ := beego.AppConfig.Int("small_pic_h")
+	if 0 == sw || 0 == sh {
+		sw = 400
+		sh = 400
+	}
+	beego.Debug(FN, "small pic:", sw, "x", sh)
 	if dx > sw || dy > sh {
 		if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
 			return
@@ -329,9 +339,15 @@ func addPicHouse(hid int64, minotType int, desc, pfn, pbd string) (err error, ni
 	pln = picName + "_l.jpg" // + extName
 	lw, _ := beego.AppConfig.Int("lare_pic_w")
 	lh, _ := beego.AppConfig.Int("lare_pic_h")
+	if 0 == lw || 0 == lh {
+		lw = 1200
+		lh = 1200
+	}
+	beego.Debug(FN, "large size:", lw, "x", lh)
 	if dx < lw && dy < lh { // original image is small than defined "large size", make a copy
 		lw = dx
 		lh = dy
+		beego.Debug(FN, "large size:", lw, "x", lh)
 	}
 	if err = resizeImage(src, pbd+pln, lw, lh, 100, watermarking); nil != err {
 		return
@@ -444,7 +460,7 @@ func saveImage(img *image.RGBA, file string, quality int) (err error) {
 // Load Image decodes an image from a file of image.
 func loadImage(path string) (img image.Image, err error, w, h int) {
 	FN := "[loadImage] "
-	// beego.Debug(FN, "path:", path)
+	beego.Debug(FN, "image:", path)
 
 	defer func() {
 		if nil != err {
@@ -464,10 +480,14 @@ func loadImage(path string) (img image.Image, err error, w, h int) {
 	}
 	defer file.Close()
 
-	img, _, errT = image.Decode(file)
+	img, _, errT = image.Decode(file) // common image decoder, include jpe, png ...
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Decode image, err:%s", errT.Error())}
-		return
+		// image.Decode may failed for png, try specialized png decoder again
+		img, errT = png.Decode(file)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Decode image, err:%s", errT.Error())}
+			return
+		}
 	}
 
 	w = img.Bounds().Dx()
@@ -479,6 +499,7 @@ func loadImage(path string) (img image.Image, err error, w, h int) {
 // watermarking image
 //		bg - background image
 func watermarking(bgImg *image.RGBA) (err error) {
+	FN := "[watermarking] "
 
 	if nil == bgImg {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("bgImg is NULL")}
@@ -488,7 +509,12 @@ func watermarking(bgImg *image.RGBA) (err error) {
 	dx := bgImg.Bounds().Dx()
 	dy := bgImg.Bounds().Dy()
 
-	wmp := beego.AppConfig.String("PicBaseDir") + "watermark.png" // watermark path
+	wmp := beego.AppConfig.String("PicBaseDir")
+	if 0 == len(wmp) {
+		beego.Warn(FN, "this is just for testing by go test")
+		wmp = "../pics/"
+	}
+	wmp += "watermark.png" // watermark path
 	watermark, err, wM, hM := loadImage(wmp)
 	if nil != err {
 		return
