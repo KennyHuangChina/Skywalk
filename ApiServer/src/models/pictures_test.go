@@ -210,7 +210,7 @@ func Test_AddPicture(t *testing.T) {
 		return
 	}
 
-	beego.Warn("[Test_AddPicture] adding picture for other types")
+	beego.Warn("[Test_AddPicture] TODO: adding picture for other types")
 
 	return
 }
@@ -255,5 +255,68 @@ func copyImage(src string) (err error, dest string) {
 	}
 
 	dest = nfn
+	return
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- DelImage --
+//
+func Test_DelImage(t *testing.T) {
+	t.Log("Test DelImage")
+	seq := 0
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
+	if e := DelImage(-1, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is system")
+	if e := DelImage(-1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: pic < 0")
+	if e := DelImage(-1, 11); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: pic = 0")
+	if e := DelImage(0, 11); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: pic does not exist")
+	if e := DelImage(100000000, 11); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
+	if e := DelImage(38, 2); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not for this house")
+	if e := DelImage(38, 6); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("Please ref to Test_AddPicture for actual picture deleting")
+
+	beego.Warn("[Test_DelImage] TODO: add cases for other picture type")
+
 	return
 }

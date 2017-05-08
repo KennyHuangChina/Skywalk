@@ -311,7 +311,11 @@ func getPicture(pic int64) (err error, p TblPictures) {
 	o := orm.NewOrm()
 	p1 := TblPictures{Id: pic}
 	if errT := o.Read(&p1); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("pic:%d", pic)}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		}
 		return
 	}
 
@@ -424,12 +428,7 @@ func addPicHouse(hid int64, minorType int, desc, pfn, pbd string) (err error, ni
 
 	// small size
 	psn = picName + "_s.jpg" // + extName
-	sw, _ := beego.AppConfig.Int("small_pic_w")
-	sh, _ := beego.AppConfig.Int("small_pic_h")
-	if 0 == sw || 0 == sh {
-		sw = 400
-		sh = 400
-	}
+	sw, sh := getSmallPicSize()
 	beego.Debug(FN, "small pic:", sw, "x", sh)
 	if dx > sw || dy > sh {
 		if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
@@ -446,12 +445,7 @@ func addPicHouse(hid int64, minorType int, desc, pfn, pbd string) (err error, ni
 
 	// Large size
 	pln = picName + "_l.jpg" // + extName
-	lw, _ := beego.AppConfig.Int("lare_pic_w")
-	lh, _ := beego.AppConfig.Int("lare_pic_h")
-	if 0 == lw || 0 == lh {
-		lw = 1200
-		lh = 1200
-	}
+	lw, lh := getLargePicSize()
 	beego.Debug(FN, "large size:", lw, "x", lh)
 	if dx < lw && dy < lh { // original image is small than defined "large size", make a copy
 		lw = dx
@@ -620,7 +614,7 @@ func watermarking(bgImg *image.RGBA) (err error) {
 
 	wmp := beego.AppConfig.String("PicBaseDir")
 	if 0 == len(wmp) {
-		beego.Warn(FN, "this is just for testing by go test")
+		beego.Warn(FN, `this is just for testing by "go test"`)
 		wmp = "../pics/"
 	}
 	wmp += "watermark.png" // watermark path
@@ -646,5 +640,25 @@ func watermarking(bgImg *image.RGBA) (err error) {
 	offset := image.Pt((bgImg.Bounds().Dx()-watermark.Bounds().Dx())/2, (bgImg.Bounds().Dy()-watermark.Bounds().Dy())/2)
 	draw.Draw(bgImg, watermark.Bounds().Add(offset), watermark, watermark.Bounds().Min, draw.Over)
 
+	return
+}
+
+func getSmallPicSize() (w, h int) {
+	w, _ = beego.AppConfig.Int("small_pic_w")
+	h, _ = beego.AppConfig.Int("small_pic_h")
+	if 0 == w || 0 == h {
+		w = 400
+		h = 400
+	}
+	return
+}
+
+func getLargePicSize() (w, h int) {
+	w, _ = beego.AppConfig.Int("lare_pic_w")
+	h, _ = beego.AppConfig.Int("lare_pic_h")
+	if 0 == w || 0 == h {
+		w = 1200
+		h = 1200
+	}
 	return
 }
