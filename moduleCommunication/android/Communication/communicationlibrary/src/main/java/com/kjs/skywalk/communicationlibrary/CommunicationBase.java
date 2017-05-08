@@ -35,6 +35,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected   String  mServerURL  = "";
     protected   String  mCommandURL = "";
     protected   String  mRequestData = "";
+    protected   String  mFile       = "";
 
     protected MyUtils               mUtils              = null;
     protected CIProgressListener    mProgressListener   = null;
@@ -84,6 +85,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 int retValue = InternalDefines.ERROR_CODE_OK;
                 HttpConnector http = new HttpConnector(mContext);
                 http.setURL(mServerURL, mCommandURL);
+                http.setUploadFile(mFile);
                 http.setRequestMethod(mMethodType);
                 http.setRequestData(mRequestData);
 

@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.FileNameMap;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -41,6 +43,7 @@ import javax.net.ssl.TrustManagerFactory;
  */
 
 class HttpConnector {
+    private String TAG = "HttpConnector"; // getLocalClassName();
     private Context mContext = null;
     private String mStringURL = "";
     private String mStringServerURL = "";
@@ -90,7 +93,7 @@ class HttpConnector {
             mRequestData = strRequest;
         }
 
-        Log.i(InternalDefines.TAG_HTTPConnector, "Request Data: " + mRequestData);
+        Log.i(TAG, "Request Data: " + mRequestData);
     }
 
     public void setReadCookie(boolean read) {
@@ -156,7 +159,7 @@ class HttpConnector {
                 }
                 httpsUrlConnection.setSSLSocketFactory(context.getSocketFactory());
             } else {
-                Log.i(InternalDefines.TAG_HTTPConnector, "Connect with http mode");
+                Log.i(TAG, "Connect with http mode");
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -199,7 +202,7 @@ class HttpConnector {
         mJsonObj = null;
         if (mWriteCookie) {
             String cookie = mCookieManager.getCookie(mConnection.getURL().toString());
-            Log.i(InternalDefines.TAG_HTTPConnector, "Send Cookie: " + cookie);
+            Log.i(TAG, "Send Cookie: " + cookie);
             if (cookie != null && !cookie.isEmpty()) {
                 mConnection.setRequestProperty("Cookie", cookie);
             }
@@ -208,11 +211,16 @@ class HttpConnector {
         try {
             if (mMethod.equals("POST") || mMethod.equals("PUT")) {
                 File srcFile = null;
+                String contentType = "";
                 boolean uploadFile = false;
                 if (!mUploadFile.isEmpty()) {
                     srcFile = new File(mUploadFile);
                     if (srcFile.exists()) {
-                        uploadFile = true;
+                        contentType = getMimeType(srcFile.getName());
+                        if (contentType.length() > 0) {
+                            Log.d(TAG, "contentType:" + contentType);
+                            uploadFile = true;
+                        }
                     }
                 }
 
@@ -234,7 +242,7 @@ class HttpConnector {
                             if (str0 != null && !str0.isEmpty()) {
                                 wr.writeBytes(BOUNDARY_START);
                                 String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", str0, str1);
-                                Log.i(InternalDefines.TAG_HTTPConnector, strLine);
+                                Log.i(TAG, strLine);
                                 wr.writeBytes(strLine);
                             }
                         }
@@ -244,7 +252,7 @@ class HttpConnector {
 //                        String value = tmp[1];
 //                        wr.writeBytes(BOUNDARY_START);
 //                        String strLine = String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", name, value);
-//                        Log.i(InternalDefines.TAG_HTTPConnector, strLine);
+//                        Log.i(TAG, strLine);
 //                        wr.writeBytes(strLine);
 //                    }
                     }
@@ -257,7 +265,9 @@ class HttpConnector {
                         //String strTmp = String.format("Content-Disposition:form-data;name=\"data\";filename=\"%s\"\r\nContent-Type:application/x-zip-compressed\r\n\r\n", srcFile.getName());
                         String strTmp = String.format("Content-Disposition:form-data;name=\"data\";filename=\"%s\"\r\n", srcFile.getName());
                         wr.writeBytes(strTmp);
-                        strTmp = String.format("Content-Type:application/x-zip-compressed\r\n\r\n");
+
+//                        strTmp = String.format("Content-Type:application/x-zip-compressed\r\n\r\n");
+                        strTmp = String.format("Content-Type:%s\r\n\r\n", contentType);
                         wr.writeBytes(strTmp);
 
                         fileIS = new DataInputStream(new FileInputStream(srcFile));
@@ -330,6 +340,12 @@ class HttpConnector {
         return mErrorCode;
     }
 
+    private String getMimeType(String fileUrl) throws java.io.IOException {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String type = fileNameMap.getContentTypeFor(fileUrl);
+        return type;
+    }
+
     private JSONObject getResponsObject(InputStream is) throws IOException, JSONException {
         String RespondString = "";
         byte[] response = new byte[1400];
@@ -373,13 +389,13 @@ class HttpConnector {
             } else if (err.indexOf("ECONNREFUSED") >= 0) {
                 nErrCode = InternalDefines.ERROR_CODE_CONNECTION_REFUSED;
             } else {
-                Log.w(InternalDefines.TAG_HTTPConnector, "error string: " + err);
+                Log.w(TAG, "error string: " + err);
             }
         } else if (exception instanceof java.io.FileNotFoundException) {
             // file not found, but this is real result returned by server, so we need to do
             //   further checking by respond string of request
         } else {
-            Log.w(InternalDefines.TAG_HTTPConnector, "Untyped exception");
+            Log.w(TAG, "Untyped exception");
         }
 
         return nErrCode;

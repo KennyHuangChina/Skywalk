@@ -38,6 +38,7 @@ class CommunicationParameterKey {
     public static String CPK_HOUSE_CERT_COMMENT     = "HouseCertComment";
     public static String CPK_HOUSE_RECOMMENT_ACT    = "HouseRecommentAct";
 
+    public static String CPK_IMG_FILE           = "ImageFile";
     public static String CPK_HOUSE_COVER_IMG    = "HouseCoverImage";
     public static String CPK_NAME               = "Name";
     public static String CPK_QTY                = "Quantity";

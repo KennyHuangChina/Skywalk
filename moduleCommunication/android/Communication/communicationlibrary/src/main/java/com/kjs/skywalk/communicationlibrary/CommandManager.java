@@ -357,4 +357,15 @@ public class CommandManager implements CommunicationInterface.ICommand {
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }
+
+    @Override
+    public int AddPicture(int house, int type, String desc, String file) {
+        mOperation = new CmdAddPicture(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house));
+        pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(type));
+        pMap.put(CommunicationParameterKey.CPK_DESC, desc);
+        pMap.put(CommunicationParameterKey.CPK_IMG_FILE, String.valueOf(file));
+        return execute(pMap);
+    }
 }

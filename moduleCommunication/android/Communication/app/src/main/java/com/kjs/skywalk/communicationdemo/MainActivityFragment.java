@@ -72,7 +72,7 @@ public class MainActivityFragment extends Fragment
 
     private void doTestAddApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
-        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
+//        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
 //        CmdMgr.AddDeliverable(mEditText.getText().toString());
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
 //                                    Integer.parseInt(mEditText1.getText().toString()),
@@ -89,6 +89,8 @@ public class MainActivityFragment extends Fragment
 //        list.add(new CommunicationInterface.FacilityItem(4, 3, "电视机说明"));
 //        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
 //        CmdMgr.AddHouseFacility(6, list);
+        CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+                mEditText2.getText().toString(), "/sdcard/test.png");
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
