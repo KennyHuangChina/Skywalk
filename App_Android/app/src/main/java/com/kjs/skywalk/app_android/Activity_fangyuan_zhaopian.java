@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,12 @@ import me.iwf.photopicker.PhotoPicker;
 
 public class Activity_fangyuan_zhaopian extends AppCompatActivity {
     ViewPager mVPHuXing;
+    ViewPager mVpFangJianJieGou;
+    ViewPager mVpJiaJuYongPin;
+    ViewPager mVpDianQi;
+
+
+    boolean mIsPicSelectMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,34 +44,34 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         fillPicGroupInfo(mVPHuXing, huXingPicLst);
 
         //        // 房间结构
-        ViewPager vpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
+        mVpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
         ArrayList<fragmentFangYuanZhaoPianGroup.PicList> fangJianJieGouPicLst = new ArrayList<> (
                 Arrays.asList(
                         new fragmentFangYuanZhaoPianGroup.PicList("房间结构图一", R.drawable.huxingtu1, false),
                         new fragmentFangYuanZhaoPianGroup.PicList("房间结构图二", R.drawable.huxingtu2, false)
                 )
         );
-        fillPicGroupInfo(vpFangJianJieGou, fangJianJieGouPicLst);
+        fillPicGroupInfo(mVpFangJianJieGou, fangJianJieGouPicLst);
 
         //        // 家居用品
-        ViewPager vpJiaJuYongPin = (ViewPager) findViewById(R.id.vp_jiajuyongpin);
+        mVpJiaJuYongPin = (ViewPager) findViewById(R.id.vp_jiajuyongpin);
         ArrayList<fragmentFangYuanZhaoPianGroup.PicList> jiaJuYongPinPicLst = new ArrayList<> (
                 Arrays.asList(
                         new fragmentFangYuanZhaoPianGroup.PicList("家居用品图一", R.drawable.huxingtu1, false),
                         new fragmentFangYuanZhaoPianGroup.PicList("家居用品图二", R.drawable.huxingtu2, false)
                 )
         );
-        fillPicGroupInfo(vpJiaJuYongPin, jiaJuYongPinPicLst);
+        fillPicGroupInfo(mVpJiaJuYongPin, jiaJuYongPinPicLst);
 
         //        // 电器
-        ViewPager vpDianQi = (ViewPager) findViewById(R.id.vp_dianqi);
+        mVpDianQi = (ViewPager) findViewById(R.id.vp_dianqi);
         ArrayList<fragmentFangYuanZhaoPianGroup.PicList> dianQiPicLst = new ArrayList<> (
                 Arrays.asList(
                         new fragmentFangYuanZhaoPianGroup.PicList("电器图一", R.drawable.huxingtu1, false),
                         new fragmentFangYuanZhaoPianGroup.PicList("电器图二", R.drawable.huxingtu2, false)
                 )
         );
-        fillPicGroupInfo(vpDianQi, dianQiPicLst);
+        fillPicGroupInfo(mVpDianQi, dianQiPicLst);
 
     }
 
@@ -75,8 +82,27 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
                 finish();
             }
             break;
+            case R.id.tv_select:
+            {
+                mIsPicSelectMode = !mIsPicSelectMode;
+                if (mIsPicSelectMode) {
+                    ((TextView)v).setText("取消");
+                } else {
+                    ((TextView)v).setText("选择");
+                }
+                updateViewrPagerSelectMode(mIsPicSelectMode);
 
+            }
+            break;
         }
+    }
+
+    // refresh view pagers
+    private void updateViewrPagerSelectMode(boolean isSelectMode) {
+        ((PicFragStatePageAdapter) mVPHuXing.getAdapter()).updateSelectMode(isSelectMode);
+        ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter()).updateSelectMode(isSelectMode);
+        ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).updateSelectMode(isSelectMode);
+        ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).updateSelectMode(isSelectMode);
     }
 
     public void onPhotoPickerClicked(View v) {
@@ -107,6 +133,15 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         @Override
         public int getCount() {
             return mLst.size();
+        }
+
+        public void updateSelectMode(boolean isSelectMode) {
+            for (Fragment fragment : mLst) {
+                if (fragment instanceof  fragmentFangYuanZhaoPianGroup) {
+                    ((fragmentFangYuanZhaoPianGroup)fragment).updateSelectMode(isSelectMode);
+                }
+            }
+
         }
     }
 

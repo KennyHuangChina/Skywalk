@@ -20,6 +20,7 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
     private  ArrayList<PicList> mPicList;
     ImageView mIvPicCheckFlag;
     ImageView mIvPic1CheckFlag;
+    boolean mIsSelectMode = false;
 
     static class PicList {
         String mDesc;
@@ -63,7 +64,7 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         ivPic.setOnClickListener(mPicClicked);
 
         int visibility = View.INVISIBLE;
-        if (mPicList.get(0).mIsChecked)
+        if (mIsSelectMode)
             visibility = View.VISIBLE;
         mIvPicCheckFlag = (ImageView) view.findViewById(R.id.iv_pic_checkflag);
         mIvPicCheckFlag.setVisibility(visibility);
@@ -76,12 +77,27 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         ivPic1.setOnClickListener(mPicClicked);
 
         visibility = View.INVISIBLE;
-        if (mPicList.get(1).mIsChecked)
+//        if (mPicList.get(1).mIsChecked)
+        if (mIsSelectMode)
             visibility = View.VISIBLE;
         mIvPic1CheckFlag = (ImageView) view.findViewById(R.id.iv_pic1_checkflag);
         mIvPic1CheckFlag.setVisibility(visibility);
 
         return view;
+    }
+
+    public void updateSelectMode(boolean isSelectMode) {
+        mIsSelectMode = isSelectMode;
+        int visibility = View.VISIBLE;
+        if(mIsSelectMode == false) {
+            visibility = View.INVISIBLE;
+        }
+
+        if(mIvPicCheckFlag != null)
+            mIvPicCheckFlag.setVisibility(visibility);
+
+        if(mIvPic1CheckFlag != null)
+            mIvPic1CheckFlag.setVisibility(visibility);
     }
 
     View.OnClickListener mPicClicked = new View.OnClickListener() {
