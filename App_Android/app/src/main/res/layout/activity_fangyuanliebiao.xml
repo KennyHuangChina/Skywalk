@@ -7,10 +7,160 @@
 
     <include layout="@layout/item_search_title" />
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:src="@drawable/sample1"
-        android:scaleType="fitXY"/>
+        android:layout_height="150dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/sample1"
+            android:scaleType="fitXY"/>
+        <TextView
+            android:layout_alignParentBottom="true"
+            android:textSize="17sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="世贸蝶湖湾"/>
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:textSize="13sp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorTextNormal"
+                android:text="类型：暂无"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:textColor="@color/colorTextNormal"
+                android:textSize="13sp"
+                android:paddingBottom="10dp"
+                android:text="产权：70年  竣工时间：2013年"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <include layout="@layout/seperator_horizontal" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/right_p"
+            android:drawablePadding="5dp"
+            android:text="小区详情"
+            android:textColor="@color/colorFontSelected"
+            android:textSize="13sp" />
+    </RelativeLayout>
+    <include layout="@layout/seperator_horizontal"
+        android:layout_height="8dp"
+        android:layout_width="match_parent"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_height="40dp"
+        android:id="@+id/linearLayoutConditionContainer">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:text="共24套"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/green_bar"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/textViewDisplayMode"
+                android:text="大图模式"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/show_grid"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:text="排序"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/bothway_d"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:text="筛选"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/filter_n"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true" />
+        </RelativeLayout>
+    </LinearLayout>
+    <include layout="@layout/seperator_horizontal" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollViewResult"
+        android:gravity="center" >
+        <com.kjs.skywalk.control.ListView_NoScroll
+            android:id="@+id/listViewSearchResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
 </LinearLayout>
