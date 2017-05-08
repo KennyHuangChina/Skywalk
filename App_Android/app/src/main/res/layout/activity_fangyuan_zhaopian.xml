@@ -7,11 +7,47 @@
     android:orientation="vertical"
     tools:context="com.kjs.skywalk.app_android.Activity_fangyuan_zhaopian">
 
-    <TextView
-        android:id="@+id/tv_info_title"
-        android:onClick="onViewClick"
-        style="@style/textStyle_page_title"
-        android:text="房源照片"/>
+    <RelativeLayout
+        android:id="@+id/rl_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="@dimen/page_left_margin"
+        android:paddingRight="@dimen/page_right_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/tv_back"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:onClick="onViewClick"
+            android:paddingRight="20dp"
+            android:gravity="center"
+            android:src="@drawable/left_n"/>
+
+        <TextView
+            android:id="@+id/tv_info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_back"
+            android:layout_toLeftOf="@+id/tv_select"
+            android:gravity="center"
+            android:textColor="@color/colorTextNormal"
+            android:textSize="17sp"
+            android:text="房源照片"/>
+
+        <TextView
+            android:id="@+id/tv_select"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:onClick="onViewClick"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorTextNormal"
+            android:textSize="17sp"
+            android:text="选择"/>
+
+    </RelativeLayout>
 
     <include layout="@layout/seperator_horizontal"/>
 
