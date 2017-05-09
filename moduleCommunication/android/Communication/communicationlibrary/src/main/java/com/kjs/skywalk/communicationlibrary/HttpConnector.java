@@ -216,10 +216,15 @@ class HttpConnector {
                 if (!mUploadFile.isEmpty()) {
                     srcFile = new File(mUploadFile);
                     if (srcFile.exists()) {
-                        contentType = getMimeType(srcFile.getName());
+                        contentType = CUtilities.getMimeType(srcFile.getName());
                         if (contentType.length() > 0) {
                             Log.d(TAG, "contentType:" + contentType);
                             uploadFile = true;
+//                            String strType = contentType.substring(0, 4);
+                            if (contentType.toLowerCase().startsWith("image")) {
+                                // TODO: scal down the picture if its size exceed a certain range, for example, 1920 x 1080
+//                                srcFile.
+                            }
                         }
                     }
                 }
@@ -338,12 +343,6 @@ class HttpConnector {
             }
         }
         return mErrorCode;
-    }
-
-    private String getMimeType(String fileUrl) throws java.io.IOException {
-        FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String type = fileNameMap.getContentTypeFor(fileUrl);
-        return type;
     }
 
     private JSONObject getResponsObject(InputStream is) throws IOException, JSONException {

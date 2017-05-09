@@ -2,7 +2,7 @@ package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
 import android.util.Log;
-
+import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
@@ -62,10 +62,30 @@ class CmdAddPicture extends CommunicationBase {
         }
 
         mDesc = map.get(CommunicationParameterKey.CPK_DESC);
-        mFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
+        String picFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
+        if (picFile.length() == 0) {
+            Log.e(TAG, "picture file not assigned");
+            return false;
+        }
+        String picFile1 = ScaledownPicture(picFile);
+        if (picFile1.isEmpty()) {
+            Log.e(TAG, "fail to get picture name after scaling down");
+            return false;
+        }
+
+        mFile = picFile1;
+        if (0 != picFile.compareToIgnoreCase(picFile1)) {
+            mDelFileExit = true;
+        }
 
         Log.i(TAG, "house:" + mHouse + ", type:" + mType + ", desc:" + mDesc + ", file:" + mFile);
 
         return true;
+    }
+
+    @Override
+    public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
+        ResAddResource result = new ResAddResource(nErrCode, jObject);
+        return result;
     }
 }

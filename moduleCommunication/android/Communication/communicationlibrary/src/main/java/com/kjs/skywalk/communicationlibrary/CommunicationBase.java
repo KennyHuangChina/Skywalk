@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -28,14 +29,15 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.AfterConnect,
                                     InternalDefines.ConnectFailed,
                                     InternalDefines.IApiName {
-    protected   String  TAG         = "CommunicationBase";
-    private     int     mAPI        = CmdID.CMD_TEST;
-    protected   Context mContext    = null;
-    protected   String  mMethodType = "";
-    protected   String  mServerURL  = "";
-    protected   String  mCommandURL = "";
-    protected   String  mRequestData = "";
-    protected   String  mFile       = "";
+    protected String  TAG           = "CommunicationBase";
+    private   int     mAPI          = CmdID.CMD_TEST;
+    protected Context mContext      = null;
+    protected String  mMethodType   = "";
+    protected String  mServerURL    = "";
+    protected String  mCommandURL   = "";
+    protected String  mRequestData  = "";
+    protected String  mFile         = "";
+    protected boolean mDelFileExit  = false;    // delete the file mFile when exit
 
     protected MyUtils               mUtils              = null;
     protected CIProgressListener    mProgressListener   = null;
@@ -81,6 +83,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     return;
                 }
 
+                //  Connecting
                 String returnCode = "";
                 int retValue = InternalDefines.ERROR_CODE_OK;
                 HttpConnector http = new HttpConnector(mContext);
@@ -99,8 +102,17 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     return;
                 }
 
+                // Sending data via http or https
                 retValue = http.sendRequest();
                 http.disconnect();
+                if (mDelFileExit) {
+                    // TODO: delete the mFile
+                    File file = new File(mFile);
+                    if (file.exists()) {
+                        boolean bOK = file.delete();
+                        Log.i(TAG, "[Communication Base.doOperation] delete file, result:" + bOK);
+                    }
+                }
 
                 if (retValue != InternalDefines.ERROR_CODE_OK) {
                     String strError = http.getErrorDescription();   // InternalDefines.getErrorDescription(retValue);
@@ -219,5 +231,36 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     @Override
     public String GetApiName() {
         return "" + mAPI;
+    }
+
+    protected String ScaledownPicture(String picFile) {
+        if (picFile.isEmpty()) {
+            return "";
+        }
+
+        File fPic = new File(picFile);
+        if (!fPic.exists()) {
+            return "";
+        }
+
+        try {
+            String contentType = CUtilities.getMimeType(fPic.getName());
+            if (contentType.isEmpty()) {
+                Log.e(TAG, "fail to detect the MIME type");
+                return "";
+            }
+            if (!contentType.toLowerCase().startsWith("image")) {
+                Log.e(TAG, "file is not a picture");
+                return "";
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+
+        String outPic = picFile;
+        // TODO: scale down the picture if it exceed the max size, like 1920 x 1080
+
+        return outPic;
     }
 }
