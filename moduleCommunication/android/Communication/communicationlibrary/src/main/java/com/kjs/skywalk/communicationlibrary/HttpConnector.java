@@ -263,7 +263,7 @@ class HttpConnector {
                     try {
                         wr.writeBytes(BOUNDARY_START);
                         //String strTmp = String.format("Content-Disposition:form-data;name=\"data\";filename=\"%s\"\r\nContent-Type:application/x-zip-compressed\r\n\r\n", srcFile.getName());
-                        String strTmp = String.format("Content-Disposition:form-data;name=\"data\";filename=\"%s\"\r\n", srcFile.getName());
+                        String strTmp = String.format("Content-Disposition:form-data;name=\"file\";filename=\"%s\"\r\n", srcFile.getName());
                         wr.writeBytes(strTmp);
 
 //                        strTmp = String.format("Content-Type:application/x-zip-compressed\r\n\r\n");
