@@ -105,9 +105,10 @@ func (this *PictureController) AddPic() {
 	hid, _ := this.GetInt64("house")
 	pt, _ := this.GetInt("type")
 	desc := this.GetString("desc")
+	beego.Debug(FN, "house:", hid, ", type:", pt, ", desc:", desc)
 
 	// picture
-	file, fHead, errT := this.GetFile("pic")
+	file, fHead, errT := this.GetFile("file") // pic")
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("no picture attached, err:%s", errT.Error())}
 		return
