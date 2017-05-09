@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7f000000">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:id="@+id/sort_container">
+            <include layout="@layout/seperator_horizontal" />
+
+            <LinearLayout
+                android:id="@+id/sort_smart"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="智能排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="0"
+                    android:id="@+id/textSmart"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sort_distribution_time"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="按发布时间排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="1"
+                    android:id="@+id/textDistribution"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sort_price_high_to_low"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="单价由高到低排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="2"
+                    android:id="@+id/textHighToLow"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sort_price_low_to_high"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="单价由低到高排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="3"
+                    android:id="@+id/textLowToHigh"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sort_price_total_high_to_low"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="总价由高到低排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="4"
+                    android:id="@+id/textTotalHighToLow"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sort_price_total_low_to_high"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="总价由高到低排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="5"
+                    android:id="@+id/textTotalLowToHigh"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sort_book"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="45dp">
+                <TextView
+                    android:text="预约人数由高到低排序"
+                    style="@style/text_view_fangyuanliebiao_sort_item"
+                    android:tag="6"
+                    android:id="@+id/textBook"
+                    android:onClick="onClickResponse"/>
+
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

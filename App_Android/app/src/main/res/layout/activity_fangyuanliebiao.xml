@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="5dp"
         android:layout_height="40dp"
-        android:id="@+id/linearLayoutConditionContainer">
+        android:id="@+id/linearLayoutCondition">
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -124,6 +124,7 @@
             android:layout_height="match_parent"
             android:gravity="center">
             <TextView
+                android:id="@+id/textViewSort"
                 android:text="排序"
                 android:textSize="15sp"
                 android:textColor="#272536"
@@ -132,7 +133,8 @@
                 android:drawableLeft="@drawable/bothway_d"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:onClick="onClickResponse"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="0dp"

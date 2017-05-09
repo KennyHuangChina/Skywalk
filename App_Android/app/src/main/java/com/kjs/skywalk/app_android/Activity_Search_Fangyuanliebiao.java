@@ -1,12 +1,14 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -21,7 +23,10 @@ public class Activity_Search_Fangyuanliebiao extends Activity {
     private ListView mListView = null;
 
     private TextView mDisplayType = null;
+    private TextView mTextViewSort = null;
     private AdapterFangyuanliebiao mAdapter = null;
+
+    private PopupWindowFangyuanliebiaoSort mPopSort = null;
 
     private static final int DISPLAY_GRID = 0;
     private static final int DISPLAY_LIST= 1;
@@ -45,6 +50,38 @@ public class Activity_Search_Fangyuanliebiao extends Activity {
 
         mDisplayType = (TextView)findViewById(R.id.textViewDisplayMode);
         mDisplayType.setOnClickListener(mClickListenerDisplayType);
+
+        mTextViewSort = (TextView)findViewById(R.id.textViewSort);
+    }
+
+    public void onClickResponse(View v) {
+        //commonFun.showToast_resEntryName(this, v);
+
+        switch (v.getId()) {
+            case R.id.textViewSort: {
+                if(mPopSort == null) {
+                    mPopSort = new PopupWindowFangyuanliebiaoSort(getBaseContext());
+                    cleanSortItemSelection();
+                    View v0 = (View)mPopSort.getView().findViewById(R.id.textSmart);
+                    selectItem(v0);
+                }
+
+                LinearLayout layout = (LinearLayout)findViewById(R.id.linearLayoutCondition);
+                mPopSort.showAsDropDown(layout);
+                break;
+            }
+            case R.id.textDistribution:
+            case R.id.textHighToLow:
+            case R.id.textLowToHigh:
+            case R.id.textTotalHighToLow:
+            case R.id.textTotalLowToHigh:
+            case R.id.textSmart:
+            case R.id.textBook:{
+                cleanSortItemSelection();
+                selectItem(v);
+                break;
+            }
+        }
     }
 
     private View.OnClickListener mClickListenerDisplayType = new View.OnClickListener() {
@@ -68,6 +105,41 @@ public class Activity_Search_Fangyuanliebiao extends Activity {
             mAdapter.notifyDataSetChanged();
         }
     };
+
+    private void unselectItem(View v) {
+        TextView view = (TextView)v;
+        view.setCompoundDrawables(null, null, null, null);
+        view.setTextColor(Color.rgb(0, 0, 0));
+        v.setSelected(false);
+    }
+
+    private void selectItem(View v) {
+        TextView view = (TextView)v;
+        Drawable drawable = ContextCompat.getDrawable(getBaseContext(), R.drawable.select4_check);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        view.setCompoundDrawables(null, null, drawable, null);
+        view.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorFontSelected));
+        view.setSelected(true);
+    }
+
+    private void cleanSortItemSelection() {
+        View view = mPopSort.getView();
+        View v0 = (View)view.findViewById(R.id.textSmart);
+        View v1 = (View)view.findViewById(R.id.textDistribution);
+        View v2 = (View)view.findViewById(R.id.textHighToLow);
+        View v3 = (View)view.findViewById(R.id.textLowToHigh);
+        View v4 = (View)view.findViewById(R.id.textTotalHighToLow);
+        View v5 = (View)view.findViewById(R.id.textTotalLowToHigh);
+        View v6 = (View)view.findViewById(R.id.textBook);
+
+        unselectItem(v0);
+        unselectItem(v1);
+        unselectItem(v2);
+        unselectItem(v3);
+        unselectItem(v4);
+        unselectItem(v5);
+        unselectItem(v6);
+    }
 
     public void onViewClick(View v) {
         switch (v.getId()) {
