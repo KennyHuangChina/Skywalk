@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
     private  ArrayList<PicList> mPicList;
     ImageView mIvPicCheckFlag;
     ImageView mIvPic1CheckFlag;
+    RelativeLayout mRlPicCheckFlag;
     boolean mIsSelectMode = false;
 
     static class PicList {
@@ -67,8 +69,9 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         if (mIsSelectMode)
             visibility = View.VISIBLE;
         mIvPicCheckFlag = (ImageView) view.findViewById(R.id.iv_pic_checkflag);
-        mIvPicCheckFlag.setVisibility(visibility);
-
+//        mIvPicCheckFlag.setVisibility(visibility);
+        mRlPicCheckFlag = (RelativeLayout) view.findViewById(R.id.rl_pic_checkflag);
+        mRlPicCheckFlag.setVisibility(visibility);
 
         ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
         TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
@@ -93,8 +96,11 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
             visibility = View.INVISIBLE;
         }
 
-        if(mIvPicCheckFlag != null)
-            mIvPicCheckFlag.setVisibility(visibility);
+//        if(mIvPicCheckFlag != null)
+//            mIvPicCheckFlag.setVisibility(visibility);
+
+        if(mRlPicCheckFlag != null)
+            mRlPicCheckFlag.setVisibility(visibility);
 
         if(mIvPic1CheckFlag != null)
             mIvPic1CheckFlag.setVisibility(visibility);
@@ -111,7 +117,7 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
                     if (mIvPicCheckFlag.getVisibility() == View.VISIBLE)
                         visibility = View.INVISIBLE;
 
-                    mIvPicCheckFlag.setVisibility(visibility);
+//                    mIvPicCheckFlag.setVisibility(visibility);
                     boolean bChecked = (visibility == View.VISIBLE);
                     mPicList.get(0).mIsChecked = bChecked;
 
