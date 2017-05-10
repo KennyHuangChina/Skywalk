@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7f000000">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#ffffff">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="房间数"/>
+                </RelativeLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+                    <CheckBox
+                        android:id="@+id/radio1"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="1房"/>
+                    <CheckBox
+                        android:id="@+id/radio2"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="2房"/>
+                    <CheckBox
+                        android:id="@+id/radio3"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="3房"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+                    <CheckBox
+                        android:id="@+id/radio4"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="4房"/>
+                    <CheckBox
+                        android:id="@+id/radio5"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="5房" />
+                    <CheckBox
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:visibility="invisible"
+                        android:text="" />
+                </LinearLayout>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp">
+                <include layout="@layout/seperator_horizontal" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="特色"/>
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+                    <CheckBox
+                        android:id="@+id/radioTS1"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="上门实勘"/>
+
+                    <CheckBox
+                        android:id="@+id/radioTS2"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="满五唯一"/>
+                    <CheckBox
+                        android:id="@+id/radioTS3"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="满两年"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+                    <CheckBox
+                        android:id="@+id/radioTS4"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="南北通透"/>
+                    <CheckBox
+                        android:id="@+id/radioTS5"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="无贷款" />
+                    <CheckBox
+                        android:id="@+id/radioTS6"
+                        style="@style/FangyuanLiebiaoCheckBox"
+                        android:text="电梯房" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_below="@+id/scrollView2"
+                android:layout_alignParentStart="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/colorFontSelectedWithOpacity"
+                        android:gravity="center"
+                        android:text="重置"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/colorFontSelected"
+                        android:gravity="center"
+                        android:text="确定"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

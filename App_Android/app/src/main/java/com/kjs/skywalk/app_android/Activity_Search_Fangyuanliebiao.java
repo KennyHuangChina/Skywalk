@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ public class Activity_Search_Fangyuanliebiao extends Activity {
     private AdapterFangyuanliebiao mAdapter = null;
 
     private PopupWindowFangyuanliebiaoSort mPopSort = null;
+    private PopupWindowFangyuanliebiaoFilter mPopFilter = null;
 
     private static final int DISPLAY_GRID = 0;
     private static final int DISPLAY_LIST= 1;
@@ -68,6 +71,19 @@ public class Activity_Search_Fangyuanliebiao extends Activity {
 
                 LinearLayout layout = (LinearLayout)findViewById(R.id.linearLayoutCondition);
                 mPopSort.showAsDropDown(layout);
+                break;
+            }
+            case R.id.textViewFilter: {
+                if(mPopFilter == null) {
+                    mPopFilter = new PopupWindowFangyuanliebiaoFilter(getBaseContext());
+                    CheckBox button3 = (CheckBox)mPopFilter.getView().findViewById(R.id.radio3);
+                    button3.setChecked(true);
+                    CheckBox buttonTS5 = (CheckBox)mPopFilter.getView().findViewById(R.id.radioTS5);
+                    buttonTS5.setChecked(true);
+                }
+
+                LinearLayout layout = (LinearLayout)findViewById(R.id.linearLayoutCondition);
+                mPopFilter.showAsDropDown(layout);
                 break;
             }
             case R.id.textDistribution:

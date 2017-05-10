@@ -142,6 +142,7 @@
             android:layout_height="match_parent"
             android:gravity="center">
             <TextView
+                android:id="@+id/textViewFilter"
                 android:text="筛选"
                 android:textSize="15sp"
                 android:textColor="#272536"
@@ -150,7 +151,8 @@
                 android:drawableLeft="@drawable/filter_n"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:onClick="onClickResponse"/>
         </RelativeLayout>
     </LinearLayout>
     <include layout="@layout/seperator_horizontal" />

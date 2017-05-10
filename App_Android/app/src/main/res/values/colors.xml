@@ -6,6 +6,7 @@
 
     <color name="colorFontNormal">#6B7173</color>
     <color name="colorFontSelected">#00AE63</color>
+    <color name="colorFontSelectedWithOpacity">#7f00AE63</color>
 
     <color name="colorTextNormal">#242224</color>
     <color name="colorTextTint">#939499</color>
