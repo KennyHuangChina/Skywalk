@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,9 +20,10 @@ import java.util.ArrayList;
 public class fragmentFangYuanZhaoPianGroup extends Fragment {
 //    private Group mGroup;
     private  ArrayList<PicList> mPicList;
-    ImageView mIvPicCheckFlag;
-    ImageView mIvPic1CheckFlag;
     RelativeLayout mRlPicCheckFlag;
+    RelativeLayout mRlPic1CheckFlag;
+    CheckBox mCbPicCheckFlag;
+    CheckBox mCbPic1CheckFlag;
     boolean mIsSelectMode = false;
 
     static class PicList {
@@ -68,11 +70,13 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         int visibility = View.INVISIBLE;
         if (mIsSelectMode)
             visibility = View.VISIBLE;
-        mIvPicCheckFlag = (ImageView) view.findViewById(R.id.iv_pic_checkflag);
-//        mIvPicCheckFlag.setVisibility(visibility);
         mRlPicCheckFlag = (RelativeLayout) view.findViewById(R.id.rl_pic_checkflag);
+        mRlPicCheckFlag.setOnClickListener(mRlPicCheckFlagClicked);
         mRlPicCheckFlag.setVisibility(visibility);
+        mCbPicCheckFlag = (CheckBox) view.findViewById(R.id.cb_pic_checkflag);
 
+
+        // pic1
         ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
         TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
         ivPic1.setImageResource(mPicList.get(1).mDrawable);
@@ -80,11 +84,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         ivPic1.setOnClickListener(mPicClicked);
 
         visibility = View.INVISIBLE;
-//        if (mPicList.get(1).mIsChecked)
         if (mIsSelectMode)
             visibility = View.VISIBLE;
-        mIvPic1CheckFlag = (ImageView) view.findViewById(R.id.iv_pic1_checkflag);
-        mIvPic1CheckFlag.setVisibility(visibility);
+        mRlPic1CheckFlag = (RelativeLayout) view.findViewById(R.id.rl_pic1_checkflag);
+        mRlPic1CheckFlag.setOnClickListener(mRlPicCheckFlagClicked);
+        mRlPic1CheckFlag.setVisibility(visibility);
+        mCbPic1CheckFlag = (CheckBox) view.findViewById(R.id.cb_pic1_checkflag);
 
         return view;
     }
@@ -96,15 +101,40 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
             visibility = View.INVISIBLE;
         }
 
-//        if(mIvPicCheckFlag != null)
-//            mIvPicCheckFlag.setVisibility(visibility);
-
         if(mRlPicCheckFlag != null)
             mRlPicCheckFlag.setVisibility(visibility);
 
-        if(mIvPic1CheckFlag != null)
-            mIvPic1CheckFlag.setVisibility(visibility);
+        if(mRlPic1CheckFlag != null)
+            mRlPic1CheckFlag.setVisibility(visibility);
     }
+
+    View.OnClickListener mRlPicCheckFlagClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            switch (view.getId()) {
+                case R.id.rl_pic_checkflag:
+                {
+                    boolean bChecked = mCbPicCheckFlag.isChecked();
+                    bChecked = !bChecked;
+                    mCbPicCheckFlag.setChecked(bChecked);
+                    mPicList.get(0).mIsChecked = bChecked;
+
+                    break;
+                }
+
+                case R.id.rl_pic1_checkflag:
+                {
+                    boolean bChecked = mCbPic1CheckFlag.isChecked();
+                    bChecked = !bChecked;
+                    mCbPic1CheckFlag.setChecked(bChecked);
+                    mPicList.get(1).mIsChecked = bChecked;
+
+                    break;
+                }
+            }
+        }
+    };
 
     View.OnClickListener mPicClicked = new View.OnClickListener() {
         @Override
@@ -113,26 +143,13 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
             switch (view.getId()) {
                 case R.id.iv_pic:
                 {
-                    int visibility = View.VISIBLE;
-                    if (mIvPicCheckFlag.getVisibility() == View.VISIBLE)
-                        visibility = View.INVISIBLE;
-
-//                    mIvPicCheckFlag.setVisibility(visibility);
-                    boolean bChecked = (visibility == View.VISIBLE);
-                    mPicList.get(0).mIsChecked = bChecked;
 
                     break;
                 }
 
                 case R.id.iv_pic1:
                 {
-                    int visibility = View.VISIBLE;
-                    if (mIvPic1CheckFlag.getVisibility() == View.VISIBLE)
-                        visibility = View.INVISIBLE;
 
-                    mIvPic1CheckFlag.setVisibility(visibility);
-                    boolean bChecked = (visibility == View.VISIBLE);
-                    mPicList.get(1).mIsChecked = bChecked;
 
                     break;
                 }

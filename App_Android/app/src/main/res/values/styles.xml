@@ -311,6 +311,11 @@
         <item name="android:paddingLeft">5dp</item>
     </style>
 
+    <style name="checkBoxStyle1" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_checkbox1</item>
+        <item name="android:paddingLeft">5dp</item>
+    </style>
+
     <!--代理人-->
     <style name="textViewAgentName" parent="@android:style/Widget.TextView">
         <item name="android:textSize">13sp</item>
