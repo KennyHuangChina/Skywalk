@@ -1,5 +1,14 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import android.graphics.Bitmap;
@@ -31,13 +40,12 @@ class CUtilities {
      * @param height 指定输出图像的高度
      * @return 生成的缩略图
      */
-    private Bitmap getImageThumbnail(String imagePath, int width, int height) {
+    static public Bitmap getImageThumbnail(String imagePath, int width, int height) {
         Bitmap bitmap = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
+        options.inJustDecodeBounds = true; //不加载bitmap到内存中
         // 获取这个图片的宽和高，注意此处的bitmap为null
         bitmap = BitmapFactory.decodeFile(imagePath, options);
-        options.inJustDecodeBounds = false; // 设为 false
         // 计算缩放比
         int h = options.outHeight;
         int w = options.outWidth;
@@ -54,10 +62,47 @@ class CUtilities {
         }
         options.inSampleSize = be;
         // 重新读入图片，读取缩放后的bitmap，注意这次要把options.inJustDecodeBounds 设为 false
+        options.inJustDecodeBounds = false; // 加载bitmap到内存中
         bitmap = BitmapFactory.decodeFile(imagePath, options);
+/*
         // 利用ThumbnailUtils来创建缩略图，这里要指定要缩放哪个Bitmap对象
         bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
                 ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        saveThePicture(bitmap, "/sdcard/test_thum2.jpeg");
+*/
         return bitmap;
     }
+
+    static public boolean saveThePicture(Bitmap bitmap, String thumFile)
+    {
+        File file = new File(thumFile);  // "/sdcard/test_thum.jpeg");
+        try
+        {
+            FileOutputStream fos = new FileOutputStream(file);
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))
+            {
+                fos.flush();
+                fos.close();
+            }
+        }
+        catch(FileNotFoundException e1)
+        {
+            e1.printStackTrace();
+            return false;
+        }
+        catch(IOException e2)
+        {
+            e2.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+//    private InputStream  Bitmap2IS(Bitmap bm){
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
+//        return sbs;
+//    }
 }

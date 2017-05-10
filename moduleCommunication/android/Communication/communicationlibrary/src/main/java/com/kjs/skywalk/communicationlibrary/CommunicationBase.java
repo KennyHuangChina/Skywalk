@@ -75,6 +75,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         new Thread(new Runnable() {
             @Override
             public void run() {
+            try {
                 // check network status
                 ConnectionDetector cd = new ConnectionDetector(mContext);
                 if (!cd.isConnectingToInternet()) {
@@ -105,14 +106,6 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 // Sending data via http or https
                 retValue = http.sendRequest();
                 http.disconnect();
-                if (mDelFileExit) {
-                    // TODO: delete the mFile
-                    File file = new File(mFile);
-                    if (file.exists()) {
-                        boolean bOK = file.delete();
-                        Log.i(TAG, "[Communication Base.doOperation] delete file, result:" + bOK);
-                    }
-                }
 
                 if (retValue != InternalDefines.ERROR_CODE_OK) {
                     String strError = http.getErrorDescription();   // InternalDefines.getErrorDescription(retValue);
@@ -142,7 +135,16 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 mCommandListener.onCommandFinished(mAPI, result);
 
                 doAfterConnect(http);
-
+            } finally {
+                // Delete the tmp file
+                if (mDelFileExit) {
+                    File file = new File(mFile);
+                    if (file.exists()) {
+                        boolean bOK = file.delete();
+                        Log.i(TAG, "[Communication Base.doOperation] delete file, result:" + bOK);
+                    }
+                }
+            }
             }
         }).start();
 
@@ -258,8 +260,15 @@ class CommunicationBase implements  InternalDefines.DoOperation,
             return "";
         }
 
-        String outPic = picFile;
-        // TODO: scale down the picture if it exceed the max size, like 1920 x 1080
+        // TODO: determine if this pictre really need to be resized
+
+        String outPic = "/sdcard/test_thumb.jpg"; // picFile;
+        // scale down the picture if it exceed the max picture size, like 1920 x 1080, to restrict the max file size
+        boolean bResize = CUtilities.saveThePicture(CUtilities.getImageThumbnail(picFile, 1920, 1080), outPic) ;
+        if (!bResize) {
+            Log.e(TAG, "fail to resize the picture");
+            return  "";
+        }
 
         return outPic;
     }
