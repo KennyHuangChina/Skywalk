@@ -5,36 +5,52 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="30dp">
+        android:layout_height="30dp"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="44">
+
             <ImageView
+                android:id="@+id/imageViewBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/left_n"
-                android:id="@+id/imageViewBack"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                app:srcCompat="@drawable/left_n" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="380">
+            android:layout_weight="380"
+            android:background="@drawable/rounded_rect_background_search_gray">
+
+            <TextView
+                android:id="@+id/textViewAdvancedSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/fragment_search_input_hint"
+                android:textSize="14sp"
+                android:textColor="#9c9ea5"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/search_n"
+                android:paddingLeft="21dp"
+                android:drawablePadding="5dp"
+                android:onClick="onClickResponse"/>
 
             <SearchView
                 android:id="@+id/search_view"
-                android:background="#efefef"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:searchIcon="@drawable/search_n"
+                android:background="#efefef"
+                android:queryHint="@string/fragment_search_input_hint"
                 android:searchHintIcon="@drawable/search_n"
-                android:queryHint="@string/fragment_search_input_hint" />
+                android:searchIcon="@drawable/search_n"
+                android:visibility="invisible" />
         </RelativeLayout>
 
 
@@ -44,11 +60,11 @@
             android:layout_weight="44">
 
             <ImageView
+                android:id="@+id/imageViewLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/location2_n"
                 android:layout_centerInParent="true"
-                android:id="@+id/imageViewLocation" />
+                app:srcCompat="@drawable/location2_n" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -57,11 +73,11 @@
             android:layout_weight="44">
 
             <ImageView
+                android:id="@+id/imageViewMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/message_n"
                 android:layout_centerInParent="true"
-                android:id="@+id/imageViewMessage" />
+                app:srcCompat="@drawable/message_n" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -132,18 +148,20 @@
         android:background="#EFEFEF"
         android:layout_height="40dp"
         android:id="@+id/linearLayoutSortContainer">
+
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortDate"
-            android:text="@string/fragment_search_sort_date"
-            android:textSize="13sp"
-            android:textColor="#272536"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_weight="3"
+            android:adjustViewBounds="true"
             android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:adjustViewBounds="true"
-            android:layout_weight="3" />
+            android:text="@string/fragment_search_sort_date"
+            android:textColor="#272536"
+            android:textSize="13sp" />
+
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortUnitPrice"
             android:text="@string/fragment_search_sort_unit_price"
