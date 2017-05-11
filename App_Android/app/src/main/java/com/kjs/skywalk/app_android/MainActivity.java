@@ -167,6 +167,12 @@ public class MainActivity extends AppCompatActivity {
                 showTestMenu(v);
             }
             break;
+
+            case R.id.textViewAdvancedSearch:
+            {
+                startActivity(new Intent(MainActivity.this, Activity_Search.class));
+                break;
+            }
         }
     }
 
@@ -358,11 +364,11 @@ public class MainActivity extends AppCompatActivity {
 //                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_renzhengshuoming.class));
 //                        break;
 //                    }
-                    case R.id.action_setting111:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Search.class));
-                        break;
-                    }
+//                    case R.id.action_setting111:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Search.class));
+//                        break;
+//                    }
                     case R.id.action_setting112:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_Search_Fangyuanliebiao.class));
