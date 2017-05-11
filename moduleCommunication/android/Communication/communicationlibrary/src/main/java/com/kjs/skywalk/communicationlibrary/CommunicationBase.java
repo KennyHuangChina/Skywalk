@@ -37,7 +37,6 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected String  mCommandURL   = "";
     protected String  mRequestData  = "";
     protected String  mFile         = "";
-    protected boolean mDelFileExit  = false;    // delete the file mFile when exit
 
     protected MyUtils               mUtils              = null;
     protected CIProgressListener    mProgressListener   = null;
@@ -136,14 +135,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
                 doAfterConnect(http);
             } finally {
-                // Delete the tmp file
-                if (mDelFileExit) {
-                    File file = new File(mFile);
-                    if (file.exists()) {
-                        boolean bOK = file.delete();
-                        Log.i(TAG, "[Communication Base.doOperation] delete file, result:" + bOK);
-                    }
-                }
+                // Do cleaning here
             }
             }
         }).start();
@@ -233,43 +225,5 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     @Override
     public String GetApiName() {
         return "" + mAPI;
-    }
-
-    protected String ScaledownPicture(String picFile) {
-        if (picFile.isEmpty()) {
-            return "";
-        }
-
-        File fPic = new File(picFile);
-        if (!fPic.exists()) {
-            return "";
-        }
-
-        try {
-            String contentType = CUtilities.getMimeType(fPic.getName());
-            if (contentType.isEmpty()) {
-                Log.e(TAG, "fail to detect the MIME type");
-                return "";
-            }
-            if (!contentType.toLowerCase().startsWith("image")) {
-                Log.e(TAG, "file is not a picture");
-                return "";
-            }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-
-        // TODO: determine if this pictre really need to be resized
-
-        String outPic = "/sdcard/test_thumb.jpg"; // picFile;
-        // scale down the picture if it exceed the max picture size, like 1920 x 1080, to restrict the max file size
-        boolean bResize = CUtilities.saveThePicture(CUtilities.getImageThumbnail(picFile, 1920, 1080), outPic) ;
-        if (!bResize) {
-            Log.e(TAG, "fail to resize the picture");
-            return  "";
-        }
-
-        return outPic;
     }
 }

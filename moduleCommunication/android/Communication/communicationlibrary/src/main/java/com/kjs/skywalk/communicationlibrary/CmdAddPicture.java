@@ -62,6 +62,11 @@ class CmdAddPicture extends CommunicationBase {
         }
 
         mDesc = map.get(CommunicationParameterKey.CPK_DESC);
+        if (!mDesc.isEmpty()) {
+            mDesc = String2Base64(mDesc);
+            Log.d(TAG, "mDesc: " + mDesc);
+        }
+
         String picFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
         if (picFile.length() == 0) {
             Log.e(TAG, "picture file not assigned");
