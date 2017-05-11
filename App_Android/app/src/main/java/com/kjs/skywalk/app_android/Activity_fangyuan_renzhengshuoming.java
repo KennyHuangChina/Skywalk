@@ -22,6 +22,12 @@ public class Activity_fangyuan_renzhengshuoming extends AppCompatActivity {
                 finish();
             }
             break;
+            case R.id.textViewCommit:
+            {
+                finish();
+                startActivity(new Intent(this, Activity_shenhe_zhengjian.class));
+            }
+            break;
         }
     }
 }

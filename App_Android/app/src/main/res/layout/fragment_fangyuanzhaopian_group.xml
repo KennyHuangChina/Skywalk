@@ -22,15 +22,20 @@
                 android:layout_height="108dp"
                 android:src="@drawable/huxingtu1"
                 android:scaleType="fitXY"/>
-            <ImageView
-                android:id="@+id/iv_pic_checkflag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingRight="5dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/select_check1"
-                android:visibility="invisible"/>
+            <RelativeLayout
+                android:id="@+id/rl_pic_checkflag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#50FFFFFF">
+                <CheckBox
+                    android:id="@+id/cb_pic_checkflag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/checkBoxStyle1"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -76,15 +81,21 @@
                 android:layout_height="108dp"
                 android:src="@drawable/huxingtu2"
                 android:scaleType="fitXY"/>
-            <ImageView
-                android:id="@+id/iv_pic1_checkflag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingRight="5dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/select_check1"
-                android:visibility="invisible"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_pic1_checkflag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#90FFFFFF">
+                <CheckBox
+                    android:id="@+id/cb_pic1_checkflag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/checkBoxStyle1"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <LinearLayout

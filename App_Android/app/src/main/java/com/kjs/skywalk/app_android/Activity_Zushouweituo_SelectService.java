@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -22,6 +23,16 @@ public class Activity_Zushouweituo_SelectService extends Activity {
             case R.id.tv_info_title:
             {
                 finish();
+            }
+            break;
+            case R.id.tv_prev:
+            {
+                finish();
+            }
+            break;
+            case R.id.tv_next:
+            {
+                startActivity(new Intent(this, Activity_Zushouweituo_Finish.class));
             }
             break;
         }
