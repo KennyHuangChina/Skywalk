@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"ApiServer/commdef"
+	"encoding/base64"
 	"fmt"
 	"github.com/astaxie/beego"
 	"io"
@@ -101,10 +102,13 @@ func (this *PictureController) AddPic() {
 	if nil != err {
 		return
 	}
+	// uid = 4
 
 	hid, _ := this.GetInt64("house")
 	pt, _ := this.GetInt("type")
 	desc := this.GetString("desc")
+	tmp, _ := base64.URLEncoding.DecodeString(desc)
+	desc = string(tmp)
 	beego.Debug(FN, "house:", hid, ", type:", pt, ", desc:", desc)
 
 	// picture
@@ -281,8 +285,8 @@ func savePicture(file multipart.File, filename string) (err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file, size:", fileSize)}
 		return
 	}
-	if fileSize > 2*1024*1024 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "picture size too large (< 2MB)"}
+	if fileSize > 3*1024*1024 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture size too large (< 3MB):%d", fileSize)}
 		return
 	}
 	// beego.Debug(FN, "file name:", fHead.Header["Content-Disposition"][0])
