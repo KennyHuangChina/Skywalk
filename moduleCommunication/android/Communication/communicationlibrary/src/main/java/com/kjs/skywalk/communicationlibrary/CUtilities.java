@@ -46,6 +46,23 @@ class CUtilities {
         return false;
     }
 
+    static private boolean isNeedScalDown(String imagePath, int width, int height) {
+        Bitmap bitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; //不加载bitmap到内存中
+        bitmap = BitmapFactory.decodeFile(imagePath, options);
+        options.inSampleSize = 1;
+        bitmap = BitmapFactory.decodeFile(imagePath, options);
+        // 获取这个图片的宽和高，注意此处的bitmap为null
+        int hsrc = options.outHeight;
+        int wsrc = options.outWidth;
+        if (wsrc * hsrc > width * height) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 根据指定的图像路径和大小来获取缩略图
      * 此方法有两点好处：
@@ -144,12 +161,20 @@ class CUtilities {
         return true;
     }
 
-    static public InputStream getResizedPicure(String filePath) {
-        Bitmap bm = getImageThumbnail(filePath, 1920, 1080);
+    static public InputStream getResizedPicure(String filePath) throws FileNotFoundException {
+        int nBoundary_W = 1920;
+        int nBoundary_H = 1080;
+
+        if (isNeedScalDown(filePath, nBoundary_W, nBoundary_H)) {
+            Bitmap bm = getImageThumbnail(filePath, nBoundary_W, nBoundary_H);
 //        saveThePicture(bm, "/sdcard/test_thumb.jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
-        return sbs;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
+            return sbs;
+        }
+
+        // just use the picture directly
+        return new FileInputStream(filePath);
     }
 }
