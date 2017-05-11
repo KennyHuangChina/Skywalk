@@ -220,11 +220,6 @@ class HttpConnector {
                         if (contentType.length() > 0) {
                             Log.d(TAG, "contentType:" + contentType);
                             uploadFile = true;
-//                            String strType = contentType.substring(0, 4);
-                            if (contentType.toLowerCase().startsWith("image")) {
-                                // TODO: scal down the picture if its size exceed a certain range, for example, 1920 x 1080
-//                                srcFile.
-                            }
                         }
                     }
                 }
@@ -275,7 +270,12 @@ class HttpConnector {
                         strTmp = String.format("Content-Type:%s\r\n\r\n", contentType);
                         wr.writeBytes(strTmp);
 
-                        fileIS = new DataInputStream(new FileInputStream(srcFile));
+                        // file bytes
+                        if (CUtilities.isPicture(mUploadFile)) {
+                            fileIS = new DataInputStream(CUtilities.getResizedPicure(mUploadFile));
+                        } else {
+                            fileIS = new DataInputStream(new FileInputStream(srcFile));
+                        }
 
                         int bytes = 0;
                         byte[] bufferOut = new byte[1024];
@@ -284,8 +284,8 @@ class HttpConnector {
                         }
 
                         wr.writeBytes("\r\n");
-
                         fileIS.close();
+
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return InternalDefines.ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND;

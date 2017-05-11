@@ -67,17 +67,16 @@ class CmdAddPicture extends CommunicationBase {
             Log.e(TAG, "picture file not assigned");
             return false;
         }
-        String picFile1 = ScaledownPicture(picFile);
-        if (picFile1.isEmpty()) {
-            Log.e(TAG, "fail to get picture name after scaling down");
-            return false;
-        }
+//        String picFile1 = ScaledownPicture(picFile);
+//        if (picFile1.isEmpty()) {
+//            Log.e(TAG, "fail to get picture name after scaling down");
+//            return false;
+//        }
 
-        mFile = picFile1;
-        if (0 != picFile.compareToIgnoreCase(picFile1)) {
-            mDelFileExit = true;
-        }
-
+        mFile = picFile; //picFile1;
+//        if (0 != picFile.compareToIgnoreCase(picFile1)) {
+//            mDelFileExit = true;
+//        }
         Log.i(TAG, "house:" + mHouse + ", type:" + mType + ", desc:" + mDesc + ", file:" + mFile);
 
         return true;

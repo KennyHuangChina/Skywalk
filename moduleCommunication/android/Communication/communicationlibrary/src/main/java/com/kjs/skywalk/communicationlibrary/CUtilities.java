@@ -14,6 +14,7 @@ import java.net.URLConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.util.Log;
 
 /**
  * Created by kenny on 2017/5/9.
@@ -26,6 +27,23 @@ class CUtilities {
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
         String type = fileNameMap.getContentTypeFor(fileUrl);
         return type;
+    }
+
+    static public boolean isPicture(String filePath) {
+        String contentType = "";
+
+        try {
+            contentType = getMimeType(filePath);
+            if (!contentType.isEmpty() &&
+                    contentType.toLowerCase().startsWith("image/")) {
+                return true;
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -45,13 +63,14 @@ class CUtilities {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true; //不加载bitmap到内存中
         // 获取这个图片的宽和高，注意此处的bitmap为null
-        bitmap = BitmapFactory.decodeFile(imagePath, options);
+//        bitmap = BitmapFactory.decodeFile(imagePath, options);
         // 计算缩放比
-        int h = options.outHeight;
-        int w = options.outWidth;
+/*        int hsrc = options.outHeight;
+        int wsrc = options.outWidth;
+        int be = 1;
+        Log.d(TAG, "be:" + be);
         int beWidth = w / width;
         int beHeight = h / height;
-        int be = 1;
         if (beWidth < beHeight) {
             be = beWidth;
         } else {
@@ -64,13 +83,39 @@ class CUtilities {
         // 重新读入图片，读取缩放后的bitmap，注意这次要把options.inJustDecodeBounds 设为 false
         options.inJustDecodeBounds = false; // 加载bitmap到内存中
         bitmap = BitmapFactory.decodeFile(imagePath, options);
+*/
+        // get original picture
+        options.inSampleSize = 1;
+        options.inJustDecodeBounds = false; // 加载bitmap到内存中
+        bitmap = BitmapFactory.decodeFile(imagePath, options);
+        int hsrc = options.outHeight;
+        int wsrc = options.outWidth;
+
+        if (wsrc < hsrc && width > height) {    // rotate the out rectangle
+            int tmp = width;
+            width = height;
+            height = tmp;
+        }
+        if (wsrc * hsrc <= width * height) { // do not scale down the picture, just export origianl picture
+            return bitmap;
+        } else {    // scale down the picture by rectangle defined by width x height
+            int w1 = width;
+            int h1 = width * hsrc / wsrc;
+            if (h1 <= height) {
+            } else {
+                h1 = height;
+                w1 = wsrc * height / hsrc;
+            }
+            return Bitmap.createScaledBitmap(bitmap, w1, h1, false);
+        }
+
 /*
         // 利用ThumbnailUtils来创建缩略图，这里要指定要缩放哪个Bitmap对象
         bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
                 ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
         saveThePicture(bitmap, "/sdcard/test_thum2.jpeg");
-*/
-        return bitmap;
+
+        return bitmap; */
     }
 
     static public boolean saveThePicture(Bitmap bitmap, String thumFile)
@@ -99,10 +144,12 @@ class CUtilities {
         return true;
     }
 
-//    private InputStream  Bitmap2IS(Bitmap bm){
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//        InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
-//        return sbs;
-//    }
+    static public InputStream getResizedPicure(String filePath) {
+        Bitmap bm = getImageThumbnail(filePath, 1920, 1080);
+//        saveThePicture(bm, "/sdcard/test_thumb.jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
+        return sbs;
+    }
 }
