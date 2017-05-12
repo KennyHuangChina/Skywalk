@@ -18,42 +18,42 @@ func Test_AddPicture(t *testing.T) {
 	seq := 1
 
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house < 0")
-	if e, _ := AddPicture(-1, -1, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(-1, -1, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house does not exist")
-	if e, _ := AddPicture(100000000, -1, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(100000000, -1, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
-	if e, _ := AddPicture(3, -1, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(3, -1, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
-	if e, _ := AddPicture(3, 100000000, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(3, 100000000, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
-	if e, _ := AddPicture(3, 9, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(3, 9, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not for this house")
-	if e, _ := AddPicture(3, 6, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(3, 6, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -81,7 +81,7 @@ func Test_AddPicture(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: base dir not set")
-	if e, _ := AddPicture(3, 10, -1, "", "", ""); e == nil {
+	if e, _ := AddPicture(3, 10, -1, "", "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -90,21 +90,28 @@ func Test_AddPicture(t *testing.T) {
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture file name not set")
 	picBaseDir := "./pics/" // beego.AppConfig.String("PicBaseDir") // os.Getwd()
 	t.Log("picBaseDir:", picBaseDir)
-	if e, _ := AddPicture(3, 10, -1, "", "", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, -1, "", "", "", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture file name do not include char '.'")
-	if e, _ := AddPicture(3, 10, -1, "", "abc", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, -1, "", "", "abc", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture desc not set")
-	if e, _ := AddPicture(3, 10, -1, "", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, -1, "", "", "ab.c", picBaseDir); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture md5 not set")
+	if e, _ := AddPicture(3, 10, -1, "picture desc", "", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -115,7 +122,7 @@ func Test_AddPicture(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -123,7 +130,7 @@ func Test_AddPicture(t *testing.T) {
 	typeMajor = commdef.PIC_TYPE_USER - 1
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -131,7 +138,7 @@ func Test_AddPicture(t *testing.T) {
 	typeMajor = commdef.PIC_TYPE_USER
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -139,7 +146,7 @@ func Test_AddPicture(t *testing.T) {
 	typeMajor = commdef.PIC_TYPE_RENTAL
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -147,7 +154,7 @@ func Test_AddPicture(t *testing.T) {
 	typeMajor = commdef.PIC_TYPE_RENTAL + 1
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -156,7 +163,7 @@ func Test_AddPicture(t *testing.T) {
 	typeMinor = commdef.PIC_HOUSE_FLOOR - 1
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -165,14 +172,14 @@ func Test_AddPicture(t *testing.T) {
 	typeMinor = commdef.PIC_HOUSE_APPLIANCE + 1
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: <type> major:", typeMajor, ", minor:", typeMinor)
-	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(3, 10, typeMajor+typeMinor, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: PIC_TYPE_HOUSE but house is not set")
-	if e, _ := AddPicture(0, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_APPLIANCE, "picture desc", "ab.c", picBaseDir); e == nil {
+	if e, _ := AddPicture(0, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_APPLIANCE, "picture desc", "abcdefghijklmn", "ab.c", picBaseDir); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -188,7 +195,7 @@ func Test_AddPicture(t *testing.T) {
 		return
 	}
 	t.Log("new picture:", pfn)
-	e, nid := AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", pfn, picBaseDir)
+	e, nid := AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", "abcdefghijklmn", pfn, picBaseDir)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
