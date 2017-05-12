@@ -6,32 +6,70 @@
 
     <include layout="@layout/item_search_title" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/searchResultContainer"
         android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:background="#eeeeee">
-        <TextView
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="15dp"
-            android:text="小区"
-            android:textColor="@color/colorText"
-            android:textSize="12sp"
-            android:gravity="center_vertical"/>
-    </RelativeLayout>
+            android:layout_height="33dp"
+            android:background="#eeeeee">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:text="小区"
+                android:textColor="@color/colorText"
+                android:textSize="12sp"
+                android:gravity="center_vertical"/>
+        </RelativeLayout>
 
-    <include layout="@layout/seperator_horizontal" />
+        <include layout="@layout/seperator_horizontal" />
 
-    <ScrollView
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollViewResult"
+            android:gravity="center" >
+            <com.kjs.skywalk.control.ListView_NoScroll
+                android:id="@+id/listViewResult"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </ScrollView>
+        <include layout="@layout/seperator_horizontal" />
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="visible"
+        android:id="@+id/searchResultEmptyContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollViewResult"
-        android:gravity="center" >
-        <com.kjs.skywalk.control.ListView_NoScroll
-            android:id="@+id/listViewHint"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="33dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:text="最近搜索"
+                android:textColor="@color/colorTextNormal"
+                android:textSize="13sp"
+                android:gravity="center_vertical"/>
+        </RelativeLayout>
 
-    </ScrollView>
-    <include layout="@layout/seperator_horizontal" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollViewResultEmpty"
+            android:gravity="center" >
+            <com.kjs.skywalk.control.ListView_NoScroll
+                android:id="@+id/listViewHint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

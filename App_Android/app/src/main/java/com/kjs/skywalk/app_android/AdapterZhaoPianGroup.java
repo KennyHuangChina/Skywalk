@@ -142,7 +142,7 @@ class AdapterZhaoPianGroup extends BaseAdapter {
             fragment.setPicList(list);
             fragLst.add(fragment);
         }
-        viewPager.setAdapter(new Activity_fangyuan_zhaopian.PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
+        //viewPager.setAdapter(new Activity_fangyuan_zhaopian.PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
         viewPager.setCurrentItem(0);
     }
 }
