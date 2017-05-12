@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"ApiServer/commdef"
+	"crypto/md5"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"github.com/astaxie/beego"
 	"io"
@@ -137,14 +139,15 @@ func (this *PictureController) AddPic() {
 	//	maybe used by other API calling, so we should occupy this file name first.
 	// Warning: This solution could not prevent picture file name conflict completely, there is chance that file conflict
 	//	between generatePicFileName() and savePicture(), although it's very low possibility
-	if err = savePicture(file, picBaseDir+picFileName /*fHead.Filename*/); nil != err {
+	err, picMd5 := savePicture(file, picBaseDir+picFileName /*fHead.Filename*/)
+	if nil != err {
 		return
 	}
 
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddPicture(hid, uid, pt, desc, picFileName, picBaseDir)
+	err, id := models.AddPicture(hid, uid, pt, desc, picMd5, picFileName, picBaseDir)
 	if nil == err {
 		result.Id = id
 	} else {
@@ -267,7 +270,7 @@ func generatePicFileName(baseDir, extName string) (err error, fileName string) {
 	return
 }
 
-func savePicture(file multipart.File, filename string) (err error) {
+func savePicture(file multipart.File, picPath string) (err error, picMd5 string) {
 	FN := "[savePicture] "
 
 	defer func() {
@@ -290,7 +293,7 @@ func savePicture(file multipart.File, filename string) (err error) {
 		return
 	}
 	// beego.Debug(FN, "file name:", fHead.Header["Content-Disposition"][0])
-	beego.Debug(FN, "file name:", filename, ", size:", fileSize)
+	beego.Debug(FN, "pic file:", picPath, ", size:", fileSize)
 
 	buffSize := int64(20 * 1024) // default buffer size 20KB
 	if fileSize < 20*1024 {
@@ -299,12 +302,14 @@ func savePicture(file multipart.File, filename string) (err error) {
 	buff := make([]byte, buffSize)
 
 	// save to local disk
-	localFile, errT := os.Create(filename)
+	localFile, errT := os.Create(picPath)
 	defer localFile.Close()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_CREATE_FILE, ErrInfo: errT.Error()}
 		return
 	}
+
+	hasher := md5.New()
 
 	writeBytes := int64(0)
 	file.Seek(0, 0)
@@ -321,6 +326,8 @@ func savePicture(file multipart.File, filename string) (err error) {
 		}
 
 		buff2write := buff[:numb]
+		hasher.Write([]byte(buff2write))
+
 		n, errT := localFile.Write(buff2write)
 		if nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_SYS_IO_WRITE, ErrInfo: errT.Error()}
@@ -328,7 +335,9 @@ func savePicture(file multipart.File, filename string) (err error) {
 		}
 		writeBytes = writeBytes + int64(n)
 	}
+	picMd5 = hex.EncodeToString(hasher.Sum(nil))
 	beego.Debug(FN, "writeBytes:", writeBytes)
+	beego.Debug(FN, "MD5:", picMd5)
 
 	return
 }

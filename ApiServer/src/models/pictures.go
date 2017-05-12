@@ -31,9 +31,9 @@ import (
 *		err - error info
 *		nid - new picture id
 **/
-func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid int64) {
+func AddPicture(hid, uid int64, pt int, desc, md5, pfn, pbd string) (err error, nid int64) {
 	FN := "[AddPicture] "
-	beego.Trace(FN, "house:", hid, ", user:", uid, ", picture type:", pt, ", desc:", desc, ", pic file name:", pfn, ", base dir:", pbd)
+	beego.Trace(FN, "house:", hid, ", user:", uid, ", picture type:", pt, ", desc:", desc, ", md5:", md5, ", pic file:", pfn, ", base dir:", pbd)
 
 	defer func() {
 		if nil != err {
@@ -74,6 +74,11 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture desc:%s", desc)}
 		return
 	}
+
+	if 0 == len(md5) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture md5:%s", md5)}
+		return
+	}
 	// picture type
 	err, majorType, minorType := checkPictureType(pt)
 	if nil != err {
@@ -94,7 +99,7 @@ func AddPicture(hid, uid int64, pt int, desc, pfn, pbd string) (err error, nid i
 	/* Processing */
 	switch majorType {
 	case commdef.PIC_TYPE_HOUSE:
-		return addPicHouse(hid, minorType, desc, pfn, pbd)
+		return addPicHouse(hid, minorType, desc, md5, pfn, pbd)
 	case commdef.PIC_TYPE_USER:
 	case commdef.PIC_TYPE_RENTAL:
 	default:
@@ -360,9 +365,9 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 	return
 }
 
-func addPicHouse(hid int64, minorType int, desc, pfn, pbd string) (err error, nid int64) {
+func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err error, nid int64) {
 	FN := "[addPicHouse] "
-	beego.Debug(FN, "house:", hid, ", minor type:", minorType, ", desc:", desc, ", pic file name:", pfn, ", base dir:", pbd)
+	beego.Debug(FN, "house:", hid, ", minor type:", minorType, ", desc:", desc, ", md5:", md5, ", pic file:", pfn, ", base dir:", pbd)
 
 	defer func() {
 		if nil != err {
@@ -401,7 +406,8 @@ func addPicHouse(hid int64, minorType int, desc, pfn, pbd string) (err error, ni
 		}
 	}()
 
-	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMiner: minorType, RefId: hid, Desc: desc}
+	// picture major record
+	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMiner: minorType, RefId: hid, Desc: desc, Md5: md5}
 	id, errT := o.Insert(&newPic)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
