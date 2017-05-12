@@ -72,7 +72,7 @@ class CmdAddPicture extends CommunicationBase {
             Log.e(TAG, "picture file not assigned");
             return false;
         }
-        if (!isUploadFileExist(picFile)) {
+        if (!CUtilities.isPicture(picFile)) {
             Log.e(TAG, "picture file not exist");
             return false;
         }

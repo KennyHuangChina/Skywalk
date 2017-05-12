@@ -29,9 +29,23 @@ class CUtilities {
         return type;
     }
 
-    static public boolean isPicture(String filePath) {
-        String contentType = "";
+    static public boolean isFileExist(String filePath) {
+        if (filePath.isEmpty()) {
+            Log.w("[isFileExist] ", "upload file not set");
+            return false;
+        }
 
+        File upFile = new File(filePath);
+        return upFile.exists();
+    }
+
+    static public boolean isPicture(String filePath) {
+
+        if (!isFileExist(filePath)) {
+            return false;
+        }
+
+        String contentType = "";
         try {
             contentType = getMimeType(filePath);
             if (!contentType.isEmpty() &&
