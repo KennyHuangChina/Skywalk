@@ -70,6 +70,7 @@
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
                     <TextView
+                        android:id="@+id/tv_name_picgroup1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -78,6 +79,14 @@
                         android:textColor="@color/colorTextNormal"
                         android:textSize="13sp"
                         android:text="户型图"/>
+                    <TextView
+                        android:id="@+id/tv_status_picgroup1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/tv_name_picgroup1"
+                        android:text="(6)"/>
 
                     <ImageView
                         android:id="@+id/iv_huxing_photopicker"
@@ -114,6 +123,7 @@
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
                     <TextView
+                        android:id="@+id/tv_name_picgroup2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -122,7 +132,14 @@
                         android:textColor="@color/colorTextNormal"
                         android:textSize="13sp"
                         android:text="房间结构"/>
-
+                    <TextView
+                        android:id="@+id/tv_status_picgroup2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/tv_name_picgroup2"
+                        android:text="(6)"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -156,6 +173,7 @@
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
                     <TextView
+                        android:id="@+id/tv_name_picgroup3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -164,7 +182,14 @@
                         android:textColor="@color/colorTextNormal"
                         android:textSize="13sp"
                         android:text="家居用品"/>
-
+                    <TextView
+                        android:id="@+id/tv_status_picgroup3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/tv_name_picgroup3"
+                        android:text="(6)"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -198,6 +223,7 @@
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
                     <TextView
+                        android:id="@+id/tv_name_picgroup4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -206,7 +232,14 @@
                         android:textColor="@color/colorTextNormal"
                         android:textSize="13sp"
                         android:text="电器"/>
-
+                    <TextView
+                        android:id="@+id/tv_status_picgroup4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/tv_name_picgroup4"
+                        android:text="(6)"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,40 +20,22 @@ import java.util.ArrayList;
 
 public class fragmentFangYuanZhaoPianGroup extends Fragment {
 //    private Group mGroup;
-    private  ArrayList<PicList> mPicList;
+    private  ArrayList<ClassDefine.PicList> mPicList;
     RelativeLayout mRlPicCheckFlag;
     RelativeLayout mRlPic1CheckFlag;
     CheckBox mCbPicCheckFlag;
     CheckBox mCbPic1CheckFlag;
     boolean mIsSelectMode = false;
+    ZhaoPianGroupCallback mCallback = null;
 
-    static class PicList {
-        String mDesc;
-        int    mDrawable;
-        boolean mIsChecked;
-
-        public PicList(String desc, int drawable, boolean isChecked) {
-            mDesc = desc;
-            mDrawable = drawable;
-            mIsChecked = isChecked;
-        }
+    public interface ZhaoPianGroupCallback {
+        void onPicSelectChanged();
+    }
+    public void setZhaoPianGroupCallback(ZhaoPianGroupCallback callback) {
+        this.mCallback = callback;
     }
 
-//    static class Group {
-//        String mTitle;
-//        ArrayList<PicList> mList;
-//
-//        public Group(String title,  ArrayList<PicList> list) {
-//            mTitle = title;
-//            mList = list;
-//        }
-//    }
-
-//    public void setGroup(Group group) {
-//        mGroup = group;
-//    }
-
-    public void setPicList(ArrayList<PicList> picLst) {
+    public void setPicList(ArrayList<ClassDefine.PicList> picLst) {
         mPicList = picLst;
     }
 
@@ -74,7 +57,8 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         mRlPicCheckFlag.setOnClickListener(mRlPicCheckFlagClicked);
         mRlPicCheckFlag.setVisibility(visibility);
         mCbPicCheckFlag = (CheckBox) view.findViewById(R.id.cb_pic_checkflag);
-
+        mCbPicCheckFlag.setChecked(mPicList.get(0).mIsChecked);
+        mCbPicCheckFlag.setOnCheckedChangeListener(mCheckedChangeListener);
 
         // pic1
         ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
@@ -90,6 +74,8 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         mRlPic1CheckFlag.setOnClickListener(mRlPicCheckFlagClicked);
         mRlPic1CheckFlag.setVisibility(visibility);
         mCbPic1CheckFlag = (CheckBox) view.findViewById(R.id.cb_pic1_checkflag);
+        mCbPicCheckFlag.setChecked(mPicList.get(1).mIsChecked);
+        mCbPic1CheckFlag.setOnCheckedChangeListener(mCheckedChangeListener);
 
         return view;
     }
@@ -106,6 +92,31 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
 
         if(mRlPic1CheckFlag != null)
             mRlPic1CheckFlag.setVisibility(visibility);
+
+        if (!mIsSelectMode) {
+            // clear all check box select status
+            if (mCbPicCheckFlag != null)
+                mCbPicCheckFlag.setChecked(false);
+            if (mCbPic1CheckFlag != null)
+                mCbPic1CheckFlag.setChecked(false);
+
+            for (ClassDefine.PicList picList : mPicList) {
+                picList.mIsChecked = false;
+            }
+        }
+    }
+
+    public int getSelectCount() {
+        if (!mIsSelectMode)
+            return 0;
+
+        int count = 0;
+        for (ClassDefine.PicList picList : mPicList) {
+            if (picList.mIsChecked)
+                count++;
+        }
+
+        return count;
     }
 
     View.OnClickListener mRlPicCheckFlagClicked = new View.OnClickListener() {
@@ -118,7 +129,6 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
                     boolean bChecked = mCbPicCheckFlag.isChecked();
                     bChecked = !bChecked;
                     mCbPicCheckFlag.setChecked(bChecked);
-                    mPicList.get(0).mIsChecked = bChecked;
 
                     break;
                 }
@@ -128,7 +138,6 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
                     boolean bChecked = mCbPic1CheckFlag.isChecked();
                     bChecked = !bChecked;
                     mCbPic1CheckFlag.setChecked(bChecked);
-                    mPicList.get(1).mIsChecked = bChecked;
 
                     break;
                 }
@@ -154,6 +163,26 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
                     break;
                 }
             }
+        }
+    };
+
+    CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.cb_pic_checkflag:
+                {
+                    mPicList.get(0).mIsChecked = isChecked;
+                    break;
+                }
+                case R.id.cb_pic1_checkflag:
+                {
+                    mPicList.get(1).mIsChecked = isChecked;
+                    break;
+                }
+            }
+            if (mCallback != null)
+                mCallback.onPicSelectChanged();
         }
     };
 }
