@@ -77,7 +77,10 @@ class CmdAddPicture extends CommunicationBase {
 //            Log.e(TAG, "fail to get picture name after scaling down");
 //            return false;
 //        }
-
+        if (!isUploadFileExist(picFile)) {
+            Log.e(TAG, "picture file not exist");
+            return false;
+        }
         mFile = picFile; //picFile1;
 //        if (0 != picFile.compareToIgnoreCase(picFile1)) {
 //            mDelFileExit = true;

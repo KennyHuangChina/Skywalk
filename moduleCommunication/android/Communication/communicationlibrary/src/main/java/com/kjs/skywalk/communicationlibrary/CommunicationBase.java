@@ -226,4 +226,14 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     public String GetApiName() {
         return "" + mAPI;
     }
+
+    protected boolean isUploadFileExist(String filePath) {
+        if (filePath.isEmpty()) {
+            Log.w(TAG, "upload file not set");
+            return false;
+        }
+
+        File upFile = new File(filePath);
+        return upFile.exists();
+    }
 }

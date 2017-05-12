@@ -90,7 +90,7 @@ public class MainActivityFragment extends Fragment
 //        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
 //        CmdMgr.AddHouseFacility(6, list);
         CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-                mEditText2.getText().toString(), "/sdcard/test.jpg");
+                mEditText2.getText().toString(), "/sdcard/testKenny.jpg");
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
