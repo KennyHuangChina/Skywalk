@@ -71,6 +71,7 @@ func (this *PictureController) GetPicUrl() {
 		result.Url_s = url_s
 		result.Url_m = url_m
 		result.Url_l = url_l
+		// beego.Warn(FN, fmt.Sprintf("%+v", result))
 	}
 }
 

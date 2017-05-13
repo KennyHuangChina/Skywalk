@@ -187,6 +187,7 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 		}
 	}
 
+	// beego.Debug(FN, "s:", url_s, ", m:", url_m, ", l:", url_l)
 	return
 }
 
@@ -236,6 +237,8 @@ func DelImage(pic, uid int64) (err error) {
 	} else {
 		beego.Warn("TODO: Do permission checking here for other kind of pictures")
 	}
+
+	beego.Warn(FN, "TODO: check if this picture has been used by some other object")
 
 	/* Processing */
 	o := orm.NewOrm()
