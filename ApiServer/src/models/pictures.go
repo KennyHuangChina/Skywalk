@@ -295,9 +295,7 @@ func DelImageFile(image string) (err error) {
 
 	_, errT := os.Stat(image)
 	if nil == errT || os.IsExist(errT) { // picture exist
-		if errT = os.Remove(image); nil != errT {
-			beego.Error(FN, "Fail to delete, err:", errT)
-		}
+		err = os.Remove(image)
 	} else {
 		beego.Warn(FN, "Image not found")
 	}
