@@ -49,10 +49,14 @@
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
                         android:text="小区名称"/>
-                    <EditText
+                    <TextView
+                        android:id="@+id/textViewSelectBlock"
                         style="@style/textStyle_page_blockValue"
                         android:textColorHint="@color/colorEditTextTint"
                         android:background="#FFFFFFFF"
+                        android:drawableRight="@drawable/right_n"
+                        android:drawablePadding="5dp"
+                        android:onClick="onViewClick"
                         android:hint="选择小区"/>
                 </RelativeLayout>
 

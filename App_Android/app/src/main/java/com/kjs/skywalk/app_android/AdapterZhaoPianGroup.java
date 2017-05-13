@@ -130,19 +130,19 @@ class AdapterZhaoPianGroup extends BaseAdapter {
         }
     }
 
-    private void fillPicGroupInfo(ViewPager viewPager, ArrayList<fragmentFangYuanZhaoPianGroup.PicList> picLst) {
-        List<Fragment> fragLst = new ArrayList<Fragment>();
-        int lstCnt = picLst.size() % 2 == 0 ? picLst.size() / 2 : picLst.size() / 2 + 1;
-        for (int i = 0; i <lstCnt; i++) {
-            fragmentFangYuanZhaoPianGroup fragment = new fragmentFangYuanZhaoPianGroup();
-            ArrayList<fragmentFangYuanZhaoPianGroup.PicList> list = new ArrayList();
-            list.add(picLst.get(i * 2));
-            list.add(picLst.get(i * 2  + 1));
-
-            fragment.setPicList(list);
-            fragLst.add(fragment);
-        }
-        //viewPager.setAdapter(new Activity_fangyuan_zhaopian.PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
-        viewPager.setCurrentItem(0);
-    }
+//    private void fillPicGroupInfo(ViewPager viewPager, ArrayList<fragmentFangYuanZhaoPianGroup.PicList> picLst) {
+//        List<Fragment> fragLst = new ArrayList<Fragment>();
+//        int lstCnt = picLst.size() % 2 == 0 ? picLst.size() / 2 : picLst.size() / 2 + 1;
+//        for (int i = 0; i <lstCnt; i++) {
+//            fragmentFangYuanZhaoPianGroup fragment = new fragmentFangYuanZhaoPianGroup();
+//            ArrayList<fragmentFangYuanZhaoPianGroup.PicList> list = new ArrayList();
+//            list.add(picLst.get(i * 2));
+//            list.add(picLst.get(i * 2  + 1));
+//
+//            fragment.setPicList(list);
+//            fragLst.add(fragment);
+//        }
+//        //viewPager.setAdapter(new Activity_fangyuan_zhaopian.PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
+//        viewPager.setCurrentItem(0);
+//    }
 }
