@@ -143,6 +143,13 @@ type ResGetHouseFacilities struct {
 	Facilities []commdef.HouseFacility
 }
 
+// result of API get house picture list
+type ResGetHousePicList struct {
+	ResCommon
+	Total int
+	Pics  []commdef.HousePicture
+}
+
 /************************************************************************************
 *
 *		Functions

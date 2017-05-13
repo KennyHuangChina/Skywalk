@@ -2,10 +2,9 @@
 
 ##
 ### 1. Get picture url
-	[Security]	based on who is asking, some pictures are pulbic, but some pictures are private
+	[Security]	based on the picture type, some kind of pictures are pulbic, but some pictures are private
 	[Request]
-  		* GET /v1/pic/:id?sid=xxx&size=
-	  		* sid 			string	// session id, by which server could know who send the request
+  		* GET /v1/pic/:id
 	  		* size			int		// picture size, 1 - small; 2 - moderate; 3 - large; 0 or not set means fetch all 3 kind of size
 	[Response]
 		* SUCCESS:200 
@@ -39,6 +38,24 @@
   		* DELETE /v1/pic/:id
 	[Response]
 		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+
+##
+### 4. Get House Picture list
+	[Security]	based on the picture type, some kind of pictures are pulbic, but some pictures are private
+	[Request]
+  		* GET /v1/pic/house/:id?st=
+	  		* st			int 		// type: 0 means all subtype, > 0 means a certain subtype
+	[Response]
+		* SUCCESS:200 
+			* total			int 		// picture count
+			* PicList
+				* id 		int			// picture id
+				* desc		string		// picture description
+				* type		int			// picture sub-type
+				* Checksum	string		// picture checksum, md5
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

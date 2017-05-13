@@ -112,6 +112,64 @@ func AddPicture(hid, uid int64, pt int, desc, md5, pfn, pbd string) (err error, 
 /**
 *	Get picture url
 *	Arguments:
+*		hid 	- house id
+*		uid 	- login user id
+*		size	- picture size: PIC_SIZE_ALL, PIC_SIZE_SMALL, PIC_SIZE_MODERATE, PIC_SIZE_LARGE,
+*	Returns
+*		err 	- error info
+*		picList	- picture list
+**/
+func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.HousePicture) {
+	FN := "[GetHousePicList] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", sub type:", subType)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, _ = getHouse(hid)
+	if nil != err {
+		return
+	}
+
+	if subType < 0 || subType > commdef.PIC_HOUSE_END {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("subType:%d", subType)}
+		return
+	}
+
+	// checkPicturePermission(pic, uid)
+
+	/* Querying */
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_pictures").Filter("TypeMajor", commdef.PIC_TYPE_HOUSE).Filter("RefId", hid)
+	if subType > 0 {
+		qs = qs.Filter("TypeMiner", subType)
+	}
+
+	var pl []TblPictures
+	numb, errT := qs.OrderBy("TypeMiner", "RefId").All(&pl)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT)}
+		return
+	}
+	beego.Debug(FN, "", numb, "pictures")
+
+	for _, v := range pl {
+		if err1 := checkPicturePermission(&v, uid); nil == err1 {
+			np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMiner, Checksum: v.Md5}
+			picList = append(picList, np)
+		}
+	}
+
+	return
+}
+
+/**
+*	Get picture url
+*	Arguments:
 *		pid 	- picture id
 *		uid 	- login user id
 *		size	- picture size: PIC_SIZE_ALL, PIC_SIZE_SMALL, PIC_SIZE_MODERATE, PIC_SIZE_LARGE,
@@ -131,12 +189,12 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 		}
 	}()
 
+	/* Argument Checking */
 	err, pic := getPicture(pid)
 	if nil != err {
 		return
 	}
 
-	/* some pictures are private, like landlord id card */
 	if err = checkPicturePermission(&pic, uid); nil != err {
 		return
 	}
@@ -149,6 +207,7 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 		return
 	}
 
+	/* Querying */
 	o := orm.NewOrm()
 
 	sql := fmt.Sprintf("SELECT size, url FROM tbl_pic_set WHERE pic_id='%d'", pid)

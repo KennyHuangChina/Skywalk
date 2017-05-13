@@ -28,6 +28,53 @@ func (p *PictureController) URLMapping() {
 	p.Mapping("GetPicUrl", p.GetPicUrl)
 	p.Mapping("AddPic", p.AddPic)
 	p.Mapping("DelPic", p.DelPic)
+	p.Mapping("GetHousePicList", p.GetHousePicList)
+}
+
+// @Title GetHousePicList
+// @Description get picture url
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /house/:id [get]
+func (this *PictureController) GetHousePicList() {
+	FN := "[GetHousePicList] "
+	beego.Warn("[--- API: GetHousePicList ---]")
+
+	var result ResGetHousePicList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, _ /*err*/ := getLoginUser(this.Controller) // some kind of pictures are public, some kind of picures are private,
+	// if nil != err {
+	// 	return
+	// }
+	hid, _ := this.GetInt64(":id")
+	subtype, _ := this.GetInt("st")
+
+	// beego.Debug(FN, "house:", hid, ", subtype:", subtype)
+
+	/*
+	 *	Processing
+	 */
+	err, picLst := models.GetHousePicList(hid, uid, subtype)
+	if nil == err {
+		result.Total = len(picLst)
+		result.Pics = picLst
+		// beego.Warn(FN, fmt.Sprintf("%+v", result))
+	}
 }
 
 // @Title GetPicUrl
@@ -56,12 +103,15 @@ func (this *PictureController) GetPicUrl() {
 	/*
 	 *	Extract agreements
 	 */
-	pid, _ := this.GetInt64(":id")
-	sid := this.GetString("sid")
-	size, _ := this.GetInt("size")
-	uid := int64(0)
+	uid, _ /*err*/ := getLoginUser(this.Controller) // some kind of pictures are public, some kind of picures are private,
+	// if nil != err {
+	// 	return
+	// }
 
-	beego.Debug(FN, "pid:", pid, ", sid:", sid)
+	pid, _ := this.GetInt64(":id")
+	size, _ := this.GetInt("size")
+
+	// beego.Debug(FN, "pid:", pid, ", sid:", sid)
 
 	/*
 	 *	Processing

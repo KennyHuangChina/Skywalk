@@ -186,10 +186,12 @@ const (
 
 // for PIC_TYPE_HOUSE
 const (
+	PIC_HOUSE_BEGIN         = 1
 	PIC_HOUSE_FLOOR         = 1 // house type image, anyone could access
 	PIC_HOUSE_FURNITURE     = 2 // house furnitures, anyone could access
 	PIC_HOUSE_APPLIANCE     = 3 // house appliance, andy could access
 	PIC_HOUSE_OwnershipCert = 4 // house ownership certification, only the landlord, its agency and administrator could access
+	PIC_HOUSE_END           = 4
 )
 
 const (
@@ -200,3 +202,10 @@ const (
 	PIC_SIZE_LARGE    = 4
 	// PIC_SIZE_HEAD_PORTRAINT = 5 // head portraint, typically used for user picture
 )
+
+type HousePicture struct {
+	Id       int64  // house picture id
+	Desc     string // house picture description
+	SubType  int    // house picture sub-type
+	Checksum string // house picture checksum, md5
+}
