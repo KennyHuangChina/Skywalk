@@ -10,11 +10,13 @@ import java.util.ArrayList;
 public class ClassDefine {
     static class PicList {
         String mDesc;
+        String mPath;
         int    mDrawable;
         boolean mIsChecked;
 
-        public PicList(String desc, int drawable, boolean isChecked) {
+        public PicList(String desc, String path, int drawable, boolean isChecked) {
             mDesc = desc;
+            mPath = path;
             mDrawable = drawable;
             mIsChecked = isChecked;
         }

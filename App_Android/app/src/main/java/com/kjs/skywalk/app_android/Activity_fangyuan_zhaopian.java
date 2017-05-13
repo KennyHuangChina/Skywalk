@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,6 +31,20 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
     ArrayList<ClassDefine.PicList> mDianQiPicLst;
 
     boolean mIsPicSelectMode = false;
+    int mPhotoPickerHostId;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == PhotoPicker.REQUEST_CODE) {
+            List<String> photos = null;
+            if (data != null) {
+                photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                onPhotoPickerReturn(photos);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +57,12 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
         mHuXingPicLst = new ArrayList<> (
                 Arrays.asList(
-                        new ClassDefine.PicList("户型图一", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("户型图二", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图三", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图四", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图五", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图六", R.drawable.huxingtu2, false)
+                        new ClassDefine.PicList("户型图一", "", R.drawable.huxingtu1, false),
+                        new ClassDefine.PicList("户型图二", "", R.drawable.huxingtu2, false),
+                        new ClassDefine.PicList("户型图三", "", R.drawable.huxingtu2, false),
+                        new ClassDefine.PicList("户型图四", "", R.drawable.huxingtu2, false),
+                        new ClassDefine.PicList("户型图五", "", R.drawable.huxingtu2, false),
+                        new ClassDefine.PicList("户型图六", "", R.drawable.huxingtu2, false)
              )
         );
         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
@@ -58,8 +73,8 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         mVpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
         mFangJianJieGouPicLst = new ArrayList<> (
                 Arrays.asList(
-                        new ClassDefine.PicList("房间结构图一", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("房间结构图二", R.drawable.huxingtu2, false)
+                        new ClassDefine.PicList("房间结构图一", "", R.drawable.huxingtu1, false),
+                        new ClassDefine.PicList("房间结构图二", "", R.drawable.huxingtu2, false)
                 )
         );
         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
@@ -70,8 +85,8 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         mVpJiaJuYongPin = (ViewPager) findViewById(R.id.vp_jiajuyongpin);
         mJiaJuYongPinPicLst = new ArrayList<> (
                 Arrays.asList(
-                        new ClassDefine.PicList("家居用品图一", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("家居用品图二", R.drawable.huxingtu2, false)
+                        new ClassDefine.PicList("家居用品图一", "", R.drawable.huxingtu1, false),
+                        new ClassDefine.PicList("家居用品图二", "", R.drawable.huxingtu2, false)
                 )
         );
         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
@@ -80,19 +95,19 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_name_picgroup4)).setText("电器");
         mTvStatus4 = (TextView) findViewById(R.id.tv_status_picgroup4);
         mVpDianQi = (ViewPager) findViewById(R.id.vp_dianqi);
-        mDianQiPicLst = new ArrayList<> (
-                Arrays.asList(
-                        new ClassDefine.PicList("电器图一", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("电器图二", R.drawable.huxingtu2, false)
-                )
-        );
+        mDianQiPicLst = new ArrayList<> ();
+//                Arrays.asList(
+//                        new ClassDefine.PicList("电器图一", "", R.drawable.huxingtu1, false),
+//                        new ClassDefine.PicList("电器图二", "", R.drawable.huxingtu2, false)
+//                )
+//        );
         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
     }
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title:
+            case R.id.iv_back:
             {
                 finish();
             }
@@ -122,10 +137,12 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
 
     public void onPhotoPickerClicked(View v) {
         switch (v.getId()) {
-            case R.id.iv_huxing_photopicker:
+            case R.id.iv_photopicker_picgroup1:
+            case R.id.iv_photopicker_picgroup2:
+            case R.id.iv_photopicker_picgroup3:
+            case R.id.iv_photopicker_picgroup4:
             {
-                PhotoPicker.builder()
-                        .start(Activity_fangyuan_zhaopian.this);
+                startPhotoPickerActivity(v);
             }
             break;
 
@@ -209,4 +226,55 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
             mTvStatus4.setText("(" + select_count + "/" + total + ")");
         }
     };
+
+    private void startPhotoPickerActivity(View host_view) {
+        mPhotoPickerHostId = host_view.getId();
+        PhotoPicker.builder()
+                .start(Activity_fangyuan_zhaopian.this);
+    }
+
+    private void onPhotoPickerReturn(List<String> photos) {
+        ArrayList<ClassDefine.PicList> picList;
+        PicFragStatePageAdapter adapter;
+        switch (mPhotoPickerHostId) {
+            case R.id.iv_photopicker_picgroup1:
+            {
+                picList = mHuXingPicLst;
+                adapter = ((PicFragStatePageAdapter) mVPHuXing.getAdapter());
+                break;
+            }
+            case R.id.iv_photopicker_picgroup2:
+            {
+                picList = mFangJianJieGouPicLst;
+                adapter = ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter());
+                break;
+            }
+            case R.id.iv_photopicker_picgroup3:
+            {
+                picList = mJiaJuYongPinPicLst;
+                adapter = ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter());
+                break;
+            }
+            case R.id.iv_photopicker_picgroup4:
+            {
+                picList = mDianQiPicLst;
+                adapter = ((PicFragStatePageAdapter) mVpDianQi.getAdapter());
+                break;
+            }
+            default:
+                return;
+        }
+
+        for (String path : photos) {
+            ClassDefine.PicList item = new ClassDefine.PicList("电器图一", path, 0, false);
+            picList.add(item);
+        }
+
+        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+
+        adapter.notifyDataSetChanged();
+    }
 }

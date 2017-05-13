@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/tv_back"
+            android:id="@+id/iv_back"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:onClick="onViewClick"
@@ -89,7 +89,7 @@
                         android:text="(6)"/>
 
                     <ImageView
-                        android:id="@+id/iv_huxing_photopicker"
+                        android:id="@+id/iv_photopicker_picgroup1"
                         android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -141,6 +141,8 @@
                         android:layout_toRightOf="@+id/tv_name_picgroup2"
                         android:text="(6)"/>
                     <ImageView
+                        android:id="@+id/iv_photopicker_picgroup2"
+                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -191,6 +193,8 @@
                         android:layout_toRightOf="@+id/tv_name_picgroup3"
                         android:text="(6)"/>
                     <ImageView
+                        android:id="@+id/iv_photopicker_picgroup3"
+                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -241,6 +245,8 @@
                         android:layout_toRightOf="@+id/tv_name_picgroup4"
                         android:text="(6)"/>
                     <ImageView
+                        android:id="@+id/iv_photopicker_picgroup4"
+                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

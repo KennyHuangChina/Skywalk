@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import me.iwf.photopicker.PhotoPreview;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -46,7 +49,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
 
         ImageView ivPic = (ImageView) view.findViewById(R.id.iv_pic);
         TextView tvPicDes = (TextView) view.findViewById(R.id.tv_pic_desc);
-        ivPic.setImageResource(mPicList.get(0).mDrawable);
+        if (!mPicList.get(0).mPath.isEmpty()) {
+            Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(0).mPath);
+            ivPic.setImageDrawable(drawable);
+        } else {
+            ivPic.setImageResource(mPicList.get(0).mDrawable);
+        }
         tvPicDes.setText("照片说明：" + mPicList.get(0).mDesc);
         ivPic.setOnClickListener(mPicClicked);
 
@@ -63,7 +71,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         // pic1
         ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
         TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
-        ivPic1.setImageResource(mPicList.get(1).mDrawable);
+        if (!mPicList.get(1).mPath.isEmpty()) {
+            Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(1).mPath);
+            ivPic1.setImageDrawable(drawable);
+        } else {
+            ivPic1.setImageResource(mPicList.get(1).mDrawable);
+        }
         tvPicDes1.setText("照片说明：" + mPicList.get(1).mDesc);
         ivPic1.setOnClickListener(mPicClicked);
 
@@ -148,6 +161,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
     View.OnClickListener mPicClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
+            ArrayList<String> images = commonFun.getTestPicList(getActivity());
+            PhotoPreview.builder()
+                    .setPhotos(images)
+                    .setCurrentItem(0)
+                    .start(getActivity());
 
             switch (view.getId()) {
                 case R.id.iv_pic:
