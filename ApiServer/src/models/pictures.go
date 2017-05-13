@@ -243,8 +243,9 @@ func DelImage(pic, uid int64) (err error) {
 	}
 	beego.Debug(FN, numb, "record in database")
 
+	picBaseDir := GetPicBaseDir()
 	for _, v := range psl {
-		DelImageFile(v.Url)
+		DelImageFile(picBaseDir + v.Url)
 	}
 	o.Begin()
 	defer func() {
@@ -294,7 +295,11 @@ func DelImageFile(image string) (err error) {
 
 	_, errT := os.Stat(image)
 	if nil == errT || os.IsExist(errT) { // picture exist
-		err = os.Remove(image)
+		if errT = os.Remove(image); nil != errT {
+			beego.Error(FN, "Fail to delete, err:", errT)
+		}
+	} else {
+		beego.Warn(FN, "Image not found")
 	}
 
 	return
@@ -618,7 +623,7 @@ func watermarking(bgImg *image.RGBA) (err error) {
 	dx := bgImg.Bounds().Dx()
 	dy := bgImg.Bounds().Dy()
 
-	wmp := beego.AppConfig.String("PicBaseDir")
+	wmp := GetPicBaseDir()
 	if 0 == len(wmp) {
 		beego.Warn(FN, `this is just for testing by "go test"`)
 		wmp = "../pics/"
@@ -647,6 +652,10 @@ func watermarking(bgImg *image.RGBA) (err error) {
 	draw.Draw(bgImg, watermark.Bounds().Add(offset), watermark, watermark.Bounds().Min, draw.Over)
 
 	return
+}
+
+func GetPicBaseDir() string {
+	return beego.AppConfig.String("PicBaseDir")
 }
 
 func getSmallPicSize() (w, h int) {

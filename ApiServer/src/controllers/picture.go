@@ -129,7 +129,7 @@ func (this *PictureController) AddPic() {
 		return
 	}
 
-	picBaseDir := beego.AppConfig.String("PicBaseDir") // os.Getwd()
+	picBaseDir := models.GetPicBaseDir() // beego.AppConfig.String("PicBaseDir") // os.Getwd()
 	// beego.Warn("picBaseDir:", picBaseDir)
 	err, picFileName := generatePicFileName(picBaseDir, getPicExtName(fType))
 	if nil != err {
