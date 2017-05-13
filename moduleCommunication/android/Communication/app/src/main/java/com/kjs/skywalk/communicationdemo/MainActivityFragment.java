@@ -42,6 +42,11 @@ public class MainActivityFragment extends Fragment
     public MainActivityFragment() {
     }
 
+    private void doTestDeleApi() {
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CmdMgr.DelePicture(Integer.parseInt(mEditText.getText().toString()));
+    }
+
     private void doTestModifyApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
@@ -166,6 +171,18 @@ public class MainActivityFragment extends Fragment
                 mResultString = "";
                 mTextViewResult.setText("");
                 doTestModifyApi();
+            }
+        });
+
+        Button btntestDeleteApi = (Button)view.findViewById(R.id.testDeleteApi);
+        btntestDeleteApi.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mResultString = "";
+                mTextViewResult.setText("");
+                doTestDeleApi();
             }
         });
 

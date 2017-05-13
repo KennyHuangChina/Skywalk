@@ -368,4 +368,11 @@ public class CommandManager implements CommunicationInterface.ICommand {
         pMap.put(CommunicationParameterKey.CPK_IMG_FILE, String.valueOf(file));
         return execute(pMap);
     }
+
+    @Override
+    public int DelePicture(int pic) {
+        mOperation = new CmdDelePicture(mContext, pic);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
 }

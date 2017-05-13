@@ -75,6 +75,7 @@ public class CommunicationInterface {
 
         // Pictures
         int AddPicture(int house, int type, String desc, String file);
+        int DelePicture(int pic);
     }
 
     public static class CmdID {
@@ -124,6 +125,7 @@ public class CommunicationInterface {
 
         // Pictures
         public static int CMD_ADD_PICTURE            = 0x6001;
+        public static int CMD_DEL_PICTURE            = 0x6002;
 
         public static int CMD_TEST                   = 0x0001;
     }

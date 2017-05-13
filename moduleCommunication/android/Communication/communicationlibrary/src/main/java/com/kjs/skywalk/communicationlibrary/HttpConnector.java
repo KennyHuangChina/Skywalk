@@ -295,7 +295,7 @@ class HttpConnector {
                 wr.writeBytes(BOUNDARY_END);
                 wr.writeBytes("\r\n");
                 wr.flush();
-            } else if (mMethod.equals("GET")) {
+            } else if (mMethod.equals("GET") || mMethod.equals("DELETE")) {
                 mConnection.setRequestMethod(mMethod);
                 mConnection.setDoOutput(false);
             }

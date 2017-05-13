@@ -80,6 +80,15 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
+        <Button
+            android:text="Test Delete API"
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/testDeleteApi"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
