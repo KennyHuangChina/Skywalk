@@ -76,5 +76,79 @@
 
             </LinearLayout>
         </ScrollView>
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_marginTop="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/house4_n"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/colorText"
+                android:layout_gravity="center_horizontal"
+                android:text="暂无搜索记录"/>
+        </LinearLayout>
+        <ScrollView
+            android:id="@+id/scrollViewAdd"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.kjs.skywalk.control.ListView_NoScroll
+                    android:id="@+id/listViewAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include layout="@layout/seperator_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="15dp"
+                        android:text="没有我想要的小区"
+                        android:textColor="@color/colorTextNormal"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_pass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="27dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/rounded_rect_stroke_background_green"
+                        android:gravity="center"
+                        android:onClick="onViewClick"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:text="点击添加"
+                        android:textColor="#00ae63"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+                <include layout="@layout/seperator_horizontal" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </RelativeLayout>

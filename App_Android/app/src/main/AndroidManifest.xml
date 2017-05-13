@@ -80,8 +80,6 @@
         <activity
             android:name=".Activity_Zushouweituo_Kanfangshijian"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity android:name=".Activity_Search_NoHistory" />
-        <activity android:name=".Activity_Search_Add" />
         <activity android:name=".Activity_Search_House" />
         <activity android:name=".Activity_fangyuan_renzhengshuoming"></activity>
         <activity android:name=".Activity_fangyuan_zhaopian"></activity>

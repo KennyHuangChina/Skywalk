@@ -344,31 +344,6 @@ public class MainActivity extends AppCompatActivity {
 //                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Kanfangshijian.class));
 //                        break;
 //                    }
-                    case R.id.action_setting107:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Search_NoHistory.class));
-                        break;
-                    }
-                    case R.id.action_setting108:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Search_Add.class));
-                        break;
-                    }
-                    case R.id.action_setting109:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Search_House.class));
-                        break;
-                    }
-//                    case R.id.action_setting110:
-//                    {
-//                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_renzhengshuoming.class));
-//                        break;
-//                    }
-//                    case R.id.action_setting111:
-//                    {
-//                        startActivity(new Intent(MainActivity.this, Activity_Search.class));
-//                        break;
-//                    }
                     case R.id.action_setting112:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_Search_Fangyuanliebiao.class));

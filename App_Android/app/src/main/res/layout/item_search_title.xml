@@ -31,6 +31,7 @@
             android:layout_height="match_parent"
             android:searchIcon="@drawable/search_n"
             android:searchHintIcon="@drawable/search_n"
+            android:closeIcon="@drawable/close2_n"
             android:queryHint="输入小区名称" />
     </RelativeLayout>
 
