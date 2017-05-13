@@ -375,4 +375,11 @@ public class CommandManager implements CommunicationInterface.ICommand {
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }
+
+    @Override
+    public int GetPicUrls(int pic, int size) {
+        mOperation = new CmdGetPictureUrls(mContext, pic, size);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
 }

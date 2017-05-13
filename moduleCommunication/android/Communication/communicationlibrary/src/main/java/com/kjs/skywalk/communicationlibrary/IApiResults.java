@@ -108,4 +108,12 @@ public class IApiResults {
         String GetType();
         int GetQty();
         String GetDesc();
-    }}
+    }
+
+    // command: CmdGetPictureUrls
+    public interface IPicUrls {
+        String GetSmallPicture();
+        String GetMiddlePicture();
+        String GetLargePicture();
+    }
+}
