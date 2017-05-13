@@ -113,7 +113,7 @@ func AddPicture(hid, uid int64, pt int, desc, md5, pfn, pbd string) (err error, 
 *	Get picture url
 *	Arguments:
 *		pid 	- picture id
-*		uid 	- user id
+*		uid 	- login user id
 *		size	- picture size: PIC_SIZE_ALL, PIC_SIZE_SMALL, PIC_SIZE_MODERATE, PIC_SIZE_LARGE,
 *	Returns
 *		err - error info
@@ -123,7 +123,7 @@ func AddPicture(hid, uid int64, pt int, desc, md5, pfn, pbd string) (err error, 
 **/
 func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string) {
 	FN := "[GetPicUrl] "
-	beego.Trace(FN, "pid:", pid, ", uid:", uid, ", size:", size)
+	beego.Trace(FN, "picture:", pid, ", login user:", uid, ", size:", size)
 
 	defer func() {
 		if nil != err {
@@ -131,14 +131,19 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 		}
 	}()
 
-	if pid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture id:%d", pid)}
+	err, pic := getPicture(pid)
+	if nil != err {
 		return
 	}
-	if uid <= 0 {
-		// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user id:%d", uid)}
-		// return
+
+	/* some pictures are private, like landlord id card */
+	if err = checkPicturePermission(&pic, uid); nil != err {
+		return
 	}
+	// if uid <= 0 {
+	// 	// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user id:%d", uid)}
+	// 	// return
+	// }
 	if size < commdef.PIC_SIZE_ALL || size > commdef.PIC_SIZE_LARGE {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("size:%d", size)}
 		return
@@ -181,8 +186,6 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 			}
 		}
 	}
-
-	beego.Warn(FN, "TODO: picture access right varification")
 
 	return
 }
@@ -230,6 +233,8 @@ func DelImage(pic, uid int64) (err error) {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
 			return
 		}
+	} else {
+		beego.Warn("TODO: Do permission checking here for other kind of pictures")
 	}
 
 	/* Processing */
@@ -354,6 +359,7 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 		case commdef.PIC_HOUSE_FURNITURE:
 			fallthrough
 		case commdef.PIC_HOUSE_APPLIANCE:
+		case commdef.PIC_HOUSE_OwnershipCert:
 			majorType = typeMajor
 			minorType = typeMinor
 		default:
@@ -673,5 +679,38 @@ func getLargePicSize() (w, h int) {
 		w = 1200
 		h = 1200
 	}
+	return
+}
+
+func checkPicturePermission(pic *TblPictures, uid int64) (err error) {
+
+	switch pic.TypeMajor {
+	case commdef.PIC_TYPE_HOUSE:
+		switch pic.TypeMiner {
+		case commdef.PIC_HOUSE_OwnershipCert: // house ownership certification is only accessable for landlord, its agency and andministrator
+			if err, _ = GetUser(uid); nil != err {
+				return
+			}
+			h := TblHouse{}
+			err, h = getHouse(pic.RefId)
+			if nil != err {
+				return
+			}
+			if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+			} else if _, bAdmin := isAdministrator(uid); bAdmin {
+			} else {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+			}
+			return
+		default:
+		}
+	case commdef.PIC_TYPE_USER:
+	case commdef.PIC_TYPE_RENTAL:
+	default:
+	}
+
+	/* some pictures are private, like landlord id card */
+	beego.Warn("TODO: Check piture permission here by picture type")
+
 	return
 }

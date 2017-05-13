@@ -327,3 +327,148 @@ func Test_DelImage(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetPicUrl --
+//
+func Test_GetPicUrl(t *testing.T) {
+	t.Log("Test GetPicUrl")
+	seq := 1
+
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture < 0")
+	if e, _, _, _ := GetPicUrl(-1, -1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture = 0")
+	if e, _, _, _ := GetPicUrl(0, -1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture does not exist")
+	if e, _, _, _ := GetPicUrl(100000000, -1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture size < PIC_SIZE_ALL")
+	if e, _, _, _ := GetPicUrl(50, -1, commdef.PIC_SIZE_ALL-1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: picture size > PIC_SIZE_LARGE")
+	if e, _, _, _ := GetPicUrl(50, -1, commdef.PIC_SIZE_LARGE+1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Get urls of all size")
+	e, s, m, l := GetPicUrl(50, -1, commdef.PIC_SIZE_ALL)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("\nsmall:\t", s, "\nmiddle:\t", m, "\nlarge:\t", l)
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Get url of small")
+	e, s, m, l = GetPicUrl(39, -1, commdef.PIC_SIZE_SMALL)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("\nsmall:\t", s, "\nmiddle:\t", m, "\nlarge:\t", l)
+	if 0 == len(s) {
+		t.Error("Failed, small picture not found")
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Get url of middle")
+	e, s, m, l = GetPicUrl(39, -1, commdef.PIC_SIZE_MODERATE)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("\nsmall:\t", s, "\nmiddle:\t", m, "\nlarge:\t", l)
+	// if 0 == len(m) {	// we do not generate the picture for moderate size
+	// 	t.Error("Failed, middle picture not found")
+	// 	return
+	// }
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Get url of large")
+	e, s, m, l = GetPicUrl(39, -1, commdef.PIC_SIZE_LARGE)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("\nsmall:\t", s, "\nmiddle:\t", m, "\nlarge:\t", l)
+	if 0 == len(l) {
+		t.Error("Failed, large picture not found")
+		return
+	}
+
+	/* check permission for house ownership certification */
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
+	if e, _, _, _ := GetPicUrl(61, -1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
+	if e, _, _, _ := GetPicUrl(61, 100000000, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
+	if e, _, _, _ := GetPicUrl(61, 9, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not behalf this house")
+	if e, _, _, _ := GetPicUrl(61, 11, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency who stand for this house")
+	if e, _, _, _ := GetPicUrl(61, 4, 0); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an landlord")
+	if e, _, _, _ := GetPicUrl(33, 4, 0); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an administrator")
+	if e, _, _, _ := GetPicUrl(61, 5, 0); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log("**** Check permission for other picture type ****")
+
+	return
+}

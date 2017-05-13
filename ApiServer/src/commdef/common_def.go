@@ -186,9 +186,10 @@ const (
 
 // for PIC_TYPE_HOUSE
 const (
-	PIC_HOUSE_FLOOR     = 1 // house type image, anyone could access
-	PIC_HOUSE_FURNITURE = 2 // house furnitures, anyone could access
-	PIC_HOUSE_APPLIANCE = 3 // house appliance, andy could access
+	PIC_HOUSE_FLOOR         = 1 // house type image, anyone could access
+	PIC_HOUSE_FURNITURE     = 2 // house furnitures, anyone could access
+	PIC_HOUSE_APPLIANCE     = 3 // house appliance, andy could access
+	PIC_HOUSE_OwnershipCert = 4 // house ownership certification, only the landlord, its agency and administrator could access
 )
 
 const (

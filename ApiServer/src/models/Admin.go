@@ -475,7 +475,7 @@ func GetUser(uid int64) (err error, user TblUser) {
 	// FN := "[GetUser] "
 
 	if uid < 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN, ErrInfo: fmt.Sprintf("uid:%d", uid)}
 		return
 	}
 
