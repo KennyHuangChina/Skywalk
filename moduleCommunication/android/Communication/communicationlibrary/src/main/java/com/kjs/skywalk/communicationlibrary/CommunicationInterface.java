@@ -78,6 +78,9 @@ public class CommunicationInterface {
         int DelePicture(int pic);
         int GetPicUrls(int pic, int size);
         int GetHousePics(int house, int type);
+
+        // Event
+        int GetNewEventCount();
     }
 
     public static class CmdID {
@@ -130,6 +133,9 @@ public class CommunicationInterface {
         public static int CMD_DEL_PICTURE            = 0x6002;
         public static int CMD_GET_PIC_URL            = 0x6003;
         public static int CMD_GET_HOUSE_PIC_LIST     = 0x6004;
+
+        // Event
+        public static int CMD_GET_EVENT_CNT          = 0x7001;
 
         public static int CMD_TEST                   = 0x0001;
     }

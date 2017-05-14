@@ -124,4 +124,9 @@ public class IApiResults {
         int     GetType();
         String  GetChecksum();
     }
+
+    // command: GetNewEventCount
+    public interface INewEventCount {
+        int     GetNewEventCount();
+    }
 }
