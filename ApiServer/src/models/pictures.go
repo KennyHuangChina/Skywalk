@@ -421,6 +421,7 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 		case commdef.PIC_HOUSE_FURNITURE:
 			fallthrough
 		case commdef.PIC_HOUSE_APPLIANCE:
+			fallthrough
 		case commdef.PIC_HOUSE_OwnershipCert:
 			majorType = typeMajor
 			minorType = typeMinor

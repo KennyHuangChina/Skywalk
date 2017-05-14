@@ -198,6 +198,7 @@ func Test_AddPicture(t *testing.T) {
 	e, nid := AddPicture(3, 10, commdef.PIC_TYPE_HOUSE+commdef.PIC_HOUSE_FURNITURE, "picture desc", "abcdefghijklmn", pfn, picBaseDir)
 	if e != nil {
 		t.Error("Failed, err: ", e)
+		DelImageFile(picBaseDir + pfn)
 		return
 	}
 	t.Log("new picture:", nid)
