@@ -116,4 +116,12 @@ public class IApiResults {
         String GetMiddlePicture();
         String GetLargePicture();
     }
+
+    // command: GetHousePicList
+    public interface IHousePicInfo {
+        int     GetId();
+        String  GetDesc();
+        int     GetType();
+        String  GetChecksum();
+    }
 }

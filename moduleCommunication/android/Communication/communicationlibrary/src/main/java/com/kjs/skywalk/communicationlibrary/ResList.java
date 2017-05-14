@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 
 class ResList implements InternalDefines.IListInner {
-    private int mTotal = 0;
-    private int mFetched = 0;
+    protected int mTotal = 0;
+    protected int mFetched = 0;
     protected ArrayList<Object> mList = null;
     protected boolean mForceGetList = false;    // true: list without properties: total & fetched; false - list with properties: total & fetched
 
@@ -27,6 +27,10 @@ class ResList implements InternalDefines.IListInner {
         if (!mForceGetList) {
             strList += ("Total: " + mTotal + "\n");
             strList += ("Fetched: " + mFetched + "\n");
+        } else {
+            if (mTotal > 0) {
+                strList += ("Total: " + mTotal + "\n");
+            }
         }
 
         for (int n = 0; n < mList.size(); n++) {
