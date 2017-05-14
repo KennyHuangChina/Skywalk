@@ -148,11 +148,11 @@ func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.
 
 	/* Querying */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_pictures").Filter("TypeMajor", commdef.PIC_TYPE_HOUSE).Filter("TypeMiner__in", sts)
+	qs := o.QueryTable("tbl_pictures").Filter("TypeMajor", commdef.PIC_TYPE_HOUSE).Filter("TypeMinor__in", sts)
 	qs = qs.Filter("RefId", hid)
 
 	var pl []TblPictures
-	numb, errT := qs.OrderBy("TypeMiner", "RefId").All(&pl)
+	numb, errT := qs.OrderBy("TypeMinor", "RefId").All(&pl)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT)}
 		return
@@ -160,7 +160,7 @@ func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.
 	beego.Debug(FN, "", numb, "pictures")
 
 	for _, v := range pl {
-		np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMiner, Checksum: v.Md5}
+		np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMinor, Checksum: v.Md5}
 		picList = append(picList, np)
 	}
 
@@ -416,7 +416,7 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	case commdef.PIC_TYPE_HOUSE:
 		switch typeMinor {
-		case commdef.PIC_HOUSE_FLOOR:
+		case commdef.PIC_HOUSE_FLOOR_PLAN:
 			fallthrough
 		case commdef.PIC_HOUSE_FURNITURE:
 			fallthrough
@@ -479,7 +479,7 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 	}()
 
 	// picture major record
-	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMiner: minorType, RefId: hid, Desc: desc, Md5: md5}
+	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMinor: minorType, RefId: hid, Desc: desc, Md5: md5}
 	id, errT := o.Insert(&newPic)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
@@ -749,7 +749,7 @@ func checkPicturePermission(pic *TblPictures, uid int64) (err error) {
 
 	switch pic.TypeMajor {
 	case commdef.PIC_TYPE_HOUSE:
-		switch pic.TypeMiner {
+		switch pic.TypeMinor {
 		case commdef.PIC_HOUSE_OwnershipCert: // house ownership certification is only accessable for landlord, its agency and andministrator
 			if err, _ = GetUser(uid); nil != err {
 				return
@@ -782,9 +782,9 @@ func getHousePicSubtypes(h TblHouse, uid int64, subType int) (stl []int) {
 	FN := "[getHousePicSubtypes] "
 	beego.Info(FN, "house:", fmt.Sprintf("%+v", h), ", login user:", uid, ", subType:", subType)
 
-	if 0 == subType || subType == commdef.PIC_HOUSE_FLOOR {
+	if 0 == subType || subType == commdef.PIC_HOUSE_FLOOR_PLAN {
 		// Public picture, all user could access
-		stl = append(stl, commdef.PIC_HOUSE_FLOOR)
+		stl = append(stl, commdef.PIC_HOUSE_FLOOR_PLAN)
 	}
 
 	if 0 == subType || subType == commdef.PIC_HOUSE_FURNITURE {

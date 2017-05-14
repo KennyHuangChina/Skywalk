@@ -277,7 +277,7 @@ type TblHouseEventProcess struct {
 type TblPictures struct {
 	Id        int64
 	TypeMajor int       // picture major type. ref to commdef.PIC_TYPE_xxxx
-	TypeMiner int       // picture miner type. ref to commdef.PIC_xxx, based on what major type is. for example, if TypeMajor is PIC_TYPE_HOUSE, then TypeMiner should be PIC_HOUSE_xxx
+	TypeMinor int       // picture minor type. ref to commdef.PIC_xxx, based on what major type is. for example, if TypeMajor is PIC_TYPE_HOUSE, then TypeMinor should be PIC_HOUSE_xxx
 	RefId     int64     // picture reference id, based on what type it is. for example if type is PIC_TYPE_HOUSE, then the RefId is house id
 	Desc      string    `orm:"size(100)"`                   // picture description
 	Md5       string    `orm:"size(50)"`                    // picture fingerprint, use md5
@@ -286,7 +286,7 @@ type TblPictures struct {
 
 func (p *TblPictures) TableIndex() [][]string {
 	return [][]string{
-		[]string{"TypeMajor", "TypeMiner", "RefId"},
+		[]string{"TypeMajor", "TypeMinor", "RefId"},
 		[]string{"Md5"},
 	}
 }
