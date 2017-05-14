@@ -18,7 +18,7 @@ import (
 **/
 func GetNewEventCount(uid int64) (err error, new_event int64) {
 	FN := "[GetNewEventCount] "
-	beego.Trace(FN, "uid:", uid)
+	beego.Trace(FN, "login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -26,8 +26,7 @@ func GetNewEventCount(uid int64) (err error, new_event int64) {
 		}
 	}()
 
-	if uid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user id:%d", uid)}
+	if err, _ = GetUser(uid); nil != err {
 		return
 	}
 

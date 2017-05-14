@@ -42,10 +42,11 @@ func (this *EventController) GetNewEventCount() {
 	/*
 	 *	Extract agreements
 	 */
-	sid := this.GetString("sid")
-	uid := int64(3)
-
-	beego.Debug(FN, "uid:", uid, ", sid:", sid)
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "uid:", uid)
 
 	/*
 	 *	Processing
