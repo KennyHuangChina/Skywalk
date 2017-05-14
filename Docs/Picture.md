@@ -52,9 +52,9 @@
 		* SUCCESS:200 
 			* total			int 		// picture count
 			* PicList
-				* id 		int			// picture id
-				* desc		string		// picture description
-				* type		int			// picture sub-type
+				* Id 		int			// picture id
+				* Desc		string		// picture description
+				* SubType	int			// picture sub-type
 				* Checksum	string		// picture checksum, md5
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code

@@ -130,7 +130,7 @@ func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.
 	}()
 
 	/* Argument Checking */
-	err, _ = getHouse(hid)
+	err, h := getHouse(hid)
 	if nil != err {
 		return
 	}
@@ -141,13 +141,15 @@ func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.
 	}
 
 	// checkPicturePermission(pic, uid)
+	sts := getHousePicSubtypes(h, uid, subType)
+	if 0 == len(sts) {
+		return
+	}
 
 	/* Querying */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_pictures").Filter("TypeMajor", commdef.PIC_TYPE_HOUSE).Filter("RefId", hid)
-	if subType > 0 {
-		qs = qs.Filter("TypeMiner", subType)
-	}
+	qs := o.QueryTable("tbl_pictures").Filter("TypeMajor", commdef.PIC_TYPE_HOUSE).Filter("TypeMiner__in", sts)
+	qs = qs.Filter("RefId", hid)
 
 	var pl []TblPictures
 	numb, errT := qs.OrderBy("TypeMiner", "RefId").All(&pl)
@@ -158,10 +160,8 @@ func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.
 	beego.Debug(FN, "", numb, "pictures")
 
 	for _, v := range pl {
-		if err1 := checkPicturePermission(&v, uid); nil == err1 {
-			np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMiner, Checksum: v.Md5}
-			picList = append(picList, np)
-		}
+		np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMiner, Checksum: v.Md5}
+		picList = append(picList, np)
 	}
 
 	return
@@ -774,5 +774,41 @@ func checkPicturePermission(pic *TblPictures, uid int64) (err error) {
 	/* some pictures are private, like landlord id card */
 	beego.Warn("TODO: Check piture permission here by picture type")
 
+	return
+}
+
+func getHousePicSubtypes(h TblHouse, uid int64, subType int) (stl []int) {
+	FN := "[getHousePicSubtypes] "
+	beego.Info(FN, "house:", fmt.Sprintf("%+v", h), ", login user:", uid, ", subType:", subType)
+
+	if 0 == subType || subType == commdef.PIC_HOUSE_FLOOR {
+		// Public picture, all user could access
+		stl = append(stl, commdef.PIC_HOUSE_FLOOR)
+	}
+
+	if 0 == subType || subType == commdef.PIC_HOUSE_FURNITURE {
+		// Public picture, all user could access
+		stl = append(stl, commdef.PIC_HOUSE_FURNITURE)
+	}
+
+	if 0 == subType || subType == commdef.PIC_HOUSE_APPLIANCE {
+		// Public picture, all user could access
+		stl = append(stl, commdef.PIC_HOUSE_APPLIANCE)
+	}
+
+	if 0 == subType || subType == commdef.PIC_HOUSE_OwnershipCert {
+		// Private picture, only the landlord, house agency and administrator could access
+		bAccess := false
+		if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+			bAccess = true
+		} else if _, bAdmin := isAdministrator(uid); bAdmin {
+			bAccess = true
+		}
+		if bAccess {
+			stl = append(stl, commdef.PIC_HOUSE_OwnershipCert)
+		}
+	}
+
+	beego.Debug(FN, "sub-type list:", stl)
 	return
 }
