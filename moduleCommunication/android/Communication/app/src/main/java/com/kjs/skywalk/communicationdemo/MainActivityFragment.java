@@ -106,7 +106,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
-        CmdMgr.GetNewEventCount();
+//        CmdMgr.GetNewEventCount();
+        CmdMgr.GetHouseNewEvent();
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);

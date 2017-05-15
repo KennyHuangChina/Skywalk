@@ -129,4 +129,16 @@ public class IApiResults {
     public interface INewEventCount {
         int     GetNewEventCount();
     }
+
+    // command: CmdGetHouseNewEvent
+    public interface IHouseNewEvent {
+        int     GetHouseId();
+        String  GetProperty();
+        int     GetBuildingNo();
+        String  GetHouseNo();
+        int     GetCoverImageId();
+        int     GetNewEventCount();
+        String  GetEvenTime();
+        String  GetDescription();
+    }
 }

@@ -7,20 +7,20 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Created by kenny on 2017/5/14.
+ * Created by kenny on 2017/5/15.
  */
 
-class CmdGetNewEventCount extends CommunicationBase {
+class CmdGetHouseNewEvent extends CommunicationBase {
 
-    CmdGetNewEventCount(Context context) {
-        super(context, CommunicationInterface.CmdID.CMD_GET_NEW_EVENT_CNT);
-        TAG = "CmdGetNewEventCount";
+    CmdGetHouseNewEvent(Context context) {
+        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_NEW_EVENT_CNT);
+        TAG = "CmdGetHouseNewEvent";
         mMethodType = "GET";
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/event/count";
+        mCommandURL = "/v1/event/houses";
         return mCommandURL;
     }
 
@@ -31,7 +31,7 @@ class CmdGetNewEventCount extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResGetNewEventCount result = new ResGetNewEventCount(nErrCode, jObject);
+        ResGetHouseNewEvent result = new ResGetHouseNewEvent(nErrCode, jObject);
         return result;
     }
 }
