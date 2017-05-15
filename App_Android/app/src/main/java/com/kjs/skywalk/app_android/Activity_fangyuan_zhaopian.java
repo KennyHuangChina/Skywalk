@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPicker;
+import me.iwf.photopicker.PhotoPreview;
 
 public class Activity_fangyuan_zhaopian extends AppCompatActivity {
     ViewPager mVPHuXing;
@@ -192,7 +193,7 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         List<Fragment> fragLst = new ArrayList<Fragment>();
         int lstCnt = picLst.size() % 2 == 0 ? picLst.size() / 2 : picLst.size() / 2 + 1;
         for (int i = 0; i <lstCnt; i++) {
-            fragmentFangYuanZhaoPianGroup fragment = new fragmentFangYuanZhaoPianGroup();
+            fragmentFangYuanZhaoPianGroup fragment = fragmentFangYuanZhaoPianGroup.newInstance(viewPager.getId());
             fragment.setZhaoPianGroupCallback(mPicGroupCallback);
             ArrayList<ClassDefine.PicList> list = new ArrayList();
             list.add(picLst.get(i * 2));
@@ -224,6 +225,40 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
             select_count = ((PicFragStatePageAdapter)mVpDianQi.getAdapter()).getSelectCount();
             total = mDianQiPicLst.size();
             mTvStatus4.setText("(" + select_count + "/" + total + ")");
+        }
+
+        @Override
+        public void onPicClicked(int hostId, int pos, String picPath) {
+//            commonFun.showToast_info(Activity_fangyuan_zhaopian.this, mVPHuXing, "hostId: " + hostId);
+            ViewPager viewPager = (ViewPager) findViewById(hostId);
+            if (viewPager == null)
+                return;
+
+            PicFragStatePageAdapter adapter = ((PicFragStatePageAdapter)viewPager.getAdapter());
+            if (adapter == null)
+                return;
+
+            ArrayList<String> images = new ArrayList<>();
+            int nFragCount = adapter.getCount();
+            int curItem = 0;
+            for (int i = 0; i < nFragCount; i++) {
+                fragmentFangYuanZhaoPianGroup fragment = (fragmentFangYuanZhaoPianGroup) adapter.getItem(i);
+                int tmpIndex = i * 2;
+                for (ClassDefine.PicList picItem : fragment.mPicList) {
+                    String path = picItem.mPath;
+                    if (!path.isEmpty()) {
+                        if (path.equalsIgnoreCase(picPath))
+                            curItem = tmpIndex;
+                        tmpIndex += 1;
+                        images.add(path);
+                    }
+                }
+            }
+
+            PhotoPreview.builder()
+                .setPhotos(images)
+                .setCurrentItem(curItem)
+                .start(Activity_fangyuan_zhaopian.this);
         }
     };
 

@@ -23,7 +23,7 @@ import me.iwf.photopicker.PhotoPreview;
 
 public class fragmentFangYuanZhaoPianGroup extends Fragment {
 //    private Group mGroup;
-    private  ArrayList<ClassDefine.PicList> mPicList;
+    public ArrayList<ClassDefine.PicList> mPicList;
     RelativeLayout mRlPicCheckFlag;
     RelativeLayout mRlPic1CheckFlag;
     CheckBox mCbPicCheckFlag;
@@ -33,6 +33,7 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
 
     public interface ZhaoPianGroupCallback {
         void onPicSelectChanged();
+        void onPicClicked(int hostId, int pos, String picPath);
     }
     public void setZhaoPianGroupCallback(ZhaoPianGroupCallback callback) {
         this.mCallback = callback;
@@ -40,6 +41,15 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
 
     public void setPicList(ArrayList<ClassDefine.PicList> picLst) {
         mPicList = picLst;
+    }
+
+    public static fragmentFangYuanZhaoPianGroup newInstance(int hostId) {
+        fragmentFangYuanZhaoPianGroup fragGroup = new fragmentFangYuanZhaoPianGroup();
+        Bundle bundle = new Bundle();
+        bundle.putInt("host_id", hostId);
+        fragGroup.setArguments(bundle);
+
+        return fragGroup;
     }
 
     @Nullable
@@ -162,25 +172,32 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         @Override
         public void onClick(View view) {
 
-            ArrayList<String> images = commonFun.getTestPicList(getActivity());
-            PhotoPreview.builder()
-                    .setPhotos(images)
-                    .setCurrentItem(0)
-                    .start(getActivity());
+//            ArrayList<String> images = commonFun.getTestPicList(getActivity());
+//            PhotoPreview.builder()
+//                    .setPhotos(images)
+//                    .setCurrentItem(0)
+//                    .start(getActivity());
 
+            int pos = 0;
             switch (view.getId()) {
                 case R.id.iv_pic:
                 {
-
+                    pos = 0;
                     break;
                 }
 
                 case R.id.iv_pic1:
                 {
-
-
+                    pos = 1;
                     break;
                 }
+            }
+
+            if (mCallback != null) {
+                int hostId = 0;
+                if (getArguments() != null)
+                    hostId = getArguments().getInt("host_id");
+                mCallback.onPicClicked(hostId, pos, mPicList.get(pos).mPath);
             }
         }
     };
