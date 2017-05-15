@@ -51,15 +51,12 @@ func GetNewEventCount(uid int64) (err error, new_event int64) {
 }
 
 /**
-*	Get new event count
+*	Get new event count for each house
 *	Arguments:
-*		uid 	- user id
+*		uid 	- login user
 *	Returns
 *		err 	- error info
 *		houses 	- house list with new event
-*	Comments:
-*		for house owner, only the houses they owned could be fetched
-*		for agency, the house they owned and the house they represent could be fetched
 **/
 type house_events struct {
 	House  int64 // house id
@@ -68,7 +65,7 @@ type house_events struct {
 
 func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 	FN := "[GetHouseNewEvents] "
-	beego.Trace(FN, "uid:", uid)
+	beego.Trace(FN, "login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -76,13 +73,17 @@ func GetHouseNewEvents(uid int64) (err error, houses []commdef.HouseEvents) {
 		}
 	}()
 
-	if uid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user id:%d", uid)}
+	/* Argumen Checking */
+	if err, _ = GetUser(uid); nil != err {
 		return
 	}
+
+	/* Permission checking */
 	beego.Warn(FN, "TODO: User permission checking")
 
-	// houses that can access
+	// Houses that can access
+	//	for house owner, only the houses they owned could be fetched
+	//	for agency, the houses they owned and the house they represent could be fetched
 	sql_house := fmt.Sprintf("SELECT id FROM tbl_house WHERE owner_id=%d", uid)
 	if _, bAgency := isAgency(uid); bAgency {
 		sql_house = sql_house + fmt.Sprintf(" OR agency_id=%d", uid)

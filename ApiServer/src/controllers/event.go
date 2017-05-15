@@ -2,6 +2,7 @@ package controllers
 
 import (
 	// "ApiServer/commdef"
+	"fmt"
 	"github.com/astaxie/beego"
 	// "github.com/astaxie/beego/orm"
 	"ApiServer/models"
@@ -83,10 +84,10 @@ func (this *EventController) GetHouseNewEvents() {
 	/*
 	 *	Extract agreements
 	 */
-	sid := this.GetString("sid")
-	uid := int64(4) // for testing
-
-	beego.Debug(FN, "uid:", uid, ", sid:", sid)
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
 
 	/*
 	 *	Processing
@@ -94,5 +95,6 @@ func (this *EventController) GetHouseNewEvents() {
 	err, houses := models.GetHouseNewEvents(uid)
 	if nil == err {
 		result.Houses = houses
+		beego.Debug(FN, fmt.Sprintf("%+v", houses))
 	}
 }
