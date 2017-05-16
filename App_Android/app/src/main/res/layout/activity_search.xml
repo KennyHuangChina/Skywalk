@@ -63,12 +63,44 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollViewResultEmpty"
+            android:id="@+id/scrollViewRecent"
             android:gravity="center" >
-            <com.kjs.skywalk.control.ListView_NoScroll
-                android:id="@+id/listViewHint"
+            <LinearLayout
+                android:id="@+id/layoutRecent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+            </LinearLayout>
+
+        </ScrollView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:layout_marginTop="15dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:text="猜你喜欢"
+                android:textColor="@color/colorTextNormal"
+                android:textSize="13sp"
+                android:gravity="center_vertical"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollViewGuess"
+            android:gravity="center" >
+            <LinearLayout
+                android:id="@+id/layoutGuess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
 
         </ScrollView>
     </LinearLayout>
