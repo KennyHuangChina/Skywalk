@@ -17,7 +17,7 @@ import (
 *		err 		- error info
 **/
 func NewEventRead(uid, eid int64) (err error) {
-	FN := "[GetNewEventCount] "
+	FN := "[NewEventRead] "
 	beego.Trace(FN, "login user:", uid, ", event:", eid)
 
 	defer func() {
@@ -31,6 +31,11 @@ func NewEventRead(uid, eid int64) (err error) {
 	if nil != err {
 		return
 	}
+	nullTime := time.Time{}
+	if nullTime != he.ReadTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("event:%d already read", eid)}
+		return
+	}
 
 	if err, _ = GetUser(uid); nil != err {
 		return
@@ -39,7 +44,7 @@ func NewEventRead(uid, eid int64) (err error) {
 	/* Permission Checking */
 	// Only the event receiver could set event read status
 	if he.Receiver != uid {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:", uid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
 		return
 	}
 
@@ -231,7 +236,7 @@ func getEvent(eid int64) (err error, he TblHouseEvent) {
 	beego.Info(FN, "event:", eid)
 
 	if eid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("event:", eid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("event:%d", eid)}
 		return
 	}
 
@@ -247,5 +252,49 @@ func getEvent(eid int64) (err error, he TblHouseEvent) {
 	}
 
 	he = e
+	return
+}
+
+func newEventUnread(uid, eid int64) (err error) {
+	FN := "[newEventUnread] "
+	beego.Trace(FN, "login user:", uid, ", event:", eid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, he := getEvent(eid)
+	if nil != err {
+		return
+	}
+	nullTime := time.Time{}
+	if nullTime == he.ReadTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("event:%d not read", eid)}
+		return
+	}
+
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	/* Permission Checking */
+	// Only the administrator could set event unread status
+	if _, bAdmin := isAdministrator(uid); !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	eu := TblHouseEvent{Id: eid, ReadTime: nullTime}
+	/*numb*/ _, errT := o.Update(&eu, "ReadTime")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
 	return
 }

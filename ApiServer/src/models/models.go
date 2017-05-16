@@ -264,8 +264,8 @@ func (he *TblHouseEvent) TableIndex() [][]string {
 type TblHouseEventProcess struct {
 	Id int64
 	// Event int64     // event id
-	Who   int64          // who made thie process
-	When  time.Time      `orm:"auto_now_add;type(datetime)"` // process time
+	Who   int64          // who made the processing
+	When  time.Time      `orm:"auto_now_add;type(datetime)"` // when made the processing
 	Type  int            // event process type, ref to HOUSE_EVENT_PROC_XXXX
 	Desc  string         `orm:"size(200)"`
 	Event *TblHouseEvent `orm:"rel(fk)"`
