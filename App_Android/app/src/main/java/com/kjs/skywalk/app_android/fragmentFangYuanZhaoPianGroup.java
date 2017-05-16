@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,7 +57,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fangyuanzhaopian_group, container, false);
+        if (mPicList.size() == 0) {
+            commonFun.showToast_info(getActivity(), view, "found error, mPicList is null");
+            return view;
+        }
 
+        // pic0
         ImageView ivPic = (ImageView) view.findViewById(R.id.iv_pic);
         TextView tvPicDes = (TextView) view.findViewById(R.id.tv_pic_desc);
         if (!mPicList.get(0).mPath.isEmpty()) {
@@ -79,26 +85,31 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         mCbPicCheckFlag.setOnCheckedChangeListener(mCheckedChangeListener);
 
         // pic1
-        ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
-        TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
-        if (!mPicList.get(1).mPath.isEmpty()) {
-            Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(1).mPath);
-            ivPic1.setImageDrawable(drawable);
+        if (mPicList.size() == 1) {
+            LinearLayout llPicItem1 = (LinearLayout) view.findViewById(R.id.ll_picitem1);
+            llPicItem1.setVisibility(View.INVISIBLE);
         } else {
-            ivPic1.setImageResource(mPicList.get(1).mDrawable);
-        }
-        tvPicDes1.setText("照片说明：" + mPicList.get(1).mDesc);
-        ivPic1.setOnClickListener(mPicClicked);
+            ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
+            TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
+            if (!mPicList.get(1).mPath.isEmpty()) {
+                Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(1).mPath);
+                ivPic1.setImageDrawable(drawable);
+            } else {
+                ivPic1.setImageResource(mPicList.get(1).mDrawable);
+            }
+            tvPicDes1.setText("照片说明：" + mPicList.get(1).mDesc);
+            ivPic1.setOnClickListener(mPicClicked);
 
-        visibility = View.INVISIBLE;
-        if (mIsSelectMode)
-            visibility = View.VISIBLE;
-        mRlPic1CheckFlag = (RelativeLayout) view.findViewById(R.id.rl_pic1_checkflag);
-        mRlPic1CheckFlag.setOnClickListener(mRlPicCheckFlagClicked);
-        mRlPic1CheckFlag.setVisibility(visibility);
-        mCbPic1CheckFlag = (CheckBox) view.findViewById(R.id.cb_pic1_checkflag);
-        mCbPicCheckFlag.setChecked(mPicList.get(1).mIsChecked);
-        mCbPic1CheckFlag.setOnCheckedChangeListener(mCheckedChangeListener);
+            visibility = View.INVISIBLE;
+            if (mIsSelectMode)
+                visibility = View.VISIBLE;
+            mRlPic1CheckFlag = (RelativeLayout) view.findViewById(R.id.rl_pic1_checkflag);
+            mRlPic1CheckFlag.setOnClickListener(mRlPicCheckFlagClicked);
+            mRlPic1CheckFlag.setVisibility(visibility);
+            mCbPic1CheckFlag = (CheckBox) view.findViewById(R.id.cb_pic1_checkflag);
+            mCbPicCheckFlag.setChecked(mPicList.get(1).mIsChecked);
+            mCbPic1CheckFlag.setOnCheckedChangeListener(mCheckedChangeListener);
+        }
 
         return view;
     }
