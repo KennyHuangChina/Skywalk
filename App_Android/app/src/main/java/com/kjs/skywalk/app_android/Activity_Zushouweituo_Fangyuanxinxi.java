@@ -42,7 +42,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             {
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
-
+            break;
             case R.id.textViewSelectBlock: {
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Search_House.class));
             }
