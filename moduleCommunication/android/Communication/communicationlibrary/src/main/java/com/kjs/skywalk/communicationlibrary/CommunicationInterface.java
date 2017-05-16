@@ -82,6 +82,7 @@ public class CommunicationInterface {
         // Event
         int GetNewEventCount();
         int GetHouseNewEvent();
+        int ReadNewEvent(int event_id);
     }
 
     public static class CmdID {
@@ -138,6 +139,7 @@ public class CommunicationInterface {
         // Event
         public static int CMD_GET_NEW_EVENT_CNT         = 0x7001;
         public static int CMD_GET_HOUSE_NEW_EVENT_CNT   = 0x7002;
+        public static int CMD_READ_NEW_EVENT            = 0x7003;
 
         public static int CMD_TEST                   = 0x0001;
     }

@@ -403,4 +403,10 @@ public class CommandManager implements CommunicationInterface.ICommand {
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }
+    @Override
+    public int ReadNewEvent(int event_id) {
+        mOperation = new CmdNewEventRead(mContext, event_id);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
 }
