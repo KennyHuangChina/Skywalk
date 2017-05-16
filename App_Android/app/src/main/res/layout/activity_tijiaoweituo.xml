@@ -63,16 +63,36 @@
 
         <include layout="@layout/seperator_horizontal"/>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="3dp" />
-
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/clickReloadView"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="重新加载网页"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_rect_background_gray"
+                android:onClick="onViewClick"/>
+            <RelativeLayout
+                android:visibility="invisible"
+                android:id="@+id/progressContainer"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="3dp">
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
