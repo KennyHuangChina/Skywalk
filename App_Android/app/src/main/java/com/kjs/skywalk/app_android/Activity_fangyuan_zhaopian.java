@@ -52,51 +52,67 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fangyuan_zhaopian);
 
+        // test pics
+        ArrayList<String> photosLst = commonFun.getTestPicList(this);
+        int testCount = 0;
+        mHuXingPicLst = new ArrayList<> ();
+        mFangJianJieGouPicLst = new ArrayList<> ();
+        mJiaJuYongPinPicLst = new ArrayList<> ();
+        mDianQiPicLst = new ArrayList<> ();
+
+        for (String photoPath : photosLst) {
+            testCount++;
+            mHuXingPicLst.add(new ClassDefine.PicList("户型图" + testCount, photoPath, 0, false));
+            mFangJianJieGouPicLst.add(new ClassDefine.PicList("房间结构图" + testCount, photoPath, 0, false));
+            mJiaJuYongPinPicLst.add(new ClassDefine.PicList("家居用品图" + testCount, photoPath, 0, false));
+        }
+
         // 户型图
         ((TextView) findViewById(R.id.tv_name_picgroup1)).setText("户型图");
         mTvStatus1 = (TextView) findViewById(R.id.tv_status_picgroup1);
         mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
-        mHuXingPicLst = new ArrayList<> (
-                Arrays.asList(
-                        new ClassDefine.PicList("户型图一", "", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("户型图二", "", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图三", "", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图四", "", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图五", "", R.drawable.huxingtu2, false),
-                        new ClassDefine.PicList("户型图六", "", R.drawable.huxingtu2, false)
-             )
-        );
+//        mHuXingPicLst = new ArrayList<> (
+//                Arrays.asList(
+//                        new ClassDefine.PicList("户型图一", "", R.drawable.huxingtu1, false),
+//                        new ClassDefine.PicList("户型图二", "", R.drawable.huxingtu2, false),
+//                        new ClassDefine.PicList("户型图三", "", R.drawable.huxingtu2, false),
+//                        new ClassDefine.PicList("户型图四", "", R.drawable.huxingtu2, false),
+//                        new ClassDefine.PicList("户型图五", "", R.drawable.huxingtu2, false),
+//                        new ClassDefine.PicList("户型图六", "", R.drawable.huxingtu2, false)
+//             )
+//        );
+
         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
 
         //        // 房间结构
         ((TextView) findViewById(R.id.tv_name_picgroup2)).setText("房间结构");
         mTvStatus2 = (TextView) findViewById(R.id.tv_status_picgroup2);
         mVpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
-        mFangJianJieGouPicLst = new ArrayList<> (
-                Arrays.asList(
-                        new ClassDefine.PicList("房间结构图一", "", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("房间结构图二", "", R.drawable.huxingtu2, false)
-                )
-        );
+//        mFangJianJieGouPicLst = new ArrayList<> (
+//                Arrays.asList(
+//                        new ClassDefine.PicList("房间结构图一", "", R.drawable.huxingtu1, false),
+//                        new ClassDefine.PicList("房间结构图二", "", R.drawable.huxingtu2, false)
+//                )
+//        );
         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
 
         //        // 家居用品
         ((TextView) findViewById(R.id.tv_name_picgroup3)).setText("家居用品");
         mTvStatus3 = (TextView) findViewById(R.id.tv_status_picgroup3);
         mVpJiaJuYongPin = (ViewPager) findViewById(R.id.vp_jiajuyongpin);
-        mJiaJuYongPinPicLst = new ArrayList<> (
-                Arrays.asList(
-                        new ClassDefine.PicList("家居用品图一", "", R.drawable.huxingtu1, false),
-                        new ClassDefine.PicList("家居用品图二", "", R.drawable.huxingtu2, false)
-                )
-        );
+//        mJiaJuYongPinPicLst = new ArrayList<> (
+//                Arrays.asList(
+//                        new ClassDefine.PicList("家居用品图一", "", R.drawable.huxingtu1, false),
+//                        new ClassDefine.PicList("家居用品图二", "", R.drawable.huxingtu2, false)
+//                )
+//        );
         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
 
         //        // 电器
         ((TextView) findViewById(R.id.tv_name_picgroup4)).setText("电器");
         mTvStatus4 = (TextView) findViewById(R.id.tv_status_picgroup4);
         mVpDianQi = (ViewPager) findViewById(R.id.vp_dianqi);
-        mDianQiPicLst = new ArrayList<> ();
+//        mDianQiPicLst = new ArrayList<> ();
 //                Arrays.asList(
 //                        new ClassDefine.PicList("电器图一", "", R.drawable.huxingtu1, false),
 //                        new ClassDefine.PicList("电器图二", "", R.drawable.huxingtu2, false)
@@ -196,8 +212,11 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
             fragmentFangYuanZhaoPianGroup fragment = fragmentFangYuanZhaoPianGroup.newInstance(viewPager.getId());
             fragment.setZhaoPianGroupCallback(mPicGroupCallback);
             ArrayList<ClassDefine.PicList> list = new ArrayList();
-            list.add(picLst.get(i * 2));
-            list.add(picLst.get(i * 2  + 1));
+
+            if (i * 2 < picLst.size())
+                list.add(picLst.get(i * 2));
+            if ((i * 2 + 1) < picLst.size())
+                list.add(picLst.get(i * 2  + 1));
 
             fragment.setPicList(list);
             fragLst.add(fragment);
