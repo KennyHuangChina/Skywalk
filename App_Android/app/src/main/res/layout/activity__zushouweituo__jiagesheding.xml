@@ -291,7 +291,7 @@
                 android:textColor="#ffffff"
                 android:textSize="15sp"
                 android:gravity="center"
-                android:background="#00AE63"
+                android:background="@drawable/rounded_rect_background_green"
                 android:text="下一步"/>
         </LinearLayout>
 
