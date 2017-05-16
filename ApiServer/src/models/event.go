@@ -11,6 +11,53 @@ import (
 /**
 *	Get new event count
 *	Arguments:
+*		uid 		- login user id
+*		eid			- event id
+*	Returns
+*		err 		- error info
+**/
+func NewEventRead(uid, eid int64) (err error) {
+	FN := "[GetNewEventCount] "
+	beego.Trace(FN, "login user:", uid, ", event:", eid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, he := getEvent(eid)
+	if nil != err {
+		return
+	}
+
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	/* Permission Checking */
+	// Only the event receiver could set event read status
+	if he.Receiver != uid {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:", uid)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	eu := TblHouseEvent{Id: eid, ReadTime: time.Now()}
+	/*numb*/ _, errT := o.Update(&eu, "ReadTime")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
+/**
+*	Get new event count
+*	Arguments:
 *		uid 		- user id
 *	Returns
 *		err 		- error info
@@ -176,5 +223,29 @@ func getHouseNewestEventDesc(hid int64) (err error, ed string, ct time.Time) {
 	ct = es[0].CreateTime
 	ed = es[0].Desc
 
+	return
+}
+
+func getEvent(eid int64) (err error, he TblHouseEvent) {
+	FN := "[getEvent] "
+	beego.Info(FN, "event:", eid)
+
+	if eid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("event:", eid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	e := TblHouseEvent{Id: eid}
+	errT := o.Read(&e)
+	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("event:%d", eid)}
+		return
+	} else if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	he = e
 	return
 }

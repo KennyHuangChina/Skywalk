@@ -1,7 +1,7 @@
 # Event APIs
 
 ##
-###1. Get new message count
+### 1. Get new message count
 	[Security]	private
 	[Request]
   		* GET /v1/event/count
@@ -13,7 +13,7 @@
 	  		* ErrDesc		string		// error description
 
 ##
-###2. Get new message info by house
+### 2. Get new message info by house
 	[Security]	private
 	[Request]
   		* GET /v1/event/houses
@@ -28,6 +28,41 @@
 				* EventCnt		int			// new event number
 				* Time			string		// newest event time
 				* Desc			string		// newest event description
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description
+
+##
+### 3. Read New Event
+	[Security]	private. Only the event receiver could set the read status
+	[Request]
+  		* PUT /v1/event/:id/read
+	  		* :id				int 		// event id
+	[Response]
+		* SUCCESS:200
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description
+
+##
+### 4*. Get event by id
+	[Security]	private
+	[Request]
+  		* GET /v1/event/:id
+	  		* :id				int 		// event id
+	[Response]
+		* SUCCESS:200
+			* Id 			int 		// event id 
+			* HouseId		int 		// house id
+			* Property		string		// property name
+			* Building		int			// bulding number
+			* HouseNo		string		// house number
+			* Sender		string 		// Event Sender
+			* Receiver		string		// Event Receiver
+			* CreateTime	string		// Event create time
+			* ReadTime		string		// Event read time
+			* Type			string		// Event type
+			* Desc			string		// Event Description
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description

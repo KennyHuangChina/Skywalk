@@ -15,6 +15,48 @@ type EventController struct {
 func (e *EventController) URLMapping() {
 	e.Mapping("GetNewEventCount", e.GetNewEventCount)
 	e.Mapping("GetHouseNewEvents", e.GetHouseNewEvents)
+	e.Mapping("NewEventRead", e.NewEventRead)
+}
+
+// @Title NewEventRead
+// @Description get new event count
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/read [put]
+func (this *EventController) NewEventRead() {
+	FN := "[NewEventRead] "
+	beego.Warn("[--- API: NewEventRead ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	eid, _ := this.GetInt64(":id")
+	beego.Debug(FN, "uid:", uid, ", event:", eid)
+
+	/*
+	 *	Processing
+	 */
+	err = models.NewEventRead(uid, eid)
+	if nil == err {
+	}
 }
 
 // @Title GetNewEventCount
