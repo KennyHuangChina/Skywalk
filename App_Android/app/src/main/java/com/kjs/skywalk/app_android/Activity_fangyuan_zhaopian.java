@@ -63,14 +63,14 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         for (String photoPath : photosLst) {
             testCount++;
             mHuXingPicLst.add(new ClassDefine.PicList("户型图" + testCount, photoPath, 0, false));
-            mFangJianJieGouPicLst.add(new ClassDefine.PicList("房间结构图" + testCount, photoPath, 0, false));
-            mJiaJuYongPinPicLst.add(new ClassDefine.PicList("家居用品图" + testCount, photoPath, 0, false));
-        }
+        mFangJianJieGouPicLst.add(new ClassDefine.PicList("房间结构图" + testCount, photoPath, 0, false));
+        mJiaJuYongPinPicLst.add(new ClassDefine.PicList("家居用品图" + testCount, photoPath, 0, false));
+    }
 
-        // 户型图
+    // 户型图
         ((TextView) findViewById(R.id.tv_name_picgroup1)).setText("户型图");
-        mTvStatus1 = (TextView) findViewById(R.id.tv_status_picgroup1);
-        mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
+    mTvStatus1 = (TextView) findViewById(R.id.tv_status_picgroup1);
+    mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
 //        mHuXingPicLst = new ArrayList<> (
 //                Arrays.asList(
 //                        new ClassDefine.PicList("户型图一", "", R.drawable.huxingtu1, false),
@@ -82,9 +82,9 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
 //             )
 //        );
 
-        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+    fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
 
-        //        // 房间结构
+    //        // 房间结构
         ((TextView) findViewById(R.id.tv_name_picgroup2)).setText("房间结构");
         mTvStatus2 = (TextView) findViewById(R.id.tv_status_picgroup2);
         mVpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
@@ -320,7 +320,7 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         }
 
         for (String path : photos) {
-            ClassDefine.PicList item = new ClassDefine.PicList("电器图一", path, 0, false);
+            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false);
             picList.add(item);
         }
 
