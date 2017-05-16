@@ -94,7 +94,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/scrollViewGuess"
-            android:gravity="center" >
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
             <LinearLayout
                 android:id="@+id/layoutGuess"
                 android:layout_width="match_parent"
