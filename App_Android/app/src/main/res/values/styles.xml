@@ -396,4 +396,20 @@
         <item name="android:textColor">@drawable/radio_button_text_selector</item>
         <item name="android:background">@drawable/radio_button_bk_selector</item>
     </style>
+
+    <!--主要button-->
+    <style name="btnstyle_major">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/rounded_rect_background_green</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--次要button-->
+    <style name="btnstyle_minor">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorFontSelected</item>
+        <item name="android:background">@drawable/rounded_rect_stroke_background_green</item>
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

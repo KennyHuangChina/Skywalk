@@ -22,12 +22,9 @@
             android:onClick="onViewClick"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            style="@style/btnstyle_major"
             android:layout_centerInParent="true"
             android:layout_margin="15dp"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:background="@drawable/rounded_rect_background_green"
             android:text="关闭"/>
     </RelativeLayout>
 

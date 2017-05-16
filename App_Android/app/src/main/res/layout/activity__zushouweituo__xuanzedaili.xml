@@ -57,12 +57,9 @@
                         android:onClick="onViewClick"
                         android:layout_width="111dp"
                         android:layout_height="45dp"
+                        style="@style/btnstyle_minor"
                         android:layout_gravity="center"
                         android:layout_marginRight="5dp"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp"
-                        android:gravity="center"
-                        android:background="@drawable/rounded_rect_background_light_green"
                         android:text="上一步"/>
 
                     <TextView
@@ -70,12 +67,9 @@
                         android:onClick="onViewClick"
                         android:layout_width="209dp"
                         android:layout_height="45dp"
+                        style="@style/btnstyle_major"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp"
-                        android:gravity="center"
-                        android:background="@drawable/rounded_rect_background_green"
                         android:text="下一步"/>
                 </LinearLayout>
             </RelativeLayout>
