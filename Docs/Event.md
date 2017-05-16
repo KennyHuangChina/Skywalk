@@ -45,24 +45,25 @@
 	  		* ErrDesc			string		// error description
 
 ##
-### 4*. Get event by id
+### 4. Get event by id
 	[Security]	private
 	[Request]
   		* GET /v1/event/:id
 	  		* :id				int 		// event id
 	[Response]
 		* SUCCESS:200
-			* Id 			int 		// event id 
-			* HouseId		int 		// house id
-			* Property		string		// property name
-			* Building		int			// bulding number
-			* HouseNo		string		// house number
-			* Sender		string 		// Event Sender
-			* Receiver		string		// Event Receiver
-			* CreateTime	string		// Event create time
-			* ReadTime		string		// Event read time
-			* Type			string		// Event type
-			* Desc			string		// Event Description
+			* Event
+				* Id 			int 		// event id 
+				* HouseId		int 		// house id
+				* Property		string		// property name
+				* Building		int			// bulding number
+				* HouseNo		string		// house number
+				* Sender		string 		// Event Sender
+				* Receiver		string		// Event Receiver
+				* CreateTime	string		// Event create time
+				* ReadTime		string		// Event read time
+				* Type			string		// Event type
+				* Desc			string		// Event Description
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description

@@ -11,6 +11,69 @@ import (
 /**
 *	Get new event count
 *	Arguments:
+*		uid 	- login user id
+*		eid		- event id
+*	Returns
+*		err 	- error info
+*		ei		- event info
+**/
+func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
+	FN := "[NewEventRead] "
+	beego.Trace(FN, "login user:", uid, ", event:", eid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, he := getEvent(eid)
+	if nil != err {
+		return
+	}
+
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	/* Permission Checking */
+	// The landlord, house agency and administrator could get event
+	err, h := getHouse(he.House)
+	if nil != err {
+		return
+	}
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	ei.Id = he.Id
+	ei.HouseId = he.House
+	_, ei.Property = getHouseProperty(ei.HouseId)
+	_, ei.Building, ei.HouseNo = getHouseNumber(ei.HouseId)
+	// _, ei.Picture = getHouseCoverImg(ei.HouseId)
+
+	_, u := GetUser(he.Sender)
+	ei.Sender = u.Name
+
+	_, u = GetUser(he.Receiver)
+	ei.Receiver = u.Name
+
+	ei.CreateTime = he.CreateTime.String()
+	ei.ReadTime = he.ReadTime.String()
+	// ei.Type = he.Type
+	ei.Desc = he.Desc
+
+	return
+}
+
+/**
+*	Get new event count
+*	Arguments:
 *		uid 		- login user id
 *		eid			- event id
 *	Returns
@@ -255,6 +318,7 @@ func getEvent(eid int64) (err error, he TblHouseEvent) {
 	return
 }
 
+// reset even to unread status
 func newEventUnread(uid, eid int64) (err error) {
 	FN := "[newEventUnread] "
 	beego.Trace(FN, "login user:", uid, ", event:", eid)

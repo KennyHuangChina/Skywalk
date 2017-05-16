@@ -168,6 +168,20 @@ type HouseEvents struct {
 	EventDesc string
 }
 
+type HouseEventInfo struct {
+	Id         int64  // event id
+	HouseId    int64  // house id
+	Property   string // property name
+	Building   int    // bulding number
+	HouseNo    string // house number
+	Sender     string // Event Sender
+	Receiver   string // Event Receiver
+	CreateTime string // Event create time
+	ReadTime   string // Event read time
+	Type       string // Event type
+	Desc       string // Event Description
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Pictures

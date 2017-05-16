@@ -176,6 +176,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:EventController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:EventController"],
 		beego.ControllerComments{
+			Method: "GetEvent",
+			Router: `/:id`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:EventController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:EventController"],
+		beego.ControllerComments{
 			Method: "NewEventRead",
 			Router: `/:id/read`,
 			AllowHTTPMethods: []string{"put"},
