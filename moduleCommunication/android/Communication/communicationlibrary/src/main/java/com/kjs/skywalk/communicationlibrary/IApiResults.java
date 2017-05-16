@@ -141,4 +141,19 @@ public class IApiResults {
         String  GetEvenTime();
         String  GetDescription();
     }
+
+    // command: CmdGetHouseEventInfo
+    public interface IGetHouseEventInfo {
+        int     EventId();      // event id
+        int     HouseId();      // house id
+        String  Property();     // property name
+        int     BuildingNo();   // the building number the house belong to
+        String  HouseNo();      // exact house number. like house 1305#
+        String  Sender();       // people who send the event
+        String  Receiver();     // people who the event send to
+        String  CreateTime();   // exact time when the event created
+        String  ReadTime();     // exact time when the event get readed
+        String  EventType();    // event type
+        String  EventDesc();    // event description
+    }
 }
