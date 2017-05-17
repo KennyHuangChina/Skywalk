@@ -176,12 +176,11 @@ public class Activity_Search extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.HORIZONTAL);
-
         int totalWidth = 0;
         int count = 0;
         for(int i = 0; i < list.size(); i ++) {
             TextItem item = createTextItem(list.get(i));
-            if(totalWidth + item.mTextViewWidth <= mActScreenWidth) {
+            if((totalWidth + item.mTextViewWidth <= mActScreenWidth) || (i == 0 && item.mTextViewWidth > mActScreenWidth)) {
                 layout.addView(item.mView);
                 totalWidth += item.mTextViewWidth;
                 count += 1;
@@ -196,6 +195,7 @@ public class Activity_Search extends Activity {
 
     private void initHistory() {
         mHistory.add("世茂蝶湖湾");
+        mHistory.add("中冶昆廷");
         mHistory.add("印象欧洲");
         mHistory.add("中冶昆廷");
         mHistory.add("香溢紫君");
