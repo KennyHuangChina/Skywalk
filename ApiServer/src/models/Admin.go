@@ -62,9 +62,14 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 
 	uif.Id = u.Id
 	uif.Name = u.Name
+	if 0 == len(uif.Name) {
+		beego.Warn(FN, "TODO: should get string from table, instead of put string directly")
+		uif.Name = "未设置"
+	}
 	uif.HeadPortrait = u.Head
 	// uif.Role = u.Role
 	uif.Role2Desc() // uif.RoleDesc
+
 	if bPrivacy {
 		beego.Debug(FN, "bPrivacy:", bPrivacy)
 		uif.IdNo = u.IdNo
@@ -765,4 +770,9 @@ func isOwnerAgency(uid, aid int64) (bAgency bool) {
 	}
 
 	return
+}
+
+func getName4System() string {
+	beego.Warn("[getName4System] TODO: get string from table, instead of put string here directly")
+	return "系统"
 }

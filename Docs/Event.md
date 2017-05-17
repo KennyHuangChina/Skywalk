@@ -64,6 +64,7 @@
 				* ReadTime		string		// Event read time
 				* Type			string		// Event type
 				* Desc			string		// Event Description
+				* ProcCount		int 		// How many processing follows the event
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description

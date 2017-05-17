@@ -32,6 +32,7 @@ func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
 	if nil != err {
 		return
 	}
+	beego.Debug(FN, "he:", fmt.Sprintf("%+v", he))
 
 	if err, _ = GetUser(uid); nil != err {
 		return
@@ -51,22 +52,48 @@ func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
 	}
 
 	/* Processing */
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_event_process").Filter("Event__Id", eid)
+	cnt, errT := qs.Count()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
 	ei.Id = he.Id
 	ei.HouseId = he.House
 	_, ei.Property = getHouseProperty(ei.HouseId)
 	_, ei.Building, ei.HouseNo = getHouseNumber(ei.HouseId)
 	// _, ei.Picture = getHouseCoverImg(ei.HouseId)
 
-	_, u := GetUser(he.Sender)
-	ei.Sender = u.Name
+	if 0 == he.Sender {
+		ei.Sender = getName4System()
+	} else {
+		_, u := GetUserInfo(he.Sender, uid)
+		ei.Sender = u.Name
+		beego.Debug(FN, "sender:", fmt.Sprintf("%+v", u))
+	}
 
-	_, u = GetUser(he.Receiver)
-	ei.Receiver = u.Name
+	if 0 == he.Receiver {
+		ei.Receiver = getName4System()
+	} else {
+		_, u := GetUserInfo(he.Receiver, uid)
+		ei.Receiver = u.Name
+		beego.Debug(FN, "receiver:", fmt.Sprintf("%+v", u))
+	}
 
-	ei.CreateTime = he.CreateTime.String()
-	ei.ReadTime = he.ReadTime.String()
+	// beego.Debug(FN, "CreateTime:", he.CreateTime.Local())
+	nullTime := time.Time{}
+	if nullTime != he.CreateTime {
+		ei.CreateTime = he.CreateTime.Local().String()[:19]
+	}
+	if nullTime != he.ReadTime {
+		ei.ReadTime = he.ReadTime.Local().String()[:19]
+	}
 	// ei.Type = he.Type
+	beego.Warn(FN, "TODO: get type")
 	ei.Desc = he.Desc
+	ei.ProcCount = cnt
 
 	return
 }

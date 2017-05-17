@@ -180,6 +180,7 @@ type HouseEventInfo struct {
 	ReadTime   string // Event read time
 	Type       string // Event type
 	Desc       string // Event Description
+	ProcCount  int64  // How many processing follows the event
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
