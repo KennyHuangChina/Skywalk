@@ -409,4 +409,11 @@ public class CommandManager implements CommunicationInterface.ICommand {
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }
+
+    @Override
+    public int GetHouseEventInfo(int event_id) {
+        mOperation = new CmdGetHouseEventInfo(mContext, event_id);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(pMap);
+    }
 }

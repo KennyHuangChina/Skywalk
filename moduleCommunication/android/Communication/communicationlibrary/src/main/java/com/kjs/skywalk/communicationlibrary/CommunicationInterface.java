@@ -83,6 +83,7 @@ public class CommunicationInterface {
         int GetNewEventCount();
         int GetHouseNewEvent();
         int ReadNewEvent(int event_id);
+        int GetHouseEventInfo(int event_id);
     }
 
     public static class CmdID {

@@ -19,6 +19,7 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
     private String  mReadTime   = "";   // exact time when the event get readed
     private String  mEventType  = "";   // event type
     private String  mEventDesc  = "";   // event description
+    private int     mProcCount  = 0;
 
     ResGetEventInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -38,6 +39,7 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
         mString += "  Read: " + mReadTime + "\n";
         mString += "  Type: " + mEventType + "\n";
         mString += "  Desc: " + mEventDesc + "\n";
+        mString += "  Proc: " + mProcCount + "\n";
 
         return mString;
     }
@@ -58,6 +60,7 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
             mReadTime   = jEvent.getString("ReadTime");
             mEventType  = jEvent.getString("Type");
             mEventDesc  = jEvent.getString("Desc");
+            mProcCount  = jEvent.getInt("ProcCount");
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -108,7 +108,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetNewEventCount();
-        CmdMgr.GetHouseNewEvent();
+//        CmdMgr.GetHouseNewEvent();
+        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
