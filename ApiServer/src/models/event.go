@@ -39,13 +39,19 @@ func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
 	}
 
 	/* Permission Checking */
-	// The landlord, house agency and administrator could get event
+	// The landlord, house agency administrator, sender and receiver could get event
 	err, h := getHouse(he.House)
 	if nil != err {
 		return
 	}
-	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	if he.Sender == uid || he.Receiver == uid {
+		beego.Debug(FN, "sender or receiver")
+	} else if isHouseOwner(h, uid) {
+		beego.Debug(FN, "landlord")
+	} else if isHouseAgency(h, uid) {
+		beego.Debug(FN, "house agency")
 	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		beego.Debug(FN, "administrator")
 	} else {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
 		return
