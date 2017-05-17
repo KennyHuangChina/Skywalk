@@ -324,6 +324,18 @@ func (sc *TblSmsCode) TableUnique() [][]string {
 	}
 }
 
+type TblStrings struct {
+	Id    int64
+	Key   string `orm:"size(50)"`
+	Value string `orm:"size(100)"`
+}
+
+func (sc *TblStrings) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Key"},
+	}
+}
+
 // before using please makere sure the database already created, else use the following sentence to create it
 //	CREATE DATABASE IF NOT EXISTS yourdbname DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
@@ -337,7 +349,8 @@ func init() {
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
-		new(TblSmsCode))
+		new(TblSmsCode),
+		new(TblStrings))
 
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 
@@ -371,4 +384,24 @@ func init() {
 	// beego.Debug("[init] err:", err.Error())
 
 	orm.RunSyncdb("default", false, true) // sync tables
+
+	// Special processing
+	o := orm.NewOrm()
+	bHasKey := o.QueryTable("tbl_strings").Filter("Key", KEY_USER_SYSTEM).Exist()
+	beego.Debug("bHasKey:", bHasKey)
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_USER_SYSTEM, Value: "系统"}
+		o.Insert(&kv)
+		// kv.Key = KEY_USER_SYSTEM
+		// kv.Value = "系统"
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_USER_NAME_NOT_SET).Exist()
+	beego.Debug("bHasKey:", bHasKey)
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_USER_NAME_NOT_SET, Value: "未设置"}
+		// kv.Key = KEY_USER_NAME_NOT_SET
+		// kv.Value = "未设置"
+		o.Insert(&kv)
+	}
 }
