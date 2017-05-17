@@ -21,7 +21,6 @@
                 android:id="@+id/iv_pic"
                 android:layout_width="160dp"
                 android:layout_height="108dp"
-                android:src="@drawable/huxingtu1"
                 android:scaleType="fitXY"/>
             <RelativeLayout
                 android:id="@+id/rl_pic_checkflag"
@@ -81,7 +80,6 @@
                 android:id="@+id/iv_pic1"
                 android:layout_width="160dp"
                 android:layout_height="108dp"
-                android:src="@drawable/huxingtu2"
                 android:scaleType="fitXY"/>
 
             <RelativeLayout

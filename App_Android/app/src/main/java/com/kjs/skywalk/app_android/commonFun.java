@@ -43,6 +43,28 @@ public class commonFun {
         return bmp;
     }
 
+    public static Bitmap getScaleBitmapFromLocal(String path, int dstW, int dstH) {
+        Bitmap bmp = null;
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inJustDecodeBounds = true; // allowing the caller to query the bitmap without having to allocate the memory for its pixels.
+        BitmapFactory.decodeFile(path, opt);
+        int picW = opt.outWidth;
+        int picH = opt.outHeight;
+
+        opt.inSampleSize = 1;
+        if (picW > dstW || picH > dstH) {
+            if (picW * dstH > picH * dstW) {
+                opt.inSampleSize = picH / dstH;
+            } else {
+                opt.inSampleSize = picW / dstW;
+            }
+        }
+        opt.inJustDecodeBounds = false;
+        bmp = BitmapFactory.decodeFile(path, opt);
+
+        return bmp;
+    }
+
     public static Drawable getDrawableFromLocal(Context context, String path) {
         BitmapDrawable bd = null;
         Bitmap bmp = getBitmapFromLocal(path);

@@ -66,8 +66,9 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         ImageView ivPic = (ImageView) view.findViewById(R.id.iv_pic);
         TextView tvPicDes = (TextView) view.findViewById(R.id.tv_pic_desc);
         if (!mPicList.get(0).mPath.isEmpty()) {
-            Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(0).mPath);
-            ivPic.setImageDrawable(drawable);
+//            Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(0).mPath);
+//            ivPic.setImageDrawable(drawable);
+            ivPic.setImageBitmap(commonFun.getScaleBitmapFromLocal(mPicList.get(0).mPath, 320, 240));
         } else {
             ivPic.setImageResource(mPicList.get(0).mDrawable);
         }
@@ -92,8 +93,9 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
             ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
             TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
             if (!mPicList.get(1).mPath.isEmpty()) {
-                Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(1).mPath);
-                ivPic1.setImageDrawable(drawable);
+//                Drawable drawable = commonFun.getDrawableFromLocal(getActivity(), mPicList.get(1).mPath);
+//                ivPic1.setImageDrawable(drawable);
+                ivPic1.setImageBitmap(commonFun.getScaleBitmapFromLocal(mPicList.get(1).mPath, 320, 240));
             } else {
                 ivPic1.setImageResource(mPicList.get(1).mDrawable);
             }
