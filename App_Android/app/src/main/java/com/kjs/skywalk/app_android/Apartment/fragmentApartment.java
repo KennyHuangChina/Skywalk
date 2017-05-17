@@ -114,6 +114,7 @@ public class fragmentApartment extends Fragment {
                 mDisplayType.setImageResource(R.drawable.show_grid);
             }
             mListViewSearchResult.removeAllViewsInLayout();
+            mListViewSearchResult.setAdapter(mAdapter);
             mAdapter.setDisplayType(mDisplay);
             mAdapter.notifyDataSetChanged();
         }
