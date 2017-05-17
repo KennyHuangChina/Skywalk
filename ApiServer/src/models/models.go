@@ -326,7 +326,7 @@ func (sc *TblSmsCode) TableUnique() [][]string {
 
 type TblStrings struct {
 	Id    int64
-	Key   string `orm:"size(50)"`
+	Key   string `orm:"size(100)"`
 	Value string `orm:"size(100)"`
 }
 
@@ -388,20 +388,44 @@ func init() {
 	// Special processing
 	o := orm.NewOrm()
 	bHasKey := o.QueryTable("tbl_strings").Filter("Key", KEY_USER_SYSTEM).Exist()
-	beego.Debug("bHasKey:", bHasKey)
 	if !bHasKey {
 		kv := TblStrings{Key: KEY_USER_SYSTEM, Value: "系统"}
 		o.Insert(&kv)
-		// kv.Key = KEY_USER_SYSTEM
-		// kv.Value = "系统"
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_UNKNOWN).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_UNKNOWN, Value: "未知"}
+		o.Insert(&kv)
 	}
 
 	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_USER_NAME_NOT_SET).Exist()
-	beego.Debug("bHasKey:", bHasKey)
 	if !bHasKey {
 		kv := TblStrings{Key: KEY_USER_NAME_NOT_SET, Value: "未设置"}
-		// kv.Key = KEY_USER_NAME_NOT_SET
-		// kv.Value = "未设置"
+		o.Insert(&kv)
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_LANDLORD_SUBMIT_NEW_HOUSE).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_LANDLORD_SUBMIT_NEW_HOUSE, Value: "业主委托新房源"}
+		o.Insert(&kv)
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_BEGIN).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_BEGIN, Value: "房源审核中"}
+		o.Insert(&kv)
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_FAILED).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_FAILED, Value: "房源审核失败"}
+		o.Insert(&kv)
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_PASS).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_PASS, Value: "房源审核通过"}
 		o.Insert(&kv)
 	}
 }

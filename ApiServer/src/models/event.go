@@ -90,8 +90,7 @@ func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
 	if nullTime != he.ReadTime {
 		ei.ReadTime = he.ReadTime.Local().String()[:19]
 	}
-	// ei.Type = he.Type
-	beego.Warn(FN, "TODO: get type")
+	ei.Type = getEventType(he.Type)
 	ei.Desc = he.Desc
 	ei.ProcCount = cnt
 
@@ -388,4 +387,22 @@ func newEventUnread(uid, eid int64) (err error) {
 	}
 
 	return
+}
+
+func getEventType(et int) string {
+	if v, ok := EVENT_TYPE_MAP[et]; ok {
+		return getSpecialString(v)
+	}
+	return getSpecialString(KEY_HOUSE_CERTIFICATE_PASS)
+}
+
+var EVENT_TYPE_MAP map[int]string
+
+func init() {
+	// Initialize the event type map
+	EVENT_TYPE_MAP = make(map[int]string)
+	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Submit] = KEY_LANDLORD_SUBMIT_NEW_HOUSE
+	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Certification_Begin] = KEY_HOUSE_CERTIFICATE_BEGIN
+	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Certification_Fail] = KEY_HOUSE_CERTIFICATE_FAILED
+	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Certification_OK] = KEY_HOUSE_CERTIFICATE_PASS
 }
