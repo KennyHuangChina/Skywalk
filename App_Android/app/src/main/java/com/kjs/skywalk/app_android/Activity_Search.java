@@ -2,6 +2,7 @@ package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -79,6 +80,8 @@ public class Activity_Search extends Activity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                startHouseListActivity();
+                finish();
                 return true;
             }
 
@@ -145,15 +148,21 @@ public class Activity_Search extends Activity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView v = (TextView)view;
-                String textOnView = v.getText().toString();
-                commonFun.showToast_info(mContext, view, textOnView);
+//                TextView v = (TextView)view;
+//                String textOnView = v.getText().toString();
+//                commonFun.showToast_info(mContext, view, textOnView);
+                startHouseListActivity();
+                finish();
             }
         });
         float size = textView.getPaint().measureText(text);
         item.mView = textView;
         item.mTextViewWidth = (int)size + paddingLeft + paddingRight + marginLeft + marginRight;
         return item;
+    }
+
+    private void startHouseListActivity() {
+        startActivity(new Intent(this, Activity_Search_Fangyuanliebiao.class));
     }
 
     private void initGuess() {
