@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPicker;
@@ -26,6 +25,8 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
     TextView mTvStatus2;
     TextView mTvStatus3;
     TextView mTvStatus4;
+    TextView mTvUpload;
+    TextView mTvDelete;
     ArrayList<ClassDefine.PicList> mHuXingPicLst;
     ArrayList<ClassDefine.PicList> mFangJianJieGouPicLst;
     ArrayList<ClassDefine.PicList> mJiaJuYongPinPicLst;
@@ -51,6 +52,9 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fangyuan_zhaopian);
+
+        mTvUpload = (TextView) findViewById(R.id.tv_upload);
+        mTvDelete = (TextView) findViewById(R.id.tv_delete);
 
         // test pics
         ArrayList<String> photosLst = commonFun.getTestPicList(this);
@@ -134,13 +138,27 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
                 mIsPicSelectMode = !mIsPicSelectMode;
                 if (mIsPicSelectMode) {
                     ((TextView)v).setText("取消");
+                    mTvUpload.setVisibility(View.GONE);
+                    mTvDelete.setVisibility(View.VISIBLE);
                 } else {
                     ((TextView)v).setText("选择");
+                    mTvUpload.setVisibility(View.VISIBLE);
+                    mTvDelete.setVisibility(View.GONE);
                 }
                 updateViewrPagerSelectMode(mIsPicSelectMode);
+                break;
 
             }
-            break;
+            case R.id.tv_upload:
+            {
+                break;
+            }
+            case R.id.tv_delete:
+            {
+                break;
+            }
+            default:
+                break;
         }
     }
 

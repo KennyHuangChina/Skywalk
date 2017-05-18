@@ -28,6 +28,8 @@
                 android:layout_width="111dp"
                 android:layout_height="45dp"
                 style="@style/btnstyle_minor"
+                android:background="@drawable/button_minor_bk_selector"
+                android:textColor="@drawable/button_minor_text_selector"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
                 android:text="上一步"/>
@@ -38,6 +40,8 @@
                 android:layout_width="209dp"
                 android:layout_height="45dp"
                 style="@style/btnstyle_major"
+                android:background="@drawable/button_major_bk_selector"
+                android:textColor="@drawable/button_major_text_selector"
                 android:layout_marginLeft="5dp"
                 android:text="下一步"/>
         </LinearLayout>

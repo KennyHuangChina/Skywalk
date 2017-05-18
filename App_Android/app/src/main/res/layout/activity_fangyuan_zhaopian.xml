@@ -270,15 +270,28 @@
                 android:background="#E5E5E5">
 
                 <TextView
+                    android:id="@+id/tv_upload"
                     android:layout_width="330dp"
                     android:layout_height="45dp"
                     android:onClick="onViewClick"
-                    android:gravity="center"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/rounded_rect_background_green"
-                    android:textSize="15sp"
-                    android:textColor="#FFFFFF"
+                    style="@style/btnstyle_major"
+                    android:background="@drawable/button_major_bk_selector"
+                    android:textColor="@drawable/button_major_text_selector"
                     android:text="上传房源照片">
+                </TextView>
+                <TextView
+                    android:id="@+id/tv_delete"
+                    android:layout_width="330dp"
+                    android:layout_height="45dp"
+                    android:onClick="onViewClick"
+                    android:layout_centerInParent="true"
+                    style="@style/btnstyle_major"
+                    android:background="@drawable/button_major_bk_selector"
+                    android:textColor="@drawable/button_major_text_selector"
+                    android:text="删除选中照片"
+                    android:enabled="false"
+                    android:visibility="gone">
                 </TextView>
             </RelativeLayout>
 
