@@ -1,87 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="44">
-
-            <ImageView
-                android:id="@+id/imageViewBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:srcCompat="@drawable/left_n" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="380"
-            android:background="@drawable/rounded_rect_background_search_gray">
-
-            <TextView
-                android:id="@+id/textViewAdvancedSearch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/fragment_search_input_hint"
-                android:textSize="14sp"
-                android:textColor="#9c9ea5"
-                android:gravity="center_vertical"
-                android:drawableLeft="@drawable/search_n"
-                android:paddingLeft="21dp"
-                android:drawablePadding="5dp"
-                android:onClick="onClickResponse"/>
-
-            <SearchView
-                android:id="@+id/search_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#efefef"
-                android:queryHint="@string/fragment_search_input_hint"
-                android:searchHintIcon="@drawable/search_n"
-                android:searchIcon="@drawable/search_n"
-                android:visibility="invisible" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="44">
-
-            <ImageView
-                android:id="@+id/imageViewLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:srcCompat="@drawable/location2_n" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="44">
-
-            <ImageView
-                android:id="@+id/imageViewMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:srcCompat="@drawable/message_n" />
-        </RelativeLayout>
-
-    </LinearLayout>
-
+    <include layout="@layout/layout_search_title_text" />
 
     <LinearLayout
         android:orientation="horizontal"
