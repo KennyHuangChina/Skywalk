@@ -156,4 +156,13 @@ public class IApiResults {
         String  EventType();    // event type
         String  EventDesc();    // event description
     }
+
+    // command: CmdGetHouseEventProcList
+    public interface IEventProcInfo {
+        int     Id();           // event proc id
+        String  User();         // user name
+        String  Time();         // proc time
+        String  Operation();    // proc operation
+        String  Desc();         // proc description
+    }
 }
