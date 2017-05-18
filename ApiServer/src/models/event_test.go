@@ -146,19 +146,19 @@ func Test_GetEventInfo(t *testing.T) {
 		return
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is sender")
-	if e, _ := GetEventInfo(2, 1); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
+	// seq++
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is sender")
+	// if e, _ := GetEventInfo(2, 1); e != nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is receiver")
-	if e, _ := GetEventInfo(6, 1); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
+	// seq++
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is receiver")
+	// if e, _ := GetEventInfo(6, 1); e != nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is landloard")
@@ -195,9 +195,81 @@ func Test_GetEventProcList(t *testing.T) {
 	seq := 0
 
 	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "")
-	if e, _ := GetEventProcList(4, 7); e != nil {
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: event id < 0")
+	if e, _ := GetEventProcList(-1, -1); e == nil {
 		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: event id = 0")
+	if e, _ := GetEventProcList(-1, 0); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: event does not exist")
+	if e, _ := GetEventProcList(-1, 100000000); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not log in")
+	if e, _ := GetEventProcList(-1, 7); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
+	if e, _ := GetEventProcList(100000000, 7); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
+	if e, _ := GetEventProcList(10, 7); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not behalf this house")
+	if e, _ := GetEventProcList(11, 7); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is landlord")
+	if e, _ := GetEventProcList(9, 7); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is agency of this house")
+	if e, _ := GetEventProcList(6, 7); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is administrator")
+	e, epl := GetEventProcList(5, 7)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 2 != len(epl) {
+		t.Error("Failed, proc records:", len(epl))
+		return
+	}
+	if epl[0].Id <= epl[1].Id {
+		t.Error("Failed, incorrect order, 0:", epl[0].Id, ", 1:", epl[1].Id)
 		return
 	}
 
