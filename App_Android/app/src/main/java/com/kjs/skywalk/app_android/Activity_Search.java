@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -32,11 +33,13 @@ public class Activity_Search extends Activity {
     private ArrayList<String> mHistory = new ArrayList<String>();
     private ArrayList<String> mGuess = new ArrayList<String>();
     private int mActScreenWidth = 1080;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        mContext = getBaseContext();
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         mActScreenWidth = metric.widthPixels;
@@ -138,8 +141,16 @@ public class Activity_Search extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(marginLeft, marginTop, marginRight, marginBottom);
         textView.setLayoutParams(layoutParams);
-        float size = textView.getPaint().measureText(text);
 
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView v = (TextView)view;
+                String textOnView = v.getText().toString();
+                commonFun.showToast_info(mContext, view, textOnView);
+            }
+        });
+        float size = textView.getPaint().measureText(text);
         item.mView = textView;
         item.mTextViewWidth = (int)size + paddingLeft + paddingRight + marginLeft + marginRight;
         return item;
