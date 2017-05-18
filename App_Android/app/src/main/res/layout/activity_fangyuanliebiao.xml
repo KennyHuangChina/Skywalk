@@ -2,10 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.kjs.skywalk.app_android.Activity_Search_Fangyuanliebiao"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/item_search_title" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+        <include layout="@layout/layout_search_title_text" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

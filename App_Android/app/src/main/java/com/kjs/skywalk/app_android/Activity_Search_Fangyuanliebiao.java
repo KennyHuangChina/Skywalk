@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -61,6 +62,11 @@ public class Activity_Search_Fangyuanliebiao extends Activity {
         //commonFun.showToast_resEntryName(this, v);
 
         switch (v.getId()) {
+            case R.id.textViewAdvancedSearch:{
+                startActivity(new Intent(Activity_Search_Fangyuanliebiao.this, Activity_Search.class));
+                finish();
+                break;
+            }
             case R.id.textViewSort: {
                 if(mPopSort == null) {
                     mPopSort = new PopupWindowFangyuanliebiaoSort(getBaseContext());
