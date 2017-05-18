@@ -273,8 +273,6 @@
                 android:layout_width="111dp"
                 android:layout_height="45dp"
                 style="@style/btnstyle_minor"
-                android:background="@drawable/button_minor_bk_selector"
-                android:textColor="@drawable/button_minor_text_selector"
                 android:layout_marginRight="10dp"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
@@ -286,8 +284,6 @@
                 android:layout_width="210dp"
                 android:layout_height="45dp"
                 style="@style/btnstyle_major"
-                android:background="@drawable/button_major_bk_selector"
-                android:textColor="@drawable/button_major_text_selector"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:text="下一步"/>

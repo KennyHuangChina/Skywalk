@@ -247,21 +247,33 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
 
         @Override
         public void onPicSelectChanged() {
+            int total_select_count = 0;
             int select_count = ((PicFragStatePageAdapter)mVPHuXing.getAdapter()).getSelectCount();
             int total = mHuXingPicLst.size();
             mTvStatus1.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
 
             select_count = ((PicFragStatePageAdapter)mVpFangJianJieGou.getAdapter()).getSelectCount();
             total = mFangJianJieGouPicLst.size();
             mTvStatus2.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
 
             select_count = ((PicFragStatePageAdapter)mVpJiaJuYongPin.getAdapter()).getSelectCount();
             total = mJiaJuYongPinPicLst.size();
             mTvStatus3.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
 
             select_count = ((PicFragStatePageAdapter)mVpDianQi.getAdapter()).getSelectCount();
             total = mDianQiPicLst.size();
             mTvStatus4.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+
+            if (total_select_count > 0) {
+                mTvDelete.setEnabled(true);
+            } else {
+                mTvDelete.setEnabled(false);
+            }
+
         }
 
         @Override
