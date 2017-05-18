@@ -40,7 +40,21 @@
                 android:background="#E5E5E5" />
 
             <!--textSize 42px-->
+            <TextView
+                android:id="@+id/textViewAdvancedSearch"
+                android:layout_width="0dp"
+                android:layout_weight="592"
+                android:layout_height="30dp"
+                android:text="@string/fragment_search_input_hint"
+                android:textSize="14sp"
+                android:textColor="#9c9ea5"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/search_n"
+                android:paddingLeft="15dp"
+                android:drawablePadding="5dp"
+                android:onClick="onClickResponse"/>
             <EditText
+                android:visibility="gone"
                 android:id="@+id/editTextInputPassword"
                 android:inputType="numberPassword"
                 android:drawableStart="@drawable/search_n"
