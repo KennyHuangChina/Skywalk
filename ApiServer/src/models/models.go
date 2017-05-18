@@ -271,6 +271,12 @@ type TblHouseEventProcess struct {
 	Event *TblHouseEvent `orm:"rel(fk)"`
 }
 
+func (he *TblHouseEventProcess) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Event", "When"},
+	}
+}
+
 /***************************************************************************
 	tables for pictures
 ***************************************************************************/
@@ -426,6 +432,18 @@ func init() {
 	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_PASS).Exist()
 	if !bHasKey {
 		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_PASS, Value: "房源审核通过"}
+		o.Insert(&kv)
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_EVENT_PROC_FOLLOW).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_HOUSE_EVENT_PROC_FOLLOW, Value: "跟进"}
+		o.Insert(&kv)
+	}
+
+	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_EVENT_PROC_CLOSE).Exist()
+	if !bHasKey {
+		kv := TblStrings{Key: KEY_HOUSE_EVENT_PROC_CLOSE, Value: "结案"}
 		o.Insert(&kv)
 	}
 }

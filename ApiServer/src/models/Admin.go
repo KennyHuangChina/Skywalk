@@ -74,7 +74,7 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 		uif.IdNo = u.IdNo
 		uif.Phone = u.Phone
 	}
-	beego.Debug(FN, fmt.Sprintf("uid:%+v", uif))
+	beego.Debug(FN, fmt.Sprintf("user info:%+v", uif))
 
 	return
 }

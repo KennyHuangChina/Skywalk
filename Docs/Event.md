@@ -68,3 +68,23 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description
+
+##
+### 5. Get event processing
+	[Security]	private
+	[Request]
+  		* GET /v1/event/:id/proc
+	  		* :id				int 		// event id
+	[Response]
+		* SUCCESS:200
+			* Total				int			// total number of event proc
+			* Fetched 			int			// event proc number fetched
+			* ProcList
+				* Id 			int 		// proc id
+				* User			string		// who made this proc
+				* Time			string		// when made this proc
+				* Op			string		// proc operation
+				* Desc			string		// proc description
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description

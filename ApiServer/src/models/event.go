@@ -9,7 +9,80 @@ import (
 )
 
 /**
-*	Get new event count
+*	Get even proc list by event id
+*	Arguments:
+*		uid 	- login user id
+*		eid		- event id
+*	Returns
+*		err 	- error info
+*		epl		- event proc list
+**/
+func GetEventProcList(uid, eid int64) (err error, epl []commdef.HouseEventProc) {
+	FN := "[GetEventProcList] "
+	beego.Trace(FN, "login user:", uid, ", event:", eid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, he := getEvent(eid)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "he:", fmt.Sprintf("%+v", he))
+
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	/* Permission Checking */
+	// The landlord, house agency and administrator could access event
+	err, h := getHouse(he.House)
+	if nil != err {
+		return
+	}
+	if isHouseOwner(h, uid) {
+		beego.Debug(FN, "landlord")
+	} else if isHouseAgency(h, uid) {
+		beego.Debug(FN, "house agency")
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		beego.Debug(FN, "administrator")
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_event_process")
+	if eid > 0 {
+		qs = qs.Filter("Event__Id", eid)
+	}
+
+	var l []TblHouseEventProcess
+	//	/*numb*/ _, errT := qs.RelatedSel("TblHouseEvent").All(&l)
+	/*numb*/ _, errT := qs.RelatedSel().All(&l)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	for k, v := range l {
+		np := commdef.HouseEventProc{Id: v.Id, Desc: v.Desc, Op: getEventProcType(v.Type), Time: v.When.Local().String()[:19]}
+		_, u := GetUserInfo(v.Who, uid)
+		np.User = u.Name
+		epl = append(epl, np)
+		beego.Debug(FN, fmt.Sprintf("%d: %+v", k, np))
+	}
+
+	return
+}
+
+/**
+*	Get event info by id
 *	Arguments:
 *		uid 	- login user id
 *		eid		- event id
@@ -18,7 +91,7 @@ import (
 *		ei		- event info
 **/
 func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
-	FN := "[NewEventRead] "
+	FN := "[GetEventInfo] "
 	beego.Trace(FN, "login user:", uid, ", event:", eid)
 
 	defer func() {
@@ -44,9 +117,10 @@ func GetEventInfo(uid, eid int64) (err error, ei commdef.HouseEventInfo) {
 	if nil != err {
 		return
 	}
-	if he.Sender == uid || he.Receiver == uid {
-		beego.Debug(FN, "sender or receiver")
-	} else if isHouseOwner(h, uid) {
+	// if he.Sender == uid || he.Receiver == uid {
+	// 	beego.Debug(FN, "sender or receiver")
+	// } else
+	if isHouseOwner(h, uid) {
 		beego.Debug(FN, "landlord")
 	} else if isHouseAgency(h, uid) {
 		beego.Debug(FN, "house agency")
@@ -399,10 +473,36 @@ func getEventType(et int) string {
 	if v, ok := EVENT_TYPE_MAP[et]; ok {
 		return getSpecialString(v)
 	}
-	return getSpecialString(KEY_HOUSE_CERTIFICATE_PASS)
+	return getSpecialString(KEY_UNKNOWN)
 }
 
+func getEventProcType(ept int) string {
+	if v, ok := EVENT_PROC_TYPE_MAP[ept]; ok {
+		return getSpecialString(v)
+	}
+	return getSpecialString(KEY_UNKNOWN)
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+const (
+	KEY_UNKNOWN = "KEY_UNKNOWN"
+
+	KEY_USER_SYSTEM               = "KEY_USER_SYSTEM"
+	KEY_USER_NAME_NOT_SET         = "KEY_USER_NAME_NOT_SET"
+	KEY_LANDLORD_SUBMIT_NEW_HOUSE = "KEY_LANDLORD_SUBMIT_NEW_HOUSE"
+	KEY_HOUSE_CERTIFICATE_BEGIN   = "KEY_HOUSE_CERTIFICATE_BEGIN"
+	KEY_HOUSE_CERTIFICATE_FAILED  = "KEY_HOUSE_CERTIFICATE_FAILED"
+	KEY_HOUSE_CERTIFICATE_PASS    = "KEY_HOUSE_CERTIFICATE_PASS"
+
+	KEY_HOUSE_EVENT_PROC_FOLLOW = "KEY_HOUSE_EVENT_PROC_FOLLOW"
+	KEY_HOUSE_EVENT_PROC_CLOSE  = "KEY_HOUSE_EVENT_PROC_CLOSE"
+)
+
 var EVENT_TYPE_MAP map[int]string
+var EVENT_PROC_TYPE_MAP map[int]string
 
 func init() {
 	// Initialize the event type map
@@ -411,4 +511,9 @@ func init() {
 	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Certification_Begin] = KEY_HOUSE_CERTIFICATE_BEGIN
 	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Certification_Fail] = KEY_HOUSE_CERTIFICATE_FAILED
 	EVENT_TYPE_MAP[commdef.HOUSE_EVENT_Certification_OK] = KEY_HOUSE_CERTIFICATE_PASS
+
+	// Initialize the event proc type map
+	EVENT_PROC_TYPE_MAP = make(map[int]string)
+	EVENT_PROC_TYPE_MAP[commdef.HOUSE_EVENT_PROC_Follow] = KEY_HOUSE_EVENT_PROC_FOLLOW
+	EVENT_PROC_TYPE_MAP[commdef.HOUSE_EVENT_PROC_Close] = KEY_HOUSE_EVENT_PROC_CLOSE
 }

@@ -121,6 +121,14 @@ type ResGetHouseEventInfo struct {
 	Event commdef.HouseEventInfo
 }
 
+// result of API get house event proc list
+type ResGetHouseEventProcList struct {
+	ResCommon
+	Total    int
+	Fetched  int
+	ProcList []commdef.HouseEventProc
+}
+
 // result of APIs of list, like get deliverable list
 type ResGetCommonList struct {
 	ResCommon

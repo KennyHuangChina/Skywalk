@@ -183,6 +183,14 @@ type HouseEventInfo struct {
 	ProcCount  int64  // How many processing follows the event
 }
 
+type HouseEventProc struct {
+	Id   int64  // proc id
+	User string // who made this proc
+	Time string // when made this proc
+	Op   string // proc operation
+	Desc string // proc description
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Pictures

@@ -185,3 +185,21 @@ func Test_GetEventInfo(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetEventProcList --
+//
+func Test_GetEventProcList(t *testing.T) {
+	t.Log("Test GetEventProcList")
+	seq := 0
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "")
+	if e, _ := GetEventProcList(4, 7); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}

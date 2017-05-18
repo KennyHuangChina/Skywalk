@@ -21,16 +21,6 @@ func generateMD5(content string) string {
 	return fmt.Sprintf("%x", raw)
 }
 
-const (
-	KEY_UNKNOWN                   = "KEY_UNKNOWN"
-	KEY_USER_SYSTEM               = "KEY_USER_SYSTEM"
-	KEY_USER_NAME_NOT_SET         = "KEY_USER_NAME_NOT_SET"
-	KEY_LANDLORD_SUBMIT_NEW_HOUSE = "KEY_LANDLORD_SUBMIT_NEW_HOUSE"
-	KEY_HOUSE_CERTIFICATE_BEGIN   = "KEY_HOUSE_CERTIFICATE_BEGIN"
-	KEY_HOUSE_CERTIFICATE_FAILED  = "KEY_HOUSE_CERTIFICATE_FAILED"
-	KEY_HOUSE_CERTIFICATE_PASS    = "KEY_HOUSE_CERTIFICATE_PASS"
-)
-
 func getSpecialString(key string) (value string) {
 	o := orm.NewOrm()
 

@@ -17,6 +17,49 @@ func (e *EventController) URLMapping() {
 	e.Mapping("GetHouseNewEvents", e.GetHouseNewEvents)
 	e.Mapping("NewEventRead", e.NewEventRead)
 	e.Mapping("GetEvent", e.GetEvent)
+	e.Mapping("GetEventProcs", e.GetEventProcs)
+}
+
+// @Title GetEventProcs
+// @Description get event proc list by id
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/proc [get]
+func (this *EventController) GetEventProcs() {
+	FN := "[GetEventProcs] "
+	beego.Warn("[--- API: GetEventProcs ---]")
+
+	var result ResGetHouseEventProcList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	eid, _ := this.GetInt64(":id")
+	beego.Debug(FN, "uid:", uid, ", event:", eid)
+
+	/*
+	 *	Processing
+	 */
+	err, epl := models.GetEventProcList(uid, eid)
+	if nil == err {
+		result.ProcList = epl
+	}
 }
 
 // @Title GetEvent
