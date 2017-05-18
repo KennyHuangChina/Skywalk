@@ -78,7 +78,7 @@
 	[Response]
 		* SUCCESS:200
 			* Total				int			// total number of event proc
-			* Fetched 			int			// event proc number fetched
+			* Count 			int			// event proc number fetched
 			* ProcList
 				* Id 			int 		// proc id
 				* User			string		// who made this proc

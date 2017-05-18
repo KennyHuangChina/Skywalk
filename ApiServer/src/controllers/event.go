@@ -58,6 +58,8 @@ func (this *EventController) GetEventProcs() {
 	 */
 	err, epl := models.GetEventProcList(uid, eid)
 	if nil == err {
+		result.Total = len(epl)
+		result.Count = len(epl)
 		result.ProcList = epl
 	}
 }

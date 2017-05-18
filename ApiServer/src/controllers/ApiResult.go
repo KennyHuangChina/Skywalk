@@ -125,7 +125,7 @@ type ResGetHouseEventInfo struct {
 type ResGetHouseEventProcList struct {
 	ResCommon
 	Total    int
-	Fetched  int
+	Count    int
 	ProcList []commdef.HouseEventProc
 }
 

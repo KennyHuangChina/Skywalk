@@ -64,7 +64,7 @@ func GetEventProcList(uid, eid int64) (err error, epl []commdef.HouseEventProc) 
 
 	var l []TblHouseEventProcess
 	//	/*numb*/ _, errT := qs.RelatedSel("TblHouseEvent").All(&l)
-	/*numb*/ _, errT := qs.RelatedSel().All(&l)
+	/*numb*/ _, errT := qs.OrderBy("Event__Id", "-When").RelatedSel().All(&l)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
