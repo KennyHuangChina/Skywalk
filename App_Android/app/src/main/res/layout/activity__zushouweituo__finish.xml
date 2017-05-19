@@ -147,11 +147,13 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/uploadContainer"
                     android:layout_width="match_parent"
                     android:layout_height="83dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:onClick="onViewClick">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -184,11 +186,13 @@
                 </LinearLayout>
                 <include layout="@layout/seperator_horizontal"/>
                 <LinearLayout
+                    android:id="@+id/improveContainer"
                     android:layout_width="match_parent"
                     android:layout_height="83dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:onClick="onViewClick">
 
                     <ImageView
                         android:layout_width="wrap_content"
