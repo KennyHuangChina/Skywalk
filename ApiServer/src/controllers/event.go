@@ -18,6 +18,58 @@ func (e *EventController) URLMapping() {
 	e.Mapping("NewEventRead", e.NewEventRead)
 	e.Mapping("GetEvent", e.GetEvent)
 	e.Mapping("GetEventProcs", e.GetEventProcs)
+	e.Mapping("GetHouseEventList", e.GetHouseEventList)
+}
+
+// @Title GetHouseEventList
+// @Description get house event list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /list/house/:id [get]
+func (this *EventController) GetHouseEventList() {
+	FN := "[GetHouseEventList] "
+	beego.Warn("[--- API: GetHouseEventList ---]")
+
+	var result ResGetHouseEventList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	hid, _ := this.GetInt64(":id")
+	stat, _ := this.GetInt("stat")
+	et, _ := this.GetInt("type")
+	bgn, _ := this.GetInt64("bgn")
+	cnt, _ := this.GetInt64("cnt")
+	ido, _ := this.GetBool("ido")
+	beego.Debug(FN, "uid:", uid, ", house:", hid)
+
+	/*
+	 *	Processing
+	 */
+	err, total, hel := models.GetHouseEventList(uid, hid, bgn, cnt, stat, et, ido)
+	if nil == err {
+		result.Total = total
+		result.Count = int64(len(hel))
+		if result.Count > 0 {
+			result.EventLst = hel
+		}
+	}
 }
 
 // @Title GetEventProcs

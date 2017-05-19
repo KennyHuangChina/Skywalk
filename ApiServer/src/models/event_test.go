@@ -275,3 +275,21 @@ func Test_GetEventProcList(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetHouseEventList --
+//
+func Test_GetHouseEventList(t *testing.T) {
+	t.Log("Test GetHouseEventList")
+	seq := 0
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "")
+	if e, _, _ := GetHouseEventList(5, 2, 0, 10, 0, 0, false); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}

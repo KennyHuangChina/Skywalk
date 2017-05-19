@@ -8,6 +8,139 @@ import (
 	"time"
 )
 
+const (
+	EVENT_STAT_Begin = 0
+
+	EVENT_STAT_All    = 0
+	EVENT_STAT_New    = 1
+	EVENT_STAT_Ongoin = 2
+	EVENT_STAT_Closed = 3
+
+	EVENT_STAT_End = 3
+)
+
+/**
+*	Get even proc list by event id
+*	Arguments:
+*		uid 	- login user id
+*		hid		- house id
+*		bgn		- fetch begin position
+*		cnt		- how many records to fetch. = 0 means just fetch total number
+*		stat	- event status. EVENT_STAT_xxx
+*		type  	- event type. 0 means all kind of event. refer to HOUSE_EVENT_xxx
+*	Returns
+*		err 	- error info
+*		hel		- house event list
+**/
+func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err error, total int64, hel []commdef.HouseEventInfo) {
+	FN := "[GetHouseEventList] "
+	beego.Trace(FN, "login user:", uid, ", house:", hid, ", fetch begin:", bgn, ", fetch count:", cnt, ", stat:", stat, ", type:", et, ", id only:", ido)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "house:", fmt.Sprintf("%+v", h))
+
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	if bgn < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin position:%d", bgn)}
+		return
+	}
+
+	if cnt < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin cnt:%d", cnt)}
+		return
+	}
+
+	if stat < EVENT_STAT_Begin || stat > EVENT_STAT_End {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("stat:%d", stat)}
+		return
+	}
+
+	if et < 0 /*commdef.HOUSE_EVENT_Begin*/ || et > commdef.HOUSE_EVENT_End {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("event type:%d", et)}
+		return
+	}
+
+	/* Permission Checking */
+	// Onlye the landlord, house agency and administrator could access the house event
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	// calculate the total number
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_event").Filter("House", hid)
+	if stat > EVENT_STAT_All { // event status
+		switch stat {
+		case EVENT_STAT_New:
+			qs = qs.Filter("ReadTime__isnull", true)
+		case EVENT_STAT_Ongoin:
+			qs = qs.Filter("ReadTime__isnull", false).Filter("CloseTime__isnull", true)
+		case EVENT_STAT_Closed:
+			qs = qs.Filter("CloseTime__isnull", false)
+		}
+	}
+	if et > 0 { // event type
+		qs = qs.Filter("Type", et)
+	}
+
+	numb, errT := qs.Count()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	total = numb
+	if 0 == cnt { // user just want to detect the total number
+		return
+	}
+
+	// fetch real records
+	sql_event := fmt.Sprintf(`SELECT event.id, event.house AS house_id, prop.name AS property, building_no AS building,
+										house_no, sender, receiver, create_time, read_time, type, event.desc
+									FROM tbl_house_event AS event, tbl_house AS house, tbl_property AS prop
+									WHERE event.house=%d AND event.house=house.id AND house.property_id = prop.id`, hid)
+	if stat > EVENT_STAT_All { // event status
+		switch stat {
+		case EVENT_STAT_New:
+			sql_event = sql_event + " AND read_time IS NULL"
+		case EVENT_STAT_Ongoin:
+			sql_event = sql_event + " AND read_time IS NOT NULL AND close_time IS NULL"
+		case EVENT_STAT_Closed:
+			sql_event = sql_event + " close_time IS NOT NULL"
+		}
+	}
+	if et > 0 { // event type
+		sql_event = sql_event + fmt.Sprintf(" type=%d", et)
+	}
+	sql_event = sql_event + " ORDER BY read_time, close_time"
+
+	sql_proc := fmt.Sprintf(`SELECT el.id, CASE WHEN ISNULL(proc.event_id) then 0 ELSE COUNT(*) END AS count 
+								FROM (SELECT id FROM tbl_house_event WHERE house=%d) AS el LEFT JOIN tbl_house_event_process AS proc
+								ON el.id = proc.event_id GROUP BY el.id`, hid)
+	beego.Debug(FN, "sql_proc:", sql_proc)
+
+	sql := fmt.Sprintf(`SELECT event.*, proc.count AS ProcCount FROM (%s) AS event, (%s) AS proc WHERE event.id=proc.id`, sql_event, sql_proc)
+	beego.Debug(FN, "sql:", sql)
+
+	return
+}
+
 /**
 *	Get even proc list by event id
 *	Arguments:

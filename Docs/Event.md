@@ -88,3 +88,35 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description
+
+##
+### 6. Get house event list
+	[Security]	private
+	[Request]
+  		* GET /v1/event/list/house/:id?stat=..&type=..&bgn=..&cnt=..&ido=..
+	  		* :id				int 		// house id
+	  		* stat				int 		// 0 - all events; 1 - new events; 2 - unclosed event; 3 - closed events
+	  		* type				int 		// event type. 0 means all kind of events
+	  		* bgn				int 		// begin position from where to fetch
+	  		* cnt				int 		// how many records want to fetch
+	  		* ido				int 		// if only fetch event id. true - fetch evvent id / false - fetch whole event info
+	[Response]
+		* SUCCESS:200
+			* Total				int			// total number of event proc
+			* Count 			int			// event proc number fetched
+			* EventLst
+				* Id 			int 		// event id 
+				* HouseId		int 		// house id
+				* Property		string		// property name
+				* Building		int			// bulding number
+				* HouseNo		string		// house number
+				* Sender		string 		// Event Sender
+				* Receiver		string		// Event Receiver
+				* CreateTime	string		// Event create time
+				* ReadTime		string		// Event read time
+				* Type			string		// Event type
+				* Desc			string		// Event Description
+				* ProcCount		int 		// How many processing follows the event
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description

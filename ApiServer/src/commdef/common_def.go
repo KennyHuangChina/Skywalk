@@ -145,11 +145,15 @@ type HouseFacility struct {
 //		Events
 //
 const (
+	HOUSE_EVENT_Begin = 1
+
 	HOUSE_EVENT_Submit              = 1 // house owner submit a new house
 	HOUSE_EVENT_Certification_Begin = 2
 	HOUSE_EVENT_Certification_Fail  = 3
 	HOUSE_EVENT_Certification_OK    = 4
 	// HOUSE_EVENT_
+
+	HOUSE_EVENT_End = 4
 )
 
 const (
