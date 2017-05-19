@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPicker;
@@ -155,6 +156,14 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
             }
             case R.id.tv_delete:
             {
+                deleteSelectItem(mHuXingPicLst);
+                fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+//                fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+
+//                ((PicFragStatePageAdapter) mVPHuXing.getAdapter()).deleteSelectItem();
+//                ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter()).deleteSelectItem();
+//                ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).deleteSelectItem();
+//                ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).deleteSelectItem();
                 break;
             }
             default:
@@ -220,6 +229,14 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
 
             return count;
         }
+
+        public void deleteSelectItem() {
+            for (Fragment fragment : mLst) {
+                if (fragment instanceof  fragmentFangYuanZhaoPianGroup) {
+                    ((fragmentFangYuanZhaoPianGroup)fragment).deleteSelectItem();
+                }
+            }
+        }
     }
 
     private void fillPicGroupInfo(TextView tvStatus, ViewPager viewPager, ArrayList<ClassDefine.PicList> picLst) {
@@ -241,6 +258,16 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         }
         viewPager.setAdapter(new PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
         viewPager.setCurrentItem(0);
+    }
+
+    private void deleteSelectItem(ArrayList<ClassDefine.PicList> picLst) {
+        Iterator iter = picLst.iterator();
+        while (iter.hasNext()) {
+            ClassDefine.PicList item = (ClassDefine.PicList) iter.next();
+            if(item.mIsChecked) {
+                iter.remove();
+            }
+        }
     }
 
     fragmentFangYuanZhaoPianGroup.ZhaoPianGroupCallback mPicGroupCallback = new fragmentFangYuanZhaoPianGroup.ZhaoPianGroupCallback() {

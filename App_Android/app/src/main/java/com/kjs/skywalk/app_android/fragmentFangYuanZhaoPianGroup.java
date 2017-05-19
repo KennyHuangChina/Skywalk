@@ -151,6 +151,13 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         return count;
     }
 
+    public void deleteSelectItem() {
+        for (ClassDefine.PicList picList : mPicList) {
+            if (picList.mIsChecked)
+                mPicList.remove(picList);
+        }
+    }
+
     View.OnClickListener mRlPicCheckFlagClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
