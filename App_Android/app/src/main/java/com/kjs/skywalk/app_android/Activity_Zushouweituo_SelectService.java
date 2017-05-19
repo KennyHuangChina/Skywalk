@@ -32,7 +32,7 @@ public class Activity_Zushouweituo_SelectService extends Activity {
             break;
             case R.id.tv_next:
             {
-                startActivity(new Intent(this, Activity_Zushouweituo_Finish.class));
+                startActivity(new Intent(this, Activity_Weituoqueren.class));
             }
             break;
         }

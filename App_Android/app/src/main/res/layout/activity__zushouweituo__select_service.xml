@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     android:orientation="vertical"
 
-    tools:context="com.kjs.skywalk.app_android.Activity_rentals_expiration">
+    tools:context="com.kjs.skywalk.app_android.Activity_Zushouweituo_SelectService">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"

@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -75,7 +76,7 @@ public class Activity_Weituoqueren extends Activity {
         switch (v.getId()) {
             case R.id.textViewCommit:
             {
-                finish();
+                startActivity(new Intent(this, Activity_Zushouweituo_Finish.class));
             }
             break;
             case R.id.clickReloadView:

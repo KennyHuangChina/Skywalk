@@ -310,11 +310,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
 
-                    case R.id.action_setting101:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Weituoqueren.class));
-                        break;
-                    }
+//                    case R.id.action_setting101:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Weituoqueren.class));
+//                        break;
+//                    }
 
 //                    case R.id.action_setting102:
 //                    {
