@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"strconv"
 	"time"
 )
 
@@ -110,6 +111,11 @@ func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err er
 		return
 	}
 
+	if bgn > total-1 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin position:%d > total:%d", bgn, total)}
+		return
+	}
+
 	// fetch real records
 	sql_event := fmt.Sprintf(`SELECT event.id, event.house AS house_id, prop.name AS property, building_no AS building,
 										house_no, sender, receiver, create_time, read_time, type, event.desc
@@ -122,21 +128,49 @@ func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err er
 		case EVENT_STAT_Ongoin:
 			sql_event = sql_event + " AND read_time IS NOT NULL AND close_time IS NULL"
 		case EVENT_STAT_Closed:
-			sql_event = sql_event + " close_time IS NOT NULL"
+			sql_event = sql_event + " AND close_time IS NOT NULL"
 		}
 	}
 	if et > 0 { // event type
-		sql_event = sql_event + fmt.Sprintf(" type=%d", et)
+		sql_event = sql_event + fmt.Sprintf(" AND type=%d", et)
 	}
-	sql_event = sql_event + " ORDER BY read_time, close_time"
+	sql_event = sql_event + " ORDER BY read_time DESC, close_time DESC"
 
 	sql_proc := fmt.Sprintf(`SELECT el.id, CASE WHEN ISNULL(proc.event_id) then 0 ELSE COUNT(*) END AS count 
 								FROM (SELECT id FROM tbl_house_event WHERE house=%d) AS el LEFT JOIN tbl_house_event_process AS proc
 								ON el.id = proc.event_id GROUP BY el.id`, hid)
 	beego.Debug(FN, "sql_proc:", sql_proc)
 
-	sql := fmt.Sprintf(`SELECT event.*, proc.count AS ProcCount FROM (%s) AS event, (%s) AS proc WHERE event.id=proc.id`, sql_event, sql_proc)
+	sql := fmt.Sprintf(`SELECT event.*, proc.count AS proc_count FROM (%s) AS event, (%s) AS proc 
+							WHERE event.id=proc.id LIMIT %d, %d`, sql_event, sql_proc, bgn, cnt)
 	beego.Debug(FN, "sql:", sql)
+
+	var lst []commdef.HouseEventInfo
+	numb, errT = o.Raw(sql).QueryRows(&lst)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf("%d records", numb))
+
+	for k, v := range lst {
+		beego.Debug(FN, fmt.Sprintf("%d:%+v", k, v))
+
+		sender, _ := strconv.ParseInt(v.Sender, 10, 64)
+		if 0 == sender {
+			v.Sender = getName4System()
+		} else {
+			_, u := GetUserInfo(sender, uid)
+			v.Sender = u.Name
+		}
+
+		receiver, _ := strconv.ParseInt(v.Receiver, 10, 64)
+		_, u := GetUserInfo(receiver, uid)
+		v.Receiver = u.Name
+
+		hel = append(hel, v)
+		beego.Debug(FN, fmt.Sprintf("%d:%+v", k, hel[k]))
+	}
 
 	return
 }

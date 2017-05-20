@@ -1,7 +1,7 @@
 package models
 
 import (
-	// "ApiServer/commdef"
+	"ApiServer/commdef"
 	"fmt"
 	// "github.com/astaxie/beego"
 	// "os"
@@ -285,11 +285,178 @@ func Test_GetHouseEventList(t *testing.T) {
 	seq := 0
 
 	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "")
-	if e, _, _ := GetHouseEventList(5, 2, 0, 10, 0, 0, false); e != nil {
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: house < 0")
+	if e, _, _ := GetHouseEventList(-1, -1, 0, 10, 0, 0, false); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: house = 0")
+	if e, _, _ := GetHouseEventList(-1, 0, 0, 10, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: house does not exist")
+	if e, _, _ := GetHouseEventList(-1, 100000000, 0, 10, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
+	if e, _, _ := GetHouseEventList(-1, 2, 0, 10, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is SYSTEM")
+	if e, _, _ := GetHouseEventList(0, 2, 0, 10, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
+	if e, _, _ := GetHouseEventList(100000000, 2, 0, 10, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: bgn < 0")
+	if e, _, _ := GetHouseEventList(4, 2, -1, 10, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: cnt < 0")
+	if e, _, _ := GetHouseEventList(4, 2, 0, -1, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: stat < EVENT_STAT_Begin")
+	if e, _, _ := GetHouseEventList(4, 2, 0, 0, EVENT_STAT_Begin-1, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: stat > EVENT_STAT_End")
+	if e, _, _ := GetHouseEventList(4, 2, 0, 0, EVENT_STAT_End+1, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: et < 0")
+	if e, _, _ := GetHouseEventList(4, 2, 0, 0, 0, -1, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: et > commdef.HOUSE_EVENT_End")
+	if e, _, _ := GetHouseEventList(4, 2, 0, 0, 0, commdef.HOUSE_EVENT_End+1, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
+	if e, _, _ := GetHouseEventList(10, 2, 0, 0, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not for this house")
+	if e, _, _ := GetHouseEventList(11, 2, 0, 0, 0, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Landlord get event list")
+	if e, _, _ := GetHouseEventList(9, 2, 0, 0, 0, 0, false); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "house agency get event list")
+	if e, _, _ := GetHouseEventList(6, 2, 0, 0, 0, 0, false); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "administrator get event list")
+	if e, _, _ := GetHouseEventList(5, 2, 0, 0, 0, 0, false); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get all events")
+	e, total, _ := GetHouseEventList(6, 2, 0, 0, EVENT_STAT_All, 0, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 3 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get new events")
+	e, total, _ = GetHouseEventList(6, 2, 0, 0, EVENT_STAT_New, 0, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 1 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get ongoing events")
+	e, total, _ = GetHouseEventList(6, 2, 0, 0, EVENT_STAT_Ongoin, 0, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 1 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get closed events")
+	e, total, _ = GetHouseEventList(6, 2, 0, 0, EVENT_STAT_Closed, 0, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 1 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+
+	// seq++
+	// t.Log(fmt.Sprintf("<Case %d>", seq), "")
+	// if e, _, _ := GetHouseEventList(5, 2, 0, 10, 0, 0, false); e != nil {
+	// 	t.Error("Failed, err: ", e)
+	// 	return
+	// }
 
 	return
 }
