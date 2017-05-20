@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by kenny on 2017/5/16.
  */
 
-class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo {
+class ResGetEventInfo extends ResBase implements IApiResults.IHouseEventInfo {
     private HouseEventInfo mHouseEventInfo = null;
 
     ResGetEventInfo(int nErrCode, JSONObject jObject) {
@@ -136,7 +136,7 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
     }
 }
 
-class HouseEventInfo implements IApiResults.IGetHouseEventInfo {
+class HouseEventInfo implements IApiResults.IHouseEventInfo {
     protected int      mEventId    = 0;    // event id
     protected int      mHouseId    = 0;    // house id
     protected String   mProperty   = "";   // property name

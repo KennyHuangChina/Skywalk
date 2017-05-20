@@ -143,7 +143,7 @@ public class IApiResults {
     }
 
     // command: CmdGetHouseEventInfo, CmdGetHouseEventList
-    public interface IGetHouseEventInfo {
+    public interface IHouseEventInfo {
         int     EventId();      // event id
         int     HouseId();      // house id
         String  Property();     // property name
