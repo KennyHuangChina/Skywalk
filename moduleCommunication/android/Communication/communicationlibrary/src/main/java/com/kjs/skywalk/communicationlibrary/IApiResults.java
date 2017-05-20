@@ -142,7 +142,7 @@ public class IApiResults {
         String  GetDescription();
     }
 
-    // command: CmdGetHouseEventInfo
+    // command: CmdGetHouseEventInfo, CmdGetHouseEventList
     public interface IGetHouseEventInfo {
         int     EventId();      // event id
         int     HouseId();      // house id
@@ -155,6 +155,7 @@ public class IApiResults {
         String  ReadTime();     // exact time when the event get readed
         String  EventType();    // event type
         String  EventDesc();    // event description
+        int     ProcCnt();      // how many procs follows the event
     }
 
     // command: CmdGetHouseEventProcList

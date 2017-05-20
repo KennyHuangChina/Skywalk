@@ -423,4 +423,16 @@ public class CommandManager implements CommunicationInterface.ICommand {
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(pMap);
     }
+
+    @Override
+    public int GetHouseEventList(int house_id, int stat, int type, int posi_bgn, int fetch_cnt, boolean bIDO) {
+        mOperation = new CmdGetHouseEventList(mContext, house_id);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_EVENT_STAT, String.valueOf(stat));
+        pMap.put(CommunicationParameterKey.CPK_EVENT_TYPE, String.valueOf(type));
+        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, String.valueOf(posi_bgn));
+        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, String.valueOf(fetch_cnt));
+        pMap.put(CommunicationParameterKey.CPK_EVENT_IDO, String.valueOf(bIDO));
+        return execute(pMap);
+    }
 }

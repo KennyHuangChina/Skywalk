@@ -8,18 +8,7 @@ import org.json.JSONObject;
  */
 
 class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo {
-    private int     mEventId    = 0;    // event id
-    private int     mHouseId    = 0;    // house id
-    private String  mProperty   = "";   // property name
-    private int     mBuildingNo = 0;    // the building number the house belong to
-    private String  mHouseNo    = "";   // exact house number. like house 1305#
-    private String  mSender     = "";   // people who send the event
-    private String  mReceiver   = "";   // people who the event send to
-    private String  mCreateTime = "";   // exact time when the event created
-    private String  mReadTime   = "";   // exact time when the event get readed
-    private String  mEventType  = "";   // event type
-    private String  mEventDesc  = "";   // event description
-    private int     mProcCount  = 0;
+    private HouseEventInfo mHouseEventInfo = null;
 
     ResGetEventInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -30,16 +19,9 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
     public String DebugString() {
         super.DebugString();
 
-        mString += "  id: " + mEventId + "\n";
-        mString += "  hosue id: " + mHouseId + "\n";
-        mString += "  property: " + mProperty + "\n";
-        mString += "  " + mBuildingNo + "栋 " + mHouseNo + "室";
-        mString += "  sender: " + mSender + ", receiver:" + mReceiver + "\n";
-        mString += "  Create: " + mCreateTime + "\n";
-        mString += "  Read: " + mReadTime + "\n";
-        mString += "  Type: " + mEventType + "\n";
-        mString += "  Desc: " + mEventDesc + "\n";
-        mString += "  Proc: " + mProcCount + "\n";
+        if (null != mHouseEventInfo) {
+            mString += mHouseEventInfo.DebugString();
+        }
 
         return mString;
     }
@@ -48,26 +30,161 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
     protected int parseResult(JSONObject obj) {
         try {
             JSONObject jEvent = obj.getJSONObject("Event");
-
-            mEventId    = jEvent.getInt("Id");
-            mHouseId    = jEvent.getInt("HouseId");
-            mProperty   = jEvent.getString("Property");
-            mBuildingNo = jEvent.getInt("Building");
-            mHouseNo    = jEvent.getString("HouseNo");
-            mSender     = jEvent.getString("Sender");
-            mReceiver   = jEvent.getString("Receiver");
-            mCreateTime = jEvent.getString("CreateTime");
-            mReadTime   = jEvent.getString("ReadTime");
-            mEventType  = jEvent.getString("Type");
-            mEventDesc  = jEvent.getString("Desc");
-            mProcCount  = jEvent.getInt("ProcCount");
-
+            mHouseEventInfo = new HouseEventInfo(jEvent);
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
         }
 
         return 0;
+    }
+
+    @Override
+    public int EventId() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.EventId();
+        }
+        return 0;
+    }
+
+    @Override
+    public int HouseId() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.HouseId();
+        }
+        return 0;
+    }
+
+    @Override
+    public String Property() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.Property();
+        }
+        return null;
+    }
+
+    @Override
+    public int BuildingNo() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.BuildingNo();
+        }
+        return 0;
+    }
+
+    @Override
+    public String HouseNo() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.HouseNo();
+        }
+        return null;
+    }
+
+    @Override
+    public String Sender() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.Sender();
+        }
+        return null;
+    }
+
+    @Override
+    public String Receiver() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.Receiver();
+        }
+        return null;
+    }
+
+    @Override
+    public String CreateTime() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.CreateTime();
+        }
+        return null;
+    }
+
+    @Override
+    public String ReadTime() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.ReadTime();
+        }
+        return null;
+    }
+
+    @Override
+    public String EventType() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.EventType();
+        }
+        return null;
+    }
+
+    @Override
+    public String EventDesc() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.EventDesc();
+        }
+        return null;
+    }
+
+    @Override
+    public int ProcCnt() {
+        if (null != mHouseEventInfo) {
+            return mHouseEventInfo.ProcCnt();
+        }
+        return 0;
+    }
+}
+
+class HouseEventInfo implements IApiResults.IGetHouseEventInfo {
+    protected int      mEventId    = 0;    // event id
+    protected int      mHouseId    = 0;    // house id
+    protected String   mProperty   = "";   // property name
+    protected int      mBuilding   = 0;    // bulding number
+    protected String   mHouseNo    = "";   // house number
+    protected String   mSender     = "";   // Event Sender
+    protected String   mReceiver   = "";   // Event Receiver
+    protected String   mCreateTime = "";   // Event create time
+    protected String   mReadTime   = "";   // Event read time
+    protected String   mType       = "";   // Event type
+    protected String   mDesc       = "";   // Event Description
+    protected int      mProcCount  = 0;    // How many processing follows the event}
+
+    public HouseEventInfo(JSONObject jsonObject) {
+        try {
+            mEventId    = jsonObject.getInt("Id");
+            mHouseId    = jsonObject.getInt("HouseId");
+            mProperty   = jsonObject.getString("Property");
+            mBuilding   = jsonObject.getInt("Building");
+            mHouseNo    = jsonObject.getString("HouseNo");
+            mSender     = jsonObject.getString("Sender");
+            mReceiver   = jsonObject.getString("Receiver");
+            mCreateTime = jsonObject.getString("CreateTime");
+            mReadTime   = jsonObject.getString("ReadTime");
+            mType       = jsonObject.getString("Type");
+            mDesc       = jsonObject.getString("Desc");
+            mProcCount  = jsonObject.getInt("ProcCount");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+//            return -1;
+        }
+    }
+
+    public String DebugString() {
+        String dbString = "";
+        dbString += "  id: " + mEventId + "\n";
+        dbString += "  Hosue id: " + mHouseId + "\n";
+        dbString += "  Property: " + mProperty + "\n";
+        dbString += "  " + mBuilding + "栋 " + mHouseNo + "室";
+        dbString += "  Sender: " + mSender + ", Receiver:" + mReceiver + "\n";
+        dbString += "  Create: " + mCreateTime + "\n";
+        dbString += "  Read: " + mReadTime + "\n";
+        dbString += "  Type: " + mType + "\n";
+        dbString += "  Desc: " + mDesc + "\n";
+        dbString += "  Proc: " + mProcCount + "\n";
+
+        return dbString;
     }
 
     @Override
@@ -87,7 +204,7 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
 
     @Override
     public int BuildingNo() {
-        return mBuildingNo;
+        return mBuilding;
     }
 
     @Override
@@ -117,11 +234,16 @@ class ResGetEventInfo extends ResBase implements IApiResults.IGetHouseEventInfo 
 
     @Override
     public String EventType() {
-        return mEventType;
+        return mType;
     }
 
     @Override
     public String EventDesc() {
-        return mEventDesc;
+        return mDesc;
+    }
+
+    @Override
+    public int ProcCnt() {
+        return mProcCount;
     }
 }

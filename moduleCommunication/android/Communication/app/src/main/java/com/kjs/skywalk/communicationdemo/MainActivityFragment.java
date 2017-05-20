@@ -110,7 +110,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetNewEventCount();
 //        CmdMgr.GetHouseNewEvent();
 //        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
