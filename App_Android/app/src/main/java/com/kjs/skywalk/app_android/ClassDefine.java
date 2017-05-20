@@ -31,4 +31,9 @@ public class ClassDefine {
             mList = list;
         }
     }
+
+    static class Garden {
+        public String mName;
+        public String mAddress;
+    }
 }

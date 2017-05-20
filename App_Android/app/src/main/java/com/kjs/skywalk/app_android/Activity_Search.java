@@ -35,6 +35,8 @@ public class Activity_Search extends Activity {
     private ArrayList<String> mGuess = new ArrayList<String>();
     private int mActScreenWidth = 1080;
     private Context mContext;
+    AdapterHouseSearchResult mAdapter = null;
+    private ArrayList<ClassDefine.Garden> mGardenList = new ArrayList<ClassDefine.Garden>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,8 @@ public class Activity_Search extends Activity {
         }
 
         mListView = (ListView)findViewById(R.id.listViewResult);
-        AdapterHouseSearchResult adapter = new AdapterHouseSearchResult(this);
-        mListView.setAdapter(adapter);
+        mAdapter = new AdapterHouseSearchResult(this);
+        mListView.setAdapter(mAdapter);
 
         mContainer = (LinearLayout)findViewById(R.id.searchResultContainer);
         mContainerEmpty = (LinearLayout)findViewById(R.id.searchResultEmptyContainer);
@@ -76,6 +78,7 @@ public class Activity_Search extends Activity {
 
         initHistory();
         initGuess();
+        initGardenList();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -91,6 +94,7 @@ public class Activity_Search extends Activity {
                     mContainer.setVisibility(View.GONE);
                     mContainerEmpty.setVisibility(View.VISIBLE);
                 } else {
+                    updateAdapter(newText);
                     if(!mContainer.isShown()) {
                         mContainer.setVisibility(View.VISIBLE);
                         mContainerEmpty.setVisibility(View.GONE);
@@ -109,6 +113,20 @@ public class Activity_Search extends Activity {
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         searchView.onActionViewExpanded();
         searchView.setIconifiedByDefault(false);
+
+        updateAdapter("");
+    }
+
+    private void updateAdapter(String keywords) {
+        mListView.removeAllViewsInLayout();
+        ArrayList<ClassDefine.Garden> newList = new ArrayList<ClassDefine.Garden>();
+        for(ClassDefine.Garden garden : mGardenList) {
+            if(garden.mName.contains(keywords)) {
+                newList.add(garden);
+            }
+        }
+        mAdapter.setDataList(newList);
+        mAdapter.notifyDataSetChanged();
     }
 
     public void onViewClick(View v) {
@@ -234,5 +252,40 @@ public class Activity_Search extends Activity {
                 list.remove(0);
             }
         }
+    }
+
+    private void initGardenList() {
+        ClassDefine.Garden garden = new ClassDefine.Garden();
+        garden.mName = "世茂蝶湖湾";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "万科魅力花园MIXTOWN";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "印象欧洲";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "绿地21新城";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "万科花园MIXTOWN";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "印象de欧洲";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "绿地26新城";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
+        garden = new ClassDefine.Garden();
+        garden.mName = "新时代";
+        garden.mAddress = "昆山市玉山镇";
+        mGardenList.add(garden);
     }
 }
