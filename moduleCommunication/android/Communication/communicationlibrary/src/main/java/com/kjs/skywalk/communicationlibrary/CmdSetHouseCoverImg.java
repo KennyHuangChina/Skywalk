@@ -17,8 +17,6 @@ class CmdSetHouseCoverImg extends CommunicationBase {
 
     CmdSetHouseCoverImg(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_SET_HOUSE_COVER_IMAGE);
-        TAG = "CmdSetHouseCoverImg";
-//        Log.i(TAG, "Constructor");
         mMethodType = "PUT";
     }
 

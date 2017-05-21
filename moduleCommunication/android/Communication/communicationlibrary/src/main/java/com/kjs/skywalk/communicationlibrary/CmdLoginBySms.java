@@ -22,8 +22,6 @@ class CmdLoginBySms extends CommunicationBase {
 
     CmdLoginBySms(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_LOGIN_BY_SMS);
-        TAG = "CmdLoginBySms";
-//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
 
         // generate a random

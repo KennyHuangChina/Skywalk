@@ -16,7 +16,6 @@ class CmdGetBehalfHouses extends CmdGetHouseList {
 
     CmdGetBehalfHouses(Context context) {
         super(context, "CmdGetBehalfHouses");
-        TAG = "CmdGetBehalfHouses";
         mMethodType = "GET";
     }
 

@@ -43,7 +43,7 @@ import javax.net.ssl.TrustManagerFactory;
  */
 
 class HttpConnector {
-    private String TAG = "HttpConnector"; // getLocalClassName();
+    private String TAG = getClass().getSimpleName(); // getLocalClassName();
     private Context mContext = null;
     private String mStringURL = "";
     private String mStringServerURL = "";

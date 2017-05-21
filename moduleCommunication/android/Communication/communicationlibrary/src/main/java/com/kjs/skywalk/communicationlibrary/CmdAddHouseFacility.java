@@ -18,7 +18,6 @@ class CmdAddHouseFacility extends CommunicationBase {
 
     CmdAddHouseFacility(Context context, int house, ArrayList<CommunicationInterface.FacilityItem> list) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_HOUSE_FACILITY);
-        TAG = "CmdAddHouseFacility";
         mMethodType = "POST";
         mHouse = house;
         mList = list;   // new ArrayList<CommunicationInterface.FacilityItem>();

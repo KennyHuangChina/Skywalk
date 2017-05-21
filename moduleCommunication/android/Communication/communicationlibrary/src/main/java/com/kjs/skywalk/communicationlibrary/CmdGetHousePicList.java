@@ -17,7 +17,6 @@ class CmdGetHousePicList extends CommunicationBase {
 
     CmdGetHousePicList(Context context, int house, int type) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST);
-        TAG = "CmdGetHousePicList";
         mMethodType = "GET";
         mHouse = house;
         mType = type;

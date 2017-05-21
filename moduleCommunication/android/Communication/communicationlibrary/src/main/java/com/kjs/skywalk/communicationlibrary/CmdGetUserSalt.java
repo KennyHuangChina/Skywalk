@@ -19,8 +19,6 @@ class CmdGetUserSalt extends CommunicationBase {
 
     CmdGetUserSalt(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_USER_SALT);
-        TAG = "CmdGetUserSalt";
-//        Log.i(TAG, "Constructor");
         mMethodType = "GET";
     }
 

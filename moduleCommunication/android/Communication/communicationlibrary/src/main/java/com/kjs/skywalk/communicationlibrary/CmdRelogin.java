@@ -22,9 +22,7 @@ class CmdRelogin extends CommunicationBase {
 
     CmdRelogin(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_RELOGIN);
-        TAG = "CmdRelogin";
-//        Log.i(TAG, "Constructor");
-        mMethodType = "POST";
+       mMethodType = "POST";
 
         // generate a random
         mRadom = generateRandom();

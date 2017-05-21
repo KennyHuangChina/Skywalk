@@ -25,8 +25,6 @@ class CmdLoginByPassword extends CommunicationBase {
 
     CmdLoginByPassword(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD);
-        TAG = "CmdLoginByPassword";
-//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
         mSessionID = "xxxxx";
     }

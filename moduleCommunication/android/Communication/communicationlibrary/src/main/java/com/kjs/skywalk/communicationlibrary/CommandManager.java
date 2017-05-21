@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  */
 
 public class CommandManager implements CommunicationInterface.ICommand {
-    final String TAG = "CommandManager";
+    final String TAG = getClass().getSimpleName();
 
     private Context             mContext        = null;
     private CommunicationBase   mOperation      = null;

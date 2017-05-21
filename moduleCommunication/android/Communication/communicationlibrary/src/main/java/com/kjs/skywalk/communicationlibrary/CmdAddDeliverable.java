@@ -16,7 +16,6 @@ class CmdAddDeliverable extends CommunicationBase {
 
     CmdAddDeliverable(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_DELIVERABLE);
-        TAG = "CmdAddDeliverable";
         mMethodType = "POST";
     }
 

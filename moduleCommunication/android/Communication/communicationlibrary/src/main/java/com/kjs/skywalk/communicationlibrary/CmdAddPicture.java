@@ -16,7 +16,6 @@ class CmdAddPicture extends CommunicationBase {
 
     CmdAddPicture(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_PICTURE);
-        TAG = "CmdAddPicture";
         mMethodType = "POST";
     }
 

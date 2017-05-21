@@ -14,7 +14,6 @@ class CmdGetDeliverableList extends CommunicationBase {
 
     CmdGetDeliverableList(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_DELIVERABLE_LIST);
-        TAG = "CmdGetDeliverableList";
         mMethodType = "GET";
     }
 

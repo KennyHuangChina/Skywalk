@@ -17,7 +17,6 @@ class CmdModifyDeliverable extends CommunicationBase {
 
     CmdModifyDeliverable(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_DELIVERABLE);
-        TAG = "CmdModifyDeliverable";
         mMethodType = "PUT";
     }
 

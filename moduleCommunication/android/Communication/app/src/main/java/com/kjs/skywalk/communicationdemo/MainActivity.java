@@ -14,7 +14,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
     private final int mFragmentCount = 2;
-    private final String TAG = "MainActivity";
+    private final String TAG = getClass().getSimpleName();
     private Fragment[] mFragments;
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;

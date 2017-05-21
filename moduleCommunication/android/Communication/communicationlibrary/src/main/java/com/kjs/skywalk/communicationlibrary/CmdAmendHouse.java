@@ -18,8 +18,6 @@ class CmdAmendHouse extends CommunicationBase {
     CmdAmendHouse(Context context, CommunicationInterface.HouseInfo houseInfo) {
         super(context, CommunicationInterface.CmdID.CMD_AMEND_HOUSE);
         mHouseInfo = houseInfo;
-        TAG = "CmdAmendHouse";
-//        Log.i(TAG, "Constructor");
         mMethodType = "PUT";
     }
 

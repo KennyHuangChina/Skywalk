@@ -16,7 +16,6 @@ class CmdGetHouseEventInfo extends CommunicationBase {
 
     CmdGetHouseEventInfo(Context context, int eventId) {
         super(context, CommunicationInterface.CmdID.CMD_GET_EVENT_INFO);
-        TAG = "CmdGetHouseInfo";
         mMethodType = "GET";
         mEventId = eventId;
     }

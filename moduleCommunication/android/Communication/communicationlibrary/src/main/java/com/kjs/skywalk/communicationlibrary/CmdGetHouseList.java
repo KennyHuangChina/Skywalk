@@ -18,8 +18,6 @@ class CmdGetHouseList extends CommunicationBase {
 
     CmdGetHouseList(Context context, String strAPI) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_LIST);
-        TAG = "CmdGetHouseList";
-//        Log.i(TAG, "Constructor");
         mMethodType = "GET";
     }
 

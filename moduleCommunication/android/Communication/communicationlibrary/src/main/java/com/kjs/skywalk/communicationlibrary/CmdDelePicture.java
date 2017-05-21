@@ -14,7 +14,6 @@ class CmdDelePicture extends CommunicationBase {
 
     CmdDelePicture(Context context, int picId) {
         super(context, CommunicationInterface.CmdID.CMD_DEL_PICTURE);
-        TAG = "CmdDelePicture";
         mMethodType = "DELETE";
         mPicId = picId;
     }

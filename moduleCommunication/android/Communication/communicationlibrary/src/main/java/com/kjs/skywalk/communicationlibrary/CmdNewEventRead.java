@@ -14,7 +14,6 @@ class CmdNewEventRead extends CommunicationBase {
 
     CmdNewEventRead(Context context, int eventId) {
         super(context, CommunicationInterface.CmdID.CMD_READ_NEW_EVENT);
-        TAG = "CmdNewEventRead";
         mMethodType = "PUT";
         mEventId = eventId;
     }

@@ -20,8 +20,6 @@ class CommandTest extends CommunicationBase {
 
     CommandTest(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_TEST);
-        TAG = "CommandTest";
-//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
     }
     @Override

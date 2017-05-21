@@ -18,7 +18,6 @@ class CmdCommitHouseByOwner extends CommunicationBase {
 
     CmdCommitHouseByOwner(Context context, CommunicationInterface.HouseInfo houseInfo, int agent) {
         super(context, CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER);
-        TAG = "CmdCommitHouseByOwner";
         mHouseInfo = houseInfo;
         mAgent = agent;
 //        Log.i(TAG, "Constructor");

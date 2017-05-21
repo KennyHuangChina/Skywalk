@@ -18,7 +18,6 @@ class CmdModifyPropertyInfo extends CommunicationBase {
 
     CmdModifyPropertyInfo(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_MODIFY_PROPERTY);
-        TAG = "CmdModifyPropertyInfo";
         mMethodType = "PUT";
     }
 

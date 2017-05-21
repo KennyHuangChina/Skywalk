@@ -23,8 +23,6 @@ class CmdGetBriefPublicHouseInfo extends CommunicationBase {
 
     CmdGetBriefPublicHouseInfo(Context context){
         super(context, CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO);
-        TAG = "GetBriefPublicHouseInfo";
-        Log.i(TAG, "Constructor");
         mMethodType = "GET";
     }
 

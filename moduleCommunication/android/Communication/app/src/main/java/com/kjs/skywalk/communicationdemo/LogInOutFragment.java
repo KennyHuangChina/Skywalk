@@ -26,7 +26,7 @@ import java.util.Iterator;
 public class LogInOutFragment extends Fragment
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
 
-    private final String TAG = "LogInOutFragment";
+    private final String TAG = getClass().getSimpleName();
     private String mResultString = "";
 
     TextView mTextViewResult = null;

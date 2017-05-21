@@ -17,8 +17,6 @@ class CmdLogout extends CommunicationBase {
 
     CmdLogout(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_LOG_OUT);
-        TAG = "Logout";
-//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
     }
 

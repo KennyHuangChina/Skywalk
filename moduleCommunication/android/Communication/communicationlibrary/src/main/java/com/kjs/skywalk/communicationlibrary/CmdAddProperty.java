@@ -21,8 +21,6 @@ class CmdAddProperty extends CommunicationBase {
 
     CmdAddProperty(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_PROPERTY);
-        TAG = "CmdAddProperty";
-//        Log.i(TAG, "Constructor");
         mMethodType = "POST";
     }
 

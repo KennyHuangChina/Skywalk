@@ -15,7 +15,6 @@ class CmdModifyFacilityType extends CommunicationBase {
 
     CmdModifyFacilityType(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_FACILITY_TYPE);
-        TAG = "CmdModifyFacilityType";
         mMethodType = "PUT";
     }
 

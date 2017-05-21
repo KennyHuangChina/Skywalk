@@ -28,7 +28,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 public class MainActivityFragment extends Fragment
         implements CICommandListener, CIProgressListener{
 
-    private final String TAG = "MainActivityFragment";
+    private final String TAG = getClass().getSimpleName();
     private MainActivity mainActivity = null;
     private String mResultString = "";
 

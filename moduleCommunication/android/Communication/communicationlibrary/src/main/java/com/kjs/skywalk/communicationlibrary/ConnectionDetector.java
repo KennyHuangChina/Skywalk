@@ -11,7 +11,7 @@ import android.util.Log;
  */
 
 class ConnectionDetector {
-    final static String TAG = "ConnectionDetector";
+    final String TAG = getClass().getSimpleName();
     private Context mContext;
 
     public ConnectionDetector(Context context){

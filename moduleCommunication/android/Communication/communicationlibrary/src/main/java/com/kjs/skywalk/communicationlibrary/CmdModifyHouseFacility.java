@@ -17,7 +17,6 @@ class CmdModifyHouseFacility extends CommunicationBase {
 
     CmdModifyHouseFacility(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_HOUSE_FACILITY);
-        TAG = "CmdModifyHouseFacility";
         mMethodType = "PUT";
     }
 
