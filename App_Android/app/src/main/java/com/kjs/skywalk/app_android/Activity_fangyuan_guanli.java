@@ -99,6 +99,7 @@ public class Activity_fangyuan_guanli extends AppCompatActivity {
             case R.id.ll_shegnhuozhanghu:
             {
                 // 生活账户
+                startActivity(new Intent(this, Activity_Shenghuozhanghu.class));
             }
             break;
             case R.id.ll_fuwu:

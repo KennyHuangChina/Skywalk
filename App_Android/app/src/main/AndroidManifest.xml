@@ -85,6 +85,7 @@
         <activity android:name=".Activity_fangyuan_zhaopian"></activity>
         <activity android:name=".Activity_Search" />
         <activity android:name=".Activity_Search_Fangyuanliebiao" />
+        <activity android:name=".Activity_Shenghuozhanghu" />
     </application>
 
 </manifest>
