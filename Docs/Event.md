@@ -120,3 +120,16 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description
+
+##
+### 7. Update event info
+	[Security]	private
+	[Request]
+  		* PUT /v1/event/:id
+	  		* :id				int 		// house id
+	  		* desc				string 		// event description
+	[Response]
+		* SUCCESS:200
+		* ERR: 4XX,5XX
+	  		* ErrCode			int			// error code
+	  		* ErrDesc			string		// error description

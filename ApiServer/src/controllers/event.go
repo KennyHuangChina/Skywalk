@@ -2,6 +2,7 @@ package controllers
 
 import (
 	// "ApiServer/commdef"
+	"encoding/base64"
 	"fmt"
 	"github.com/astaxie/beego"
 	// "github.com/astaxie/beego/orm"
@@ -19,6 +20,51 @@ func (e *EventController) URLMapping() {
 	e.Mapping("GetEvent", e.GetEvent)
 	e.Mapping("GetEventProcs", e.GetEventProcs)
 	e.Mapping("GetHouseEventList", e.GetHouseEventList)
+	e.Mapping("ModifyEvent", e.ModifyEvent)
+}
+
+// @Title ModifyEvent
+// @Description get house event list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /list/house/:id [get]
+func (this *EventController) ModifyEvent() {
+	FN := "[ModifyEvent] "
+	beego.Warn("[--- API: ModifyEvent ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	eid, _ := this.GetInt64(":id")
+	desc := this.GetString("desc")
+	tmp, _ := base64.URLEncoding.DecodeString(desc)
+	desc = string(tmp)
+	beego.Debug(FN, "event:", eid, ", desc:", desc)
+
+	/*
+	 *	Processing
+	 */
+	err = models.ModifyHouseEvent(uid, eid, desc)
+	if nil == err {
+	}
 }
 
 // @Title GetHouseEventList

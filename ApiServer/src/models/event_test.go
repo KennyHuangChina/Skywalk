@@ -536,3 +536,98 @@ func Test_GetHouseEventList(t *testing.T) {
 
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- ModifyHouseEvent --
+//
+func Test_ModifyHouseEvent(t *testing.T) {
+	t.Log("Test ModifyHouseEvent")
+	seq := 0
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: desc not set")
+	if e := ModifyHouseEvent(-1, -1, ""); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: event < 0")
+	if e := ModifyHouseEvent(-1, -1, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: event = 0")
+	if e := ModifyHouseEvent(-1, 0, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: event does not exist")
+	if e := ModifyHouseEvent(-1, 100000000, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
+	if e := ModifyHouseEvent(-1, 1, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is SYSTEM")
+	if e := ModifyHouseEvent(0, 1, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
+	if e := ModifyHouseEvent(100000000, 1, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is not event sender, receiver and administraot")
+	if e := ModifyHouseEvent(9, 1, "测试 1st 计划"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Event Sender modify event")
+	if e := ModifyHouseEvent(2, 1, "测试 1st 计划"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Event Receiver modify event")
+	if e := ModifyHouseEvent(6, 1, "测试 1st 计划"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "House agency modify event")
+	if e := ModifyHouseEvent(4, 1, "测试 1st 计划"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "administrator agency modify event")
+	if e := ModifyHouseEvent(5, 1, "测试 1st 计划"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	return
+}

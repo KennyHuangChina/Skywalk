@@ -9,6 +9,65 @@ import (
 	"time"
 )
 
+/**
+*	Get even proc list by event id
+*	Arguments:
+*		uid 	- login user id
+*		eid		- event id
+*		desc	- event description
+*	Returns
+*		err 	- error info
+**/
+func ModifyHouseEvent(uid, eid int64, desc string) (err error) {
+	FN := "[ModifyHouseEvent] "
+	beego.Trace(FN, "login user:", uid, ", event:", eid, ", desc:", desc)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	if 0 == len(desc) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "desc not set"}
+		return
+	}
+	err, e := getEvent(eid)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "event:", fmt.Sprintf("%+v", e))
+
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	err, h := getHouse(e.House)
+	if nil != err {
+		return
+	}
+
+	/* Permission checking */
+	// Event sener, receiver, house agency and administrator could modify the event
+	if e.Sender == uid || e.Receiver == uid || isHouseAgency(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	/*numb*/ _, errT := o.Update(&TblHouseEvent{Id: eid, Desc: desc}, "Desc")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	return
+}
+
 const (
 	EVENT_STAT_Begin = 0
 
