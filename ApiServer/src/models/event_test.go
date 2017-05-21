@@ -383,6 +383,15 @@ func Test_GetHouseEventList(t *testing.T) {
 	}
 
 	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "house do not have event")
+	if e, _, _ := GetHouseEventList(2, 6, 0, 10, 0, 0, false); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// return
+
+	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Landlord get event list")
 	if e, _, _ := GetHouseEventList(9, 2, 0, 0, 0, 0, false); e != nil {
 		t.Error("Failed, err: ", e)
@@ -451,12 +460,79 @@ func Test_GetHouseEventList(t *testing.T) {
 		return
 	}
 
-	// seq++
-	// t.Log(fmt.Sprintf("<Case %d>", seq), "")
-	// if e, _, _ := GetHouseEventList(5, 2, 0, 10, 0, 0, false); e != nil {
-	// 	t.Error("Failed, err: ", e)
-	// 	return
-	// }
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: begin position over the total number")
+	if e, _, _ := GetHouseEventList(4, 2, 3, 10, EVENT_STAT_All, 0, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get all events, whole info")
+	e, _, hel := GetHouseEventList(6, 2, 0, 10, EVENT_STAT_All, 0, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	for k, v := range hel {
+		t.Log(fmt.Sprintf("\t%d : %+v", k, v))
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get all events with type 1")
+	e, total, hel = GetHouseEventList(6, 2, 0, 10, EVENT_STAT_All, 1, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 1 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+	for k, v := range hel {
+		t.Log(fmt.Sprintf("\t%d : %+v", k, v))
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get all events with type 2")
+	e, total, hel = GetHouseEventList(6, 2, 0, 10, EVENT_STAT_All, 2, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 1 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+	for k, v := range hel {
+		t.Log(fmt.Sprintf("\t%d : %+v", k, v))
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get all events with type 3")
+	e, total, hel = GetHouseEventList(6, 2, 0, 10, EVENT_STAT_All, 3, false)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 1 != total {
+		t.Error("Failed, incorrect event count:", total)
+		return
+	}
+	for k, v := range hel {
+		t.Log(fmt.Sprintf("\t%d : %+v", k, v))
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "get all events, event id only")
+	e, _, hel2 := GetHouseEventList(6, 2, 0, 10, EVENT_STAT_All, 0, true)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	for k, v := range hel2 {
+		t.Log(fmt.Sprintf("\t%d : %+v", k, v))
+	}
 
 	return
 }

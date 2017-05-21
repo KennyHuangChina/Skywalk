@@ -106,13 +106,18 @@ func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err er
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
+	beego.Debug(FN, fmt.Sprintf("%d events found", numb))
+	// if 0 == numb {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("there are no events for house:%d", hid)}
+	// 	return
+	// }
 	total = numb
-	if 0 == cnt { // user just want to detect the total number
+	if 0 == cnt || 0 == total { // user just want to detect the total number, or there no event could be fetched
 		return
 	}
 
 	if bgn > total-1 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin position:%d > total:%d", bgn, total)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin position:%d >= total:%d", bgn, total)}
 		return
 	}
 
@@ -121,6 +126,9 @@ func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err er
 										house_no, sender, receiver, create_time, read_time, type, event.desc
 									FROM tbl_house_event AS event, tbl_house AS house, tbl_property AS prop
 									WHERE event.house=%d AND event.house=house.id AND house.property_id = prop.id`, hid)
+	if ido {
+		sql_event = fmt.Sprintf(`SELECT id FROM tbl_house_event WHERE house=%d`, hid)
+	}
 	if stat > EVENT_STAT_All { // event status
 		switch stat {
 		case EVENT_STAT_New:
