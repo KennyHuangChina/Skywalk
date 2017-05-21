@@ -122,12 +122,14 @@ func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err er
 	}
 
 	// fetch real records
-	sql_event := fmt.Sprintf(`SELECT event.id, event.house AS house_id, prop.name AS property, building_no AS building,
+	sql_event := ""
+	if ido {
+		sql_event = fmt.Sprintf(`SELECT id FROM tbl_house_event WHERE house=%d`, hid)
+	} else {
+		sql_event = fmt.Sprintf(`SELECT event.id, event.house AS house_id, prop.name AS property, building_no AS building,
 										house_no, sender, receiver, create_time, read_time, type, event.desc
 									FROM tbl_house_event AS event, tbl_house AS house, tbl_property AS prop
 									WHERE event.house=%d AND event.house=house.id AND house.property_id = prop.id`, hid)
-	if ido {
-		sql_event = fmt.Sprintf(`SELECT id FROM tbl_house_event WHERE house=%d`, hid)
 	}
 	if stat > EVENT_STAT_All { // event status
 		switch stat {
@@ -175,6 +177,9 @@ func GetHouseEventList(uid, hid, bgn, cnt int64, stat, et int, ido bool) (err er
 		receiver, _ := strconv.ParseInt(v.Receiver, 10, 64)
 		_, u := GetUserInfo(receiver, uid)
 		v.Receiver = u.Name
+
+		evtType, _ := strconv.Atoi(v.Type) // ParseInt(v.Type, 10, 32)
+		v.Type = getEventType(evtType)
 
 		hel = append(hel, v)
 		beego.Debug(FN, fmt.Sprintf("%d:%+v", k, hel[k]))
