@@ -1,5 +1,7 @@
 package com.kjs.skywalk.app_android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -156,14 +158,27 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
             }
             case R.id.tv_delete:
             {
-                deleteSelectItem(mHuXingPicLst);
-                fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
-//                fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+                // show confirm dialog
+                new AlertDialog.Builder(this)
+                        .setTitle("是否删除选中的照片")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
 
-//                ((PicFragStatePageAdapter) mVPHuXing.getAdapter()).deleteSelectItem();
-//                ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter()).deleteSelectItem();
-//                ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).deleteSelectItem();
-//                ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).deleteSelectItem();
+                                deleteSelectItem(mHuXingPicLst);
+                                fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+                                updateViewrPagerSelectMode(mIsPicSelectMode);
+                                updateStatus();
+
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+
                 break;
             }
             default:
@@ -177,6 +192,35 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
         ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).updateSelectMode(isSelectMode);
+    }
+
+    private void updateStatus() {
+        int total_select_count = 0;
+        int select_count = ((PicFragStatePageAdapter)mVPHuXing.getAdapter()).getSelectCount();
+        int total = mHuXingPicLst.size();
+        mTvStatus1.setText("(" + select_count + "/" + total + ")");
+        total_select_count += select_count;
+
+        select_count = ((PicFragStatePageAdapter)mVpFangJianJieGou.getAdapter()).getSelectCount();
+        total = mFangJianJieGouPicLst.size();
+        mTvStatus2.setText("(" + select_count + "/" + total + ")");
+        total_select_count += select_count;
+
+        select_count = ((PicFragStatePageAdapter)mVpJiaJuYongPin.getAdapter()).getSelectCount();
+        total = mJiaJuYongPinPicLst.size();
+        mTvStatus3.setText("(" + select_count + "/" + total + ")");
+        total_select_count += select_count;
+
+        select_count = ((PicFragStatePageAdapter)mVpDianQi.getAdapter()).getSelectCount();
+        total = mDianQiPicLst.size();
+        mTvStatus4.setText("(" + select_count + "/" + total + ")");
+        total_select_count += select_count;
+
+        if (total_select_count > 0) {
+            mTvDelete.setEnabled(true);
+        } else {
+            mTvDelete.setEnabled(false);
+        }
     }
 
     public void onPhotoPickerClicked(View v) {
@@ -274,33 +318,7 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
 
         @Override
         public void onPicSelectChanged() {
-            int total_select_count = 0;
-            int select_count = ((PicFragStatePageAdapter)mVPHuXing.getAdapter()).getSelectCount();
-            int total = mHuXingPicLst.size();
-            mTvStatus1.setText("(" + select_count + "/" + total + ")");
-            total_select_count += select_count;
-
-            select_count = ((PicFragStatePageAdapter)mVpFangJianJieGou.getAdapter()).getSelectCount();
-            total = mFangJianJieGouPicLst.size();
-            mTvStatus2.setText("(" + select_count + "/" + total + ")");
-            total_select_count += select_count;
-
-            select_count = ((PicFragStatePageAdapter)mVpJiaJuYongPin.getAdapter()).getSelectCount();
-            total = mJiaJuYongPinPicLst.size();
-            mTvStatus3.setText("(" + select_count + "/" + total + ")");
-            total_select_count += select_count;
-
-            select_count = ((PicFragStatePageAdapter)mVpDianQi.getAdapter()).getSelectCount();
-            total = mDianQiPicLst.size();
-            mTvStatus4.setText("(" + select_count + "/" + total + ")");
-            total_select_count += select_count;
-
-            if (total_select_count > 0) {
-                mTvDelete.setEnabled(true);
-            } else {
-                mTvDelete.setEnabled(false);
-            }
-
+            updateStatus();
         }
 
         @Override
