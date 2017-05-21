@@ -29,7 +29,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.AfterConnect,
                                     InternalDefines.ConnectFailed,
                                     InternalDefines.IApiName {
-    protected String  TAG           = "CommunicationBase";
+    protected String  TAG           = this.getClass().getSimpleName();
     private   int     mAPI          = CmdID.CMD_TEST;
     protected Context mContext      = null;
     protected String  mMethodType   = "";

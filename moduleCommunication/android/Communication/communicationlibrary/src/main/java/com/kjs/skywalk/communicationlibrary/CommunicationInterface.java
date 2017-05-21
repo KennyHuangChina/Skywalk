@@ -86,6 +86,7 @@ public class CommunicationInterface {
         int GetHouseEventInfo(int event_id);
         int GetHouseEventProcList(int event_id);
         int GetHouseEventList(int house_id, int stat, int type, int posi_bgn, int fetch_cnt, boolean bIDO);
+        int ModifyHouseEvent(int event_id, String desc);
     }
 
     public static class CmdID {
@@ -146,6 +147,7 @@ public class CommunicationInterface {
         public static int CMD_GET_EVENT_INFO            = 0x7004;
         public static int CMD_GET_EVENT_PROC_LST        = 0x7005;
         public static int CMD_GET_HOUSE_EVENT_LST       = 0x7006;
+        public static int CMD_MODIFY_HOUSE_EVENT        = 0x7007;
 
         public static int CMD_TEST                   = 0x0001;
     }
