@@ -27,6 +27,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
     private ListView    mLvDeliverables;
     private TextView    mTvModifyFinish;
     private Boolean     mIsModifyMode;
+    private ImageButton mIbNew;
     AdapterDeliverables mDeliverablesAdapter;
     // test data
 
@@ -63,8 +64,8 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         loadUI();
 
         // add button
-        ImageButton ibNew = (ImageButton) findViewById(R.id.ib_new);
-        ibNew.setOnClickListener(new View.OnClickListener() {
+        mIbNew = (ImageButton) findViewById(R.id.ib_new);
+        mIbNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDeliverableNewDlg();
@@ -232,6 +233,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
                     mTvModifyFinish.setText("编辑");
                 }
                 mDeliverablesAdapter.setEditMode(mIsModifyMode);
+                mIbNew.setVisibility(mIsModifyMode ? View.GONE : View.VISIBLE);
             }
             break;
 

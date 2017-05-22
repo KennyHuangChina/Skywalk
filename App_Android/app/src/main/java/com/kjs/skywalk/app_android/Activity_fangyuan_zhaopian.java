@@ -167,6 +167,16 @@ public class Activity_fangyuan_zhaopian extends AppCompatActivity {
 
                                 deleteSelectItem(mHuXingPicLst);
                                 fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+
+                                deleteSelectItem(mFangJianJieGouPicLst);
+                                fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+
+                                deleteSelectItem(mJiaJuYongPinPicLst);
+                                fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+
+                                deleteSelectItem(mDianQiPicLst);
+                                fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+
                                 updateViewrPagerSelectMode(mIsPicSelectMode);
                                 updateStatus();
 

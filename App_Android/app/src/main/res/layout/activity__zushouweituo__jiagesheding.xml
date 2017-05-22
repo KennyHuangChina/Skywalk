@@ -50,7 +50,7 @@
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
                         android:gravity="center_vertical"
-                        android:drawableLeft="@drawable/house2_n"
+                        android:drawableLeft="@drawable/rent_n"
                         android:text="委托出租"/>
                 </RelativeLayout>
 
@@ -117,8 +117,10 @@
                     <TextView
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
-                        android:layout_centerVertical="true"
-                        android:text="是否物业费"/>
+                        android:text="是否含物业费"
+                        android:layout_alignBaseline="@+id/toggleButton"
+                        android:layout_alignBottom="@+id/toggleButton"
+                        android:layout_alignParentStart="true" />
                     <ToggleButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -129,7 +131,8 @@
                         android:textOn=""
                         android:textOff=""
                         android:checked="true"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/toggleButton" />
                 </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal"/>

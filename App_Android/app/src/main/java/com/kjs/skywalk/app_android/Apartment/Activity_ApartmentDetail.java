@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android.Apartment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -44,14 +45,14 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_share);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_share);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
@@ -105,6 +106,18 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
             case  R.id.fab_back:
             {
                 finish();
+            }
+            break;
+
+            case  R.id.fab_share:
+            {
+                Intent intent = new Intent("android.intent.action.SEND");
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
+                intent.putExtra(Intent.EXTRA_TEXT, "我发现有个房子不错，点击查看");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                startActivity(Intent.createChooser(intent, "分享房源"));
             }
             break;
 
