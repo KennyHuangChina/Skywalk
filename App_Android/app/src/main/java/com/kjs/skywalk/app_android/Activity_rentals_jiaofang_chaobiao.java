@@ -15,9 +15,9 @@ public class Activity_rentals_jiaofang_chaobiao extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rentals_progress_jiaofang_chaobiao);
 
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.input_dialog_number_one);
-        dialog.show();
+//        Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.input_dialog_number_one);
+//        dialog.show();
     }
 
     public void onViewClick(View v) {

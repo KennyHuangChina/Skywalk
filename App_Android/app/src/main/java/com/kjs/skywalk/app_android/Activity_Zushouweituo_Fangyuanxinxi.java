@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -16,12 +17,25 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__zushouweituo__fangyuanxinxi);
+        TextView titleText = (TextView)findViewById(R.id.textViewActivityTitle);
+        titleText.setText("租售委托-房源信息");
+        ImageView closeButton = (ImageView)findViewById(R.id.imageViewActivityClose);
+        closeButton.setVisibility(View.INVISIBLE);
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title:
+            case R.id.imageViewActivityBack:
             {
+                finish();
+            }
+            break;
+            case R.id.imageViewActivityClose:
+            {
+                Intent intent =new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
                 finish();
             }
             break;
