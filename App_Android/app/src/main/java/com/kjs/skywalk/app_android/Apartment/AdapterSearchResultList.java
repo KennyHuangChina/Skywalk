@@ -66,7 +66,13 @@ class AdapterSearchResultList extends BaseAdapter {
             ImageView flagView = (ImageView)convertView.findViewById(R.id.imageViewFlag);
             flagView.setVisibility(View.VISIBLE);
             ImageView thumbView = (ImageView)convertView.findViewById(R.id.iv_apartment_thumb);
-            thumbView.setImageResource(R.drawable.sample2);
+            if(position % 3 == 0) {
+                thumbView.setImageResource(R.drawable.sample1);
+            } else if(position % 3 == 1) {
+                thumbView.setImageResource(R.drawable.sample2);
+            } else if(position % 3 == 2) {
+                thumbView.setImageResource(R.drawable.homepage_title);
+            }
 
             holder = new ViewHolder();
             holder.tvContentName = (TextView) convertView.findViewById(R.id.title);

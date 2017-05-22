@@ -128,14 +128,9 @@
 
     <include layout="@layout/seperator_horizontal" />
 
-    <ScrollView
+    <ListView
+        android:id="@+id/listViewSearchResult"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollViewResult"
-        android:gravity="center" >
-        <com.kjs.skywalk.control.ListView_NoScroll
-            android:id="@+id/listViewSearchResult"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </ScrollView>
+        android:layout_height="match_parent" />
+
 </LinearLayout>

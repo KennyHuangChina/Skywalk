@@ -7,34 +7,24 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="154dp">
+        android:layout_height="wrap_content">
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="154dp"
+            android:layout_height="wrap_content"
             android:contentDescription=""
-            android:src="@drawable/sample1"
+            android:maxWidth="1920dp"
             android:scaleType="fitXY"
-            android:id="@+id/iv_apartment_thumb"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
+            android:adjustViewBounds="true"
+            android:id="@+id/iv_apartment_thumb" />
 
         <ImageView
             android:id="@+id/imageViewFlag"
-            android:background="@drawable/shape1_n"
+            android:background="@drawable/house_checked1_n"
             android:layout_width="30dp"
             android:layout_height="23dp"
             android:layout_alignLeft="@+id/iv_apartment_thumb"
             android:layout_alignTop="@+id/iv_apartment_thumb"
             android:layout_marginTop="3dp" />
-        <TextView
-            android:text="上门实勘"
-            android:layout_width="25dp"
-            android:layout_height="23dp"
-            android:textSize="9sp"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:layout_alignLeft="@+id/imageViewFlag"
-            android:layout_alignTop="@+id/imageViewFlag"/>
     </RelativeLayout>
 
     <LinearLayout
