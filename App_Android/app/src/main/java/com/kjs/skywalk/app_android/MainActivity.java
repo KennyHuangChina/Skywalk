@@ -37,6 +37,8 @@ import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+
 public class MainActivity extends AppCompatActivity {
     private fragmentHomePage mFragHomePage = null;
     private fragmentApartment mFragApartment = null;
