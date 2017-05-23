@@ -276,6 +276,12 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
+                    case R.id.action_login:
+                    {
+                        startActivity(new Intent(MainActivity.this, Activity_login.class));
+                    }
+                    break;
+
                     case R.id.action_setting1:
                     {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_expiration.class));

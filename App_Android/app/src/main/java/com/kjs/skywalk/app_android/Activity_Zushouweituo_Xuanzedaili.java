@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class Activity_Zushouweituo_Xuanzedaili extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__zushouweituo__xuanzedaili);
+        TextView titleText = (TextView)findViewById(R.id.textViewActivityTitle);
+        titleText.setText("租售委托-选择代理");
 
         mListViewAgents = (ListView)findViewById(R.id.listViewContent);
         mListViewAgents.setFocusable(false);
@@ -28,13 +31,20 @@ public class Activity_Zushouweituo_Xuanzedaili extends Activity {
 
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
-            case R.id.tv_close:
-            {
+            case R.id.imageViewActivityBack: {
                 finish();
+                break;
             }
-            break;
+            case R.id.imageViewActivityClose: {
+                Intent intent =new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                finish();
+                break;
+            }
             case R.id.tv_prev:
             {
                 finish();

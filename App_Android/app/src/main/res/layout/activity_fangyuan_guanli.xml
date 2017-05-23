@@ -33,7 +33,7 @@
 
         <include layout="@layout/seperator_horizontal"
             android:layout_width="match_parent"
-            android:layout_height="17dp"/>
+            android:layout_height="6dp"/>
 
         <ScrollView
             android:layout_width="match_parent"

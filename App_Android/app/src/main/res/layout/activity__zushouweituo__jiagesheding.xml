@@ -17,10 +17,8 @@
         android:orientation="vertical"
         android:layout_above="@+id/ll_bottom"
         android:id="@+id/linearLayout">
-        <TextView
-            android:id="@+id/tv_info_title"
-            style="@style/textStyle_page_title"
-            android:text="租售委托-价格设定"/>
+
+        <include layout="@layout/layout_title_bar_with_close_button" />
 
         <include layout="@layout/seperator_horizontal"/>
 
@@ -52,7 +50,7 @@
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
                         android:gravity="center_vertical"
-                        android:drawableLeft="@drawable/house2_n"
+                        android:drawableLeft="@drawable/rent_n"
                         android:text="委托出租"/>
                 </RelativeLayout>
 
@@ -119,8 +117,10 @@
                     <TextView
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorTextNormal"
-                        android:layout_centerVertical="true"
-                        android:text="是否物业费"/>
+                        android:text="是否含物业费"
+                        android:layout_alignBaseline="@+id/toggleButton"
+                        android:layout_alignBottom="@+id/toggleButton"
+                        android:layout_alignParentStart="true" />
                     <ToggleButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -131,7 +131,8 @@
                         android:textOn=""
                         android:textOff=""
                         android:checked="true"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/toggleButton" />
                 </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal"/>
@@ -277,7 +278,7 @@
 
             <TextView
                 android:id="@+id/tv_prev"
-                android:onClick="onViewClick"
+                android:onClick="onClickResponse"
                 android:layout_width="111dp"
                 android:layout_height="45dp"
                 style="@style/btnstyle_minor"
@@ -288,7 +289,7 @@
 
             <TextView
                 android:id="@+id/tv_next"
-                android:onClick="onViewClick"
+                android:onClick="onClickResponse"
                 android:layout_width="210dp"
                 android:layout_height="45dp"
                 style="@style/btnstyle_major"

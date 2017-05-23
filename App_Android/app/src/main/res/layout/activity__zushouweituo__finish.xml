@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/tv_close"
-            android:onClick="onViewClick"
+            android:onClick="onClickResponse"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             style="@style/btnstyle_major"
@@ -34,10 +34,8 @@
         android:orientation="vertical"
         android:layout_above="@id/relativeLayout"
         android:id="@+id/linearLayout">
-        <TextView
-            android:id="@+id/tv_info_title"
-            style="@style/textStyle_page_title"
-            android:text="租售委托-完成"/>
+
+        <include layout="@layout/layout_title_bar_with_close_button" />
 
         <include layout="@layout/seperator_horizontal"/>
 
@@ -90,7 +88,7 @@
                             android:layout_marginBottom="15dp"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:onClick="onViewClick"
+                            android:onClick="onClickResponse"
                             android:gravity="center"
                             android:textColor="#9d9c9d"
                             android:layout_alignParentRight="true"
@@ -111,7 +109,7 @@
                             android:layout_marginBottom="15dp"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:onClick="onViewClick"
+                            android:onClick="onClickResponse"
                             android:gravity="center"
                             android:textColor="#ffffff"
                             android:layout_alignParentLeft="true"
@@ -153,7 +151,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:orientation="horizontal"
-                    android:onClick="onViewClick">
+                    android:onClick="onClickResponse">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -192,7 +190,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:orientation="horizontal"
-                    android:onClick="onViewClick">
+                    android:onClick="onClickResponse">
 
                     <ImageView
                         android:layout_width="wrap_content"

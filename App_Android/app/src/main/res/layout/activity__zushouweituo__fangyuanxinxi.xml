@@ -14,12 +14,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
-        <TextView
-            android:id="@+id/tv_info_title"
-            style="@style/textStyle_page_title"
-            android:text="租售委托-房源信息"/>
+        android:orientation="vertical" >
+
+        <include layout="@layout/layout_title_bar_with_close_button" />
 
         <include layout="@layout/seperator_horizontal"/>
 
@@ -56,7 +53,7 @@
                         android:background="#FFFFFFFF"
                         android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
-                        android:onClick="onViewClick"
+                        android:onClick="onClickResponse"
                         android:hint="选择小区"/>
                 </RelativeLayout>
 
@@ -203,7 +200,7 @@
                         android:id="@+id/tv_huxing_selector"
                         style="@style/textStyle_page_blockValue"
                         android:textColorHint="@color/colorEditTextTint"
-                        android:onClick="onViewClick"
+                        android:onClick="onClickResponse"
                         android:hint="请选择"/>
                 </RelativeLayout>
 
@@ -240,7 +237,7 @@
                         android:id="@+id/tv_date_selector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onViewClick"
+                        android:onClick="onClickResponse"
                         android:layout_gravity="center_vertical"
                         android:drawablePadding="10dp"
                         android:drawableRight="@drawable/date_n"
@@ -331,7 +328,7 @@
 
         <TextView
             android:id="@+id/tv_next"
-            android:onClick="onViewClick"
+            android:onClick="onClickResponse"
             android:layout_width="330dp"
             android:layout_height="45dp"
             style="@style/btnstyle_major"

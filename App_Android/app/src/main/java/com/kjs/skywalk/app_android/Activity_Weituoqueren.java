@@ -11,6 +11,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,10 @@ public class Activity_Weituoqueren extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tijiaoweituo);
+        TextView titleText = (TextView)findViewById(R.id.textViewActivityTitle);
+        titleText.setText("业主房屋委托确认书");
+        ImageView closeButton = (ImageView)findViewById(R.id.imageViewActivityClose);
+        closeButton.setVisibility(View.INVISIBLE);
 
         mProgress = (ProgressBar)findViewById(R.id.progressBar);
         mProgressContainer = (RelativeLayout)findViewById(R.id.progressContainer);
@@ -72,7 +77,7 @@ public class Activity_Weituoqueren extends Activity {
         });
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.textViewCommit:
             {
@@ -84,6 +89,19 @@ public class Activity_Weituoqueren extends Activity {
                 TextView reload = (TextView)findViewById(R.id.clickReloadView);
                 reload.setVisibility(View.INVISIBLE);
                 mWebView.loadUrl(mURL);
+                break;
+            }
+            case R.id.imageViewActivityBack: {
+                finish();
+                break;
+            }
+            case R.id.imageViewActivityClose: {
+                Intent intent =new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                finish();
+                break;
             }
         }
     }
