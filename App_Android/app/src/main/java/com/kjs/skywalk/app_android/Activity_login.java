@@ -3,6 +3,9 @@ package com.kjs.skywalk.app_android;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -37,6 +40,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_SALT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD;
 
 /**
@@ -63,6 +67,10 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
     private View mProgressView;
     private View mLoginFormView;
 
+    private String mRand = "";
+    private String mSalt = "";
+    private final int MSG_LOGIN = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +95,27 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    private void doLogin() {
+        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CmdMgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), mRand, mSalt);
+    }
+
+    private void logIn() {
+        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CmdMgr.GetUserSalt(mEmailView.getText().toString());
+    }
+
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case MSG_LOGIN:
+                    doLogin();
+                    break;
+            }
+        }
+    };
+
     public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_info_title: {
@@ -96,8 +125,8 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
 
             case R.id.tv_login: {
                 //attemptLogin();
-                CommandManager mgr = new CommandManager(this, this, this);
-                mgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), "sdfasdf", "asdfasdfasdf");
+                showProgress(true);
+                logIn();
                 break;
             }
         }
@@ -253,8 +282,34 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
     public void onCommandFinished(int command, IApiResults.ICommon result) {
         if(command == CMD_LOGIN_BY_PASSWORD) {
             Log.i("Login Activity", "command finished: " + command);
-            Log.i("Login Activity", "Result:  " + result.GetErrDesc());
+            Log.i("Login Activity", "Result:  " + result.GetErrCode() + " Description: " + result.GetErrDesc());
+            if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
+                finish();
+            } else {
+                commonFun.showToast_info(getApplicationContext(), mEmailView, result.GetErrDesc());
+            }
+            doShowProgress(false);
+        } else if(command == CMD_GET_USER_SALT) {
+            IApiResults.IGetUserSalt userSalt = (IApiResults.IGetUserSalt) result;
+            if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
+                mSalt = userSalt.GetSalt();
+                mRand = userSalt.GetRandom();
+
+                mHandler.sendEmptyMessageDelayed(MSG_LOGIN, 100);
+            } else {
+                commonFun.showToast_info(getApplicationContext(), mEmailView, result.GetErrDesc());
+                doShowProgress(false);
+            }
         }
+    }
+
+    private void doShowProgress(final boolean b) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(b);
+            }
+        });
     }
 
     @Override
