@@ -77,6 +77,7 @@ type TblHouse struct {
 	CoverImg    int64        // the picture id of house cover image
 	Property    *TblProperty `orm:"rel(fk)"`
 
+	Public   bool `orm:"default(true); not null"` // if house opened for every agency, else only the agency who behalf this house could access
 	ForSale  bool // house is for sale
 	ForRent  bool // house is for rent
 	RentStat int  // current rent status, ref to HOUSE_RENT_xxx

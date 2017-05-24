@@ -1329,3 +1329,35 @@ func delHouse(hid, luid int64) (err error) {
 
 	return
 }
+
+// check if the login user has right to access the private info of house
+func canAccessHouse(uid, hid int64) (err error) {
+	FN := "[canAccessHouse] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) { // landlord or house agency
+	} else if _, bAdmin := isAdministrator(uid); bAdmin { // administrator
+	} else {
+		if h.Public { // house is public
+			if _, bAgency := isAgency(uid); bAgency { // login user is a agency
+				return
+			}
+		}
+
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	return
+}
