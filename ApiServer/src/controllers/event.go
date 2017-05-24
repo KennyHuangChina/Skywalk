@@ -27,7 +27,7 @@ func (e *EventController) URLMapping() {
 // @Description get house event list
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /list/house/:id [get]
+// @router /:id [put]
 func (this *EventController) ModifyEvent() {
 	FN := "[ModifyEvent] "
 	beego.Warn("[--- API: ModifyEvent ---]")
