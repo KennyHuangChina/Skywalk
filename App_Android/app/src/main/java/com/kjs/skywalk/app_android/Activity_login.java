@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,13 +28,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class Activity_login extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class Activity_login extends AppCompatActivity implements LoaderCallbacks<Cursor>,
+        CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -85,7 +95,9 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
             }
 
             case R.id.tv_login: {
-                attemptLogin();
+                //attemptLogin();
+                CommandManager mgr = new CommandManager(this, this, this);
+                mgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), "sdfasdf", "asdfasdfasdf");
                 break;
             }
         }
@@ -235,6 +247,19 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon result) {
+        if(command == CMD_LOGIN_BY_PASSWORD) {
+            Log.i("Login Activity", "command finished: " + command);
+            Log.i("Login Activity", "Result:  " + result.GetErrDesc());
+        }
+    }
+
+    @Override
+    public void onProgressChanged(int command, String percent, HashMap<String, String> map) {
+
     }
 
 
