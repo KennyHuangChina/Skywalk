@@ -20,14 +20,18 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -70,6 +74,10 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
     private String mRand = "";
     private String mSalt = "";
     private final int MSG_LOGIN = 0;
+    private final int MSG_HIDE_WAITING_WINDOW = 1;
+
+    PopupWindowWaiting mWaitingWindow = null;
+    private ScrollView mContainer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,7 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        mContainer=(ScrollView) findViewById(R.id.login_form);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -97,12 +106,16 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
 
     private void doLogin() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
-        CmdMgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), mRand, mSalt);
+        if(CmdMgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+            if(mWaitingWindow != null) {
+                mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
+            }
+        }
     }
 
-    private void logIn() {
+    private int logIn() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
-        CmdMgr.GetUserSalt(mEmailView.getText().toString());
+        return CmdMgr.GetUserSalt(mEmailView.getText().toString());
     }
 
     Handler mHandler = new Handler(){
@@ -112,6 +125,13 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
                 case MSG_LOGIN:
                     doLogin();
                     break;
+                case MSG_HIDE_WAITING_WINDOW: {
+                    if(mWaitingWindow != null) {
+                        mWaitingWindow.dismiss();
+                    }
+                    break;
+                }
+
             }
         }
     };
@@ -125,8 +145,15 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
 
             case R.id.tv_login: {
                 //attemptLogin();
-                showProgress(true);
-                logIn();
+                if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
+                    //showProgress(true);
+                    if(mWaitingWindow == null) {
+                        mWaitingWindow = new PopupWindowWaiting(this);
+                    }
+                    mWaitingWindow.showAtLocation((View)mContainer.getParent(), Gravity.CENTER, 0, 0);
+                } else {
+                    Log.e(this.getClass().getSimpleName(), "Command Error");
+                }
                 break;
             }
         }
@@ -289,6 +316,7 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
                 commonFun.showToast_info(getApplicationContext(), mEmailView, result.GetErrDesc());
             }
             doShowProgress(false);
+            hideWaitingWindow();
         } else if(command == CMD_GET_USER_SALT) {
             IApiResults.IGetUserSalt userSalt = (IApiResults.IGetUserSalt) result;
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
@@ -299,8 +327,13 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
             } else {
                 commonFun.showToast_info(getApplicationContext(), mEmailView, result.GetErrDesc());
                 doShowProgress(false);
+                hideWaitingWindow();
             }
         }
+    }
+
+    private void hideWaitingWindow() {
+        mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
     }
 
     private void doShowProgress(final boolean b) {
