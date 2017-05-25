@@ -101,7 +101,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	_, bAdmin := isAdministrator(uid)
 	beego.Debug(FN, "bAgency:", bAgency, ", bAdmin:", bAdmin)
 	if !bAdmin && !bAgency {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
 		return
 	}
 
@@ -212,7 +212,7 @@ func GetHouseDigestInfo(hid int64) (err error, hd commdef.HouseDigest) {
 		return
 	}
 
-	// rental info
+	// rental price info
 	err, rs := getHouseRental(hid)
 	if nil != err {
 		return
@@ -263,14 +263,21 @@ func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
 		return
 	}
 
-	// permission checking. Only house owner, agency and administrator could see the private info
+	/* Permission Checking */
+	// House owner, agency and administrator could see the private info
 	bPriv := false
-	if uid > 0 {
-		if isHouseAgency(house, uid) || isHouseOwner(house, uid) {
-			bPriv = true
-		} else if _, bAdmin := isAdministrator(uid); bAdmin {
-			bPriv = true
+	if errT := canAccessHouse(uid, hid); nil != errT {
+		if se, ok := errT.(commdef.SwError); ok {
+			if commdef.ERR_COMMON_PERMISSION != se.ErrCode {
+				err = errT
+				return
+			}
+		} else {
+			err = errT
+			return
 		}
+	} else {
+		bPriv = true
 	}
 	beego.Debug(FN, "bPriv:", bPriv)
 
@@ -1347,17 +1354,19 @@ func canAccessHouse(uid, hid int64) (err error) {
 	}
 
 	if isHouseOwner(h, uid) || isHouseAgency(h, uid) { // landlord or house agency
-	} else if _, bAdmin := isAdministrator(uid); bAdmin { // administrator
-	} else {
-		if h.Public { // house is public
-			if _, bAgency := isAgency(uid); bAgency { // login user is a agency
-				return
-			}
-		}
-
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
 		return
 	}
 
+	if _, bAdmin := isAdministrator(uid); bAdmin { // administrator
+		return
+	}
+
+	if h.Public { // house is public
+		if _, bAgency := isAgency(uid); bAgency { // login user is a agency
+			return
+		}
+	}
+
+	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
 	return
 }
