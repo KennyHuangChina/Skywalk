@@ -140,7 +140,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/tv_pass"
+                        android:id="@+id/textViewAdd"
                         android:layout_width="wrap_content"
                         android:layout_height="27dp"
                         android:layout_marginLeft="15dp"

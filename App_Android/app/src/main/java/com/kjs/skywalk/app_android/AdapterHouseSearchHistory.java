@@ -16,14 +16,20 @@ import java.util.ArrayList;
 public class AdapterHouseSearchHistory extends BaseAdapter {
     private Context mContext = null;
 
+    ArrayList<String> mList = new ArrayList<>();
+
     public AdapterHouseSearchHistory(Context context) {
         super();
         mContext = context;
     }
 
+    public void setDataList(ArrayList<String> list) {
+        mList = list;
+    }
+
     @Override
     public int getCount() {
-        return 3;
+        return mList.size();
     }
 
     @Override
@@ -46,6 +52,8 @@ public class AdapterHouseSearchHistory extends BaseAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_search_history, null);
+            TextView view = (TextView)convertView.findViewById(R.id.textViewName);
+            view.setText(mList.get(position));
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

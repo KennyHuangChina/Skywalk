@@ -3,6 +3,8 @@ package com.kjs.skywalk.app_android;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -12,23 +14,40 @@ import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import com.kjs.skywalk.communicationlibrary.IApiResults.IPropertyInfo;
 
 /**
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Search_House extends Activity {
-    private ListView mListViewAgents = null;
+public class Activity_Search_House extends Activity implements
+        CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
+    private ListView mListView = null;
     private SearchView mSearchView = null;
     private HouseSearchHistory mHistory = null;
     private LinearLayout mHistoryLayout = null;
     private LinearLayout mNoHistoryLayout = null;
     private ScrollView mAddHouseLayout = null;
+    private AdapterHouseSearchHistory mAdapter = null;
+
+    private int mPropertyCount = 0;
+    private ArrayList<IPropertyInfo> mPropertyList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__search_house);
+
+        CommandManager manager = new CommandManager(this, this, this);
+        manager.GetPropertyListByName("", 0, 0);
 
         mHistory = new HouseSearchHistory(this);
 
@@ -54,10 +73,10 @@ public class Activity_Search_House extends Activity {
             }
         }
 
-        mListViewAgents = (ListView)findViewById(R.id.listViewContent);
-        mListViewAgents.setFocusable(false);
-        AdapterHouseSearchHistory adapter = new AdapterHouseSearchHistory(this);
-        mListViewAgents.setAdapter(adapter);
+        mListView = (ListView)findViewById(R.id.listViewContent);
+        mListView.setFocusable(false);
+        mAdapter = new AdapterHouseSearchHistory(this);
+        mListView.setAdapter(mAdapter);
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -107,13 +126,71 @@ public class Activity_Search_House extends Activity {
         }
     }
 
+    private void updateAdapter(String keywords) {
+        mListView.removeAllViewsInLayout();
+        ArrayList<String> newList = new ArrayList<>();
+        for(IPropertyInfo info : mPropertyList) {
+            if(info.GetName().contains(keywords)) {
+                newList.add(info.GetName());
+            }
+        }
+        mAdapter.setDataList(newList);
+        mAdapter.notifyDataSetChanged();
+    }
+
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title:
-            {
+            case R.id.tv_info_title: {
                 finish();
+                break;
             }
-            break;
+            case R.id.textViewAdd: {
+
+                break;
+            }
         }
+    }
+
+    private void fetchPropertyList() {
+        CommandManager manager = new CommandManager(this, this, this);
+        manager.GetPropertyListByName("", 0, mPropertyCount);
+    }
+
+    private final int MSG_FETCH_PROPERTY_LIST = 0;
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case MSG_FETCH_PROPERTY_LIST: {
+                    fetchPropertyList();
+                    break;
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+        if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
+            if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
+                mPropertyCount = list.GetTotalNumber();
+                int nFetchCount = list.GetFetchedNumber();
+                if(nFetchCount > 0) {
+                    ArrayList<Object> array = list.GetList();
+                    for(Object obj : array) {
+                        IPropertyInfo info = (IPropertyInfo)obj;
+                        mPropertyList.add(info);
+                    }
+                } else {
+                    mHandler.sendEmptyMessageDelayed(MSG_FETCH_PROPERTY_LIST, 0);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
     }
 }
