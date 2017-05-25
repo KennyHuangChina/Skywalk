@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -50,7 +52,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 /**
  * A login screen that offers login via email/password.
  */
-public class Activity_login extends AppCompatActivity implements LoaderCallbacks<Cursor>,
+public class Activity_login extends AppCompatActivity implements
         CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
 
     /**
@@ -77,7 +79,7 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
     private final int MSG_HIDE_WAITING_WINDOW = 1;
 
     PopupWindowWaiting mWaitingWindow = null;
-    private ScrollView mContainer = null;
+    private LinearLayout mContainer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +87,7 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
-        mContainer=(ScrollView) findViewById(R.id.login_form);
+        mContainer=(LinearLayout) findViewById(R.id.container);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -102,14 +103,18 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        mWaitingWindow = new PopupWindowWaiting(this);
+        mWaitingWindow.setWidth(dm.widthPixels);
+        mWaitingWindow.setHeight(dm.heightPixels);
     }
 
     private void doLogin() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
         if(CmdMgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
-            if(mWaitingWindow != null) {
-                mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
-            }
+            mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
         }
     }
 
@@ -126,9 +131,7 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
                     doLogin();
                     break;
                 case MSG_HIDE_WAITING_WINDOW: {
-                    if(mWaitingWindow != null) {
-                        mWaitingWindow.dismiss();
-                    }
+                    mWaitingWindow.dismiss();
                     break;
                 }
 
@@ -145,11 +148,10 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
 
             case R.id.tv_login: {
                 //attemptLogin();
+                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
                 if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
                     //showProgress(true);
-                    if(mWaitingWindow == null) {
-                        mWaitingWindow = new PopupWindowWaiting(this);
-                    }
                     mWaitingWindow.showAtLocation((View)mContainer.getParent(), Gravity.CENTER, 0, 0);
                 } else {
                     Log.e(this.getClass().getSimpleName(), "Command Error");
@@ -158,11 +160,6 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
             }
         }
     }
-
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -262,39 +259,6 @@ public class Activity_login extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.

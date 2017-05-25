@@ -21,11 +21,9 @@ class PopupWindowWaiting extends PopupWindow {
 
         mView = LayoutInflater.from(context).inflate(R.layout.popup_window_waiting, null);
         setContentView(mView);
-        setFocusable(false);
-        setTouchable(false);
+        setFocusable(true);
+        setTouchable(true);
         setBackgroundDrawable(null);
-        setWidth(480);
-        setHeight(320);
     }
 
 }
