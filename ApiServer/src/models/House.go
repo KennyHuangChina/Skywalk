@@ -332,16 +332,6 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 		return
 	}
 
-	_, house := getHouse(hif.Id)
-
-	// Persission checking, only landlord, it's agency and administrator coudl modify this house
-	if isHouseOwner(house, uid) || isHouseAgency(house, uid) {
-	} else if _, bAdmin := isAdministrator(uid); bAdmin {
-	} else {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
-		return
-	}
-
 	// if the house id(property + building + house_no) is conflict
 	o := orm.NewOrm()
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
@@ -354,6 +344,12 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
 			return
 		}
+	}
+
+	/* Permission Checking */
+	// Only the landlord, house agency and administrator could modify house info
+	if err = canModifyHouse(uid, hif.Id); nil != err {
+		return
 	}
 
 	// Update
@@ -1365,6 +1361,34 @@ func canAccessHouse(uid, hid int64) (err error) {
 		if _, bAgency := isAgency(uid); bAgency { // login user is a agency
 			return
 		}
+	}
+
+	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+	return
+}
+
+// check if the login user has right to modify the house info
+func canModifyHouse(uid, hid int64) (err error) {
+	FN := "[canModifyHouse] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+
+	if isHouseOwner(h, uid) || isHouseAgency(h, uid) { // landlord or house agency
+		return
+	}
+
+	if _, bAdmin := isAdministrator(uid); bAdmin { // administrator
+		return
 	}
 
 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
