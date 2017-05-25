@@ -73,6 +73,7 @@ public class IApiResults {
         int BuildingNo();   // the building number the house belong to
         int FloorTotal();   // total floors
         int Floorthis();    // exact floor the house resident
+        String FloorDesc(); // floor description
         String HouseNo();   // exact house number. like house 1305#
         int Bedrooms();     // how many bedrooms whitin house
         int Livingrooms();  // how many living rooms within house
