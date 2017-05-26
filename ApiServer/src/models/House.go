@@ -400,20 +400,14 @@ func SetHouseAgency(hid, aid, luid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	err, h := getHouse(hid)
-	if nil != err {
+	// new agency id is a real agency
+	if err, _ = isAgency(aid); nil != err {
 		return
 	}
 
-	if err, _ = GetUser(aid); nil != err {
-		return
-	}
-
-	// Permission checking. Only the landload and administrator could assign agency for house
-	if isHouseOwner(h, luid) {
-	} else if _, bAdmin := isAdministrator(luid); bAdmin {
-	} else {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("luid:%d", luid)}
+	/* Permission */
+	// Only the landload and administrator could assign agency for house
+	if err = canModifyHouse(luid, hid); nil != err {
 		return
 	}
 
