@@ -536,21 +536,29 @@ func Test_ModifyHouseInfo(t *testing.T) {
 	}
 
 	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: login user have no right to modify")
-	t.Log("<Case> login have no right to modify")
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: login user is a regular user, have no right to modify house")
 	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
 		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
 	if e := ModifyHouse(&hif, 2); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	return
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: login user is an agency, but not behalf this house, have no right to modify house")
+	// hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+	// 	Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+	if e := ModifyHouse(&hif, 11); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
 
 	lgusrs := []int64{9, 6, 4}
 	usrnames := []string{"Landlord", "Agency", "Administrator"}
 	steps := []int{1, 1, -2}
 	for k, v := range lgusrs {
-		t.Log("<Case> login user is", usrnames[k])
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> %s (%d)", seq, usrnames[k], v), "modify the house info")
 		e, hd := GetHouseInfo(2, v) // get current info
 		if e != nil {
 			t.Error("Failed, err: ", e)
