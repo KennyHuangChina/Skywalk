@@ -52,12 +52,17 @@ public class AdapterHouseSearchHistory extends BaseAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_search_history, null);
-            TextView view = (TextView)convertView.findViewById(R.id.textViewName);
-            view.setText(mList.get(position));
+            holder = new ViewHolder();
+            holder.tvContentName = (TextView)convertView.findViewById(R.id.textViewName);
+            convertView.setTag(holder);
+
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        if(holder.tvContentName != null) {
+            holder.tvContentName.setText(mList.get(position));
+        }
         return convertView;
     }
 }
