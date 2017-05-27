@@ -15,7 +15,6 @@ public class CommandManager implements CommunicationInterface.ICommand {
     final String TAG = getClass().getSimpleName();
 
     private Context             mContext        = null;
-    private CommunicationBase   mOperation      = null;
     private SKCookieManager     mCookieManager  = null;
     private MyUtils             mUtils          = null;
 
@@ -33,8 +32,8 @@ public class CommandManager implements CommunicationInterface.ICommand {
         mCookieManager = SKCookieManager.getManager(context);
     }
 
-    private int execute(HashMap<String, String> map) {
-        if (null == mOperation) {
+    private int execute(CommunicationBase operation, HashMap<String, String> map) {
+        if (null == operation) {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
         if (null == mCmdListener || null == mProgListener) {
@@ -42,14 +41,14 @@ public class CommandManager implements CommunicationInterface.ICommand {
         }
         MyUtils.printContentInMap(map);
 
-        if (!mOperation.checkParameter(map)) {
+        if (!operation.checkParameter(map)) {
             Log.w(TAG, "Fail to check parameters");
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
 
-        int ret = mOperation.doOperation(map, mCmdListener, mProgListener);
+        int ret = operation.doOperation(map, mCmdListener, mProgListener);
         if (ret != CommunicationError.CE_ERROR_NO_ERROR) {
-            Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + mOperation.GetApiName());
+            Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + operation.GetApiName());
         }
 
         return ret;
@@ -57,390 +56,390 @@ public class CommandManager implements CommunicationInterface.ICommand {
 
     @Override
     public int GetSmsCode(String userName) {
-        mOperation = new CmdGetSmsCode(mContext);
+        CommunicationBase op = new CmdGetSmsCode(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetUserInfo(int uid) {
-        mOperation = new CmdGetUserInfo(mContext);
+        CommunicationBase op = new CmdGetUserInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, "" + uid);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetUserSalt(String userName) {
-        mOperation = new CmdGetUserSalt(mContext);
+        CommunicationBase op = new CmdGetUserSalt(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int LoginByPassword(String user, String pass, String rand, String salt) {
-        mOperation = new CmdLoginByPassword(mContext);
+        CommunicationBase op = new CmdLoginByPassword(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
         pMap.put(CommunicationParameterKey.CPK_PASSWORD, pass);
         pMap.put(CommunicationParameterKey.CPK_RANDOM, rand);
         pMap.put(CommunicationParameterKey.CPK_USER_SALT, salt);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int LoginBySms(String user, String smsCode) {
-        mOperation = new CmdLoginBySms(mContext);
+        CommunicationBase op = new CmdLoginBySms(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
         pMap.put(CommunicationParameterKey.CPK_SMS_CODE, smsCode);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int Logout() {
-        mOperation = new CmdLogout(mContext);
+        CommunicationBase op = new CmdLogout(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int Relogin(String userName) {
-        mOperation = new CmdRelogin(mContext);
+        CommunicationBase op = new CmdRelogin(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int CommandTest() {
-        mOperation = new CommandTest(mContext);
+        CommunicationBase op = new CommandTest(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetBriefPublicHouseInfo(int houseId) {
-        mOperation = new CmdGetBriefPublicHouseInfo(mContext);
+        CommunicationBase op = new CmdGetBriefPublicHouseInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, "" + houseId);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseInfo(int houseId, boolean bPrivtInfo) {
-        mOperation = new CmdGetHouseInfo(mContext);
+        CommunicationBase op = new CmdGetHouseInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(houseId));
         pMap.put(CommunicationParameterKey.CPK_PRIVATE_INFO, String.valueOf(bPrivtInfo));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int CommitHouseByOwner(CommunicationInterface.HouseInfo houseInfo, int agency) {
-        mOperation = new CmdCommitHouseByOwner(mContext, houseInfo, agency);
+        CommunicationBase op = new CmdCommitHouseByOwner(mContext, houseInfo, agency);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AmendHouse(CommunicationInterface.HouseInfo houseInfo) {
-        mOperation = new CmdAmendHouse(mContext, houseInfo);
+        CommunicationBase op = new CmdAmendHouse(mContext, houseInfo);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int RecommendHouse(int house_id, int action) {
-        mOperation = new CmdRecommendHouse(mContext);
+        CommunicationBase op = new CmdRecommendHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
         pMap.put(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT, String.valueOf(action));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int SetHouseCoverImg(int house_id, int img_id) {
-        mOperation = new CmdSetHouseCoverImg(mContext);
+        CommunicationBase op = new CmdSetHouseCoverImg(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
         pMap.put(CommunicationParameterKey.CPK_HOUSE_COVER_IMG, String.valueOf(img_id));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int CertificateHouse(int house_id, boolean bPass, String sCertComment) {
-        mOperation = new CmdCertificateHouse(mContext);
+        CommunicationBase op = new CmdCertificateHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
         pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, sCertComment);
         pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_PASS, String.valueOf(bPass));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetBehalfHouses(int type, int begin, int cnt) {
-        mOperation = new CmdGetBehalfHouses(mContext);
+        CommunicationBase op = new CmdGetBehalfHouses(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
         pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + cnt);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseList(int type, int begin, int cnt) {
-        mOperation = new CmdGetHouseList(mContext, "GetHouseList");
+        CommunicationBase op = new CmdGetHouseList(mContext, "GetHouseList");
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
         pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + cnt);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetPropertyListByName(String sName, int nBegin, int nCount) {
-        mOperation = new CmdGetPropertyList(mContext);
+        CommunicationBase op = new CmdGetPropertyList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, String.valueOf(nBegin));
         pMap.put(CommunicationParameterKey.CPK_LIST_CNT, String.valueOf(nCount));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddProperty(String sName, String sAddr, String sDesc) {
-        mOperation = new CmdAddProperty(mContext);
+        CommunicationBase op = new CmdAddProperty(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, sAddr);
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, sDesc);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetPropertyInfo(int nPropId) {
-        mOperation = new CmdGetPropertyInfo(mContext);
+        CommunicationBase op = new CmdGetPropertyInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(nPropId));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc) {
-        mOperation = new CmdModifyPropertyInfo(mContext);
+        CommunicationBase op = new CmdModifyPropertyInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(nPropId));
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, sAddr);
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, sDesc);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddDeliverable(String sName) {
-        mOperation = new CmdAddDeliverable(mContext);
+        CommunicationBase op = new CmdAddDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_NAME, sName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetDeliverableList() {
-        mOperation = new CmdGetDeliverableList(mContext);
+        CommunicationBase op = new CmdGetDeliverableList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int ModifyDeliverable(int dev_id, String sName) {
-        mOperation = new CmdModifyDeliverable(mContext);
+        CommunicationBase op = new CmdModifyDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(dev_id));
         pMap.put(CommunicationParameterKey.CPK_NAME, sName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc) {
-        mOperation = new CmdAddHouseDeliverable(mContext);
+        CommunicationBase op = new CmdAddHouseDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
         pMap.put(CommunicationParameterKey.CPK_DELIVERABLE_ID, String.valueOf(deliverable_id));
         pMap.put(CommunicationParameterKey.CPK_QTY, String.valueOf(qty));
         pMap.put(CommunicationParameterKey.CPK_DESC, sDesc);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseDeliverables(int house_id) {
-        mOperation = new CmdGetHouseDeliverables(mContext, house_id);
+        CommunicationBase op = new CmdGetHouseDeliverables(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id)); // "2");
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddFacilityType(String sTypeName) {
-        mOperation = new CmdAddFacilityType(mContext);
+        CommunicationBase op = new CmdAddFacilityType(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_NAME, sTypeName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int EditFacility(int id, int nType, String sName) {
-        mOperation = new CmdModifyFacility(mContext);
+        CommunicationBase op = new CmdModifyFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(id));
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
         pMap.put(CommunicationParameterKey.CPK_NAME, sName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int EditFacilityType(int typeId, String sTypeName) {
-        mOperation = new CmdModifyFacilityType(mContext);
+        CommunicationBase op = new CmdModifyFacilityType(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(typeId));
         pMap.put(CommunicationParameterKey.CPK_NAME, sTypeName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
    @Override
     public int GetFacilityTypeList() {
-        mOperation = new CmdGetFacilityTypeList(mContext);
+       CommunicationBase op = new CmdGetFacilityTypeList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddFacility(int nType, String sName) {
-        mOperation = new CmdAddFacility(mContext);
+        CommunicationBase op = new CmdAddFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
         pMap.put(CommunicationParameterKey.CPK_NAME, sName);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetFacilityList(int nType) {
-        mOperation = new CmdGetFacilityList(mContext);
+        CommunicationBase op = new CmdGetFacilityList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddHouseFacility(int house, ArrayList<CommunicationInterface.FacilityItem> list) {
-        mOperation = new CmdAddHouseFacility(mContext, house, list);
+        CommunicationBase op = new CmdAddHouseFacility(mContext, house, list);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int EditHouseFacility(int hfid, int fid, int qty, String desc) {
-        mOperation = new CmdModifyHouseFacility(mContext);
+        CommunicationBase op = new CmdModifyHouseFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(hfid));
         pMap.put(CommunicationParameterKey.CPK_FACILITY_ID, String.valueOf(fid));
         pMap.put(CommunicationParameterKey.CPK_QTY, String.valueOf(qty));
         pMap.put(CommunicationParameterKey.CPK_DESC, desc);
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseFacilityList(int house) {
-        mOperation = new CmdGetHouseFacilityList(mContext, house);
+        CommunicationBase op = new CmdGetHouseFacilityList(mContext, house);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int AddPicture(int house, int type, String desc, String file) {
-        mOperation = new CmdAddPicture(mContext);
+        CommunicationBase op = new CmdAddPicture(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house));
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(type));
         pMap.put(CommunicationParameterKey.CPK_DESC, desc);
         pMap.put(CommunicationParameterKey.CPK_IMG_FILE, String.valueOf(file));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int DelePicture(int pic) {
-        mOperation = new CmdDelePicture(mContext, pic);
+        CommunicationBase op = new CmdDelePicture(mContext, pic);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetPicUrls(int pic, int size) {
-        mOperation = new CmdGetPictureUrls(mContext, pic, size);
+        CommunicationBase op = new CmdGetPictureUrls(mContext, pic, size);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHousePics(int house, int type) {
-        mOperation = new CmdGetHousePicList(mContext, house, type);
+        CommunicationBase op = new CmdGetHousePicList(mContext, house, type);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetNewEventCount() {
-        mOperation = new CmdGetNewEventCount(mContext);
+        CommunicationBase op = new CmdGetNewEventCount(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseNewEvent() {
-        mOperation = new CmdGetHouseNewEvent(mContext);
+        CommunicationBase op = new CmdGetHouseNewEvent(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
     @Override
     public int ReadNewEvent(int event_id) {
-        mOperation = new CmdNewEventRead(mContext, event_id);
+        CommunicationBase op = new CmdNewEventRead(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseEventInfo(int event_id) {
-        mOperation = new CmdGetHouseEventInfo(mContext, event_id);
+        CommunicationBase op = new CmdGetHouseEventInfo(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseEventProcList(int event_id) {
-        mOperation = new CmdGetHouseEventProcList(mContext, event_id);
+        CommunicationBase op = new CmdGetHouseEventProcList(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int GetHouseEventList(int house_id, int stat, int type, int posi_bgn, int fetch_cnt, boolean bIDO) {
-        mOperation = new CmdGetHouseEventList(mContext, house_id);
+        CommunicationBase op = new CmdGetHouseEventList(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_EVENT_STAT, String.valueOf(stat));
         pMap.put(CommunicationParameterKey.CPK_EVENT_TYPE, String.valueOf(type));
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, String.valueOf(posi_bgn));
         pMap.put(CommunicationParameterKey.CPK_LIST_CNT, String.valueOf(fetch_cnt));
         pMap.put(CommunicationParameterKey.CPK_EVENT_IDO, String.valueOf(bIDO));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 
     @Override
     public int ModifyHouseEvent(int event_id, String desc) {
-        mOperation = new CmdModifyHouseEvent(mContext, event_id);
+        CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_DESC, String.valueOf(desc));
-        return execute(pMap);
+        return execute(op, pMap);
     }
 }
