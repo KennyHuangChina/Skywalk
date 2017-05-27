@@ -58,9 +58,21 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             }
             break;
             case R.id.textViewSelectBlock: {
-                startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Search_House.class));
+                startActivityForResult(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Search_House.class), 0);
             }
             break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0) { //request from Activity_Search_House
+            if(resultCode != 0) {
+                TextView view = (TextView)findViewById(R.id.textViewSelectBlock);
+                String name = data.getStringExtra("name");
+                view.setText(name);
+            }
         }
     }
 

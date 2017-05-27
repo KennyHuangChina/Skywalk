@@ -2,6 +2,7 @@ package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -86,10 +88,25 @@ public class Activity_Search_House extends SKBaseActivity implements
         mAdapterHistory = new AdapterSelectPropertyHistory(this);
         mListViewHistory.setAdapter(mAdapterHistory);
 
+        mListViewHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String property = (String)parent.getAdapter().getItem(position);
+                doSelected(property);
+            }
+        });
+
         mListViewProperty = (ListView)findViewById(R.id.listViewAdd);
         mListViewProperty.setFocusable(false);
         mAdapterProperty = new AdapterHouseSearchResult(this);
         mListViewProperty.setAdapter(mAdapterProperty);
+        mListViewProperty.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ClassDefine.Garden garden = (ClassDefine.Garden)parent.getAdapter().getItem(position);
+                doSelected(garden.mName);
+            }
+        });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -109,6 +126,13 @@ public class Activity_Search_House extends SKBaseActivity implements
                 return true;
             }
         });
+    }
+
+    private void doSelected(String property) {
+        Intent data = new Intent();
+        data.putExtra("name", property);
+        setResult(30, data);
+        finish();
     }
 
     protected void onResume() {

@@ -34,7 +34,7 @@ public class AdapterSelectPropertyHistory extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return mList.get(i);
     }
 
     @Override
