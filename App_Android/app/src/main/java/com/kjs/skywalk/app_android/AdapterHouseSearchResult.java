@@ -45,23 +45,27 @@ public class AdapterHouseSearchResult extends BaseAdapter {
     }
 
     class ViewHolder {
-        TextView tvContentName;
+        TextView textViewName;
+        TextView textViewLocation;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
         if (convertView == null) {
+            holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_housing, null);
-            ClassDefine.Garden garden = mDataList.get(position);
-            TextView name = (TextView)convertView.findViewById(R.id.textViewName);
-            name.setText(garden.mName);
-            TextView address = (TextView)convertView.findViewById(R.id.textViewLocation);
-            address.setText(garden.mAddress);
+
+            holder.textViewName = (TextView)convertView.findViewById(R.id.textViewName);
+            holder.textViewLocation = (TextView)convertView.findViewById(R.id.textViewLocation);
+            convertView.setTag(holder);
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder)convertView.getTag();
         }
+
+        ClassDefine.Garden garden = mDataList.get(position);
+        holder.textViewName.setText(garden.mName);
+        holder.textViewLocation.setText(garden.mAddress);
 
         return convertView;
     }

@@ -10,15 +10,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by Jackie on 2017/3/24.
+ * Created by Jackie on 2017/5/27.
  */
 
-public class AdapterHouseSearchHistory extends BaseAdapter {
+public class AdapterSelectPropertyHistory extends BaseAdapter {
     private Context mContext = null;
 
     ArrayList<String> mList = new ArrayList<>();
 
-    public AdapterHouseSearchHistory(Context context) {
+    public AdapterSelectPropertyHistory(Context context) {
         super();
         mContext = context;
     }
@@ -55,7 +55,6 @@ public class AdapterHouseSearchHistory extends BaseAdapter {
             holder = new ViewHolder();
             holder.tvContentName = (TextView)convertView.findViewById(R.id.textViewName);
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
