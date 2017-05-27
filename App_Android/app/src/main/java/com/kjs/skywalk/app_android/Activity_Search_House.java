@@ -129,6 +129,12 @@ public class Activity_Search_House extends SKBaseActivity implements
     }
 
     private void doSelected(String property) {
+        if(property == null || property.isEmpty()) {
+            return;
+        }
+
+        mHistory.addHistory(property);
+        
         Intent data = new Intent();
         data.putExtra("name", property);
         setResult(30, data);
