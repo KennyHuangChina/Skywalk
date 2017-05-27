@@ -444,24 +444,17 @@ func SetHouseCoverImage(hid, cid, uid int64) (err error) {
 	}()
 
 	/*	argument checking */
-	err, h := getHouse(hid)
-	if nil != err {
-		return
-	}
-
 	if err = checkImage(cid); nil != err {
 		return
 	}
 
-	/* Permission checking */
-	// Only the house owner, it's agency and administrator could set the cover image
-	if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
-	} else if _, bAdmin := isAdministrator(uid); bAdmin {
-	} else {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+	/* Permission */
+	// Only the landlord, house agency and administrator could set the cover image
+	if err = canModifyHouse(uid, hid); nil != err {
 		return
 	}
 
+	/* processing */
 	// Update
 	o := orm.NewOrm()
 

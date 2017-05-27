@@ -654,52 +654,56 @@ func Test_SetHouseAgency(t *testing.T) {
 //
 func Test_SetHouseCoverImage(t *testing.T) {
 	t.Log("Test SetHouseCoverImage")
+	seq := 0
 
-	t.Log("<Case> invalid arguments: house does not exist")
-	if e := SetHouseCoverImage(100000000, -1, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// Invalid image id
+	iids := []int64{-1, 0, 100000000}
+	img_desc := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range iids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: image (%d) %s", seq, v, img_desc[k]))
+		if e := SetHouseCoverImage(2, v, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> invalid arguments: picture <= 0")
-	if e := SetHouseCoverImage(2, 0, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// Invalid house id
+	hids := []int64{-1, 0, 100000000}
+	hid_desc := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range hids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: house (%d) %s", seq, v, hid_desc[k]))
+		if e := SetHouseCoverImage(v, 29, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> invalid arguments: picture does not exist")
-	if e := SetHouseCoverImage(2, 100000000, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// Permission fail
+	uids := []int64{-1, 0, 2, 11}
+	user_desc := []string{"not login", "is SYSTEM", "is a regular user", "is an agency, but not for this house"}
+	for k, v := range uids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user (%d) %s", seq, v, user_desc[k]))
+		if e := SetHouseCoverImage(2, 29, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	// not landload, not it's agency, not administrator
-	t.Log("<Case> permission: regular user can not set cover image")
-	if e := SetHouseCoverImage(2, 30, 2); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// set house cover image
+	users := []int64{9, 6, 5}
+	user_desc = []string{"landlord", "agency", "administrator"}
+	for k, v := range users {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> %s (%d) set house cover image", seq, user_desc[k], v))
+		if e := SetHouseCoverImage(2, 29, v); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		SetHouseCoverImage(2, 31, v) // restore
 	}
-
-	t.Log("<Case> permission: landload have right to set cover image")
-	if e := SetHouseCoverImage(2, 30, 9); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	SetHouseCoverImage(2, 31, 9) // restore
-
-	t.Log("<Case> permission: agency have right to set cover image")
-	if e := SetHouseCoverImage(2, 30, 6); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	SetHouseCoverImage(2, 31, 6) // restore
-
-	t.Log("<Case> permission: administrator have right to set cover image")
-	if e := SetHouseCoverImage(2, 30, 4); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	SetHouseCoverImage(2, 31, 4) // restore
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
