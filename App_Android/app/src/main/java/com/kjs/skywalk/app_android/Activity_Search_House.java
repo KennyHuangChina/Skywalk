@@ -31,18 +31,24 @@ import com.kjs.skywalk.communicationlibrary.IApiResults.IPropertyInfo;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Search_House extends Activity implements
+public class Activity_Search_House extends SKBaseActivity implements
         CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
+    private final String TAG = getClass().getSimpleName().toString();
     private ListView mListViewHistory = null;
+    private ListView mListViewProperty = null;
     private SearchView mSearchView = null;
     private HouseSearchHistory mHistory = null;
     private LinearLayout mHistoryLayout = null;
     private LinearLayout mNoHistoryLayout = null;
     private ScrollView mAddHouseLayout = null;
-    private AdapterHouseSearchHistory mAdapterHistory = null;
-
+    private AdapterSelectPropertyHistory mAdapterHistory = null;
+    private AdapterHouseSearchResult mAdapterProperty = null;
     private int mPropertyCount = 0;
     private ArrayList<IPropertyInfo> mPropertyList = new ArrayList<>();
+
+    private final int MSG_FETCH_PROPERTY_LIST = 0;
+    private final int MSG_SHOW_WAITING = 1;
+    private final int MSG_HIDE_WAITING = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,50 +83,32 @@ public class Activity_Search_House extends Activity implements
 
         mListViewHistory = (ListView)findViewById(R.id.listViewHistory);
         mListViewHistory.setFocusable(false);
-        mAdapterHistory = new AdapterHouseSearchHistory(this);
+        mAdapterHistory = new AdapterSelectPropertyHistory(this);
         mListViewHistory.setAdapter(mAdapterHistory);
+
+        mListViewProperty = (ListView)findViewById(R.id.listViewAdd);
+        mListViewProperty.setFocusable(false);
+        mAdapterProperty = new AdapterHouseSearchResult(this);
+        mListViewProperty.setAdapter(mAdapterProperty);
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mHistory.addHistory(query);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+                commonFun.hideSoftKeyboard(getApplicationContext(), mSearchView);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.equals("")) {
-                    updateLayout();
+                    updateAdapterHistory();
                 } else {
-                    if(mHistory.searched(newText)) {
-                        mNoHistoryLayout.setVisibility(View.GONE);
-                        mAddHouseLayout.setVisibility(View.GONE);
-                        mHistoryLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        mAddHouseLayout.setVisibility(View.VISIBLE);
-                        mNoHistoryLayout.setVisibility(View.GONE);
-                        mHistoryLayout.setVisibility(View.GONE);
-                    }
+                    updateAdapterProperty(newText);
                 }
-
                 return true;
             }
         });
-    }
-
-    private void updateLayout() {
-        if(mHistory.getCount() == 0) {
-            mHistoryLayout.setVisibility(View.GONE);
-            mAddHouseLayout.setVisibility(View.GONE);
-            mNoHistoryLayout.setVisibility(View.VISIBLE);
-        } else{
-            mNoHistoryLayout.setVisibility(View.GONE);
-            mAddHouseLayout.setVisibility(View.GONE);
-            mHistoryLayout.setVisibility(View.VISIBLE);
-        }
-        updateAdapterHistory();
     }
 
     protected void onResume() {
@@ -129,29 +117,48 @@ public class Activity_Search_House extends Activity implements
         int id = mSearchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         mSearchView.onActionViewExpanded();
         mSearchView.setIconifiedByDefault(false);
-
-        updateLayout();
     }
 
-    private void updatemAdapterProperty(String keywords) {
-        mListViewHistory.removeAllViewsInLayout();
-        ArrayList<String> newList = new ArrayList<>();
+    private void updateAdapterProperty(String keywords) {
+        mHistoryLayout.setVisibility(View.GONE);
+        mNoHistoryLayout.setVisibility(View.GONE);
+        mAddHouseLayout.setVisibility(View.VISIBLE);
+
+        mListViewProperty.removeAllViewsInLayout();
+        ArrayList<ClassDefine.Garden> newList = new ArrayList<>();
         for(IPropertyInfo info : mPropertyList) {
             if(info.GetName().contains(keywords)) {
-                newList.add(info.GetName());
+                ClassDefine.Garden property = new ClassDefine.Garden();
+                property.mName = info.GetName();
+                property.mAddress = info.GetAddress();
+                newList.add(property);
             }
         }
-        mAdapterHistory.setDataList(newList);
-        mAdapterHistory.notifyDataSetChanged();
+
+        mAdapterProperty.setDataList(newList);
+        mListViewProperty.setAdapter(mAdapterProperty);
+        mAdapterProperty.notifyDataSetChanged();
     }
 
     private void updateAdapterHistory() {
+        if(mHistory.getCount() > 0) {
+            mNoHistoryLayout.setVisibility(View.GONE);
+            mAddHouseLayout.setVisibility(View.GONE);
+            mHistoryLayout.setVisibility(View.VISIBLE);
+        } else {
+            mNoHistoryLayout.setVisibility(View.VISIBLE);
+            mAddHouseLayout.setVisibility(View.GONE);
+            mHistoryLayout.setVisibility(View.GONE);
+            return;
+        }
+
         mListViewHistory.removeAllViewsInLayout();
         ArrayList<String> newList = new ArrayList<>();
         for(int i = 0; i < mHistory.getCount(); i ++){
             newList.add(mHistory.get(i));
         }
         mAdapterHistory.setDataList(newList);
+        mListViewHistory.setAdapter(mAdapterHistory);
         mAdapterHistory.notifyDataSetChanged();
     }
 
@@ -162,12 +169,14 @@ public class Activity_Search_House extends Activity implements
                 break;
             }
             case R.id.textViewAdd: {
-
+                commonFun.hideSoftKeyboard(getApplicationContext(), v);
+                mSearchView.clearFocus();
+                addProperty();
                 break;
             }
             case R.id.cleanHistory: {
                 mHistory.cleanHistory();
-                updateLayout();
+                updateAdapterHistory();
                 break;
             }
         }
@@ -178,7 +187,30 @@ public class Activity_Search_House extends Activity implements
         manager.GetPropertyListByName("", 0, mPropertyCount);
     }
 
-    private final int MSG_FETCH_PROPERTY_LIST = 0;
+    private void addProperty() {
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                    commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
+                } else {
+                    commonFun.showToast_info(getApplicationContext(), mSearchView, iCommon.GetErrDesc());
+                }
+                hideWaiting();
+            }
+        };
+
+        int res = 0;
+        CommandManager manager = new CommandManager(this, listener, this);
+        String text = commonFun.getTextOnSearchView(mSearchView);
+        res = manager.AddProperty(text, "", "");
+        if(res == CE_ERROR_NO_ERROR) {
+            showWaiting(mSearchView);
+        } else {
+            commonFun.showToast_info(getApplicationContext(), mSearchView, "失败");
+        }
+    }
+
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -203,11 +235,14 @@ public class Activity_Search_House extends Activity implements
                     for(Object obj : array) {
                         IPropertyInfo info = (IPropertyInfo)obj;
                         mPropertyList.add(info);
+                        Log.i(TAG, info.GetName());
                     }
                 } else {
                     mHandler.sendEmptyMessageDelayed(MSG_FETCH_PROPERTY_LIST, 0);
                 }
             }
+        } else if(i == CommunicationInterface.CmdID.CMD_ADD_PROPERTY) {
+
         }
     }
 

@@ -10,6 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -171,6 +174,17 @@ public class commonFun {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getTextOnSearchView(SearchView v) {
+        int id = v.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) v.findViewById(id);
+        return textView.getText().toString();
+    }
+
+    public static void hideSoftKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     ///////////////////////////////////////////////////////////////////////////
