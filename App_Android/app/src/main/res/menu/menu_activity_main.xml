@@ -25,11 +25,11 @@
         android:title="出租进度-签约"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_setting4"
-        android:orderInCategory="100"
-        android:title="租售委托"
-        app:showAsAction="never"/>
+    <!--<item-->
+        <!--android:id="@+id/action_setting4"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="租售委托"-->
+        <!--app:showAsAction="never"/>-->
 
     <item
         android:id="@+id/action_setting5"

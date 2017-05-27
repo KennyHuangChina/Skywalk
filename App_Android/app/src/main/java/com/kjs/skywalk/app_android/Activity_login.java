@@ -87,6 +87,12 @@ public class Activity_login extends AppCompatActivity implements
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        List<String> arrAuto = new ArrayList<>();
+        arrAuto.add("15306261804");
+        addEmailsToAutoComplete(arrAuto);
+        mEmailView.setThreshold(1);
+
+
         mContainer=(LinearLayout) findViewById(R.id.container);
 
         mPasswordView = (EditText) findViewById(R.id.password);

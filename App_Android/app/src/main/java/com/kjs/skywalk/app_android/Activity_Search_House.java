@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -31,13 +33,13 @@ import com.kjs.skywalk.communicationlibrary.IApiResults.IPropertyInfo;
 
 public class Activity_Search_House extends Activity implements
         CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
-    private ListView mListView = null;
+    private ListView mListViewHistory = null;
     private SearchView mSearchView = null;
     private HouseSearchHistory mHistory = null;
     private LinearLayout mHistoryLayout = null;
     private LinearLayout mNoHistoryLayout = null;
     private ScrollView mAddHouseLayout = null;
-    private AdapterHouseSearchHistory mAdapter = null;
+    private AdapterHouseSearchHistory mAdapterHistory = null;
 
     private int mPropertyCount = 0;
     private ArrayList<IPropertyInfo> mPropertyList = new ArrayList<>();
@@ -73,24 +75,24 @@ public class Activity_Search_House extends Activity implements
             }
         }
 
-        mListView = (ListView)findViewById(R.id.listViewContent);
-        mListView.setFocusable(false);
-        mAdapter = new AdapterHouseSearchHistory(this);
-        mListView.setAdapter(mAdapter);
+        mListViewHistory = (ListView)findViewById(R.id.listViewHistory);
+        mListViewHistory.setFocusable(false);
+        mAdapterHistory = new AdapterHouseSearchHistory(this);
+        mListViewHistory.setAdapter(mAdapterHistory);
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mHistory.addHistory(query);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.equals("")) {
-                    mNoHistoryLayout.setVisibility(View.GONE);
-                    mAddHouseLayout.setVisibility(View.GONE);
-                    mHistoryLayout.setVisibility(View.VISIBLE);
+                    updateLayout();
                 } else {
                     if(mHistory.searched(newText)) {
                         mNoHistoryLayout.setVisibility(View.GONE);
@@ -108,6 +110,19 @@ public class Activity_Search_House extends Activity implements
         });
     }
 
+    private void updateLayout() {
+        if(mHistory.getCount() == 0) {
+            mHistoryLayout.setVisibility(View.GONE);
+            mAddHouseLayout.setVisibility(View.GONE);
+            mNoHistoryLayout.setVisibility(View.VISIBLE);
+        } else{
+            mNoHistoryLayout.setVisibility(View.GONE);
+            mAddHouseLayout.setVisibility(View.GONE);
+            mHistoryLayout.setVisibility(View.VISIBLE);
+        }
+        updateAdapterHistory();
+    }
+
     protected void onResume() {
         super.onResume();
 
@@ -115,30 +130,32 @@ public class Activity_Search_House extends Activity implements
         mSearchView.onActionViewExpanded();
         mSearchView.setIconifiedByDefault(false);
 
-        if(mHistory.getCount() == 0) {
-            mHistoryLayout.setVisibility(View.GONE);
-            mAddHouseLayout.setVisibility(View.GONE);
-            mNoHistoryLayout.setVisibility(View.VISIBLE);
-        } else{
-            mHistoryLayout.setVisibility(View.GONE);
-            mAddHouseLayout.setVisibility(View.GONE);
-            mHistoryLayout.setVisibility(View.VISIBLE);
-        }
+        updateLayout();
     }
 
-    private void updateAdapter(String keywords) {
-        mListView.removeAllViewsInLayout();
+    private void updatemAdapterProperty(String keywords) {
+        mListViewHistory.removeAllViewsInLayout();
         ArrayList<String> newList = new ArrayList<>();
         for(IPropertyInfo info : mPropertyList) {
             if(info.GetName().contains(keywords)) {
                 newList.add(info.GetName());
             }
         }
-        mAdapter.setDataList(newList);
-        mAdapter.notifyDataSetChanged();
+        mAdapterHistory.setDataList(newList);
+        mAdapterHistory.notifyDataSetChanged();
     }
 
-    public void onViewClick(View v) {
+    private void updateAdapterHistory() {
+        mListViewHistory.removeAllViewsInLayout();
+        ArrayList<String> newList = new ArrayList<>();
+        for(int i = 0; i < mHistory.getCount(); i ++){
+            newList.add(mHistory.get(i));
+        }
+        mAdapterHistory.setDataList(newList);
+        mAdapterHistory.notifyDataSetChanged();
+    }
+
+    public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_info_title: {
                 finish();
@@ -146,6 +163,11 @@ public class Activity_Search_House extends Activity implements
             }
             case R.id.textViewAdd: {
 
+                break;
+            }
+            case R.id.cleanHistory: {
+                mHistory.cleanHistory();
+                updateLayout();
                 break;
             }
         }

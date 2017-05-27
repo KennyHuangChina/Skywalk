@@ -137,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
 //                }
 
 //                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
+                // need check login status
+                startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
+
             }
             break;
 
@@ -149,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //
 //                setNewMessageCount(5);
+
+                onTabMenuClick(mTvApartment);
             }
             break;
 
@@ -300,11 +305,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
-                    case R.id.action_setting4:
-                    {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
-                    }
-                    break;
+//                    case R.id.action_setting4:
+//                    {
+//                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
+//                    }
+//                    break;
 
                     case R.id.action_setting5:
                     {

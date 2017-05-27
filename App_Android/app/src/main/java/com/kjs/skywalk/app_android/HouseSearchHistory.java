@@ -32,8 +32,14 @@ public class HouseSearchHistory {
             return;
         }
 
+        for(String str : mList) {
+            if(str.equals(history)) {
+                return;
+            }
+        }
+
         if(mList.size() >= mMaxRecord) {
-            mList.remove(mMaxRecord - 1);
+            mList.remove(0);
         }
 
         mList.add(history);
@@ -80,10 +86,6 @@ public class HouseSearchHistory {
     }
 
     private void saveHistory() {
-        if(mList.size() == 0) {
-            return;
-        }
-
         SharedPreferences.Editor sharedData = mContext.getSharedPreferences(SharedFile, 0).edit();
         String history = "";
         for(int i = 0; i < mList.size(); i ++) {
@@ -93,5 +95,9 @@ public class HouseSearchHistory {
 
         sharedData.putString("History", history);
         sharedData.commit();
+    }
+
+    public String get(int i) {
+        return mList.get(i);
     }
 }
