@@ -118,6 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <include layout="@layout/seperator_horizontal" />
 
                 <com.kjs.skywalk.control.ListView_NoScroll
                     android:id="@+id/listViewAdd"

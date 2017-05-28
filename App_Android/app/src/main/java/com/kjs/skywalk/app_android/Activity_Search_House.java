@@ -111,7 +111,6 @@ public class Activity_Search_House extends SKBaseActivity implements
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mHistory.addHistory(query);
                 commonFun.hideSoftKeyboard(getApplicationContext(), mSearchView);
                 return true;
             }
@@ -223,6 +222,14 @@ public class Activity_Search_House extends SKBaseActivity implements
             public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
                 if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
                     commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String text = commonFun.getTextOnSearchView(mSearchView);
+                            doSelected(text);
+                            finish();
+                        }
+                    });
                 } else {
                     commonFun.showToast_info(getApplicationContext(), mSearchView, iCommon.GetErrDesc());
                 }
@@ -233,7 +240,7 @@ public class Activity_Search_House extends SKBaseActivity implements
         int res = 0;
         CommandManager manager = new CommandManager(this, listener, this);
         String text = commonFun.getTextOnSearchView(mSearchView);
-        res = manager.AddProperty(text, "", "");
+        res = manager.AddProperty(text, "地址：未填写", "");
         if(res == CE_ERROR_NO_ERROR) {
             showWaiting(mSearchView);
         } else {
