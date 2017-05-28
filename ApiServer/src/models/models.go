@@ -110,7 +110,7 @@ type TblHouseCert struct {
 	House   int64     // house id
 	Who     int64     // who made the certification
 	When    time.Time `orm:"auto_now_add;type(datetime)"` // when made the certification
-	Comment string    `orm:"size(20)"`                    // certification comments
+	Comment string    `orm:"size(200)"`                   // certification comments
 	Pass    bool      // certificat result, pass or not
 }
 

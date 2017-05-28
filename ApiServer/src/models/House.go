@@ -473,7 +473,7 @@ func SetHouseCoverImage(hid, cid, uid int64) (err error) {
 *	Certify House
 *	Arguments:
 *		hid 	- house id
-*		uid		- who made the certification
+*		uid		- login user who made the certification
 *		pass	- certificate result, pass or not
 *		comment	- certificate comment
 *	Returns
