@@ -12,9 +12,9 @@ import java.util.HashMap;
 
 class CmdGetPropertyList extends CommunicationBase {
 
-    private String mPropertyName = "";
-    private int mBeginPosi = 0;
-    private int mFetchCount = 0;
+    private String  mPropertyName   = "";
+    private int     mBeginPosi      = 0;
+    private int     mFetchCount     = 0;
 
     CmdGetPropertyList(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST);

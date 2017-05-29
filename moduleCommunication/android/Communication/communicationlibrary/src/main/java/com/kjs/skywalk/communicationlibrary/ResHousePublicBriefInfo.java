@@ -13,17 +13,17 @@ import java.util.ArrayList;
  */
 
 class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IResultList {
-    private int mHouseId = 0;
-    private String mPropertyName = "";
-    private String mPropertyAddr = "";
-    private int mBedrooms = 0;
-    private int mLivingRooms = 0;
-    private int mBathrooms = 0;
-    private int mAcreage = 0;
-    private int mRental = 0;
-    private int mPricing = 0;
-    private int mCoverImg = 0;
-    private TagList mTagList = null;
+    private int     mHouseId        = 0;
+    private String  mPropertyName   = "";
+    private String  mPropertyAddr   = "";
+    private int     mBedrooms       = 0;
+    private int     mLivingRooms    = 0;
+    private int     mBathrooms      = 0;
+    private int     mAcreage        = 0;
+    private int     mRental         = 0;
+    private int     mPricing        = 0;
+    private int     mCoverImg       = 0;
+    private TagList mTagList        = null;
 
     ResHousePublicBriefInfo(int nErrCode, JSONObject obj) {
         super(nErrCode);
@@ -36,16 +36,16 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         try {
             objDigest = obj.getJSONObject("HouseDigest");
             // parse house digest info
-            mHouseId = objDigest.getInt("Id");
-            mPropertyName = objDigest.getString("Property");
-            mPropertyAddr = objDigest.getString("PropertyAddr");
-            mBedrooms = objDigest.getInt("Bedrooms");
-            mLivingRooms = objDigest.getInt("Livingrooms");
-            mBathrooms = objDigest.getInt("Bathrooms");
-            mAcreage = objDigest.getInt("Acreage");
-            mRental = objDigest.getInt("Rental");
-            mPricing = objDigest.getInt("Pricing");
-            mCoverImg = objDigest.getInt("CoverImg");
+            mHouseId        = objDigest.getInt("Id");
+            mPropertyName   = objDigest.getString("Property");
+            mPropertyAddr   = objDigest.getString("PropertyAddr");
+            mBedrooms       = objDigest.getInt("Bedrooms");
+            mLivingRooms    = objDigest.getInt("Livingrooms");
+            mBathrooms      = objDigest.getInt("Bathrooms");
+            mAcreage        = objDigest.getInt("Acreage");
+            mRental         = objDigest.getInt("Rental");
+            mPricing        = objDigest.getInt("Pricing");
+            mCoverImg       = objDigest.getInt("CoverImg");
 
         } catch (JSONException e) {
             e.printStackTrace();
