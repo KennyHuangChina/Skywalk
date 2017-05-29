@@ -26,67 +26,69 @@ public class CommunicationInterface {
     //         -- Command definitions --
     //
     public interface ICommand {
-        // user admin
-        int GetSmsCode(String userName);
-        int GetUserInfo(int uid);
-        int GetUserSalt(String userName);
-        int LoginByPassword(String user, String pass, String rand, String salt);
-        int LoginBySms(String user, String smsCode);
-        int Logout();
-        int Relogin(String userName);
+
+        /* User Admin */
+        int GetSmsCode(String userName);                                        // CMD_GET_SMS_CODE,        IApiResults.IGetSmsCode
+        int GetUserInfo(int uid);                                               // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
+        int GetUserSalt(String userName);                                       // CMD_GET_USER_SALT,       IApiResults.IGetUserSalt
+        int LoginByPassword(String user, String pass, String rand, String salt);// CMD_LOGIN_BY_PASSWORD,   IApiResults.ILogin
+        int LoginBySms(String user, String smsCode);                            // CMD_LOGIN_BY_SMS,        IApiResults.ILogin
+        int Relogin(String userName);                                           // CMD_RELOGIN,             IApiResults.ILogin
+        int Logout();                                                           // CMD_LOG_OUT,             IApiResults.ICommon
         int CommandTest();
 
-        // house
-        int GetBriefPublicHouseInfo(int houseId);
-        int GetHouseInfo(int houseId, boolean bPrivtInfo);
-        int CommitHouseByOwner(HouseInfo houseInfo, int agency);
-        int AmendHouse(HouseInfo houseInfo);
-        int RecommendHouse(int house_id, int action);
-        int SetHouseCoverImg(int house_id, int img_id);
-        int CertificateHouse(int house_id, boolean bPass, String sCertComment);
-        int GetBehalfHouses(int type, int begin, int cnt);
-        int GetHouseList(int type, int begin, int cnt);
+        /* House */
+        int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+        int GetHouseInfo(int houseId, boolean bPrivtInfo);                      // CMD_GET_HOUSE_INFO,              IApiResults.IGetHouseInfo
+        int CommitHouseByOwner(HouseInfo houseInfo, int agency);                // CMD_COMMIT_HOUSE_BY_OWNER,       IApiResults.IAddRes
+        int AmendHouse(HouseInfo houseInfo);                                    // CMD_AMEND_HOUSE,                 IApiResults.ICommon
+        int RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
+        int SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,,  IApiResults.ICommon
+        int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
+        int GetBehalfHouses(int type, int begin, int cnt);                      // CMD_GET_BEHALF_HOUSE_LIST,       TODO:
+        int GetHouseList(int type, int begin, int cnt);                         // CMD_GET_HOUSE_LIST,              IApiResults.IResultList(int[])
 
-        // Property, community
-        int GetPropertyListByName(String sName, int nBegin, int nCount);
-        int AddProperty(String sName, String sAddr, String sDesc);
-        int GetPropertyInfo(int nPropId);
-        int ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);
+        /* Property, Community */
+        int GetPropertyListByName(String sName, int nBegin, int nCount);                // CMD_GET_PROPERTY_LIST,   IApiResults.IResultList(IApiResults.IPropertyInfo)
+        int AddProperty(String sName, String sAddr, String sDesc);                      // CMD_ADD_PROPERTY,        IApiResults.IAddRes
+        int GetPropertyInfo(int nPropId);                                               // CMD_GET_PROPERTY_INFO,   IApiResults.IPropertyInfo
+        int ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);  // CMD_MODIFY_PROPERTY,     IApiResults.ICommon
 
-        // house deliverables for rent
-        int AddDeliverable(String sName);
-        int GetDeliverableList();
-        int ModifyDeliverable(int dev_id, String sName);
-        int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);
-        int GetHouseDeliverables(int house_id);
+        /* House Deliverables for rent */
+        int AddDeliverable(String sName);                                                   // CMD_ADD_DELIVERABLE,         IApiResults.IAddRes
+        int GetDeliverableList();                                                           // CMD_GET_DELIVERABLE_LIST,    IApiResults.IResultList(IApiResults.IListIdName)
+        int ModifyDeliverable(int dev_id, String sName);                                    // CMD_EDIT_DELIVERABLE,        IApiResults.ICommon
+        int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);   // CMD_ADD_HOUSE_DELIVERABLE,   IApiResults.IAddRes
+        int GetHouseDeliverables(int house_id);                                             // CMD_GET_HOUSE_DELIVERABLES,  IApiResults.IResultList(IApiResults.IDeliverableInfo)
 
-        // house facilities
-        int AddFacilityType(String sTypeName);
-        int EditFacilityType(int typeId, String sTypeName);
-        int GetFacilityTypeList();
+        /* House Facilities */
+        int AddFacilityType(String sTypeName);                          // CMD_ADD_FACILITY_TYPE,       IApiResults.IAddRes
+        int EditFacilityType(int typeId, String sTypeName);             // CMD_EDIT_FACILITY_TYPE,      IApiResults.ICommon
+        int GetFacilityTypeList();                                      // CMD_GET_FACILITY_TYPE_LIST,  IApiResults.IResultList(IApiResults.IListIdName)
 
-        int AddFacility(int nType, String sName);
-        int EditFacility(int id, int nType, String sName);
-        int GetFacilityList(int nType);
+        int AddFacility(int nType, String sName);                       // CMD_ADD_FACILITY,            IApiResults.IAddRes
+        int EditFacility(int id, int nType, String sName);              // CMD_EDIT_FACILITY,           IApiResults.ICommon
+        int GetFacilityList(int nType);                                 // CMD_GET_FACILITY_LIST,       IApiResults.IResultList(IApiResults.IFacilityInfo)
 
-        int AddHouseFacility(int house, ArrayList<FacilityItem> list);
-        int GetHouseFacilityList(int house);
-        int EditHouseFacility(int hfid, int fid, int qty, String desc);
+        int AddHouseFacility(int house, ArrayList<FacilityItem> list);  // CMD_ADD_HOUSE_FACILITY,      IApiResults.ICommon
+        int GetHouseFacilityList(int house);                            // CMD_GET_HOUSEFACILITY_LIST,  IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
+        int EditHouseFacility(int hfid, int fid, int qty, String desc); // CMD_EDIT_HOUSE_FACILITY,     IApiResults.ICommon
 
         // Pictures
-        int AddPicture(int house, int type, String desc, String file);
-        int DelePicture(int pic);
-        int GetPicUrls(int pic, int size);
-        int GetHousePics(int house, int type);
+        int AddPicture(int house, int type, String desc, String file);  // CMD_ADD_PICTURE,         IApiResults.IAddRes
+        int DelePicture(int pic);                                       // CMD_DEL_PICTURE,         IApiResults.ICommon
+        int GetPicUrls(int pic, int size);                              // CMD_GET_PIC_URL,         IApiResults.IPicUrls
+        int GetHousePics(int house, int type);                          // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
 
         // Event
-        int GetNewEventCount();
-        int GetHouseNewEvent();
-        int ReadNewEvent(int event_id);
-        int GetHouseEventInfo(int event_id);
-        int GetHouseEventProcList(int event_id);
-        int GetHouseEventList(int house_id, int stat, int type, int posi_bgn, int fetch_cnt, boolean bIDO);
-        int ModifyHouseEvent(int event_id, String desc);
+        int GetNewEventCount();                                 // CMD_GET_NEW_EVENT_CNT,       IApiResults.INewEventCount
+        int GetHouseNewEvent();                                 // CMD_GET_HOUSE_NEW_EVENTS,    IApiResults.IResultList(IApiResults.IHouseNewEvent)
+        int ReadNewEvent(int event_id);                         // CMD_READ_NEW_EVENT,          IApiResults.ICommon
+        int GetHouseEventInfo(int event_id);                    // CMD_GET_EVENT_INFO,          IApiResults.IHouseEventInfo
+        int GetHouseEventProcList(int event_id);                // CMD_GET_EVENT_PROC_LST,      IApiResults.IResultList(IApiResults.IEventProcInfo)
+        int GetHouseEventList(int house_id, int stat, int type, // CMD_GET_HOUSE_EVENT_LST,     IApiResults.IResultList(IApiResults.IHouseEventInfo)
+                              int posi_bgn, int fetch_cnt, boolean bIDO);
+        int ModifyHouseEvent(int event_id, String desc);        // CMD_MODIFY_HOUSE_EVENT,      IApiResults.ICommon
     }
 
     public static class CmdID {
@@ -142,7 +144,7 @@ public class CommunicationInterface {
 
         // Event
         public static int CMD_GET_NEW_EVENT_CNT         = 0x7001;
-        public static int CMD_GET_HOUSE_NEW_EVENT_CNT   = 0x7002;
+        public static int CMD_GET_HOUSE_NEW_EVENTS      = 0x7002;
         public static int CMD_READ_NEW_EVENT            = 0x7003;
         public static int CMD_GET_EVENT_INFO            = 0x7004;
         public static int CMD_GET_EVENT_PROC_LST        = 0x7005;
