@@ -1303,6 +1303,7 @@ func delHouse(hid, luid int64) (err error) {
 		return
 	}
 
+	/* Only Administrator is able to delte the house */
 	if _, bAdmin := isAdministrator(luid); !bAdmin {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("luid:%d", luid)}
 		return

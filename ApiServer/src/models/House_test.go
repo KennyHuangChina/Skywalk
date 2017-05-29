@@ -779,75 +779,64 @@ func Test_CertHouse(t *testing.T) {
 //
 func Test_RecommendHouse(t *testing.T) {
 	t.Log("Test RecommendHouse")
+	seq := 0
 
-	t.Log("<Case> invalid arguments: house does not exist")
-	if e := RecommendHouse(100000000, -1, 1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// House
+	xids := []int64{-1, 0, 100000000, 4, 2}
+	xdesc := []string{"< 0", "= 0", "does not exist", "not been published", "already recommended"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid argument: House (%d) %s", seq, v, xdesc[k]))
+		if e := RecommendHouse(v, 6, 1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> permission: no user login")
-	if e := RecommendHouse(2, -1, 1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// User
+	xids = []int64{-1, 0, 100000000}
+	xdesc = []string{"not login", "is SYSTEM", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid argument: User (%d) %s", seq, v, xdesc[k]))
+		if e := RecommendHouse(2, v, 1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> permission: login user does not exist")
-	if e := RecommendHouse(2, 100000000, 1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// User permission
+	xids = []int64{2, 9, 11}
+	xdesc = []string{"is a regular user", "is landlord", "is an agency, but not for this house"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: User (%d) %s", seq, v, xdesc[k]))
+		if e := RecommendHouse(2, v, 1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> permission: login user is landlord")
-	if e := RecommendHouse(2, 9, 3); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	xids = []int64{0, 3}
+	for _, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid argument: action (%d)", seq, v))
+		if e := RecommendHouse(2, -2, int(v)); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> permission: login user is nither agency nor administrator")
-	if e := RecommendHouse(2, 2, 3); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> invalid arguments: action")
-	if e := RecommendHouse(2, 6, 3); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if e := RecommendHouse(2, 4, 3); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> permission: house not published")
-	if e := RecommendHouse(4, 6, 2); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> invalid arguments: house has been recommended")
-	if e := RecommendHouse(2, 6, 1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> unrecommend house")
-	if e := RecommendHouse(2, 6, 2); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> recommend house")
-	if e := RecommendHouse(2, 6, 1); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> invalid arguments: house not been recommended")
-	if e := RecommendHouse(6, 5, 2); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// regular operation
+	xids = []int64{2, 1}
+	xdesc = []string{"unrecommend house", "recommend house"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Operation: %s", seq, xdesc[k]))
+		if e := RecommendHouse(2, 6, int(v)); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 }
 
