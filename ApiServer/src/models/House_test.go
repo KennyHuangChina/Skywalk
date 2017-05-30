@@ -384,73 +384,51 @@ func Test_ModifyHouseInfo(t *testing.T) {
 	t.Log("Test ModifyHouse")
 	seq := 0
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: property == 0")
-	hif := commdef.HouseInfo{Id: 2, Property: 0}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	xids := []int64{-1, 0 /*, 100000000*/}
+	xdesc := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: property (%d) %s", seq, v, xdesc[k]))
+		hif := commdef.HouseInfo{Id: 2, Property: v}
+		if e := ModifyHouse(&hif, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: property < 0")
-	hif = commdef.HouseInfo{Id: 2, Property: -1}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: building no (%d) %s", seq, v, xdesc[k]))
+		hif := commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: int(v)}
+		if e := ModifyHouse(&hif, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: building_no = 0")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 0}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: Total floor (%d) %s", seq, v, xdesc[k]))
+		hif := commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: int(v)}
+		if e := ModifyHouse(&hif, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: building_no < 0")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: -1}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: FloorTotal = 0")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 0}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: FloorTotal < 0")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: -1}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: FloorThis = 0")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 0}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: FloorThis < 0")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: -1}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: House floor (%d) %s", seq, v, xdesc[k]))
+		hif := commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: int(v)}
+		if e := ModifyHouse(&hif, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: FloorThis > FloorTotal")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 36}
+	hif := commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 36}
 	if e := ModifyHouse(&hif, -1); e == nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -497,6 +475,19 @@ func Test_ModifyHouseInfo(t *testing.T) {
 	if e := ModifyHouse(&hif, -1); e == nil {
 		t.Error("Failed, err: ", e)
 		return
+	}
+
+	xids = []int64{commdef.DECORATION_Workblank - 1, commdef.DECORATION_Luxury + 1}
+	xdesc = []string{"< commdef.DECORATION_Workblank", "> commdef.DECORATION_Luxury"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: Decoration (%d) %s", seq, v, xdesc[k]))
+		hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: 175, FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+			Livingrooms: 1, Bathrooms: 1, Acreage: 10300, Decoration: int(v)}
+		if e := ModifyHouse(&hif, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
 	seq++
