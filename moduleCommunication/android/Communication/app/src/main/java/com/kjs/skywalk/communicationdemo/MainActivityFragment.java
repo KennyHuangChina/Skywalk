@@ -73,7 +73,7 @@ public class MainActivityFragment extends Fragment
         CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
-        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true, 3);
         CmdMgr.AmendHouse(houseInfo);
    }
 
@@ -87,7 +87,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString());
 //
-//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true);
+//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true, 3);
 //        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse

@@ -160,36 +160,38 @@ public class CommunicationInterface {
     //
     // used in CommitHouse, AmendHouse
     static public class HouseInfo {
-        public int mHouseId = 0;
-        public int mPropId = 0;
-        public int mBuilding = 0;
-        public String mHouseNo = "";
-        public int mFloorTotal = 0;
-        public int mFloorThis = 0;
-        public int mLivingrooms = 0;
-        public int mBedrooms = 0;
-        public int mBathrooms = 0;
-        public int mAcreage = 0;
-        public boolean mForSale = false;
-        public boolean mForRent = false;
+        public int      mHouseId        = 0;
+        public int      mPropId         = 0;    // property, community
+        public int      mBuilding       = 0;    // building number, like 177栋
+        public String   mHouseNo        = "";   // house number, 1505室
+        public int      mFloorTotal     = 0;    // total floor
+        public int      mFloorThis      = 0;    // house floor
+        public int      mLivingrooms    = 0;
+        public int      mBedrooms       = 0;
+        public int      mBathrooms      = 0;
+        public int      mAcreage        = 0;    // acreage, 100 times than actual. 10300 means 103 平米
+        public boolean  mForSale        = false;
+        public boolean  mForRent        = false;
+        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简装 / 2 - 中等 / 3 - 精装 / 4 - 豪华
 
         public HouseInfo() {
         }
 
         public HouseInfo(int hid, int pid, int bld, String hno, int ftotal, int fthis, int lr,
-                         int bedr, int bathr, int acre, boolean sale, boolean rent) {
-            mHouseId = hid;
-            mPropId = pid;
-            mBuilding = bld;
-            mHouseNo = hno;
-            mFloorTotal = ftotal;
-            mFloorThis = fthis;
-            mLivingrooms = lr;
-            mBedrooms = bedr;
-            mBathrooms = bathr;
-            mAcreage = acre;
-            mForSale = sale;
-            mForRent = rent;
+                         int bedr, int bathr, int acre, boolean sale, boolean rent, int decorate) {
+            mHouseId        = hid;
+            mPropId         = pid;
+            mBuilding       = bld;
+            mHouseNo        = hno;
+            mFloorTotal     = ftotal;
+            mFloorThis      = fthis;
+            mLivingrooms    = lr;
+            mBedrooms       = bedr;
+            mBathrooms      = bathr;
+            mAcreage        = acre;
+            mForSale        = sale;
+            mForRent        = rent;
+            mDecorate       = decorate;
         }
 
         public boolean CheckHoseInfo(String TAG, boolean bAdd) {
@@ -230,6 +232,10 @@ public class CommunicationInterface {
             }
 //            mSale
 //            mRent
+            if (mDecorate < 0 || mDecorate > 4) {
+                Log.e(TAG, "Invalid decoration:" + mDecorate);
+                return false;
+            }
 
             return true;
         }
