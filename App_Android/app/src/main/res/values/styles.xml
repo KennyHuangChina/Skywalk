@@ -412,4 +412,9 @@
         <item name="android:background">@drawable/button_minor_bk_selector</item>
         <item name="android:textColor">@drawable/button_minor_text_selector</item>
     </style>
+
+    <style name="popupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popupwindow_in</item>
+        <item name="android:windowExitAnimation">@anim/popupwindow_out</item>
+    </style>
 </resources>

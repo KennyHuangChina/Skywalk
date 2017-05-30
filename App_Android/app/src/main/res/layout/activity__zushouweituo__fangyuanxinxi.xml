@@ -27,14 +27,15 @@
             android:layout_height="7dp"/>
 
         <ScrollView
+            android:id="@+id/scrollViewContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp">
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"  >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"  >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -244,6 +245,7 @@
                         android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
                         android:onClick="onClickResponse"
+                        android:gravity="right"
                         android:hint="请选择"/>
                 </RelativeLayout>
 

@@ -1,68 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="bottom">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="#efefef"
             android:id="@+id/sort_container">
             <include layout="@layout/seperator_horizontal" />
             <TextView
+                android:id="@+id/textViewMaopi"
                 android:text="毛坯"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="17dp"
+                android:gravity="center"
                 android:textSize="14sp"
                 android:textColor="@color/colorTextNormal"
                 android:onClick="onClickResponse"/>
 
             <include layout="@layout/seperator_horizontal" />
             <TextView
+                android:id="@+id/textViewJianzhuang"
                 android:text="简装"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="17dp"
+                android:gravity="center"
                 android:textSize="14sp"
                 android:textColor="@color/colorTextNormal"
                 android:onClick="onClickResponse"/>
 
             <include layout="@layout/seperator_horizontal" />
             <TextView
+                android:id="@+id/textViewZhongdeng"
                 android:text="中等"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="17dp"
+                android:gravity="center"
                 android:textSize="14sp"
                 android:textColor="@color/colorTextNormal"
                 android:onClick="onClickResponse"/>
 
             <include layout="@layout/seperator_horizontal" />
             <TextView
+                android:id="@+id/textViewJingzhuang"
                 android:text="精装"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="17dp"
+                android:gravity="center"
                 android:textSize="14sp"
                 android:textColor="@color/colorTextNormal"
                 android:onClick="onClickResponse"/>
 
             <include layout="@layout/seperator_horizontal" />
             <TextView
+                android:id="@+id/textViewHaohua"
                 android:text="豪华"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="17dp"
+                android:gravity="center"
                 android:textSize="14sp"
                 android:textColor="@color/colorTextNormal"
                 android:onClick="onClickResponse"/>

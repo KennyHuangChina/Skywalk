@@ -4,15 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.control.kjsNumberPicker;
 
 public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
+    private PopupWindowZhuangxiuSelector mZhuangxiuSelector = null;
+    private ScrollView mContainer = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +26,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         titleText.setText("租售委托-房源信息");
         ImageView closeButton = (ImageView)findViewById(R.id.imageViewActivityClose);
         closeButton.setVisibility(View.INVISIBLE);
+        mContainer = (ScrollView)findViewById(R.id.scrollViewContainer);
     }
 
     public void onClickResponse(View v) {
@@ -48,6 +54,11 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
             case R.id.tv_zhuangxiu_selector:
             {
+                if(mZhuangxiuSelector == null) {
+                    mZhuangxiuSelector = new PopupWindowZhuangxiuSelector(this);
+                }
+
+                mZhuangxiuSelector.showAtLocation(mContainer, Gravity.BOTTOM, 0, 0);
                 break;
             }
 
@@ -64,8 +75,19 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             break;
             case R.id.textViewSelectBlock: {
                 startActivityForResult(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Search_House.class), 0);
+                break;
             }
-            break;
+            case R.id.textViewMaopi:
+            case R.id.textViewJianzhuang:
+            case R.id.textViewZhongdeng:
+            case R.id.textViewJingzhuang:
+            case R.id.textViewHaohua:{
+                TextView tmp = (TextView)v;
+                TextView button = (TextView)findViewById(R.id.tv_zhuangxiu_selector);
+                button.setText(tmp.getText().toString());
+                mZhuangxiuSelector.dismiss();
+                break;
+            }
         }
     }
 
