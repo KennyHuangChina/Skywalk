@@ -58,6 +58,8 @@ class CmdAmendHouse extends CommunicationBase {
         mRequestData += ("4sale=" + mHouseInfo.mForSale);
         mRequestData += "&";
         mRequestData += ("4rent=" + mHouseInfo.mForRent);
+        mRequestData += "&";
+        mRequestData += ("decor=" + mHouseInfo.mDecorate);
 
         Log.d(TAG, "mRequestData: " + mRequestData);
     }

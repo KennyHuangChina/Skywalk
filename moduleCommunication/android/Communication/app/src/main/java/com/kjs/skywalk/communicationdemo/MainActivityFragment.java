@@ -60,7 +60,7 @@ public class MainActivityFragment extends Fragment
 //                                mCertificate ? "已经和业主核实，同意发布" : "撤销发布");
 //        mCertificate = !mCertificate;
 
-//        doTestModifyApi_ModifyHouse(CmdMgr);
+        doTestModifyApi_ModifyHouse(CmdMgr);
 //        CmdMgr.ModifyDeliverable(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
 //        CmdMgr.EditFacilityType(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
 //        CmdMgr.EditFacility(Integer.parseInt(mEditText.getText().toString()),
@@ -70,7 +70,7 @@ public class MainActivityFragment extends Fragment
 //                Integer.parseInt(mEditText1.getText().toString()),
 //                Integer.parseInt(mEditText2.getText().toString()), "");
 //        CmdMgr.ReadNewEvent(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
+//        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true, 3);
@@ -103,8 +103,8 @@ public class MainActivityFragment extends Fragment
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
-//        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()),
-//                            Boolean.parseBoolean(mEditText1.getText().toString()));
+        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()),
+                            Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
@@ -112,7 +112,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseNewEvent();
 //        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
+//        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);

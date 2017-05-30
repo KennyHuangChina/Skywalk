@@ -68,17 +68,19 @@ public class IApiResults {
     }
 
     public interface IGetHouseInfo {
-        int HouseId();      // house id
-        int ProId();        // property id which the house belong to
-        int BuildingNo();   // the building number the house belong to
-        int FloorTotal();   // total floors
-        int Floorthis();    // exact floor the house resident
-        String FloorDesc(); // floor description
-        String HouseNo();   // exact house number. like house 1305#
-        int Bedrooms();     // how many bedrooms whitin house
-        int Livingrooms();  // how many living rooms within house
-        int Bathrooms();    // how many bathrooms within house
-        int Acreage();      // house acreage, 100x than real value. for example 11537 mean 115.37 m2
+        int HouseId();          // house id
+        int ProId();            // property id which the house belong to
+        int BuildingNo();       // the building number the house belong to
+        int FloorTotal();       // total floors
+        int Floorthis();        // exact floor the house resident
+        String FloorDesc();     // floor description
+        String HouseNo();       // exact house number. like house 1305#
+        int Bedrooms();         // how many bedrooms whitin house
+        int Livingrooms();      // how many living rooms within house
+        int Bathrooms();        // how many bathrooms within house
+        int Acreage();          // house acreage, 100x than real value. for example 11537 mean 115.37 M^2
+        int Decorate();         // decoration
+        String DecorateDesc();
     }
 
     public interface IAddRes {
