@@ -18,7 +18,9 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private int     mBedrooms;      // how many bedrooms whitin house
     private int     mLivingrooms;   // how many living rooms within house
     private int     mBathrooms;     // how many bathrooms within house
-    private int     mAcreage;       // house acreage, 100x than real value. for example 11537 mean 115.37 m2
+    private int     mAcreage;       // house acreage, 100x than real value. for example 11537 mean 115.37 m^2 (Square Meter)
+    private int     mDecorate;      // decorate id
+    private String  mDecoration;    // decoration description
 
     ResGetHouseInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -38,6 +40,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
         mString += "  living rooms: " + mLivingrooms + "\n";
         mString += "  bathrooms: " + mBathrooms + "\n";
         mString += "  acreage: " + mAcreage / 100 + "." + mAcreage % 100 + "\n";
+        mString += "  decoration: (" + mDecorate  + ")" + mDecoration + "\n";
 
         return mString;
     }
@@ -46,16 +49,17 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
         try {
             JSONObject jHouse = obj.getJSONObject("HouseInfo");
 
-            mHouseId = jHouse.getInt("Id");
-            mProId  = jHouse.getInt("Property");
-            mBuildingNo = jHouse.getInt("BuildingNo");
-            mFloorTotal = jHouse.getInt("FloorTotal");
-            mFloorThis = jHouse.getInt("FloorThis");
-            mHouseNo = jHouse.getString("HouseNo");
-            mBedrooms = jHouse.getInt("Bedrooms");
-            mLivingrooms = jHouse.getInt("Livingrooms");
-            mBathrooms = jHouse.getInt("Bathrooms");
-            mAcreage = jHouse.getInt("Acreage");
+            mHouseId        = jHouse.getInt("Id");
+            mProId          = jHouse.getInt("Property");
+            mBuildingNo     = jHouse.getInt("BuildingNo");
+            mFloorTotal     = jHouse.getInt("FloorTotal");
+            mFloorThis      = jHouse.getInt("FloorThis");
+            mHouseNo        = jHouse.getString("HouseNo");
+            mBedrooms       = jHouse.getInt("Bedrooms");
+            mLivingrooms    = jHouse.getInt("Livingrooms");
+            mBathrooms      = jHouse.getInt("Bathrooms");
+            mAcreage        = jHouse.getInt("Acreage");
+            mDecorate       = jHouse.getInt("Decoration");
 
             if (0 == mBuildingNo || mHouseNo.isEmpty()) {
                 if (mFloorThis == mFloorTotal + 1) {
@@ -65,6 +69,24 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
                 } else if (mFloorThis == mFloorTotal + 3) {
                     mFloorDesc = "高层";
                 }
+            }
+
+            switch (mDecorate) {
+                case 0:
+                    mDecoration = "毛坯";
+                    break;
+                case 1:
+                    mDecoration = "简装";
+                    break;
+                case 2:
+                    mDecoration = "中档装修";
+                    break;
+                case 3:
+                    mDecoration = "精装装修";
+                    break;
+                case 4:
+                    mDecoration = "豪华装修";
+                    break;
             }
 
         } catch (JSONException e) {
@@ -128,5 +150,15 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     @Override
     public int Acreage() {
         return mAcreage;
+    }
+
+    @Override
+    public int Decorate() {
+        return mDecorate;
+    }
+
+    @Override
+    public String DecorateDesc() {
+        return mDecoration;
     }
 }
