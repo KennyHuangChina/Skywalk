@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
@@ -17,6 +18,7 @@ import com.kjs.skywalk.control.kjsNumberPicker;
 
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -28,9 +30,9 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
     private String mRoomString = "";
     private String mLoungeString = "";
     private String mToiletString = "";
-    private int mRoomIndex= 0;
-    private int mLoungeIndex = 0;
-    private int mToiletIndex = 0;
+    private int mRoomIndex= -1;
+    private int mLoungeIndex = -1;
+    private int mToiletIndex = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +85,9 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
             case R.id.tv_next:
             {
+                if(!checkData()){
+                    return;
+                }
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
             break;
@@ -114,6 +119,98 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
                 view.setText(name);
             }
         }
+    }
+
+    private boolean checkData() {
+        TextView viewPropertyName = (TextView)findViewById(R.id.textViewSelectBlock);
+        String propertyName = viewPropertyName.getText().toString();
+        if(propertyName.isEmpty()) {
+            commonFun.showToast_info(this, viewPropertyName, "小区名称不能为空");
+            return false;
+        }
+
+        EditText viewNumber = (EditText)findViewById(R.id.editTextPropertyNumber);
+        String number = viewNumber.getText().toString();
+        if(number.isEmpty()) {
+            commonFun.showToast_info(this, viewPropertyName, "楼栋号不能为空");
+            return false;
+        }
+
+        EditText viewFloor = (EditText)findViewById(R.id.editTextFloor);
+        String floor = viewFloor.getText().toString();
+        EditText viewFloorTotal = (EditText)findViewById(R.id.editTextTotalFloor);
+        String floorTotal = viewFloorTotal.getText().toString();
+
+        int nFloor;
+        int nFloorTotal;
+        try {
+            nFloor = Integer.valueOf(floor);
+            if(nFloor <= 0) {
+                commonFun.showToast_info(this, viewPropertyName, "楼层输入不正确");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            commonFun.showToast_info(this, viewPropertyName, "楼层输入不正确");
+            return false;
+        }
+        try {
+            nFloorTotal = Integer.valueOf(floorTotal);
+            if(nFloorTotal <= 0) {
+                commonFun.showToast_info(this, viewPropertyName, "总楼层数输入不正确");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            commonFun.showToast_info(this, viewPropertyName, "总楼层数输入不正确");
+            return false;
+        }
+
+        if(nFloor > nFloorTotal){
+            commonFun.showToast_info(this, viewPropertyName, "楼层应小于总楼层数");
+            return false;
+        }
+
+        EditText viewRoomNumber = (EditText)findViewById(R.id.editTextRoomNumber);
+        String roomNumber = viewRoomNumber.getText().toString();
+        if(roomNumber.isEmpty()) {
+            commonFun.showToast_info(this, viewRoomNumber, "门牌号不能为空");
+            return false;
+        }
+
+        EditText viewArea = (EditText)findViewById(R.id.editTextArea);
+        String area = viewArea.getText().toString();
+        double nArea;
+        try {
+            nArea = Double.valueOf(area);
+            if(nArea <= 0) {
+                commonFun.showToast_info(this, viewPropertyName, "面积输入不正确");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            commonFun.showToast_info(this, viewPropertyName, "面积输入不正确");
+            return false;
+        }
+
+        TextView viewHuxing = (TextView)findViewById(R.id.tv_huxing_selector);
+        String huxing = viewHuxing.getText().toString();
+        if(huxing.isEmpty()) {
+            commonFun.showToast_info(this, viewPropertyName, "请选择户型");
+            return false;
+        }
+
+        TextView viewZhuangxiu = (TextView)findViewById(R.id.tv_zhuangxiu_selector);
+        String zhuangxiu = viewZhuangxiu.getText().toString();
+        if(zhuangxiu.isEmpty()) {
+            commonFun.showToast_info(this, viewPropertyName, "请选择装修程度");
+            return false;
+        }
+
+        TextView viewDate = (TextView)findViewById(R.id.tv_date_selector);
+        String date = viewDate.getText().toString();
+        if(date.isEmpty()) {
+            commonFun.showToast_info(this, viewPropertyName, "请选择购买日期");
+            return false;
+        }
+        return true;
     }
 
     private AlertDialog mDateSelectorDlg;
