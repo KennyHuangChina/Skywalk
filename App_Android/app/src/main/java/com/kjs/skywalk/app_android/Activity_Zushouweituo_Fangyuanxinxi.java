@@ -46,6 +46,11 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             }
             break;
 
+            case R.id.tv_zhuangxiu_selector:
+            {
+                break;
+            }
+
             case R.id.tv_date_selector:
             {
                 showDateSelectorDlg();
