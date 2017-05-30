@@ -55,7 +55,8 @@
                         android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
                         android:onClick="onClickResponse"
-                        android:hint="选择小区"/>
+                        android:hint="选择小区"
+                        android:textColor="@color/colorTextNormal"/>
                 </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal"/>
@@ -78,7 +79,8 @@
                         android:gravity="right"
                         android:inputType="text"
                         android:nextFocusDown="@+id/editTextFloor"
-                        android:hint="输入楼栋号"/>
+                        android:hint="输入楼栋号"
+                        android:textColor="@color/colorTextNormal"/>
                     <TextView
                         android:id="@+id/tv_loudong_unit"
                         android:layout_width="wrap_content"
@@ -171,6 +173,7 @@
                         android:background="#FFFFFFFF"
                         android:gravity="right"
                         android:inputType="text"
+                        android:textColor="@color/colorTextNormal"
                         android:hint="输入房号"/>
                 </RelativeLayout>
 
@@ -192,6 +195,7 @@
                         android:layout_toLeftOf="@+id/tv_chanzheng_unit"
                         android:gravity="right"
                         android:inputType="number"
+                        android:textColor="@color/colorTextNormal"
                         android:hint="输入产证面积"/>
                     <TextView
                         android:id="@+id/tv_chanzheng_unit"
@@ -221,6 +225,7 @@
                         android:textColorHint="@color/colorEditTextTint"
                         android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
+                        android:textColor="@color/colorTextNormal"
                         android:onClick="onClickResponse"
                         android:hint="请选择"/>
                 </RelativeLayout>
@@ -244,6 +249,7 @@
                         android:background="#FFFFFFFF"
                         android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
+                        android:textColor="@color/colorTextNormal"
                         android:onClick="onClickResponse"
                         android:gravity="right"
                         android:hint="请选择"/>
@@ -272,7 +278,8 @@
                         android:layout_alignParentRight="true"
                         android:textSize="14sp"
                         android:textColor="@color/colorTextNormal"
-                        android:text="2016-12-12"/>
+                        android:hint="请选择"
+                        android:textColorHint="@color/colorText"/>
                 </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal"/>

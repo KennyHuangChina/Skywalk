@@ -7,12 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.control.kjsNumberPicker;
+
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
@@ -111,12 +117,15 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
     }
 
     private AlertDialog mDateSelectorDlg;
+    private DatePicker mDatePicker;
     private void showDateSelectorDlg() {
         if (mDateSelectorDlg == null) {
             mDateSelectorDlg = new AlertDialog.Builder(this).create();
         }
         mDateSelectorDlg.show();
         mDateSelectorDlg.setContentView(R.layout.dialog_fangyuanxinxi_dateselector);
+
+        mDatePicker = (DatePicker)mDateSelectorDlg.findViewById(R.id.datePicker2);
 
         TextView tvBack = (TextView) mDateSelectorDlg.findViewById(R.id.tv_back);
         tvBack.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +139,17 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int year = mDatePicker.getYear();
+                int month = mDatePicker.getMonth();
+                int day = mDatePicker.getDayOfMonth();
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String date = df.format(calendar.getTime());
+                TextView tmp = (TextView)findViewById(R.id.tv_date_selector);
+                tmp.setText(date);
+
                 mDateSelectorDlg.dismiss();
             }
         });
