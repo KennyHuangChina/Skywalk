@@ -18,6 +18,13 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
     private PopupWindowZhuangxiuSelector mZhuangxiuSelector = null;
     private ScrollView mContainer = null;
+
+    private String mRoomString = "";
+    private String mLoungeString = "";
+    private String mToiletString = "";
+    private int mRoomIndex= 0;
+    private int mLoungeIndex = 0;
+    private int mToiletIndex = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,12 +143,16 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         mHuXingSelectorDlg.show();
         mHuXingSelectorDlg.setContentView(R.layout.dialog_fangyuanxinxi_fangxing);
 
+        mRoomIndex = 0;
+        mToiletIndex = 0;
+        mLoungeIndex = 0;
+
         kjsNumberPicker npShi = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_shi);
         kjsNumberPicker npTing = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_ting);
-        kjsNumberPicker npWei = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_wei);
-        String[] arrShi = {"1室", "2室", "3室", "4室", "5室"};
-        String[] arrTing = {"1厅", "2厅", "3厅", "4厅", "5厅"};
-        String[] arrWei = {"1卫", "2卫", "3卫", "4卫", "5卫"};
+        final kjsNumberPicker npWei = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_wei);
+        final String[] arrShi = {"1室", "2室", "3室", "4室", "5室"};
+        final String[] arrTing = {"1厅", "2厅", "3厅", "4厅", "5厅"};
+        final String[] arrWei = {"1卫", "2卫", "3卫", "4卫", "5卫"};
 
         npShi.setDisplayedValues(arrShi);
         npShi.setMinValue(0);
@@ -161,6 +172,21 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         npWei.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mToiletIndex = newVal;
+            }
+        });
+
+        npTing.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mLoungeIndex = newVal;
+            }
+        });
+
+        npShi.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mRoomIndex = newVal;
             }
         });
 
@@ -176,6 +202,11 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mToiletString = arrWei[mToiletIndex];
+                mRoomString = arrShi[mRoomIndex];
+                mLoungeString = arrTing[mLoungeIndex];
+                TextView tmp = (TextView)findViewById(R.id.tv_huxing_selector);
+                tmp.setText(mRoomString + mLoungeString + mToiletString);
                 mHuXingSelectorDlg.dismiss();
             }
         });
