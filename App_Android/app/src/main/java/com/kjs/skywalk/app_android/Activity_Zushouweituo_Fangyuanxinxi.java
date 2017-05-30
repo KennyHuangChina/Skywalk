@@ -85,9 +85,9 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
             case R.id.tv_next:
             {
-                if(!checkData()){
-                    return;
-                }
+//                if(!checkData()){
+//                    return;
+//                }
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
             break;
