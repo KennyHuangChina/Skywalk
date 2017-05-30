@@ -5,7 +5,7 @@ import (
 	"ApiServer/commdef"
 	"ApiServer/models"
 	"encoding/base64"
-	// "fmt"
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -252,8 +252,11 @@ func (this *HouseController) ModifyHouse() {
 	acreage, _ := this.GetInt("Acreage")
 	_4sale, _ := this.GetBool("4sale")
 	_4rent, _ := this.GetBool("4rent")
+	decor, _ := this.GetInt("decor")
+
 	hif := commdef.HouseInfo{Id: hid, Property: prop, BuildingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
-		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage, ForSale: _4sale, ForRent: _4rent}
+		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage,
+		ForSale: _4sale, ForRent: _4rent, Decoration: decor}
 
 	/*
 	 *	Processing
@@ -307,8 +310,11 @@ func (this *HouseController) CommitHouseByOwner() {
 	acreage, _ := this.GetInt("Acreage")
 	_4sale, _ := this.GetBool("4sale")
 	_4rent, _ := this.GetBool("4rent")
+	decor, _ := this.GetInt("decor")
+
 	hif := commdef.HouseInfo{Property: prop, BuildingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
-		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage, ForSale: _4sale, ForRent: _4rent}
+		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage,
+		ForSale: _4sale, ForRent: _4rent, Decoration: decor}
 
 	/*
 	 *	Processing
@@ -495,10 +501,10 @@ func (this *HouseController) GetHouseInfo() {
 	hid, _ := this.GetInt64(":id")
 	pri, _ := this.GetInt("p")
 
-	beego.Debug(FN, "ver:", version, ", hid:", hid, ", private:", pri)
-	if 0 == pri {
-		uid = -1
-	}
+	beego.Debug(FN, "ver:", version, ", hid:", hid, ", private:", pri, ", login user:", uid)
+	// if 0 == pri {
+	// 	uid = -1
+	// }
 
 	/*
 	 *	Processing
@@ -506,5 +512,6 @@ func (this *HouseController) GetHouseInfo() {
 	err, hif := models.GetHouseInfo(hid, uid)
 	if nil == err {
 		result.HouseInfo = hif
+		beego.Debug(FN, fmt.Sprintf("%+v", result.HouseInfo))
 	}
 }

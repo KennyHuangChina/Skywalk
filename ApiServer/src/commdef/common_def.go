@@ -43,6 +43,14 @@ func (this *UserInfo) Role2Desc() {
 //
 //		House
 //
+const (
+	DECORATION_Workblank = 0
+	DECORATION_Simple    = 1
+	DECORATION_Medium    = 2
+	DECORATION_Refined   = 3
+	DECORATION_Luxury    = 4
+)
+
 type HouseTags struct {
 	TagId   int64
 	TagDesc string
@@ -75,6 +83,7 @@ type HouseInfo struct {
 	Acreage     int
 	ForSale     bool
 	ForRent     bool
+	Decoration  int // TODO
 }
 
 type PropInfo struct {
