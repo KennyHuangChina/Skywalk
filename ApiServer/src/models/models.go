@@ -392,61 +392,30 @@ func init() {
 	// /*_, err :=*/ o.Raw("CREATE UNIQUE INDEX house_id ON tbl_house (property_id, building_no, house_no)").Exec()
 	// beego.Debug("[init] err:", err.Error())
 
+	beego.Debug("models.init")
 	orm.RunSyncdb("default", false, true) // sync tables
 
-	// Special processing
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// 			Special processing
+	//
+	var STRING_MAP map[string]string
+	STRING_MAP = make(map[string]string)
+	STRING_MAP[KEY_USER_SYSTEM] = "系统"
+	STRING_MAP[KEY_UNKNOWN] = "未知"
+	STRING_MAP[KEY_USER_NAME_NOT_SET] = "未设置"
+	STRING_MAP[KEY_LANDLORD_SUBMIT_NEW_HOUSE] = "业主委托新房源"
+	STRING_MAP[KEY_HOUSE_CERTIFICATE_BEGIN] = "房源审核中"
+	STRING_MAP[KEY_HOUSE_CERTIFICATE_FAILED] = "房源审核失败"
+	STRING_MAP[KEY_HOUSE_CERTIFICATE_PASS] = "房源审核通过"
+	STRING_MAP[KEY_HOUSE_EVENT_PROC_FOLLOW] = "跟进"
+	STRING_MAP[KEY_HOUSE_EVENT_PROC_CLOSE] = "结案"
+
 	o := orm.NewOrm()
-	bHasKey := o.QueryTable("tbl_strings").Filter("Key", KEY_USER_SYSTEM).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_USER_SYSTEM, Value: "系统"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_UNKNOWN).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_UNKNOWN, Value: "未知"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_USER_NAME_NOT_SET).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_USER_NAME_NOT_SET, Value: "未设置"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_LANDLORD_SUBMIT_NEW_HOUSE).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_LANDLORD_SUBMIT_NEW_HOUSE, Value: "业主委托新房源"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_BEGIN).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_BEGIN, Value: "房源审核中"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_FAILED).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_FAILED, Value: "房源审核失败"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_CERTIFICATE_PASS).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_HOUSE_CERTIFICATE_PASS, Value: "房源审核通过"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_EVENT_PROC_FOLLOW).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_HOUSE_EVENT_PROC_FOLLOW, Value: "跟进"}
-		o.Insert(&kv)
-	}
-
-	bHasKey = o.QueryTable("tbl_strings").Filter("Key", KEY_HOUSE_EVENT_PROC_CLOSE).Exist()
-	if !bHasKey {
-		kv := TblStrings{Key: KEY_HOUSE_EVENT_PROC_CLOSE, Value: "结案"}
-		o.Insert(&kv)
+	for k, v := range STRING_MAP {
+		if !o.QueryTable("tbl_strings").Filter("Key", k).Exist() {
+			kv := TblStrings{Key: k, Value: v}
+			o.Insert(&kv)
+		}
 	}
 }
