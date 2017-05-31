@@ -37,6 +37,7 @@
             android:layout_marginLeft="13dp">
 
             <TextView
+                android:id="@+id/textViewAgentName"
                 style="@style/textViewAgentName"
                 android:text="代理人"
                 android:layout_width="wrap_content"
@@ -47,6 +48,7 @@
                 android:drawablePadding="3dp"/>
 
             <TextView
+                android:id="@+id/textViewAgentIDCard"
                 style="@style/textViewAgentIDCard"
                 android:text="身份证: 1000xxxxxxxxxx0000"
                 android:layout_width="wrap_content"
@@ -55,6 +57,7 @@
                 android:gravity="center_vertical" />
 
             <TextView
+                android:id="@+id/textViewAgentConyezigeYear"
                 style="@style/textViewAgentConyezigeYear"
                 android:text="从业资格: 5年"
                 android:layout_width="wrap_content"
@@ -74,10 +77,10 @@
                     android:layout_height="match_parent">
                     <TextView
                         android:text="专业:"
-                        android:id="@+id/textViewZhuanye"
                         style="@style/textViewScoreText"/>
 
                     <TextView
+                        android:id="@+id/textViewProfessional"
                         android:text="4.5"
                         style="@style/textViewScore"
                         android:layout_marginLeft="10dp" />
@@ -89,11 +92,11 @@
                     android:layout_height="match_parent">
                     <TextView
                         android:text="态度:"
-                        android:id="@+id/textViewScoreText"
                         style="@style/textViewScoreText"/>
 
                     <TextView
                         android:text="4.9"
+                        android:id="@+id/textViewAttitude"
                         style="@style/textViewScore"
                         android:layout_marginLeft="10dp" />
                 </LinearLayout>
