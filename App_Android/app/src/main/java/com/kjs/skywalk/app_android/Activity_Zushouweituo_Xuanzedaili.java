@@ -13,9 +13,10 @@ import java.util.List;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Zushouweituo_Xuanzedaili extends Activity {
+public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity {
 
     private ListView mListViewAgents = null;
+    private AdapterAgents mAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,8 @@ public class Activity_Zushouweituo_Xuanzedaili extends Activity {
 
         mListViewAgents = (ListView)findViewById(R.id.listViewContent);
         mListViewAgents.setFocusable(false);
-        AdapterAgents adapter = new AdapterAgents(this);
-        mListViewAgents.setAdapter(adapter);
+        mAdapter = new AdapterAgents(this);
+        mListViewAgents.setAdapter(mAdapter);
 
     }
 

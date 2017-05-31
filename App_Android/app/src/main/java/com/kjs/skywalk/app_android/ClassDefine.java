@@ -32,7 +32,7 @@ public class ClassDefine {
         }
     }
 
-    static class Garden {
+    static class Property {
         public String mName;
         public String mAddress;
     }

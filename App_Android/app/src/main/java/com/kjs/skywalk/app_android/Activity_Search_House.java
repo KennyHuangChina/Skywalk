@@ -103,7 +103,7 @@ public class Activity_Search_House extends SKBaseActivity implements
         mListViewProperty.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ClassDefine.Garden garden = (ClassDefine.Garden)parent.getAdapter().getItem(position);
+                ClassDefine.Property garden = (ClassDefine.Property)parent.getAdapter().getItem(position);
                 doSelected(garden.mName);
             }
         });
@@ -154,10 +154,10 @@ public class Activity_Search_House extends SKBaseActivity implements
         mAddHouseLayout.setVisibility(View.VISIBLE);
 
         mListViewProperty.removeAllViewsInLayout();
-        ArrayList<ClassDefine.Garden> newList = new ArrayList<>();
+        ArrayList<ClassDefine.Property> newList = new ArrayList<>();
         for(IPropertyInfo info : mPropertyList) {
             if(info.GetName().contains(keywords)) {
-                ClassDefine.Garden property = new ClassDefine.Garden();
+                ClassDefine.Property property = new ClassDefine.Property();
                 property.mName = info.GetName();
                 property.mAddress = info.GetAddress();
                 newList.add(property);

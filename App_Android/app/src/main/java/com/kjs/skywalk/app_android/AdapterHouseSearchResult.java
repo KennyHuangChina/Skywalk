@@ -18,14 +18,14 @@ import static android.R.attr.name;
 
 public class AdapterHouseSearchResult extends BaseAdapter {
     private Context mContext = null;
-    private ArrayList<ClassDefine.Garden> mDataList = new ArrayList<ClassDefine.Garden>();
+    private ArrayList<ClassDefine.Property> mDataList = new ArrayList<ClassDefine.Property>();
 
     public AdapterHouseSearchResult(Context context) {
         super();
         mContext = context;
     }
 
-    public void setDataList(ArrayList<ClassDefine.Garden> list) {
+    public void setDataList(ArrayList<ClassDefine.Property> list) {
         mDataList = list;
     }
 
@@ -63,7 +63,7 @@ public class AdapterHouseSearchResult extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        ClassDefine.Garden garden = mDataList.get(position);
+        ClassDefine.Property garden = mDataList.get(position);
         holder.textViewName.setText(garden.mName);
         holder.textViewLocation.setText(garden.mAddress);
 
