@@ -48,9 +48,9 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
             break;
             case R.id.tv_next:
             {
-                if(!checkData()) {
-                    return;
-                }
+//                if(!checkData()) {
+//                    return;
+//                }
                 startActivity(new Intent(this, Activity_Zushouweituo_Xuanzedaili.class));
             }
             break;
