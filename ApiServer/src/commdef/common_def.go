@@ -26,6 +26,17 @@ type UserInfo struct {
 	RoleDesc     string
 }
 
+type AgencyInfo struct {
+	Id           int64
+	Name         string
+	Sex          int
+	IdNo         string
+	Phone        string
+	HeadPortrait string
+	Attitue      int
+	Professional int
+}
+
 func (this *UserInfo) Role2Desc() {
 	switch this.Role {
 	case USER_TYPE_Manger:

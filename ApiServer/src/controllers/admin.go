@@ -30,6 +30,7 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("GetSecurePic", a.GetSecurePic)
 	a.Mapping("GetUserInfo", a.GetUserInfo)
 	a.Mapping("GetSaltForUser", a.GetSaltForUser)
+	a.Mapping("GetAgencyList", a.GetAgencyList)
 
 	a.Mapping("Loginpass", a.Loginpass)
 	a.Mapping("FetchSms", a.FetchSms)
@@ -37,6 +38,53 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Loginsms", a.Loginsms)
 	a.Mapping("Logout", a.Logout)
 	a.Mapping("Test", a.Test)
+}
+
+// @Title GetAgencyList
+// @Description get agency list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /AgencyList [get]
+func (this *AdminController) GetAgencyList() {
+	FN := "[GetAgencyList] "
+	beego.Warn("[--- API: GetAgencyList ---]")
+
+	var result ResAdminGetAgencyList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	lu, err := getLoginUser(this.Controller) // login user id
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "lu:", lu)
+
+	/*
+	 *	Extract agreements
+	 */
+	// version := this.GetString("ver")
+	begin, _ := this.GetInt("bgn")
+	cnt, _ := this.GetInt("cnt")
+
+	/*
+	 *	Processing
+	 */
+	err, total, agencys := models.GetAgencyList(begin, cnt)
+	if nil == err {
+		result.Total = total
+		result.Count = int64(len(agencys))
+		result.Agencys = agencys
+	}
 }
 
 // @Title GetUserInfo

@@ -29,6 +29,69 @@ const (
 *		err - error info
 *		uif - user info
  */
+func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.AgencyInfo) {
+	FN := "[GetAgencyList] "
+	beego.Trace(FN, "begin:", begin, ", cnt:", cnt)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument checking */
+
+	/* Permission checking */
+
+	/* Processing */
+	// calculate the count
+	o := orm.NewOrm()
+	sql := `SELECT COUNT(*) AS count
+				FROM tbl_user_group_member AS gm, tbl_user AS u, tbl_user_group AS g 
+				WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND g.admin`
+	var Count int64
+	errT := o.Raw(sql).QueryRow(&Count)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	total = Count
+	if 0 == total || 0 == cnt { // user just want to calculate the total number
+		return
+	}
+
+	if int64(begin) >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin position: %d", begin)}
+		return
+	}
+
+	// get real records
+	sql = `SELECT u.id, u.name, u.id_no, u.phone, u.head AS head_portrait
+				FROM tbl_user_group_member AS gm, tbl_user AS u, tbl_user_group AS g 
+				WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND g.admin
+				LIMIT ?, ?`
+	var as []commdef.AgencyInfo
+	numb, errT := o.Raw(sql, begin, cnt).QueryRows(&as)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, numb, "records found")
+
+	agencys = as
+	return
+}
+
+/**
+*	Get user information by id
+*	Arguments:
+*		id 	- user id to fetch
+*		ln	- login user. 	> 0: real login user; = 0: system; < 0: no user specified
+*	Returns
+*		err - error info
+*		uif - user info
+ */
 func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 	FN := "[GetUserInfo] "
 	beego.Trace(FN, "id:", id, ", ln:", ln)

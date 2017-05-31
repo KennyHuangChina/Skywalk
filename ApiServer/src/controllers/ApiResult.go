@@ -30,6 +30,14 @@ type ResAdminGetUserInfo struct {
 	commdef.UserInfo
 }
 
+// result of API get agency list
+type ResAdminGetAgencyList struct {
+	ResCommon
+	Total   int64
+	Count   int64
+	Agencys []commdef.AgencyInfo
+}
+
 // result of API GetSaltForUser{
 type ResAdminGetUserSalt struct {
 	ResCommon

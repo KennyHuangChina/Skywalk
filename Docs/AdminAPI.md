@@ -137,3 +137,28 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
+
+### 10. Get Agency List
+	[Scope]			APP
+	[Private]		private: all logined user
+	[Request]
+  		* GET /v1/admin/AgencyList?bgn=<>&cnt=<>
+	  		* bgn			int		// from which item to fetch
+	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
+	[Response]
+		* SUCCESS:200 
+			* Total    			int		// total number
+			* Count				int		// how many items fetched
+			* Agencys			array
+				* Id			int 		// agency id
+				* Name			string		// agency name
+				* Sex			int 		// agency sex. 0 - male / 1 - female
+				* IDNo			string		// agency ID card
+				* Professional	int			// professional rank. 0 ~ 50 (0.0 ~ 5.0)
+				* Attitude		int			// attitude rank. 0 ~50 (0.0 ~ 5.0)
+				* Portrait		string		// head portraint picture URL
+				* Phone			string		// phone number
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
