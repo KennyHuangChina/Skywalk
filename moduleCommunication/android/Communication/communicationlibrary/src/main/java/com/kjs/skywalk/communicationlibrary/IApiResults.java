@@ -18,6 +18,17 @@ public class IApiResults {
         String GetRandom();
     }
 
+    public interface IAgencyInfo {
+        int     Id();       // agency id
+        String  Name();     // agency name
+        String  Phone();    // agency phone number
+        String  Portrait(); // agency head portrait picture URL
+        int     Sex();      // agency sex. 0 - male / 1 - female
+        String  IdNo();     // agency ID card
+        int     RankProf(); // professional rank. 0 ~ 50 (0.0 ~ 5.0)
+        int     RankAtti(); // attitude rank. 0 ~50 (0.0 ~ 5.0)
+    }
+
     public interface IPropertyInfo {
         int GetId();
         String GetName();
