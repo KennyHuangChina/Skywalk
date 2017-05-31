@@ -27,6 +27,8 @@ public class CommunicationInterface {
     //
     public interface ICommand {
 
+        int CommandTest();
+
         /* User Admin */
         int GetSmsCode(String userName);                                        // CMD_GET_SMS_CODE,        IApiResults.IGetSmsCode
         int GetUserInfo(int uid);                                               // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
@@ -35,7 +37,7 @@ public class CommunicationInterface {
         int LoginBySms(String user, String smsCode);                            // CMD_LOGIN_BY_SMS,        IApiResults.ILogin
         int Relogin(String userName);                                           // CMD_RELOGIN,             IApiResults.ILogin
         int Logout();                                                           // CMD_LOG_OUT,             IApiResults.ICommon
-        int CommandTest();
+        int GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
 
         /* House */
         int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
@@ -100,6 +102,7 @@ public class CommunicationInterface {
         public static int CMD_LOG_OUT               = 0x1005;
         public static int CMD_RELOGIN               = 0x1006;
         public static int CMD_GET_SMS_CODE          = 0x1007;
+        public static int CMD_GET_AGENCY_LIST       = 0x1008;
 
         // House
         public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001;
