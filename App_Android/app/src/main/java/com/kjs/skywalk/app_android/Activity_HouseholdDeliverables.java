@@ -106,6 +106,16 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity
 //        loadItems(llDeliverables, rows);
     }
 
+    private void updateDeliverableList(final ArrayList<AdapterDeliverables.Deliverable> newList) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                kjsLogUtil.i("updateDeliverablesList");
+                mDeliverablesAdapter.updateDeliverablesList(newList);
+            }
+        });
+    }
+
 //    private void loadItems(ViewGroup layout, int rows) {
 //
 //        for (int i = 0; i < rows; i++) {
@@ -265,11 +275,11 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity
     public class GetDeliverablesTask extends AsyncTask<Void, Void, Boolean> {
         ArrayList<Object> mIds = null;
         boolean mGotHouseDeliverables = false;
-
+        ArrayList<AdapterDeliverables.Deliverable> mDeliverablesList;
         @Override
         protected Boolean doInBackground(Void... voids) {
             CommandManager CmdMgr = new CommandManager(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
-            int result = CmdMgr.GetHouseDeliverables(2);
+            int result = CmdMgr.GetHouseDeliverables(6);
             if (result != CommunicationError.CE_ERROR_NO_ERROR) {
                 kjsLogUtil.e("Error to call GetHouseDeliverables");
                 return false;
@@ -293,6 +303,8 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity
                 return false;
             }
 
+            updateDeliverableList(mDeliverablesList);
+
 //            for (Object id : mIds) {
 //                CmdMgr = new CommandManager(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
 //                result = CmdMgr.GetHouseDeliverables((int)id);
@@ -309,13 +321,17 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity
 
             @Override
             public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
-                if (i == CMD_GET_HOUSE_DELIVERABLES) {
+                kjsLogUtil.i(String.format("[command: %d] ErrCode:%d(%s)", i, iCommon.GetErrCode(), iCommon.GetErrDesc()));
+
+                if (i == CMD_GET_HOUSE_DELIVERABLES && iCommon.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
                     IApiResults.IResultList list = (IApiResults.IResultList)iCommon;
+                    mDeliverablesList = new ArrayList<AdapterDeliverables.Deliverable>();
                     for (Object item : list.GetList()) {
                         IApiResults.IDeliverableInfo info = (IApiResults.IDeliverableInfo)item;
                         AdapterDeliverables.Deliverable deliverable = new AdapterDeliverables.Deliverable(R.drawable.gas_n, info.GetName(), info.GetQty());
-                        mHouseDeliverables.add(deliverable);
-                     }
+                        mDeliverablesList.add(deliverable);
+                        kjsLogUtil.i(String.format("[Deliverable:%d] name:%s qty:%d desc:%s", info.GetId(), info.GetName(), info.GetQty(), info.GetDesc()));
+                    }
                   mGotHouseDeliverables = true;
                 }
             }

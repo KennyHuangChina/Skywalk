@@ -77,9 +77,8 @@ class AdapterDeliverables extends BaseAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.listitem_household_deliverable, null);
 
-            ((ImageView)convertView.findViewById(R.id.iv_icon)).setImageResource(mDeliverableLst.get(position).mIcon);
-            ((TextView)convertView.findViewById(R.id.tv_description)).setText(mDeliverableLst.get(position).mDesc);
-
+            holder.ivIcon = ((ImageView)convertView.findViewById(R.id.iv_icon));
+            holder.tvDescription = ((TextView)convertView.findViewById(R.id.tv_description));
             holder.tvNumber = ((TextView)convertView.findViewById(R.id.tv_number));
             holder.tvPlus = ((TextView)convertView.findViewById(R.id.tv_plus));
             holder.tvDecrease = ((TextView)convertView.findViewById(R.id.tv_decrease));
@@ -89,6 +88,8 @@ class AdapterDeliverables extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.ivIcon.setImageResource(mDeliverableLst.get(position).mIcon);
+        holder.tvDescription.setText(mDeliverableLst.get(position).mDesc);
         holder.tvNumber.setText("" + mDeliverableLst.get(position).mNum);
 
         if (mIsEditMode) {
