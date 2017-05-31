@@ -36,7 +36,7 @@ public class Activity_Search extends Activity {
     private int mActScreenWidth = 1080;
     private Context mContext;
     AdapterHouseSearchResult mAdapter = null;
-    private ArrayList<ClassDefine.Garden> mGardenList = new ArrayList<ClassDefine.Garden>();
+    private ArrayList<ClassDefine.Property> mGardenList = new ArrayList<ClassDefine.Property>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +119,8 @@ public class Activity_Search extends Activity {
 
     private void updateAdapter(String keywords) {
         mListView.removeAllViewsInLayout();
-        ArrayList<ClassDefine.Garden> newList = new ArrayList<ClassDefine.Garden>();
-        for(ClassDefine.Garden garden : mGardenList) {
+        ArrayList<ClassDefine.Property> newList = new ArrayList<ClassDefine.Property>();
+        for(ClassDefine.Property garden : mGardenList) {
             if(garden.mName.contains(keywords)) {
                 newList.add(garden);
             }
@@ -255,35 +255,35 @@ public class Activity_Search extends Activity {
     }
 
     private void initGardenList() {
-        ClassDefine.Garden garden = new ClassDefine.Garden();
+        ClassDefine.Property garden = new ClassDefine.Property();
         garden.mName = "世茂蝶湖湾";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "万科魅力花园MIXTOWN";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "印象欧洲";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "绿地21新城";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "万科花园MIXTOWN";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "印象de欧洲";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "绿地26新城";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);
-        garden = new ClassDefine.Garden();
+        garden = new ClassDefine.Property();
         garden.mName = "新时代";
         garden.mAddress = "昆山市玉山镇";
         mGardenList.add(garden);

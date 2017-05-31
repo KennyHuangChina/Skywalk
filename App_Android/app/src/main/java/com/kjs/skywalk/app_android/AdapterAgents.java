@@ -16,35 +16,54 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
 /**
  * Created by Jackie on 2017/3/24.
  */
 
 public class AdapterAgents extends BaseAdapter {
     private Context mContext = null;
+    private ArrayList<ClassDefine.Agent> mDataList = new ArrayList<>();
+    private boolean mAutoSelect = true;
 
     public AdapterAgents(Context context) {
         super();
         mContext = context;
     }
 
+    public void setAutoSelect(boolean b) {
+        mAutoSelect = b;
+    }
+
+    public void setDataList(ArrayList<ClassDefine.Agent> list) {
+        mDataList = list;
+    }
+
     @Override
     public int getCount() {
-        return 3;
+        return mDataList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return mDataList.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     class ViewHolder {
-        TextView tvContentName;
+        ImageView mImageViewPhoto;
+        TextView mName;
+        TextView mID;
+        TextView mYears;
+        TextView mAttitude;
+        TextView mProfessional;
     }
 
     @Override
@@ -57,20 +76,26 @@ public class AdapterAgents extends BaseAdapter {
             thumbView.setImageResource(R.drawable.ren);
 
             holder = new ViewHolder();
-            holder.tvContentName = (TextView) convertView.findViewById(R.id.title);
+            holder.mImageViewPhoto = thumbView;
+            holder.mName = (TextView)convertView.findViewById(R.id.textViewAgentName);
+            holder.mID = (TextView)convertView.findViewById(R.id.textViewAgentIDCard);
+            holder.mYears = (TextView)convertView.findViewById(R.id.textViewAgentConyezigeYear);
+            holder.mAttitude = (TextView)convertView.findViewById(R.id.textViewAttitude);
+            holder.mProfessional = (TextView)convertView.findViewById(R.id.textViewProfessional);
+
             convertView.setTag(holder);
-
-            if(position == 0)
-            {
-                ImageView selectionView = (ImageView)convertView.findViewById(R.id.imageViewSelection);
-                selectionView.setVisibility(View.VISIBLE);
-
-                int color = 0xFFebfff6;
-
-                convertView.setBackgroundColor(color);
-            }
         } else {
             holder = (ViewHolder) convertView.getTag();
+        }
+
+        if(!mAutoSelect)
+        {
+            ImageView selectionView = (ImageView)convertView.findViewById(R.id.imageViewSelection);
+            selectionView.setVisibility(View.VISIBLE);
+
+            int color = 0xFFebfff6;
+
+            convertView.setBackgroundColor(color);
         }
 
         return convertView;

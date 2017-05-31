@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,16 +20,27 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
-public class Activity_HouseholdDeliverables extends AppCompatActivity {
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_DELIVERABLE_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
+
+public class Activity_HouseholdDeliverables extends AppCompatActivity
+        implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
     private AlertDialog mDeliverableEdtDlg;
-    private ListView    mLvDeliverables;
-    private TextView    mTvModifyFinish;
-    private Boolean     mIsModifyMode;
+    private ListView mLvDeliverables;
+    private TextView mTvModifyFinish;
+    private Boolean mIsModifyMode;
     private ImageButton mIbNew;
     AdapterDeliverables mDeliverablesAdapter;
+    GetDeliverablesTask mGetDeliverablesTask;
     // test data
 
 
@@ -43,7 +55,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
                     new AdapterDeliverables.Deliverable(R.drawable.mail_box_n, "信报箱钥匙", 1),
                     new AdapterDeliverables.Deliverable(R.drawable.coffer_n, "保险柜钥匙", 1),
                     new AdapterDeliverables.Deliverable(R.drawable.gas_n, "燃气卡", 3)
-        )
+            )
     );
     //
 
@@ -58,7 +70,7 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         int l = s.length();
         styleText.setSpan(new TextAppearanceSpan(this, R.style.textstyle_large), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         styleText.setSpan(new TextAppearanceSpan(this, R.style.textstyle_small), 5, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ((TextView)findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
+        ((TextView) findViewById(R.id.tv_apartment_name)).setText(styleText, TextView.BufferType.SPANNABLE);
 
         mIsModifyMode = false;
         loadUI();
@@ -71,6 +83,11 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
                 showDeliverableNewDlg();
             }
         });
+
+
+        // get deliverable list
+        mGetDeliverablesTask = new GetDeliverablesTask();
+        mGetDeliverablesTask.execute();
     }
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
@@ -81,9 +98,6 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         mDeliverablesAdapter = new AdapterDeliverables(this);
         mDeliverablesAdapter.updateDeliverablesList(mHouseDeliverables);
         mLvDeliverables.setAdapter(mDeliverablesAdapter);
-
-
-
 
 
 //        LinearLayout llDeliverables = (LinearLayout) findViewById(R.id.ll_deliverables);
@@ -219,13 +233,11 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
 
     public void onViewClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_back:
-            {
+            case R.id.tv_back: {
                 finish();
             }
             break;
-            case R.id.tv_modify_finish:
-            {
+            case R.id.tv_modify_finish: {
                 mIsModifyMode = !mIsModifyMode;
                 if (mIsModifyMode) {
                     mTvModifyFinish.setText("完成");
@@ -240,4 +252,80 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+
+    }
+
+    @Override
+    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
+    }
+
+    public class GetDeliverablesTask extends AsyncTask<Void, Void, Boolean> {
+        ArrayList<Object> mIds = null;
+        boolean mGotHouseDeliverables = false;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            CommandManager CmdMgr = new CommandManager(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
+            int result = CmdMgr.GetHouseDeliverables(2);
+            if (result != CommunicationError.CE_ERROR_NO_ERROR) {
+                kjsLogUtil.e("Error to call GetHouseDeliverables");
+                return false;
+            }
+
+            int wait_count = 0;
+            while (wait_count < 10) {
+                if (mGotHouseDeliverables)
+                    break;
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+
+            if (!mGotHouseDeliverables) {
+                kjsLogUtil.e("failed to GetHouseDeliverables");
+                return false;
+            }
+
+//            for (Object id : mIds) {
+//                CmdMgr = new CommandManager(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
+//                result = CmdMgr.GetHouseDeliverables((int)id);
+//                if (result != CommunicationError.CE_ERROR_NO_ERROR) {
+//                    kjsLogUtil.e("Error to call GetHouseDeliverables, id: " + (int)id);
+//                    return false;
+//                }
+//            }
+
+            return true;
+        }
+
+        CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
+
+            @Override
+            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+                if (i == CMD_GET_HOUSE_DELIVERABLES) {
+                    IApiResults.IResultList list = (IApiResults.IResultList)iCommon;
+                    for (Object item : list.GetList()) {
+                        IApiResults.IDeliverableInfo info = (IApiResults.IDeliverableInfo)item;
+                        AdapterDeliverables.Deliverable deliverable = new AdapterDeliverables.Deliverable(R.drawable.gas_n, info.GetName(), info.GetQty());
+                        mHouseDeliverables.add(deliverable);
+                     }
+                  mGotHouseDeliverables = true;
+                }
+            }
+        };
+
+        CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
+            @Override
+            public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
+            }
+        };
+    }
 }

@@ -32,8 +32,18 @@ public class ClassDefine {
         }
     }
 
-    static class Garden {
+    static class Property {
         public String mName;
         public String mAddress;
     }
+
+    static class Agent {
+        public String mName;
+        public String mSex;
+        public String mID;
+        public String mProfessional;
+        public String mAttitude;
+        public String mYears;
+    }
+
 }

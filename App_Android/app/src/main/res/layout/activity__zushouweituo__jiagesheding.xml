@@ -67,16 +67,20 @@
                         android:textColor="@color/colorTextNormal"
                         android:text="挂牌租金"/>
                     <EditText
+                        android:id="@+id/editTextRent"
                         style="@style/textStyle_page_blockEdit"
                         android:textColorHint="@color/colorEditTextTint"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="right"
+                        android:inputType="number|numberDecimal"
+                        android:paddingRight="10dp"
                         android:layout_toLeftOf="@+id/tv_guapai_unit"
-                        android:hint="501"/>
+                        android:hint="请输入租金"/>
                     <TextView
                         android:id="@+id/tv_guapai_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
                         android:text="元/月"/>
                 </RelativeLayout>
 
@@ -93,16 +97,20 @@
                         android:textColor="@color/colorTextNormal"
                         android:text="最低租金"/>
                     <EditText
+                        android:id="@+id/editTextMinRent"
                         style="@style/textStyle_page_blockEdit"
                         android:textColorHint="@color/colorEditTextTint"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="right"
+                        android:inputType="number|numberDecimal"
+                        android:paddingRight="10dp"
                         android:layout_toLeftOf="@+id/tv_zuidi_unit"
-                        android:hint="501"/>
+                        android:hint="请输入最低租金"/>
                     <TextView
                         android:id="@+id/tv_zuidi_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
                         android:text="元/月"/>
                 </RelativeLayout>
 
@@ -148,16 +156,20 @@
                         android:textColor="@color/colorTextNormal"
                         android:text="物业费"/>
                     <EditText
+                        android:id="@+id/editTextPropertyFee"
                         style="@style/textStyle_page_blockEdit"
                         android:textColorHint="@color/colorEditTextTint"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="right"
+                        android:inputType="number|numberDecimal"
+                        android:paddingRight="10dp"
                         android:layout_toLeftOf="@+id/tv_wuye_unit"
-                        android:hint="501"/>
+                        android:hint="请输入物业费"/>
                     <TextView
                         android:id="@+id/tv_wuye_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
                         android:text="元/月"/>
                 </RelativeLayout>
 
@@ -192,17 +204,21 @@
                         android:textColor="@color/colorTextNormal"
                         android:text="挂牌售价"/>
                     <EditText
+                        android:id="@+id/editTextPrice"
                         style="@style/textStyle_page_blockEdit"
                         android:textColorHint="@color/colorEditTextTint"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="right"
+                        android:inputType="number|numberDecimal"
+                        android:paddingRight="10dp"
                         android:layout_toLeftOf="@+id/tv_guapaishoujia_unit"
-                        android:hint="501"/>
+                        android:hint="请输入售价"/>
                     <TextView
                         android:id="@+id/tv_guapaishoujia_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
-                        android:text="元/月"/>
+                        android:text="万元"/>
                 </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal"/>
@@ -218,17 +234,21 @@
                         android:textColor="@color/colorTextNormal"
                         android:text="最低售价"/>
                     <EditText
+                        android:id="@+id/editTextMinPrice"
                         style="@style/textStyle_page_blockEdit"
                         android:textColorHint="@color/colorEditTextTint"
+                        android:textColor="@color/colorTextNormal"
+                        android:gravity="right"
+                        android:inputType="number|numberDecimal"
+                        android:paddingRight="10dp"
                         android:layout_toLeftOf="@+id/tv_zuidishoujia_unit"
-                        android:hint="501"/>
+                        android:hint="请输入最低售价"/>
                     <TextView
                         android:id="@+id/tv_zuidishoujia_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
-                        android:text="元/月"/>
+                        android:text="万元"/>
                 </RelativeLayout>
 
                 <LinearLayout

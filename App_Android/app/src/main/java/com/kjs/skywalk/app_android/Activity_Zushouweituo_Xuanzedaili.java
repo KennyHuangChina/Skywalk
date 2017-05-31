@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -13,9 +15,10 @@ import java.util.List;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Zushouweituo_Xuanzedaili extends Activity {
+public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity {
 
     private ListView mListViewAgents = null;
+    private AdapterAgents mAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +27,21 @@ public class Activity_Zushouweituo_Xuanzedaili extends Activity {
         TextView titleText = (TextView)findViewById(R.id.textViewActivityTitle);
         titleText.setText("租售委托-选择代理");
 
+        CheckBox autoSelect = (CheckBox)findViewById(R.id.checkbox);
+        autoSelect.setChecked(true);
+
         mListViewAgents = (ListView)findViewById(R.id.listViewContent);
         mListViewAgents.setFocusable(false);
-        AdapterAgents adapter = new AdapterAgents(this);
-        mListViewAgents.setAdapter(adapter);
+        mAdapter = new AdapterAgents(this);
+        mAdapter.setAutoSelect(autoSelect.isChecked());
+        mListViewAgents.setAdapter(mAdapter);
 
+        mListViewAgents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
 
     public void onClickResponse(View v) {
@@ -55,6 +68,9 @@ public class Activity_Zushouweituo_Xuanzedaili extends Activity {
                 startActivity(new Intent(this, Activity_Zushouweituo_SelectService.class));
             }
             break;
+            case R.id.checkbox: {
+                break;
+            }
         }
     }
 }
