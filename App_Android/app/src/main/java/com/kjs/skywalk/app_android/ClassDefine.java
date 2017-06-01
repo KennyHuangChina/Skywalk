@@ -40,10 +40,12 @@ public class ClassDefine {
     static class Agent {
         public String mName;
         public String mSex;
-        public String mID;
+        public String mIDCard;
         public String mProfessional;
         public String mAttitude;
         public String mYears;
+        public String mID;
+        public String mPortrait;
     }
 
 }

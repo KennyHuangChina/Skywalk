@@ -60,7 +60,7 @@ public class AdapterAgents extends BaseAdapter {
     class ViewHolder {
         ImageView mImageViewPhoto;
         TextView mName;
-        TextView mID;
+        TextView mIDCard;
         TextView mYears;
         TextView mAttitude;
         TextView mProfessional;
@@ -78,7 +78,7 @@ public class AdapterAgents extends BaseAdapter {
             holder = new ViewHolder();
             holder.mImageViewPhoto = thumbView;
             holder.mName = (TextView)convertView.findViewById(R.id.textViewAgentName);
-            holder.mID = (TextView)convertView.findViewById(R.id.textViewAgentIDCard);
+            holder.mIDCard = (TextView)convertView.findViewById(R.id.textViewAgentIDCard);
             holder.mYears = (TextView)convertView.findViewById(R.id.textViewAgentConyezigeYear);
             holder.mAttitude = (TextView)convertView.findViewById(R.id.textViewAttitude);
             holder.mProfessional = (TextView)convertView.findViewById(R.id.textViewProfessional);
@@ -87,6 +87,13 @@ public class AdapterAgents extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        ClassDefine.Agent agent = mDataList.get(position);
+        holder.mName.setText(agent.mName);
+        holder.mIDCard.setText("身份证: " + agent.mIDCard);
+        holder.mYears.setText("从业资格: " + agent.mYears);
+        holder.mAttitude.setText(agent.mAttitude);
+        holder.mProfessional.setText(agent.mProfessional);
 
         if(!mAutoSelect)
         {

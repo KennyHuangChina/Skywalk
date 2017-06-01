@@ -16,6 +16,7 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +31,9 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
 
     private ListView mListViewAgents = null;
     private AdapterAgents mAdapter = null;
+    private ArrayList<ClassDefine.Agent> mAgentList = new ArrayList<>();
 
+    private int mAgentCount = 0;
     private final int MSG_GET_AGENT_LIST = 0;
 
     @Override
@@ -64,22 +67,44 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_GET_AGENT_LIST: {
-                    fetchAgentList();
+                    fetchAgentList(0, 50);
                     break;
                 }
             }
         }
     };
 
-    private void fetchAgentList() {
+    private void fetchAgentList(final int start, final int end) {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
             public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
                 if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                    commonFun.showToast_info(getApplicationContext(), mListViewAgents, "添加成功");
+                    IApiResults.IResultList res = (IApiResults.IResultList) iCommon;
+                    mAgentCount = res.GetTotalNumber();
+                    int nFetched = res.GetFetchedNumber();
+                    if (nFetched > 0) {
+                        ArrayList<Object> array = res.GetList();
+                        for(Object obj : array) {
+                            IApiResults.IAgencyInfo info = (IApiResults.IAgencyInfo)obj;
+                            ClassDefine.Agent agent = new ClassDefine.Agent();
+                            double db = info.RankAtti() / 10.0;
+                            agent.mAttitude = String.format("%.1f", db);
+                            db = info.RankProf() / 10.0;
+                            agent.mProfessional = String.format("%.1f", db);
+                            agent.mIDCard = info.IdNo();
+                            agent.mID = String.valueOf(info.Id());
+                            agent.mName = info.Name();
+                            agent.mSex = String.valueOf(info.Sex());
+                            agent.mPortrait = info.Portrait();
+                            agent.mYears = "3年";
+
+                            mAgentList.add(agent);
+                        }
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            updateAgentList();
                         }
                     });
                 } else {
@@ -89,12 +114,19 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
             }
         };
         CommandManager manager = new CommandManager(this, listener, this);
-        int res = manager.GetAgencyList(0, 0);
+        int res = manager.GetAgencyList(start, end);
         if(res == CE_ERROR_NO_ERROR) {
             showWaiting(mListViewAgents);
         } else {
             commonFun.showToast_info(getApplicationContext(), mListViewAgents, "失败");
         }
+    }
+
+    public void updateAgentList() {
+        mListViewAgents.removeAllViewsInLayout();
+        mListViewAgents.setAdapter(mAdapter);
+        mAdapter.setDataList(mAgentList);
+        mAdapter.notifyDataSetChanged();
     }
 
     public void onClickResponse(View v) {
