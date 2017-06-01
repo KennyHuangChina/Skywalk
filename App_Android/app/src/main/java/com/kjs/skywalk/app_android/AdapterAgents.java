@@ -28,10 +28,50 @@ public class AdapterAgents extends BaseAdapter {
     private Context mContext = null;
     private ArrayList<ClassDefine.Agent> mDataList = new ArrayList<>();
     private boolean mAutoSelect = true;
+    private View mSelectedView = null;
 
     public AdapterAgents(Context context) {
         super();
         mContext = context;
+    }
+
+    public void unSelectCurrentItem() {
+        unSelectItem(mSelectedView);
+
+        mSelectedView = null;
+    }
+
+    private void unSelectItem(View v) {
+        if(v == null) {
+            return;
+        }
+
+        ImageView selectionView = (ImageView) v.findViewById(R.id.imageViewSelection);
+        selectionView.setVisibility(View.INVISIBLE);
+
+        v.setBackgroundColor(0x000000);
+    }
+
+    public void setItemSelected(View v, int position) {
+        if(mSelectedView == v){
+            return;
+        } else {
+            if(mSelectedView != null) {
+                ImageView selectionView = (ImageView) mSelectedView.findViewById(R.id.imageViewSelection);
+                selectionView.setVisibility(View.INVISIBLE);
+
+                mSelectedView.setBackgroundColor(0x000000);
+            }
+        }
+
+        ImageView selectionView = (ImageView)v.findViewById(R.id.imageViewSelection);
+        selectionView.setVisibility(View.VISIBLE);
+
+        int color = 0xFFebfff6;
+
+        v.setBackgroundColor(color);
+
+        mSelectedView = v;
     }
 
     public void setAutoSelect(boolean b) {

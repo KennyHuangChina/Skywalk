@@ -101,7 +101,6 @@
                         android:layout_marginLeft="10dp" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
