@@ -18,10 +18,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
-public class Activity_HouseholdAppliances extends AppCompatActivity {
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_FACILITY_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
+
+public class Activity_HouseholdAppliances extends AppCompatActivity
+        implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
     listitem_adapter_household_appliance mApplAdapter;
     // test data
     private final static ArrayList<listitem_adapter_household_appliance.ApplianceItem> mHouseAppliances = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>(
@@ -54,6 +65,23 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 showApplianceEdtDlg(i);
+            }
+        });
+
+        // get
+        CommandManager CmdMgr = new CommandManager(this, this, this);
+        int result = CmdMgr.GetHouseFacilityList(6);
+        if (result != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Error to call GetHouseFacilityList");
+        }
+    }
+
+    private void updateApplianceList(final ArrayList<listitem_adapter_household_appliance.ApplianceItem> newList) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                kjsLogUtil.i("updateApplianceList");
+                mApplAdapter.updateApplianceItemList(newList);
             }
         });
     }
@@ -140,6 +168,28 @@ public class Activity_HouseholdAppliances extends AppCompatActivity {
         }
         mApplianceNewDlg.show();
         mApplianceNewDlg.setContentView(R.layout.dialog_appliances_new);
+    }
+
+    @Override
+    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+        kjsLogUtil.i(String.format("[command: %d] ErrCode:%d(%s) --- %s" , i, iCommon.GetErrCode(), iCommon.GetErrDesc(), iCommon.DebugString()));
+
+        if (i == CMD_GET_HOUSEFACILITY_LIST && iCommon.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
+            IApiResults.IResultList list = (IApiResults.IResultList)iCommon;
+            ArrayList<listitem_adapter_household_appliance.ApplianceItem> itemList = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>();
+            for (Object item : list.GetList()) {
+                IApiResults.IHouseFacilityInfo info = (IApiResults.IHouseFacilityInfo)item;
+                listitem_adapter_household_appliance.ApplianceItem newItem = new listitem_adapter_household_appliance.ApplianceItem(R.drawable.gas_n, info.GetType() + ": " + info.GetName(), info.GetDesc(), info.GetQty());
+                itemList.add(newItem);
+            }
+
+            updateApplianceList(itemList);
+        }
+    }
+
+    @Override
+    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
     }
 
     // SpinnerAdapter not use now, reserve for future use
