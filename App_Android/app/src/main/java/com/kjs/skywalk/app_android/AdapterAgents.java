@@ -41,6 +41,10 @@ public class AdapterAgents extends BaseAdapter {
         mSelectedView = null;
     }
 
+    public boolean hasSelected() {
+        return mSelectedView == null ? false : true;
+    }
+
     private void unSelectItem(View v) {
         if(v == null) {
             return;
@@ -134,16 +138,6 @@ public class AdapterAgents extends BaseAdapter {
         holder.mYears.setText("从业资格: " + agent.mYears);
         holder.mAttitude.setText(agent.mAttitude);
         holder.mProfessional.setText(agent.mProfessional);
-
-        if(!mAutoSelect)
-        {
-            ImageView selectionView = (ImageView)convertView.findViewById(R.id.imageViewSelection);
-            selectionView.setVisibility(View.VISIBLE);
-
-            int color = 0xFFebfff6;
-
-            convertView.setBackgroundColor(color);
-        }
 
         return convertView;
     }

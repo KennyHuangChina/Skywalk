@@ -86,7 +86,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
         } else {
             mListViewAgents.setEnabled(false);
             mAdapter.unSelectCurrentItem();
-            mAgentListContainer.setBackgroundColor(0x10777777);
+            mAgentListContainer.setBackgroundColor(0x10666666);
         }
 
         mAdapter.unSelectCurrentItem();
@@ -180,6 +180,9 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
             break;
             case R.id.tv_next:
             {
+                if(!checkData()) {
+                    return;
+                }
                 startActivity(new Intent(this, Activity_Zushouweituo_SelectService.class));
             }
             break;
@@ -187,6 +190,17 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                 break;
             }
         }
+    }
+
+    private boolean checkData() {
+        CheckBox autoSelect = (CheckBox)findViewById(R.id.checkbox);
+        if(!autoSelect.isChecked()) {
+            if(!mAdapter.hasSelected()) {
+                commonFun.showToast_info(this, autoSelect, "请选择一个代理人或由系统自动为您分配");
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
