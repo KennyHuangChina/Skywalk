@@ -139,52 +139,61 @@ func Test_EditDeliverable(t *testing.T) {
 //
 func Test_AddDeliverable(t *testing.T) {
 	t.Log("Test AddDeliverable")
+	seq := 0
 
-	t.Log("<Case> Invalid argument: name not set")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid argument: name not set", seq))
 	if e, _ := AddDeliverable("", -1); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Permission: user not login")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Permission: user not login", seq))
 	if e, _ := AddDeliverable("11", -1); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Permission: login user does not exist")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Permission: login user does not exist", seq))
 	if e, _ := AddDeliverable("11", 100000000); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Permission: login user is a regualr user")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Permission: login user is a regualr user", seq))
 	if e, _ := AddDeliverable("11", 2); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Permission: login user is a agency")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Permission: login user is a agency", seq))
 	if e, _ := AddDeliverable("11", 6); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Invalid argument: deliverable already exist")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid argument: deliverable already exist", seq))
 	if e, _ := AddDeliverable("钥匙", 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Add Deliverable")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Add Deliverable", seq))
 	// Add
-	name_add := "水电存折"
+	name_add := fmt.Sprintf("水电存折测试_%d", seq)
 	e, id := AddDeliverable(name_add, 5)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("id:", id)
+
 	// remove
 	if e := delDeliverable(id, 5); nil != e {
 		t.Error("Failed, err: ", e)

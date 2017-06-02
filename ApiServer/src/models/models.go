@@ -176,6 +176,14 @@ func (hr *TblHouseRecommend) TableUnique() [][]string {
 type TblDeliverables struct {
 	Id   int64
 	Name string `orm:"size(50)"`
+	Pic  int    `orm:"not null; default(0)"` // pic id
+}
+
+func (hr *TblDeliverables) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Name"},
+		[]string{"Pic"},
+	}
 }
 
 type TblHouseDeliverable struct {
@@ -277,6 +285,25 @@ type TblHouseEventProcess struct {
 func (he *TblHouseEventProcess) TableIndex() [][]string {
 	return [][]string{
 		[]string{"Event", "When"},
+	}
+}
+
+type TblMessage struct {
+	Id         int64
+	Type       int       // message type
+	Msg        string    `orm:"size(200)"`
+	Sender     int64     // who send the message
+	Receiver   int64     // who is targe receiver of message
+	CreateTime time.Time `orm:"auto_now_add;type(datetime);not null"`
+	ReadTime   time.Time `orm:"type(datetime);null"` // when the receiver read the message
+	RefId      int64     // reference id, depend on what type the message is
+}
+
+func (he *TblMessage) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Receiver"},
+		[]string{"Sender"},
+		[]string{"Type", "RefId"},
 	}
 }
 
@@ -415,6 +442,25 @@ func init() {
 	for k, v := range STRING_MAP {
 		if !o.QueryTable("tbl_strings").Filter("Key", k).Exist() {
 			kv := TblStrings{Key: k, Value: v}
+			o.Insert(&kv)
+		}
+	}
+
+	DELIVERABLE_MAP := map[string]int{
+		"大门钥匙":    1,
+		"门禁卡":     2,
+		"水电卡/存折":  3,
+		"有线电视用户证": 4,
+		"水表箱钥匙":   5,
+		"电表箱钥匙":   6,
+		"信报箱钥匙":   7,
+		"保险柜钥匙":   8,
+		"燃气卡":     9,
+	}
+	for k, v := range DELIVERABLE_MAP {
+		// beego.Debug("k:", k, ", v:", v)
+		if !o.QueryTable("tbl_deliverables").Filter("name", k).Exist() {
+			kv := TblDeliverables{Name: k, Pic: v}
 			o.Insert(&kv)
 		}
 	}

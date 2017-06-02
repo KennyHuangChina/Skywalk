@@ -90,7 +90,7 @@ func (this *AccessoryController) GetDeliverableList() {
 	FN := "[GetDeliverableList] "
 	beego.Warn("[--- API: GetDeliverableList ---]")
 
-	var result ResGetCommonList
+	var result ResGetDeliverables
 	var err error
 
 	defer func() {

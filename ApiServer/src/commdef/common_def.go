@@ -132,6 +132,11 @@ type CommonListItem struct {
 	Name string
 }
 
+type Deliverable struct {
+	CommonListItem
+	Pic int
+}
+
 type HouseDeliverable struct {
 	Id   int64
 	Name string // house id

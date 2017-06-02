@@ -152,6 +152,12 @@ type ResGetCommonList struct {
 	List  []commdef.CommonListItem
 }
 
+type ResGetDeliverables struct {
+	ResCommon
+	Total int64
+	List  []commdef.Deliverable
+}
+
 // result of API get house deliverable list
 type ResGetHouseDeliverables struct {
 	ResCommon

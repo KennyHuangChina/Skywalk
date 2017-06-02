@@ -56,7 +56,7 @@ func GetHouseDeliverableList(uid, hid int64) (err error, lst []commdef.HouseDeli
 *		err 	- error info
 *		lst 	- deliverable list
 **/
-func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
+func GetDeliverables(uid int64) (err error, lst []commdef.Deliverable) {
 	FN := "[GetDeliverables] "
 	beego.Trace(FN, "uid:", uid)
 
@@ -77,7 +77,9 @@ func GetDeliverables(uid int64) (err error, lst []commdef.CommonListItem) {
 	}
 
 	for _, v := range dl {
-		newItem := commdef.CommonListItem{Id: v.Id, Name: v.Name}
+		newItem := commdef.Deliverable{Pic: v.Pic}
+		newItem.Id = v.Id
+		newItem.Name = v.Name
 		lst = append(lst, newItem)
 	}
 	// lst = dl
@@ -124,8 +126,16 @@ func AddDeliverable(name string, uid int64) (err error, id int64) {
 		return
 	}
 
+	// get max pic id
+	max := 0
+	errT := o.Raw(`SELECT MAX(pic) AS max FROM tbl_deliverables`).QueryRow(&max)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
 	// Add
-	n := TblDeliverables{Name: name}
+	n := TblDeliverables{Name: name, Pic: max + 1}
 	nid, errT := o.Insert(&n)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
