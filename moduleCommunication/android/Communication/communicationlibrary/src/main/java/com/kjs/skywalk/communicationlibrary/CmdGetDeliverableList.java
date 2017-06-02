@@ -30,7 +30,7 @@ class CmdGetDeliverableList extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResIdNameList res = new ResIdNameList(nErrCode, jObject);
+        ResDeliverableList res = new ResDeliverableList(nErrCode, jObject);
         return res;
     }
 }
