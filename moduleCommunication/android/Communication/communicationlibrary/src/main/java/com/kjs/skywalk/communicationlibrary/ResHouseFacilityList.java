@@ -97,6 +97,7 @@ class ResHouseFacilityList extends ResBase implements IApiResults.IResultList {
             private int     mId     = 0;
             private String  mName   = "";
             private String  mType   = "";
+            private String  mIcon   = "";
             private int     mQty    = 0;
             private String  mDesc   = "";
 
@@ -105,8 +106,12 @@ class ResHouseFacilityList extends ResBase implements IApiResults.IResultList {
                     mId     = obj.getInt("Id");
                     mName   = obj.getString("Name");
                     mType   = obj.getString("Type");
+                    mIcon   = obj.getString("Icon");
                     mQty    = obj.getInt("Qty");
                     mDesc   = obj.getString("Desc");
+                    if (!mIcon.isEmpty()) {
+                        mIcon = PicFullUrl(mIcon);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -128,6 +133,11 @@ class ResHouseFacilityList extends ResBase implements IApiResults.IResultList {
             }
 
             @Override
+            public String GetIcon() {
+                return mIcon;
+            }
+
+            @Override
             public int GetQty() {
                 return mQty;
             }
@@ -139,7 +149,8 @@ class ResHouseFacilityList extends ResBase implements IApiResults.IResultList {
 
             @Override
             public String ListItemInfo2String() {
-                return " id: " + mId + ", name: " + mName + ", mType: " + mType + ", qty: " + mQty + ", desc: " + mDesc;
+                return " id: " + GetId() + ", name: " + GetName() + ", mType: " + GetType()
+                        + ", qty: " + GetQty() + ", desc: " + GetDesc() + ", icon: " + GetIcon();
             }
         }
     }

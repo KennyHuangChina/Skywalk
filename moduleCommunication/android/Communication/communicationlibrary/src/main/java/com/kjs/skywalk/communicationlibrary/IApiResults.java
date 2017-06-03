@@ -127,6 +127,7 @@ public class IApiResults {
         int GetId();
         String GetName();
         String GetType();
+        String GetIcon();
         int GetQty();
         String GetDesc();
     }
