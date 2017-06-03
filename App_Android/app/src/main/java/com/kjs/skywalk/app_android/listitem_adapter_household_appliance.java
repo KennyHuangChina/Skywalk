@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -88,10 +89,14 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
         Drawable drawable = mContext.getResources().getDrawable(item.mIcon, null);
         holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
-//        if(i == 2) {
-//            Drawable drawable_ex = commonFun.getDrawableFromLocal(mContext, "/sdcard/skywalk/canju.png");
-//            holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable_ex, null, null, null);
-//        }
+        if(i == 0) {
+            String testFile = mContext.getCacheDir().getAbsolutePath() + File.separator + "testPics" + File.separator + "sofa_n.png";
+            File file = new File(testFile);
+            if (file.exists()) {
+                Drawable drawable_ex = commonFun.getDrawableFromLocal(mContext, testFile);
+                holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable_ex, null, null, null);
+            }
+        }
 
         return view;
     }
