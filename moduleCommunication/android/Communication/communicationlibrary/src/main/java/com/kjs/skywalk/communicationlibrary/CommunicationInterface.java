@@ -68,7 +68,7 @@ public class CommunicationInterface {
         int EditFacilityType(int typeId, String sTypeName);             // CMD_EDIT_FACILITY_TYPE,      IApiResults.ICommon
         int GetFacilityTypeList();                                      // CMD_GET_FACILITY_TYPE_LIST,  IApiResults.IResultList(IApiResults.IListIdName)
 
-        int AddFacility(int nType, String sName);                       // CMD_ADD_FACILITY,            IApiResults.IAddRes
+        int AddFacility(int nType, String sName, String sIcon);         // CMD_ADD_FACILITY,            IApiResults.IAddRes
         int EditFacility(int id, int nType, String sName);              // CMD_EDIT_FACILITY,           IApiResults.ICommon
         int GetFacilityList(int nType);                                 // CMD_GET_FACILITY_LIST,       IApiResults.IResultList(IApiResults.IFacilityInfo)
 

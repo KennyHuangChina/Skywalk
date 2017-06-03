@@ -41,6 +41,7 @@ class CmdAddFacility extends CommunicationBase {
             return false;
         }
 
+        // Facility Name
         mName = map.get(CommunicationParameterKey.CPK_NAME);
         if (mName.length() == 0) {
             Log.e(TAG, "mName: " + mName);
@@ -49,6 +50,7 @@ class CmdAddFacility extends CommunicationBase {
         mName = String2Base64(mName);
         Log.d(TAG, "mName: " + mName);
 
+        // Facility type
         try {
             mType = Integer.parseInt(map.get(CommunicationParameterKey.CPK_TYPE));
             if (mType < 0) {
@@ -58,6 +60,20 @@ class CmdAddFacility extends CommunicationBase {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;
+        }
+
+        // Facility Icon
+        if (map.containsKey(CommunicationParameterKey.CPK_IMG_FILE)) {
+            String picFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
+            if (picFile.length() == 0) {
+                Log.e(TAG, "picture file not assigned");
+                return false;
+            }
+            if (!CUtilities.isPicture(picFile)) {
+                Log.e(TAG, "picture file not exist");
+                return false;
+            }
+            mFile = picFile;
         }
 
         return true;

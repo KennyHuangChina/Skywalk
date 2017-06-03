@@ -323,11 +323,14 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int AddFacility(int nType, String sName) {
+    public int AddFacility(int nType, String sName, String sIcon) {
         CommunicationBase op = new CmdAddFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
         pMap.put(CommunicationParameterKey.CPK_NAME, sName);
+        if (null != sIcon && !sIcon.isEmpty()) {
+            pMap.put(CommunicationParameterKey.CPK_IMG_FILE, sIcon);
+        }
         return execute(op, pMap);
     }
 
