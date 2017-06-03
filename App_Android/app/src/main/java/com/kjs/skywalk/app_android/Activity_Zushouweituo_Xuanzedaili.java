@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -32,7 +35,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
     private ListView mListViewAgents = null;
     private AdapterAgents mAdapter = null;
     private ArrayList<ClassDefine.Agent> mAgentList = new ArrayList<>();
-
+    private ScrollView mAgentListContainer = null;
     private int mAgentCount = 0;
     private final int MSG_GET_AGENT_LIST = 0;
 
@@ -43,7 +46,9 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
         TextView titleText = (TextView)findViewById(R.id.textViewActivityTitle);
         titleText.setText("租售委托-选择代理");
 
-        CheckBox autoSelect = (CheckBox)findViewById(R.id.checkbox);
+        mAgentListContainer = (ScrollView)findViewById(R.id.scrollViewAgentContainer);
+
+        final CheckBox autoSelect = (CheckBox)findViewById(R.id.checkbox);
         autoSelect.setChecked(true);
 
         mListViewAgents = (ListView)findViewById(R.id.listViewContent);
@@ -55,11 +60,36 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
         mListViewAgents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                ClassDefine.Agent agent = (ClassDefine.Agent) parent.getAdapter().getItem(position);
+                Log.i(getClass().getSimpleName().toString(), agent.mID);
+                AdapterAgents agentAdapter = (AdapterAgents)parent.getAdapter();
+                agentAdapter.setItemSelected(view, position);
             }
         });
 
+        updateAgentListStatus(!autoSelect.isChecked());
+
+        autoSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox)v;
+                updateAgentListStatus(!checkBox.isChecked());
+            }
+        });
         mHandler.sendEmptyMessageDelayed(MSG_GET_AGENT_LIST, 100);
+    }
+
+    private void updateAgentListStatus(boolean enable) {
+        if(enable) {
+            mListViewAgents.setEnabled(true);
+            mAgentListContainer.setBackgroundColor(0x000000);
+        } else {
+            mListViewAgents.setEnabled(false);
+            mAdapter.unSelectCurrentItem();
+            mAgentListContainer.setBackgroundColor(0x10666666);
+        }
+
+        mAdapter.unSelectCurrentItem();
     }
 
     Handler mHandler = new Handler(){
@@ -150,6 +180,9 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
             break;
             case R.id.tv_next:
             {
+                if(!checkData()) {
+                    return;
+                }
                 startActivity(new Intent(this, Activity_Zushouweituo_SelectService.class));
             }
             break;
@@ -157,6 +190,17 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                 break;
             }
         }
+    }
+
+    private boolean checkData() {
+        CheckBox autoSelect = (CheckBox)findViewById(R.id.checkbox);
+        if(!autoSelect.isChecked()) {
+            if(!mAdapter.hasSelected()) {
+                commonFun.showToast_info(this, autoSelect, "请选择一个代理人或由系统自动为您分配");
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
