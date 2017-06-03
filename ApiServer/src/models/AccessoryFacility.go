@@ -127,7 +127,7 @@ func GetHouseFacilities(hid int64) (err error, lst []commdef.HouseFacility) {
 	}
 
 	/* query */
-	sql := fmt.Sprintf(`SELECT hf.id, f.name, t.name AS type, hf.qty, hf.desc 
+	sql := fmt.Sprintf(`SELECT hf.id, f.name, t.name AS type, f.pic AS icon, hf.qty, hf.desc
 							FROM tbl_house_facility AS hf, tbl_facilitys AS f, tbl_facility_type AS t 
 							WHERE hf.house=%d AND hf.facility=f.id AND f.type=t.id`, hid)
 	o := orm.NewOrm()

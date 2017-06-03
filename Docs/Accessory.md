@@ -183,7 +183,7 @@
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
-### 16. Delete Facility (By administrator) ****
+### 16. Delete Facility (By administrator) ** Not Implement **
 	[Security]	private
 	[Request]
   		* DELETE /v1/accessory/facility/:id
@@ -224,6 +224,7 @@
 		  		* Id		int			// facility id
 		  		* Name		string		// facility name
 		  		* Type		string		// facility type name
+		  		* Icon		string 		// facility Icon url
 		  		* Qty		ing 		// facility quantity
 		  		* Desc		string		// facility description
 		* ERR: 4XX,5XX

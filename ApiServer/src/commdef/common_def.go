@@ -162,6 +162,7 @@ type HouseFacility struct {
 	Id   int64  // facility id
 	Name string // facility name
 	Type string // facility type name
+	Icon string // facility icon url
 	Qty  int    // facility quantity
 	Desc string // facility description
 }
