@@ -10,9 +10,9 @@ import java.util.HashMap;
  */
 
 class CmdModifyFacility extends CommunicationBase {
-    private int mFacilityId = -1;
-    private int mTypeId = -1;
-    private String mName = "";
+    private int     mFacilityId = -1;
+    private int     mTypeId     = -1;
+    private String  mName       = "";
 
     CmdModifyFacility(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_FACILITY);
@@ -40,6 +40,7 @@ class CmdModifyFacility extends CommunicationBase {
             return false;
         }
 
+        // Facility id & type
         try {
             mFacilityId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
             mTypeId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_TYPE));
@@ -48,6 +49,7 @@ class CmdModifyFacility extends CommunicationBase {
             return false;
         }
 
+        // Facility name
         mName = map.get(CommunicationParameterKey.CPK_NAME);
         if (mName.length() == 0) {
             Log.e(TAG, "mName: " + mName);
@@ -55,6 +57,20 @@ class CmdModifyFacility extends CommunicationBase {
         }
         mName = String2Base64(mName);
         Log.d(TAG, "mName: " + mName);
+
+        // Facility ICON
+        if (map.containsKey(CommunicationParameterKey.CPK_IMG_FILE)) {
+            String picFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
+            if (picFile.length() == 0) {
+                Log.e(TAG, "picture file not assigned");
+                return false;
+            }
+            if (!CUtilities.isPicture(picFile)) {
+                Log.e(TAG, "picture file not exist");
+                return false;
+            }
+            mFile = picFile;
+        }
 
         return true;
     }

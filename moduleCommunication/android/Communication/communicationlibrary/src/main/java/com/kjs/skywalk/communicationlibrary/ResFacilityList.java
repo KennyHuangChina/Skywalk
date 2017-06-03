@@ -97,12 +97,17 @@ class ResFacilityList extends ResBase implements IApiResults.IResultList {
             private int     mId     = 0;
             private String  mName   = "";
             private String  mType   = "";
+            private String  mIcon   = "";
 
             FacilityListItem(JSONObject obj) {
                 try {
                     mId     = obj.getInt("Id");
                     mName   = obj.getString("Name");
                     mType   = obj.getString("Type");
+                    mIcon   = obj.getString("Icon");
+                    if (!mIcon.isEmpty()) {
+                        mIcon = PicFullUrl(mIcon);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -124,8 +129,13 @@ class ResFacilityList extends ResBase implements IApiResults.IResultList {
             }
 
             @Override
+            public String GetIcon() {
+                return mIcon;
+            }
+
+            @Override
             public String ListItemInfo2String() {
-                return " id: " + mId + ", name: " + mName + ", type: " + mType;
+                return " id: " + GetId() + ", name: " + GetName() + ", type: " + GetType() + ", icon:" + GetIcon();
             }
         }
     }

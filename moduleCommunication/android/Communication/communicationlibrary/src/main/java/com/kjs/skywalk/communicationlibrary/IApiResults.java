@@ -103,6 +103,12 @@ public class IApiResults {
         String GetName();
     }
 
+    public interface IDeliverableItem {
+        int     GetId();
+        String  GetName();
+        int     GetPic();
+    }
+
     public interface IDeliverableInfo {
         int GetId();
         String GetName();
@@ -114,12 +120,14 @@ public class IApiResults {
         int GetId();
         String GetName();
         String GetType();
+        String GetIcon();
     }
 
     public interface IHouseFacilityInfo {
         int GetId();
         String GetName();
         String GetType();
+        String GetIcon();
         int GetQty();
         String GetDesc();
     }
