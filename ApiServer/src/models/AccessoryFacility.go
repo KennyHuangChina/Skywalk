@@ -493,12 +493,14 @@ func AddFacility(name string, ft, uid int64, icon, dir string) (err error, id in
 *		fid 	- facility id
 *		name	- facility name
 *		ft		- facility type
+*		icon	- facility icon file name
+*		dir		- dir to save the icon
 *	Returns
 *		err 	- error info
 **/
-func EditFacility(fid, ft, uid int64, name string) (err error) {
+func EditFacility(fid, ft, uid int64, name, icon, dir string) (err error) {
 	FN := "[AddFacility] "
-	beego.Trace(FN, "Facility:", fid, ", type:", ft, ", name:", name, ", login user:", uid)
+	beego.Trace(FN, "Facility:", fid, ", type:", ft, ", name:", name, ", login user:", uid, ", icon:", icon, ", dir:", dir)
 
 	defer func() {
 		if nil != err {
@@ -506,7 +508,8 @@ func EditFacility(fid, ft, uid int64, name string) (err error) {
 		}
 	}()
 
-	// permission checking: only the administrator could modify facility
+	/* Permission checking */
+	// only the administrator could modify facility
 	if _, bAdmin := isAdministrator(uid); bAdmin {
 	} else {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
@@ -535,10 +538,26 @@ func EditFacility(fid, ft, uid int64, name string) (err error) {
 	}
 
 	/* Processing: Update */
-	_, errT := o.Update(&TblFacilitys{Id: fid, Type: ft, Name: name})
+	o.Begin()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
+
+	_, errT := o.Update(&TblFacilitys{Id: fid, Type: ft, Name: name}, "Type", "Name")
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
+	}
+	if len(icon) > 0 && len(dir) > 0 {
+		_, errT = o.Update(&TblFacilitys{Id: fid, Pic: dir + icon}, "Pic")
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
 	}
 
 	return

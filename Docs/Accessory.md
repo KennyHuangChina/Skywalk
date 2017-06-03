@@ -152,7 +152,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 14. Get Facility List (By login user)
+### 14. Get Facility List (By login user) *****
 	[Security]	private
 	[Request]
   		* GET /v1/accessory/facilitys?type=
@@ -175,13 +175,14 @@
 	  		* id			int 		// facility id
 	  		* name			string		// facility name
 	  		* type			int			// facility type id
+		  	* 			    file		// icon file
   	[Response]
 		* SUCCESS:200
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
 
-### 16. Delete Facility (By administrator)
+### 16. Delete Facility (By administrator) ****
 	[Security]	private
 	[Request]
   		* DELETE /v1/accessory/facility/:id
