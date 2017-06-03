@@ -120,6 +120,7 @@ public class IApiResults {
         int GetId();
         String GetName();
         String GetType();
+        String GetIcon();
     }
 
     public interface IHouseFacilityInfo {
