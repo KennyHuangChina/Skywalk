@@ -472,12 +472,39 @@ func (this *AccessoryController) AddFacility() {
 	name = string(tmp)
 	// beego.Debug(FN, "name:", name, ", ft:", ft)
 
+	// Icon. ref to AddPic()
+	picDir := models.GetPicBaseDir() // beego.AppConfig.String("PicBaseDir") // os.Getwd()
+	picFile := ""
+	file, fHead, errT := this.GetFile("file") // pic")
+	if nil == errT {
+		for k, v := range fHead.Header {
+			beego.Debug(FN, k, ":", v)
+		}
+		// file type
+		fType := fHead.Header["Content-Type"][0]
+		if !checkPicType(fType) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("invalid Content-Type::%s", fType)}
+			return
+		}
+
+		// beego.Warn("picDir:", picDir)
+		err, picFile = generatePicFileName(picDir, getPicExtName(fType))
+		if nil != err {
+			return
+		}
+		if err, _ = savePicture(file, picDir+picFile); nil != err {
+			return
+		}
+	}
+
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddFacility(name, ft, uid)
+	err, id := models.AddFacility(name, ft, uid, picFile, picDir)
 	if nil == err {
 		result.Id = id
+	} else if len(picFile) > 0 {
+		models.DelImageFile(picDir + picFile)
 	}
 }
 

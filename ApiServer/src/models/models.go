@@ -222,11 +222,18 @@ type TblFacilitys struct {
 	Id   int64
 	Type int64
 	Name string `orm:"size(50)"`
+	Pic  string `orm:"size(300); not null"` // icon url
 }
 
 func (f *TblFacilitys) TableUnique() [][]string {
 	return [][]string{
 		[]string{"Type", "Name"},
+	}
+}
+
+func (hd *TblFacilitys) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Type"},
 	}
 }
 
@@ -461,6 +468,64 @@ func init() {
 		// beego.Debug("k:", k, ", v:", v)
 		if !o.QueryTable("tbl_deliverables").Filter("name", k).Exist() {
 			kv := TblDeliverables{Name: k, Pic: v}
+			o.Insert(&kv)
+		}
+	}
+
+	// Facility type
+	FACILITY_TYPE_MAP := map[string]int64{
+		"家用电器": 1,
+		"家具":   2,
+		"厨房用品": 3,
+		"其它":   4,
+	}
+	for k, v := range FACILITY_TYPE_MAP {
+		// beego.Debug("k:", k, ", v:", v)
+		if !o.QueryTable("tbl_facility_type").Filter("name", k).Exist() {
+			kv := TblFacilityType{Id: v, Name: k}
+			o.Insert(&kv)
+		}
+	}
+
+	// Facility
+	FACILITY_MAP := map[string]int64{
+		"电冰箱":      1,
+		"酒水柜":      1,
+		"洗衣机":      1,
+		"电视机":      1,
+		"有线电视/机顶盒": 1,
+		"卫星电视":     1,
+		"立式空调":     1,
+		"音响":       1,
+		"壁挂空调":     1,
+		"电脑":       1,
+		"宽带网络/路由器": 1,
+		"电风扇":      1,
+		"取暖器":      1,
+		"电熨斗":      1,
+
+		"沙发+茶几": 2,
+		"电视柜":   2,
+		"床":     2,
+		"衣柜":    2,
+		"书桌":    2,
+		"书柜":    2,
+
+		"灶具":  3,
+		"油烟机": 3,
+		"微波炉": 3,
+		"电磁炉": 3,
+		"烤箱":  3,
+		"洗碗机": 3,
+		"消毒柜": 3,
+
+		"鞋柜": 4,
+		"花架": 4,
+	}
+	for k, v := range FACILITY_MAP {
+		// beego.Debug("k:", k, ", v:", v)
+		if !o.QueryTable("tbl_facilitys").Filter("name", k).Exist() {
+			kv := TblFacilitys{Type: v, Name: k}
 			o.Insert(&kv)
 		}
 	}

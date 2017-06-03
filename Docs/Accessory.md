@@ -143,6 +143,7 @@
   		* POST /v1/accessory/facility
 	  		* name			string		// facility name
 	  		* type			int			// facility type id
+		  	* 			    file		// icon file
   	[Response]
 		* SUCCESS:200 
 			* Id			int			// new facility id

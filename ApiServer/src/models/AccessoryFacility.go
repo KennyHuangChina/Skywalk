@@ -426,13 +426,15 @@ func AddHouseFacilities(uid, hid int64, fl []commdef.AddHouseFacility) (err erro
 *		uid 	- login user id
 *		name	- facility name
 *		ft		- facility type
+*		icon	- icon file name
+*		dir 	- base dir to save the icon
 *	Returns
 *		err 	- error info
 *		id 		- new facility id
 **/
-func AddFacility(name string, ft, uid int64) (err error, id int64) {
+func AddFacility(name string, ft, uid int64, icon, dir string) (err error, id int64) {
 	FN := "[AddFacility] "
-	beego.Trace(FN, "name:", name, ", facility type:", ft, ", login user:", uid)
+	beego.Trace(FN, "name:", name, ", facility type:", ft, ", login user:", uid, ", icon:", icon, ", dir:", dir)
 
 	defer func() {
 		if nil != err {
@@ -458,15 +460,22 @@ func AddFacility(name string, ft, uid int64) (err error, id int64) {
 
 	o := orm.NewOrm()
 
-	// check if type + facility name already exist
+	// if type + facility name already exist
 	bExist := o.QueryTable("tbl_facilitys").Filter("Type", ft).Filter("Name__contains", name).Exist()
 	if bExist {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("facility type:%d, name:%s", ft, name)}
 		return
 	}
 
-	/* Add to table */
+	/* Processing */
+	// Add
 	nf := TblFacilitys{Type: int64(ft), Name: name}
+	// beego.Debug(FN, "icon len:", len(icon), ", dir len:", len(dir))
+	if len(icon) > 0 && len(dir) > 0 {
+		nf.Pic = dir + icon
+		// beego.Debug(FN, nf.Pic)
+	}
+	// beego.Debug(FN, fmt.Sprintf("nf:%+v", nf))
 	nid, errT := o.Insert(&nf)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
