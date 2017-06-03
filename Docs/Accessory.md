@@ -152,7 +152,7 @@
 	  		* ErrDesc		string		// error description
 
 
-### 14. Get Facility List (By login user) *****
+### 14. Get Facility List (By login user)
 	[Security]	private
 	[Request]
   		* GET /v1/accessory/facilitys?type=
@@ -164,6 +164,7 @@
 				* Id		int			// facility id
 				* Name		string		// facility name
 				* Type		string		// facility type
+				* Icon		string 		// Icon url
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

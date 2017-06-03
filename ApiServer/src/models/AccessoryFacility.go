@@ -42,7 +42,7 @@ func GetFacilityList(uid, ft int64) (err error, lst []commdef.Facility) {
 	}
 
 	/* Fetching */
-	sql := "SELECT f.id, f.name, t.name AS type FROM tbl_facilitys AS f, tbl_facility_type AS t WHERE f.type=t.id"
+	sql := "SELECT f.id, f.name, t.name AS type, pic AS icon FROM tbl_facilitys AS f, tbl_facility_type AS t WHERE f.type=t.id"
 	if ft > 0 {
 		sql = sql + fmt.Sprintf(" AND type=%d", ft)
 	}
