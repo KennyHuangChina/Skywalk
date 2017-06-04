@@ -30,6 +30,8 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("GetSecurePic", a.GetSecurePic)
 	a.Mapping("GetUserInfo", a.GetUserInfo)
 	a.Mapping("GetSaltForUser", a.GetSaltForUser)
+
+	a.Mapping("ModifyAgency", a.ModifyAgency)
 	a.Mapping("GetAgencyList", a.GetAgencyList)
 
 	a.Mapping("Loginpass", a.Loginpass)
@@ -38,6 +40,54 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Loginsms", a.Loginsms)
 	a.Mapping("Logout", a.Logout)
 	a.Mapping("Test", a.Test)
+}
+
+// TODO: user.id_no could be used to correct the user sex info
+
+// @Title ModifyAgency
+// @Description modify the agency info
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /Agency/:id [put]
+func (this *AdminController) ModifyAgency() {
+	FN := "[ModifyAgency] "
+	beego.Warn("[--- API: ModifyAgency ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	lu, err := getLoginUser(this.Controller) // login user id
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "lu:", lu)
+
+	/*
+	 *	Extract agreements
+	 */
+	// version := this.GetString("ver")
+	aid, _ := this.GetInt64(":id")
+	rp, _ := this.GetInt("rp")
+	ra, _ := this.GetInt("ra")
+	by, _ := this.GetInt("by")
+
+	/*
+	 *	Processing
+	 */
+	err = models.ModifyAgency(lu, aid, rp, ra, by)
+	if nil == err {
+	}
 }
 
 // @Title GetAgencyList

@@ -162,3 +162,17 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+##
+
+### 11. Modify Agency Info
+	[Private]	private: agency himself or administrator
+	[Request]
+  		* PUT /v1/admin/Agency/:id
+	  		* rp			int		// rank for professional. 0 ~ 50 (0.0 ~ 5.0)
+	  		* ra			int		// rank for attitude. 0 ~ 50 (0.0 ~ 5.0)
+	  		* by			int		// which year the agency start his business
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description

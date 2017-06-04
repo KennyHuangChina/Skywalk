@@ -21,6 +21,38 @@ const (
 )
 
 /**
+*	Modify agency info
+*	Arguments:
+*		uid 		- login user
+*		aid			- agency id to mofidy
+*		rank_prof	- professional rank
+*		rank_atti	- attitude rank
+*		begin_year	- business begin year
+*	Returns
+*		err - error info
+ */
+func ModifyAgency(uid, aid int64, rank_prof, rank_atti, begin_year int) (err error) {
+	FN := "[ModifyAgency] "
+	beego.Trace(FN, "login user:", uid, ", agency:", aid, ", rank professional:", rank_prof, ", rank attitude:", rank_atti, ", begin year:", begin_year)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	// TODO:NOT Implement
+
+	/* Argument checking */
+
+	/* Permission checking */
+
+	/* Processing */
+
+	return
+}
+
+/**
 *	Get user information by id
 *	Arguments:
 *		id 	- user id to fetch
