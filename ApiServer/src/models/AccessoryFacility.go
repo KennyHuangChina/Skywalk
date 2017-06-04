@@ -603,6 +603,8 @@ func DelFacility(fid, uid int64) (err error) {
 		return
 	}
 
+	beego.Warn(FN, "TODO: Delete the icon related")
+
 	return
 }
 

@@ -44,69 +44,57 @@ func Test_GetFacilityTypeList(t *testing.T) {
 //
 func Test_EditFacilityType(t *testing.T) {
 	t.Log("Test EditFacilityType")
+	seq := 0
 
-	t.Log("<Case> Permission: user not login")
-	if e := EditFacilityType("", -1, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	xids := []int64{-1, 100000000, 9, 11}
+	xdesc := []string{"not login", "does not exist", "is a regular user", "is an agency"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
+		if e := EditFacilityType("", -1, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	t.Log("<Case> Permission: login user does not exist")
-	if e := EditFacilityType("", -1, 100000000); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> Permission: login user is a regular user")
-	if e := EditFacilityType("", -1, 9); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> Permission: login user is a agency")
-	if e := EditFacilityType("", -1, 11); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> Invalid parameter: type name is empty")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid parameter: type name is empty", seq))
 	if e := EditFacilityType("", -1, 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Invalid parameter: type < 0")
-	if e := EditFacilityType("test", -1, 5); e == nil {
+	xids = []int64{-1, 0, 100000000}
+	xdesc = []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid parameter: type(%d) %s", seq, v, xdesc[k]))
+		if e := EditFacilityType("", -1, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid parameter: type name already exist", seq))
+	if e := EditFacilityType("家具" /*2*/, 3, 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case> Invalid parameter: type = 0")
-	if e := EditFacilityType("test", 0, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> Invalid parameter: type does not exist")
-	if e := EditFacilityType("test", 100000000, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> Invalid parameter: type name already exist")
-	if e := EditFacilityType("试类", 2, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> Modify")
 	// Modify
-	if e := EditFacilityType("家电1", 2, 5); e != nil {
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: Modify", seq))
+	// Modify
+	if e := EditFacilityType("家具1", 2, 5); e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
+
 	// restore
-	if e := EditFacilityType("家电", 2, 5); e != nil {
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: restore", seq))
+	if e := EditFacilityType("家具", 2, 5); e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -284,81 +272,65 @@ func Test_GetFacilityList(t *testing.T) {
 //
 func Test_EditFacility(t *testing.T) {
 	t.Log("Test EditFacility")
+	seq := 0
 
-	t.Log("<Case 1> Permission: user not login")
-	if e := EditFacility(-1, -1, -1, ""); e == nil {
+	xids := []int64{-1} //, 100000000, 9, 6}
+	xdesc := []string{"not login", "does not exist", "is a regular user", "is an agency"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
+		if e := EditFacility(-1, -1, v, "", "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xids = []int64{-1, 0, 100000000}
+	xdesc = []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid argument: facility(%d) %s", seq, v, xdesc[k]))
+		if e := EditFacility(v, -1, 5, "", "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid argument: name is empty", seq))
+	if e := EditFacility(3, -1, 5, "", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case 2> Permission: user does not exist")
-	if e := EditFacility(-1, -1, 100000000, ""); e == nil {
+	xids = []int64{-1, 0, 100000000}
+	xdesc = []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid argument: facility type(%d) %s", seq, v, xdesc[k]))
+		if e := EditFacility(3, v, 5, "", "", "test"); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid argument: duplicated", seq))
+	if e := EditFacility(3, 2, 5, "书桌", "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case 3> Permission: user is a regualr user")
-	if e := EditFacility(-1, -1, 9, ""); e == nil {
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: modify", seq))
+	if e := EditFacility(4, 2, 5, "书桌1", "", ""); e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case 4> Permission: user is a agency")
-	if e := EditFacility(-1, -1, 6, ""); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 5> Invalid argument: facility < 0")
-	if e := EditFacility(-1, -1, 5, ""); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 6> Invalid argument: facility = 0")
-	if e := EditFacility(0, -1, 5, ""); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 7> Invalid argument: facility does not exist")
-	if e := EditFacility(100000000, -1, 5, ""); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 8> Invalid argument: name is empty")
-	if e := EditFacility(3, -1, 5, ""); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 9> Invalid argument: type < 0")
-	if e := EditFacility(3, -1, 5, "test"); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 10> Invalid argument: type = 0")
-	if e := EditFacility(3, 0, 5, "test"); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 11> Invalid argument: duplicated")
-	if e := EditFacility(3, 2, 5, "电视"); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 12> Modify facility")
-	if e := EditFacility(3, 6, 5, "电视机60吋"); e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 13> Restore facility")
-	if e := EditFacility(3, 2, 5, "电冰箱"); e != nil {
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: restore", seq))
+	if e := EditFacility(4, 2, 5, "书桌", "", ""); e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -425,70 +397,55 @@ func Test_DelFacility(t *testing.T) {
 //
 func Test_AddFacility(t *testing.T) {
 	t.Log("Test AddFacility")
+	seq := 0
 
-	t.Log("<Case 1> Permission: user not login")
-	if e, _ := AddFacility("", -1, -1); e == nil {
+	xvalu := []int64{-1, 0, 100000000, 9, 6}
+	xdesc := []string{"not login", "is SYSTEM", "does not exist", "is a regular user", "is an agency"}
+	for k, v := range xvalu {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
+		if e, _ := AddFacility("", -1, v, "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid argument: name is empty", seq))
+	if e, _ := AddFacility("", -1, 5, "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case 2> Permission: user does not exist")
-	if e, _ := AddFacility("", -1, 100000000); e == nil {
+	xvalu = []int64{-1, 0, 100000000}
+	xdesc = []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xvalu {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid argument: type(%d) %s", seq, v, xdesc[k]))
+		if e, _ := AddFacility("test", -1, 5, "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid argument: duplicated", seq))
+	if e, _ := AddFacility("书桌", 2, 5, "", ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	t.Log("<Case 3> Permission: user is a regualr user")
-	if e, _ := AddFacility("", -1, 9); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 4> Permission: user is a agency")
-	if e, _ := AddFacility("", -1, 6); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 5> Invalid argument: name is empty")
-	if e, _ := AddFacility("", -1, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 6> Invalid argument: type < 0")
-	if e, _ := AddFacility("test", -1, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 7> Invalid argument: type = 0")
-	if e, _ := AddFacility("test", 0, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 8> Invalid argument: type does not exist")
-	if e, _ := AddFacility("test", 100000000, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 9> Invalid argument: duplicated")
-	if e, _ := AddFacility("冰", 2, 5); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case 10> Add facility")
-	e, nid := AddFacility("宽带网络", 6, 5)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: add facility", seq))
+	e, nid := AddFacility("宽带网络", 4, 5, "", "")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("new facility:", nid)
 
-	t.Log("<Case 11> Delete facility just added a second ago")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: delete the new facility", seq))
 	if e := DelFacility(nid, 5); e != nil {
 		t.Error("Failed, err: ", e)
 		return
