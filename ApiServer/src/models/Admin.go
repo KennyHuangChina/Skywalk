@@ -80,6 +80,14 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 	beego.Debug(FN, numb, "records found")
 
 	agencys = as
+	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET) // "未设置"
+	for k, _ := range agencys {
+		if 0 == len(agencys[k].Name) {
+			agencys[k].Name = nameUnset
+			// beego.Debug(FN, k, ":", agencys[k].Name)
+		}
+	}
+
 	return
 }
 
