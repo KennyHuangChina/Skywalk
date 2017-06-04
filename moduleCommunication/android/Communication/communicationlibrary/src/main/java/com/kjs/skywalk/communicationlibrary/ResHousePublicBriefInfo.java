@@ -101,17 +101,26 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
 
     @Override
     public int GetTotalNumber() {
-        return 0;
-    }
+        if (null == mTagList) {
+            return 0;
+        }
+        return mTagList.GetTotalNumber();
+   }
 
     @Override
     public int GetFetchedNumber() {
-        return 0;
+        if (null == mTagList) {
+            return 0;
+        }
+        return mTagList.GetFetchedNumber();
     }
 
     @Override
     public ArrayList<Object> GetList() {
-        return null;
+        if (null == mTagList) {
+            return null;
+        }
+        return mTagList.GetList();
     }
 
     class TagList extends ResList {
