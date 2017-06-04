@@ -48,4 +48,22 @@ public class ClassDefine {
         public String mPortrait;
     }
 
+    public static class HouseTag {
+        public int tagId;
+        public String tagName;
+    }
+
+    public static class HouseDigest {
+        public int houseId;
+        public String property;
+        public String addr;
+        public int Bedrooms;
+        public int Livingrooms;
+        public int Bathrooms;
+        public int Acreage;
+        public int Rental;
+        public int Pricing;
+        public int CoverImage;
+        public ArrayList<HouseTag> houseTags;
+    }
 }

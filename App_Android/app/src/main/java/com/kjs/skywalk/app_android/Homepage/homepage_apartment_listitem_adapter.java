@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by sailor.zhou on 2017/1/15.
@@ -15,10 +18,16 @@ import com.kjs.skywalk.app_android.R;
 
 public class homepage_apartment_listitem_adapter extends BaseAdapter {
     private Context mContext;
+    private ArrayList<ClassDefine.HouseDigest> mList;
 
     public homepage_apartment_listitem_adapter(Context context) {
         super();
         mContext = context;
+    }
+
+    public void updateList(ArrayList<ClassDefine.HouseDigest> list) {
+        mList = list;
+        this.notifyDataSetChanged();
     }
 
     @Override
