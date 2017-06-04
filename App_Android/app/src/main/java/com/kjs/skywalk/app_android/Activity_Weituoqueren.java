@@ -11,6 +11,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -81,6 +82,11 @@ public class Activity_Weituoqueren extends Activity {
         switch (v.getId()) {
             case R.id.textViewCommit:
             {
+                CheckBox box = (CheckBox)findViewById(R.id.checkbox);
+                if(!box.isChecked()) {
+                    commonFun.showToast_info(this, box, "请仔细阅读委托确认书，理解并同意其条款");
+                    return;
+                }
                 startActivity(new Intent(this, Activity_Zushouweituo_Finish.class));
             }
             break;

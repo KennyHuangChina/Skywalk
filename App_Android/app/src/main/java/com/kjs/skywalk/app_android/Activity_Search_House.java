@@ -51,6 +51,8 @@ public class Activity_Search_House extends SKBaseActivity implements
     private final int MSG_FETCH_PROPERTY_LIST = 0;
     private final int MSG_SHOW_WAITING = 1;
     private final int MSG_HIDE_WAITING = 2;
+
+    private int mPropertyId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,10 @@ public class Activity_Search_House extends SKBaseActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String property = (String)parent.getAdapter().getItem(position);
-                doSelected(property);
+                int propertyId = getPropertyIdFromList(property);
+                if(propertyId >= 0) {
+                    doSelected(property, propertyId);
+                }
             }
         });
 
@@ -103,8 +108,11 @@ public class Activity_Search_House extends SKBaseActivity implements
         mListViewProperty.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ClassDefine.Property garden = (ClassDefine.Property)parent.getAdapter().getItem(position);
-                doSelected(garden.mName);
+                ClassDefine.Property property = (ClassDefine.Property)parent.getAdapter().getItem(position);
+                int propertyId = getPropertyIdFromList(property.mName);
+                if(propertyId >= 0) {
+                    doSelected(property.mName, propertyId);
+                }
             }
         });
 
@@ -127,7 +135,7 @@ public class Activity_Search_House extends SKBaseActivity implements
         });
     }
 
-    private void doSelected(String property) {
+    private void doSelected(String property, int propertyId) {
         if(property == null || property.isEmpty()) {
             return;
         }
@@ -136,6 +144,7 @@ public class Activity_Search_House extends SKBaseActivity implements
         
         Intent data = new Intent();
         data.putExtra("name", property);
+        data.putExtra("id", propertyId);
         setResult(30, data);
         finish();
     }
@@ -211,6 +220,18 @@ public class Activity_Search_House extends SKBaseActivity implements
         }
     }
 
+    private int getPropertyIdFromList(String property) {
+        if(mPropertyList.size() == 0) {
+            for(IPropertyInfo info : mPropertyList) {
+                if(info.GetName().equals(property)) {
+                    return info.GetId();
+                }
+            }
+        }
+
+        return -1;
+    }
+
     private void fetchPropertyList() {
         CommandManager manager = new CommandManager(this, this, this);
         manager.GetPropertyListByName("", 0, mPropertyCount);
@@ -222,11 +243,13 @@ public class Activity_Search_House extends SKBaseActivity implements
             public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
                 if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
                     commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
+                    IApiResults.IAddRes res = (IApiResults.IAddRes)iCommon;
+                    mPropertyId = res.GetId();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             String text = commonFun.getTextOnSearchView(mSearchView);
-                            doSelected(text);
+                            doSelected(text, mPropertyId);
                             finish();
                         }
                     });

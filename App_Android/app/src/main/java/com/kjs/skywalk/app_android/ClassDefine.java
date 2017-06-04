@@ -66,4 +66,23 @@ public class ClassDefine {
         public int CoverImage;
         public ArrayList<HouseTag> houseTags;
     }
+
+    public static class HouseInfoForCommit {
+        public int propertyId;
+        public String buildingNo;
+        public int floor;
+        public int totalFloor;
+        public String roomNo;
+        public int area;
+        public int bedRooms;
+        public int livingRooms;
+        public int bathRooms;
+        public int decorate;
+        public int decorateDescription;
+        public int buyYear;
+        public int buyMonth;
+        public int buyDay;
+        public int hasLoan;
+        public int unique;
+    }
 }
