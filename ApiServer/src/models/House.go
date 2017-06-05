@@ -357,7 +357,7 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 	// Update
 	tModi := time.Now() //.UTC()
 	modifyTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tModi.Year(), tModi.Month(), tModi.Day(), tModi.Hour(), tModi.Minute(), tModi.Second())
-	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no=%s, floor_total=%d, floor_this=%d,
+	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no='%s', floor_total=%d, floor_this=%d,
 								house_no='%s', bedrooms=%d, livingrooms=%d, bathrooms=%d, acreage=%d, 
 								modify_time='%s', for_sale=%t, for_rent=%t, decoration=%d WHERE id=%d`,
 		hif.Property, hif.BuildingNo, hif.FloorTotal, hif.FloorThis, hif.HouseNo, hif.Bedrooms, hif.Livingrooms, hif.Bathrooms,
@@ -606,7 +606,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	bExist := qs.Exist()
 	if bExist {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%s, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
 		return
 	}
 
@@ -614,7 +614,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	submitTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tSubmit.Year(), tSubmit.Month(), tSubmit.Day(), tSubmit.Hour(), tSubmit.Minute(), tSubmit.Second())
 	sql := fmt.Sprintf(`INSERT INTO tbl_house(property_id, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, 
 									bathrooms, acreage, decoration, owner_id, agency_id, submit_time, for_sale, for_rent) 
-							VALUES(%d, %s, '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %t, %t)`,
+							VALUES(%d, '%s', '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %t, %t)`,
 		hif.Property, hif.BuildingNo, hif.HouseNo, hif.FloorTotal, hif.FloorThis, hif.Bedrooms, hif.Livingrooms,
 		hif.Bathrooms, hif.Acreage, hif.Decoration, oid, aid, submitTime, hif.ForSale, hif.ForRent)
 	res, errT := o.Raw(sql).Exec()
