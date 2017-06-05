@@ -165,7 +165,7 @@ public class CommunicationInterface {
     static public class HouseInfo {
         public int      mHouseId        = 0;
         public int      mPropId         = 0;    // property, community
-        public int      mBuilding       = 0;    // building number, like 177栋
+        public String   mBuilding       = "";   // building number, like 177A栋
         public String   mHouseNo        = "";   // house number, 1505室
         public int      mFloorTotal     = 0;    // total floor
         public int      mFloorThis      = 0;    // house floor
@@ -180,7 +180,7 @@ public class CommunicationInterface {
         public HouseInfo() {
         }
 
-        public HouseInfo(int hid, int pid, int bld, String hno, int ftotal, int fthis, int lr,
+        public HouseInfo(int hid, int pid, String bld, String hno, int ftotal, int fthis, int lr,
                          int bedr, int bathr, int acre, boolean sale, boolean rent, int decorate) {
             mHouseId        = hid;
             mPropId         = pid;
@@ -207,7 +207,7 @@ public class CommunicationInterface {
                 Log.e(TAG, "mPropId:" + mPropId);
                 return false;
             }
-            if (mBuilding <= 0) {
+            if (mBuilding.isEmpty()) {
                 Log.e(TAG, "mBuilding:" + mBuilding);
                 return false;
             }

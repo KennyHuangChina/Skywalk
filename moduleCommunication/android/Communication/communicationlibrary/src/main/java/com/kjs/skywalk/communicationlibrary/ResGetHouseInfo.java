@@ -10,7 +10,7 @@ import org.json.JSONObject;
 class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private int     mHouseId;       // house id
     private int     mProId;         // property id which the house belong to
-    private int     mBuildingNo;    // the building number the house belong to
+    private String  mBuildingNo;    // the building number the house belong to
     private int     mFloorTotal;    // total floors
     private int     mFloorThis;     // exact floor the house resident
     private String  mFloorDesc;     // floor description
@@ -51,7 +51,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
 
             mHouseId        = jHouse.getInt("Id");
             mProId          = jHouse.getInt("Property");
-            mBuildingNo     = jHouse.getInt("BuildingNo");
+            mBuildingNo     = jHouse.getString("BuildingNo");
             mFloorTotal     = jHouse.getInt("FloorTotal");
             mFloorThis      = jHouse.getInt("FloorThis");
             mHouseNo        = jHouse.getString("HouseNo");
@@ -61,7 +61,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
             mAcreage        = jHouse.getInt("Acreage");
             mDecorate       = jHouse.getInt("Decoration");
 
-            if (0 == mBuildingNo || mHouseNo.isEmpty()) {
+            if (mBuildingNo.isEmpty() || mHouseNo.isEmpty()) {
                 if (mFloorThis == mFloorTotal + 1) {
                     mFloorDesc = "低层";
                 } else if (mFloorThis == mFloorTotal + 2) {
@@ -108,7 +108,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     }
 
     @Override
-    public int BuildingNo() {
+    public String BuildingNo() {
         return mBuildingNo;
     }
 
