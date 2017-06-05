@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"strconv"
 	"time"
 )
 
@@ -295,7 +296,7 @@ func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
 		hif.FloorThis = house.FloorThis
 		hif.HouseNo = house.HouseNo
 	} else { // hide the privite info
-		hif.BuildingNo = 0
+		hif.BuildingNo = ""
 		hif.HouseNo = ""
 		if house.FloorThis*3 < hif.FloorTotal {
 			hif.FloorThis = hif.FloorTotal + 1 // low storied
@@ -356,7 +357,7 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 	// Update
 	tModi := time.Now() //.UTC()
 	modifyTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tModi.Year(), tModi.Month(), tModi.Day(), tModi.Hour(), tModi.Minute(), tModi.Second())
-	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no=%d, floor_total=%d, floor_this=%d,
+	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no=%s, floor_total=%d, floor_this=%d,
 								house_no='%s', bedrooms=%d, livingrooms=%d, bathrooms=%d, acreage=%d, 
 								modify_time='%s', for_sale=%t, for_rent=%t, decoration=%d WHERE id=%d`,
 		hif.Property, hif.BuildingNo, hif.FloorTotal, hif.FloorThis, hif.HouseNo, hif.Bedrooms, hif.Livingrooms, hif.Bathrooms,
@@ -613,7 +614,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	submitTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tSubmit.Year(), tSubmit.Month(), tSubmit.Day(), tSubmit.Hour(), tSubmit.Minute(), tSubmit.Second())
 	sql := fmt.Sprintf(`INSERT INTO tbl_house(property_id, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, 
 									bathrooms, acreage, decoration, owner_id, agency_id, submit_time, for_sale, for_rent) 
-							VALUES(%d, %d, '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %t, %t)`,
+							VALUES(%d, %s, '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %t, %t)`,
 		hif.Property, hif.BuildingNo, hif.HouseNo, hif.FloorTotal, hif.FloorThis, hif.Bedrooms, hif.Livingrooms,
 		hif.Bathrooms, hif.Acreage, hif.Decoration, oid, aid, submitTime, hif.ForSale, hif.ForRent)
 	res, errT := o.Raw(sql).Exec()
@@ -1044,7 +1045,7 @@ func getRecommendHouseList(begin, count int64) (err error, total, fetched int64,
 *		building	- house building number
 *		house_no	- house number
 **/
-func getHouseNumber(hid int64) (err error, building int, house_no string) {
+func getHouseNumber(hid int64) (err error, building, house_no string) {
 	FN := "[getHouseProperty] "
 	beego.Trace(FN, "hid:", hid)
 
@@ -1142,7 +1143,7 @@ func getHouseAgency(hid int64) (err error, aid int64, agency string) {
 *		err 	- error info
 **/
 func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
-	// FN := "[checkHouseInfo] "
+	FN := "[checkHouseInfo] "
 
 	if !bAdd && hif.Id <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hif.Id)}
@@ -1152,10 +1153,20 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("property:%d", hif.Property)}
 		return
 	}
-	if hif.BuildingNo <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building_no:%d", hif.BuildingNo)}
+	if 0 == len(hif.BuildingNo) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building_no:%s", hif.BuildingNo)}
 		return
 	}
+	nBuilding, errT := strconv.ParseInt(hif.BuildingNo, 10, 64)
+	if nil == errT {
+		if nBuilding <= 0 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("building_no:%d", nBuilding)}
+			return
+		}
+	} else {
+		beego.Warn(FN, "errT:", errT.Error())
+	}
+
 	if hif.FloorTotal <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("floor_total:%d", hif.FloorTotal)}
 		return

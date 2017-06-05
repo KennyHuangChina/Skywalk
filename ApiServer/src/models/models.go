@@ -64,9 +64,10 @@ func (p *TblProperty) TableUnique() [][]string {
 	}
 }
 
+// ALTER TABLE tbl_house CHANGE building_no building_no VARCHAR(40) NOT NULL
 type TblHouse struct {
 	Id          int64
-	BuildingNo  int
+	BuildingNo  string `orm:"size(40);not null"`
 	FloorTotal  int
 	FloorThis   int
 	HouseNo     string `orm:"size(20)"` // private info, only the house owner and agent could see

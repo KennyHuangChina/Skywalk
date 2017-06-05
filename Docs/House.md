@@ -10,7 +10,7 @@
 		* SUCCESS:200 
 			* Id    			int		// house id
 			* Property			int		// property id which the house belong to
-			* BuildingNo		int		// the building number the house belong to. private info. 
+			* BuildingNo		string	// the building number the house belong to. private info. 
 			* FloorTotal		int 	// total floors
 			* FloorThis			int		// exact floor the house resident. private info, 
 											1)  < FloorTotal, actual floor of house
@@ -78,7 +78,7 @@
 	[Request]
   		* POST /v1/house/commit
 	  		* prop			int 	// property id
-	  		* build			int		// building number
+	  		* build			string	// building number
 	  		* house			string 	// house number
 	  		* floor_total	int		// total floor
 	  		* floor_this	int		// this floor
@@ -103,7 +103,7 @@
 	[Request]
   		* PUT /v1/house/:id
 	  		* prop			int 	// property id
-	  		* build			int		// building number
+	  		* build			string	// building number
 	  		* house			string 	// house number
 	  		* floor_total	int		// total floor
 	  		* floor_this	int		// this floor

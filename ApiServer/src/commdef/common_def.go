@@ -84,7 +84,7 @@ type HouseDigest struct {
 type HouseInfo struct {
 	Id          int64
 	Property    int64
-	BuildingNo  int
+	BuildingNo  string
 	FloorTotal  int
 	FloorThis   int
 	HouseNo     string
@@ -191,7 +191,7 @@ const (
 type HouseEvents struct {
 	HouseId   int64
 	Property  string
-	Building  int
+	Building  string
 	HouseNo   string
 	Picture   int64
 	EventCnt  int
@@ -203,7 +203,7 @@ type HouseEventInfo struct {
 	Id         int64  // event id
 	HouseId    int64  // house id
 	Property   string // property name
-	Building   int    // bulding number
+	Building   string // bulding number
 	HouseNo    string // house number
 	Sender     string // Event Sender
 	Receiver   string // Event Receiver

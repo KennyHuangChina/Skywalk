@@ -242,7 +242,7 @@ func (this *HouseController) ModifyHouse() {
 
 	hid, _ := this.GetInt64(":id")
 	prop, _ := this.GetInt64("prop")
-	building_no, _ := this.GetInt("build")
+	building_no := this.GetString("build")
 	house_no := this.GetString("house")
 	floor_total, _ := this.GetInt("floor_total")
 	floor_this, _ := this.GetInt("floor_this")
@@ -300,7 +300,7 @@ func (this *HouseController) CommitHouseByOwner() {
 
 	agent, _ := this.GetInt64("agen")
 	prop, _ := this.GetInt64("prop")
-	building_no, _ := this.GetInt("build")
+	building_no := this.GetString("build")
 	house_no := this.GetString("house")
 	floor_total, _ := this.GetInt("floor_total")
 	floor_this, _ := this.GetInt("floor_this")
