@@ -90,6 +90,7 @@
 			* 4sale			int		// submit for sale. 1: yes; 0: no
 			* 4rent			int		// submit for rent. 1: yes; 0: no
 			* decor			int		// decoration. 0 - Workblank / 1 - Simple / 2 - Medium / 3 -Refined / 4 - Luxury
+			* buy_date		string	// buying date. 2016-01-02
 	[Response]
 		* SUCCESS:200 
 			* Id    		int		// new house id

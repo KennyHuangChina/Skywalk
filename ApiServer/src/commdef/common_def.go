@@ -92,9 +92,10 @@ type HouseInfo struct {
 	Livingrooms int
 	Bathrooms   int
 	Acreage     int
-	ForSale     bool
-	ForRent     bool
-	Decoration  int // TODO
+	ForSale     bool   // house is for saling
+	ForRent     bool   // house is for renting
+	Decoration  int    // TODO
+	BuyDate     string // purchase date
 }
 
 type PropInfo struct {

@@ -613,10 +613,10 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	tSubmit := time.Now() // .UTC()
 	submitTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tSubmit.Year(), tSubmit.Month(), tSubmit.Day(), tSubmit.Hour(), tSubmit.Minute(), tSubmit.Second())
 	sql := fmt.Sprintf(`INSERT INTO tbl_house(property_id, building_no, house_no, floor_total, floor_this, bedrooms, livingrooms, 
-									bathrooms, acreage, decoration, owner_id, agency_id, submit_time, for_sale, for_rent) 
-							VALUES(%d, '%s', '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %t, %t)`,
+									bathrooms, acreage, decoration, owner_id, agency_id, purchase_date, submit_time, for_sale, for_rent) 
+							VALUES(%d, '%s', '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', '%s', %t, %t)`,
 		hif.Property, hif.BuildingNo, hif.HouseNo, hif.FloorTotal, hif.FloorThis, hif.Bedrooms, hif.Livingrooms,
-		hif.Bathrooms, hif.Acreage, hif.Decoration, oid, aid, submitTime, hif.ForSale, hif.ForRent)
+		hif.Bathrooms, hif.Acreage, hif.Decoration, oid, aid, hif.BuyDate, submitTime, hif.ForSale, hif.ForRent)
 	res, errT := o.Raw(sql).Exec()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
@@ -1213,6 +1213,14 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("ForRent:%d", hif.ForRent)}
 	// 	return
 	// }
+	if 0 == len(hif.BuyDate) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("buying date not set")}
+		return
+	}
+	if _, errT = time.Parse("2006-01-02", hif.BuyDate); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("date error: %s, %s", hif.BuyDate, errT.Error())}
+		return
+	}
 
 	// do further checking
 	// house id

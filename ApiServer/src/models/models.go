@@ -87,9 +87,10 @@ type TblHouse struct {
 	Owner  *TblUser `orm:"rel(fk)"` // house owner
 	Agency *TblUser `orm:"rel(fk)"` // house agency
 
-	SubmitTime  time.Time `orm:"auto_now_add;type(datetime)"`      // the time the owner submited
-	PublishTime time.Time `orm:"auto_now_add;type(datetime);null"` // the time the agency certificated and published
-	ModifyTime  time.Time `orm:"auto_now_add;type(datetime);null"` // the time the house has been modified
+	PurchaseDate time.Time `orm:"type(datetime);null"`              // exact date when purchase the house
+	SubmitTime   time.Time `orm:"auto_now_add;type(datetime)"`      // the time the owner submited
+	PublishTime  time.Time `orm:"auto_now_add;type(datetime);null"` // the time the agency certificated and published
+	ModifyTime   time.Time `orm:"auto_now_add;type(datetime);null"` // the time the house has been modified
 }
 
 func (h *TblHouse) TableIndex() [][]string {
@@ -512,13 +513,15 @@ func init() {
 		"书桌":    2,
 		"书柜":    2,
 
-		"灶具":  3,
-		"油烟机": 3,
-		"微波炉": 3,
-		"电磁炉": 3,
-		"烤箱":  3,
-		"洗碗机": 3,
-		"消毒柜": 3,
+		"天然气":   3,
+		"液化石油气": 3,
+		"灶具":    3,
+		"油烟机":   3,
+		"微波炉":   3,
+		"电磁炉":   3,
+		"烤箱":    3,
+		"洗碗机":   3,
+		"消毒柜":   3,
 
 		"鞋柜": 4,
 		"花架": 4,
