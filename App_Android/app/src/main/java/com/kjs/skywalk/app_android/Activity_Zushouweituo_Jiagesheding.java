@@ -48,9 +48,9 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
             break;
             case R.id.tv_next:
             {
-//                if(!checkData()) {
+                if(!collectData()) {
 //                    return;
-//                }
+                }
                 startActivity(new Intent(this, Activity_Zushouweituo_Xuanzedaili.class));
             }
             break;
@@ -69,16 +69,16 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
         }
     }
 
-    private boolean checkData() {
+    private boolean collectData() {
         EditText viewRent = (EditText)findViewById(R.id.editTextRent);
         String rent = viewRent.getText().toString();
         EditText viewMinRent = (EditText)findViewById(R.id.editTextMinRent);
         String minRent = viewMinRent.getText().toString();
-
-        int nRent;
-        int nMinRent;
+        int tmp;
+        double nRent;
+        double nMinRent;
         try {
-            nRent = Integer.valueOf(rent);
+            nRent = Double.valueOf(rent);
             if(nRent <= 0) {
                 commonFun.showToast_info(this, viewRent, "租金输入不正确");
                 return false;
@@ -88,7 +88,7 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
             return false;
         }
         try {
-            nMinRent = Integer.valueOf(minRent);
+            nMinRent = Double.valueOf(minRent);
             if(nMinRent <= 0) {
                 commonFun.showToast_info(this, viewRent, "最低租金输入不正确");
                 return false;
@@ -103,13 +103,16 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
             return false;
         }
 
+        ClassDefine.HouseInfoForCommit.rental = (int)(nRent * 100);
+        ClassDefine.HouseInfoForCommit.minRental = (int)(nMinRent * 100);
+
         ToggleButton button = (ToggleButton)findViewById(R.id.toggleButton);
         if(!button.isChecked()) {
             EditText viewFee = (EditText)findViewById(R.id.editTextPropertyFee);
             String fee = viewFee.getText().toString();
-            int nFee;
+            double nFee;
             try {
-                nFee = Integer.valueOf(fee);
+                nFee = Double.valueOf(fee);
                 if(nFee <= 0) {
                     commonFun.showToast_info(this, viewFee, "物业费输入不正确");
                     return false;
@@ -118,6 +121,12 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
                 commonFun.showToast_info(this, viewFee, "物业费输入不正确");
                 return false;
             }
+
+            ClassDefine.HouseInfoForCommit.propertyFee = (int)(nFee * 100);
+            ClassDefine.HouseInfoForCommit.includePropertyFee = 0;
+        } else {
+            ClassDefine.HouseInfoForCommit.includePropertyFee = 1;
+            ClassDefine.HouseInfoForCommit.propertyFee = 0;
         }
 
         EditText viewPrice = (EditText)findViewById(R.id.editTextPrice);
@@ -126,10 +135,10 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
             EditText viewMinPrice = (EditText)findViewById(R.id.editTextMinPrice);
             String minPrice = viewMinPrice.getText().toString();
 
-            int nPrice;
-            int nMinPrice;
+            double nPrice;
+            double nMinPrice;
             try {
-                nPrice = Integer.valueOf(price);
+                nPrice = Double.valueOf(price);
                 if(nPrice <= 0) {
                     commonFun.showToast_info(this, viewPrice, "售价输入不正确");
                     return false;
@@ -139,7 +148,7 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
                 return false;
             }
             try {
-                nMinPrice = Integer.valueOf(minPrice);
+                nMinPrice = Double.valueOf(minPrice);
                 if(nMinPrice <= 0) {
                     commonFun.showToast_info(this, viewPrice, "最低售价输入不正确");
                     return false;
@@ -153,6 +162,12 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
                 commonFun.showToast_info(this, viewPrice, "售价应大于最低售价");
                 return false;
             }
+
+            ClassDefine.HouseInfoForCommit.price = (int)(nPrice * 100);
+            ClassDefine.HouseInfoForCommit.minPrice = (int)(nMinPrice * 100);
+        } else {
+            ClassDefine.HouseInfoForCommit.price = 0;
+            ClassDefine.HouseInfoForCommit.minPrice = 0;
         }
 
         return true;

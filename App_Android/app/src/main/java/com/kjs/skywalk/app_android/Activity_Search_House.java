@@ -221,7 +221,8 @@ public class Activity_Search_House extends SKBaseActivity implements
     }
 
     private int getPropertyIdFromList(String property) {
-        if(mPropertyList.size() == 0) {
+        int itemCount = mPropertyList.size();
+        if(itemCount != 0) {
             for(IPropertyInfo info : mPropertyList) {
                 if(info.GetName().equals(property)) {
                     return info.GetId();
