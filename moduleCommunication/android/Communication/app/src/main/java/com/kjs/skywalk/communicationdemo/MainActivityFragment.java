@@ -60,12 +60,12 @@ public class MainActivityFragment extends Fragment
 //                                mCertificate ? "已经和业主核实，同意发布" : "撤销发布");
 //        mCertificate = !mCertificate;
 
-//        doTestModifyApi_ModifyHouse(CmdMgr);
+        doTestModifyApi_ModifyHouse(CmdMgr);
 //        CmdMgr.ModifyDeliverable(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
 //        CmdMgr.EditFacilityType(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
-        CmdMgr.EditFacility(Integer.parseInt(mEditText.getText().toString()),
-                Integer.parseInt(mEditText1.getText().toString()),
-                mEditText2.getText().toString(), "/sdcard/tv_n.png");
+//        CmdMgr.EditFacility(Integer.parseInt(mEditText.getText().toString()),
+//                Integer.parseInt(mEditText1.getText().toString()),
+//                mEditText2.getText().toString(), "/sdcard/tv_n.png");
 //        CmdMgr.EditHouseFacility(Integer.parseInt(mEditText.getText().toString()),
 //                Integer.parseInt(mEditText1.getText().toString()),
 //                Integer.parseInt(mEditText2.getText().toString()), "");
@@ -73,7 +73,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
-        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, 56, "1606", 35, 16, 2, 4, 3, 17788, false, true, 3);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, "57", "1606", 35, 16, 2, 4, 3, 17788, false, true, 3);
         CmdMgr.AmendHouse(houseInfo);
    }
 
@@ -85,10 +85,10 @@ public class MainActivityFragment extends Fragment
 //                                    Integer.parseInt(mEditText1.getText().toString()),
 //                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
-        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
+//        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
 //
-//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, 177, "2305", 35, 23, 4, 3, 2, 157678, false, true, 3);
-//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "177A", "2305", 35, 23, 4, 3, 2, 157678, false, true, 3);
+        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
 //        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
@@ -105,7 +105,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()),
 //                            Boolean.parseBoolean(mEditText1.getText().toString()));
-        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetNewEventCount();
@@ -113,7 +113,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
-//        CmdMgr.GetAgencyList(0, 10);
+        CmdMgr.GetAgencyList(0, 10);
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
