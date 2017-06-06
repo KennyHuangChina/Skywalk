@@ -35,6 +35,9 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (mList != null)
+            return mList.size();
+
         return 3;
     }
 
@@ -57,12 +60,16 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         TextView tvApartment1_name;
         TextView tvApartment1_desc;
         LinearLayout llApartment1_tag;
+        TextView tvApartment1_tag1;
+        TextView tvApartment1_tag2;
         RelativeLayout rlApartment2;
         ImageView ivApartment2_thumb;
         ImageView ivApartment2_flag;
         TextView tvApartment2_name;
         TextView tvApartment2_desc;
         LinearLayout llApartment2_tag;
+        TextView tvApartment2_tag1;
+        TextView tvApartment2_tag2;
     }
 
     @Override
@@ -82,6 +89,8 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
             holder.tvApartment1_name = (TextView) view.findViewById(R.id.tv_apartment1_name);
             holder.tvApartment1_desc = (TextView) view.findViewById(R.id.tv_apartment1_desc);
             holder.llApartment1_tag = (LinearLayout) view.findViewById(R.id.ll_apartment1_tag);
+            holder.tvApartment1_tag1 = (TextView) view.findViewById(R.id.tv_apartment1_tag1);
+            holder.tvApartment1_tag2 = (TextView) view.findViewById(R.id.tv_apartment1_tag2);
 
             holder.rlApartment2 = (RelativeLayout) view.findViewById(R.id.rl_apartment2);
             holder.ivApartment2_thumb = (ImageView) view.findViewById(R.id.iv_apartment2_thumb);
@@ -89,10 +98,46 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
             holder.tvApartment2_name = (TextView) view.findViewById(R.id.tv_apartment2_name);
             holder.tvApartment2_desc = (TextView) view.findViewById(R.id.tv_apartment2_desc);
             holder.llApartment2_tag = (LinearLayout) view.findViewById(R.id.ll_apartment2_tag);
+            holder.tvApartment2_tag1 = (TextView) view.findViewById(R.id.tv_apartment2_tag1);
+            holder.tvApartment2_tag2 = (TextView) view.findViewById(R.id.tv_apartment2_tag2);
 
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
+        }
+
+        if (mList != null) {
+            ClassDefine.HouseDigest houseDigest = mList.get(0);
+            holder.tvApartment1_name.setText(houseDigest.property);
+            holder.tvApartment1_desc.setText(houseDigest.addr + "/" + houseDigest.Acreage + "㎡");
+
+            int count = 0;
+            for (ClassDefine.HouseTag houseTag : houseDigest.houseTags) {
+                if (count == 0)
+                    holder.tvApartment1_tag1.setText(houseTag.tagName);
+                if (count == 1)
+                    holder.tvApartment1_tag2.setText(houseTag.tagName);
+                count++;
+            }
+
+            if (mList.size() == 1) {
+                holder.rlApartment2.setVisibility(View.INVISIBLE);
+            } else {
+                ClassDefine.HouseDigest houseDigest1 = mList.get(1);
+                holder.rlApartment2.setVisibility(View.VISIBLE);
+                holder.tvApartment1_name.setText(houseDigest1.property);
+
+                count = 0;
+                for (ClassDefine.HouseTag houseTag : houseDigest1.houseTags) {
+                    if (count == 0)
+                        holder.tvApartment2_tag1.setText(houseTag.tagName);
+                    if (count == 1)
+                        holder.tvApartment2_tag2.setText(houseTag.tagName);
+                    count++;
+                }
+
+                holder.tvApartment1_desc.setText(houseDigest1.addr + "/" + houseDigest1.Acreage + "㎡");
+            }
         }
 
         return view;
