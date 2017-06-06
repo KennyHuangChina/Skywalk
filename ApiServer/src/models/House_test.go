@@ -484,10 +484,25 @@ func Test_ModifyHouseInfo(t *testing.T) {
 		}
 	}
 
+	xitem = []string{"", "abcdefg", "20160305", "2016.03.05", "2016", "201603", "2016/03/06",
+		"2016-03-07 19:35:46", "2016-3-7", "2017-13-23", "2017-03-33"}
+	xdesc = []string{"not set", "is not date", "no '-'", "'.' -> '-'", "only year", "day not set", "'/' -> '-'",
+		"extra text 19:35:46", "month out of range", "month out of range", "day out of range"}
+	for k, v := range xitem {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> invalid arguments: buying date(%s) %s", seq, v, xdesc[k]))
+		hif = commdef.HouseInfo{Property: 2, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
+			Livingrooms: 1, Bathrooms: 1, Acreage: 12300, BuyDate: v}
+		if e, _ := CommitHouseByOwner(&hif, 9, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: house does not exist")
 	hif = commdef.HouseInfo{Id: 100000000, Property: 2, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
-		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+		Livingrooms: 1, Bathrooms: 1, Acreage: 10000, BuyDate: "2017-06-07"}
 	if e := ModifyHouse(&hif, -1); e == nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -496,7 +511,7 @@ func Test_ModifyHouseInfo(t *testing.T) {
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: property does not exist")
 	hif = commdef.HouseInfo{Id: 2, Property: 200000000, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
-		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+		Livingrooms: 1, Bathrooms: 1, Acreage: 10000, BuyDate: "2017-06-07"}
 	if e := ModifyHouse(&hif, -1); e == nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -505,37 +520,23 @@ func Test_ModifyHouseInfo(t *testing.T) {
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Arguments: house duplicated")
 	hif = commdef.HouseInfo{Id: 2, Property: 1, BuildingNo: "177", FloorTotal: 35, FloorThis: 15, HouseNo: "1505",
-		Bedrooms: 2, Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
+		Bedrooms: 2, Livingrooms: 1, Bathrooms: 1, Acreage: 10000, BuyDate: "2017-06-07"}
 	if e := ModifyHouse(&hif, 9); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
-		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
-	if e := ModifyHouse(&hif, -1); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: login user is a regular user, have no right to modify house")
-	hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
-		Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
-	if e := ModifyHouse(&hif, 2); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: login user is an agency, but not behalf this house, have no right to modify house")
-	// hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, Bedrooms: 2,
-	// 	Livingrooms: 1, Bathrooms: 1, Acreage: 10000}
-	if e := ModifyHouse(&hif, 11); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	xids = []int64{-1, 0, 2, 11}
+	xdesc = []string{"not login", "is SYSTEM", "is a regular user", "is an agency, but not behalf this house"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
+		hif = commdef.HouseInfo{Id: 2, Property: 2, BuildingNo: "175", FloorTotal: 35, FloorThis: 15, HouseNo: "1505",
+			Bedrooms: 2, Livingrooms: 1, Bathrooms: 1, Acreage: 10000, BuyDate: "2017-06-07"}
+		if e := ModifyHouse(&hif, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
 	lgusrs := []int64{9, 6, 4}
@@ -557,6 +558,10 @@ func Test_ModifyHouseInfo(t *testing.T) {
 		if /*0 == nBN ||*/ 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
 			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
 			return
+		}
+
+		if 0 == len(hd.BuyDate) {
+			hd.BuyDate = "2017-06-07"
 		}
 
 		bn := hd.BuildingNo

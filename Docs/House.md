@@ -22,6 +22,7 @@
 			* Livingrooms		int		// how many living rooms within house
 			* Bathrooms			int		// how many bathrooms within house
 			* Acreage			int 	// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
+			* BuyDate			string	// the exact date buying this house
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
@@ -115,6 +116,7 @@
 			* 4sale			int		// submit for sale. 1: yes; 0: no
 			* 4rent			int		// submit for rent. 1: yes; 0: no
 			* decor			int		// decoration. 0 - Workblank / 1 - Simple / 2 - Medium / 3 -Refined / 4 - Luxury
+			* buy_date		string	// buying date. 2016-01-02
 	[Response]
 		* SUCCESS:200 
 		* ERR: 4XX,5XX

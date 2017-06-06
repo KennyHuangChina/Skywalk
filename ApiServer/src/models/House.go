@@ -295,6 +295,7 @@ func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
 		hif.BuildingNo = house.BuildingNo
 		hif.FloorThis = house.FloorThis
 		hif.HouseNo = house.HouseNo
+		hif.BuyDate = fmt.Sprintf("%s", house.PurchaseDate.Local())[:10]
 	} else { // hide the privite info
 		hif.BuildingNo = ""
 		hif.HouseNo = ""
@@ -336,16 +337,12 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 
 	// if the house id(property + building + house_no) is conflict
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
-	h := TblHouse{}
-	errT := qs.One(&h)
-	// beego.Debug(FN, fmt.Sprintf("%+v", h))
-	if nil == errT {
-		beego.Debug(FN, "h.Id:", h.Id, ", hif.Id:", hif.Id)
-		if h.Id != hif.Id {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%d, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
-			return
-		}
+	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo).Exclude("Id", hif.Id)
+	bExist := qs.Exist()
+	if bExist {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE,
+			ErrInfo: fmt.Sprintf("property:%d, building:%s, house:%s alredy exist", hif.Property, hif.BuildingNo, hif.HouseNo)}
+		return
 	}
 
 	/* Permission Checking */
@@ -359,9 +356,9 @@ func ModifyHouse(hif *commdef.HouseInfo, uid int64) (err error) {
 	modifyTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tModi.Year(), tModi.Month(), tModi.Day(), tModi.Hour(), tModi.Minute(), tModi.Second())
 	sql := fmt.Sprintf(`UPDATE tbl_house SET property_id=%d, building_no='%s', floor_total=%d, floor_this=%d,
 								house_no='%s', bedrooms=%d, livingrooms=%d, bathrooms=%d, acreage=%d, 
-								modify_time='%s', for_sale=%t, for_rent=%t, decoration=%d WHERE id=%d`,
+								modify_time='%s', for_sale=%t, for_rent=%t, decoration=%d, purchase_date='%s' WHERE id=%d`,
 		hif.Property, hif.BuildingNo, hif.FloorTotal, hif.FloorThis, hif.HouseNo, hif.Bedrooms, hif.Livingrooms, hif.Bathrooms,
-		hif.Acreage, modifyTime, hif.ForSale, hif.ForRent, hif.Decoration, hif.Id)
+		hif.Acreage, modifyTime, hif.ForSale, hif.ForRent, hif.Decoration, hif.BuyDate, hif.Id)
 	res, errT := o.Raw(sql).Exec()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}

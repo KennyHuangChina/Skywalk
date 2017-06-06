@@ -253,10 +253,11 @@ func (this *HouseController) ModifyHouse() {
 	_4sale, _ := this.GetBool("4sale")
 	_4rent, _ := this.GetBool("4rent")
 	decor, _ := this.GetInt("decor")
+	buy_date := this.GetString("buy_date")
 
 	hif := commdef.HouseInfo{Id: hid, Property: prop, BuildingNo: building_no, FloorTotal: floor_total, FloorThis: floor_this,
 		HouseNo: house_no, Bedrooms: bedrooms, Livingrooms: livingrooms, Bathrooms: bathrooms, Acreage: acreage,
-		ForSale: _4sale, ForRent: _4rent, Decoration: decor}
+		ForSale: _4sale, ForRent: _4rent, Decoration: decor, BuyDate: buy_date}
 
 	/*
 	 *	Processing
