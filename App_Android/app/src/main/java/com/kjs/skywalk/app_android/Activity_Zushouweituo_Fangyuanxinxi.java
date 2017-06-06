@@ -100,10 +100,6 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
                 if(!collectData()){
 //                    return;
                 }
-                Intent intent = new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class);
-                Bundle bd = new Bundle();
-                bd.putParcelable("HouseInfo", (Parcelable) mHouseInfo);
-
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
             break;
