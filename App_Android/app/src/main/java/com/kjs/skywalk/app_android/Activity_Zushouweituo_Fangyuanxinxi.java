@@ -1,6 +1,8 @@
 package com.kjs.skywalk.app_android;
 
 import android.content.Intent;
+import android.os.Parcelable;
+import android.support.annotation.IntegerRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.kjs.skywalk.control.kjsNumberPicker;
 
@@ -29,10 +32,19 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
     private String mRoomString = "";
     private String mLoungeString = "";
-    private String mToiletString = "";
+    private String mBathString = "";
     private int mRoomIndex= -1;
     private int mLoungeIndex = -1;
-    private int mToiletIndex = -1;
+    private int mBathIndex = -1;
+
+    private int mPropertyId = -1;
+    private int mDecorate = -1;
+    private int mBuyYear = 0;
+    private int mBuyMonth = 0;
+    private int mBuyDay = 0;
+
+    ClassDefine.HouseInfoForCommit mHouseInfo = new ClassDefine.HouseInfoForCommit();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,9 +97,13 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
 
             case R.id.tv_next:
             {
-//                if(!checkData()){
+                if(!collectData()){
 //                    return;
-//                }
+                }
+                Intent intent = new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class);
+                Bundle bd = new Bundle();
+                bd.putParcelable("HouseInfo", (Parcelable) mHouseInfo);
+
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
             break;
@@ -101,6 +117,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             case R.id.textViewJingzhuang:
             case R.id.textViewHaohua:{
                 TextView tmp = (TextView)v;
+                mDecorate = Integer.valueOf(tmp.getTag().toString());
                 TextView button = (TextView)findViewById(R.id.tv_zhuangxiu_selector);
                 button.setText(tmp.getText().toString());
                 mZhuangxiuSelector.dismiss();
@@ -117,11 +134,12 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
                 TextView view = (TextView)findViewById(R.id.textViewSelectBlock);
                 String name = data.getStringExtra("name");
                 view.setText(name);
+                mPropertyId = data.getIntExtra("id", -1);
             }
         }
     }
 
-    private boolean checkData() {
+    private boolean collectData() {
         TextView viewPropertyName = (TextView)findViewById(R.id.textViewSelectBlock);
         String propertyName = viewPropertyName.getText().toString();
         if(propertyName.isEmpty()) {
@@ -129,12 +147,16 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
+        mHouseInfo.propertyId = mPropertyId;
+
         EditText viewNumber = (EditText)findViewById(R.id.editTextPropertyNumber);
         String number = viewNumber.getText().toString();
         if(number.isEmpty()) {
             commonFun.showToast_info(this, viewPropertyName, "楼栋号不能为空");
             return false;
         }
+
+        mHouseInfo.buildingNo = number;
 
         EditText viewFloor = (EditText)findViewById(R.id.editTextFloor);
         String floor = viewFloor.getText().toString();
@@ -169,12 +191,17 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
+        mHouseInfo.floor = nFloor;
+        mHouseInfo.totalFloor = nFloorTotal;
+
         EditText viewRoomNumber = (EditText)findViewById(R.id.editTextRoomNumber);
         String roomNumber = viewRoomNumber.getText().toString();
         if(roomNumber.isEmpty()) {
             commonFun.showToast_info(this, viewRoomNumber, "门牌号不能为空");
             return false;
         }
+
+        mHouseInfo.roomNo = roomNumber;
 
         EditText viewArea = (EditText)findViewById(R.id.editTextArea);
         String area = viewArea.getText().toString();
@@ -190,12 +217,21 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
+        double db = nArea * 100;
+        String tmpArea = "" + db;
+        String tmp[] = tmpArea.split(".");
+        mHouseInfo.area = Integer.valueOf(tmp[0]);
+
         TextView viewHuxing = (TextView)findViewById(R.id.tv_huxing_selector);
         String huxing = viewHuxing.getText().toString();
         if(huxing.isEmpty()) {
             commonFun.showToast_info(this, viewPropertyName, "请选择户型");
             return false;
         }
+
+        mHouseInfo.bedRooms = mRoomIndex + 1;
+        mHouseInfo.livingRooms = mLoungeIndex + 1;
+        mHouseInfo.bathRooms = mBathIndex + 1;
 
         TextView viewZhuangxiu = (TextView)findViewById(R.id.tv_zhuangxiu_selector);
         String zhuangxiu = viewZhuangxiu.getText().toString();
@@ -204,12 +240,26 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
+        mHouseInfo.decorate = mDecorate;
+        mHouseInfo.decorateDescription = zhuangxiu;
+
         TextView viewDate = (TextView)findViewById(R.id.tv_date_selector);
         String date = viewDate.getText().toString();
         if(date.isEmpty()) {
             commonFun.showToast_info(this, viewPropertyName, "请选择购买日期");
             return false;
         }
+
+        mHouseInfo.buyYear = mBuyYear;
+        mHouseInfo.buyMonth = mBuyMonth;
+        mHouseInfo.buyDay = mBuyDay;
+
+        ToggleButton hasLoan = (ToggleButton)findViewById(R.id.toggleButtonLoan);
+        mHouseInfo.hasLoan = hasLoan.isChecked() ? 1 : 0;
+
+        ToggleButton unique = (ToggleButton)findViewById(R.id.toggleButtonUnique);
+        mHouseInfo.unique = unique.isChecked() ? 1 : 0;
+
         return true;
     }
 
@@ -236,12 +286,12 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int year = mDatePicker.getYear();
-                int month = mDatePicker.getMonth();
-                int day = mDatePicker.getDayOfMonth();
+                mBuyYear = mDatePicker.getYear();
+                mBuyMonth = mDatePicker.getMonth();
+                mBuyDay = mDatePicker.getDayOfMonth();
 
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
+                calendar.set(mBuyYear, mBuyMonth, mBuyDay);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 String date = df.format(calendar.getTime());
                 TextView tmp = (TextView)findViewById(R.id.tv_date_selector);
@@ -261,7 +311,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         mHuXingSelectorDlg.setContentView(R.layout.dialog_fangyuanxinxi_fangxing);
 
         mRoomIndex = 0;
-        mToiletIndex = 0;
+        mBathIndex = 0;
         mLoungeIndex = 0;
 
         kjsNumberPicker npShi = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_shi);
@@ -289,7 +339,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         npWei.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mToiletIndex = newVal;
+                mBathIndex = newVal;
             }
         });
 
@@ -319,11 +369,11 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mToiletString = arrWei[mToiletIndex];
+                mBathString = arrWei[mBathIndex];
                 mRoomString = arrShi[mRoomIndex];
                 mLoungeString = arrTing[mLoungeIndex];
                 TextView tmp = (TextView)findViewById(R.id.tv_huxing_selector);
-                tmp.setText(mRoomString + mLoungeString + mToiletString);
+                tmp.setText(mRoomString + mLoungeString + mBathString);
                 mHuXingSelectorDlg.dismiss();
             }
         });

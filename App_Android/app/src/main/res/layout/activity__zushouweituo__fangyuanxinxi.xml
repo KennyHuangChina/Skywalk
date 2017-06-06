@@ -300,6 +300,7 @@
                         android:layout_centerVertical="true"
                         android:text="有无房贷"/>
                     <ToggleButton
+                        android:id="@+id/toggleButtonLoan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="10dp"
@@ -331,6 +332,7 @@
                             android:layout_centerVertical="true"
                             android:text="是否唯一"/>
                         <ToggleButton
+                            android:id="@+id/toggleButtonUnique"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minWidth="10dp"

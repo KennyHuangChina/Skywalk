@@ -17,6 +17,7 @@
             <TextView
                 android:id="@+id/textViewMaopi"
                 android:text="毛坯"
+                android:tag="0"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"
@@ -28,6 +29,7 @@
             <TextView
                 android:id="@+id/textViewJianzhuang"
                 android:text="简装"
+                android:tag="1"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"
@@ -39,6 +41,7 @@
             <TextView
                 android:id="@+id/textViewZhongdeng"
                 android:text="中等"
+                android:tag="2"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"
@@ -50,6 +53,7 @@
             <TextView
                 android:id="@+id/textViewJingzhuang"
                 android:text="精装"
+                android:tag="3"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"
@@ -61,6 +65,7 @@
             <TextView
                 android:id="@+id/textViewHaohua"
                 android:text="豪华"
+                android:tag="4"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"

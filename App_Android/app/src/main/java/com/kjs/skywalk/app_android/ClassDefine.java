@@ -1,6 +1,9 @@
 package com.kjs.skywalk.app_android;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -78,11 +81,15 @@ public class ClassDefine {
         public int livingRooms;
         public int bathRooms;
         public int decorate;
-        public int decorateDescription;
+        public String decorateDescription;
         public int buyYear;
         public int buyMonth;
         public int buyDay;
         public int hasLoan;
         public int unique;
+
+        public void printContent() {
+
+        }
     }
 }
