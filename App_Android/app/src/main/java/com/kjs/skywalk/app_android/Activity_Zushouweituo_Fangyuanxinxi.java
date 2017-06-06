@@ -43,8 +43,6 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
     private int mBuyMonth = 0;
     private int mBuyDay = 0;
 
-    ClassDefine.HouseInfoForCommit mHouseInfo = new ClassDefine.HouseInfoForCommit();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +141,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.propertyId = mPropertyId;
+        ClassDefine.HouseInfoForCommit.propertyId = mPropertyId;
 
         EditText viewNumber = (EditText)findViewById(R.id.editTextPropertyNumber);
         String number = viewNumber.getText().toString();
@@ -152,7 +150,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.buildingNo = number;
+        ClassDefine.HouseInfoForCommit.buildingNo = number;
 
         EditText viewFloor = (EditText)findViewById(R.id.editTextFloor);
         String floor = viewFloor.getText().toString();
@@ -187,8 +185,8 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.floor = nFloor;
-        mHouseInfo.totalFloor = nFloorTotal;
+        ClassDefine.HouseInfoForCommit.floor = nFloor;
+        ClassDefine.HouseInfoForCommit.totalFloor = nFloorTotal;
 
         EditText viewRoomNumber = (EditText)findViewById(R.id.editTextRoomNumber);
         String roomNumber = viewRoomNumber.getText().toString();
@@ -197,7 +195,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.roomNo = roomNumber;
+        ClassDefine.HouseInfoForCommit.roomNo = roomNumber;
 
         EditText viewArea = (EditText)findViewById(R.id.editTextArea);
         String area = viewArea.getText().toString();
@@ -213,10 +211,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        double db = nArea * 100;
-        String tmpArea = "" + db;
-        String tmp[] = tmpArea.split(".");
-        mHouseInfo.area = Integer.valueOf(tmp[0]);
+        ClassDefine.HouseInfoForCommit.area = (int)(nArea * 100);
 
         TextView viewHuxing = (TextView)findViewById(R.id.tv_huxing_selector);
         String huxing = viewHuxing.getText().toString();
@@ -225,9 +220,9 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.bedRooms = mRoomIndex + 1;
-        mHouseInfo.livingRooms = mLoungeIndex + 1;
-        mHouseInfo.bathRooms = mBathIndex + 1;
+        ClassDefine.HouseInfoForCommit.bedRooms = mRoomIndex + 1;
+        ClassDefine.HouseInfoForCommit.livingRooms = mLoungeIndex + 1;
+        ClassDefine.HouseInfoForCommit.bathRooms = mBathIndex + 1;
 
         TextView viewZhuangxiu = (TextView)findViewById(R.id.tv_zhuangxiu_selector);
         String zhuangxiu = viewZhuangxiu.getText().toString();
@@ -236,8 +231,8 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.decorate = mDecorate;
-        mHouseInfo.decorateDescription = zhuangxiu;
+        ClassDefine.HouseInfoForCommit.decorate = mDecorate;
+        ClassDefine.HouseInfoForCommit.decorateDescription = zhuangxiu;
 
         TextView viewDate = (TextView)findViewById(R.id.tv_date_selector);
         String date = viewDate.getText().toString();
@@ -246,15 +241,15 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
-        mHouseInfo.buyYear = mBuyYear;
-        mHouseInfo.buyMonth = mBuyMonth;
-        mHouseInfo.buyDay = mBuyDay;
+        ClassDefine.HouseInfoForCommit.buyYear = mBuyYear;
+        ClassDefine.HouseInfoForCommit.buyMonth = mBuyMonth;
+        ClassDefine.HouseInfoForCommit.buyDay = mBuyDay;
 
         ToggleButton hasLoan = (ToggleButton)findViewById(R.id.toggleButtonLoan);
-        mHouseInfo.hasLoan = hasLoan.isChecked() ? 1 : 0;
+        ClassDefine.HouseInfoForCommit.hasLoan = hasLoan.isChecked() ? 1 : 0;
 
         ToggleButton unique = (ToggleButton)findViewById(R.id.toggleButtonUnique);
-        mHouseInfo.unique = unique.isChecked() ? 1 : 0;
+        ClassDefine.HouseInfoForCommit.unique = unique.isChecked() ? 1 : 0;
 
         return true;
     }
