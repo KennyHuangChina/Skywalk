@@ -43,19 +43,24 @@ public class fragmentHomePage extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ListView lvContent = (ListView) view.findViewById(R.id.lv_content);
         lvContent.setFocusable(false);
 
         mAdapterApartmentItem = new homepage_apartment_listitem_adapter(getActivity());
         lvContent.setAdapter(mAdapterApartmentItem);
-
-        lvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapterApartmentItem.updateList(loadTestData());
+        mAdapterApartmentItem.setApartmentListCallback(new homepage_apartment_listitem_adapter.ApartmentListCallback() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                commonFun.showToast_resId(getActivity().getApplicationContext(), view);
+            public void onItemClicked(ClassDefine.HouseDigest houseDigest) {
+                kjsLogUtil.i("clicked: " + houseDigest.property);
+
                 Intent intent = new Intent(getActivity().getApplicationContext(), Activity_ApartmentDetail.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("property", houseDigest.property);
+                bundle.putString("addr", houseDigest.addr);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -64,6 +69,23 @@ public class fragmentHomePage extends Fragment {
         (new GetRecommendHouseListTask()).execute();
 
         return view;
+    }
+
+    private ArrayList<ClassDefine.HouseDigest> loadTestData() {
+        ArrayList<ClassDefine.HouseDigest> houseDigestsList = new ArrayList<>();
+        ClassDefine.HouseDigest digest = new ClassDefine.HouseDigest();
+        digest.property = "证大大拇指广场";
+        digest.addr = "姑苏白杨湾街道";
+        digest.Acreage = 120;
+        houseDigestsList.add(digest);
+
+        ClassDefine.HouseDigest digest1 = new ClassDefine.HouseDigest();
+        digest1.property = "证大大拇指广场1";
+        digest1.addr = "姑苏白杨湾街道1";
+        digest1.Acreage = 130;
+        houseDigestsList.add(digest1);
+
+        return houseDigestsList;
     }
 
     private void updateHouseList(final ArrayList<ClassDefine.HouseDigest> list) {
