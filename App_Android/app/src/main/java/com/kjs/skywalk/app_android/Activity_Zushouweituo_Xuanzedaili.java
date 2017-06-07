@@ -39,6 +39,8 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
     private int mAgentCount = 0;
     private final int MSG_GET_AGENT_LIST = 0;
 
+    private String mCurrentAgentId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                 Log.i(getClass().getSimpleName().toString(), agent.mID);
                 AdapterAgents agentAdapter = (AdapterAgents)parent.getAdapter();
                 agentAdapter.setItemSelected(view, position);
+                mCurrentAgentId = agent.mID;
             }
         });
 
@@ -180,7 +183,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
             break;
             case R.id.tv_next:
             {
-                if(!checkData()) {
+                if(!collectData()) {
                     return;
                 }
                 startActivity(new Intent(this, Activity_Zushouweituo_SelectService.class));
@@ -192,13 +195,19 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
         }
     }
 
-    private boolean checkData() {
+    private boolean collectData() {
         CheckBox autoSelect = (CheckBox)findViewById(R.id.checkbox);
         if(!autoSelect.isChecked()) {
             if(!mAdapter.hasSelected()) {
                 commonFun.showToast_info(this, autoSelect, "请选择一个代理人或由系统自动为您分配");
                 return false;
+            } else {
+                ClassDefine.HouseInfoForCommit.autoAgent = 0;
+                ClassDefine.HouseInfoForCommit.agentId = mCurrentAgentId;
             }
+        } else {
+            ClassDefine.HouseInfoForCommit.autoAgent = 1;
+            ClassDefine.HouseInfoForCommit.agentId = "";
         }
         return true;
     }

@@ -95,6 +95,9 @@ public class ClassDefine {
         public static int price = 0;
         public static int minPrice = 0;
 
+        public static int autoAgent = 1;
+        public static String agentId = "";
+
         public void printContent() {
 
         }
