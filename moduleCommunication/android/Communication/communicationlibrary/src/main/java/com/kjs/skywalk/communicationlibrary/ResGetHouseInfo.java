@@ -21,6 +21,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private int     mAcreage;       // house acreage, 100x than real value. for example 11537 mean 115.37 m^2 (Square Meter)
     private int     mDecorate;      // decorate id
     private String  mDecoration;    // decoration description
+    private String  mBuyDate;       // buy date
 
     ResGetHouseInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -31,16 +32,17 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     public String DebugString() {
         super.DebugString();
 
-        mString += "  hosue id: " + mHouseId + "\n";
-        mString += "  property: " + mProId + "\n";
-        mString += "  building: " + mBuildingNo + "\n";
-        mString += "  floor: " + mFloorThis + "/" + mFloorTotal + "\n";
-        mString += "  house no: " + mHouseNo + "\n";
-        mString += "  bedrooms: " + mBedrooms + "\n";
-        mString += "  living rooms: " + mLivingrooms + "\n";
-        mString += "  bathrooms: " + mBathrooms + "\n";
-        mString += "  acreage: " + mAcreage / 100 + "." + mAcreage % 100 + "\n";
-        mString += "  decoration: (" + mDecorate  + ")" + mDecoration + "\n";
+        mString += "  hosue id: " + HouseId() + "\n";
+        mString += "  property: " + ProId() + "\n";
+        mString += "  building: " + BuildingNo() + "\n";
+        mString += "  floor: " + Floorthis() + "/" + FloorTotal() + "\n";
+        mString += "  house no: " + HouseNo() + "\n";
+        mString += "  bedrooms: " + Bedrooms() + "\n";
+        mString += "  living rooms: " + Livingrooms() + "\n";
+        mString += "  bathrooms: " + Bathrooms() + "\n";
+        mString += "  acreage: " + Acreage() / 100 + "." + Acreage() % 100 + "\n";
+        mString += "  decoration: (" + Decorate() + ")" + DecorateDesc() + "\n";
+        mString += "  buy date: " + BuyDate() + "\n";
 
         return mString;
     }
@@ -60,6 +62,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
             mBathrooms      = jHouse.getInt("Bathrooms");
             mAcreage        = jHouse.getInt("Acreage");
             mDecorate       = jHouse.getInt("Decoration");
+            mBuyDate        = jHouse.getString("BuyDate");
 
             if (mBuildingNo.isEmpty() || mHouseNo.isEmpty()) {
                 if (mFloorThis == mFloorTotal + 1) {
@@ -82,7 +85,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
                     mDecoration = "中档装修";
                     break;
                 case 3:
-                    mDecoration = "精装装修";
+                    mDecoration = "精装修";
                     break;
                 case 4:
                     mDecoration = "豪华装修";
@@ -160,5 +163,10 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     @Override
     public String DecorateDesc() {
         return mDecoration;
+    }
+
+    @Override
+    public String BuyDate() {
+        return mBuyDate;
     }
 }
