@@ -176,12 +176,13 @@ public class CommunicationInterface {
         public boolean  mForSale        = false;
         public boolean  mForRent        = false;
         public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简装 / 2 - 中等 / 3 - 精装 / 4 - 豪华
+        public String   mBuyDate        = "";   // exact date of buying this house
 
         public HouseInfo() {
         }
 
         public HouseInfo(int hid, int pid, String bld, String hno, int ftotal, int fthis, int lr,
-                         int bedr, int bathr, int acre, boolean sale, boolean rent, int decorate) {
+                         int bedr, int bathr, int acre, boolean sale, boolean rent, int decorate, String buy_date) {
             mHouseId        = hid;
             mPropId         = pid;
             mBuilding       = bld;
@@ -195,6 +196,7 @@ public class CommunicationInterface {
             mForSale        = sale;
             mForRent        = rent;
             mDecorate       = decorate;
+            mBuyDate        = buy_date;
         }
 
         public boolean CheckHoseInfo(String TAG, boolean bAdd) {
@@ -237,6 +239,11 @@ public class CommunicationInterface {
 //            mRent
             if (mDecorate < 0 || mDecorate > 4) {
                 Log.e(TAG, "Invalid decoration:" + mDecorate);
+                return false;
+            }
+
+            if (mBuyDate.isEmpty()) {
+                Log.e(TAG, "buy date not set");
                 return false;
             }
 

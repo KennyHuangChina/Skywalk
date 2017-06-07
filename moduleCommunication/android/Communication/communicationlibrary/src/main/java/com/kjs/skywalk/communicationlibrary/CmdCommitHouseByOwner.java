@@ -71,6 +71,8 @@ class CmdCommitHouseByOwner extends CommunicationBase {
         mRequestData += "&";
         mRequestData += ("decor=" + mHouseInfo.mDecorate);
         mRequestData += "&";
+        mRequestData += ("buy_date=" + mHouseInfo.mBuyDate);
+        mRequestData += "&";
         mRequestData += ("agen=" + mAgent);
 
         Log.d(TAG, "mRequestData: " + mRequestData);
