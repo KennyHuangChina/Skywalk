@@ -23,6 +23,15 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<ClassDefine.HouseDigest> mList;
 
+    ApartmentListCallback mCallback = null;
+
+    public interface ApartmentListCallback {
+        void onItemClicked(ClassDefine.HouseDigest houseDigest);
+    }
+    public void setApartmentListCallback(ApartmentListCallback callback) {
+        this.mCallback = callback;
+    }
+
     public homepage_apartment_listitem_adapter(Context context) {
         super();
         mContext = context;
@@ -107,36 +116,55 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         }
 
         if (mList != null) {
-            ClassDefine.HouseDigest houseDigest = mList.get(0);
-            holder.tvApartment1_name.setText(houseDigest.property);
-            holder.tvApartment1_desc.setText(houseDigest.addr + "/" + houseDigest.Acreage + "㎡");
+            final ClassDefine.HouseDigest houseDigest1 = mList.get(0);
+            holder.tvApartment1_name.setText(houseDigest1.property);
+            holder.tvApartment1_desc.setText(houseDigest1.addr + "/" + houseDigest1.Acreage + "㎡");
+            holder.rlApartment1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCallback != null)
+                        mCallback.onItemClicked(houseDigest1);
+                }
+            });
 
-            int count = 0;
-            for (ClassDefine.HouseTag houseTag : houseDigest.houseTags) {
-                if (count == 0)
-                    holder.tvApartment1_tag1.setText(houseTag.tagName);
-                if (count == 1)
-                    holder.tvApartment1_tag2.setText(houseTag.tagName);
-                count++;
+            if (houseDigest1.houseTags != null) {
+                int count = 0;
+                for (ClassDefine.HouseTag houseTag : houseDigest1.houseTags) {
+                    if (count == 0)
+                        holder.tvApartment1_tag1.setText(houseTag.tagName);
+                    if (count == 1)
+                        holder.tvApartment1_tag2.setText(houseTag.tagName);
+                    count++;
+                }
             }
+
 
             if (mList.size() == 1) {
                 holder.rlApartment2.setVisibility(View.INVISIBLE);
             } else {
-                ClassDefine.HouseDigest houseDigest1 = mList.get(1);
+                final ClassDefine.HouseDigest houseDigest2 = mList.get(1);
                 holder.rlApartment2.setVisibility(View.VISIBLE);
-                holder.tvApartment1_name.setText(houseDigest1.property);
+                holder.tvApartment2_name.setText(houseDigest2.property);
+                holder.tvApartment2_desc.setText(houseDigest2.addr + "/" + houseDigest2.Acreage + "㎡");
+                holder.rlApartment2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mCallback != null)
+                            mCallback.onItemClicked(houseDigest2);
+                    }
+                });
 
-                count = 0;
-                for (ClassDefine.HouseTag houseTag : houseDigest1.houseTags) {
-                    if (count == 0)
-                        holder.tvApartment2_tag1.setText(houseTag.tagName);
-                    if (count == 1)
-                        holder.tvApartment2_tag2.setText(houseTag.tagName);
-                    count++;
+                if (houseDigest2.houseTags != null) {
+                    int count = 0;
+                    for (ClassDefine.HouseTag houseTag : houseDigest2.houseTags) {
+                        if (count == 0)
+                            holder.tvApartment2_tag1.setText(houseTag.tagName);
+                        if (count == 1)
+                            holder.tvApartment2_tag2.setText(houseTag.tagName);
+                        count++;
+                    }
                 }
 
-                holder.tvApartment1_desc.setText(houseDigest1.addr + "/" + houseDigest1.Acreage + "㎡");
             }
         }
 

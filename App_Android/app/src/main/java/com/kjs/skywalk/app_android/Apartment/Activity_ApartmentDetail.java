@@ -58,6 +58,12 @@ public class Activity_ApartmentDetail extends AppCompatActivity {
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         mImageLst = commonFun.getTestPicList(this);
         sView.setImages(mImageLst, mSvListener);
+
+        Bundle bundle = getIntent().getExtras();
+        String property = bundle.getString("property");
+        String addr = bundle.getString("addr");
+
+        ((TextView)findViewById(R.id.tv_apartment_name)).setText(property);
     }
 
     private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
