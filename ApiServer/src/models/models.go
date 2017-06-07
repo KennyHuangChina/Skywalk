@@ -108,6 +108,24 @@ func (h *TblHouse) TableUnique() [][]string {
 	}
 }
 
+type TblHousePrice struct {
+	Id            int64
+	House         int64     // house
+	RentalTag     int64     // rental, tag price
+	RentalBottom  int64     // rental, bottom price
+	PropFee       bool      `orm:"not null; default(false)"` // if the rental involve the property fee
+	SellingTag    int64     // selling, tag price
+	SellingBottom int64     // selling, bottom price
+	Who           int64     // who set the price
+	When          time.Time `orm:"auto_now_add;type(datetime)"` // when set the price
+}
+
+func (h *TblHousePrice) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+	}
+}
+
 type TblHouseCert struct {
 	Id      int64
 	House   int64     // house id
@@ -390,7 +408,7 @@ func init() {
 	// tables need to be registered in init() function
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
-		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert),
+		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),

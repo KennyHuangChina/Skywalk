@@ -179,3 +179,18 @@
 	  		* ErrDesc		string		// error description
 ##
 
+### 10. Set House Price
+	[Security]	private: landlorad, house agency, administrator
+	[Request]
+  		* POST /v1/house/:id/price
+	  		* r_tp			int 	// rental, tag price
+	  		* r_bp			int		// rental, bottom price
+	  		* pf			bool	// if the rental involve the property fee
+	  		* p_tp			int		// selling price, tag price
+	  		* p_bp			int 	// selling price, bottom price
+	[Response]
+		* SUCCESS:200 
+			* Id    		int		// new price record id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

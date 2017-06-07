@@ -469,6 +469,99 @@ func SetHouseCoverImage(hid, cid, uid int64) (err error) {
 }
 
 /**
+*	Set House Price
+*	Arguments:
+*		hid 		- house id
+*		uid			- login user
+*		rental_tp	- rental, tag price
+*		rental_bp	- rental, bottom price
+*		prop_fee	- if the rental involve the property fee
+*		price_tp	- selling price, tag price
+*		price_bp	- selling price, bottom price
+*	Returns
+*		err - error info
+*		pid	- price id
+ */
+func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, prop_fee bool) (err error, pid int64) {
+	FN := "[SetHousePrice] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", rental:", rental_tp, "|", rental_bp,
+		", include property_fee:", prop_fee, ", selling price:", price_tp, "|", price_bp)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument checking */
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+
+	if h.ForRent {
+		if rental_tp < 0 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("rental tag: %d", rental_tp)}
+			return
+		}
+		if rental_bp < 0 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("rental bottom: %d", rental_bp)}
+			return
+		}
+		if 0 == rental_tp && 0 == rental_bp {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "Rental not set"}
+			return
+		}
+		if rental_tp < rental_bp {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Rental: tag(%d) < bottom(%d)", rental_tp, rental_bp)}
+			return
+		}
+	}
+
+	if h.ForSale {
+		if price_tp < 0 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("selling tag: %d", price_tp)}
+			return
+		}
+		if price_bp < 0 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("selling bottom: %d", price_bp)}
+			return
+		}
+		if 0 == price_tp && 0 == price_bp {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "Selling price not set"}
+			return
+		}
+		if price_tp < price_bp {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Selling price: tag(%d) < bottom(%d)", price_tp, price_bp)}
+			return
+		}
+	}
+
+	if !h.ForRent && !h.ForSale {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "House does not accept any price"}
+		return
+	}
+
+	/* Premission checking */
+	if err = canAccessHouse(uid, hid); nil != err {
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	np := TblHousePrice{House: hid, RentalTag: rental_tp, RentalBottom: rental_bp, PropFee: prop_fee,
+		SellingTag: price_tp, SellingBottom: price_bp, Who: uid}
+	nId, errT := o.Insert(&np)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	pid = nId
+	return
+}
+
+/**
 *	Certify House
 *	Arguments:
 *		hid 	- house id

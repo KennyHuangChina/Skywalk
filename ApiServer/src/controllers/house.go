@@ -19,11 +19,62 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseList", h.GetHouseList)
 	h.Mapping("CommitHouseByOwner", h.CommitHouseByOwner)
 	h.Mapping("ModifyHouse", h.ModifyHouse)
+
+	h.Mapping("SetHousePrice", h.SetHousePrice)
 	h.Mapping("CertHouse", h.CertHouse)
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
 	h.Mapping("GetBehalfList", h.GetBehalfList)
+}
+
+// @Title SetHousePrice
+// @Description set house price, incouding rental and selling price
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/price [post]
+func (this *HouseController) SetHousePrice() {
+	FN := "[SetHousePrice] "
+	beego.Warn("[--- API: SetHousePrice ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	rental_tp, _ := this.GetInt64("r_tp")
+	rental_bp, _ := this.GetInt64("r_bp")
+	prop_fee, _ := this.GetBool("pf")
+	price_tp, _ := this.GetInt64("p_tp")
+	price_bp, _ := this.GetInt64("p_bp")
+
+	/*
+	 *	Processing
+	 */
+	err, pid := models.SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp, prop_fee)
+	if nil == err {
+		result.Id = pid
+	}
+
+	return
 }
 
 // @Title CertHouse

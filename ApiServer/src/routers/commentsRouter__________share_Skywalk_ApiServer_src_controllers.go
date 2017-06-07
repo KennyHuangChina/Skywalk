@@ -239,6 +239,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
 		beego.ControllerComments{
+			Method: "SetHousePrice",
+			Router: `/:id/price`,
+			AllowHTTPMethods: []string{"post"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
+		beego.ControllerComments{
 			Method: "CertHouse",
 			Router: `/cert/:id`,
 			AllowHTTPMethods: []string{"post"},
