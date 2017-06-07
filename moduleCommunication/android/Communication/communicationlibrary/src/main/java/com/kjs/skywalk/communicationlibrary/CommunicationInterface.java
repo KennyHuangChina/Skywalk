@@ -114,6 +114,7 @@ public class CommunicationInterface {
         public static int CMD_CERTIFY_HOUSE                 = 0x2007;
         public static int CMD_GET_SET_HOUSE_COVER_IMAGE     = 0x2008;
         public static int CMD_GET_RECOMMEND_HOUSE           = 0x2009;
+        public static int CMD_SET_HOUSE_PRICE               = 0x200A;
 
         // Property
         public static int CMD_GET_PROPERTY_LIST     = 0x3001;
@@ -165,8 +166,8 @@ public class CommunicationInterface {
     static public class HouseInfo {
         public int      mHouseId        = 0;
         public int      mPropId         = 0;    // property, community
-        public String   mBuilding       = "";   // building number, like 177A栋
-        public String   mHouseNo        = "";   // house number, 1505室
+        public String   mBuilding       = "";   // building number, like 177A�?
+        public String   mHouseNo        = "";   // house number, 1505�?
         public int      mFloorTotal     = 0;    // total floor
         public int      mFloorThis      = 0;    // house floor
         public int      mLivingrooms    = 0;
@@ -175,7 +176,7 @@ public class CommunicationInterface {
         public int      mAcreage        = 0;    // acreage, 100 times than actual. 10300 means 103 平米
         public boolean  mForSale        = false;
         public boolean  mForRent        = false;
-        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简装 / 2 - 中等 / 3 - 精装 / 4 - 豪华
+        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简�?/ 2 - 中等 / 3 - 精装 / 4 - 豪华
         public String   mBuyDate        = "";   // exact date of buying this house
 
         public HouseInfo() {
