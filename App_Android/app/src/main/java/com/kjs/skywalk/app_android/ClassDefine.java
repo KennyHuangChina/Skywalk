@@ -98,6 +98,8 @@ public class ClassDefine {
         public static int autoAgent = 1;
         public static String agentId = "";
 
+        public static int service = -1;
+
         public void printContent() {
 
         }

@@ -68,10 +68,12 @@ public class Activity_Zushouweituo_SelectService extends Activity {
         mService = 2;
     }
 
-    private boolean checkData() {
+    private boolean collectData() {
         if(mService == -1) {
             commonFun.showToast_info(this, mContainer1, "请选择您需要的服务");
             return false;
+        } else {
+            ClassDefine.HouseInfoForCommit.service = mService;
         }
         return true;
     }
@@ -85,7 +87,7 @@ public class Activity_Zushouweituo_SelectService extends Activity {
             break;
             case R.id.tv_next:
             {
-                if(!checkData()) {
+                if(!collectData()) {
                     return;
                 }
                 startActivity(new Intent(this, Activity_Weituoqueren.class));
