@@ -95,12 +95,14 @@
                     <!--158x52px-->
                     <TextView
                         android:id="@+id/tv_apartment1_tag1"
-                        android:text="随时看房"
-                        style="@style/TextView_cg1" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="随时看房" />
                     <TextView
                         android:id="@+id/tv_apartment1_tag2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="满2年"
-                        style="@style/TextView_cg2"
                         android:layout_marginLeft="5dp"/>
                 </LinearLayout>
             </LinearLayout>
@@ -169,11 +171,11 @@
                     <TextView
                         android:id="@+id/tv_apartment2_tag1"
                         android:text="随时看房"
-                        style="@style/TextView_cg1" />
+                        style="@style/tv_apartment_cg1" />
                     <TextView
                         android:id="@+id/tv_apartment2_tag2"
                         android:text="满2年"
-                        style="@style/TextView_cg2"
+                        style="@style/tv_apartment_cg2"
                         android:layout_marginLeft="5dp"/>
                 </LinearLayout>
             </LinearLayout>
