@@ -484,8 +484,8 @@ func SetHouseCoverImage(hid, cid, uid int64) (err error) {
  */
 func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, prop_fee bool) (err error, pid int64) {
 	FN := "[SetHousePrice] "
-	beego.Trace(FN, "house:", hid, ", login user:", uid, ", rental:", rental_tp, "|", rental_bp,
-		", include property_fee:", prop_fee, ", selling price:", price_tp, "|", price_bp)
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", rental:(", rental_tp, ",", rental_bp,
+		"), include property_fee:", prop_fee, ", selling price:(", price_tp, ",", price_bp, ")")
 
 	defer func() {
 		if nil != err {
@@ -538,7 +538,7 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
 	}
 
 	if !h.ForRent && !h.ForSale {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "House does not accept any price"}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "House can not accept any price"}
 		return
 	}
 
@@ -554,8 +554,30 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
 		}
 	}
 
-	if cp.RentalTag == rental_tp && cp.RentalBottom == rental_bp && cp.PropFee == prop_fee &&
-		cp.SellingTag == price_tp && cp.SellingBottom == price_bp {
+	bDuplicate := false
+	bRentEqual := false
+	bPriceEqual := false
+	if h.ForRent {
+		if cp.RentalTag == rental_tp && cp.RentalBottom == rental_bp && cp.PropFee == prop_fee {
+			bRentEqual = true
+			if !h.ForSale {
+				bDuplicate = true
+			}
+		}
+	}
+	if h.ForSale {
+		if cp.SellingTag == price_tp && cp.SellingBottom == price_bp {
+			bPriceEqual = true
+			if !h.ForRent {
+				bDuplicate = true
+			}
+		}
+	}
+	if !bDuplicate && bRentEqual && bPriceEqual {
+		bDuplicate = true
+	}
+
+	if bDuplicate {
 		beego.Error(FN, fmt.Sprintf("current price:%+v", cp))
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE}
 		return
@@ -568,13 +590,24 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
 
 	/* Processing */
 	o := orm.NewOrm()
-	np := TblHousePrice{House: hid, RentalTag: rental_tp, RentalBottom: rental_bp, PropFee: prop_fee,
-		SellingTag: price_tp, SellingBottom: price_bp, Who: uid}
+	np := TblHousePrice{House: hid, Who: uid}
+	if h.ForRent {
+		np.RentalTag = rental_tp
+		np.RentalBottom = rental_bp
+		np.PropFee = prop_fee
+	}
+	if h.ForSale {
+		np.SellingTag = price_tp
+		np.SellingBottom = price_bp
+	}
+
 	nId, errT := o.Insert(&np)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
+
+	beego.Warn(FN, "TODO: send message if someone change the price")
 
 	pid = nId
 	return

@@ -1025,3 +1025,82 @@ func Test_CommitHouseByOwner(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- SetHousePrice --
+//
+func Test_SetHousePrice(t *testing.T) {
+	seq := 0
+
+	xids := []int64{-1, 0, 100000000}
+	xdesc := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: house(%d) %s", seq, v, xdesc[k]))
+		if e, _ := SetHousePrice(v, -1, 0, 0, 0, 0, false); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xid_1 := []int64{-1, 0, 0}
+	xid_2 := []int64{0, -1, 0}
+	xdesc = []string{"rental(%d, %d), tag < 0", "rental(%d, %d), bottom < 0", "rental(%d, %d), not set"}
+	for k, v := range xid_1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: %s", seq, fmt.Sprintf(xdesc[k], v, xid_2[k])))
+		if e, _ := SetHousePrice(3, -1, v, xid_2[k], -1, -1, false); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xid_1 = []int64{-1, 0, 0}
+	xid_2 = []int64{0, -1, 0}
+	xdesc = []string{"selling price(%d, %d), tag < 0", "selling price(%d, %d), bottom < 0", "selling price(%d, %d), not set"}
+	for k, v := range xid_1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: %s", seq, fmt.Sprintf(xdesc[k], v, xid_2[k])))
+		if e, _ := SetHousePrice(12, -1, 1, 1, v, xid_2[k], false); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: house can not accept any price", seq))
+	if e, _ := SetHousePrice(2, -1, 1, 1, 1, 1, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: duplicate price", seq))
+	if e, _ := SetHousePrice(11, -1, 1000, 800, 500000, 470000, true); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	xids = []int64{-1, 0, 100000000, 2, 11}
+	xdesc = []string{"not login", "is SYSTEM", "does not exist", "is a regular user", "is an agency, but not for this house"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: User(%d) %s", seq, v, xdesc[k]))
+		if e, _ := SetHousePrice(13, v, 1, 1, 1, 1, false); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xids = []int64{10, 6, 5}
+	xdesc = []string{"Landlord", "house agency", "administrator"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: %s(%d) set price", seq, xdesc[k], v))
+		if e, _ := SetHousePrice(13, v, 1000+int64(k), 800+int64(k), 500000+int64(k), 48000+int64(k), false); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+}
