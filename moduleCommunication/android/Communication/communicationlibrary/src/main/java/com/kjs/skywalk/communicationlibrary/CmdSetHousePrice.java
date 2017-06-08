@@ -39,7 +39,7 @@ class CmdSetHousePrice extends CommunicationBase {
         mRequestData += "&";
         mRequestData += ("pf=" + mPropertyFee);
         mRequestData += "&";
-        mRequestData = ("p_tp=" + mPriceTag);
+        mRequestData += ("p_tp=" + mPriceTag);
         mRequestData += "&";
         mRequestData += ("p_bp=" + mPriceBottom);
         Log.d(TAG, "mRequestData: " + mRequestData);
@@ -51,7 +51,7 @@ class CmdSetHousePrice extends CommunicationBase {
                 !map.containsKey(CommunicationParameterKey.CPK_HOUSE_RENTAL_BOTTOM) ||
                 !map.containsKey(CommunicationParameterKey.CPK_HOUSE_RENTAL_PROPFEE) ||
                 !map.containsKey(CommunicationParameterKey.CPK_HOUSE_RPRICE_TAG) ||
-                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_PRICE_BOTTOM)) {
+                    !map.containsKey(CommunicationParameterKey.CPK_HOUSE_PRICE_BOTTOM)) {
             return false;
         }
 
@@ -89,6 +89,7 @@ class CmdSetHousePrice extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        return super.doParseResult(nErrCode, jObject);
+        ResAddResource result = new ResAddResource(nErrCode, jObject);
+        return result;
     }
 }

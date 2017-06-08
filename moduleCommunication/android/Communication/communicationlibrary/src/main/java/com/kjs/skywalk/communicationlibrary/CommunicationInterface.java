@@ -45,7 +45,9 @@ public class CommunicationInterface {
         int CommitHouseByOwner(HouseInfo houseInfo, int agency);                // CMD_COMMIT_HOUSE_BY_OWNER,       IApiResults.IAddRes
         int AmendHouse(HouseInfo houseInfo);                                    // CMD_AMEND_HOUSE,                 IApiResults.ICommon
         int RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
-        int SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,,  IApiResults.ICommon
+        int SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,   IApiResults.ICommon
+        int SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee,
+                          int price_tag, int price_bottom);                     // CMD_SET_HOUSE_PRICE,             IApiResults.IAddRes
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
         int GetBehalfHouses(int type, int begin, int cnt);                      // CMD_GET_BEHALF_HOUSE_LIST,       TODO:
         int GetHouseList(int type, int begin, int cnt);                         // CMD_GET_HOUSE_LIST,              IApiResults.IResultList(int[])
@@ -166,8 +168,8 @@ public class CommunicationInterface {
     static public class HouseInfo {
         public int      mHouseId        = 0;
         public int      mPropId         = 0;    // property, community
-        public String   mBuilding       = "";   // building number, like 177A�?
-        public String   mHouseNo        = "";   // house number, 1505�?
+        public String   mBuilding       = "";   // building number, like 177A�?
+        public String   mHouseNo        = "";   // house number, 1505�?
         public int      mFloorTotal     = 0;    // total floor
         public int      mFloorThis      = 0;    // house floor
         public int      mLivingrooms    = 0;
@@ -176,7 +178,7 @@ public class CommunicationInterface {
         public int      mAcreage        = 0;    // acreage, 100 times than actual. 10300 means 103 平米
         public boolean  mForSale        = false;
         public boolean  mForRent        = false;
-        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简�?/ 2 - 中等 / 3 - 精装 / 4 - 豪华
+        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简�?/ 2 - 中等 / 3 - 精装 / 4 - 豪华
         public String   mBuyDate        = "";   // exact date of buying this house
 
         public HouseInfo() {
