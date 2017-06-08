@@ -87,8 +87,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
 //
-        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "177X", "2305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
-        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "177X", "2305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
+//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
 //        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
@@ -98,6 +98,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddHouseFacility(6, list);
 //        CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
 //                mEditText2.getText().toString(), "/sdcard/testKenny.jpg");
+        CmdMgr.SetHousePrice(11, 1000, 800, true, 500000, 470000);
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);

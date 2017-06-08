@@ -177,6 +177,18 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee, int price_tag, int price_bottom) {
+        CommunicationBase op = new CmdSetHousePrice(mContext, house_id);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_RENTAL_TAG,     String.valueOf(rental_tag));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_RENTAL_BOTTOM,  String.valueOf(rental_bottom));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_RENTAL_PROPFEE, String.valueOf(bIncPropFee));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_RPRICE_TAG,     String.valueOf(price_tag));
+        pMap.put(CommunicationParameterKey.CPK_HOUSE_PRICE_BOTTOM,   String.valueOf(price_bottom));
+        return execute(op, pMap);
+    }
+
+    @Override
     public int CertificateHouse(int house_id, boolean bPass, String sCertComment) {
         CommunicationBase op = new CmdCertificateHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();

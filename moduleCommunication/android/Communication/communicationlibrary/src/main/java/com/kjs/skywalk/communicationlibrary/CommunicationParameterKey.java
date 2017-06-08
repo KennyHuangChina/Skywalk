@@ -20,18 +20,12 @@ class CommunicationParameterKey {
     public static String CPK_LIST_CNT       = "FetchCount";
     public static String CPK_HOUSE_TYPE     = "HouseType";
 
-    public static String CPK_PROPERTY_ID    = "PropertyId";
-    public static String CPK_BUILDING_NO    = "BuildingNo";
-    public static String CPK_HOUSE_NO       = "HouseNo";
-    public static String CPK_FLOOR_TOTA     = "FloorTotal";
-    public static String CPK_FLOOR_THIS     = "FloorThis";
-    public static String CPK_LIVINGROOMS    = "Livingrooms";
-    public static String CPK_BEDROOMS       = "Bedrooms";
-    public static String CPK_BATHROOMS      = "Bathrooms";
-    public static String CPK_ACREAGE        = "Acreage";
-    public static String CPK_4SALE          = "4Sale";
-    public static String CPK_4RENT          = "4Rent";
-    public static String CPK_AGENT          = "Agent";
+    public static String CPK_HOUSE_RENTAL_TAG       = "HouseRentalTag";
+    public static String CPK_HOUSE_RENTAL_BOTTOM    = "HouseRentalBottom";
+    public static String CPK_HOUSE_RENTAL_PROPFEE   = "HouseRentalPropFee";
+    public static String CPK_HOUSE_RPRICE_TAG       = "HousePriceTag";
+    public static String CPK_HOUSE_PRICE_BOTTOM     = "HousePriceBottom";
+
     public static String CPK_PRIVATE_INFO   = "GetPrivtInfo";
 
     public static String CPK_HOUSE_CERT_PASS        = "HouseCertPass";
