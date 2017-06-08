@@ -5,10 +5,13 @@ import android.content.ContextWrapper;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
@@ -210,5 +213,55 @@ public class commonFun {
     public static void showToast_info(Context context, View v, String info) {
 //        Toast.makeText(context, "res tag: " + v.getTag(), Toast.LENGTH_SHORT).show();
         Snackbar.make(v, info, Snackbar.LENGTH_SHORT).show();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // translate tag id
+    ///////////////////////////////////////////////////////////////////////////
+    public static void setHouseTagStyleById(TextView textview, String text, int tagId) {
+        switch (tagId) {
+            case 1:
+            {
+                textview.setBackgroundResource(R.drawable.rounded_rect_background1);
+                textview.setTextColor(Color.parseColor("#32BE84"));
+                break;
+            }
+            case 2:
+            {
+                textview.setBackgroundResource(R.drawable.rounded_rect_background2);
+                textview.setTextColor(Color.parseColor("#4CA3FF"));
+                break;
+            }
+            case 3:
+            {
+                textview.setBackgroundResource(R.drawable.rounded_rect_background3);
+                textview.setTextColor(Color.parseColor("#FF3F29"));
+                break;
+            }
+            case 4:
+            {
+                textview.setBackgroundResource(R.drawable.rounded_rect_background4);
+                textview.setTextColor(Color.parseColor("#8D7DEF"));
+                break;
+            }
+            case 5:
+            {
+                textview.setBackgroundResource(R.drawable.rounded_rect_background5);
+                textview.setTextColor(Color.parseColor("#EA0233"));
+                break;
+            }
+            default:
+            {
+                textview.setBackgroundResource(R.drawable.rounded_rect_background1);
+                textview.setTextColor(Color.parseColor("#32BE84"));
+                break;
+            }
+        }
+
+        // base setting
+        textview.setText(text);
+        textview.setTextSize(11);       // setTextSize --- sp   getTextSize --- pixel
+        textview.setGravity(Gravity.CENTER);
+        textview.setPadding(30, 15, 30, 15);        // must set padding after setBackgroundResource
     }
 }

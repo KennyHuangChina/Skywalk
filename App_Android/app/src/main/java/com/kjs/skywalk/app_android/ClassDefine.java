@@ -54,6 +54,11 @@ public class ClassDefine {
     public static class HouseTag {
         public int tagId;
         public String tagName;
+
+        public HouseTag(int id, String name) {
+            tagId = id;
+            tagName = name;
+        }
     }
 
     public static class HouseDigest {
