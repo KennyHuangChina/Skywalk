@@ -141,6 +141,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
             return false;
         }
 
+        ClassDefine.HouseInfoForCommit.propertyName = propertyName;
         ClassDefine.HouseInfoForCommit.propertyId = mPropertyId;
 
         EditText viewNumber = (EditText)findViewById(R.id.editTextPropertyNumber);

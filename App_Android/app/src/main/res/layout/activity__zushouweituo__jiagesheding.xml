@@ -117,6 +117,7 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:paddingLeft="@dimen/page_left_margin"
@@ -146,6 +147,7 @@
                 <include layout="@layout/seperator_horizontal"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:paddingLeft="@dimen/page_left_margin"

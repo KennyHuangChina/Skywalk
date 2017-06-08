@@ -64,6 +64,7 @@
                     android:text="您已经成功委托"/>
 
                 <TextView
+                    android:id="@+id/textViewHouseLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
