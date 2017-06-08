@@ -542,8 +542,27 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
 		return
 	}
 
+	// check if the new price is equal to the "Current Price"
+	err, cp := getHouseCurentPrice(hid)
+	if nil != err {
+		if se, ok := err.(commdef.SwError); ok {
+			if commdef.ERR_COMMON_RES_NOTFOUND != se.ErrCode { // no price set for this house
+				return
+			}
+		} else {
+			return
+		}
+	}
+
+	if cp.RentalTag == rental_tp && cp.RentalBottom == rental_bp && cp.PropFee == prop_fee &&
+		cp.SellingTag == price_tp && cp.SellingBottom == price_bp {
+		beego.Error(FN, fmt.Sprintf("current price:%+v", cp))
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE}
+		return
+	}
+
 	/* Premission checking */
-	if err = canAccessHouse(uid, hid); nil != err {
+	if err = canModifyHouse(uid, hid); nil != err {
 		return
 	}
 
@@ -1495,5 +1514,32 @@ func canModifyHouse(uid, hid int64) (err error) {
 	}
 
 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+	return
+}
+
+func getHouseCurentPrice(hid int64) (err error, cp TblHousePrice) {
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_price").Filter("House", hid)
+
+	var p TblHousePrice
+	errT := qs.OrderBy("-Id").One(&p)
+	if nil != errT {
+		switch errT {
+		case orm.ErrMultiRows:
+			{
+			}
+		case orm.ErrNoRows:
+			{
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house:%d", hid)}
+				return
+			}
+		default:
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	}
+
+	cp = p
 	return
 }
