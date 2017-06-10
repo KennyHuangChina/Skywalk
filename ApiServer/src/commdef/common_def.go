@@ -98,6 +98,17 @@ type HouseInfo struct {
 	BuyDate     string // purchase date
 }
 
+type HousePrice struct {
+	Id           int64
+	RentalTag    int    // rental, tag price
+	RentalMin    int    // rental, bottom price
+	PropFee      bool   // if the rental involve the property fee
+	SalePriceTag int    // selling price, tag price
+	SalePriceMin int    // selling price, bottom price
+	Who          string // who set the price
+	When         string // when set the price
+}
+
 type PropInfo struct {
 	Id          int64
 	PropName    string

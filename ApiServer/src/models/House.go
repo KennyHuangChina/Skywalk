@@ -473,6 +473,71 @@ func SetHouseCoverImage(hid, cid, uid int64) (err error) {
 *	Arguments:
 *		hid 		- house id
 *		uid			- login user
+*	Returns
+*		err - error info
+*		pl	- price list
+ */
+func GetHousePrice(hid, uid int64, begin, fetchCnt int) (err error, total int64, pl []commdef.HousePrice) {
+	FN := "[GetHousePrice] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument checking */
+	// err, h := getHouse(hid)	// canAccessHouse will also check the house
+
+	/* Permission checking */
+	if err = canAccessHouse(uid, hid); nil != err {
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+
+	// counting
+	Count := int64(0)
+	errT := o.Raw("SELECT COUNT(*) AS count FROM tbl_house_price WHERE house=?", hid).QueryRow(&Count)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	total = Count
+	if 0 == fetchCnt || 0 == total { // user just want to know the total number in database, or no record for fetching
+		return
+	}
+
+	if int64(begin) >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin: %d", begin)}
+		return
+	}
+
+	// fetching real price records
+	sql := `SELECT p.id, rental_tag, rental_bottom AS rental_min, prop_fee, selling_tag AS sale_price_tag, selling_bottom AS sale_price_min,
+					IF (LENGTH(u.name) > 0,  u.name, ?) AS who, p.when
+					FROM tbl_house_price AS p, tbl_user AS u WHERE p.who=u.id AND p.house=? ORDER BY id DESC LIMIT ?, ?`
+
+	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET)
+	var lst []commdef.HousePrice
+	numb, errT := o.Raw(sql, nameUnset, hid, begin, fetchCnt).QueryRows(&lst)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, "Total:", numb)
+	pl = lst
+
+	return
+}
+
+/**
+*	Set House Price
+*	Arguments:
+*		hid 		- house id
+*		uid			- login user
 *		rental_tp	- rental, tag price
 *		rental_bp	- rental, bottom price
 *		prop_fee	- if the rental involve the property fee

@@ -194,3 +194,27 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 11. Get House Price history
+	[Security]	private: landlorad, agency, administrator
+	[Request]
+  		* GET /v1/house/:id/price
+	  		* bgn			int		// begin position
+	  		* cnt			int		// how many records want to fetch
+	[Response]
+		* SUCCESS:200 
+			* Total    			int		// total number
+			* Count				int		// how many items fetched
+			* Prices			array
+				* Id				int		// 
+				* RentalTag			int		// rental, tag price
+				* RentalMin			int		// rental, bottom price
+				* PropFee			bool	// if the rental involve the property fee
+				* SalePriceTag		int		// selling price, tag price
+				* SalePriceMin		int		// selling price, bottom price
+				* Who				String	// who set the price
+				* When				String	// when set the price
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

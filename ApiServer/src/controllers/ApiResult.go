@@ -83,6 +83,14 @@ type ResGetHouseList struct {
 	IDs   []int64
 }
 
+// result of API get house price list
+type ResGetHousePriceList struct {
+	ResCommon
+	Total  int64
+	Count  int64
+	Prices []commdef.HousePrice
+}
+
 // result of API add resource
 type ResAddResource struct {
 	ResCommon
