@@ -47,6 +47,20 @@ type TblUserGroupMember struct {
 	User  *TblUser      `orm:"rel(fk)"`
 }
 
+type TblAgency struct {
+	Id       int64
+	User     int64 // user id, TblUser.Id
+	RankProf int   // rank for professional. 0 ~ 500 (0.00 ~ 5.00)
+	RankAtti int   // rank for attitude. 0 ~ 500 (0.00 ~ 5.00)
+	Begin    int   // which year start the business
+}
+
+func (rs *TblAgency) TableUnique() [][]string {
+	return [][]string{
+		[]string{"User"},
+	}
+}
+
 /***************************************************************************
 	tables for house
 ***************************************************************************/
@@ -406,7 +420,7 @@ func (sc *TblStrings) TableUnique() [][]string {
 func init() {
 	orm.DefaultTimeLoc = time.UTC
 	// tables need to be registered in init() function
-	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember),
+	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember), new(TblAgency),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility),

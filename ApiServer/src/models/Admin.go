@@ -41,13 +41,66 @@ func ModifyAgency(uid, aid int64, rank_prof, rank_atti, begin_year int) (err err
 		}
 	}()
 
-	// TODO:NOT Implement
-
 	/* Argument checking */
+	if _, bAgency := isAgency(aid); !bAgency {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("aid: %d", aid)}
+		return
+	}
+	if rank_prof < 0 || rank_prof > 500 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("rank_prof: %d", rank_prof)}
+		return
+	}
+	if rank_atti < 0 || rank_atti > 500 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("rank_atti: %d", rank_atti)}
+		return
+	}
+	if begin_year < 2000 || begin_year > 2100 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin_year: %d", begin_year)}
+		return
+	}
 
 	/* Permission checking */
+	// SYSTEM, agency himself and administrator could modify
+	if 0 == uid || uid == aid {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
 
 	/* Processing */
+	o := orm.NewOrm()
+
+	ag := TblAgency{}
+	errT := o.QueryTable("tbl_agency").Filter("User", uid).One(&ag)
+	if nil != errT {
+		if orm.ErrNoRows == errT {
+		} else {
+			// if orm.ErrMultiRows == errT {
+			// } else  {
+			// }
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	}
+
+	ag.RankProf = rank_prof
+	ag.RankAtti = rank_atti
+	ag.Begin = begin_year
+
+	if ag.Id > 0 {
+		if _, errT := o.Update(&ag); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	} else {
+		id, errT := o.Insert(&ag)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(FN, "new id:", id)
+	}
 
 	return
 }

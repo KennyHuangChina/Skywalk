@@ -155,8 +155,8 @@
 				* Name			string		// agency name
 				* Sex			int 		// agency sex. 0 - male / 1 - female
 				* IDNo			string		// agency ID card
-				* Professional	int			// professional rank. 0 ~ 50 (0.0 ~ 5.0)
-				* Attitude		int			// attitude rank. 0 ~50 (0.0 ~ 5.0)
+				* Professional	int			// professional rank. 0 ~ 500 (0.00 ~ 5.00)
+				* Attitude		int			// attitude rank. 0 ~500 (0.00 ~ 5.00)
 				* Portrait		string		// head portraint picture URL
 				* Phone			string		// phone number
 		* ERR: 4XX,5XX
@@ -168,8 +168,8 @@
 	[Private]	private: agency himself or administrator
 	[Request]
   		* PUT /v1/admin/Agency/:id
-	  		* rp			int		// rank for professional. 0 ~ 50 (0.0 ~ 5.0)
-	  		* ra			int		// rank for attitude. 0 ~ 50 (0.0 ~ 5.0)
+	  		* rp			int		// rank for professional. 0 ~ 500 (0.00 ~ 5.00)
+	  		* ra			int		// rank for attitude. 0 ~ 50 (0.00 ~ 5.00)
 	  		* by			int		// which year the agency start his business
 	[Response]
 		* SUCCESS:200 
