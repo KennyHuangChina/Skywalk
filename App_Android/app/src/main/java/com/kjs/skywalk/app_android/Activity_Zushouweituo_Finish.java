@@ -36,6 +36,20 @@ public class Activity_Zushouweituo_Finish extends Activity {
 
         String location = property + buildingNo + "栋" + room + "室";
         view.setText(location);
+
+        TextView rental = (TextView)findViewById(R.id.textViewRent);
+        TextView sale = (TextView)findViewById(R.id.textViewSale);
+        if(ClassDefine.HouseInfoForCommit.forRental()) {
+            rental.setSelected(true);
+        } else {
+            rental.setSelected(false);
+        }
+
+        if(ClassDefine.HouseInfoForCommit.forSale()) {
+            sale.setSelected(true);
+        } else {
+            sale.setSelected(false);
+        }
     }
 
     @Override
