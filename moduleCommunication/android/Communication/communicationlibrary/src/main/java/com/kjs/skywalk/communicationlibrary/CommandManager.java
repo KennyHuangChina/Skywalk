@@ -113,6 +113,13 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year) {
+        CommunicationBase op = new CmdModifyAgency(mContext, agency, rank_pro, rank_att, begin_year);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int Relogin(String userName) {
         CommunicationBase op = new CmdRelogin(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();

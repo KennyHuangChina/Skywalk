@@ -38,6 +38,7 @@ public class CommunicationInterface {
         int Relogin(String userName);                                           // CMD_RELOGIN,             IApiResults.ILogin
         int Logout();                                                           // CMD_LOG_OUT,             IApiResults.ICommon
         int GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
+        int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon
 
         /* House */
         int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
@@ -106,6 +107,7 @@ public class CommunicationInterface {
         public static int CMD_RELOGIN               = 0x1006;
         public static int CMD_GET_SMS_CODE          = 0x1007;
         public static int CMD_GET_AGENCY_LIST       = 0x1008;
+        public static int CMD_MODIFY_AGENCY         = 0x1009;
 
         // House
         public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001;
