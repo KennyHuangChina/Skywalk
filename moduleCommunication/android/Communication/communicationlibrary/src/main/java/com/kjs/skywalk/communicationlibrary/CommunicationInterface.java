@@ -48,6 +48,7 @@ public class CommunicationInterface {
         int SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,   IApiResults.ICommon
         int SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee,
                           int price_tag, int price_bottom);                     // CMD_SET_HOUSE_PRICE,             IApiResults.IAddRes
+        int GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
         int GetBehalfHouses(int type, int begin, int cnt);                      // CMD_GET_BEHALF_HOUSE_LIST,       TODO:
         int GetHouseList(int type, int begin, int cnt);                         // CMD_GET_HOUSE_LIST,              IApiResults.IResultList(int[])
@@ -117,6 +118,7 @@ public class CommunicationInterface {
         public static int CMD_GET_SET_HOUSE_COVER_IMAGE     = 0x2008;
         public static int CMD_GET_RECOMMEND_HOUSE           = 0x2009;
         public static int CMD_SET_HOUSE_PRICE               = 0x200A;
+        public static int CMD_GET_HOUSE_PRICE               = 0x200B;
 
         // Property
         public static int CMD_GET_PROPERTY_LIST     = 0x3001;
