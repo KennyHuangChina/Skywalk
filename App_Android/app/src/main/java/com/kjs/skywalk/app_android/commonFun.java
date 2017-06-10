@@ -103,6 +103,17 @@ public class commonFun {
         return bitmap;
     }
 
+    public static Drawable getDrawableFromUrl(Context context, String imgUrl) {
+        Bitmap bitmap = loadImageFromUrl(imgUrl);
+        BitmapDrawable bd = null;
+
+        if (bitmap != null) {
+            bd = new BitmapDrawable(context.getResources(), bitmap);
+        }
+
+        return bd;
+    }
+
     public static void copyAssets( Context context, String pathInAssets, String dstPath ) {
         File dir = new File(dstPath + File.separator + pathInAssets);
         if(dir.exists() && dir.isDirectory()) {

@@ -20,12 +20,12 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
     private ArrayList<ApplianceItem> mApplianceItemLst;
 
     static class ApplianceItem {
-        int mIcon;
+        Drawable mIcon;
         String mName;
         String mDesc;
         int mNum;
 
-        public ApplianceItem(int icon, String name, String description, int number) {
+        public ApplianceItem(Drawable icon, String name, String description, int number) {
             mIcon = icon;
             mName = name;
             mDesc = description;
@@ -86,7 +86,7 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
         holder.tvApplNum.setText(String.valueOf(item.mNum));
         holder.tvApplDesc.setText(item.mDesc);
 
-        Drawable drawable = mContext.getResources().getDrawable(item.mIcon, null);
+        Drawable drawable = item.mIcon;
         holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
         if(i == 0) {
