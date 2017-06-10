@@ -1135,3 +1135,72 @@ func Test_SetHousePrice(t *testing.T) {
 	// remove all records just added
 	delHousePrices(6)
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetHousePrice --
+//
+func Test_GetHousePrice(t *testing.T) {
+	seq := 0
+
+	seq++
+	begin := -1
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: begin(%d) < 0", seq, begin))
+	if e, _, _ := GetHousePrice(4, 5, begin, -1); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	count := -1
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: count(%d) < 0", seq, count))
+	if e, _, _ := GetHousePrice(4, 5, 0, count); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	xids := []int64{-1, 0, 100000000}
+	xdesc := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: house(%d) %s", seq, v, xdesc[k]))
+		if e, _, _ := GetHousePrice(v, -1, 0, 100); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xids = []int64{-1, 0, 100000000, 2, 11}
+	xdesc = []string{"not login", "is SYSTEM", "does not exist", "is a regular user", "is an agency, but not for this privacy house"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
+		if e, _, _ := GetHousePrice(4, v, 0, 100); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xids = []int64{10, 6, 4, 5, 11}
+	xdesc = []string{"landlord", "is house agency", "administator", "administrator", "other agency"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: %s(%d) retrieve the price list", seq, xdesc[k], v))
+		if e, _, _ := GetHousePrice(13, v, 0, 100); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Testing: Landlord(4) retrieve the price list", seq))
+	e, total, _ := GetHousePrice(11, 4, 0, 100)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	if 2 != total {
+		t.Error("Failed, total(%d) != 2", total)
+		return
+	}
+}

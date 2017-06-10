@@ -489,6 +489,14 @@ func GetHousePrice(hid, uid int64, begin, fetchCnt int) (err error, total int64,
 
 	/* Argument checking */
 	// err, h := getHouse(hid)	// canAccessHouse will also check the house
+	if begin < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin: %d", begin)}
+		return
+	}
+	if fetchCnt < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("fetchCnt: %d", fetchCnt)}
+		return
+	}
 
 	/* Permission checking */
 	if err = canAccessHouse(uid, hid); nil != err {
