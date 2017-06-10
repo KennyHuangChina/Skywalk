@@ -1044,9 +1044,9 @@ func Test_SetHousePrice(t *testing.T) {
 		}
 	}
 
-	xid_1 := []int64{-1, 0, 0}
-	xid_2 := []int64{0, -1, 0}
-	xdesc = []string{"rental(%d, %d), tag < 0", "rental(%d, %d), bottom < 0", "rental(%d, %d), not set"}
+	xid_1 := []int64{-1, 0, 0, 100}
+	xid_2 := []int64{0, -1, 0, 200}
+	xdesc = []string{"rental(%d, %d), tag < 0", "rental(%d, %d), bottom < 0", "rental(%d, %d), not set", "rental(%d, %d), tag price < bottom price"}
 	for k, v := range xid_1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: %s", seq, fmt.Sprintf(xdesc[k], v, xid_2[k])))
@@ -1056,9 +1056,9 @@ func Test_SetHousePrice(t *testing.T) {
 		}
 	}
 
-	xid_1 = []int64{-1, 0, 0}
-	xid_2 = []int64{0, -1, 0}
-	xdesc = []string{"selling price(%d, %d), tag < 0", "selling price(%d, %d), bottom < 0", "selling price(%d, %d), not set"}
+	xid_1 = []int64{-1, 0, 0, 10000}
+	xid_2 = []int64{0, -1, 0, 20000}
+	xdesc = []string{"selling price(%d, %d), tag < 0", "selling price(%d, %d), bottom < 0", "selling price(%d, %d), not set", "selling price(%d, %d), tag price < bottom price"}
 	for k, v := range xid_1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: %s", seq, fmt.Sprintf(xdesc[k], v, xid_2[k])))
@@ -1093,14 +1093,45 @@ func Test_SetHousePrice(t *testing.T) {
 		}
 	}
 
+	// set rental
 	xids = []int64{10, 6, 5}
 	xdesc = []string{"Landlord", "house agency", "administrator"}
 	for k, v := range xids {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Testing: %s(%d) set price", seq, xdesc[k], v))
+		t.Log(fmt.Sprintf("<Case %d> Testing: %s(%d) set rental price", seq, xdesc[k], v))
 		if e, _ := SetHousePrice(13, v, 1000+int64(k), 800+int64(k), 500000+int64(k), 48000+int64(k), false); e != nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
+	// remove all records just added
+	delHousePrices(13)
+
+	// set selling price
+	xids = []int64{9, 5}
+	xdesc = []string{"Landlord", "administrator"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: %s(%d) set selling price", seq, xdesc[k], v))
+		if e, _ := SetHousePrice(12, v, 1000+int64(k), 800+int64(k), 500000+int64(k), 48000+int64(k), false); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+	// remove all records just added
+	delHousePrices(12)
+
+	// set both rental and selling price
+	xids = []int64{2 /*1,*/, 5}
+	xdesc = []string{"Landlord" /*"house agency",*/, "administrator"}
+	for k, v := range xids {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: %s(%d) set both rental and selling price", seq, xdesc[k], v))
+		if e, _ := SetHousePrice(6, v, 1000+int64(k), 800+int64(k), 500000+int64(k), 48000+int64(k), false); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+	// remove all records just added
+	delHousePrices(6)
 }

@@ -1576,3 +1576,25 @@ func getHouseCurentPrice(hid int64) (err error, cp TblHousePrice) {
 	cp = p
 	return
 }
+
+func delHousePrices(hid int64) (err error) {
+	FN := "[delHousePrices] "
+	beego.Trace(FN, "house:", hid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_price").Filter("House", hid)
+	numb, errT := qs.Delete()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	beego.Debug(FN, fmt.Sprintf("%d records get deleted", numb))
+	return
+}
