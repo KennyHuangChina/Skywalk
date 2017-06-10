@@ -50,11 +50,11 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     CommunicationBase(Context context, int cmdId) {
         Log.i(TAG, "Communication Base Constructor");
-        mContext = context;
-        mAPI = cmdId;
-        mVersion = 1;   // please set it in sub-class if its version is not 1
-        mUtils = new MyUtils(context);
-        mServerURL = ServerURL.mServerUri;
+        mContext    = context;
+        mAPI        = cmdId;
+        mVersion    = 1;   // please set it in sub-class if its version is not 1
+        mUtils      = new MyUtils(context);
+        mServerURL  = ServerURL.mServerUri;
 
         mCookieManager = SKCookieManager.getManager(context);
     }

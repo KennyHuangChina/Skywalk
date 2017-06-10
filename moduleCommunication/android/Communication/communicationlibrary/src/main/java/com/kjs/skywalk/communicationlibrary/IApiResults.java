@@ -1,5 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.appwidget.AppWidgetHost;
+
 import java.util.ArrayList;
 
 /**
@@ -93,6 +95,17 @@ public class IApiResults {
         int     Decorate();     // decoration
         String  DecorateDesc();
         String  BuyDate();
+    }
+
+    public interface IHousePriceInfo {
+        int     Id();
+        int     RentalTag();
+        int     RentalMin();
+        boolean RentalIncPropFee();
+        int     SellingPriceTag();
+        int     SellingPriceMin();
+        String  Who();
+        String  When();
     }
 
     public interface IAddRes {
