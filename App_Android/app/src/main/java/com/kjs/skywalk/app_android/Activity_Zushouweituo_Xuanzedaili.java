@@ -207,7 +207,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
             }
         } else {
             ClassDefine.HouseInfoForCommit.autoAgent = 1;
-            ClassDefine.HouseInfoForCommit.agentId = "";
+            ClassDefine.HouseInfoForCommit.agentId = "0";
         }
         return true;
     }

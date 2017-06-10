@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.commonFun;
 
 import java.util.ArrayList;
 
@@ -130,14 +131,15 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
             if (houseDigest1.houseTags != null) {
                 int count = 0;
                 for (ClassDefine.HouseTag houseTag : houseDigest1.houseTags) {
-                    if (count == 0)
-                        holder.tvApartment1_tag1.setText(houseTag.tagName);
-                    if (count == 1)
-                        holder.tvApartment1_tag2.setText(houseTag.tagName);
+                    if (count == 0) {
+                        commonFun.setHouseTagStyleById(holder.tvApartment1_tag1, houseTag.tagName, houseTag.tagId);
+                    }
+                    if (count == 1) {
+                        commonFun.setHouseTagStyleById(holder.tvApartment1_tag2, houseTag.tagName, houseTag.tagId);
+                    }
                     count++;
                 }
             }
-
 
             if (mList.size() == 1) {
                 holder.rlApartment2.setVisibility(View.INVISIBLE);
@@ -157,14 +159,15 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
                 if (houseDigest2.houseTags != null) {
                     int count = 0;
                     for (ClassDefine.HouseTag houseTag : houseDigest2.houseTags) {
-                        if (count == 0)
-                            holder.tvApartment2_tag1.setText(houseTag.tagName);
-                        if (count == 1)
-                            holder.tvApartment2_tag2.setText(houseTag.tagName);
+                        if (count == 0) {
+                            commonFun.setHouseTagStyleById(holder.tvApartment2_tag1, houseTag.tagName, houseTag.tagId);
+                        }
+                        if (count == 1) {
+                            commonFun.setHouseTagStyleById(holder.tvApartment2_tag2, houseTag.tagName, houseTag.tagId);
+                        }
                         count++;
                     }
                 }
-
             }
         }
 

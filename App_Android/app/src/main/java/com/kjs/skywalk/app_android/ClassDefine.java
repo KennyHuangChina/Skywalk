@@ -54,6 +54,11 @@ public class ClassDefine {
     public static class HouseTag {
         public int tagId;
         public String tagName;
+
+        public HouseTag(int id, String name) {
+            tagId = id;
+            tagName = name;
+        }
     }
 
     public static class HouseDigest {
@@ -71,6 +76,7 @@ public class ClassDefine {
     }
 
     public static class HouseInfoForCommit {
+        public static String propertyName = "";
         public static int propertyId = -1;
         public static String buildingNo = "";
         public static int floor = 0;
@@ -96,9 +102,25 @@ public class ClassDefine {
         public static int minPrice = 0;
 
         public static int autoAgent = 1;
-        public static String agentId = "";
+        public static String agentId = "0";
 
         public static int service = -1;
+
+        public static boolean forSale() {
+            return price > 0 ? true : false;
+        }
+
+        public static boolean forRental() {
+            return rental > 0 ? true : false;
+        }
+
+        public static String dateToString() {
+            String month = String.format("%02d", ClassDefine.HouseInfoForCommit.buyMonth);
+            String day = String.format("%02d", ClassDefine.HouseInfoForCommit.buyDay);
+            String date = "" + ClassDefine.HouseInfoForCommit.buyYear + "-" + month + "-" + day;
+
+            return date;
+        }
 
         public void printContent() {
 

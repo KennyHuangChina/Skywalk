@@ -77,12 +77,18 @@ public class fragmentHomePage extends Fragment {
         digest.property = "证大大拇指广场";
         digest.addr = "姑苏白杨湾街道";
         digest.Acreage = 120;
+        digest.houseTags = new ArrayList<>();
+        digest.houseTags.add(new ClassDefine.HouseTag(3, "满二唯一"));
+        digest.houseTags.add(new ClassDefine.HouseTag(2, "靠近地铁"));
         houseDigestsList.add(digest);
 
         ClassDefine.HouseDigest digest1 = new ClassDefine.HouseDigest();
         digest1.property = "证大大拇指广场1";
         digest1.addr = "姑苏白杨湾街道1";
         digest1.Acreage = 130;
+        digest1.houseTags = new ArrayList<>();
+        digest1.houseTags.add(new ClassDefine.HouseTag(1, "满三唯一"));
+        digest1.houseTags.add(new ClassDefine.HouseTag(5, "不靠近地铁"));
         houseDigestsList.add(digest1);
 
         return houseDigestsList;
@@ -202,9 +208,7 @@ public class fragmentHomePage extends Fragment {
                         houseDigest.houseTags = new ArrayList<>();
                         for (Object obj : array) {
                             IApiResults.IHouseTag tag = (IApiResults.IHouseTag)obj;
-                            ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag();
-                            houseTag.tagId = tag.GetTagId();
-                            houseTag.tagName = tag.GetName();
+                            ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
                             houseDigest.houseTags.add(houseTag);
                         }
                     }

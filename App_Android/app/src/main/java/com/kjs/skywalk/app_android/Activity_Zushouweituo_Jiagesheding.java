@@ -74,37 +74,51 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
         String rent = viewRent.getText().toString();
         EditText viewMinRent = (EditText)findViewById(R.id.editTextMinRent);
         String minRent = viewMinRent.getText().toString();
-        int tmp;
-        double nRent;
-        double nMinRent;
-        try {
-            nRent = Double.valueOf(rent);
-            if(nRent <= 0) {
+        EditText viewPrice = (EditText)findViewById(R.id.editTextPrice);
+        String price = viewPrice.getText().toString();
+        EditText viewMinPrice = (EditText)findViewById(R.id.editTextMinPrice);
+        String minPrice = viewMinPrice.getText().toString();
+
+        if(rent.isEmpty() && minRent.isEmpty() && price.isEmpty() && minPrice.isEmpty()) {
+            commonFun.showToast_info(this, viewRent, "租金或售价至少填写一种");
+            return false;
+        }
+
+        if(!rent.isEmpty()) {
+            double nRent;
+            double nMinRent;
+            try {
+                nRent = Double.valueOf(rent);
+                if (nRent <= 0) {
+                    commonFun.showToast_info(this, viewRent, "租金输入不正确");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
                 commonFun.showToast_info(this, viewRent, "租金输入不正确");
                 return false;
             }
-        } catch (NumberFormatException e) {
-            commonFun.showToast_info(this, viewRent, "租金输入不正确");
-            return false;
-        }
-        try {
-            nMinRent = Double.valueOf(minRent);
-            if(nMinRent <= 0) {
+            try {
+                nMinRent = Double.valueOf(minRent);
+                if (nMinRent <= 0) {
+                    commonFun.showToast_info(this, viewRent, "最低租金输入不正确");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
                 commonFun.showToast_info(this, viewRent, "最低租金输入不正确");
                 return false;
             }
-        } catch (NumberFormatException e) {
-            commonFun.showToast_info(this, viewRent, "最低租金输入不正确");
-            return false;
-        }
 
-        if(nRent < nMinRent){
-            commonFun.showToast_info(this, viewRent, "租金应大于最小租金");
-            return false;
-        }
+            if (nRent < nMinRent) {
+                commonFun.showToast_info(this, viewRent, "租金应大于最小租金");
+                return false;
+            }
 
-        ClassDefine.HouseInfoForCommit.rental = (int)(nRent * 100);
-        ClassDefine.HouseInfoForCommit.minRental = (int)(nMinRent * 100);
+            ClassDefine.HouseInfoForCommit.rental = (int) (nRent * 100);
+            ClassDefine.HouseInfoForCommit.minRental = (int) (nMinRent * 100);
+        } else {
+            ClassDefine.HouseInfoForCommit.rental = 0;
+            ClassDefine.HouseInfoForCommit.minRental = 0;
+        }
 
         ToggleButton button = (ToggleButton)findViewById(R.id.toggleButton);
         if(!button.isChecked()) {
@@ -129,12 +143,7 @@ public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
             ClassDefine.HouseInfoForCommit.propertyFee = 0;
         }
 
-        EditText viewPrice = (EditText)findViewById(R.id.editTextPrice);
-        String price = viewPrice.getText().toString();
         if(!price.isEmpty()) {
-            EditText viewMinPrice = (EditText)findViewById(R.id.editTextMinPrice);
-            String minPrice = viewMinPrice.getText().toString();
-
             double nPrice;
             double nMinPrice;
             try {

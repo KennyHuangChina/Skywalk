@@ -110,19 +110,10 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
             }
         };
         CommandManager manager = new CommandManager(this, listener, this);
-        boolean forSale = false;
-        boolean forRent = false;
-        if(ClassDefine.HouseInfoForCommit.rental > 0) {
-            forRent = true;
-        }
+        boolean forSale = ClassDefine.HouseInfoForCommit.forSale();
+        boolean forRent = ClassDefine.HouseInfoForCommit.forRental();
 
-        if(ClassDefine.HouseInfoForCommit.price > 0) {
-            forSale = true;
-        }
-
-        String month = String.format("%02d", ClassDefine.HouseInfoForCommit.buyMonth);
-        String day = String.format("%02d", ClassDefine.HouseInfoForCommit.buyDay);
-        String date = "" + ClassDefine.HouseInfoForCommit.buyYear + "-" + month + "-" + day;
+        String date = ClassDefine.HouseInfoForCommit.dateToString();
 
         CommunicationInterface.HouseInfo house = new CommunicationInterface.HouseInfo(
                 0,

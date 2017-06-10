@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by admin on 2017/3/22.
  */
@@ -21,6 +23,33 @@ public class Activity_Zushouweituo_Finish extends Activity {
         titleText.setText("租售委托-完成");
         ImageView closeButton = (ImageView)findViewById(R.id.imageViewActivityClose);
         closeButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        TextView view = (TextView)findViewById(R.id.textViewHouseLocation);
+        String property = ClassDefine.HouseInfoForCommit.propertyName;
+        String buildingNo = ClassDefine.HouseInfoForCommit.buildingNo;
+        String room = ClassDefine.HouseInfoForCommit.roomNo;
+
+        String location = property + buildingNo + "栋" + room + "室";
+        view.setText(location);
+
+        TextView rental = (TextView)findViewById(R.id.textViewRent);
+        TextView sale = (TextView)findViewById(R.id.textViewSale);
+        if(ClassDefine.HouseInfoForCommit.forRental()) {
+            rental.setSelected(true);
+        } else {
+            rental.setSelected(false);
+        }
+
+        if(ClassDefine.HouseInfoForCommit.forSale()) {
+            sale.setSelected(true);
+        } else {
+            sale.setSelected(false);
+        }
     }
 
     @Override
