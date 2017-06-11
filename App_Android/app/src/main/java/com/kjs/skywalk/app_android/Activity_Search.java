@@ -52,7 +52,9 @@ public class Activity_Search extends Activity {
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         TextView textView = (TextView) searchView.findViewById(id);
         textView.setTextSize(14);
-        textView.setGravity(Gravity.BOTTOM);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER_VERTICAL;
+        textView.setLayoutParams(lp);
 
         if (searchView != null) {
             try {
