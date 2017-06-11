@@ -10,6 +10,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -71,7 +72,9 @@ public class Activity_Search_House extends SKBaseActivity implements
         int id = mSearchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         TextView textView = (TextView) mSearchView.findViewById(id);
         textView.setTextSize(14);
-        textView.setGravity(Gravity.BOTTOM);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER_VERTICAL;
+        textView.setLayoutParams(lp);
 
         if (mSearchView != null) {
             try {
