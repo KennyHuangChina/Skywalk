@@ -529,7 +529,7 @@ func (this *HouseController) GetHouseList() {
 // @Description get user info by id
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /digest/:id [get]
+// @router /:id/digest [get]
 func (this *HouseController) GetHouseDigestInfo() {
 	FN := "[GetHouseDigestInfo] "
 	beego.Warn("[--- API: GetHouseDigestInfo ---]")

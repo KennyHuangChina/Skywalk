@@ -161,6 +161,7 @@ type TblRental struct {
 	HouseId      int64
 	RentalBid    int       // rental Bid price, in 0.01. So 120050 means 1200.50
 	RentalBottom int       // rental bottom price, in 0.01. So 120050 means 1200.50
+	PropFee      bool      `orm:"not null; default(false)"` // if the rental involve the property fee
 	Who          int       // who made this price, ref to TblUser. typically it is house owner
 	When         time.Time `orm:"auto_now_add;type(datetime)"` // when made this price
 	Active       bool      // Is the price still open. when house has been rented, this field should be set to false which means there is no available rental

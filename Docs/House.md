@@ -32,8 +32,7 @@
 ###2. Get brief public house info
 	[Security]	public
 	[Request]
-  		* GET /v1/house/digest/id?sid=xxxxx
-	  		* sid 			string	// session id, by which server could know who send the request
+  		* GET /v1/house/:id/digest
 	[Response]
 		* SUCCESS:200 
 			* Id    		int		// id
@@ -46,6 +45,8 @@
 			* Rental		int		// the exact rental that the house owner published, in 0.01RMB
 			* Pricing		int		// <0: Rental depreciate; 0: Even, no change; >0: Rental raise
 			* CoverImg		int		// cover image id
+			* CovImgUrlS	string	// cover image url for small size
+			* CovImgUrlM	string	// cover image url for modrate size
 			* Tags			array	// house tags
 				* TagId		int 	// tag id
 				* TagDesc	string	// tag description string
@@ -57,17 +58,16 @@
 ###3. Get house list
 	[Security]	public
 	[Request]
-  		* GET /v1/house/list?type=<>?bgn=<>&cnt=<>&sid=xxxxx
+  		* GET /v1/house/list?type=<>?bgn=<>&cnt=<>
 	  		* type			int 	// house type. 0: all; 1: recommend; 2: deducted; 3: new
 	  		* bgn			int		// from which item to fetch
 	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
-	  		* sid 			string	// session id, by which server could know who send the request
 	[Response]
 		* SUCCESS:200 
 			* Total    		int		// total number
 			* Count			int		// how many items fetched
-			* IDs			array
-				* Id		int		// house id
+			* Houses		array	// house public brief info list
+				* house public brief info
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
