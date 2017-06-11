@@ -34,28 +34,40 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
     }
 
     @Override
-    public int GetHouseId() { return (null != mDigestInfo) ? mDigestInfo.mHouseId : 0; }
+    public int GetHouseId() { return (null != mDigestInfo) ? mDigestInfo.GetHouseId() : 0; }
     @Override
-    public String GetProperty() { return (null != mDigestInfo) ? mDigestInfo.mPropertyName : null; }
+    public String GetProperty() { return (null != mDigestInfo) ? mDigestInfo.GetProperty() : null; }
     @Override
-    public String GetPropertyAddr() { return (null != mDigestInfo) ? mDigestInfo.mPropertyAddr : null; }
+    public String GetPropertyAddr() { return (null != mDigestInfo) ? mDigestInfo.GetPropertyAddr() : null; }
     @Override
-    public int GetBedrooms() { return (null != mDigestInfo) ? mDigestInfo.mBedrooms : 0; }
+    public int GetBedrooms() { return (null != mDigestInfo) ? mDigestInfo.GetBedrooms() : 0; }
     @Override
-    public int GetLivingrooms() { return (null != mDigestInfo) ? mDigestInfo.mLivingRooms : 0; }
+    public int GetLivingrooms() { return (null != mDigestInfo) ? mDigestInfo.GetLivingrooms() : 0; }
     @Override
-    public int GetBathrooms() { return (null != mDigestInfo) ? mDigestInfo.mBathrooms : 0; }
+    public int GetBathrooms() { return (null != mDigestInfo) ? mDigestInfo.GetBathrooms() : 0; }
     @Override
-    public int GetAcreage() { return (null != mDigestInfo) ? mDigestInfo.mAcreage : 0; }
+    public int GetAcreage() { return (null != mDigestInfo) ? mDigestInfo.GetAcreage() : 0; }
     @Override
-    public int GetRental() { return (null != mDigestInfo) ? mDigestInfo.mRental : 0; }
+    public int GetRental() { return (null != mDigestInfo) ? mDigestInfo.GetRental() : 0; }
     @Override
-    public int GetPricing() { return (null != mDigestInfo) ? mDigestInfo.mPricing : 0; }
+    public int GetPricing() { return (null != mDigestInfo) ? mDigestInfo.GetPricing() : 0; }
     @Override
-    public int GetCoverImage() { return (null != mDigestInfo) ? mDigestInfo.mCoverImg : 0; }
+    public int GetCoverImage() { return (null != mDigestInfo) ? mDigestInfo.GetCoverImage() : 0; }
 
     @Override
-    public String GetCoverImageUrlM() { return (null == mDigestInfo) ? null : mDigestInfo.mCovImgUrl_m; }
+    public String GetCoverImageUrlM() { return (null == mDigestInfo) ? null : mDigestInfo.GetCoverImageUrlM(); }
+
+    @Override
+    public int GetTotalNumber() { return (null == mDigestInfo) ? 0 : mDigestInfo.GetTotalNumber(); }
+
+    @Override
+    public int GetFetchedNumber() { return (null == mDigestInfo) ? 0 : mDigestInfo.GetFetchedNumber(); }
+
+    @Override
+    public String GetCoverImageUrlS() { return (null == mDigestInfo) ? null : mDigestInfo.GetCoverImageUrlS(); }
+
+    @Override
+    public ArrayList<Object> GetList() { return (null == mDigestInfo) ? null : mDigestInfo.GetList(); }
 
     @Override
     public String DebugString() {
@@ -66,34 +78,22 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
 
         return mString;
     }
-
-    @Override
-    public int GetTotalNumber() { return (null == mDigestInfo) ? 0 : mDigestInfo.GetTotalNumber(); }
-
-    @Override
-    public int GetFetchedNumber() { return (null == mDigestInfo) ? 0 : mDigestInfo.GetFetchedNumber(); }
-
-    @Override
-    public String GetCoverImageUrlS() { return (null == mDigestInfo) ? null : mDigestInfo.mCovImgUrl_s; }
-
-    @Override
-    public ArrayList<Object> GetList() { return (null == mDigestInfo) ? null : mDigestInfo.GetList(); }
 }
 
-class HouseDigestInfo implements IApiResults.IResultList {
-    public int     mHouseId        = 0;
-    public String  mPropertyName   = "";
-    public String  mPropertyAddr   = "";
-    public int     mBedrooms       = 0;
-    public int     mLivingRooms    = 0;
-    public int     mBathrooms      = 0;
-    public int     mAcreage        = 0;
-    public int     mRental         = 0;
-    public int     mPricing        = 0;
-    public int     mCoverImg       = 0;
-    public String  mCovImgUrl_s    = null;
-    public String  mCovImgUrl_m    = null;
-    public TagList mTagList        = null;
+class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultList {
+    private int     mHouseId        = 0;
+    private String  mPropertyName   = "";
+    private String  mPropertyAddr   = "";
+    private int     mBedrooms       = 0;
+    private int     mLivingRooms    = 0;
+    private int     mBathrooms      = 0;
+    private int     mAcreage        = 0;
+    private int     mRental         = 0;
+    private int     mPricing        = 0;
+    private int     mCoverImg       = 0;
+    private String  mCovImgUrl_s    = null;
+    private String  mCovImgUrl_m    = null;
+    private TagList mTagList        = null;
 
     HouseDigestInfo(JSONObject objDigest) {
         mTagList = new TagList();
@@ -142,18 +142,18 @@ class HouseDigestInfo implements IApiResults.IResultList {
 
     public String DebugString() {
         String sDebugString = "";
-        sDebugString += (" house id: " + mHouseId + "\n");
-        sDebugString += (" property: " + mPropertyName + "\n");
-        sDebugString += (" property address: " + mPropertyAddr + "\n");
-        sDebugString += (" Bedrooms: " + mBedrooms + "\n");
-        sDebugString += (" LivingRooms: " + mLivingRooms + "\n");
-        sDebugString += (" Bathrooms: " + mBathrooms + "\n");
-        sDebugString += (" Acreage: " + mAcreage + "\n");
-        sDebugString += (" Rental: " + mRental + "\n");
-        sDebugString += (" Pricing: " + mPricing + "\n");
-        sDebugString += (" CoverImg: " + mCoverImg + "\n");
-        sDebugString += (" Image URL(s): " + mCovImgUrl_s + "\n");
-        sDebugString += (" Image URL(m): " + mCovImgUrl_m + "\n");
+        sDebugString += (" house id: " + GetHouseId() + "\n");
+        sDebugString += (" property: " + GetProperty() + "\n");
+        sDebugString += (" property address: " + GetPropertyAddr() + "\n");
+        sDebugString += (" Bedrooms: " + GetBedrooms() + "\n");
+        sDebugString += (" LivingRooms: " + GetLivingrooms() + "\n");
+        sDebugString += (" Bathrooms: " + GetBathrooms() + "\n");
+        sDebugString += (" Acreage: " + GetAcreage() + "\n");
+        sDebugString += (" Rental: " + GetRental() + "\n");
+        sDebugString += (" Pricing: " + GetPricing() + "\n");
+        sDebugString += (" CoverImg: " + GetCoverImage() + "\n");
+        sDebugString += (" Image URL(s): " + GetCoverImageUrlS() + "\n");
+        sDebugString += (" Image URL(m): " + GetCoverImageUrlM() + "\n");
 
         if (null != mTagList) {
             sDebugString += mTagList.DebugList();
@@ -161,6 +161,42 @@ class HouseDigestInfo implements IApiResults.IResultList {
 
         return sDebugString;
     }
+
+    @Override
+    public int GetHouseId() { return mHouseId; }
+
+    @Override
+    public String GetProperty() { return mPropertyName; }
+
+    @Override
+    public String GetPropertyAddr() { return mPropertyAddr; }
+
+    @Override
+    public int GetBedrooms() { return mBedrooms; }
+
+    @Override
+    public int GetLivingrooms() { return mLivingRooms; }
+
+    @Override
+    public int GetBathrooms() { return mBathrooms; }
+
+    @Override
+    public int GetAcreage() { return mAcreage; }
+
+    @Override
+    public int GetRental() { return mRental; }
+
+    @Override
+    public int GetPricing() { return mPricing; }
+
+    @Override
+    public int GetCoverImage() { return mCoverImg; }
+
+    @Override
+    public String GetCoverImageUrlS() { return mCovImgUrl_s; }
+
+    @Override
+    public String GetCoverImageUrlM() { return mCovImgUrl_m; }
 
     /*
     *       class TagList
