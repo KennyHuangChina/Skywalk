@@ -76,6 +76,14 @@ type ResGetHouseDigest struct {
 }
 
 // result of API get house list
+type ResGetHouseDigestList struct {
+	ResCommon
+	Total        int64
+	Count        int64
+	HouseDigests []commdef.HouseDigest
+}
+
+// result of API get house list
 type ResGetHouseList struct {
 	ResCommon
 	Total int64

@@ -16,7 +16,7 @@ type HouseController struct {
 func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseInfo", h.GetHouseInfo)
 	h.Mapping("GetHouseDigestInfo", h.GetHouseDigestInfo)
-	h.Mapping("GetHouseList", h.GetHouseList)
+	h.Mapping("GetHouseDigestList", h.GetHouseDigestList)
 	h.Mapping("CommitHouseByOwner", h.CommitHouseByOwner)
 	h.Mapping("ModifyHouse", h.ModifyHouse)
 
@@ -476,16 +476,16 @@ func (this *HouseController) GetBehalfList() {
 	}
 }
 
-// @Title GetHouseList
-// @Description get house list by type
+// @Title GetHouseDigestList
+// @Description get house list by type, in digest info
 // @Success 200 {string}
 // @Failure 403 body is empty
 // @router /list [get]
-func (this *HouseController) GetHouseList() {
-	FN := "[GetHouseList] "
-	beego.Warn("[--- API: GetHouseList ---]")
+func (this *HouseController) GetHouseDigestList() {
+	FN := "[GetHouseDigestList] "
+	beego.Warn("[--- API: GetHouseDigestList ---]")
 
-	var result ResGetHouseList
+	var result ResGetHouseDigestList
 	var err error
 
 	defer func() {
@@ -520,8 +520,17 @@ func (this *HouseController) GetHouseList() {
 	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count)
 	if nil == err {
 		result.Total = total
-		result.Count = fetched
-		result.IDs = ids
+		if fetched > 0 {
+			for _, v := range ids {
+				hdi := commdef.HouseDigest{}
+				err, hdi = models.GetHouseDigestInfo(v)
+				if nil != err {
+					return
+				}
+				result.HouseDigests = append(result.HouseDigests, hdi)
+			}
+		}
+		result.Count = int64(len(result.HouseDigests))
 	}
 }
 

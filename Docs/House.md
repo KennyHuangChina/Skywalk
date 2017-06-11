@@ -66,7 +66,7 @@
 		* SUCCESS:200 
 			* Total    		int		// total number
 			* Count			int		// how many items fetched
-			* Houses		array	// house public brief info list
+			* HouseDigests	array	// house public brief info list
 				* house public brief info
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
