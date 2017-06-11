@@ -26,6 +26,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import com.kjs.skywalk.communicationlibrary.IApiResults.IPropertyInfo;
@@ -50,7 +51,7 @@ public class Activity_Search_House extends SKBaseActivity implements
     private ArrayList<IPropertyInfo> mPropertyList = new ArrayList<>();
 
     private final int MSG_FETCH_PROPERTY_LIST = 0;
-    private final int MSG_SHOW_WAITING = 1;
+    private final int MSG_PROPERTY_LIST_DONW = 1;
     private final int MSG_HIDE_WAITING = 2;
 
     private int mPropertyId = -1;
@@ -58,9 +59,6 @@ public class Activity_Search_House extends SKBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__search_house);
-
-        CommandManager manager = new CommandManager(this, this, this);
-        manager.GetPropertyListByName("", 0, 0);
 
         mHistory = new HouseSearchHistory(this);
 
@@ -131,7 +129,8 @@ public class Activity_Search_House extends SKBaseActivity implements
                 if(newText.equals("")) {
                     updateAdapterHistory();
                 } else {
-                    updateAdapterProperty(newText);
+                    showPropertyList();
+                    updatePropertyList(newText);
                 }
                 return true;
             }
@@ -160,25 +159,61 @@ public class Activity_Search_House extends SKBaseActivity implements
         mSearchView.setIconifiedByDefault(false);
     }
 
-    private void updateAdapterProperty(String keywords) {
+    private void showPropertyList() {
         mHistoryLayout.setVisibility(View.GONE);
         mNoHistoryLayout.setVisibility(View.GONE);
         mAddHouseLayout.setVisibility(View.VISIBLE);
+    }
 
-        mListViewProperty.removeAllViewsInLayout();
+    private void makePropertyList(ArrayList<Object> array) {
+        for(Object obj : array) {
+            IPropertyInfo info = (IPropertyInfo)obj;
+            mPropertyList.add(info);
+            Log.i(TAG, "Property ++ " + info.GetName());
+        }
+    }
+
+    private void updateAdapterProperty() {
         ArrayList<ClassDefine.Property> newList = new ArrayList<>();
         for(IPropertyInfo info : mPropertyList) {
-            if(info.GetName().contains(keywords)) {
-                ClassDefine.Property property = new ClassDefine.Property();
-                property.mName = info.GetName();
-                property.mAddress = info.GetAddress();
-                newList.add(property);
-            }
+            ClassDefine.Property property = new ClassDefine.Property();
+            property.mName = info.GetName();
+            property.mAddress = info.GetAddress();
+            newList.add(property);
         }
 
         mAdapterProperty.setDataList(newList);
         mListViewProperty.setAdapter(mAdapterProperty);
         mAdapterProperty.notifyDataSetChanged();
+    }
+
+    private void updatePropertyList(final String keywords) {
+        mListViewProperty.removeAllViewsInLayout();
+        mPropertyList.clear();
+
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+                if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
+                    if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                        IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
+                        mPropertyCount = list.GetTotalNumber();
+                        int nFetchCount = list.GetFetchedNumber();
+                        if(nFetchCount == 0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fetchPropertyList(keywords);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        };
+
+        CommandManager manager = new CommandManager(this, listener, this);
+        manager.GetPropertyListByName(keywords, 0, 0);
     }
 
     private void updateAdapterHistory() {
@@ -236,9 +271,9 @@ public class Activity_Search_House extends SKBaseActivity implements
         return -1;
     }
 
-    private void fetchPropertyList() {
+    private void fetchPropertyList(String keywords) {
         CommandManager manager = new CommandManager(this, this, this);
-        manager.GetPropertyListByName("", 0, mPropertyCount);
+        manager.GetPropertyListByName(keywords, 0, mPropertyCount);
     }
 
     private void addProperty() {
@@ -249,6 +284,7 @@ public class Activity_Search_House extends SKBaseActivity implements
                     commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
                     IApiResults.IAddRes res = (IApiResults.IAddRes)iCommon;
                     mPropertyId = res.GetId();
+                    Log.i(TAG, "New Property ID: " + mPropertyId);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -280,7 +316,10 @@ public class Activity_Search_House extends SKBaseActivity implements
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_FETCH_PROPERTY_LIST: {
-                    fetchPropertyList();
+                    break;
+                }
+                case MSG_PROPERTY_LIST_DONW: {
+                    updateAdapterProperty();
                     break;
                 }
             }
@@ -295,18 +334,15 @@ public class Activity_Search_House extends SKBaseActivity implements
                 mPropertyCount = list.GetTotalNumber();
                 int nFetchCount = list.GetFetchedNumber();
                 if(nFetchCount > 0) {
-                    ArrayList<Object> array = list.GetList();
-                    for(Object obj : array) {
-                        IPropertyInfo info = (IPropertyInfo)obj;
-                        mPropertyList.add(info);
-                        Log.i(TAG, info.GetName());
-                    }
-                } else {
-                    mHandler.sendEmptyMessageDelayed(MSG_FETCH_PROPERTY_LIST, 0);
+                    makePropertyList(list.GetList());
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateAdapterProperty();
+                    }
+                });
             }
-        } else if(i == CommunicationInterface.CmdID.CMD_ADD_PROPERTY) {
-
         }
     }
 
