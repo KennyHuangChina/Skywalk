@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class Activity_rentals_progress_contractedBoth extends AppCompatActivity {
+public class Activity_rentals_progress_contractedBoth extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

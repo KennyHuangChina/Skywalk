@@ -15,7 +15,7 @@ import android.widget.TextView;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Zushouweituo_SelectService extends Activity {
+public class Activity_Zushouweituo_SelectService extends SKBaseActivity {
     private RelativeLayout mContainer1 = null;
     private RelativeLayout mContainer2 = null;
     private int mService = -1;

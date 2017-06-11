@@ -8,7 +8,7 @@ import android.view.View;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Zushouweituo_Kanfangshijian extends Activity {
+public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

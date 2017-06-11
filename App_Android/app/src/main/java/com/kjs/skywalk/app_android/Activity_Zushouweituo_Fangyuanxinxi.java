@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Activity_Zushouweituo_Fangyuanxinxi extends AppCompatActivity {
+public class Activity_Zushouweituo_Fangyuanxinxi extends SKBaseActivity {
 
     private PopupWindowZhuangxiuSelector mZhuangxiuSelector = null;
     private ScrollView mContainer = null;

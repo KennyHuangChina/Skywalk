@@ -52,7 +52,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 /**
  * A login screen that offers login via email/password.
  */
-public class Activity_login extends AppCompatActivity implements
+public class Activity_login extends SKBaseActivity implements
         CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
 
     /**

@@ -22,7 +22,7 @@ import org.w3c.dom.Text;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Search_Fangyuanliebiao extends Activity {
+public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
     private ListView mListView = null;
 
     private TextView mDisplayType = null;

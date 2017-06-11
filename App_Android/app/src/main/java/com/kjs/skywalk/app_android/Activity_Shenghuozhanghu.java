@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
-public class Activity_Shenghuozhanghu extends AppCompatActivity {
+public class Activity_Shenghuozhanghu extends SKBaseActivity {
     private AlertDialog mInputDialog = null;
     private TextView mCurrent = null;
     @Override

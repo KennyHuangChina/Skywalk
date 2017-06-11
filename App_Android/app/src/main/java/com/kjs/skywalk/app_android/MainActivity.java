@@ -39,7 +39,7 @@ import me.iwf.photopicker.PhotoPreview;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends SKBaseActivity {
     private fragmentHomePage mFragHomePage = null;
     private fragmentApartment mFragApartment = null;
     private fragmentMsg mFragMsg = null;

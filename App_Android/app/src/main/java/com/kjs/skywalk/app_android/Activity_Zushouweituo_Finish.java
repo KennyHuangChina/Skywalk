@@ -13,7 +13,7 @@ import org.w3c.dom.Text;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Zushouweituo_Finish extends Activity {
+public class Activity_Zushouweituo_Finish extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

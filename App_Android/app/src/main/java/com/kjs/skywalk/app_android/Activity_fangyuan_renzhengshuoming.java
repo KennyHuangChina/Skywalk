@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class Activity_fangyuan_renzhengshuoming extends AppCompatActivity {
+public class Activity_fangyuan_renzhengshuoming extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

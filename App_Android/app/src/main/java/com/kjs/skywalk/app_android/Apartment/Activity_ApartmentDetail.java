@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Activity_HouseholdDeliverables;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.SKBaseActivity;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.control.ExpandedView;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 
 import me.iwf.photopicker.PhotoPreview;
 
-public class Activity_ApartmentDetail extends AppCompatActivity {
+public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private ArrayList<String> mImageLst;
 

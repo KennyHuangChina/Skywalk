@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class Activity_rentals_progress_yijia extends AppCompatActivity {
+public class Activity_rentals_progress_yijia extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

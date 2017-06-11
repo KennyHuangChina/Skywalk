@@ -9,7 +9,7 @@ import android.view.View;
  * Created by admin on 2017/3/7.
  */
 
-public class Activity_rentals_jiaofang_chaobiao extends Activity {
+public class Activity_rentals_jiaofang_chaobiao extends SKBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

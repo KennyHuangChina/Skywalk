@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Search extends Activity {
+public class Activity_Search extends SKBaseActivity {
     private final String TAG = "Search";
     private ListView mListView = null;
     private LinearLayout mContainer = null;

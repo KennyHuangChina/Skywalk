@@ -32,7 +32,7 @@ import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_DELIVERABLE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
 
-public class Activity_HouseholdDeliverables extends AppCompatActivity
+public class Activity_HouseholdDeliverables extends SKBaseActivity
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
     private AlertDialog mDeliverableEdtDlg;
     private ListView mLvDeliverables;

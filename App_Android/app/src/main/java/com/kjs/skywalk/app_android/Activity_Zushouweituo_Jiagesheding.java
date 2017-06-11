@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class Activity_Zushouweituo_Jiagesheding extends AppCompatActivity {
+public class Activity_Zushouweituo_Jiagesheding extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

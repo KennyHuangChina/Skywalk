@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
 
-public class Activity_fangyuan_guanli extends AppCompatActivity {
+public class Activity_fangyuan_guanli extends SKBaseActivity {
 
     private fragmentFangYuanGuanLiInfo1 mFragInfo1 = null;
     private fragmentFangYuanGuanLiInfo2 mFragInfo2 = null;

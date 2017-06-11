@@ -31,7 +31,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
 
-public class Activity_HouseholdAppliances extends AppCompatActivity
+public class Activity_HouseholdAppliances extends SKBaseActivity
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
     listitem_adapter_household_appliance mApplAdapter;
     // test data

@@ -19,7 +19,7 @@ import java.util.List;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
 
-public class Activity_fangyuan_zhaopian extends AppCompatActivity {
+public class Activity_fangyuan_zhaopian extends SKBaseActivity {
     ViewPager mVPHuXing;
     ViewPager mVpFangJianJieGou;
     ViewPager mVpJiaJuYongPin;

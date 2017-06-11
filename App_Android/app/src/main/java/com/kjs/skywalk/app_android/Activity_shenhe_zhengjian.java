@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-public class Activity_shenhe_zhengjian extends AppCompatActivity {
+public class Activity_shenhe_zhengjian extends SKBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
