@@ -290,6 +290,8 @@ public class Activity_HouseholdDeliverables extends AppCompatActivity
                 if (mGotHouseDeliverables)
                     break;
 
+                wait_count++;
+
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

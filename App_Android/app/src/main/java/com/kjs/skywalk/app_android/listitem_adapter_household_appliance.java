@@ -89,7 +89,7 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
         Drawable drawable = item.mIcon;
         holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
-        if(i == 0) {
+        if(i == 1) {
             String testFile = mContext.getCacheDir().getAbsolutePath() + File.separator + "testPics" + File.separator + "sofa_n.png";
             File file = new File(testFile);
             if (file.exists()) {
