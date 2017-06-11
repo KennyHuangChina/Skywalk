@@ -18,31 +18,27 @@ import java.util.Iterator;
  */
 
 class CmdGetBriefPublicHouseInfo extends CommunicationBase {
+    final protected String  TAG = getClass().getSimpleName();
+    private int mHouseId = -1;
 
-    private String mParamID = "";
-
-    CmdGetBriefPublicHouseInfo(Context context){
+    CmdGetBriefPublicHouseInfo(Context context, int house_id){
         super(context, CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO);
         mMethodType = "GET";
+        mHouseId = house_id;
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/digest/" + mParamID;
+        mCommandURL = String.format("/v1/house/%d/digest/", mHouseId);
         return mCommandURL;
     }
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if(!map.containsKey(CommunicationParameterKey.CPK_INDEX)) {
+        if (mHouseId <= 0) {
+            Log.e(TAG, "mHouseId: " + mHouseId);
              return false;
         }
-
-        mParamID = map.get(CommunicationParameterKey.CPK_INDEX);
-        if(mParamID == null || mParamID.isEmpty()) {
-            return false;
-        }
-
        return true;
     }
 

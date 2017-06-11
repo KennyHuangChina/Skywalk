@@ -23,6 +23,8 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
     private int     mRental         = 0;
     private int     mPricing        = 0;
     private int     mCoverImg       = 0;
+    private String  mCovImgUrl_s    = null;
+    private String  mCovImgUrl_m    = null;
     private TagList mTagList        = null;
 
     ResHousePublicBriefInfo(int nErrCode, JSONObject obj) {
@@ -46,6 +48,14 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
             mRental         = objDigest.getInt("Rental");
             mPricing        = objDigest.getInt("Pricing");
             mCoverImg       = objDigest.getInt("CoverImg");
+            mCovImgUrl_s    = objDigest.getString("CovImgUrlS");
+            mCovImgUrl_m    = objDigest.getString("CovImgUrlM");
+            if (null != mCovImgUrl_s && !mCovImgUrl_s.isEmpty()) {
+                mCovImgUrl_s = PicFullUrl(mCovImgUrl_s);
+            }
+            if (null != mCovImgUrl_m && !mCovImgUrl_m.isEmpty()) {
+                mCovImgUrl_m = PicFullUrl(mCovImgUrl_m);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -78,6 +88,16 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
     public int GetCoverImage() { return mCoverImg; }
 
     @Override
+    public String GetCoverImageUrlS() {
+        return mCovImgUrl_s;
+    }
+
+    @Override
+    public String GetCoverImageUrlM() {
+        return mCovImgUrl_m;
+    }
+
+    @Override
     public String DebugString() {
         super.DebugString();
 
@@ -91,6 +111,8 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         mString += (" Rental: " + mRental + "\n");
         mString += (" Pricing: " + mPricing + "\n");
         mString += (" CoverImg: " + mCoverImg + "\n");
+        mString += (" Image URL(s): " + GetCoverImageUrlS() + "\n");
+        mString += (" Image URL(m): " + GetCoverImageUrlM() + "\n");
 
         if (null != mTagList) {
             mString += mTagList.DebugList();
