@@ -16,8 +16,8 @@ class CmdGetHouseList extends CommunicationBase {
     protected int mBeginPosi = 0;
     protected int mFetchCount = 0;
 
-    CmdGetHouseList(Context context, String strAPI) {
-        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_LIST);
+    CmdGetHouseList(Context context) {
+        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST);
         mMethodType = "GET";
     }
 

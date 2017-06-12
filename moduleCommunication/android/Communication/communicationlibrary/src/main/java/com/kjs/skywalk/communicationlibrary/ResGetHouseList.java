@@ -71,12 +71,11 @@ class ResGetHouseList extends ResBase implements IApiResults.IResultList {
                     return -1;
                 }
                 for (int n = 0; n < array.length(); n++) {
-                    Integer item = array.getInt(n);
-//                    HouseInfo newItem = new HouseInfo(item);
-//                    if (null == newItem) {
-//                        return -2;
-//                    }
-                    mList.add(item);
+                    HouseDigestInfo newItem = new HouseDigestInfo(array.getJSONObject(n));
+                   if (null == newItem) {
+                        return -2;
+                    }
+                    mList.add(newItem);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -84,14 +83,6 @@ class ResGetHouseList extends ResBase implements IApiResults.IResultList {
             }
 
             return 0;
-        }
-
-        protected String getListItem2String(Object item) {
-            if (null == item) {
-                return "";
-            }
-            return " id: " + (Integer)item;
-//            return ((HouseInfo)item).ListItemInfo2String();
         }
     }
 }

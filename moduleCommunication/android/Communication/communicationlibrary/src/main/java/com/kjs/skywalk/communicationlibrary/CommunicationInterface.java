@@ -52,7 +52,7 @@ public class CommunicationInterface {
         int GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
         int GetBehalfHouses(int type, int begin, int cnt);                      // CMD_GET_BEHALF_HOUSE_LIST,       TODO:
-        int GetHouseList(int type, int begin, int cnt);                         // CMD_GET_HOUSE_LIST,              IApiResults.IResultList(int[])
+        int GetHouseDigestList(int type, int begin, int cnt);                   // CMD_GET_HOUSE_DIGEST_LIST,       IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
 
         /* Property, Community */
         int GetPropertyListByName(String sName, int nBegin, int nCount);                // CMD_GET_PROPERTY_LIST,   IApiResults.IResultList(IApiResults.IPropertyInfo)
@@ -111,7 +111,7 @@ public class CommunicationInterface {
 
         // House
         public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001;
-        public static int CMD_GET_HOUSE_LIST                = 0x2002;
+        public static int CMD_GET_HOUSE_DIGEST_LIST         = 0x2002;
         public static int CMD_GET_BEHALF_HOUSE_LIST         = 0x2003;
         public static int CMD_GET_HOUSE_INFO                = 0x2004;
         public static int CMD_COMMIT_HOUSE_BY_OWNER         = 0x2005;

@@ -222,8 +222,8 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int GetHouseList(int type, int begin, int cnt) {
-        CommunicationBase op = new CmdGetHouseList(mContext, "GetHouseList");
+    public int GetHouseDigestList(int type, int begin, int cnt) {
+        CommunicationBase op = new CmdGetHouseList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);

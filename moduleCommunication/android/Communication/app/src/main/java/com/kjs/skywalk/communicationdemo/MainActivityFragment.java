@@ -126,8 +126,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-//        CmdMgr.GetHouseList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+//        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
     }
 
     @Override
@@ -256,16 +256,23 @@ public class MainActivityFragment extends Fragment
                     IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
                     prop.GetName();
                 }
-            } else if (command == CMD_GET_HOUSE_LIST || command == CMD_GET_BEHALF_HOUSE_LIST) {
+            } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
                     int nFetched = res.GetFetchedNumber();
                     if (nFetched > 0) {
-                        ArrayList<Object> HouseIDs = res.GetList();
-                        for (int n = 0; n < HouseIDs.size(); n++) {
-                            Integer id = (Integer)HouseIDs.get(n);
-                            Log.d(TAG, "house(" + n + ") id:" + id + "\n");
+                        ArrayList<Object> HouseList = res.GetList();
+                        for (int n = 0; n < HouseList.size(); n ++) {
+                            IApiResults.IHouseDigest house = (IApiResults.IHouseDigest)HouseList.get(n);
+                            String houseProp = house.GetProperty();
+                            String housePropAddr = house.GetPropertyAddr();
+                            ArrayList<Object> tags = ((IApiResults.IResultList)house).GetList();
+                            for (int m = 0; m < tags.size(); m++) {
+                                IApiResults.IHouseTag tag = (IApiResults.IHouseTag)tags.get(m);
+                                int tagId = tag.GetTagId();
+                                String tagName = tag.GetName();
+                            }
                         }
                     }
             } else if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {

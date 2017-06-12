@@ -80,7 +80,7 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
     }
 }
 
-class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultList {
+class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultList, InternalDefines.IListItemInfoInner {
     private int     mHouseId        = 0;
     private String  mPropertyName   = "";
     private String  mPropertyAddr   = "";
@@ -197,6 +197,11 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
 
     @Override
     public String GetCoverImageUrlM() { return mCovImgUrl_m; }
+
+    @Override
+    public String ListItemInfo2String() {
+        return DebugString();
+    }
 
     /*
     *       class TagList
