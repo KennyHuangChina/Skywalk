@@ -28,8 +28,8 @@ import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_LIST;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -114,24 +114,24 @@ public class fragmentHomePage extends Fragment {
         protected Boolean doInBackground(Void... voids) {
             // get house ids
             CommandManager CmdMgr = new CommandManager(getActivity(), mCmdListener, mProgreessListener);
-            int result = CmdMgr.GetHouseList(1, 0, 4);
+            int result = CmdMgr.GetHouseDigestList(1, 0, 4);
             mResultGot = false;
             if(!waitResult(1000)) {
                 // timeout
                 return null;
             }
-            if (mHouseIds == null)
-                return null;
+//            if (mHouseIds == null)
+//                return null;
 
             // get house info
-            for (int houseId : mHouseIds) {
-                CmdMgr.GetBriefPublicHouseInfo(houseId);
-                mResultGot = false;
-                if(!waitResult(1000)) {
-                    // timeout
-                    continue;
-                }
-            }
+//            for (int houseId : mHouseIds) {
+//                CmdMgr.GetBriefPublicHouseInfo(houseId);
+//                mResultGot = false;
+//                if(!waitResult(1000)) {
+//                    // timeout
+//                    continue;
+//                }
+//            }
 
             updateHouseList(mHouseList);
 
@@ -174,16 +174,37 @@ public class fragmentHomePage extends Fragment {
                     return;
                 }
 
-                if (command == CMD_GET_HOUSE_LIST) {
+                if (command == CMD_GET_HOUSE_DIGEST_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch > 0) {
-                        mHouseIds = new int[nFetch];
-                        int i = 0;
-                        ArrayList<Object> houseIDs = resultList.GetList();
-                        for (Object houseID : houseIDs) {
-                            mHouseIds[i] = (int) houseID;
-                            i++;
+                        // IApiResults.IHouseDigest
+                        ArrayList<Object> houseDigests = resultList.GetList();
+                        for (Object houseDigestObj : houseDigests) {
+                            IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) houseDigestObj;
+                            ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
+                            houseDigest.houseId = houseDigestRes.GetHouseId();
+                            houseDigest.property = houseDigestRes.GetProperty();
+                            houseDigest.addr = houseDigestRes.GetPropertyAddr();
+                            houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
+                            houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
+                            houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
+                            houseDigest.Acreage = houseDigestRes.GetAcreage();
+                            houseDigest.Rental = houseDigestRes.GetRental();
+                            houseDigest.Pricing = houseDigestRes.GetPricing();
+                            houseDigest.CoverImage = houseDigestRes.GetCoverImage();
+                            houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
+                            houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
+
+                            ArrayList<Object> houseTags = ((IApiResults.IResultList)houseDigestRes).GetList();
+                            for (Object houseTagObj : houseTags) {
+                                houseDigest.houseTags = new ArrayList<>();
+                                IApiResults.IHouseTag tag = (IApiResults.IHouseTag)houseTagObj;
+                                ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
+                                houseDigest.houseTags.add(houseTag);
+                            }
+
+                            mHouseList.add(houseDigest);
                         }
                     }
                 }

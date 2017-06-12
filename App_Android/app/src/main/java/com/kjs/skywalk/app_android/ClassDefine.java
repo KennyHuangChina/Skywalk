@@ -72,6 +72,8 @@ public class ClassDefine {
         public int Rental;
         public int Pricing;
         public int CoverImage;
+        public String CoverImageUrlS;
+        public String CoverImageUrlM;
         public ArrayList<HouseTag> houseTags;
     }
 
