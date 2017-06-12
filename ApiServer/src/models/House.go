@@ -1219,7 +1219,8 @@ func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int
 	o := orm.NewOrm()
 
 	// calculate the total house number
-	sql_cnt := `SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, tbl_house as h WHERE r.house=h.id`
+	sql_cnt := `SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, tbl_house as h 
+						WHERE r.house=h.id AND h.publish_time IS NOT NULL`
 	var Count int64 = 0
 	errT := o.Raw(sql_cnt).QueryRow(&Count)
 	if nil != errT {
@@ -1242,7 +1243,8 @@ func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int
 
 	// fetching
 	beego.Warn(FN, "TODO: all() will be restricted by limit, and return max 1000 records")
-	sql := `SELECT r.house AS id FROM tbl_house_recommend AS r, tbl_house as h WHERE r.house=h.id ORDER BY r.when DESC LIMIT ?, ? `
+	sql := `SELECT r.house AS id FROM tbl_house_recommend AS r, tbl_house as h 
+					WHERE r.house=h.id AND h.publish_time IS NOT NULL ORDER BY r.when DESC LIMIT ?, ? `
 	idlst := []int64{}
 	numb, errT := o.Raw(sql, begin, fetchCnt).QueryRows(&idlst)
 	if nil != errT {
