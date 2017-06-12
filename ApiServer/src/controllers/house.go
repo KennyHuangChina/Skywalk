@@ -518,6 +518,7 @@ func (this *HouseController) GetHouseDigestList() {
 	 *	Processing
 	 */
 	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count)
+	beego.Debug(FN, "ids:", ids)
 	if nil == err {
 		result.Total = total
 		if fetched > 0 {

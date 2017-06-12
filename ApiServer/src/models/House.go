@@ -1198,17 +1198,17 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 /**
 *	Get recommend house list
 *	Arguments:
-*		begin	- from which item to fetch
-*		count	- how many items to fetch
+*		begin		- from which item to fetch
+*		fetchCnt	- how many items to fetch
 *	Returns
 *		err 	- error info
 *		total 	- total number
 *		fetched	- fetched quantity
 *		ids		- house id list
  */
-func getRecommendHouseList(begin, count int64) (err error, total, fetched int64, ids []int64) {
+func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int64, ids []int64) {
 	FN := "[getRecommendHouseList] "
-	beego.Trace(FN, "begin:", begin, ", count:", count)
+	beego.Trace(FN, "begin:", begin, ", fetchCnt:", fetchCnt)
 
 	defer func() {
 		if nil != err {
@@ -1217,17 +1217,20 @@ func getRecommendHouseList(begin, count int64) (err error, total, fetched int64,
 	}()
 
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_house_recommend")
 
 	// calculate the total house number
-	cnt, errT := qs.Count()
+	sql_cnt := `SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, tbl_house as h WHERE r.house=h.id`
+	var Count int64 = 0
+	errT := o.Raw(sql_cnt).QueryRow(&Count)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
-	total = cnt
 
-	if 0 == count { // user just want to detect how many houses
+	total = Count
+	beego.Debug(FN, "total:", total)
+
+	if 0 == fetchCnt || 0 == total { // user just want to detect how many houses, or there no reccor could be fetched
 		return
 	}
 
@@ -1239,19 +1242,17 @@ func getRecommendHouseList(begin, count int64) (err error, total, fetched int64,
 
 	// fetching
 	beego.Warn(FN, "TODO: all() will be restricted by limit, and return max 1000 records")
-	var hids []TblHouseRecommend
-	numb, errT := qs.Limit(count, begin).OrderBy("When").All(&hids)
+	sql := `SELECT r.house AS id FROM tbl_house_recommend AS r, tbl_house as h WHERE r.house=h.id ORDER BY r.when DESC LIMIT ?, ? `
+	idlst := []int64{}
+	numb, errT := o.Raw(sql, begin, fetchCnt).QueryRows(&idlst)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
-	// beego.Debug(FN, "hids:", hids)
+	beego.Debug(FN, "idlst:", idlst)
 
 	fetched = numb
-	for _, v := range hids {
-		ids = append(ids, v.House)
-	}
-	// ids = hids
+	ids = idlst
 
 	return
 }
