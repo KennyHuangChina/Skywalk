@@ -1064,8 +1064,10 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	}()
 
 	// calculate the total house number
-	sql_1st := "SELECT min(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
-	sql_now := "SELECT  max(id) AS id FROM tbl_rental WHERE active=true GROUP BY house_id"
+	sql_1st := `SELECT min(r.id) AS id FROM tbl_rental AS r, tbl_house AS h 
+					WHERE r.active=true AND r.house_id=h.id AND h.publish_time IS NOT NULL GROUP BY house_id`
+	sql_now := `SELECT max(r.id) AS id FROM tbl_rental AS r, tbl_house AS h 
+					WHERE r.active=true AND r.house_id=h.id AND h.publish_time IS NOT NULL GROUP BY house_id`
 
 	sql_t0 := fmt.Sprintf(`SELECT t0.id, house_id, rental_bid 
 								FROM tbl_rental AS rental LEFT JOIN (%s) AS t0 
@@ -1075,7 +1077,7 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 								ON rental.id=t1.id WHERE t1.id IS NOT NULL`, sql_now)
 	sql := fmt.Sprintf(`SELECT p0.id as p0_id, p1.id as p1_id, p0.house_id, p0.rental_bid as p0_bid, p1.rental_bid as p1_bid 
 							FROM (%s) AS p0, (%s) AS p1 
-							WHERE p0.house_id=p1.house_id 
+							WHERE p0.house_id=p1.house_id
 							HAVING (p1_bid - p0_bid) < 0`, sql_t0, sql_t1)
 	// beego.Debug(FN, "sql:", sql)
 
@@ -1091,6 +1093,7 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	}
 
 	total = cnt
+	beego.Debug(FN, "total:", total)
 
 	if 0 == fetch_numb { // user just want to get the total number of deducted house
 		return
