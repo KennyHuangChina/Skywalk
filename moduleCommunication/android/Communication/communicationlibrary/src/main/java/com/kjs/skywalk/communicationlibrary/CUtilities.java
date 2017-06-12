@@ -163,4 +163,13 @@ class CUtilities {
         // just use the picture directly
         return new FileInputStream(filePath);
     }
+
+    static public String PicFullUrl(String pic) {
+        if (pic.startsWith("./")) {
+            pic = pic.substring(1, pic.length());
+        } else if (!pic.startsWith("/")) {
+            pic = "/" + pic;
+        }
+        return ServerURL.mServerUri + pic;
+    }
 }

@@ -113,6 +113,13 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year) {
+        CommunicationBase op = new CmdModifyAgency(mContext, agency, rank_pro, rank_att, begin_year);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int Relogin(String userName) {
         CommunicationBase op = new CmdRelogin(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -129,9 +136,8 @@ public class CommandManager implements CommunicationInterface.ICommand {
 
     @Override
     public int GetBriefPublicHouseInfo(int houseId) {
-        CommunicationBase op = new CmdGetBriefPublicHouseInfo(mContext);
+        CommunicationBase op = new CmdGetBriefPublicHouseInfo(mContext, houseId);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "" + houseId);
         return execute(op, pMap);
     }
 
@@ -216,8 +222,8 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int GetHouseList(int type, int begin, int cnt) {
-        CommunicationBase op = new CmdGetHouseList(mContext, "GetHouseList");
+    public int GetHouseDigestList(int type, int begin, int cnt) {
+        CommunicationBase op = new CmdGetHouseList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);

@@ -62,9 +62,6 @@ class ResBase implements IApiResults.ICommon {
     }
 
     protected String PicFullUrl(String pic) {
-        if (pic.startsWith("./")) {
-            pic = pic.substring(1, pic.length());
-        }
-        return ServerURL.mServerUri + pic;
+        return CUtilities.PicFullUrl(pic);
     }
 }

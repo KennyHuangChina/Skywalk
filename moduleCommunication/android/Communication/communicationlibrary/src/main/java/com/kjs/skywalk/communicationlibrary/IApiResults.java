@@ -45,16 +45,18 @@ public class IApiResults {
     }
 
     public interface IHouseDigest {
-        int GetHouseId();
-        String GetProperty();
-        String GetPropertyAddr();
-        int GetBedrooms();
-        int GetLivingrooms();
-        int GetBathrooms();
-        int GetAcreage();
-        int GetRental();
-        int GetPricing();
-        int GetCoverImage();
+        int     GetHouseId();
+        String  GetProperty();
+        String  GetPropertyAddr();
+        int     GetBedrooms();
+        int     GetLivingrooms();
+        int     GetBathrooms();
+        int     GetAcreage();
+        int     GetRental();
+        int     GetPricing();
+        int     GetCoverImage();
+        String  GetCoverImageUrlS();
+        String  GetCoverImageUrlM();
     }
 
     public interface IHouseTag {

@@ -60,7 +60,7 @@ public class MainActivityFragment extends Fragment
 //                                mCertificate ? "已经和业主核实，同意发布" : "撤销发布");
 //        mCertificate = !mCertificate;
 
-        doTestModifyApi_ModifyHouse(CmdMgr);
+//        doTestModifyApi_ModifyHouse(CmdMgr);
 //        CmdMgr.ModifyDeliverable(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
 //        CmdMgr.EditFacilityType(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
 //        CmdMgr.EditFacility(Integer.parseInt(mEditText.getText().toString()),
@@ -71,6 +71,8 @@ public class MainActivityFragment extends Fragment
 //                Integer.parseInt(mEditText2.getText().toString()), "");
 //        CmdMgr.ReadNewEvent(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
+        CmdMgr.MofidyAgency(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+                Integer.parseInt(mEditText2.getText().toString()), 2016);
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, "57", "1606", 35, 16, 2, 4, 3, 17788, false, true, 3, "2017-06-08");
@@ -105,7 +107,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
-//        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetNewEventCount();
@@ -114,7 +116,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
-        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
+//        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
@@ -124,8 +126,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-//        CmdMgr.GetHouseList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+//        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
     }
 
     @Override
@@ -254,16 +256,23 @@ public class MainActivityFragment extends Fragment
                     IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
                     prop.GetName();
                 }
-            } else if (command == CMD_GET_HOUSE_LIST || command == CMD_GET_BEHALF_HOUSE_LIST) {
+            } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
                     int nFetched = res.GetFetchedNumber();
                     if (nFetched > 0) {
-                        ArrayList<Object> HouseIDs = res.GetList();
-                        for (int n = 0; n < HouseIDs.size(); n++) {
-                            Integer id = (Integer)HouseIDs.get(n);
-                            Log.d(TAG, "house(" + n + ") id:" + id + "\n");
+                        ArrayList<Object> HouseList = res.GetList();
+                        for (int n = 0; n < HouseList.size(); n ++) {
+                            IApiResults.IHouseDigest house = (IApiResults.IHouseDigest)HouseList.get(n);
+                            String houseProp = house.GetProperty();
+                            String housePropAddr = house.GetPropertyAddr();
+                            ArrayList<Object> tags = ((IApiResults.IResultList)house).GetList();
+                            for (int m = 0; m < tags.size(); m++) {
+                                IApiResults.IHouseTag tag = (IApiResults.IHouseTag)tags.get(m);
+                                int tagId = tag.GetTagId();
+                                String tagName = tag.GetName();
+                            }
                         }
                     }
             } else if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
