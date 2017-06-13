@@ -4,8 +4,8 @@
 ###1. Get house info
 	[Security]	public/private
 	[Request]
-  		* GET /v1/house/:id?p=1
-	  		* p					bool	// if get private info. 1: get; 0: not get
+  		* GET /v1/house/:id?be=1
+	  		* be				bool	// if is for back end using, 1 -- back end, 2 -- front end
 	[Response]
 		* SUCCESS:200 
 			* Id    			int		// house id

@@ -612,9 +612,9 @@ func (this *HouseController) GetHouseInfo() {
 	}
 	version := this.GetString("ver")
 	hid, _ := this.GetInt64(":id")
-	pri, _ := this.GetInt("p")
+	be, _ := this.GetBool("be")
 
-	beego.Debug(FN, "ver:", version, ", hid:", hid, ", private:", pri, ", login user:", uid)
+	beego.Debug(FN, "ver:", version, ", hid:", hid, ", back end:", be, ", login user:", uid)
 	// if 0 == pri {
 	// 	uid = -1
 	// }
@@ -622,7 +622,7 @@ func (this *HouseController) GetHouseInfo() {
 	/*
 	 *	Processing
 	 */
-	err, hif := models.GetHouseInfo(hid, uid)
+	err, hif := models.GetHouseInfo(hid, uid, be)
 	if nil == err {
 		result.HouseInfo = hif
 		beego.Debug(FN, fmt.Sprintf("%+v", result.HouseInfo))

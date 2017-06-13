@@ -266,105 +266,192 @@ func Test_GetHouseInfo(t *testing.T) {
 
 	xitem := []int64{-1, 0, 100000000}
 	xdesc := []string{"< 0", "= 0", "does not exist"}
+	back_end := []bool{true, false}
+	for _, v1 := range back_end {
+		for k, v := range xitem {
+			seq++
+			t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: house(%d) %s, back_end(%t)", seq, v, xdesc[k], v1))
+			if e, _ := GetHouseInfo(v, -1, v1); e == nil {
+				t.Error("Failed, err: ", e)
+				return
+			}
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: house(4) is not published, can not found by front-end", seq))
+	if e, _ := GetHouseInfo(4, 5, false); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Testing: house(4) is not published, can be found from back-end", seq))
+	if e, _ := GetHouseInfo(4, 5, true); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// no matter which user is, only public info could be fetched for front-end
+	xitem = []int64{-1, 0, 2, 9, 6, 5}
+	xdesc = []string{"not login", "is SYSTEM", "is regular user", "is landlord", "is house agency", "is administrator"}
 	for k, v := range xitem {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Invalid Arguments: house(%d) %s", seq, v, xdesc[k]))
-		if e, _ := GetHouseInfo(v, -1); e == nil {
+		t.Log(fmt.Sprintf("<Case %d> user(%d) %s, front end", seq, v, xdesc[k]))
+		e, hd := GetHouseInfo(2, v, false)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log(fmt.Sprintf("house: %+v", hd))
+		if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal ||
+			hd.FloorThis > hd.FloorTotal+3 || len(hd.BuyDate) > 0 {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis, ", buy date:", hd.BuyDate)
+			return
+		}
+	}
+
+	// fetching house info from back-end, permission denied
+	xitem = []int64{-1, 0, 100000000, 2, 11}
+	xdesc = []string{"not login", "is SYSTEM", "not exist", "is a regular user", "is an agency, but not for this house"}
+	for k, v := range xitem {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s, -- back end --", seq, v, xdesc[k]))
+		e, _ := GetHouseInfo(13, v, true)
+		if nil == e {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "user not login, only public info could be retrieved")
-	e, hd := GetHouseInfo(2, -1)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal || hd.FloorThis > hd.FloorTotal+3 {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "login user do not have right to access the private info")
-	e, hd = GetHouseInfo(2, 2)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal || hd.FloorThis > hd.FloorTotal+3 {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
+	// fetching house info from back-end, permission granted
+	xitem = []int64{9, 6, 11, 5}
+	xdesc = []string{"landlord", "is house agency", "an agency, although not for this house, but house is public", "is an administrator"}
+	for k, v := range xitem {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) %s, house published -- back end --", seq, v, xdesc[k]))
+		e, hd := GetHouseInfo(2, v, true)
+		if nil != e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log(fmt.Sprintf("house: %+v", hd))
+		if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis > hd.FloorTotal || 0 == len(hd.BuyDate) {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis, ", buy date:", hd.BuyDate)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "landlord fetch the private info")
-	e, hd = GetHouseInfo(2, 9)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "House agency fetch the private info")
-	e, hd = GetHouseInfo(4, 6)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
+	xitem = []int64{4, 6, 5}
+	xdesc = []string{"landlord", "is house agency", "is an administrator"}
+	for k, v := range xitem {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) %s, house not published  -- back end --", seq, v, xdesc[k]))
+		e, hd := GetHouseInfo(4, v, true)
+		if nil != e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log(fmt.Sprintf("house: %+v", hd))
+		if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis > hd.FloorTotal || 0 == len(hd.BuyDate) {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis, ", buy date:", hd.BuyDate)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "administrator fetch the private info")
-	e, hd = GetHouseInfo(2, 5)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
-	}
+	return
+	/*
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "user not login, only public info could be retrieved")
+		e, hd := GetHouseInfo(2, -1)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal || hd.FloorThis > hd.FloorTotal+3 {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "house is opened for other agency fetching the private info")
-	e, hd = GetHouseInfo(2, 11)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
-	}
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "login user do not have right to access the private info")
+		e, hd = GetHouseInfo(2, 2)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal || hd.FloorThis > hd.FloorTotal+3 {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "house is not open, other agency can not fetch the private info")
-	e, hd = GetHouseInfo(4, 11)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("house:", fmt.Sprintf("%+v", hd))
-	if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal || hd.FloorThis > hd.FloorTotal+3 {
-		t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
-		return
-	}
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "landlord fetch the private info")
+		e, hd = GetHouseInfo(2, 9)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
+
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "House agency fetch the private info")
+		e, hd = GetHouseInfo(4, 6)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
+
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "administrator fetch the private info")
+		e, hd = GetHouseInfo(2, 5)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
+
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "house is opened for other agency fetching the private info")
+		e, hd = GetHouseInfo(2, 11)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if 0 == len(hd.BuildingNo) || 0 == len(hd.HouseNo) || hd.FloorThis >= hd.FloorTotal {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
+
+		seq++
+		t.Log(fmt.Sprintf("<Case %d>", seq), "house is not open, other agency can not fetch the private info")
+		e, hd = GetHouseInfo(4, 11)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("house:", fmt.Sprintf("%+v", hd))
+		if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal || hd.FloorThis > hd.FloorTotal+3 {
+			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis)
+			return
+		}
+	*/
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -545,7 +632,7 @@ func Test_ModifyHouseInfo(t *testing.T) {
 	for k, v := range lgusrs {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> %s (%d)", seq, usrnames[k], v), "modify the house info")
-		e, hd := GetHouseInfo(2, v) // get current info
+		e, hd := GetHouseInfo(2, v, true) // get current info
 		if e != nil {
 			t.Error("Failed, err: ", e)
 			return
@@ -571,7 +658,7 @@ func Test_ModifyHouseInfo(t *testing.T) {
 			t.Error("Failed, err: ", e)
 			return
 		}
-		e, hd = GetHouseInfo(2, v) // get again
+		e, hd = GetHouseInfo(2, v, true) // get again
 		if e != nil {
 			t.Error("Failed, err: ", e)
 			return

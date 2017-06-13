@@ -250,13 +250,16 @@ func GetHouseDigestInfo(hid int64) (err error, hd commdef.HouseDigest) {
 *	Arguments:
 *		hid - house id
 *		uid	- login user id
+*		be 	- back end
 *	Returns
 *		err - error info
 *		hif - house info
+*	Comment: anyone, even not login, could fetch the published house public info for front-end using,
+*			 only the right person could feth the complete house info for back-end using
 **/
-func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
+func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 	FN := "[GetHouseInfo] "
-	beego.Trace(FN, "house:", hid, ", login user:", uid)
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", back end:", be)
 
 	defer func() {
 		if nil != err {
@@ -264,25 +267,26 @@ func GetHouseInfo(hid, uid int64) (err error, hif commdef.HouseInfo) {
 		}
 	}()
 
-	err, house := getHouse(hid)
+	/* Argument checking */
+	house := TblHouse{}
+	if be { // back-end using, check house in whole house pool
+		err, house = getHouse(hid)
+	} else { // front-end using, just check the house published
+		err, house = getHousePublished(hid)
+	}
 	if nil != err {
 		return
 	}
 
 	/* Permission Checking */
 	// House owner, agency and administrator could see the private info
+	// front-end using, could just retrieve the private info, no matter what kind user is, and whatever user login or not
+	// back-end using, user can see the private info, depend on what kind of user is and if he logined
 	bPriv := false
-	if errT := canAccessHouse(uid, hid); nil != errT {
-		if se, ok := errT.(commdef.SwError); ok {
-			if commdef.ERR_COMMON_PERMISSION != se.ErrCode {
-				err = errT
-				return
-			}
-		} else {
-			err = errT
+	if be {
+		if err = canAccessHouse(uid, hid); nil != err {
 			return
 		}
-	} else {
 		bPriv = true
 	}
 	beego.Debug(FN, "bPriv:", bPriv)
@@ -1465,6 +1469,27 @@ func checkHouseInfo(hif *commdef.HouseInfo, bAdd bool) (err error) {
 	return
 }
 
+func getHousePublished(hid int64) (err error, h TblHouse) {
+	if hid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	ht := TblHouse{}
+	errT := o.Raw(`SELECT * FROM v_house_published WHERE id=?`, hid).QueryRow(&ht)
+	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("hid:%d, err: %s", hid, errT.Error())}
+		return
+	} else if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	h = ht
+	return
+}
+
 func getHouse(hid int64) (err error, h TblHouse) {
 	if hid <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
@@ -1475,7 +1500,7 @@ func getHouse(hid int64) (err error, h TblHouse) {
 	hT := TblHouse{Id: hid}
 	errT := o.Read(&hT)
 	if errT == orm.ErrNoRows || errT == orm.ErrMissPK {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("hid:%d", hid)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("hid:%d, err: %s", hid, errT.Error())}
 		return
 	} else if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
