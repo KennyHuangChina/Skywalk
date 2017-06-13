@@ -1156,7 +1156,7 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 	beego.Warn(FN, "TODO: need to check the real submit_time, UTC or Local?")
 
 	// calculate the total house number
-	sql := fmt.Sprintf("SELECT Id FROM tbl_house WHERE publish_time IS NOT NULL AND publish_time>='%s'", t0)
+	sql := fmt.Sprintf("SELECT Id FROM v_house_published WHERE publish_time>='%s'", t0)
 	beego.Debug(FN, "sql:", sql)
 
 	o := orm.NewOrm()
