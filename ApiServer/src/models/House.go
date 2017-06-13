@@ -1064,10 +1064,10 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	}()
 
 	// calculate the total house number
-	sql_1st := `SELECT min(r.id) AS id FROM tbl_rental AS r, tbl_house AS h 
-					WHERE r.active=true AND r.house_id=h.id AND h.publish_time IS NOT NULL GROUP BY house_id`
-	sql_now := `SELECT max(r.id) AS id FROM tbl_rental AS r, tbl_house AS h 
-					WHERE r.active=true AND r.house_id=h.id AND h.publish_time IS NOT NULL GROUP BY house_id`
+	sql_1st := `SELECT min(r.id) AS id FROM tbl_rental AS r, v_house_published AS h 
+					WHERE r.active=true AND r.house_id=h.id GROUP BY house_id`
+	sql_now := `SELECT max(r.id) AS id FROM tbl_rental AS r, v_house_published AS h 
+					WHERE r.active=true AND r.house_id=h.id GROUP BY house_id`
 
 	sql_t0 := fmt.Sprintf(`SELECT t0.id, house_id, rental_bid 
 								FROM tbl_rental AS rental LEFT JOIN (%s) AS t0 
@@ -1222,7 +1222,7 @@ func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int
 	o := orm.NewOrm()
 
 	// calculate the total house number
-	sql_cnt := `SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, tbl_house as h 
+	sql_cnt := `SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, v_house_published as h 
 						WHERE r.house=h.id AND h.publish_time IS NOT NULL`
 	var Count int64 = 0
 	errT := o.Raw(sql_cnt).QueryRow(&Count)
@@ -1246,7 +1246,7 @@ func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int
 
 	// fetching
 	beego.Warn(FN, "TODO: all() will be restricted by limit, and return max 1000 records")
-	sql := `SELECT r.house AS id FROM tbl_house_recommend AS r, tbl_house as h 
+	sql := `SELECT r.house AS id FROM tbl_house_recommend AS r, v_house_published as h 
 					WHERE r.house=h.id AND h.publish_time IS NOT NULL ORDER BY r.when DESC LIMIT ?, ? `
 	idlst := []int64{}
 	numb, errT := o.Raw(sql, begin, fetchCnt).QueryRows(&idlst)

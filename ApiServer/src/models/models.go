@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 	// "os"
+	"strings"
 	"time"
 )
 
@@ -564,6 +565,28 @@ func init() {
 		if !o.QueryTable("tbl_facilitys").Filter("name", k).Exist() {
 			kv := TblFacilitys{Type: v, Name: k}
 			o.Insert(&kv)
+		}
+	}
+
+	// Create view for published house
+	// _, errT := o.Raw(`SHOW TABLES LIKE 'v_house_published'`).Exec()	// doesn't work
+	_, errT := o.Raw(`SELECT id FROM v_house_published LIMIT 0, 1`).Exec()
+	// beego.Debug("err:", errT)
+	if nil != errT {
+		beego.Warn("err:", errT.Error(), ", Create now")
+		if strings.Contains(errT.Error(), "Error 1146") {
+			// beego.Warn("View does not exist")
+			o.Raw(`CREATE VIEW v_house_published AS SELECT * FROM tbl_house WHERE publish_time IS NOT NULL`).Exec()
+		}
+	}
+
+	// Create view for unpublished house
+	_, errT = o.Raw(`SELECT id FROM v_house_unpublished LIMIT 0, 1`).Exec()
+	if nil != errT {
+		beego.Warn("err:", errT.Error(), ", Create now")
+		if strings.Contains(errT.Error(), "Error 1146") {
+			// beego.Warn("View does not exist")
+			o.Raw(`CREATE VIEW v_house_unpublished AS SELECT * FROM tbl_house WHERE publish_time IS NULL`).Exec()
 		}
 	}
 }
