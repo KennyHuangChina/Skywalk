@@ -85,7 +85,7 @@
                 android:textSize="14sp"/>
 
             <TextView
-                android:text="预约看房人数"
+                android:text="预约看房"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -94,9 +94,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include layout="@layout/seperator_horizontal"/>
+    <!--<include layout="@layout/seperator_horizontal"/>-->
 
-    <include layout="@layout/layout_fangyuanguanli_progress1"/>
+    <!--<include layout="@layout/layout_fangyuanguanli_progress1"/>-->
 
     <include layout="@layout/seperator_horizontal"/>
 

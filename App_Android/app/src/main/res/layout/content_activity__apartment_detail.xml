@@ -29,12 +29,25 @@
             android:paddingLeft="11dp"
             android:paddingRight="11dp">
 
-            <TextView
-                android:text="紫金华府175栋1505室"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:id="@+id/tv_apartment_name" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="紫金华府175栋1505室"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:id="@+id/tv_apartment_name" />
+
+                <TextView
+                    android:text="待租"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorButtonTextHighlight"
+                    android:id="@+id/tv_apartment_status" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

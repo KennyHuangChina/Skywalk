@@ -218,7 +218,7 @@ public class fragmentHomePage extends Fragment {
                     houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
                     houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
                     houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                    houseDigest.Acreage = houseDigestRes.GetAcreage();
+                    houseDigest.Acreage = houseDigestRes.GetAcreage() / 100;
                     houseDigest.Rental = houseDigestRes.GetRental();
                     houseDigest.Pricing = houseDigestRes.GetPricing();
                     houseDigest.CoverImage = houseDigestRes.GetCoverImage();
