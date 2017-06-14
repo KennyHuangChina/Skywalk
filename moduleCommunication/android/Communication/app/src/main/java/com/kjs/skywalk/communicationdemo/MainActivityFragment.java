@@ -106,8 +106,8 @@ public class MainActivityFragment extends Fragment
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
-//        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
-        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
+//        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetNewEventCount();

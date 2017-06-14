@@ -42,7 +42,7 @@ public class CommunicationInterface {
 
         /* House */
         int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
-        int GetHouseInfo(int houseId, boolean bPrivtInfo);                      // CMD_GET_HOUSE_INFO,              IApiResults.IGetHouseInfo
+        int GetHouseInfo(int houseId, boolean bBackend);                        // CMD_GET_HOUSE_INFO,              IApiResults.IGetHouseInfo
         int CommitHouseByOwner(HouseInfo houseInfo, int agency);                // CMD_COMMIT_HOUSE_BY_OWNER,       IApiResults.IAddRes
         int AmendHouse(HouseInfo houseInfo);                                    // CMD_AMEND_HOUSE,                 IApiResults.ICommon
         int RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
