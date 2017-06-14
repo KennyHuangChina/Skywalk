@@ -14,9 +14,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -274,5 +277,13 @@ public class commonFun {
         textview.setTextSize(11);       // setTextSize --- sp   getTextSize --- pixel
         textview.setGravity(Gravity.CENTER);
         textview.setPadding(30, 15, 30, 15);        // must set padding after setBackgroundResource
+    }
+
+    public static void displayImageByURL(Context context, String URL, ImageView view) {
+        if(context == null || URL == null || URL.isEmpty() || view == null) {
+            return;
+        }
+
+        Glide.with(context).load(URL).into(view);
     }
 }
