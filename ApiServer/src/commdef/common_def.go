@@ -248,7 +248,7 @@ const (
 
 // for PIC_TYPE_USER
 const (
-	PIC_OWNER_ID           = 1 // house owern's ID card, including ID card and passport. only house owner and house agent could access
+	PIC_OWNER_IDCard       = 1 // house owern's ID card, including ID card and passport. only house owner and house agent could access
 	PIC_USER_HEAD_PORTRAIT = 2 // user's head portrait, anyone could access it
 )
 
