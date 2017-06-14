@@ -142,11 +142,9 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int GetHouseInfo(int houseId, boolean bPrivtInfo) {
-        CommunicationBase op = new CmdGetHouseInfo(mContext);
+    public int GetHouseInfo(int houseId, boolean bBackend) {
+        CommunicationBase op = new CmdGetHouseInfo(mContext, houseId, bBackend);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(houseId));
-        pMap.put(CommunicationParameterKey.CPK_PRIVATE_INFO, String.valueOf(bPrivtInfo));
         return execute(op, pMap);
     }
 

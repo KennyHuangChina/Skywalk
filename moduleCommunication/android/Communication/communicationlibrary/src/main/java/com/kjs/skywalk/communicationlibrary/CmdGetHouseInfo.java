@@ -1,6 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -12,41 +13,30 @@ import java.util.HashMap;
 
 class CmdGetHouseInfo extends CommunicationBase {
     private int     mHouseId;           // house id
-    private boolean mGetPrivateInfo;    // if need to get the private info of house
+    private boolean mbBackend;          // if fetch real, complete house info for back-end using
 
-    CmdGetHouseInfo(Context context) {
+    CmdGetHouseInfo(Context context, int house_id, boolean bBackEnd) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO);
         mMethodType = "GET";
+        mHouseId    = house_id;
+        mbBackend   = bBackEnd;
     }
 
     @Override
     public String getRequestURL() {
         mCommandURL = "/v1/house/" + mHouseId;
-        if (mGetPrivateInfo) {
-            mCommandURL += "?p=1";
+        if (mbBackend) {
+            mCommandURL += "?be=1";
         }
         return mCommandURL;
     }
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_PRIVATE_INFO)) {
+        if (mHouseId <= 0) {
+            Log.e(TAG, "mHouseId: " + mHouseId);
             return false;
         }
-
-        String hid = map.get(CommunicationParameterKey.CPK_INDEX);
-        if (null == hid || hid.isEmpty()) {
-            return false;
-        }
-        try {
-            mHouseId = Integer.parseInt(hid);
-            mGetPrivateInfo = Boolean.parseBoolean(map.get(CommunicationParameterKey.CPK_PRIVATE_INFO));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
         return true;
     }
 
