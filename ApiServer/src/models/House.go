@@ -184,14 +184,15 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 /**
 *	Get house information by id
 *	Arguments:
-*		id - house id
+*		id 	- house id
+*		uid	- login user
 *	Returns
 *		err - error info
 *		hd 	- house digest info
  */
-func GetHouseDigestInfo(hid int64) (err error, hd commdef.HouseDigest) {
+func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 	FN := "[GetHouseDigestInfo] "
-	beego.Trace(FN, "hid:", hid)
+	beego.Trace(FN, "house:", hid, ", login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -199,14 +200,21 @@ func GetHouseDigestInfo(hid int64) (err error, hd commdef.HouseDigest) {
 		}
 	}()
 
+	/* Permission Checking */
+	// if user not login, it can only access the houses published
+	table_name := "tbl_house"
+	if uid <= 0 {
+		table_name = "v_house_published"
+	}
+
 	o := orm.NewOrm()
 
 	// House info
 	var dig commdef.HouseDigest
 	sql := fmt.Sprintf(`SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, 
 								livingrooms, bathrooms, acreage, cover_img 
-							FROM tbl_house AS house, tbl_property AS prop 
-							WHERE house.property_id=prop.id AND house.id=%d`, hid)
+							FROM %s AS house, tbl_property AS prop 
+							WHERE house.property_id=prop.id AND house.id=%d`, table_name, hid)
 	errTmp := o.Raw(sql).QueryRow(&dig)
 	if nil != errTmp {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}

@@ -502,10 +502,10 @@ func (this *HouseController) GetHouseDigestList() {
 	/*
 	 *	Extract agreements
 	 */
-	// uid, err := getLoginUser(this.Controller)
-	// if nil != err {
-	// 	return
-	// }
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		// return
+	}
 
 	tp, _ := this.GetInt("type")
 	begin, _ := this.GetInt64("bgn")
@@ -524,7 +524,7 @@ func (this *HouseController) GetHouseDigestList() {
 		if fetched > 0 {
 			for _, v := range ids {
 				hdi := commdef.HouseDigest{}
-				err, hdi = models.GetHouseDigestInfo(v)
+				err, hdi = models.GetHouseDigestInfo(v, uid)
 				if nil != err {
 					return
 				}
@@ -561,10 +561,10 @@ func (this *HouseController) GetHouseDigestInfo() {
 	/*
 	 *	Extract agreements
 	 */
-	// uid, err := getLoginUser(this.Controller)
-	// if nil != err {
-	// 	return
-	// }
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		// return
+	}
 	version := this.GetString("ver")
 	hid, _ := this.GetInt64(":id")
 	// sid := this.GetString("sid")
@@ -574,7 +574,7 @@ func (this *HouseController) GetHouseDigestInfo() {
 	/*
 	 *	Processing
 	 */
-	err, hd := models.GetHouseDigestInfo(hid)
+	err, hd := models.GetHouseDigestInfo(hid, uid)
 	if nil == err {
 		result.HouseDigest = hd
 	}
