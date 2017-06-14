@@ -23,8 +23,9 @@ import java.util.ArrayList;
 public class homepage_apartment_listitem_adapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<ClassDefine.HouseDigest> mList;
-
-    ApartmentListCallback mCallback = null;
+    private String mTitle;
+    private String mTotalCount;
+    private ApartmentListCallback mCallback = null;
 
     public interface ApartmentListCallback {
         void onItemClicked(ClassDefine.HouseDigest houseDigest);
@@ -33,22 +34,26 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         this.mCallback = callback;
     }
 
-    public homepage_apartment_listitem_adapter(Context context) {
+    public homepage_apartment_listitem_adapter(Context context, String title) {
         super();
         mContext = context;
+        mTitle = title;
+        mTotalCount = String.format("查看全部 %d 套", 0);
+        this.notifyDataSetChanged();
     }
 
-    public void updateList(ArrayList<ClassDefine.HouseDigest> list) {
+    public void updateList(ArrayList<ClassDefine.HouseDigest> list, int totalCount) {
         mList = list;
+        mTotalCount = String.format("查看全部 %d 套", totalCount);
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
         if (mList != null)
-            return mList.size();
+            return 1;
 
-        return 3;
+        return 0;
     }
 
     @Override
@@ -115,6 +120,9 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
+
+        holder.tvGroupTitle.setText(mTitle);
+        holder.tvGroupCount.setText(mTotalCount);
 
         if (mList != null) {
             final ClassDefine.HouseDigest houseDigest1 = mList.get(0);

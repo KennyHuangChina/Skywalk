@@ -137,22 +137,47 @@
                 android:onClick="onClickResponse" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_seperator"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/ll_entrance"
-            android:layout_width="match_parent"
-            android:layout_height="7dp"
-            android:contentDescription=""
-            android:background="#E5E5E5" />
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:contentDescription=""
+                android:background="#E5E5E5" />
+            <!--238px-->
+            <com.kjs.skywalk.control.ListView_NoScroll
+                android:id="@+id/lv_recommend"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:contentDescription=""
+                android:background="#E5E5E5" />
+            <com.kjs.skywalk.control.ListView_NoScroll
+                android:id="@+id/lv_deducted"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:contentDescription=""
+                android:background="#E5E5E5" />
+            <com.kjs.skywalk.control.ListView_NoScroll
+                android:id="@+id/lv_new"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <!--238px-->
-        <com.kjs.skywalk.control.ListView_NoScroll
-            android:id="@+id/lv_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_below="@+id/iv_seperator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        </LinearLayout>
 
     </RelativeLayout>
 
