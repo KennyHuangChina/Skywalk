@@ -229,14 +229,23 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 		case commdef.PIC_SIZE_SMALL:
 			if commdef.PIC_SIZE_ALL == size || commdef.PIC_SIZE_SMALL == size {
 				url_s = v.Url
+				if len(url_s) > 0 {
+					url_s = GetPicBaseDir() + url_s
+				}
 			}
 		case commdef.PIC_SIZE_MODERATE:
 			if commdef.PIC_SIZE_ALL == size || commdef.PIC_SIZE_MODERATE == size {
 				url_m = v.Url
+				if len(url_m) > 0 {
+					url_m = GetPicBaseDir() + url_m
+				}
 			}
 		case commdef.PIC_SIZE_LARGE:
 			if commdef.PIC_SIZE_ALL == size || commdef.PIC_SIZE_LARGE == size {
 				url_l = v.Url
+				if len(url_l) > 0 {
+					url_l = GetPicBaseDir() + url_l
+				}
 			}
 		}
 	}

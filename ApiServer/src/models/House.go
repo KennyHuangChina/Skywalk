@@ -223,12 +223,8 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 
 	// cover image
 	_, url_s, url_m, _ := GetPicUrl(dig.CoverImg, 0, commdef.PIC_SIZE_ALL)
-	if len(url_s) > 0 {
-		dig.CovImgUrlS = GetPicBaseDir() + url_s
-	}
-	if len(url_m) > 0 {
-		dig.CovImgUrlM = GetPicBaseDir() + url_m
-	}
+	dig.CovImgUrlS = url_s
+	dig.CovImgUrlM = url_m
 
 	// rental price info
 	err, rs := getHouseRental(hid)
