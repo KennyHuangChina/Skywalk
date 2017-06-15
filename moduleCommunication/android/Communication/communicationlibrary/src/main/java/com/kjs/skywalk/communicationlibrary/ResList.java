@@ -65,7 +65,7 @@ class ResList implements InternalDefines.IListInner {
         return (mTotal > 0) ? mTotal : (mForceGetList ? mList.size() : 0);
     }
     protected int GetFetchedNumber() {
-        return (mFetched > 0) ? mFetched : (mForceGetList ? mList.size() : 0);
+        return mForceGetList ? mList.size() : mFetched;
     }
     protected ArrayList<Object> GetList() {
         return mList;
