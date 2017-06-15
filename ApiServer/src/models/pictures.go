@@ -918,9 +918,9 @@ func getHousePicSubtypes(h TblHouse, uid int64, subType int) (stl []int) {
 }
 
 type PicResize struct {
-	w  int
-	h  int
-	wm bool
+	w  int  // picture width
+	h  int  // picture height
+	wm bool // if overlay watermark
 }
 
 const (

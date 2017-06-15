@@ -65,7 +65,7 @@
 	[Response]
 		* SUCCESS:200 
 			* Total    		int		// total number
-			* Count			int		// how many items fetched
+			* Count			int		// how many items fetched. -1 means just fetch the total number
 			* HouseDigests	array	// house public brief info list
 				* house public brief info
 		* ERR: 4XX,5XX

@@ -521,17 +521,21 @@ func (this *HouseController) GetHouseDigestList() {
 	beego.Debug(FN, "ids:", ids)
 	if nil == err {
 		result.Total = total
-		if fetched > 0 {
-			for _, v := range ids {
-				hdi := commdef.HouseDigest{}
-				err, hdi = models.GetHouseDigestInfo(v, uid)
-				if nil != err {
-					return
+		if 0 == count {
+			result.Count = -1
+		} else {
+			if fetched > 0 {
+				for _, v := range ids {
+					hdi := commdef.HouseDigest{}
+					err, hdi = models.GetHouseDigestInfo(v, uid)
+					if nil != err {
+						return
+					}
+					result.HouseDigests = append(result.HouseDigests, hdi)
 				}
-				result.HouseDigests = append(result.HouseDigests, hdi)
 			}
+			result.Count = int64(len(result.HouseDigests))
 		}
-		result.Count = int64(len(result.HouseDigests))
 	}
 }
 
