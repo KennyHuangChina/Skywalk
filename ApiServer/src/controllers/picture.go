@@ -158,11 +158,12 @@ func (this *PictureController) AddPic() {
 	// uid = 4
 
 	hid, _ := this.GetInt64("house")
-	pt, _ := this.GetInt("type")
+	picType, _ := this.GetInt("type")
+	xID, _ := this.GetInt64("rid")
 	desc := this.GetString("desc")
 	tmp, _ := base64.URLEncoding.DecodeString(desc)
 	desc = string(tmp)
-	beego.Debug(FN, "house:", hid, ", type:", pt, ", desc:", desc)
+	beego.Debug(FN, "house:", hid, ", type:", picType, ", desc:", desc)
 
 	// picture
 	file, fHead, errT := this.GetFile("file") // pic")
@@ -198,7 +199,7 @@ func (this *PictureController) AddPic() {
 	/*
 	 *	Processing
 	 */
-	err, id := models.AddPicture(hid, uid, pt, desc, picMd5, picFileName, picBaseDir)
+	err, id := models.AddPicture(hid, uid, xID, picType, desc, picMd5, picFileName, picBaseDir)
 	if nil == err {
 		result.Id = id
 	} else {

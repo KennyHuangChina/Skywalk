@@ -22,8 +22,9 @@ import (
 *	add new picture
 *	Arguments:
 *		hid 	- house id
-*		uid 	- login user id
+*		uid 	- login user
 *		pt		- picture type
+*		XId		- reference id, depend what type it is
 *		pfn		- picture file name, relative path against picture base dir
 *		pbd		- picture base dir
 *		desc	- picture description
@@ -32,7 +33,7 @@ import (
 *		nid - new picture id
 *	Comments:
 **/
-func AddPicture(hid, uid int64, pt int, desc, md5, pfn, pbd string) (err error, nid int64) {
+func AddPicture(hid, uid, XId int64, pt int, desc, md5, pfn, pbd string) (err error, nid int64) {
 	FN := "[AddPicture] "
 	beego.Trace(FN, "house:", hid, ", user:", uid, ", picture type:", pt, ", desc:", desc, ", md5:", md5, ", pic file:", pfn, ", base dir:", pbd)
 
@@ -94,7 +95,7 @@ func AddPicture(hid, uid int64, pt int, desc, md5, pfn, pbd string) (err error, 
 	case commdef.PIC_TYPE_HOUSE:
 		return addPicHouse(hid, minorType, desc, md5, pfn, pbd)
 	case commdef.PIC_TYPE_USER:
-		return addPicUser(uid, minorType, desc, md5, pfn, pbd)
+		return addPicUser(XId, minorType, desc, md5, pfn, pbd)
 	case commdef.PIC_TYPE_RENTAL:
 	default:
 	}
@@ -435,87 +436,14 @@ func addPicUser(uid int64, minorType int, desc, md5, pfn, pbd string) (err error
 	FN := "[addPicUser] "
 	beego.Debug(FN, "user:", uid, ", minor type:", minorType, ", desc:", desc, ", md5:", md5, ", pic file:", pfn, ", base dir:", pbd)
 
-	defer func() {
-		if nil != err {
-			beego.Error(FN, err)
-			nid = 0
-		}
-	}()
-
-	pos := strings.LastIndex(pfn, ".")
-	if pos < 1 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("picture file name:%s", pfn)}
-		return
+	switch minorType {
+	case commdef.PIC_USER_HEAD_PORTRAIT:
+		err, nid = addPic(uid, commdef.PIC_TYPE_USER, minorType, desc, md5, pfn, pbd, UserPortrait)
+	case commdef.PIC_OWNER_IDCard:
+		fallthrough
+	default:
+		err, nid = addPic(uid, commdef.PIC_TYPE_USER, minorType, desc, md5, pfn, pbd, CommonPicSL)
 	}
-	picName := pfn[:pos]
-	extName := pfn[pos:]
-	beego.Debug(FN, "pic:", picName, ", ext:", extName)
-
-	psn := ""
-
-	o := orm.NewOrm()
-
-	o.Begin()
-	defer func() {
-		if nil != err {
-			o.Rollback()
-			// delete the pictures created in this function
-			if len(psn) > 0 {
-				DelImageFile(pbd + psn)
-			}
-			nid = 0
-		} else {
-			o.Commit()
-		}
-	}()
-
-	/* picture major record */
-	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_USER, TypeMinor: minorType, RefId: uid, Desc: desc, Md5: md5}
-	id, errT := o.Insert(&newPic)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		return
-	}
-	nid = id
-	beego.Debug(FN, "new pic:", nid)
-
-	/* generate picture set, original and small size */
-	// Original picture
-	po := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_ORIGINAL, Url: pfn}
-	_, errT = o.Insert(&po)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create original picture, err:%s", errT.Error())}
-		return
-	}
-
-	src, err, dx, dy := loadImage(pbd + pfn)
-	beego.Debug(FN, "original pic:", dx, "x", dy)
-	if nil != err {
-		return
-	}
-
-	// small size
-	psn = picName + "_s.jpg" // + extName
-	sw, sh := 0, 0
-	if commdef.PIC_USER_HEAD_PORTRAIT == minorType {
-		sw, sh = getPortraitSize()
-	} else {
-		sw, sh = getSmallPicSize()
-	}
-	beego.Debug(FN, "small pic:", sw, "x", sh)
-	if dx > sw || dy > sh {
-		if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
-			return
-		}
-	} else { // original image is small than defined "small size", use original image directly
-		psn = pfn
-	}
-	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
-	if _, errT = o.Insert(&ps); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
-		return
-	}
-
 	return
 }
 
@@ -523,6 +451,14 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 	FN := "[addPicHouse] "
 	beego.Debug(FN, "house:", hid, ", minor type:", minorType, ", desc:", desc, ", md5:", md5, ", pic file:", pfn, ", base dir:", pbd)
 
+	err, nid = addPic(hid, commdef.PIC_TYPE_HOUSE, minorType, desc, md5, pfn, pbd, CommonPicAll)
+	return
+}
+
+func addPic(id int64, majorType, minorType int, desc, md5, pfn, pbd string, size map[string]PicResize) (err error, nid int64) {
+	FN := "[addPic] "
+	beego.Debug(FN, "ref id:", id, "type:(", majorType, ",", minorType, "), desc:", desc, ", md5:", md5, ", pic file:", pfn, ", base dir:", pbd)
+
 	defer func() {
 		if nil != err {
 			beego.Error(FN, err)
@@ -539,8 +475,10 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 	extName := pfn[pos:]
 	beego.Debug(FN, "pic:", picName, ", ext:", extName)
 
-	psn := ""
-	pln := ""
+	psn := "" // picture name for small size
+	pmn := "" // picture name for modrate size
+	pln := "" // picture name for large size
+	bsp, bmp, blp := false, false, false
 
 	o := orm.NewOrm()
 
@@ -549,10 +487,13 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 		if nil != err {
 			o.Rollback()
 			// delete the pictures created in this function
-			if len(psn) > 0 {
+			if len(psn) > 0 && bsp {
 				DelImageFile(pbd + psn)
 			}
-			if len(pln) > 0 {
+			if len(pmn) > 0 && bmp {
+				DelImageFile(pbd + pmn)
+			}
+			if len(pln) > 0 && blp {
 				DelImageFile(pbd + pln)
 			}
 			nid = 0
@@ -562,7 +503,7 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 	}()
 
 	// picture major record
-	newPic := TblPictures{TypeMajor: commdef.PIC_TYPE_HOUSE, TypeMinor: minorType, RefId: hid, Desc: desc, Md5: md5}
+	newPic := TblPictures{TypeMajor: majorType, TypeMinor: minorType, RefId: id, Desc: desc, Md5: md5}
 	id, errT := o.Insert(&newPic)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
@@ -571,9 +512,8 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 	nid = id
 	beego.Debug(FN, "new pic:", nid)
 
-	// watermark
-
-	// generate picture set, original, large size and small size
+	// generate picture set, original, large size, modrate size and small size
+	// original picture
 	po := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_ORIGINAL, Url: pfn}
 	_, errT = o.Insert(&po)
 	if nil != errT {
@@ -587,41 +527,75 @@ func addPicHouse(hid int64, minorType int, desc, md5, pfn, pbd string) (err erro
 		return
 	}
 
-	// small size
-	psn = picName + "_s.jpg" // + extName
-	sw, sh := getSmallPicSize()
-	beego.Debug(FN, "small pic:", sw, "x", sh)
-	if dx > sw || dy > sh {
-		if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
+	// Small size
+	if v, ok := size[PIC_SIZE_SMALL_STR]; ok {
+		beego.Debug(FN, PIC_SIZE_SMALL_STR)
+		psn = picName + "_s.jpg" // + extName
+		sw, sh := v.w, v.h
+		beego.Debug(FN, fmt.Sprintf("size: %d x %d", sw, sh))
+		if dx*dy > sw*sh {
+			if err = resizeImage(src, pbd+psn, sw, sh, 50, nil); nil != err {
+				return
+			}
+			bsp = true
+		} else { // original image is small than defined "small size", use original image
+			psn = pfn
+		}
+		ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
+		if _, errT = o.Insert(&ps); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
 			return
 		}
-	} else { // original image is small than defined "small size", use original image
-		psn = pfn
 	}
-	ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_SMALL, Url: psn}
-	if _, errT = o.Insert(&ps); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create small picture, err:%s", errT.Error())}
-		return
+
+	// Modrate size
+	if v, ok := size[PIC_SIZE_MODERATE_STR]; ok {
+		beego.Debug(FN, PIC_SIZE_MODERATE_STR)
+		pmn = picName + "_m.jpg" // + extName
+		mw, mh := v.w, v.h
+		beego.Debug(FN, fmt.Sprintf("size: %d x %d", mw, mh))
+		if dx*dy > mw*mh {
+			if err = resizeImage(src, pbd+pmn, mw, mh, 80, nil); nil != err {
+				return
+			}
+			bmp = true
+		} else { // original image is small than defined "modrate size", use original image
+			pmn = pfn
+		}
+		ps := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_MODERATE, Url: pmn}
+		if _, errT = o.Insert(&ps); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create modrate picture, err:%s", errT.Error())}
+			return
+		}
 	}
 
 	// Large size
-	pln = picName + "_l.jpg" // + extName
-	lw, lh := getLargePicSize()
-	beego.Debug(FN, "large size:", lw, "x", lh)
-	if dx < lw && dy < lh { // original image is small than defined "large size", make a copy
-		lw = dx
-		lh = dy
-		beego.Debug(FN, "large size:", lw, "x", lh)
-	}
-	if err = resizeImage(src, pbd+pln, lw, lh, 100, watermarking); nil != err {
-		return
-	}
+	if v, ok := size[PIC_SIZE_LARGE_STR]; ok {
+		beego.Debug(FN, PIC_SIZE_LARGE_STR)
+		pln = picName + "_l.jpg" // + extName
+		lw, lh := v.w, v.h
+		beego.Debug(FN, fmt.Sprintf("size: %d x %d", lw, lh))
+		if dx*dy < lw*lh { // original image is small than defined "large size", make a copy
+			lw = dx
+			lh = dy
+			beego.Debug(FN, "large size:", lw, "x", lh)
+		}
+		if v.wm {
+			err = resizeImage(src, pbd+pln, lw, lh, 100, watermarking)
+		} else {
+			err = resizeImage(src, pbd+pln, lw, lh, 100, nil)
+		}
+		if nil != err {
+			return
+		}
+		blp = true
 
-	pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: pln}
-	_, errT = o.Insert(&pl)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create large picture, err:%s", errT.Error())}
-		return
+		pl := TblPicSet{PicId: nid, Size: commdef.PIC_SIZE_LARGE, Url: pln}
+		_, errT = o.Insert(&pl)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to create large picture, err:%s", errT.Error())}
+			return
+		}
 	}
 
 	// Notice: enable the following code to test the image deleting in case of error
@@ -924,19 +898,38 @@ type PicResize struct {
 }
 
 const (
-	PIC_SIZE_SMALL    = "small"
-	PIC_SIZE_MODERATE = "moderate"
-	PIC_SIZE_LARGE    = "large"
+	PIC_SIZE_SMALL_STR    = "small"
+	PIC_SIZE_MODERATE_STR = "moderate"
+	PIC_SIZE_LARGE_STR    = "large"
 )
 
-var HousePic map[string]PicResize
+var CommonPicAll map[string]PicResize
+var CommonPicSL map[string]PicResize
+var UserPortrait map[string]PicResize
 
 func init() {
-	HousePic = make(map[string]PicResize)
+
+	// common picture size, all sizes
+	CommonPicAll = make(map[string]PicResize)
 	w, h := getSmallPicSize()
-	HousePic[PIC_SIZE_SMALL] = PicResize{w, h, false}
+	CommonPicAll[PIC_SIZE_SMALL_STR] = PicResize{w, h, false}
 	w, h = getModeratePicSize()
-	HousePic[PIC_SIZE_MODERATE] = PicResize{w, h, false}
+	CommonPicAll[PIC_SIZE_MODERATE_STR] = PicResize{w, h, false}
 	w, h = getLargePicSize()
-	HousePic[PIC_SIZE_LARGE] = PicResize{w, h, true}
+	CommonPicAll[PIC_SIZE_LARGE_STR] = PicResize{w, h, true}
+	beego.Debug(fmt.Sprintf("CommonPicAll: %+v", CommonPicAll))
+
+	// common picture size, Small and Large
+	CommonPicSL = make(map[string]PicResize)
+	w, h = getSmallPicSize()
+	CommonPicSL[PIC_SIZE_SMALL_STR] = PicResize{w, h, false}
+	w, h = getLargePicSize()
+	CommonPicSL[PIC_SIZE_LARGE_STR] = PicResize{w, h, true}
+	beego.Debug(fmt.Sprintf("CommonPicSL: %+v", CommonPicSL))
+
+	// user portrait picture size
+	UserPortrait = map[string]PicResize{}
+	w, h = getPortraitSize()
+	UserPortrait[PIC_SIZE_SMALL_STR] = PicResize{w, h, false}
+	beego.Debug(fmt.Sprintf("UserPortrait: %+v", UserPortrait))
 }

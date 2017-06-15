@@ -473,6 +473,7 @@ func (this *HouseController) GetBehalfList() {
 		result.Total = total
 		result.Count = fetched
 		result.IDs = ids
+		// TODO: use house digest list, and fetch count set to -1 if count is 0 which means user just want to fetch the total number
 	}
 }
 

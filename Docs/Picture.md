@@ -21,9 +21,10 @@
 	[Request]
   		* POST /v1/pic/newpic
 	  		* house			int			// house id. could be Zero, which means picture is not related with a certain house
+	  		* rid			int 		// ref id
 	  		* type			int			// picture type
 	  		* desc			string		// picture description
-	  		* pic			file 		// binary file to store the picture to upload
+	  		* file			file 		// binary file to store the picture to upload
 	[Response]
 		* SUCCESS:200 
 			* Id			string 		// new picture id

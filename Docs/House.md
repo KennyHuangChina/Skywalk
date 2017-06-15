@@ -171,7 +171,7 @@
 	[Response]
 		* SUCCESS:200 
 			* Total    		int		// total number
-			* Count			int		// how many items fetched
+			* Count			int		// how many items fetched. -1 means just fetch the total number.
 			* IDs			array
 				* Id		int		// house id
 		* ERR: 4XX,5XX
