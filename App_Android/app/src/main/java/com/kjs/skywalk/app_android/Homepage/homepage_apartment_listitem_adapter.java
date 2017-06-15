@@ -127,6 +127,7 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         if (mList != null) {
             final ClassDefine.HouseDigest houseDigest1 = mList.get(0);
             holder.tvApartment1_name.setText(houseDigest1.property);
+            commonFun.displayImageByURL(mContext, houseDigest1.CoverImageUrlS, holder.ivApartment1_thumb);
             holder.tvApartment1_desc.setText(houseDigest1.addr + "/" + houseDigest1.Acreage + "㎡");
             holder.rlApartment1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,6 +156,7 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
                 final ClassDefine.HouseDigest houseDigest2 = mList.get(1);
                 holder.rlApartment2.setVisibility(View.VISIBLE);
                 holder.tvApartment2_name.setText(houseDigest2.property);
+                commonFun.displayImageByURL(mContext, houseDigest2.CoverImageUrlS, holder.ivApartment2_thumb);
                 holder.tvApartment2_desc.setText(houseDigest2.addr + "/" + houseDigest2.Acreage + "㎡");
                 holder.rlApartment2.setOnClickListener(new View.OnClickListener() {
                     @Override

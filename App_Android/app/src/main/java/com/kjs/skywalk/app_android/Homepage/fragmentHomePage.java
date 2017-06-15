@@ -234,7 +234,7 @@ public class fragmentHomePage extends Fragment {
                 if (command == CMD_GET_HOUSE_DIGEST_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == 0) {
+                    if (nFetch == -1) {
                         mTotalCount = resultList.GetTotalNumber();
                     } else  {
                         // IApiResults.IHouseDigest
