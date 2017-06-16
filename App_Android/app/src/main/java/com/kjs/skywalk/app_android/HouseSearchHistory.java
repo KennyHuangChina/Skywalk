@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/5/14.
@@ -99,5 +101,19 @@ public class HouseSearchHistory {
 
     public String get(int i) {
         return mList.get(i);
+    }
+
+    public int getPropertyIdByName(String property) {
+        for(String tmp : mList) {
+            if(tmp.contains(property)) {
+                String tmpList[] = tmp.split("=");
+
+                if(tmpList.length == 2) {
+                    return Integer.valueOf(tmpList[1]);
+                }
+            }
+        }
+
+        return -1;
     }
 }

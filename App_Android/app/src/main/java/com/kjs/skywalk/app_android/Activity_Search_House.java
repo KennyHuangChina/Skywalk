@@ -95,7 +95,7 @@ public class Activity_Search_House extends SKBaseActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String property = (String)parent.getAdapter().getItem(position);
-                int propertyId = getPropertyIdFromList(property);
+                int propertyId = mHistory.getPropertyIdByName(property);
                 if(propertyId >= 0) {
                     doSelected(property, propertyId);
                 }
@@ -142,7 +142,8 @@ public class Activity_Search_House extends SKBaseActivity implements
             return;
         }
 
-        mHistory.addHistory(property);
+        String history = property + "=" + propertyId;
+        mHistory.addHistory(history);
         
         Intent data = new Intent();
         data.putExtra("name", property);
@@ -231,7 +232,9 @@ public class Activity_Search_House extends SKBaseActivity implements
         mListViewHistory.removeAllViewsInLayout();
         ArrayList<String> newList = new ArrayList<>();
         for(int i = 0; i < mHistory.getCount(); i ++){
-            newList.add(mHistory.get(i));
+            String tmp = mHistory.get(i);
+            String tmpList[] = tmp.split("=");
+            newList.add(tmpList[0]);
         }
         mAdapterHistory.setDataList(newList);
         mListViewHistory.setAdapter(mAdapterHistory);
