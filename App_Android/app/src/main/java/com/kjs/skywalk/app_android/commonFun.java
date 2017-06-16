@@ -279,11 +279,28 @@ public class commonFun {
         textview.setPadding(30, 15, 30, 15);        // must set padding after setBackgroundResource
     }
 
-    public static void displayImageByURL(Context context, String URL, ImageView view) {
+    public static final int IMAGE_TYPE_PORTRAIT = 0;
+    public static final int IMAGE_TYPE_PROPERTY = 1;
+    public static final int IMAGE_TYPE_HOUSE = 2;
+    public static void displayImageByURL(Context context, String URL, ImageView view, int type) {
         if(context == null || URL == null || URL.isEmpty() || view == null) {
             return;
         }
 
-        Glide.with(context).load(URL).into(view);
+        int placeHolderResourceId = R.drawable.touxiang;
+        int errorResourceId = R.drawable.touxiang;
+        switch (type) {
+            case IMAGE_TYPE_PORTRAIT:
+                placeHolderResourceId = R.drawable.touxiang;
+                errorResourceId = R.drawable.touxiang;
+                break;
+            case IMAGE_TYPE_PROPERTY:
+            case IMAGE_TYPE_HOUSE:
+                placeHolderResourceId = R.drawable.touxiang;
+                errorResourceId = R.drawable.touxiang;
+                break;
+        }
+
+        Glide.with(context).load(URL).placeholder(placeHolderResourceId).error(errorResourceId).into(view);
     }
 }
