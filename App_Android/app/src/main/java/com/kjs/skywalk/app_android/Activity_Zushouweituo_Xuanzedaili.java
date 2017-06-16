@@ -130,6 +130,9 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                             agent.mSex = String.valueOf(info.Sex());
                             agent.mPortrait = info.Portrait();
                             agent.mYears = "3年";
+                            if(agent.mPortrait == null || agent.mPortrait.isEmpty()) {
+                                agent.mPortrait = "not set";
+                            }
 
                             mAgentList.add(agent);
                         }

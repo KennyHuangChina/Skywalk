@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,7 +118,6 @@ public class AdapterAgents extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_agent, null);
             ImageView thumbView = (ImageView)convertView.findViewById(R.id.imageViewAgent);
-            thumbView.setImageResource(R.drawable.ren);
 
             holder = new ViewHolder();
             holder.mImageViewPhoto = thumbView;
@@ -138,6 +138,8 @@ public class AdapterAgents extends BaseAdapter {
         holder.mYears.setText("从业资格: " + agent.mYears);
         holder.mAttitude.setText(agent.mAttitude);
         holder.mProfessional.setText(agent.mProfessional);
+        Log.i("AdapterAgents", "Portrait URL: " + agent.mPortrait);
+        commonFun.displayImageByURL(mContext, agent.mPortrait, holder.mImageViewPhoto, commonFun.IMAGE_TYPE_PORTRAIT);
 
         return convertView;
     }

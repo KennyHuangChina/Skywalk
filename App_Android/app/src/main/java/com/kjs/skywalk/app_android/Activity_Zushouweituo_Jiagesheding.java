@@ -49,7 +49,7 @@ public class Activity_Zushouweituo_Jiagesheding extends SKBaseActivity {
             case R.id.tv_next:
             {
                 if(!collectData()) {
-                    return;
+//                    return;
                 }
                 startActivity(new Intent(this, Activity_Zushouweituo_Xuanzedaili.class));
             }
