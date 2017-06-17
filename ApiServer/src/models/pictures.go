@@ -417,7 +417,8 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 
 	switch typeMajor {
 	case commdef.PIC_TYPE_USER:
-		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+		// err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
+		fallthrough
 	case commdef.PIC_TYPE_HOUSE:
 		switch typeMinor {
 		case commdef.PIC_HOUSE_FLOOR_PLAN:

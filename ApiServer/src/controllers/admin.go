@@ -134,6 +134,7 @@ func (this *AdminController) GetAgencyList() {
 		result.Total = total
 		result.Count = int64(len(agencys))
 		result.Agencys = agencys
+		// beego.Debug(FN, fmt.Sprintf("agencys:%+v", agencys))
 	}
 }
 

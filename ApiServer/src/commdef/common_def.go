@@ -32,8 +32,8 @@ type AgencyInfo struct {
 	Sex          int
 	IdNo         string
 	Phone        string
-	HeadPortrait string
-	Attitue      int
+	Portrait     string
+	Attitude     int
 	Professional int
 }
 

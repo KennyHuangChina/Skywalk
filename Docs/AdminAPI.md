@@ -154,7 +154,7 @@
 				* Id			int 		// agency id
 				* Name			string		// agency name
 				* Sex			int 		// agency sex. 0 - male / 1 - female
-				* IDNo			string		// agency ID card
+				* IdNo			string		// agency ID card
 				* Professional	int			// professional rank. 0 ~ 500 (0.00 ~ 5.00)
 				* Attitude		int			// attitude rank. 0 ~500 (0.00 ~ 5.00)
 				* Portrait		string		// head portraint picture URL

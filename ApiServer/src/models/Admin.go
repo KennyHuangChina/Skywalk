@@ -133,7 +133,7 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 	o := orm.NewOrm()
 	sql := `SELECT COUNT(*) AS count
 				FROM tbl_user_group_member AS gm, tbl_user AS u, tbl_user_group AS g 
-				WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND g.admin`
+				WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND !g.admin`
 	var Count int64
 	errT := o.Raw(sql).QueryRow(&Count)
 	if nil != errT {
@@ -151,11 +151,22 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 		return
 	}
 
+	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET) // "未设置"
+
 	// get real records
-	sql = `SELECT u.id, u.name, u.id_no, u.phone, u.head AS head_portrait
-				FROM tbl_user_group_member AS gm, tbl_user AS u, tbl_user_group AS g 
-				WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND g.admin
-				LIMIT ?, ?`
+	sql_usr := fmt.Sprintf(`SELECT u.id, IF (LENGTH(u.name) > 0, u.name, '%s') AS name, 
+									IF (LENGTH(u.id_no) > 0, u.id_no, '%s') AS id_no, u.phone 
+								FROM tbl_user_group_member AS gm, tbl_user_group AS g, tbl_user AS u 
+								WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND !g.admin`, nameUnset, nameUnset)
+	sql_pic := fmt.Sprintf(`SELECT p.ref_id, ps.url 
+								FROM tbl_pictures AS p, tbl_pic_set AS ps 
+								WHERE p.id=ps.pic_id AND p.type_major=%d AND p.type_minor=%d AND ps.size=%d`,
+		commdef.PIC_TYPE_USER, commdef.PIC_USER_HEAD_PORTRAIT, commdef.PIC_SIZE_SMALL)
+
+	sql = fmt.Sprintf(`SELECT u.*, p.ref_id, IF (LENGTH(p.url) > 0, p.url, "") AS portrait 
+							FROM (%s) AS u LEFT JOIN (%s) AS p 
+							ON u.id=p.ref_id
+							LIMIT ?, ?`, sql_usr, sql_pic)
 	var as []commdef.AgencyInfo
 	numb, errT := o.Raw(sql, begin, cnt).QueryRows(&as)
 	if nil != errT {
@@ -165,12 +176,14 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 	beego.Debug(FN, numb, "records found")
 
 	agencys = as
-	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET) // "未设置"
-	for k, _ := range agencys {
-		if 0 == len(agencys[k].Name) {
-			agencys[k].Name = nameUnset
-			// beego.Debug(FN, k, ":", agencys[k].Name)
+	for k, v := range agencys {
+		beego.Debug(FN, fmt.Sprintf("<%d> %+v", k, v))
+		if len(agencys[k].Portrait) > 0 {
+			// beego.Debug(FN, k, ":", agencys[k].Portrait)
+			agencys[k].Portrait = GetPicBaseDir() + agencys[k].Portrait
+			// v.Portrait = GetPicBaseDir() + v.Portrait
 		}
+		// beego.Debug(FN, fmt.Sprintf("<%d> %+v", k, v))
 	}
 
 	return
