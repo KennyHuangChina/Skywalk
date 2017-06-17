@@ -159,9 +159,9 @@ class ResGetAgencyList extends ResBase implements IApiResults.IResultList {
 
             @Override
             public String ListItemInfo2String() {
-                return " id: " + mId + ", name: " + mName + ", sex: " + (0 == mSex ? "男" : "女")
-                        + ", ID card: " + mIDNo + ", phone:" + mPhone + ", portrait:" + mPortrait
-                        + ", rank professional:" + mProfessional + ", rank attitude:" + mAttitude;
+                return " id: " + Id() + ", name: " + Name() + ", sex: " + (0 == Sex() ? "男" : "女")
+                        + ", ID card: " + IdNo() + ", phone:" + Phone() + ", portrait:" + Portrait()
+                        + ", rank professional:" + RankProf() + ", rank attitude:" + RankAtti();
             }
         }
     }

@@ -129,8 +129,9 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+//        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetAgencyList(0, mListTotal);
     }
 
     @Override
@@ -280,6 +281,18 @@ public class MainActivityFragment extends Fragment
                     ArrayList<Object> arry = res.GetList();
                     IApiResults.IPropertyInfo prop = (IApiResults.IPropertyInfo) arry.get(0);
                     prop.GetName();
+                    mListTotal = 0;
+                }
+            } else if (command == CMD_GET_AGENCY_LIST) {
+                IApiResults.IResultList res = (IApiResults.IResultList) result;
+                int nTotal = res.GetTotalNumber();
+                mListTotal = nTotal;
+                int nFetched = res.GetFetchedNumber();
+                if (nFetched > 0) {
+                    ArrayList<Object> arry = res.GetList();
+                    IApiResults.IAgencyInfo agency = (IApiResults.IAgencyInfo) arry.get(0);
+                    agency.Name();
+                    mListTotal = 0;
                 }
             } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
@@ -298,6 +311,7 @@ public class MainActivityFragment extends Fragment
                                 int tagId = tag.GetTagId();
                                 String tagName = tag.GetName();
                             }
+                            mListTotal = 0;
                         }
                     }
             } else if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
