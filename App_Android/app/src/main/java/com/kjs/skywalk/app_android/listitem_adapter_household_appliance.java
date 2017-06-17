@@ -85,7 +85,7 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
         }
 
         ApplianceItem item = mApplianceItemLst.get(i);
-        commonFun.displayImageByURL(mContext, item.mIconUrl, holder.ivIcon);
+        commonFun.displayImageByURL(mContext, item.mIconUrl, holder.ivIcon, R.drawable.sofa_n, R.drawable.sofa_n);
         holder.tvApplName.setText(item.mName);
         holder.tvApplNum.setText(String.valueOf(item.mNum));
         holder.tvApplDesc.setText(item.mDesc);

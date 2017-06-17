@@ -139,7 +139,7 @@ public class AdapterAgents extends BaseAdapter {
         holder.mAttitude.setText(agent.mAttitude);
         holder.mProfessional.setText(agent.mProfessional);
         Log.i("AdapterAgents", "Portrait URL: " + agent.mPortrait);
-        commonFun.displayImageByURL(mContext, agent.mPortrait, holder.mImageViewPhoto, commonFun.IMAGE_TYPE_PORTRAIT);
+        commonFun.displayImageByURL(mContext, agent.mPortrait, holder.mImageViewPhoto, R.drawable.touxiang, R.drawable.touxiang);
 
         return convertView;
     }
