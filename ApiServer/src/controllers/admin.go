@@ -132,8 +132,12 @@ func (this *AdminController) GetAgencyList() {
 	err, total, agencys := models.GetAgencyList(begin, cnt)
 	if nil == err {
 		result.Total = total
-		result.Count = int64(len(agencys))
-		result.Agencys = agencys
+		if cnt > 0 {
+			result.Count = int64(len(agencys))
+			result.Agencys = agencys
+		} else {
+			result.Count = -1
+		}
 		// beego.Debug(FN, fmt.Sprintf("agencys:%+v", agencys))
 	}
 }
