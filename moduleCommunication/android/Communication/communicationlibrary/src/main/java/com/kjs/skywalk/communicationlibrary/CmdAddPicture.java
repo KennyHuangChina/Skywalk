@@ -10,13 +10,16 @@ import java.util.HashMap;
  */
 
 class CmdAddPicture extends CommunicationBase {
-    private int mHouse = 0;
-    private int mType = -1;
-    private String mDesc = "";
+    private int     mHouse  = 0;
+    private int     mType   = -1;
+    private int     mRefId  = -1;
+    private String  mDesc   = "";
 
-    CmdAddPicture(Context context) {
+    CmdAddPicture(Context context, int house_id) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_PICTURE);
         mMethodType = "POST";
+
+        mHouse = house_id;
     }
 
     @Override
@@ -30,6 +33,8 @@ class CmdAddPicture extends CommunicationBase {
         mRequestData = ("house=" + mHouse);
         mRequestData += "&";
         mRequestData += ("type=" + mType);
+        mRequestData += "&";
+        mRequestData += ("rid=" + mRefId);
         mRequestData += "&";
         mRequestData += ("desc=" + mDesc);
         Log.d(TAG, "mRequestData: " + mRequestData);
@@ -45,9 +50,9 @@ class CmdAddPicture extends CommunicationBase {
         }
 
         try {
-            mHouse = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            if (mHouse < 0) {
-                Log.e(TAG, "mHouse: " + mHouse);
+            mRefId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
+            if (mRefId < 0) {
+                Log.e(TAG, "mRefId: " + mRefId);
                 return false;
             }
             mType = Integer.parseInt(map.get(CommunicationParameterKey.CPK_TYPE));

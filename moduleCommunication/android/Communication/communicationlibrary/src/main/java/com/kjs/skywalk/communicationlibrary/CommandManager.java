@@ -394,10 +394,10 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int AddPicture(int house, int type, String desc, String file) {
-        CommunicationBase op = new CmdAddPicture(mContext);
+    public int AddPicture(int house, int type, int refId, String desc, String file) {
+        CommunicationBase op = new CmdAddPicture(mContext, house);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house));
+        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(refId));
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(type));
         pMap.put(CommunicationParameterKey.CPK_DESC, desc);
         pMap.put(CommunicationParameterKey.CPK_IMG_FILE, String.valueOf(file));

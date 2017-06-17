@@ -81,7 +81,8 @@ public class CommunicationInterface {
         int EditHouseFacility(int hfid, int fid, int qty, String desc); // CMD_EDIT_HOUSE_FACILITY,     IApiResults.ICommon
 
         // Pictures
-        int AddPicture(int house, int type, String desc, String file);  // CMD_ADD_PICTURE,         IApiResults.IAddRes
+        int AddPicture(int house, int type, int refId,
+                       String desc, String file);                       // CMD_ADD_PICTURE,         IApiResults.IAddRes
         int DelePicture(int pic);                                       // CMD_DEL_PICTURE,         IApiResults.ICommon
         int GetPicUrls(int pic, int size);                              // CMD_GET_PIC_URL,         IApiResults.IPicUrls
         int GetHousePics(int house, int type);                          // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
