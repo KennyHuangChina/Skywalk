@@ -13,22 +13,23 @@
         android:layout_height="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
+        <ImageView
+            android:id="@+id/iv_appl_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription=""
+            android:src="@drawable/sofa_n"/>
         <TextView
             android:id="@+id/tv_appl_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="left"
             android:textSize="14sp"
             android:textColor="@color/colorTextNormal"
-            android:drawablePadding="10dp"
-            android:drawableLeft="@drawable/sofa_n"
             android:text="家具：沙发+茶几"/>
         <TextView
             android:id="@+id/tv_appl_num"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="right"
             android:textSize="14sp"
             android:textColor="@color/colorTextNormal"

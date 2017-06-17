@@ -37,9 +37,9 @@ public class Activity_HouseholdAppliances extends SKBaseActivity
     // test data
     private final static ArrayList<listitem_adapter_household_appliance.ApplianceItem> mHouseAppliances = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>(
             Arrays.asList(
-                    new listitem_adapter_household_appliance.ApplianceItem(null, "电器：电视机", "康佳29寸纯屏", 1),
-                    new listitem_adapter_household_appliance.ApplianceItem(null, "家具：沙发+茶几", "咖啡色真皮沙发2个，茶几1个，靠垫4个", 1),
-                    new listitem_adapter_household_appliance.ApplianceItem(null, "厨具：灶具/油烟机", "林内灶具x1 美帝DT310油烟机", 1)
+                    new listitem_adapter_household_appliance.ApplianceItem(null, "", "电器：电视机", "康佳29寸纯屏", 1),
+                    new listitem_adapter_household_appliance.ApplianceItem(null, "", "家具：沙发+茶几", "咖啡色真皮沙发2个，茶几1个，靠垫4个", 1),
+                    new listitem_adapter_household_appliance.ApplianceItem(null, "", "厨具：灶具/油烟机", "林内灶具x1 美帝DT310油烟机", 1)
             )
     );
     //
@@ -179,10 +179,10 @@ public class Activity_HouseholdAppliances extends SKBaseActivity
             ArrayList<listitem_adapter_household_appliance.ApplianceItem> itemList = new ArrayList<listitem_adapter_household_appliance.ApplianceItem>();
             for (Object item : list.GetList()) {
                 IApiResults.IHouseFacilityInfo info = (IApiResults.IHouseFacilityInfo)item;
-                Drawable drawable = null;
-                if (!info.GetIcon().isEmpty())
-                    drawable = commonFun.getDrawableFromUrl(this, info.GetIcon());
-                listitem_adapter_household_appliance.ApplianceItem newItem = new listitem_adapter_household_appliance.ApplianceItem(drawable, info.GetType() + ": " + info.GetName(), info.GetDesc(), info.GetQty());
+//                Drawable drawable = null;
+//                if (!info.GetIcon().isEmpty())
+//                    drawable = commonFun.getDrawableFromUrl(this, info.GetIcon());
+                listitem_adapter_household_appliance.ApplianceItem newItem = new listitem_adapter_household_appliance.ApplianceItem(null, info.GetIcon(), info.GetType() + ": " + info.GetName(), info.GetDesc(), info.GetQty());
                 itemList.add(newItem);
             }
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -21,12 +22,14 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
 
     static class ApplianceItem {
         Drawable mIcon;
+        String mIconUrl;
         String mName;
         String mDesc;
         int mNum;
 
-        public ApplianceItem(Drawable icon, String name, String description, int number) {
+        public ApplianceItem(Drawable icon, String iconUrl, String name, String description, int number) {
             mIcon = icon;
+            mIconUrl = iconUrl;
             mName = name;
             mDesc = description;
             mNum = number;
@@ -57,6 +60,7 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
     }
 
     class ViewHolder {
+        ImageView ivIcon;
         TextView tvApplName;
         TextView tvApplNum;
         TextView tvApplDesc;
@@ -70,11 +74,10 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.listitem_household_appliance, null);
 
             holder = new ViewHolder();
+            holder.ivIcon = (ImageView) view.findViewById(R.id.iv_appl_icon);
             holder.tvApplName = (TextView) view.findViewById(R.id.tv_appl_name);
             holder.tvApplNum = (TextView) view.findViewById(R.id.tv_appl_num);
             holder.tvApplDesc = (TextView) view.findViewById(R.id.tv_appl_desc);
-
-
 
             view.setTag(holder);
         } else {
@@ -82,21 +85,22 @@ public class listitem_adapter_household_appliance extends BaseAdapter {
         }
 
         ApplianceItem item = mApplianceItemLst.get(i);
+        commonFun.displayImageByURL(mContext, item.mIconUrl, holder.ivIcon);
         holder.tvApplName.setText(item.mName);
         holder.tvApplNum.setText(String.valueOf(item.mNum));
         holder.tvApplDesc.setText(item.mDesc);
 
-        Drawable drawable = item.mIcon;
-        holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+//        Drawable drawable = item.mIcon;
+//        holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
-        if(i == 1) {
-            String testFile = mContext.getCacheDir().getAbsolutePath() + File.separator + "testPics" + File.separator + "sofa_n.png";
-            File file = new File(testFile);
-            if (file.exists()) {
-                Drawable drawable_ex = commonFun.getDrawableFromLocal(mContext, testFile);
-                holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable_ex, null, null, null);
-            }
-        }
+//        if(i == 1) {
+//            String testFile = mContext.getCacheDir().getAbsolutePath() + File.separator + "testPics" + File.separator + "sofa_n.png";
+//            File file = new File(testFile);
+//            if (file.exists()) {
+//                Drawable drawable_ex = commonFun.getDrawableFromLocal(mContext, testFile);
+//                holder.tvApplName.setCompoundDrawablesWithIntrinsicBounds(drawable_ex, null, null, null);
+//            }
+//        }
 
         return view;
     }

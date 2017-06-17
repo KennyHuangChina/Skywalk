@@ -117,9 +117,9 @@ public class commonFun {
         return bd;
     }
 
-    public static void copyAssets( Context context, String pathInAssets, String dstPath ) {
+    public static void copyAssets(Context context, String pathInAssets, String dstPath) {
         File dir = new File(dstPath + File.separator + pathInAssets);
-        if(dir.exists() && dir.isDirectory()) {
+        if (dir.exists() && dir.isDirectory()) {
             return;
         }
         dir.mkdir();
@@ -131,18 +131,18 @@ public class commonFun {
             kjsLogUtil.e("Failed to get asset file list." + e);
         }
 
-        for(String filename : files) {
+        for (String filename : files) {
             InputStream in;
             OutputStream out;
             try {
                 in = context.getAssets().open(pathInAssets + File.separator + filename);
-                File outFile = new File( dstPath + File.separator + pathInAssets + File.separator + filename);
+                File outFile = new File(dstPath + File.separator + pathInAssets + File.separator + filename);
                 out = new FileOutputStream(outFile);
                 copyFile(in, out);
                 in.close();
                 out.flush();
                 out.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 kjsLogUtil.e("Failed to get asset file list." + e);
             }
         }
@@ -151,7 +151,7 @@ public class commonFun {
     public static void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        while((read = in.read(buffer)) != -1) {
+        while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
     }
@@ -200,7 +200,7 @@ public class commonFun {
     }
 
     public static void hideSoftKeyboard(Context context, View v) {
-        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
@@ -283,7 +283,7 @@ public class commonFun {
     public static final int IMAGE_TYPE_PROPERTY = 1;
     public static final int IMAGE_TYPE_HOUSE = 2;
     public static void displayImageByURL(Context context, String URL, ImageView view, int type) {
-        if(context == null || URL == null || URL.isEmpty() || view == null) {
+        if (context == null || URL == null || URL.isEmpty() || view == null) {
             return;
         }
 
@@ -302,5 +302,9 @@ public class commonFun {
         }
 
         Glide.with(context).load(URL).placeholder(placeHolderResourceId).error(errorResourceId).into(view);
+    }
+
+    public static void displayImageByURL(Context context, String URL, ImageView view) {
+        displayImageByURL(context, URL, view, commonFun.IMAGE_TYPE_PORTRAIT);
     }
 }
