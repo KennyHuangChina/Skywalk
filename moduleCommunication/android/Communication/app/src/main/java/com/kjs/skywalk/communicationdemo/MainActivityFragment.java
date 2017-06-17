@@ -1,5 +1,7 @@
 package com.kjs.skywalk.communicationdemo;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
@@ -98,15 +101,15 @@ public class MainActivityFragment extends Fragment
 //        list.add(new CommunicationInterface.FacilityItem(4, 3, "电视机说明"));
 //        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
 //        CmdMgr.AddHouseFacility(6, list);
-//        CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-//                mEditText2.getText().toString(), "/sdcard/testKenny.jpg");
-        CmdMgr.SetHousePrice(11, 1000, 800, true, 500000, 470000);
+        CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+                Integer.parseInt(mEditText2.getText().toString()), "test picture 3",  "/sdcard/3.jpg");
+//        CmdMgr.SetHousePrice(11, 1000, 800, true, 500000, 470000);
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
+//        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
@@ -115,7 +118,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
-//        CmdMgr.GetAgencyList(0, 10);
+        CmdMgr.GetAgencyList(0, 10);
 //        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
     }
     private void doTestGetList() {
@@ -188,14 +191,36 @@ public class MainActivityFragment extends Fragment
         });
 
         Button btntestDeleteApi = (Button)view.findViewById(R.id.testDeleteApi);
-        btntestDeleteApi.setOnClickListener(new View.OnClickListener()
+        btntestDeleteApi.setOnClickListener(new Button.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 mResultString = "";
                 mTextViewResult.setText("");
                 doTestDeleApi();
+
+//                showDialog(/*openfileDialogId*/0);
+//            }
+
+//                Map<String, Integer> images = new HashMap<String, Integer>();
+//                // 下面几句设置各文件类型的图标， 需要你先把图标添加到资源文件夹
+//                images.put(OpenFileDialog.sRoot, R.drawable.filedialog_root);	// 根目录图标
+//                images.put(OpenFileDialog.sParent, R.drawable.filedialog_folder_up);	//返回上一层的图标
+//                images.put(OpenFileDialog.sFolder, R.drawable.filedialog_folder);	//文件夹图标
+//                images.put("wav", R.drawable.filedialog_wavfile);	//wav文件图标
+//                images.put(OpenFileDialog.sEmpty, R.drawable.filedialog_root);
+//                Dialog dialog = OpenFileDialog.createDialog(/*id*/0, view.getContext(), "打开文件", new CallbackBundle() {
+//                            @Override
+//                            public void callback(Bundle bundle) {
+//                                String filepath = bundle.getString("path");
+//                                getActivity().setTitle(filepath); // 把文件路径显示在标题上
+//                            }
+//                        },
+//                        null, //".jpg",
+//                        images);
+//                dialog.show();
+////                return dialog;
+//            }
             }
         });
 

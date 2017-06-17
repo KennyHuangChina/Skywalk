@@ -104,11 +104,14 @@ class ResGetAgencyList extends ResBase implements IApiResults.IResultList {
                     mId             = obj.getInt("Id");
                     mName           = obj.getString("Name");
                     mSex            = obj.getInt("Sex");
-                    mIDNo           = obj.getString("IDNo");
+                    mIDNo           = obj.getString("IdNo");
                     mProfessional   = obj.getInt("Professional");
                     mAttitude       = obj.getInt("Attitude");
                     mPortrait       = obj.getString("Portrait");
                     mPhone          = obj.getString("Phone");
+                    if (!mPortrait.isEmpty()) {
+                        mPortrait = PicFullUrl(mPortrait);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
