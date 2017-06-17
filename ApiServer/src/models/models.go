@@ -1,6 +1,8 @@
 package models
 
 import (
+	"ApiServer/commdef"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
@@ -587,6 +589,19 @@ func init() {
 		if strings.Contains(errT.Error(), "Error 1146") {
 			// beego.Warn("View does not exist")
 			o.Raw(`CREATE VIEW v_house_unpublished AS SELECT * FROM tbl_house WHERE publish_time IS NULL`).Exec()
+		}
+	}
+
+	// Create view for user's headportrait
+	_, errT = o.Raw(`SELECT id FROM v_pic_user_portrait LIMIT 0, 1`).Exec()
+	if nil != errT {
+		beego.Warn("err:", errT.Error(), ", Create now")
+		if strings.Contains(errT.Error(), "Error 1146") {
+			// beego.Warn("View does not exist")
+			sql := fmt.Sprintf(`CREATE VIEW v_pic_user_portrait AS 
+									SELECT * FROM tbl_pictures WHERE type_major=%d AND type_minor=%d`,
+				commdef.PIC_TYPE_USER, commdef.PIC_USER_HEAD_PORTRAIT)
+			o.Raw(sql).Exec()
 		}
 	}
 }

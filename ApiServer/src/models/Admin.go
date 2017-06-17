@@ -159,9 +159,8 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 								FROM tbl_user_group_member AS gm, tbl_user_group AS g, tbl_user AS u 
 								WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND !g.admin`, nameUnset, nameUnset)
 	sql_pic := fmt.Sprintf(`SELECT p.ref_id, ps.url 
-								FROM tbl_pictures AS p, tbl_pic_set AS ps 
-								WHERE p.id=ps.pic_id AND p.type_major=%d AND p.type_minor=%d AND ps.size=%d`,
-		commdef.PIC_TYPE_USER, commdef.PIC_USER_HEAD_PORTRAIT, commdef.PIC_SIZE_SMALL)
+								FROM v_pic_user_portrait AS p, tbl_pic_set AS ps 
+								WHERE p.id=ps.pic_id AND ps.size=%d`, commdef.PIC_SIZE_SMALL)
 
 	sql = fmt.Sprintf(`SELECT u.*, p.ref_id, IF (LENGTH(p.url) > 0, p.url, "") AS portrait 
 							FROM (%s) AS u LEFT JOIN (%s) AS p 
@@ -176,8 +175,8 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 	beego.Debug(FN, numb, "records found")
 
 	agencys = as
-	for k, v := range agencys {
-		beego.Debug(FN, fmt.Sprintf("<%d> %+v", k, v))
+	for k, _ := range agencys {
+		// beego.Debug(FN, fmt.Sprintf("<%d> %+v", k, v))
 		if len(agencys[k].Portrait) > 0 {
 			// beego.Debug(FN, k, ":", agencys[k].Portrait)
 			agencys[k].Portrait = GetPicBaseDir() + agencys[k].Portrait
