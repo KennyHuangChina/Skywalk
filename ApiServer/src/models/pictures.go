@@ -448,6 +448,14 @@ func addPicUser(uid int64, minorType int, desc, md5, pfn, pbd string) (err error
 
 	switch minorType {
 	case commdef.PIC_USER_HEAD_PORTRAIT:
+		beego.Warn(FN, "TODO: make sure only one portrait for one user")
+		// Make sure there is only one picture for user portrait
+		o := orm.NewOrm()
+		qs := o.QueryTable("tbl_pictures")
+		if qs.Filter("TypeMajor", commdef.PIC_TYPE_USER).Filter("TypeMinor", minorType).Filter("RefId", uid).Exist() {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("user(%d) already have portrait", uid)}
+			return
+		}
 		err, nid = addPic(uid, commdef.PIC_TYPE_USER, minorType, desc, md5, pfn, pbd, UserPortrait)
 	case commdef.PIC_OWNER_IDCard:
 		fallthrough
