@@ -198,7 +198,7 @@ public class MainActivityFragment extends Fragment
             @Override
             public void onClick(View v) {
                 Intent it = new Intent();
-                it.setClass(getActivity(), UploadPicture.class);
+                it.setClass(getActivity(), UploadPictureActivity.class);
                 startActivity(it);
             }
         });
