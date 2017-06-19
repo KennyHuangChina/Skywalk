@@ -44,50 +44,78 @@
             android:ems="10"
             android:id="@+id/editText2" />
 
-        <Button
-            android:text="Test List"
-            android:textAllCaps="false"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/testList"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <Button
-            android:text="Test Get API"
-            android:textAllCaps="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/testGetApi"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            <Button
+                android:id="@+id/testList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="Test List"
+                android:textAllCaps="false"
+                android:layout_weight="1" />
 
-        <Button
-            android:text="Test Add API"
-            android:textAllCaps="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/testAddApi"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            <Button
+                android:text="Test Get API"
+                android:textAllCaps="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/testGetApi"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1" />
 
-        <Button
-            android:text="Test Modify API"
-            android:textAllCaps="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/testModifyApiApi"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            <Button
+                android:text="Test Add API"
+                android:textAllCaps="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/testAddApi"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1" />
 
-        <Button
-            android:text="Test Delete API"
-            android:textAllCaps="false"
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/testDeleteApi"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <Button
+                android:text="Test Modify API"
+                android:textAllCaps="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/testModifyApiApi"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Test Delete API"
+                android:textAllCaps="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/testDeleteApi"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Upload pic"
+                android:textAllCaps="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/testUploadPic"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"

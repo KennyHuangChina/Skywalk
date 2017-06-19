@@ -48,7 +48,7 @@ class CUtilities {
         String contentType = "";
         try {
             contentType = getMimeType(filePath);
-            if (!contentType.isEmpty() &&
+            if (null != contentType && !contentType.isEmpty() &&
                     contentType.toLowerCase().startsWith("image/")) {
                 return true;
             }

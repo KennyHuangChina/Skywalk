@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="picType">
+        <item>用户身份证件照</item>
+        <item>用户头像</item>
+        <item>房源平面图</item>
+        <item>房源家具</item>
+        <item>房源电器</item>
+        <item>房源认证</item>
+    </string-array>
+    <string-array name="picTypeId">
+        <item>101</item>
+        <item>102</item>
+        <item>201</item>
+        <item>202</item>
+        <item>203</item>
+        <item>204</item>
+    </string-array>
+</resources>
