@@ -61,8 +61,7 @@ public class fragmentHomePage extends Fragment {
 
                 Intent intent = new Intent(getActivity().getApplicationContext(), Activity_ApartmentDetail.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("property", houseDigest.property);
-                bundle.putString("addr", houseDigest.addr);
+                bundle.putInt("houseId", houseDigest.houseId);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

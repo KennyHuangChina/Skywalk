@@ -28,6 +28,9 @@ import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.SliderView;
 
@@ -35,9 +38,13 @@ import java.util.ArrayList;
 
 import me.iwf.photopicker.PhotoPreview;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+
 public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private ArrayList<String> mImageLst;
+    private int mHouseId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +68,42 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         sView.setImages(mImageLst, mSvListener);
 
         Bundle bundle = getIntent().getExtras();
-        String property = bundle.getString("property");
-        String addr = bundle.getString("addr");
+        mHouseId = bundle.getInt("houseId");
 
-        ((TextView)findViewById(R.id.tv_apartment_name)).setText(property);
+        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CmdMgr.GetHouseInfo(mHouseId, false);
+        kjsLogUtil.i("GetHouseInfo: " + mHouseId);
+
+//        小区物业信息，GetPropertyInfo
+//        代理员信息，GetUserInfo
+//        房屋设施 -> GetHouseFacilityList
+    }
+
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            return;
+        }
+
+        if (command == CMD_GET_HOUSE_INFO) {
+            updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+        }
+    }
+
+    private void updateHouseInfo(IApiResults.IGetHouseInfo IHouseInfo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
