@@ -219,3 +219,31 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 12. Set House showing time
+	[Security]	private: landlorad, administrator
+	[Request]
+  		* PUT /v1/house/:id/showtime
+	  		* prd			int			// house showing period. 1 - morning, 2 - afternoon, 3 - night
+	  		* desc			string		// period desc when period is out of pre-defined
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+##
+
+### 13. Get House showing time
+	[Security]	private: landlorad, House Agency and administrator
+	[Request]
+  		* GET /v1/house/:id/showtime
+	[Response]
+		* SUCCESS:200 
+			* Period		int 		// house showing period. 1 - morning, 2 - afternoon, 3 - night
+			* Desc			sring 		// period desc when period is out of pre-defined
+			* Who			string		// who set the house showing time
+			* When			string		// when set the house showing time
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

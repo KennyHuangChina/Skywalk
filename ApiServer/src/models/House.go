@@ -10,6 +10,134 @@ import (
 )
 
 /**
+*	Set house showing time
+*	Arguments:
+*		hid 	- house id
+*		uid 	- login user
+*	Returns
+*		err 	- error info
+*		hst		- house showing time
+ */
+func GetHouseShowTime(hid, uid int64) (err error, hst commdef.HouseShowTime) {
+	FN := "[GetHouseListByType] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+
+	/* Permission checking */
+	if err = canAccessHouse(uid, hid); nil != err {
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+
+	sql := `SELECT hs.id, hs.period, hs.desc, u.name AS who, hs.when
+				FROM tbl_house_show_time AS hs, tbl_user AS u WHERE hs.id=? AND hs.who=u.id`
+	ht := commdef.HouseShowTime{}
+	errT := o.Raw(sql, hid).QueryRow(&ht)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house showing period, err:%s", errT.Error())}
+		return
+	}
+
+	hst = ht
+	return
+}
+
+/**
+*	Set house showing time
+*	Arguments:
+*		hid 	- house id
+*		uid 	- login user
+*		prd		- house showing period. 1 - morning, 2 - afternoon, 3 - night
+*		desc	- period desc when period is out of pre-defined
+*	Returns
+*		err 	- error info
+ */
+func SetHouseShowTime(hid, uid int64, prd int, desc string) (err error) {
+	FN := "[GetHouseListByType] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", period:", prd, ", desc:", desc)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+	if prd < commdef.HOUSE_SHOW_PERIOD_Begin || prd > commdef.HOUSE_SHOW_PERIOD_End {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period:%d", prd)}
+		return
+	}
+	if prd == commdef.HOUSE_SHOW_PERIOD_OTHERS && 0 == len(desc) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period:%d, desc not set", prd)}
+		return
+	}
+
+	/* Permission checking*/
+	// Only the landlord and administrator is able to set the house showing period
+	if isHouseOwner(h, uid) {
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+	} else {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user:%d", uid)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+
+	hst := TblHouseShowTime{Id: hid}
+	errT := o.Read(&hst)
+	beego.Debug(FN, "hst: %+v", hst)
+	if nil != errT {
+		if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house showing period, err:%s", errT.Error())}
+			return
+		}
+		// not set, add new record
+		hst.Id = hid
+		hst.Period = prd
+		hst.Desc = desc
+		hst.Who = uid
+		id, errT := o.Insert(&hst)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to insert house showing period, err:%s", errT.Error())}
+			return
+		}
+		beego.Debug(FN, "new id:", id)
+
+	} else { // already exist, update
+		hst.Id = hid
+		hst.Period = prd
+		hst.Desc = desc
+		hst.Who = uid
+		hst.When = time.Now()
+		numb, errT := o.Update(&hst, "Period", "Desc", "Who", "When")
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to update house showing period, err:%s", errT.Error())}
+			return
+		}
+		if 1 != numb {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("numb:%d", numb)}
+			return
+		}
+	}
+
+	return
+}
+
+/**
 *	Get house list by id
 *	Arguments:
 *		ht 		- list type. ref to commdef.HOUSE_LIST_xxx

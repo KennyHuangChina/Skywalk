@@ -295,6 +295,14 @@ func (f *TblHouseFacility) TableUnique() [][]string {
 	}
 }
 
+type TblHouseShowTime struct {
+	Id     int64 // house id
+	Period int
+	Desc   string
+	Who    int64
+	When   time.Time `orm:"auto_now_add;type(datetime)"`
+}
+
 /***************************************************************************
 	tables for events
 ***************************************************************************/
@@ -427,7 +435,7 @@ func init() {
 	orm.RegisterModel(new(TblUser), new(TblUserGroup), new(TblUserGroupMember), new(TblAgency),
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), new(TblHousePrice),
-		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility),
+		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
 		new(TblHouseEvent), new(TblHouseEventProcess),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),

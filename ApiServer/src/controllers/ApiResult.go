@@ -75,6 +75,12 @@ type ResGetHouseDigest struct {
 	HouseDigest commdef.HouseDigest
 }
 
+// result of API get House Show Time
+type ResGetHouseShowtime struct {
+	ResCommon
+	commdef.HouseShowTime
+}
+
 // result of API get house list
 type ResGetHouseDigestList struct {
 	ResCommon

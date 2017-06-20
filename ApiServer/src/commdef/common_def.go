@@ -119,6 +119,14 @@ type PropInfo struct {
 	PropDesc    string
 }
 
+type HouseShowTime struct {
+	Id     int64
+	Period int
+	Desc   string
+	Who    string
+	When   string
+}
+
 const (
 	HOUSE_LIST_Unknown   = 0
 	HOUSE_LIST_All       = 0
@@ -181,6 +189,17 @@ type HouseFacility struct {
 	Qty  int    // facility quantity
 	Desc string // facility description
 }
+
+const (
+	HOUSE_SHOW_PERIOD_Begin = 1
+
+	HOUSE_SHOW_PERIOD_MORNING   = 1
+	HOUSE_SHOW_PERIOD_AFTERNOON = 2
+	HOUSE_SHOW_PERIOD_NIGHT     = 3
+	HOUSE_SHOW_PERIOD_OTHERS    = 4
+
+	HOUSE_SHOW_PERIOD_End = 4
+)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //

@@ -20,6 +20,9 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("CommitHouseByOwner", h.CommitHouseByOwner)
 	h.Mapping("ModifyHouse", h.ModifyHouse)
 
+	h.Mapping("SetHouseShowTime", h.SetHouseShowTime)
+	h.Mapping("GetHouseShowTime", h.GetHouseShowTime)
+
 	h.Mapping("SetHousePrice", h.SetHousePrice)
 	h.Mapping("GetHousePrice", h.GetHousePrice)
 
@@ -28,6 +31,89 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
 	h.Mapping("GetBehalfList", h.GetBehalfList)
+}
+
+// @Title GetHouseShowTime
+// @Description get the house showing time
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/showtime [get]
+func (this *HouseController) GetHouseShowTime() {
+	FN := "[GetHouseShowTime] "
+	beego.Warn("[--- API: GetHouseShowTime ---]")
+
+	var result ResGetHouseShowtime
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+
+	err, hst := models.GetHouseShowTime(hid, uid)
+	if nil == err {
+		result.HouseShowTime = hst
+	}
+
+	return
+}
+
+// @Title SetHouseShowTime
+// @Description set the house showing time
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/showtime [put]
+func (this *HouseController) SetHouseShowTime() {
+	FN := "[SetHouseShowTime] "
+	beego.Warn("[--- API: SetHouseShowTime ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	prd, _ := this.GetInt("prd")
+	desc := this.GetString("desc")
+
+	err = models.SetHouseShowTime(hid, uid, prd, desc)
+	if nil == err {
+	}
+
+	return
 }
 
 // @Title GetHousePrice

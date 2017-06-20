@@ -242,13 +242,13 @@ func Test_GetHouseDigestInfo(t *testing.T) {
 	t.Log("Test GetHouseDigestInfo")
 
 	t.Log("<Case> house does not exist")
-	if e, _ := GetHouseDigestInfo(10000000000); e == nil {
+	if e, _ := GetHouseDigestInfo(10000000000, 5); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	t.Log("<Case> house actual exist")
-	e, hd := GetHouseDigestInfo(2)
+	e, hd := GetHouseDigestInfo(2, 5)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -1290,4 +1290,38 @@ func Test_GetHousePrice(t *testing.T) {
 		t.Error("Failed, total(%d) != 2", total)
 		return
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- SetHouseShowTime --
+//
+func Test_SetHouseShowTime(t *testing.T) {
+	// seq := 0
+
+	t.Error("Not Implement")
+	// 	seq++
+	// 	begin := -1
+	// 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: begin(%d) < 0", seq, begin))
+	// 	if e, _, _ := SetHouseShowTime(4, 5, begin, -1); e == nil {
+	// 		t.Error("Failed, err: ", e)
+	// 		return
+	// 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetHouseShowTime --
+//
+func Test_GetHouseShowTime(t *testing.T) {
+	// seq := 0
+
+	t.Error("Not Implement")
+	// 	seq++
+	// 	begin := -1
+	// 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: begin(%d) < 0", seq, begin))
+	// 	if e, _, _ := GetHouseShowTime(4, 5, begin, -1); e == nil {
+	// 		t.Error("Failed, err: ", e)
+	// 		return
+	// 	}
 }
