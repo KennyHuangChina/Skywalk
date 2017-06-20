@@ -97,6 +97,7 @@ public class IApiResults {
         int     Decorate();     // decoration
         String  DecorateDesc();
         String  BuyDate();
+        String  ModifyDate();
     }
 
     public interface IHousePriceInfo {

@@ -22,6 +22,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private int     mDecorate;      // decorate id
     private String  mDecoration;    // decoration description
     private String  mBuyDate;       // buy date
+    private String  mModifyDate;    // last modify date
 
     ResGetHouseInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -43,6 +44,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
         mString += "  acreage: " + Acreage() / 100 + "." + Acreage() % 100 + "\n";
         mString += "  decoration: (" + Decorate() + ")" + DecorateDesc() + "\n";
         mString += "  buy date: " + BuyDate() + "\n";
+        mString += "  last modify date: " + ModifyDate() + "\n";
 
         return mString;
     }
@@ -63,6 +65,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
             mAcreage        = jHouse.getInt("Acreage");
             mDecorate       = jHouse.getInt("Decoration");
             mBuyDate        = jHouse.getString("BuyDate");
+            mModifyDate     = jHouse.getString("ModifyDate");
 
             if (mBuildingNo.isEmpty() || mHouseNo.isEmpty()) {
                 if (mFloorThis == mFloorTotal + 1) {
@@ -168,5 +171,10 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     @Override
     public String BuyDate() {
         return mBuyDate;
+    }
+
+    @Override
+    public String ModifyDate() {
+        return mModifyDate;
     }
 }
