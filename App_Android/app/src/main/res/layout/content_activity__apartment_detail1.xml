@@ -19,8 +19,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!--android:text="3室1厅"-->
             <TextView
-                android:text="3室1厅"
+                android:id="@+id/tv_apartment_huxing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FF3F29"
@@ -48,8 +49,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!--android:text="131.51平米"-->
             <TextView
-                android:text="131.51平米"
+                android:id="@+id/tv_apartment_acreage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FF3F29"
@@ -77,8 +79,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!--android:text="6人"-->
             <TextView
-                android:text="6人"
+                android:id="@+id/tv_apartment_yuyue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FF3F29"
@@ -123,14 +126,15 @@
                     android:textColor="#939499"
                     android:text="楼层："/>
 
+                <!--android:text="12/30F"-->
                 <TextView
+                    android:id="@+id/tv_apartment_floor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="#242224"
-                    android:text="12/30F"/>
+                    android:textColor="#242224" />
             </LinearLayout>
 
             <LinearLayout
@@ -145,14 +149,15 @@
                     android:textColor="#939499"
                     android:text="房型："/>
 
+                <!--android:text="高层"-->
                 <TextView
+                    android:id="@+id/tv_apartment_fangxing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="#242224"
-                    android:text="高层"/>
+                    android:textColor="#242224"/>
             </LinearLayout>
         </TableRow>
 
@@ -173,14 +178,15 @@
                     android:textColor="#939499"
                     android:text="产权："/>
 
+                <!--android:text="70年"-->
                 <TextView
+                    android:id="@+id/tv_apartment_chanquan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="#242224"
-                    android:text="70年"/>
+                    android:textColor="#242224"/>
             </LinearLayout>
 
             <LinearLayout
@@ -195,14 +201,15 @@
                     android:textColor="#939499"
                     android:text="装修："/>
 
+                <!--android:text="精装修/毛胚"-->
                 <TextView
+                    android:id="@+id/tv_apartment_decoration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="#242224"
-                    android:text="精装修/毛胚"/>
+                    android:textColor="#242224"/>
             </LinearLayout>
         </TableRow>
 
@@ -223,14 +230,15 @@
                     android:textColor="#939499"
                     android:text="竣工："/>
 
+                <!--android:text="2012年"-->
                 <TextView
+                    android:id="@+id/tv_apartment_jungong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="#242224"
-                    android:text="2012年"/>
+                    android:textColor="#242224"/>
             </LinearLayout>
 
             <LinearLayout
@@ -245,14 +253,15 @@
                     android:textColor="#939499"
                     android:text="购入："/>
 
+                <!--android:text="2015年"-->
                 <TextView
+                    android:id="@+id/tv_apartment_buydate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="#242224"
-                    android:text="2015年"/>
+                    android:textColor="#242224"/>
             </LinearLayout>
         </TableRow>
 

@@ -45,6 +45,23 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private ArrayList<String> mImageLst;
     private int mHouseId = -1;
+    private CommandManager mCmdMgr = null;
+
+    private TextView mTvApartmentName;
+    private TextView mTvApartmentStatus;
+    private TextView mTvApartmentNo;
+    private TextView mTvApartmentLastModifyDate;
+    private TextView mTvApartmentHuXing;
+    private TextView mTvApartmentAcreage;
+    private TextView mTvApartmentYuYue;
+
+    private TextView mTvApartment_floor;
+    private TextView mTvApartment_fangxing;
+    private TextView mTvApartment_chanquan;
+    private TextView mTvApartment_decoration;
+    private TextView mTvApartment_jungong;
+    private TextView mTvApartment_buydate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +80,23 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 //        });
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mTvApartmentName = (TextView) findViewById(R.id.tv_apartment_name);
+        mTvApartmentStatus = (TextView) findViewById(R.id.tv_apartment_status);
+
+        mTvApartmentNo = (TextView) findViewById(R.id.tv_apartment_no);
+        mTvApartmentLastModifyDate = (TextView) findViewById(R.id.tv_apartment_last_modify_date);
+        mTvApartmentHuXing = (TextView) findViewById(R.id.tv_apartment_huxing);
+        mTvApartmentAcreage = (TextView) findViewById(R.id.tv_apartment_acreage);
+        mTvApartmentYuYue = (TextView) findViewById(R.id.tv_apartment_yuyue);
+
+        mTvApartment_floor = (TextView) findViewById(R.id.tv_apartment_floor);
+        mTvApartment_fangxing = (TextView) findViewById(R.id.tv_apartment_fangxing);
+        mTvApartment_chanquan = (TextView) findViewById(R.id.tv_apartment_chanquan);
+        mTvApartment_decoration = (TextView) findViewById(R.id.tv_apartment_decoration);
+        mTvApartment_jungong = (TextView) findViewById(R.id.tv_apartment_jungong);
+        mTvApartment_buydate = (TextView) findViewById(R.id.tv_apartment_buydate);
+
+
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         mImageLst = commonFun.getTestPicList(this);
         sView.setImages(mImageLst, mSvListener);
@@ -70,48 +104,68 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         Bundle bundle = getIntent().getExtras();
         mHouseId = bundle.getInt("houseId");
 
-        CommandManager CmdMgr = new CommandManager(this, this, this);
-        CmdMgr.GetHouseInfo(mHouseId, false);
+        mCmdMgr = new CommandManager(this, this, this);
+        mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
 
 //        小区物业信息，GetPropertyInfo
+//        mCmdMgr.GetPropertyInfo(2);
+
 //        代理员信息，GetUserInfo
+//        mCmdMgr.GetUserInfo(1);
+
 //        房屋设施 -> GetHouseFacilityList
-    }
-
-    @Override
-    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
-        if (null == iResult) {
-            kjsLogUtil.w("result is null");
-            return;
-        }
-        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
-        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-            return;
+        mCmdMgr.GetHouseFacilityList(mHouseId);
         }
 
-        if (command == CMD_GET_HOUSE_INFO) {
-            updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
-        }
-    }
-
-    private void updateHouseInfo(IApiResults.IGetHouseInfo IHouseInfo) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-    }
-
-    private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
         @Override
-        public void onImageClick(int pos, View view) {
-            PhotoPreview.builder()
-                    .setPhotos(mImageLst)
-                    .setCurrentItem(pos)
+        public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+            if (null == iResult) {
+                kjsLogUtil.w("result is null");
+                return;
+            }
+            kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+            if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                return;
+            }
+
+            if (command == CMD_GET_HOUSE_INFO) {
+                updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+            }
+        }
+
+        private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTvApartmentNo.setText("房屋编号： NO." + IHouseInfo.HouseId());
+                    mTvApartmentLastModifyDate.setText("最后更新： " + IHouseInfo.ModifyDate());
+                    mTvApartmentHuXing.setText(String.format("%d室%d厅%d卫", IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
+                    mTvApartmentAcreage.setText(String.format("%d 平米", IHouseInfo.Acreage() / 100));
+                    mTvApartmentYuYue.setText("");
+
+                    mTvApartment_floor.setText(String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal()));
+                    mTvApartment_fangxing.setText(IHouseInfo.FloorDesc());
+                    mTvApartment_chanquan.setText("");
+                    mTvApartment_decoration.setText(IHouseInfo.DecorateDesc());
+                    mTvApartment_jungong.setText("");
+                    mTvApartment_buydate.setText(String.format("%s 年", IHouseInfo.BuyDate()));
+
+                    mCmdMgr.GetPropertyInfo(IHouseInfo.ProId());
+                    mCmdMgr.GetUserInfo(11);
+
+                }
+            });
+        }
+
+        private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
+            @Override
+            public void onImageClick(int pos, View view) {
+                PhotoPreview.builder()
+                        .setPhotos(mImageLst)
+                        .setCurrentItem(pos)
                     .start(Activity_ApartmentDetail.this);
         }
 
