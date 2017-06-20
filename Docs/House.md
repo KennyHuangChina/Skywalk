@@ -23,6 +23,7 @@
 			* Bathrooms			int		// how many bathrooms within house
 			* Acreage			int 	// the exact acreage of house license, 100 times than real value, so it should be devided by 100 before using, for example, value 9848 mean 98.48 square meters
 			* BuyDate			string	// the exact date buying this house
+			* ModifyDate		string	// the date of modifying the house info
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

@@ -98,6 +98,7 @@ type HouseInfo struct {
 	ForRent     bool   // house is for renting
 	Decoration  int    // TODO
 	BuyDate     string // purchase date
+	ModifyDate  string // last modify date
 }
 
 type HousePrice struct {

@@ -307,6 +307,7 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 	hif.Bathrooms = house.Bathrooms
 	hif.Acreage = house.Acreage
 	hif.Decoration = house.Decoration
+	hif.ModifyDate = fmt.Sprintf("%s", house.ModifyTime.Local())[:10]
 
 	if bPriv { // get privite info
 		hif.BuildingNo = house.BuildingNo
@@ -323,6 +324,7 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 		} else {
 			hif.FloorThis = hif.FloorTotal + 3 // high storied
 		}
+		hif.BuyDate = fmt.Sprintf("%s", house.PurchaseDate.Local())[:4]
 	}
 
 	return
