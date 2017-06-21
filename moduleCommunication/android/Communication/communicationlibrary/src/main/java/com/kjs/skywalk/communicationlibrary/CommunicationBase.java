@@ -32,7 +32,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected String  TAG           = getClass().getSimpleName();
     private   int     mAPI          = CmdID.CMD_TEST;
     protected Context mContext      = null;
-    protected String  mMethodType   = "";
+    protected String  mMethodType   = "GET";
     protected String  mServerURL    = "";
     protected String  mCommandURL   = "";
     protected String  mRequestData  = "";

@@ -77,6 +77,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
         CmdMgr.MofidyAgency(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
                 Integer.parseInt(mEditText2.getText().toString()), 2016);
+        CmdMgr.SetHouseShowtime(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+                Integer.parseInt(mEditText2.getText().toString()), mEditText1.getText().toString() + mEditText2.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, "57", "1606", 35, 16, 2, 4, 3, 17788, false, true, 3, "2017-06-08");
@@ -110,7 +112,7 @@ public class MainActivityFragment extends Fragment
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
+//        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
@@ -121,6 +123,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
 //        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
+        CmdMgr.GetHouseShowtime(Integer.parseInt(mEditText.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);

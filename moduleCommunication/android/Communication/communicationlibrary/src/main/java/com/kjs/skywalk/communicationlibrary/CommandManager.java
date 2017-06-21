@@ -230,6 +230,20 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int GetHouseShowtime(int house_id) {
+        CommunicationBase op = new CmdGetHouseShowTime(mContext, house_id);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
+    public int SetHouseShowtime(int house_id, int pw, int pv, String pd) {
+        CommunicationBase op = new CmdSetHouseShowtime(mContext, house_id, pw, pv, pd);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int GetPropertyListByName(String sName, int nBegin, int nCount) {
         CommunicationBase op = new CmdGetPropertyList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
