@@ -55,12 +55,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="Test List"
+                android:text="Get List"
                 android:textAllCaps="false"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Test Get API"
+                android:text="Get API"
                 android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:text="Test Add API"
+                android:text="Add API"
                 android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <Button
-                android:text="Test Modify API"
+                android:text="Modify API"
                 android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:text="Test Delete API"
+                android:text="Delete API"
                 android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

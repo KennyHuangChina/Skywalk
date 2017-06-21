@@ -111,6 +111,15 @@ public class IApiResults {
         String  When();
     }
 
+    public interface IHouseShowtime {
+        int     HouseId();  // house id
+        int     PeriodW();  // Period for working day: 1 - mornint; 2 - afternoon; 3 - night
+        int     PeriodV();  // Period for weekend and vacation: 1 - mornint; 2 - afternoon; 3 - night
+        String  Desc();     // description when period is 4
+        String  Who();      // who set the showtime
+        String  When();     // when the showtime's been set
+    }
+
     public interface IAddRes {
         int GetId();
     }
