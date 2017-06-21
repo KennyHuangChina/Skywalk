@@ -96,6 +96,7 @@ type HouseInfo struct {
 	Acreage     int
 	ForSale     bool   // house is for saling
 	ForRent     bool   // house is for renting
+	RentStat    int    // rent state. ref to HOUSE_RENT_XXX
 	Decoration  int    // TODO
 	BuyDate     string // purchase date
 	ModifyDate  string // last modify date

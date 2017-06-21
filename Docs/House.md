@@ -25,6 +25,9 @@
 			* BuyDate			string	// the exact date buying this house
 			* ModifyDate		string	// the date of modifying the house info
 			* Agency			int 	// house agency id
+			* ForSale			boolean	// house for sale
+			* ForRent			boolean	// house for rent
+			* RentStat			int 	// 1: wait for renting, 2: rented, 3: Due, open for ordering
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

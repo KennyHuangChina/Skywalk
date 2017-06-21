@@ -447,6 +447,9 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 	hif.Livingrooms = house.Livingrooms
 	hif.Bathrooms = house.Bathrooms
 	hif.Acreage = house.Acreage
+	hif.ForSale = house.ForSale
+	hif.ForRent = house.ForRent
+	hif.RentStat = house.RentStat
 	hif.Decoration = house.Decoration
 	hif.ModifyDate = fmt.Sprintf("%s", house.ModifyTime.Local())[:10]
 	hif.Agency = house.Agency.Id
