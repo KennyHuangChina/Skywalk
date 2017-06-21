@@ -275,14 +275,15 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
+        <!--android:text="昆山市 长江南路666号（长途汽车站对面）"-->
         <TextView
+            android:id="@+id/tv_apartment_addr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:textSize="14sp"
-            android:textColor="#242224"
-            android:text="昆山市 长江南路666号（长途汽车站对面）"/>
+            android:textColor="#242224"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -542,21 +543,23 @@
             android:id="@+id/iv_touxiang"
             android:src="@drawable/touxiang"/>
 
+        <!--android:text="代理员：荼蘼"-->
         <TextView
+            android:id="@+id/tv_apartment_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/iv_touxiang"
-            android:text="代理员：荼蘼"
             android:textSize="14sp"
             android:textColor="#242224"/>
 
+        <!--android:text="联系电话：13023423232"-->
         <TextView
+            android:id="@+id/tv_apartment_telephone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:text="联系电话：13023423232"
             android:textSize="14sp"
             android:textColor="#242224"/>
 

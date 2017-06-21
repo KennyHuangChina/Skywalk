@@ -40,6 +40,8 @@ import me.iwf.photopicker.PhotoPreview;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PROPERTY_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
 
 public class Activity_ApartmentDetail extends SKBaseActivity {
 
@@ -49,6 +51,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private TextView mTvApartmentName;
     private TextView mTvApartmentStatus;
+    private TextView mTvApartmentAddr;
     private TextView mTvApartmentNo;
     private TextView mTvApartmentLastModifyDate;
     private TextView mTvApartmentHuXing;
@@ -62,6 +65,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     private TextView mTvApartment_jungong;
     private TextView mTvApartment_buydate;
 
+    private TextView mTvApartment_username;
+    private TextView mTvApartment_telephone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
         mTvApartmentName = (TextView) findViewById(R.id.tv_apartment_name);
         mTvApartmentStatus = (TextView) findViewById(R.id.tv_apartment_status);
+        mTvApartmentAddr = (TextView) findViewById(R.id.tv_apartment_addr);
 
         mTvApartmentNo = (TextView) findViewById(R.id.tv_apartment_no);
         mTvApartmentLastModifyDate = (TextView) findViewById(R.id.tv_apartment_last_modify_date);
@@ -95,6 +101,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mTvApartment_decoration = (TextView) findViewById(R.id.tv_apartment_decoration);
         mTvApartment_jungong = (TextView) findViewById(R.id.tv_apartment_jungong);
         mTvApartment_buydate = (TextView) findViewById(R.id.tv_apartment_buydate);
+
+        mTvApartment_username = (TextView) findViewById(R.id.tv_apartment_username);
+        mTvApartment_telephone = (TextView) findViewById(R.id.tv_apartment_telephone);
 
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
@@ -132,8 +141,19 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             }
 
             if (command == CMD_GET_HOUSE_INFO) {
-                updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+                updateHouseInfo((IApiResults.IGetHouseInfo)iResult);
             }
+
+            if (command == CMD_GET_PROPERTY_INFO) {
+                // CMD_GET_PROPERTY_INFO,   IApiResults.IPropertyInfo
+                updateHousePropertyInfo((IApiResults.IPropertyInfo)iResult);
+            }
+
+            if (command == CMD_GET_USER_INFO) {
+                // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
+                updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
+            }
+
         }
 
         private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
@@ -154,11 +174,32 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                     mTvApartment_buydate.setText(String.format("%s 年", IHouseInfo.BuyDate()));
 
                     mCmdMgr.GetPropertyInfo(IHouseInfo.ProId());
-                    mCmdMgr.GetUserInfo(11);
+                    mCmdMgr.GetUserInfo(IHouseInfo.Agency());
 
                 }
             });
         }
+
+        private void updateHousePropertyInfo(final IApiResults.IPropertyInfo propertyInfo) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTvApartmentName.setText(propertyInfo.GetName());
+                    mTvApartmentAddr.setText(propertyInfo.GetAddress());
+                }
+            });
+        }
+
+    private void updateHouseUserInfo(final IApiResults.IGetUserInfo UserInfo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTvApartment_username.setText("代理员：" + UserInfo.GetName());
+                mTvApartment_telephone.setText("联系电话：" + UserInfo.GetPhoneNo());
+//                UserInfo.GetHead()
+            }
+        });
+    }
 
         private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
             @Override
