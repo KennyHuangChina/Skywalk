@@ -449,6 +449,7 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 	hif.Acreage = house.Acreage
 	hif.Decoration = house.Decoration
 	hif.ModifyDate = fmt.Sprintf("%s", house.ModifyTime.Local())[:10]
+	hif.Agency = house.Agency.Id
 
 	if bPriv { // get privite info
 		hif.BuildingNo = house.BuildingNo

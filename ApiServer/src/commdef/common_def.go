@@ -99,6 +99,7 @@ type HouseInfo struct {
 	Decoration  int    // TODO
 	BuyDate     string // purchase date
 	ModifyDate  string // last modify date
+	Agency      int64  // house agency id
 }
 
 type HousePrice struct {
