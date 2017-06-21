@@ -96,6 +96,9 @@ public class IApiResults {
         int     Acreage();      // house acreage, 100x than real value. for example 11537 mean 115.37 M^2
         int     Decorate();     // decoration
         int     Agency();       // house agency id
+        boolean ForSale();      // is house for sale
+        boolean ForRent();      // is house for rent
+        int     RentStat();     // 1: wait for rent, 2: rented, 3: Due, open for ordering
         String  DecorateDesc();
         String  BuyDate();
         String  ModifyDate();
