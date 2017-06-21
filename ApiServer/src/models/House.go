@@ -38,14 +38,20 @@ func GetHouseShowTime(hid, uid int64) (err error, hst commdef.HouseShowTime) {
 	/* Processing */
 	o := orm.NewOrm()
 
-	sql := `SELECT hs.id, hs.period, hs.desc, u.name AS who, hs.when
+	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET)
+
+	sql := `SELECT hs.id, hs.period1, hs.period2, hs.desc, IF (LENGTH(u.name) > 0,  u.name, ?) AS who, hs.when
 				FROM tbl_house_show_time AS hs, tbl_user AS u WHERE hs.id=? AND hs.who=u.id`
-	ht := commdef.HouseShowTime{}
-	errT := o.Raw(sql, hid).QueryRow(&ht)
+	ht := commdef.HouseShowTime{Id: hid}
+	beego.Debug(FN, fmt.Sprintf("ht:%+v", ht))
+	errT := o.Raw(sql, nameUnset, hid).QueryRow(&ht)
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house showing period, err:%s", errT.Error())}
-		return
+		if orm.ErrNoRows != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house showing period, err:%s", errT.Error())}
+			return
+		}
 	}
+	beego.Debug(FN, fmt.Sprintf("ht:%+v", ht))
 
 	hst = ht
 	return
@@ -56,14 +62,15 @@ func GetHouseShowTime(hid, uid int64) (err error, hst commdef.HouseShowTime) {
 *	Arguments:
 *		hid 	- house id
 *		uid 	- login user
-*		prd		- house showing period. 1 - morning, 2 - afternoon, 3 - night
+*		prdw	- house showing period for working day. 1 - morning, 2 - afternoon, 3 - night
+*		prdv	- house showing period for vacation and weekend. 1 - morning, 2 - afternoon, 3 - night
 *		desc	- period desc when period is out of pre-defined
 *	Returns
 *		err 	- error info
  */
-func SetHouseShowTime(hid, uid int64, prd int, desc string) (err error) {
+func SetHouseShowTime(hid, uid int64, prdw, prdv int, desc string) (err error) {
 	FN := "[GetHouseListByType] "
-	beego.Trace(FN, "house:", hid, ", login user:", uid, ", period:", prd, ", desc:", desc)
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", period:", prdw, "|", prdv, ", desc:", desc)
 
 	defer func() {
 		if nil != err {
@@ -76,14 +83,18 @@ func SetHouseShowTime(hid, uid int64, prd int, desc string) (err error) {
 	if nil != err {
 		return
 	}
-	if prd < commdef.HOUSE_SHOW_PERIOD_Begin || prd > commdef.HOUSE_SHOW_PERIOD_End {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period:%d", prd)}
+	if prdw < commdef.HOUSE_SHOW_PERIOD_Min || prdw > commdef.HOUSE_SHOW_PERIOD_Max {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period for working day:%d", prdw)}
 		return
 	}
-	if prd == commdef.HOUSE_SHOW_PERIOD_OTHERS && 0 == len(desc) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period:%d, desc not set", prd)}
+	if prdv < commdef.HOUSE_SHOW_PERIOD_Min || prdv > commdef.HOUSE_SHOW_PERIOD_Max {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period for vacation:%d", prdv)}
 		return
 	}
+	// if prd == commdef.HOUSE_SHOW_PERIOD_OTHERS && 0 == len(desc) {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("period:%d, desc not set", prd)}
+	// 	return
+	// }
 
 	/* Permission checking*/
 	// Only the landlord and administrator is able to set the house showing period
@@ -99,7 +110,7 @@ func SetHouseShowTime(hid, uid int64, prd int, desc string) (err error) {
 
 	hst := TblHouseShowTime{Id: hid}
 	errT := o.Read(&hst)
-	beego.Debug(FN, "hst: %+v", hst)
+	beego.Debug(FN, fmt.Sprintf("hst: %+v", hst))
 	if nil != errT {
 		if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house showing period, err:%s", errT.Error())}
@@ -107,7 +118,8 @@ func SetHouseShowTime(hid, uid int64, prd int, desc string) (err error) {
 		}
 		// not set, add new record
 		hst.Id = hid
-		hst.Period = prd
+		hst.Period1 = prdw
+		hst.Period2 = prdv
 		hst.Desc = desc
 		hst.Who = uid
 		id, errT := o.Insert(&hst)
@@ -119,11 +131,12 @@ func SetHouseShowTime(hid, uid int64, prd int, desc string) (err error) {
 
 	} else { // already exist, update
 		hst.Id = hid
-		hst.Period = prd
+		hst.Period1 = prdw
+		hst.Period2 = prdv
 		hst.Desc = desc
 		hst.Who = uid
 		hst.When = time.Now()
-		numb, errT := o.Update(&hst, "Period", "Desc", "Who", "When")
+		numb, errT := o.Update(&hst, "Period1", "Period2", "Desc", "Who", "When")
 		if nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to update house showing period, err:%s", errT.Error())}
 			return

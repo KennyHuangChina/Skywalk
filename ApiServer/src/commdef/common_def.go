@@ -120,11 +120,12 @@ type PropInfo struct {
 }
 
 type HouseShowTime struct {
-	Id     int64
-	Period int
-	Desc   string
-	Who    string
-	When   string
+	Id      int64
+	Period1 int // show period for working day
+	Period2 int // show period for weekend and vacation
+	Desc    string
+	Who     string
+	When    string
 }
 
 const (
@@ -191,14 +192,13 @@ type HouseFacility struct {
 }
 
 const (
-	HOUSE_SHOW_PERIOD_Begin = 1
+	HOUSE_SHOW_PERIOD_Min = 0 // 0 | 0 | 0
 
 	HOUSE_SHOW_PERIOD_MORNING   = 1
 	HOUSE_SHOW_PERIOD_AFTERNOON = 2
-	HOUSE_SHOW_PERIOD_NIGHT     = 3
-	HOUSE_SHOW_PERIOD_OTHERS    = 4
+	HOUSE_SHOW_PERIOD_NIGHT     = 4
 
-	HOUSE_SHOW_PERIOD_End = 4
+	HOUSE_SHOW_PERIOD_Max = 7 // 1 | 2 | 4
 )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

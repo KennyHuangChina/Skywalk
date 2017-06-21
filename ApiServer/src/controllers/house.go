@@ -106,10 +106,11 @@ func (this *HouseController) SetHouseShowTime() {
 	}
 
 	hid, _ := this.GetInt64(":id")
-	prd, _ := this.GetInt("prd")
+	prdw, _ := this.GetInt("prdw")
+	prdv, _ := this.GetInt("prdv")
 	desc := this.GetString("desc")
 
-	err = models.SetHouseShowTime(hid, uid, prd, desc)
+	err = models.SetHouseShowTime(hid, uid, prdw, prdv, desc)
 	if nil == err {
 	}
 

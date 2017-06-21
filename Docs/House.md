@@ -225,7 +225,8 @@
 	[Security]	private: landlorad, administrator
 	[Request]
   		* PUT /v1/house/:id/showtime
-	  		* prd			int			// house showing period. 1 - morning, 2 - afternoon, 3 - night
+	  		* prdw			int			// house showing period for working day. 1 - morning, 2 - afternoon, 3 - night
+	  		* prdv			int			// house showing period for vacation and weekend. 1 - morning, 2 - afternoon, 3 - night
 	  		* desc			string		// period desc when period is out of pre-defined
 	[Response]
 		* SUCCESS:200 
@@ -240,7 +241,9 @@
   		* GET /v1/house/:id/showtime
 	[Response]
 		* SUCCESS:200 
-			* Period		int 		// house showing period. 1 - morning, 2 - afternoon, 3 - night
+			* Id 			int			// House id
+			* Period1		int 		// house showing period for working day. 1 - morning, 2 - afternoon, 3 - night
+			* Period2		int 		// house showing period for weekend and vacation. 1 - morning, 2 - afternoon, 3 - night
 			* Desc			sring 		// period desc when period is out of pre-defined
 			* Who			string		// who set the house showing time
 			* When			string		// when set the house showing time

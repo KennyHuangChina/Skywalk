@@ -296,11 +296,12 @@ func (f *TblHouseFacility) TableUnique() [][]string {
 }
 
 type TblHouseShowTime struct {
-	Id     int64 // house id
-	Period int
-	Desc   string
-	Who    int64
-	When   time.Time `orm:"auto_now_add;type(datetime)"`
+	Id      int64 // house id
+	Period1 int   // period for working day
+	Period2 int   // period for weekend and vacation
+	Desc    string
+	Who     int64
+	When    time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 /***************************************************************************
