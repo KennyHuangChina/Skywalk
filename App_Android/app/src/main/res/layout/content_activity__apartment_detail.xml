@@ -121,7 +121,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="11dp"
             android:paddingRight="11dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -129,25 +129,34 @@
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp">
 
-                <TextView
-                    android:text="2200（元/月）"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="11sp"/>
+                    android:orientation="vertical">
 
+                    <!--android:text="2200（元/月）"-->
+                    <TextView
+                        android:id="@+id/tv_apartment_rent_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:text="业主挂牌价"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#939499"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <!--android:text="降200"-->
                 <TextView
-                    android:text="物业200（月）"
+                    android:id="@+id/tv_apartment_pricing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="11sp"/>
-
-                <TextView
-                    android:text="降200"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center"
                     android:textColor="#32BE84"
                     android:textSize="12sp"/>
@@ -156,7 +165,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone" >
                 <TextView
                     android:text="业主挂牌价"
                     android:layout_width="wrap_content"
@@ -177,7 +187,8 @@
             <com.kjs.skywalk.control.ExpandedView
                 android:id="@+id/ev_price_analysis"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
             </com.kjs.skywalk.control.ExpandedView>
         </LinearLayout>
 
