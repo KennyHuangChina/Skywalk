@@ -165,6 +165,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                     mTvApartmentHuXing.setText(String.format("%d室%d厅%d卫", IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
                     mTvApartmentAcreage.setText(String.format("%d 平米", IHouseInfo.Acreage() / 100));
                     mTvApartmentYuYue.setText("");
+                    mTvApartmentStatus.setText(translateRentStatus(IHouseInfo.RentStat()));
 
                     mTvApartment_floor.setText(String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal()));
                     mTvApartment_fangxing.setText(IHouseInfo.FloorDesc());
@@ -199,6 +200,19 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 //                UserInfo.GetHead()
             }
         });
+    }
+
+    private String translateRentStatus(int status) {
+//        1: wait for rent, 2: rented, 3: Due, open for ordering
+        switch (status) {
+            case 1:
+                return "待租";
+            case 2:
+                return "已租";
+            case 3:
+                return "到期";
+        }
+        return "";
     }
 
         private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {

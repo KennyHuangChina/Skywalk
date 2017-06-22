@@ -39,8 +39,8 @@
                     android:textSize="18sp"
                     android:id="@+id/tv_apartment_name" />
 
+                <!--android:text="待租"-->
                 <TextView
-                    android:text="待租"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
