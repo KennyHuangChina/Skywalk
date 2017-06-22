@@ -313,7 +313,10 @@ public class MainActivity extends SKBaseActivity {
 
                     case R.id.action_setting5:
                     {
-                        startActivity(new Intent(MainActivity.this, Activity_fangyuan_guanli.class));
+                        Intent intent = new Intent(MainActivity.this, Activity_fangyuan_guanli.class);
+                        intent.putExtra("house_id", 1);
+                        intent.putExtra("house_location", "世茂蝶湖湾17栋1208室");
+                        startActivity(intent);
                     }
                     break;
 

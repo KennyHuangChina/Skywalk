@@ -14,11 +14,16 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     private fragmentFangYuanGuanLiInfo2 mFragInfo2 = null;
     private fragmentFangYuanGuanLiInfo3 mFragInfo3 = null;
     int mTestCount = 0;
+    private int mHouseId = 0;
+    private String mHouseLocation = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fangyuan_guanli);
+
+        mHouseId = getIntent().getIntExtra("house_id", 0);
+        mHouseLocation = getIntent().getStringExtra("house_location");
 
         FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
         mFragInfo1 = new fragmentFangYuanGuanLiInfo1();
@@ -75,8 +80,11 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             break;
             case R.id.ll_kanfangshijian:
             {
+                Intent intent = new Intent(this, Activity_Zushouweituo_Kanfangshijian.class);
+                intent.putExtra("house_id", mHouseId);
+                intent.putExtra("house_location", mHouseLocation);
                 // 最佳看房时间
-                startActivity(new Intent(this, Activity_Zushouweituo_Kanfangshijian.class));
+                startActivity(intent);
             }
             break;
             case R.id.ll_wuraoshijian:

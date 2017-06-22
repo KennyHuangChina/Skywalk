@@ -3,6 +3,7 @@ package com.kjs.skywalk.app_android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -32,6 +33,8 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
         Intent intent = getIntent();
         mHouseID = intent.getIntExtra("house_id", 0);
         mHouseLocation = intent.getStringExtra("house_location");
+
+        Log.i(getClass().getSimpleName(), "House Location: " + mHouseLocation);
 
         TextView titleText = (TextView) findViewById(R.id.textViewActivityTitle);
         if (mHouseLocation == null || mHouseLocation.isEmpty()) {
