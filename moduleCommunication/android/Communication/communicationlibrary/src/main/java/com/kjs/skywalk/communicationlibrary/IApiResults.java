@@ -95,6 +95,10 @@ public class IApiResults {
         int     Bathrooms();    // how many bathrooms within house
         int     Acreage();      // house acreage, 100x than real value. for example 11537 mean 115.37 M^2
         int     Decorate();     // decoration
+        int     Agency();       // house agency id
+        boolean ForSale();      // is house for sale
+        boolean ForRent();      // is house for rent
+        int     RentStat();     // 1: wait for rent, 2: rented, 3: Due, open for ordering
         String  DecorateDesc();
         String  BuyDate();
         String  ModifyDate();
@@ -109,6 +113,15 @@ public class IApiResults {
         int     SellingPriceMin();
         String  Who();
         String  When();
+    }
+
+    public interface IHouseShowtime {
+        int     HouseId();  // house id
+        int     PeriodW();  // Period for working day: 1 - mornint; 2 - afternoon; 3 - night
+        int     PeriodV();  // Period for weekend and vacation: 1 - mornint; 2 - afternoon; 3 - night
+        String  Desc();     // description when period is 4
+        String  Who();      // who set the showtime
+        String  When();     // when the showtime's been set
     }
 
     public interface IAddRes {

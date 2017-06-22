@@ -23,6 +23,10 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private String  mDecoration;    // decoration description
     private String  mBuyDate;       // buy date
     private String  mModifyDate;    // last modify date
+    private int     mAgency;        // house agent id
+    private boolean mForSale;
+    private boolean mForRent;
+    private int     mRentStat;
 
     ResGetHouseInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -45,6 +49,9 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
         mString += "  decoration: (" + Decorate() + ")" + DecorateDesc() + "\n";
         mString += "  buy date: " + BuyDate() + "\n";
         mString += "  last modify date: " + ModifyDate() + "\n";
+        mString += "  Agency: " + Agency() + "\n";
+        mString += "  Sale: " + ForSale() + "\n";
+        mString += "  Rent: " + ForRent() + ", stat:" + RentStat() + "\n";
 
         return mString;
     }
@@ -66,6 +73,10 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
             mDecorate       = jHouse.getInt("Decoration");
             mBuyDate        = jHouse.getString("BuyDate");
             mModifyDate     = jHouse.getString("ModifyDate");
+            mAgency         = jHouse.getInt("Agency");
+            mForSale        = jHouse.getBoolean("ForSale");
+            mForRent        = jHouse.getBoolean("ForRent");
+            mRentStat       = jHouse.getInt("RentStat");
 
             if (mBuildingNo.isEmpty() || mHouseNo.isEmpty()) {
                 if (mFloorThis == mFloorTotal + 1) {
@@ -161,6 +172,26 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     @Override
     public int Decorate() {
         return mDecorate;
+    }
+
+    @Override
+    public int Agency() {
+        return mAgency;
+    }
+
+    @Override
+    public boolean ForSale() {
+        return mForSale;
+    }
+
+    @Override
+    public boolean ForRent() {
+        return mForRent;
+    }
+
+    @Override
+    public int RentStat() {
+        return mRentStat;
     }
 
     @Override

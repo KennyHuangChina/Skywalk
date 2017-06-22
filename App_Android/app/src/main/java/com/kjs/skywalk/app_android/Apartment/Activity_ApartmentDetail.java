@@ -38,8 +38,11 @@ import java.util.ArrayList;
 
 import me.iwf.photopicker.PhotoPreview;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PROPERTY_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
 
 public class Activity_ApartmentDetail extends SKBaseActivity {
 
@@ -49,11 +52,14 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private TextView mTvApartmentName;
     private TextView mTvApartmentStatus;
+    private TextView mTvApartmentAddr;
     private TextView mTvApartmentNo;
     private TextView mTvApartmentLastModifyDate;
     private TextView mTvApartmentHuXing;
     private TextView mTvApartmentAcreage;
     private TextView mTvApartmentYuYue;
+    private TextView mTvApartmentRentPrice;
+    private TextView mTvApartmentPricing;
 
     private TextView mTvApartment_floor;
     private TextView mTvApartment_fangxing;
@@ -62,6 +68,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     private TextView mTvApartment_jungong;
     private TextView mTvApartment_buydate;
 
+    private TextView mTvApartment_username;
+    private TextView mTvApartment_telephone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +90,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
         mTvApartmentName = (TextView) findViewById(R.id.tv_apartment_name);
         mTvApartmentStatus = (TextView) findViewById(R.id.tv_apartment_status);
+        mTvApartmentAddr = (TextView) findViewById(R.id.tv_apartment_addr);
+        mTvApartmentRentPrice = (TextView) findViewById(R.id.tv_apartment_rent_price);
+        mTvApartmentPricing = (TextView) findViewById(R.id.tv_apartment_pricing);
 
         mTvApartmentNo = (TextView) findViewById(R.id.tv_apartment_no);
         mTvApartmentLastModifyDate = (TextView) findViewById(R.id.tv_apartment_last_modify_date);
@@ -96,6 +107,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mTvApartment_jungong = (TextView) findViewById(R.id.tv_apartment_jungong);
         mTvApartment_buydate = (TextView) findViewById(R.id.tv_apartment_buydate);
 
+        mTvApartment_username = (TextView) findViewById(R.id.tv_apartment_username);
+        mTvApartment_telephone = (TextView) findViewById(R.id.tv_apartment_telephone);
+
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         mImageLst = commonFun.getTestPicList(this);
@@ -107,6 +121,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mCmdMgr = new CommandManager(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
+
+        mCmdMgr.GetBriefPublicHouseInfo(mHouseId);
 
 //        小区物业信息，GetPropertyInfo
 //        mCmdMgr.GetPropertyInfo(2);
@@ -132,8 +148,19 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             }
 
             if (command == CMD_GET_HOUSE_INFO) {
-                updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+                updateHouseInfo((IApiResults.IGetHouseInfo)iResult);
             }
+
+            if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
+                // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+                updateBriefHouseInfo((IApiResults.IHouseDigest)iResult);
+            }
+
+            if (command == CMD_GET_USER_INFO) {
+                // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
+                updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
+            }
+
         }
 
         private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
@@ -145,6 +172,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                     mTvApartmentHuXing.setText(String.format("%d室%d厅%d卫", IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
                     mTvApartmentAcreage.setText(String.format("%d 平米", IHouseInfo.Acreage() / 100));
                     mTvApartmentYuYue.setText("");
+                    mTvApartmentStatus.setText(translateRentStatus(IHouseInfo.RentStat()));
 
                     mTvApartment_floor.setText(String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal()));
                     mTvApartment_fangxing.setText(IHouseInfo.FloorDesc());
@@ -154,11 +182,55 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                     mTvApartment_buydate.setText(String.format("%s 年", IHouseInfo.BuyDate()));
 
                     mCmdMgr.GetPropertyInfo(IHouseInfo.ProId());
-                    mCmdMgr.GetUserInfo(11);
+                    mCmdMgr.GetUserInfo(IHouseInfo.Agency());
 
                 }
             });
         }
+
+        private void updateBriefHouseInfo(final IApiResults.IHouseDigest briefHouseInfo) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTvApartmentName.setText(briefHouseInfo.GetProperty());         // name
+                    mTvApartmentAddr.setText(briefHouseInfo.GetPropertyAddr());     // address
+                    mTvApartmentRentPrice.setText(String.format("%d（元/月）", briefHouseInfo.GetRental() / 100));
+
+                    int pricingValue = briefHouseInfo.GetPricing() / 100;
+                    String pricing;
+                    if (pricingValue > 0) {
+                        pricing = String.format("升%d", pricingValue);
+                    } else {
+                        pricing = String.format("降%d", Math.abs(pricingValue));
+                    }
+                    mTvApartmentPricing.setText(pricing);
+                }
+            });
+        }
+
+    private void updateHouseUserInfo(final IApiResults.IGetUserInfo UserInfo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTvApartment_username.setText("代理员：" + UserInfo.GetName());
+                mTvApartment_telephone.setText("联系电话：" + UserInfo.GetPhoneNo());
+//                UserInfo.GetHead()
+            }
+        });
+    }
+
+    private String translateRentStatus(int status) {
+//        1: wait for rent, 2: rented, 3: Due, open for ordering
+        switch (status) {
+            case 1:
+                return "待租";
+            case 2:
+                return "已租";
+            case 3:
+                return "到期";
+        }
+        return "";
+    }
 
         private SliderView.SliderViewListener mSvListener = new SliderView.SliderViewListener() {
             @Override
