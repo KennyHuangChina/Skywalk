@@ -48,8 +48,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/linearLayout"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_above="@+id/relativeLayout">
 
         <include layout="@layout/layout_title_bar_with_close_button" />
 
@@ -78,7 +77,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:id="@+id/container1"
