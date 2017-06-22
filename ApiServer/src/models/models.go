@@ -125,6 +125,21 @@ func (h *TblHouse) TableUnique() [][]string {
 	}
 }
 
+type TblOrderTable struct {
+	Id         int64
+	House      int64     // House id
+	Subscriber int64     // who make the subscription
+	SubscTime  time.Time `orm:"auto_now_add;type(datetime)"` // when make the subscription
+	CloseTime  time.Time `orm:"type(datetime);null;default(null)"`
+}
+
+func (h *TblOrderTable) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+		[]string{"Subscriber"},
+	}
+}
+
 type TblHousePrice struct {
 	Id            int64
 	House         int64     // house
@@ -437,7 +452,7 @@ func init() {
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
-		new(TblHouseEvent), new(TblHouseEventProcess),
+		new(TblHouseEvent), new(TblHouseEventProcess), new(TblOrderTable),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),
 		new(TblStrings))

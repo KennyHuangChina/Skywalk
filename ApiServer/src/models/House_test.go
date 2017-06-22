@@ -1325,3 +1325,20 @@ func Test_GetHouseShowTime(t *testing.T) {
 	// 		return
 	// 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetOrderTable --
+//
+func Test_GetOrderTable(t *testing.T) {
+	// seq := 0
+
+	t.Error("Not Implement")
+	// 	seq++
+	// 	begin := -1
+	// 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: begin(%d) < 0", seq, begin))
+	// 	if e, _, _ := GetHouseShowTime(4, 5, begin, -1); e == nil {
+	// 		t.Error("Failed, err: ", e)
+	// 		return
+	// 	}
+}

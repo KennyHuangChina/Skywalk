@@ -254,3 +254,25 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 14. Get House order table info
+	[Security]	private: landlorad, House Agency and administrator
+				public: could see how many people already ordered
+	[Request]
+  		* GET /v1/house/:id/ordertable?
+	  		* bgn				int
+	  		* fCnt				int
+	[Response]
+		* SUCCESS:200 
+			* Total    			int		// total number
+			* Count				int		// how many items fetched
+			* Orders			array
+				* Id			int
+				* House			int		// house id
+				* Subscriber	string	// subscriber
+				* OrderTime		string	// subscribe time
+				* CloseTime		string	// order close time
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

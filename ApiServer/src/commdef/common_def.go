@@ -130,6 +130,14 @@ type HouseShowTime struct {
 	When    string
 }
 
+type HouseOrderTable struct {
+	Id         int64
+	House      int64
+	Subscriber int64
+	OrderTime  string
+	CloseTime  string
+}
+
 const (
 	HOUSE_LIST_Unknown   = 0
 	HOUSE_LIST_All       = 0

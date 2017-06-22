@@ -81,6 +81,14 @@ type ResGetHouseShowtime struct {
 	commdef.HouseShowTime
 }
 
+// result of API get House order table
+type ResGetHouseOrderTable struct {
+	ResCommon
+	Total  int64
+	Count  int64
+	Orders []commdef.HouseOrderTable
+}
+
 // result of API get house list
 type ResGetHouseDigestList struct {
 	ResCommon
