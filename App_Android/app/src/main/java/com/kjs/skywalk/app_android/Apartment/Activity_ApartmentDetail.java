@@ -2,10 +2,12 @@ package com.kjs.skywalk.app_android.Apartment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +15,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -24,6 +28,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Activity_HouseholdDeliverables;
+import com.kjs.skywalk.app_android.Activity_Search;
+import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
 import com.kjs.skywalk.app_android.commonFun;
@@ -35,6 +41,7 @@ import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
 
@@ -70,6 +77,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private TextView mTvApartment_username;
     private TextView mTvApartment_telephone;
+
+    private LinearLayout mLl_housetag_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +119,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mTvApartment_username = (TextView) findViewById(R.id.tv_apartment_username);
         mTvApartment_telephone = (TextView) findViewById(R.id.tv_apartment_telephone);
 
+        mLl_housetag_container = (LinearLayout) findViewById(R.id.ll_housetag_container);
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         mImageLst = commonFun.getTestPicList(this);
@@ -204,6 +214,24 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                         pricing = String.format("降%d", Math.abs(pricingValue));
                     }
                     mTvApartmentPricing.setText(pricing);
+
+                    ArrayList<Object> houseTags = ((IApiResults.IResultList) briefHouseInfo).GetList();
+                    ArrayList<ClassDefine.HouseTag> tagList = new ArrayList<>();
+                    for (Object houseTagObj : houseTags) {
+                        IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
+                        tagList.add(new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName()));
+//                        tagList.add(new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName()));
+//                        tagList.add(new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName()));
+                        kjsLogUtil.i(String.format("tag_id: %d, tag_name:%s", tag.GetTagId(), tag.GetName()));
+                    }
+
+                    int totalTagUsed = 0;
+
+                    while (totalTagUsed < tagList.size()) {
+                        List<ClassDefine.HouseTag> tmpList = tagList.subList(totalTagUsed, tagList.size());
+                        int count = addHouseTagToContainer(mLl_housetag_container, tmpList);
+                        totalTagUsed += count;
+                    }
                 }
             });
         }
@@ -477,4 +505,54 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             }
         });
     }
+
+    private int addHouseTagToContainer(LinearLayout container, List<ClassDefine.HouseTag> houseTags) {
+        if(houseTags == null || houseTags.size() == 0) {
+            return 0;
+        }
+
+        LinearLayout layout = new LinearLayout(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layout.setLayoutParams(layoutParams);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        int totalWidth = 0;
+        int count = 0;
+        for(int i = 0; i < houseTags.size(); i ++) {
+            ClassDefine.TextItem item = createTextItem(houseTags.get(i));
+            if((totalWidth + item.mTextViewWidth <= (mActScreenWidth - 100)) || (i == 0 && item.mTextViewWidth > (mActScreenWidth - 100))) {
+                layout.addView(item.mView);
+                totalWidth += item.mTextViewWidth;
+                count += 1;
+            } else {
+                break;
+            }
+        }
+
+        container.addView(layout);
+        return count;
+    }
+
+    private ClassDefine.TextItem createTextItem(ClassDefine.HouseTag tag) {
+        int paddingLeft, paddingRight, paddingTop, paddingBottom;
+        int marginLeft, marginRight, marginTop, marginBottom;
+        paddingLeft = paddingRight = 25;
+        paddingTop = paddingBottom = 18;
+        marginLeft = marginRight = marginTop = marginBottom = 11;
+
+        ClassDefine.TextItem item = new ClassDefine.TextItem();
+        TextView textView = new TextView(this);
+
+        commonFun.setHouseTagStyleById(textView, tag.tagName, tag.tagId);
+
+        textView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(marginLeft, marginTop, marginRight, marginBottom);
+        textView.setLayoutParams(layoutParams);
+
+        float size = textView.getPaint().measureText(tag.tagName);
+        item.mView = textView;
+        item.mTextViewWidth = (int)size + paddingLeft + paddingRight + marginLeft + marginRight;
+        return item;
+    }
+
 }

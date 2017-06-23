@@ -3,6 +3,7 @@ package com.kjs.skywalk.app_android;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -127,5 +128,10 @@ public class ClassDefine {
         public void printContent() {
 
         }
+    }
+
+    public static class TextItem {
+        public int mTextViewWidth;
+        public TextView mView;
     }
 }
