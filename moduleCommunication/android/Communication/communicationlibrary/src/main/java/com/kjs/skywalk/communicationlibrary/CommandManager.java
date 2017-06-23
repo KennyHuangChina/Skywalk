@@ -244,6 +244,13 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
+    public int GetHouseOrdertable(int house_id, int begin, int cnt) {
+        CommunicationBase op = new CmdGetHouseOrderTable(mContext, house_id, begin, cnt);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int GetPropertyListByName(String sName, int nBegin, int nCount) {
         CommunicationBase op = new CmdGetPropertyList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
