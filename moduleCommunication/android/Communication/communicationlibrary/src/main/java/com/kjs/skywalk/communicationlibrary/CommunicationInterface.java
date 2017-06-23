@@ -55,6 +55,7 @@ public class CommunicationInterface {
         int GetHouseDigestList(int type, int begin, int cnt);                   // CMD_GET_HOUSE_DIGEST_LIST,       IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
         int GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
         int SetHouseShowtime(int house_id, int pw, int pv, String pd);          // CMD_SET_HOUSE_SHOWTIME,          IApiResults.ICommon
+        int GetHouseOrdertable(int house_id, int begin, int cnt);               // CMD_GET_HOUSE_ORDER_TABLE,       IApiResults.IHouseOrdertable
 
         /* Property, Community */
         int GetPropertyListByName(String sName, int nBegin, int nCount);                // CMD_GET_PROPERTY_LIST,   IApiResults.IResultList(IApiResults.IPropertyInfo)
@@ -126,6 +127,7 @@ public class CommunicationInterface {
         public static int CMD_GET_HOUSE_PRICE               = 0x200B;
         public static int CMD_GET_HOUSE_SHOWTIME            = 0x200C;
         public static int CMD_SET_HOUSE_SHOWTIME            = 0x200D;
+        public static int CMD_GET_HOUSE_ORDER_TABLE         = 0x200E;
 
         // Property
         public static int CMD_GET_PROPERTY_LIST     = 0x3001;
