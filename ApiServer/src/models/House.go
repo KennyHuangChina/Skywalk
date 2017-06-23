@@ -20,7 +20,7 @@ import (
  */
 func GetOrderTable(hid, uid int64, begin, fetchCnt int) (err error, total int64, hot []commdef.HouseOrderTable) {
 	FN := "[GetOrderTable] "
-	beego.Trace(FN, "house:", hid, ", login user:", uid)
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", begin:", begin, ", fetchCnt:", fetchCnt)
 
 	defer func() {
 		if nil != err {
@@ -72,17 +72,19 @@ func GetOrderTable(hid, uid int64, begin, fetchCnt int) (err error, total int64,
 	}
 
 	/* Get records */
-	sql := `SELECT o.house, u.name AS subscriber, subsc_time AS order_time, close_time 
+	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET)
+	sql := `SELECT o.id, o.house, IF(LENGTH(u.name) > 0, u.name, ?) AS subscriber, subsc_time AS order_time, close_time 
 				FROM tbl_order_table AS o, tbl_user AS u 
-				WHERE o.Subscriber=u.id AND close_time IS NOT NULL AND house=?
+				WHERE o.subscriber=u.id AND close_time IS NULL AND house=?
 				LIMIT ?, ?`
 
 	ot := []commdef.HouseOrderTable{}
-	_, errT = o.Raw(sql, hid, begin, fetchCnt).QueryRows(&ot)
+	_, errT = o.Raw(sql, nameUnset, hid, begin, fetchCnt).QueryRows(&ot)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house order table, err:%s", errT.Error())}
 		return
 	}
+	// beego.Debug(FN, fmt.Sprintf("ot:%+v", ot))
 
 	hot = ot
 	return

@@ -133,7 +133,7 @@ type HouseShowTime struct {
 type HouseOrderTable struct {
 	Id         int64
 	House      int64
-	Subscriber int64
+	Subscriber string
 	OrderTime  string
 	CloseTime  string
 }

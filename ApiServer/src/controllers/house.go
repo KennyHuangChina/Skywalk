@@ -72,7 +72,11 @@ func (this *HouseController) GetOrderTable() {
 	err, total, hot := models.GetOrderTable(hid, uid, bgn, fetchCnt)
 	if nil == err {
 		result.Total = int64(total)
-		result.Orders = hot
+		if fetchCnt > 0 {
+			result.Orders = hot
+		}
+		result.Count = int64(len(result.Orders))
+		// beego.Debug(FN, fmt.Sprintf("%+v", result))
 	}
 
 	return
