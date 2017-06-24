@@ -48,6 +48,7 @@ import me.iwf.photopicker.PhotoPreview;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_ORDER_TABLE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PROPERTY_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
 
@@ -142,7 +143,11 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
 //        房屋设施 -> GetHouseFacilityList
         mCmdMgr.GetHouseFacilityList(mHouseId);
-        }
+
+//        调用方式 GetHouseOrdertable(house_id, 0, 0)，返回的 total 就试预约人数
+        mCmdMgr.GetHouseOrdertable(mHouseId, 0, 0);
+
+     }
 
         @Override
         public void onCommandFinished(int command, IApiResults.ICommon iResult) {
@@ -169,6 +174,11 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             if (command == CMD_GET_USER_INFO) {
                 // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
                 updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
+            }
+
+            if (command == CMD_GET_HOUSE_ORDER_TABLE) {
+                // IApiResults.IHouseOrdertable
+                updateHouseOrderTable(iResult);
             }
 
         }
@@ -243,6 +253,16 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 mTvApartment_username.setText("代理员：" + UserInfo.GetName());
                 mTvApartment_telephone.setText("联系电话：" + UserInfo.GetPhoneNo());
 //                UserInfo.GetHead()
+            }
+        });
+    }
+
+    private void updateHouseOrderTable(final IApiResults.ICommon orderTable) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IApiResults.IResultList res = (IApiResults.IResultList) orderTable;
+                mTvApartmentYuYue.setText(String.valueOf(res.GetTotalNumber()));
             }
         });
     }
