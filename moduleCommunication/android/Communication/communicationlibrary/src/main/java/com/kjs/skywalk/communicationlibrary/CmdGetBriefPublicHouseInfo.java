@@ -3,15 +3,9 @@ package com.kjs.skywalk.communicationlibrary;
 import android.content.Context;
 import android.util.Log;
 
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by Jackie on 2017/1/20.

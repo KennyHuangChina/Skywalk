@@ -3,8 +3,6 @@ package com.kjs.skywalk.communicationlibrary;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -99,6 +97,10 @@ public class CommunicationInterface {
         int GetHouseEventList(int house_id, int stat, int type, // CMD_GET_HOUSE_EVENT_LST,     IApiResults.IResultList(IApiResults.IHouseEventInfo)
                               int posi_bgn, int fetch_cnt, boolean bIDO);
         int ModifyHouseEvent(int event_id, String desc);        // CMD_MODIFY_HOUSE_EVENT,      IApiResults.ICommon
+
+        // Appointment
+        int MakeAppointment_SeeHouse(int house, String phone,                   // CmdMakeAppointment_SeeHouse,     IApiResults.IAddRes
+                                     String time_begin, String time_end, String desc);
     }
 
     public static class CmdID {
@@ -167,6 +169,9 @@ public class CommunicationInterface {
         public static int CMD_GET_EVENT_PROC_LST        = 0x7005;
         public static int CMD_GET_HOUSE_EVENT_LST       = 0x7006;
         public static int CMD_MODIFY_HOUSE_EVENT        = 0x7007;
+
+        // Appointment
+        public static int CMD_APPOINT_SEE_HOUSE         = 0x8001;
 
         public static int CMD_TEST                   = 0x0001;
     }

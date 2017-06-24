@@ -5,9 +5,6 @@ import android.util.Log;
 
 import com.kjs.skywalk.communicationlibrary.CommunicationBase;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
-import com.kjs.skywalk.communicationlibrary.IApiResults;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 

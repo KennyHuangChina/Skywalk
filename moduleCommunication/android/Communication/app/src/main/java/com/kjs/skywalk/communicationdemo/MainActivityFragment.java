@@ -1,7 +1,5 @@
 package com.kjs.skywalk.communicationdemo;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,7 +19,6 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
@@ -104,9 +101,11 @@ public class MainActivityFragment extends Fragment
 //        list.add(new CommunicationInterface.FacilityItem(4, 3, "电视机说明"));
 //        list.add(new CommunicationInterface.FacilityItem(7, 4, "立式空调说明"));
 //        CmdMgr.AddHouseFacility(6, list);
-        CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-                Integer.parseInt(mEditText2.getText().toString()), "test picture 3",  "/sdcard/3.jpg");
+//        CmdMgr.AddPicture(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+//                Integer.parseInt(mEditText2.getText().toString()), "test picture 3",  "/sdcard/3.jpg");
 //        CmdMgr.SetHousePrice(11, 1000, 800, true, 500000, 470000);
+        CmdMgr.MakeAppointment_SeeHouse(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString(),
+                                            "2017-06-23 9:00", "2017-06-23 10:30", mEditText2.getText().toString());
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);

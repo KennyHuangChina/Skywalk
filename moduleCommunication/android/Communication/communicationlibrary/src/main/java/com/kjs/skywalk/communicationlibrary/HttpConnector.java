@@ -1,7 +1,6 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
-import android.support.v4.*;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -17,21 +16,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.FileNameMap;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;

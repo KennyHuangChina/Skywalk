@@ -4,15 +4,10 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
-
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CIProgressListener;
-import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CICommandListener;
 
 import org.json.JSONObject;
 

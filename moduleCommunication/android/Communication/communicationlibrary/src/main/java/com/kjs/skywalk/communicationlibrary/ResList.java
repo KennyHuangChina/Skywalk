@@ -2,7 +2,6 @@ package com.kjs.skywalk.communicationlibrary;
 
 //import ResBase;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -1,7 +1,5 @@
 package com.kjs.skywalk.communicationlibrary;
 
-import android.appwidget.AppWidgetHost;
-
 import java.util.ArrayList;
 
 /**
