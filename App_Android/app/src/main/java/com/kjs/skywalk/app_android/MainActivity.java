@@ -38,6 +38,7 @@ import java.util.List;
 import me.iwf.photopicker.PhotoPreview;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
 public class MainActivity extends SKBaseActivity {
     private fragmentHomePage mFragHomePage = null;
@@ -314,8 +315,8 @@ public class MainActivity extends SKBaseActivity {
                     case R.id.action_setting5:
                     {
                         Intent intent = new Intent(MainActivity.this, Activity_fangyuan_guanli.class);
-                        intent.putExtra("house_id", 1);
-                        intent.putExtra("house_location", "世茂蝶湖湾17栋1208室");
+                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, 1);
+                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, "世茂蝶湖湾17栋1208室");
                         startActivity(intent);
                     }
                     break;

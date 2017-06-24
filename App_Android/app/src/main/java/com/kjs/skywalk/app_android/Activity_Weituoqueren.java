@@ -24,6 +24,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.util.HashMap;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
 /**
  * Created by admin on 2017/3/16.
@@ -38,7 +39,12 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     private String mURL = "file:////sdcard/test.html";
     private String mErrorPage = "file:////sdcard/error.html";
     private final int MSG_HIDE_PROGRESS_BAR = 0;
-    private final int MSG_COMMIT_DONE = 1;
+    private final int MSG_HOUSE_INFO_COMMIT_DONE = 1;
+    private final int MSG_HOUSE_PRICE_COMMIT_DONE = 2;
+    private int mHouseId = 0;
+    private boolean mHouseInfoCommitted = false;
+    private boolean mPriceInfoCommitted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,29 +93,49 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         });
     }
 
-    private void commit() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
-                if(i == CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER) {
-                    if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                        commonFun.showToast_info(getApplicationContext(), mWebView, "提交成功");
-                        myHandler.sendEmptyMessageDelayed(MSG_COMMIT_DONE, 500);
-                    } else {
-                        Log.i(TAG, iCommon.GetErrDesc()) ;
-                        commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
-                        hideWaiting();
-                    }
+    CommunicationInterface.CICommandListener mListener = new CommunicationInterface.CICommandListener() {
+        @Override
+        public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+            if(i == CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER) {
+                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                    mHouseId = ((IApiResults.IAddRes)iCommon).GetId();
+                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE, 0);
+                    Log.i(TAG, "House Info Committed: " + mHouseId);
+                } else {
+                    Log.i(TAG, iCommon.GetErrDesc()) ;
+                    commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+                    hideWaiting();
+                }
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
-                    });
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            } else if(i == CommunicationInterface.CmdID.CMD_SET_HOUSE_PRICE) {
+                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_PRICE_COMMIT_DONE, 0);
+                } else {
+                    Log.i(TAG, iCommon.GetErrDesc()) ;
+                    commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+                    hideWaiting();
                 }
             }
-        };
-        CommandManager manager = new CommandManager(this, listener, this);
+        }
+    };
+
+    private void commitPriceInfo() {
+        CommandManager manager = new CommandManager(this, mListener, this);
+        if(manager.SetHousePrice(mHouseId, ClassDefine.HouseInfoForCommit.rental, ClassDefine.HouseInfoForCommit.minRental,
+                ClassDefine.HouseInfoForCommit.includePropertyFee == 0 ? false : true,
+                ClassDefine.HouseInfoForCommit.price, ClassDefine.HouseInfoForCommit.minPrice) != CE_ERROR_NO_ERROR) {
+            hideWaiting();
+            commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+        }
+    }
+
+    private void commitHouseInfo() {
+        CommandManager manager = new CommandManager(this, mListener, this);
         boolean forSale = ClassDefine.HouseInfoForCommit.forSale();
         boolean forRent = ClassDefine.HouseInfoForCommit.forRental();
 
@@ -149,7 +175,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
                     return;
                 }
 
-                commit();
+                commitHouseInfo();
             }
             break;
             case R.id.clickReloadView:
@@ -180,15 +206,34 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mWebView.loadUrl(mURL);
     }
 
+    private void showFinishedActivity() {
+        if(!mPriceInfoCommitted || !mHouseInfoCommitted) {
+            return;
+        }
+
+        Log.i(TAG, "提交成功");
+
+        hideWaiting();
+        Intent intent = new Intent(Activity_Weituoqueren.this, Activity_Zushouweituo_Finish.class);
+        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
+        String location = ClassDefine.HouseInfoForCommit.getHouseLocation();
+        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
+        startActivity(intent);
+    }
+
     Handler myHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_HIDE_PROGRESS_BAR:
                     mProgressContainer.setVisibility(View.INVISIBLE);
                     break;
-                case MSG_COMMIT_DONE:
-                    hideWaiting();
-                    startActivity(new Intent(Activity_Weituoqueren.this, Activity_Zushouweituo_Finish.class));
+                case MSG_HOUSE_INFO_COMMIT_DONE:
+                    mHouseInfoCommitted = true;
+                    commitPriceInfo();
+                    break;
+                case MSG_HOUSE_PRICE_COMMIT_DONE:
+                    mPriceInfoCommitted = true;
+                    showFinishedActivity();
                     break;
             }
             super.handleMessage(msg);

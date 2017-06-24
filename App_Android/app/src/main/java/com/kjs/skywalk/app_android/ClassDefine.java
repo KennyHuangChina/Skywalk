@@ -124,8 +124,19 @@ public class ClassDefine {
             return date;
         }
 
+        public static String getHouseLocation() {
+            String location = propertyName + buildingNo + "栋" + roomNo + "室";
+
+            return location;
+        }
+
         public void printContent() {
 
         }
+    }
+
+    public static class IntentExtraKeyValue {
+        public static String KEY_HOUSE_ID = "house_id";
+        public static String KEY_HOUSE_LOCATION = "house_location";
     }
 }

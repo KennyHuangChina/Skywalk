@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
+import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
 public class Activity_fangyuan_guanli extends SKBaseActivity {
 
@@ -14,16 +15,11 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     private fragmentFangYuanGuanLiInfo2 mFragInfo2 = null;
     private fragmentFangYuanGuanLiInfo3 mFragInfo3 = null;
     int mTestCount = 0;
-    private int mHouseId = 0;
-    private String mHouseLocation = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fangyuan_guanli);
-
-        mHouseId = getIntent().getIntExtra("house_id", 0);
-        mHouseLocation = getIntent().getStringExtra("house_location");
 
         FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
         mFragInfo1 = new fragmentFangYuanGuanLiInfo1();

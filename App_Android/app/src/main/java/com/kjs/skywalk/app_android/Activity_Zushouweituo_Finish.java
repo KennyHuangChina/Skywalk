@@ -30,12 +30,7 @@ public class Activity_Zushouweituo_Finish extends SKBaseActivity {
         super.onResume();
 
         TextView view = (TextView)findViewById(R.id.textViewHouseLocation);
-        String property = ClassDefine.HouseInfoForCommit.propertyName;
-        String buildingNo = ClassDefine.HouseInfoForCommit.buildingNo;
-        String room = ClassDefine.HouseInfoForCommit.roomNo;
-
-        String location = property + buildingNo + "栋" + room + "室";
-        view.setText(location);
+        view.setText(mHouseLocation);
 
         TextView rental = (TextView)findViewById(R.id.textViewRent);
         TextView sale = (TextView)findViewById(R.id.textViewSale);
@@ -75,7 +70,10 @@ public class Activity_Zushouweituo_Finish extends SKBaseActivity {
                 break;
             }
             case R.id.improveContainer: {
-                startActivityForResult(new Intent(Activity_Zushouweituo_Finish.this, Activity_fangyuan_guanli.class), 0);
+                Intent intent = new Intent(Activity_Zushouweituo_Finish.this, Activity_fangyuan_guanli.class);
+                intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
+                intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION, mHouseLocation);
+                startActivityForResult(intent, 0);
                 break;
             }
             case R.id.uploadContainer: {

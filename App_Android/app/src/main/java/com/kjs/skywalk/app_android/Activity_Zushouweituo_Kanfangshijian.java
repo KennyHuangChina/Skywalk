@@ -30,12 +30,6 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__zushouweituo_kanfangshijian);
 
-        Intent intent = getIntent();
-        mHouseID = intent.getIntExtra("house_id", 0);
-        mHouseLocation = intent.getStringExtra("house_location");
-
-        Log.i(getClass().getSimpleName(), "House Location: " + mHouseLocation);
-
         TextView titleText = (TextView) findViewById(R.id.textViewActivityTitle);
         if (mHouseLocation == null || mHouseLocation.isEmpty()) {
             titleText.setText("未知房源");

@@ -96,7 +96,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends SKBaseActivity {
             case R.id.tv_next:
             {
                 if(!collectData()){
- //                   return;
+                    return;
                 }
                 startActivity(new Intent(Activity_Zushouweituo_Fangyuanxinxi.this, Activity_Zushouweituo_Jiagesheding.class));
             }
