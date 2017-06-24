@@ -25,6 +25,7 @@ func (h *HouseController) URLMapping() {
 
 	h.Mapping("SetHousePrice", h.SetHousePrice)
 	h.Mapping("GetHousePrice", h.GetHousePrice)
+
 	h.Mapping("GetOrderTable", h.GetOrderTable)
 
 	h.Mapping("CertHouse", h.CertHouse)

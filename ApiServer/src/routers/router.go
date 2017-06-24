@@ -39,6 +39,11 @@ func init() {
 				&controllers.EventController{},
 			),
 		),
+		beego.NSNamespace("/appointment",
+			beego.NSInclude(
+				&controllers.AppointmentController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

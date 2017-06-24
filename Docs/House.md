@@ -276,3 +276,20 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 15. make a appointment to see the house
+	[Security]	private: landlorad
+	[Request]
+  		* POST /v1/house/:id/appointseehouse
+	  		* house				int
+	  		* date				string
+	  		* pb				string	// period begin, like 9:00
+	  		* pe				string 	// period end, like 9:30
+	  		* desc				string	// appointment description
+	[Response]
+		* SUCCESS:200 
+			* Aid    			int		// new appointment id
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

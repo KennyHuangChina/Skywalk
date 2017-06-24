@@ -126,17 +126,23 @@ func (h *TblHouse) TableUnique() [][]string {
 }
 
 type TblOrderTable struct {
-	Id         int64
-	House      int64     // House id
-	Subscriber int64     // who make the subscription
-	SubscTime  time.Time `orm:"auto_now_add;type(datetime)"` // when make the subscription
-	CloseTime  time.Time `orm:"type(datetime);null;default(null)"`
+	Id           int64
+	OrderType    int       // order type. ref to ORDER_TYPE_xxx
+	House        int64     // House id
+	Subscriber   int64     // who make the subscription
+	Phone        string    // contace phone number. it is obligatory if user not login
+	ApomtTimeBgn time.Time `orm:"type(datetime); not null"`    // appointment period begin, like 2017-06-23 9:00
+	ApomtTimeEnd time.Time `orm:"type(datetime); not null"`    // appointment period end, like 2017-06-23 9:30
+	ApomtDesc    string    `orm:"size(200)"`                   // appointment description
+	SubscTime    time.Time `orm:"auto_now_add;type(datetime)"` // when make the subscription
+	CloseTime    time.Time `orm:"type(datetime);null;default(null)"`
 }
 
 func (h *TblOrderTable) TableIndex() [][]string {
 	return [][]string{
 		[]string{"House"},
 		[]string{"Subscriber"},
+		[]string{"OrderType", "House", "Subscriber", "Phone"},
 	}
 }
 
