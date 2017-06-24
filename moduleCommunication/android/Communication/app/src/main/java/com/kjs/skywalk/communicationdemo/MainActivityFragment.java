@@ -135,7 +135,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetAgencyList(0, mListTotal);
+//        CmdMgr.GetAgencyList(0, mListTotal);
+        CmdMgr.GetHouseOrdertable(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
     }
 
     @Override
@@ -264,7 +265,15 @@ public class MainActivityFragment extends Fragment
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            if (CMD_GET_PROPERTY_LIST == command) {
+            if (CMD_GET_HOUSE_ORDER_TABLE == command) {
+                IApiResults.IResultList res = (IApiResults.IResultList) result;
+                int nTotal = res.GetTotalNumber();
+                mListTotal = nTotal;
+                int nFetched = res.GetFetchedNumber();
+                if (nFetched > 0) {
+                    mListTotal = 0;
+                }
+            } else if (CMD_GET_PROPERTY_LIST == command) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;

@@ -31,6 +31,14 @@ public class IApiResults {
         int     RankAtti(); // attitude rank. 0 ~50 (0.0 ~ 5.0)
     }
 
+    public interface IHouseOrdertable {
+        int     OrderId();      // subscribe id
+        int     HouseId();      // which house has been subscribed
+        String  Subscriber();   // who made the subscription
+        String  OrderTime();    // subscribe time
+        String  CloseTime();    // close time
+    }
+
     public interface IPropertyInfo {
         int GetId();
         String GetName();

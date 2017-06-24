@@ -25,16 +25,18 @@ import java.util.HashMap;
 public class SKBaseActivity extends AppCompatActivity
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
     private PopupWindowWaiting mWaitingWindow = null;
+
     protected int mHouseId = 0;
     protected String mHouseLocation = "";
+
+    public int mActScreenWidth = 0;
+    public int mActScreenHeight = 0;
 
     protected void showWaiting(final View v) {
         if(mWaitingWindow == null) {
             mWaitingWindow = new PopupWindowWaiting(this);
-            DisplayMetrics dm = new DisplayMetrics();
-            this.getWindowManager().getDefaultDisplay().getMetrics(dm);
-            mWaitingWindow.setWidth(dm.widthPixels);
-            mWaitingWindow.setHeight(dm.heightPixels);
+            mWaitingWindow.setWidth(mActScreenWidth);
+            mWaitingWindow.setHeight(mActScreenHeight);
         }
 
         runOnUiThread(new Runnable() {
@@ -68,6 +70,11 @@ public class SKBaseActivity extends AppCompatActivity
             Log.i(getClass().getSimpleName().toString(), "House Id: " + mHouseId);
             Log.i(getClass().getSimpleName().toString(), "House Location: " + mHouseLocation);
         }
+
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        mActScreenWidth = metric.widthPixels;
+        mActScreenHeight = metric.heightPixels;
     }
 
     @Override
