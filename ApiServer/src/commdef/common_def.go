@@ -130,12 +130,18 @@ type HouseShowTime struct {
 	When    string
 }
 
-type HouseOrderTable struct {
-	Id         int64
-	House      int64
-	Subscriber string
-	OrderTime  string
-	CloseTime  string
+type AppointmentInfo struct {
+	Id           int64
+	ApomtType    int
+	TypeDesc     string
+	House        int64
+	Phone        string
+	Subscriber   string
+	ApomtTimeBgn string
+	ApomtTimeEnd string
+	ApomtDesc    string
+	SubscribTime string
+	CloseTime    string
 }
 
 const (

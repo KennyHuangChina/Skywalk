@@ -26,61 +26,11 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("SetHousePrice", h.SetHousePrice)
 	h.Mapping("GetHousePrice", h.GetHousePrice)
 
-	h.Mapping("GetOrderTable", h.GetOrderTable)
-
 	h.Mapping("CertHouse", h.CertHouse)
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
 	h.Mapping("GetBehalfList", h.GetBehalfList)
-}
-
-// @Title GetOrderTable
-// @Description get the house order table
-// @Success 200 {string}
-// @Failure 403 body is empty
-// @router /:id/ordertable [get]
-func (this *HouseController) GetOrderTable() {
-	FN := "[GetOrderTable] "
-	beego.Warn("[--- API: GetOrderTable ---]")
-
-	var result ResGetHouseOrderTable
-	var err error
-
-	defer func() {
-		err = api_result(err, this.Controller, &result.ResCommon)
-		if nil != err {
-			beego.Error(FN, err.Error())
-		}
-
-		// export result
-		this.Data["json"] = result
-		this.ServeJSON()
-	}()
-
-	/*
-	 *	Extract agreements
-	 */
-	uid, err := getLoginUser(this.Controller)
-	if nil != err {
-		// return
-	}
-
-	hid, _ := this.GetInt64(":id")
-	bgn, _ := this.GetInt("bgn")
-	fetchCnt, _ := this.GetInt("fCnt")
-
-	err, total, hot := models.GetOrderTable(hid, uid, bgn, fetchCnt)
-	if nil == err {
-		result.Total = int64(total)
-		if fetchCnt > 0 {
-			result.Orders = hot
-		}
-		result.Count = int64(len(result.Orders))
-		// beego.Debug(FN, fmt.Sprintf("%+v", result))
-	}
-
-	return
 }
 
 // @Title GetHouseShowTime

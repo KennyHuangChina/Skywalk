@@ -60,13 +60,13 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	o := orm.NewOrm()
 
 	// check if the appointment already exist
-	qs := o.QueryTable("tbl_order_table").Filter("OrderType", apType).Filter("House", hid).Filter("Phone", phone)
+	qs := o.QueryTable("tbl_appointment").Filter("OrderType", apType).Filter("House", hid).Filter("Phone", phone)
 	if qs.Exist() {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("appointment already exist")}
 		return
 	}
 
-	nid, errT := o.Insert(&TblOrderTable{OrderType: apType, House: hid, Phone: phone,
+	nid, errT := o.Insert(&TblAppointment{OrderType: apType, House: hid, Phone: phone,
 		ApomtTimeBgn: tBegin, ApomtTimeEnd: tEnd, ApomtDesc: desc})
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
@@ -79,7 +79,7 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 }
 
 /**
-*	Get house order table
+*	Get house see appointment list
 *	Arguments:
 *		hid 	- house id
 *		uid 	- login user
@@ -87,8 +87,8 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 *		err 	- error info
 *		hot		- house order table
  */
-func GetOrderTable(hid, uid int64, begin, fetchCnt int) (err error, total int64, hot []commdef.HouseOrderTable) {
-	FN := "[GetOrderTable] "
+func HouseSeeList(hid, uid int64, begin, fetchCnt int) (err error, total int64, hot []commdef.AppointmentInfo) {
+	FN := "[HouseSeeList] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid, ", begin:", begin, ", fetchCnt:", fetchCnt)
 
 	defer func() {
@@ -109,7 +109,7 @@ func GetOrderTable(hid, uid int64, begin, fetchCnt int) (err error, total int64,
 
 	/* Get total number */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_order_table").Filter("House", hid).Filter("CloseTime__isnull", true)
+	qs := o.QueryTable("tbl_appointment").Filter("OrderType", commdef.ORDER_TYPE_SEE_APARTMENT).Filter("House", hid).Filter("CloseTime__isnull", true)
 	cnt, errT := qs.Count()
 	if nil != errT {
 		if orm.ErrNoRows != errT {
@@ -128,7 +128,7 @@ func GetOrderTable(hid, uid int64, begin, fetchCnt int) (err error, total int64,
 		return
 	}
 	if int64(begin) >= total {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin(%d) out of bounds", begin)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin(%d) is out of bounds", begin)}
 		return
 	}
 	if err, _ = GetUser(uid); nil != err { // user not login, can only get the total number
@@ -142,18 +142,19 @@ func GetOrderTable(hid, uid int64, begin, fetchCnt int) (err error, total int64,
 
 	/* Get records */
 	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET)
-	sql := `SELECT o.id, o.house, IF(LENGTH(u.name) > 0, u.name, ?) AS subscriber, subsc_time AS order_time, close_time 
-				FROM tbl_order_table AS o, tbl_user AS u 
-				WHERE o.subscriber=u.id AND close_time IS NULL AND house=?
+	sql := `SELECT o.id, order_type AS apomt_type, o.house, o.phone, IF(LENGTH(u.name) > 0, u.name, ?) AS subscriber, o.apomt_time_bgn, 
+					o.apomt_time_end, o.apomt_desc, subsc_time AS subscrib_time, close_time 
+				FROM tbl_appointment AS o LEFT JOIN tbl_user AS u ON o.subscriber=u.id 
+				WHERE close_time IS NULL AND house=?
 				LIMIT ?, ?`
 
-	ot := []commdef.HouseOrderTable{}
+	ot := []commdef.AppointmentInfo{}
 	_, errT = o.Raw(sql, nameUnset, hid, begin, fetchCnt).QueryRows(&ot)
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house order table, err:%s", errT.Error())}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house see appointment list, err:%s", errT.Error())}
 		return
 	}
-	// beego.Debug(FN, fmt.Sprintf("ot:%+v", ot))
+	beego.Debug(FN, fmt.Sprintf("ot:%+v", ot))
 
 	hot = ot
 	return

@@ -125,7 +125,7 @@ func (h *TblHouse) TableUnique() [][]string {
 	}
 }
 
-type TblOrderTable struct {
+type TblAppointment struct {
 	Id           int64
 	OrderType    int       // order type. ref to ORDER_TYPE_xxx
 	House        int64     // House id
@@ -138,7 +138,7 @@ type TblOrderTable struct {
 	CloseTime    time.Time `orm:"type(datetime);null;default(null)"`
 }
 
-func (h *TblOrderTable) TableIndex() [][]string {
+func (h *TblAppointment) TableIndex() [][]string {
 	return [][]string{
 		[]string{"House"},
 		[]string{"Subscriber"},
@@ -458,7 +458,7 @@ func init() {
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
-		new(TblHouseEvent), new(TblHouseEventProcess), new(TblOrderTable),
+		new(TblHouseEvent), new(TblHouseEventProcess), new(TblAppointment),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),
 		new(TblStrings))

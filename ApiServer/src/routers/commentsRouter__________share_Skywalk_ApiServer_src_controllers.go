@@ -195,6 +195,13 @@ func init() {
 			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 
+	beego.GlobalControllerRouter["ApiServer/controllers:AppointmentController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AppointmentController"],
+		beego.ControllerComments{
+			Method: "HouseSeeList",
+			Router: `/house/:id/seelist`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
 	beego.GlobalControllerRouter["ApiServer/controllers:EventController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:EventController"],
 		beego.ControllerComments{
 			Method: "ModifyEvent",
@@ -241,13 +248,6 @@ func init() {
 		beego.ControllerComments{
 			Method: "GetHouseNewEvents",
 			Router: `/houses`,
-			AllowHTTPMethods: []string{"get"},
-			Params: nil})
-
-	beego.GlobalControllerRouter["ApiServer/controllers:HouseController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseController"],
-		beego.ControllerComments{
-			Method: "GetOrderTable",
-			Router: `/:id/ordertable`,
 			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 
