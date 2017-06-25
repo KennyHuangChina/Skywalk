@@ -130,20 +130,6 @@ type HouseShowTime struct {
 	When    string
 }
 
-type AppointmentInfo struct {
-	Id           int64
-	ApomtType    int
-	TypeDesc     string
-	House        int64
-	Phone        string
-	Subscriber   string
-	ApomtTimeBgn string
-	ApomtTimeEnd string
-	ApomtDesc    string
-	SubscribTime string
-	CloseTime    string
-}
-
 const (
 	HOUSE_LIST_Unknown   = 0
 	HOUSE_LIST_All       = 0
@@ -228,6 +214,20 @@ const (
 
 	ORDER_TYPE_END = 1
 )
+
+type AppointmentInfo struct {
+	Id           int64
+	ApomtType    int
+	TypeDesc     string
+	House        int64
+	Phone        string
+	Subscriber   string
+	ApomtTimeBgn string
+	ApomtTimeEnd string
+	ApomtDesc    string
+	SubscribTime string
+	CloseTime    string
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //

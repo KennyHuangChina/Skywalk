@@ -141,21 +141,31 @@ func HouseSeeList(hid, uid int64, begin, fetchCnt int) (err error, total int64, 
 	}
 
 	/* Get records */
+	tp_see_house := getSpecialString(KEY_APPOINTMENT_TYPE_SEE_HOUSE)
 	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET)
-	sql := `SELECT o.id, order_type AS apomt_type, o.house, o.phone, IF(LENGTH(u.name) > 0, u.name, ?) AS subscriber, o.apomt_time_bgn, 
+	sql := `SELECT o.id, order_type AS apomt_type, IF(order_type = ? , ?, "Unknown") AS type_desc, 
+					o.house, o.phone, IF(LENGTH(u.name) > 0, u.name, ?) AS subscriber, o.apomt_time_bgn, 
 					o.apomt_time_end, o.apomt_desc, subsc_time AS subscrib_time, close_time 
 				FROM tbl_appointment AS o LEFT JOIN tbl_user AS u ON o.subscriber=u.id 
 				WHERE close_time IS NULL AND house=?
 				LIMIT ?, ?`
 
 	ot := []commdef.AppointmentInfo{}
-	_, errT = o.Raw(sql, nameUnset, hid, begin, fetchCnt).QueryRows(&ot)
+	_, errT = o.Raw(sql, commdef.ORDER_TYPE_SEE_APARTMENT, tp_see_house, nameUnset, hid, begin, fetchCnt).QueryRows(&ot)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house see appointment list, err:%s", errT.Error())}
 		return
 	}
-	beego.Debug(FN, fmt.Sprintf("ot:%+v", ot))
+	// beego.Debug(FN, fmt.Sprintf("ot:%+v", ot))
+	beego.Warn(FN, "TODO: add other type support")
 
 	hot = ot
 	return
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+const (
+	KEY_APPOINTMENT_TYPE_SEE_HOUSE = "KEY_APPOINTMENT_TYPE_SEE_HOUSE"
+)

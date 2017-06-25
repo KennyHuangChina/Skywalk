@@ -513,6 +513,8 @@ func init() {
 	STRING_MAP[KEY_HOUSE_EVENT_PROC_FOLLOW] = "跟进"
 	STRING_MAP[KEY_HOUSE_EVENT_PROC_CLOSE] = "结案"
 
+	STRING_MAP[KEY_APPOINTMENT_TYPE_SEE_HOUSE] = "预约看房"
+
 	o := orm.NewOrm()
 	for k, v := range STRING_MAP {
 		if !o.QueryTable("tbl_strings").Filter("Key", k).Exist() {
