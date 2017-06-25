@@ -11,14 +11,14 @@ import java.util.HashMap;
  * Created by kenny on 2017/6/22.
  */
 
-class CmdGetHouseOrderTable extends CommunicationBase {
+class CmdGetAppointmentListHouseSee extends CommunicationBase {
 
     private int     mHouseId        = 0;
     private int     mBeginPosi      = 0;
     private int     mFetchCount     = 0;
 
-    CmdGetHouseOrderTable(Context context, int house_id, int begin, int cnt) {
-        super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_ORDER_TABLE);
+    CmdGetAppointmentListHouseSee(Context context, int house_id, int begin, int cnt) {
+        super(context, CommunicationInterface.CmdID.CMD_APPOINT_HOUSE_SEE_LST);
         mHouseId    = house_id;
         mBeginPosi  = begin;
         mFetchCount = cnt;
@@ -26,7 +26,7 @@ class CmdGetHouseOrderTable extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/ordertable", mHouseId);
+        mCommandURL = String.format("/v1/appointment/house/%d/seelist", mHouseId);
         return mCommandURL;
     }
     @Override
@@ -59,6 +59,6 @@ class CmdGetHouseOrderTable extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        return new ResGetHouseOrdertable(nErrCode, jObject);
+        return new ResGetAppointmentList(nErrCode, jObject);
     }
 }

@@ -53,7 +53,6 @@ public class CommunicationInterface {
         int GetHouseDigestList(int type, int begin, int cnt);                   // CMD_GET_HOUSE_DIGEST_LIST,       IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
         int GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
         int SetHouseShowtime(int house_id, int pw, int pv, String pd);          // CMD_SET_HOUSE_SHOWTIME,          IApiResults.ICommon
-        int GetHouseOrdertable(int house_id, int begin, int cnt);               // CMD_GET_HOUSE_ORDER_TABLE,       IApiResults.IHouseOrdertable
 
         /* Property, Community */
         int GetPropertyListByName(String sName, int nBegin, int nCount);                // CMD_GET_PROPERTY_LIST,   IApiResults.IResultList(IApiResults.IPropertyInfo)
@@ -98,9 +97,26 @@ public class CommunicationInterface {
                               int posi_bgn, int fetch_cnt, boolean bIDO);
         int ModifyHouseEvent(int event_id, String desc);        // CMD_MODIFY_HOUSE_EVENT,      IApiResults.ICommon
 
-        // Appointment
-        int MakeAppointment_SeeHouse(int house, String phone,                   // CmdMakeAppointment_SeeHouse,     IApiResults.IAddRes
-                                     String time_begin, String time_end, String desc);
+        // Appointment APIs
+        /*
+        *   CMD         : CmdMakeAppointment_SeeHouse
+        *   Result      : IApiResults.IAddRes
+        *   house       : house id
+        *   phone       : contact phone. if user logined, it could be empty
+        *   time_begin  : appointment period begin, like 2017-06-24 09:00
+        *   time_end    : appointment period end, like 2017-06-24 09:30
+        *   desc        : appointment description
+         */
+        int MakeAppointment_SeeHouse(int house, String phone, String time_begin, String time_end, String desc);
+
+        /*
+            CMD     : CMD_APPOINT_HOUSE_SEE_LST
+            Result  : IApiResults.IResultList(IApiResults.IAppointment)
+            house_id: house id
+            begin   : fetch begin position
+            cnt     : fetch count. set to 0 to get the total number
+         */
+        int GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
     }
 
     public static class CmdID {
@@ -129,7 +145,6 @@ public class CommunicationInterface {
         public static int CMD_GET_HOUSE_PRICE               = 0x200B;
         public static int CMD_GET_HOUSE_SHOWTIME            = 0x200C;
         public static int CMD_SET_HOUSE_SHOWTIME            = 0x200D;
-        public static int CMD_GET_HOUSE_ORDER_TABLE         = 0x200E;
 
         // Property
         public static int CMD_GET_PROPERTY_LIST     = 0x3001;
@@ -172,6 +187,7 @@ public class CommunicationInterface {
 
         // Appointment
         public static int CMD_APPOINT_SEE_HOUSE         = 0x8001;
+        public static int CMD_APPOINT_HOUSE_SEE_LST     = 0x8002;
 
         public static int CMD_TEST                   = 0x0001;
     }

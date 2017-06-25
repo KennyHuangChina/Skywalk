@@ -1,6 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by kenny on 2017/2/24.
@@ -29,12 +30,18 @@ public class IApiResults {
         int     RankAtti(); // attitude rank. 0 ~50 (0.0 ~ 5.0)
     }
 
-    public interface IHouseOrdertable {
-        int     OrderId();      // subscribe id
-        int     HouseId();      // which house has been subscribed
-        String  Subscriber();   // who made the subscription
-        String  OrderTime();    // subscribe time
-        String  CloseTime();    // close time
+    public interface IAppointment {
+        int     AppointId();        // appointment id
+        int     AppointType();      // appointment type
+        String  TypeDesc();         // appointment type description
+        int     HouseId();          // which house has been subscribed
+        String  Phone();            // contact phone
+        String  AppointDesc();      // appointment description
+        String  Subscriber();       // who made the subscription
+        Date    AppointTimeBgn();   // appointment time begin
+        Date    AppointTimeEnd();   // appointment time end
+        Date    SubscribeTime();    // subscribe time
+        Date    CloseTime();        // close time
     }
 
     public interface IPropertyInfo {
