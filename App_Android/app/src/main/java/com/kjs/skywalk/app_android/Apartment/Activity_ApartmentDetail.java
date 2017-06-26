@@ -38,6 +38,7 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.ExpandedView;
+import com.kjs.skywalk.control.LinearLayout_AdaptiveText;
 import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
@@ -85,6 +86,24 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__apartment_detail);
+
+        LinearLayout_AdaptiveText testLayout = (LinearLayout_AdaptiveText) findViewById(R.id.lla_test);
+        ArrayList<String> testList = new ArrayList<>();
+        testList.add("字符串1");
+        testList.add("字符串2");
+        testList.add("字符串3");
+        testList.add("字符串4");
+        testList.add("字符串5");
+        testLayout.setTextList(testList);
+
+        ArrayList<String> testList1 = new ArrayList<>();
+        testList1.add("字符串6");
+        testList1.add("字符串7");
+        testList1.add("字符串8");
+        testList1.add("字符串9");
+        testList1.add("字符串10");
+        testLayout.setTextList(testList1);
+
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
