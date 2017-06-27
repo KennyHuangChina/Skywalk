@@ -20,13 +20,6 @@
             android:layout_height="200dp">
         </com.kjs.skywalk.control.SliderView>
 
-        <com.kjs.skywalk.control.LinearLayout_AdaptiveText
-            android:id="@+id/lla_test"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.kjs.skywalk.control.LinearLayout_AdaptiveText>
-
         <LinearLayout
             android:id="@+id/ll_apartment_base_info"
             android:orientation="vertical"

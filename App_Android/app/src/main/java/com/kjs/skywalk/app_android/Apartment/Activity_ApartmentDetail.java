@@ -48,6 +48,7 @@ import me.iwf.photopicker.PhotoPreview;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_APPOINT_HOUSE_SEE_LST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
 
@@ -79,28 +80,12 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     private TextView mTvApartment_telephone;
 
     private LinearLayout mLl_housetag_container;
-
+    private LinearLayout_AdaptiveText mLla_facilitylist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__apartment_detail);
 
-        LinearLayout_AdaptiveText testLayout = (LinearLayout_AdaptiveText) findViewById(R.id.lla_test);
-        ArrayList<String> testList = new ArrayList<>();
-        testList.add("字符串1");
-        testList.add("字符串2");
-        testList.add("字符串3");
-        testList.add("字符串4");
-        testList.add("字符串5");
-        testLayout.setTextList(testList);
-
-        ArrayList<String> testList1 = new ArrayList<>();
-        testList1.add("字符串6");
-        testList1.add("字符串7");
-        testList1.add("字符串8");
-        testList1.add("字符串9");
-        testList1.add("字符串10");
-        testLayout.setTextList(testList1);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -138,6 +123,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mTvApartment_telephone = (TextView) findViewById(R.id.tv_apartment_telephone);
 
         mLl_housetag_container = (LinearLayout) findViewById(R.id.ll_housetag_container);
+
+        mLla_facilitylist = (LinearLayout_AdaptiveText) findViewById(R.id.lla_facilitylist);
+        mLla_facilitylist.setLayoutPadding(0, 18, 0, 18);
 
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         mImageLst = commonFun.getTestPicList(this);
@@ -196,6 +184,11 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             if (command == CMD_APPOINT_HOUSE_SEE_LST) {
                 // IApiResults.IHouseOrdertable
                 updateHouseOrderTable(iResult);
+            }
+
+            if (command == CMD_GET_HOUSEFACILITY_LIST) {
+                // IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
+                updateHouseFacilityList(iResult);
             }
 
         }
@@ -280,6 +273,23 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             public void run() {
                 IApiResults.IResultList res = (IApiResults.IResultList) orderTable;
                 mTvApartmentYuYue.setText(String.valueOf(res.GetTotalNumber()));
+            }
+        });
+    }
+
+    private void updateHouseFacilityList(final IApiResults.ICommon facilityList) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Object> list = ((IApiResults.IResultList) facilityList).GetList();
+                ArrayList<String> nameList = new ArrayList<String>();
+                for (Object item : list) {
+                    IApiResults.IHouseFacilityInfo facilityInfo = (IApiResults.IHouseFacilityInfo) item;
+                    if (facilityInfo.GetQty() > 0) {
+                        nameList.add(facilityInfo.GetName());
+                    }
+                }
+                mLla_facilitylist.setTextList(nameList);
             }
         });
     }

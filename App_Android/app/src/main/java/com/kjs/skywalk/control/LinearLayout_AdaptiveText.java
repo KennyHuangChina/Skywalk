@@ -56,9 +56,10 @@ public class LinearLayout_AdaptiveText extends LinearLayout {
         mActScreenHeight = metric.heightPixels;
 
         this.setOrientation(LinearLayout.VERTICAL);
-        this.setBackgroundColor(Color.parseColor("#500000ff"));
+//        this.setBackgroundColor(Color.parseColor("#500000ff"));
     }
 
+    // public method
     public void setTextList(ArrayList<String> list) {
         removeAllViews();
 
@@ -69,6 +70,15 @@ public class LinearLayout_AdaptiveText extends LinearLayout {
             totalUsed += count;
         }
     }
+
+    public void setLayoutPadding(int left, int top, int right, int bottom) {
+        mPaddingLeft = left;
+        mPaddingTop = top;
+        mPaddingRight = right;
+        mPaddingBottom = bottom;
+    }
+
+    //
 
     private int addChildrens(List<String> list) {
         LinearLayout layout = new LinearLayout(mContext);
