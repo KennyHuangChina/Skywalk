@@ -3,10 +3,9 @@ package com.kjs.skywalk.communicationlibrary;
 //import CommunicationBase;
 import android.content.Context;
 import android.util.Log;
-import org.json.JSONObject;
+
 import java.util.HashMap;
-import org.json.JSONArray;
-import org.json.JSONException;
+
 import org.json.JSONObject;
 
 /**

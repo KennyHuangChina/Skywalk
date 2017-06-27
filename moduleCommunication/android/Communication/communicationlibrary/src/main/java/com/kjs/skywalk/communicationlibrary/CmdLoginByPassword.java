@@ -1,12 +1,9 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.util.Base64;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -1,11 +1,6 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
-import android.util.Log;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 /**
  * Created by kenny on 2017/3/12.

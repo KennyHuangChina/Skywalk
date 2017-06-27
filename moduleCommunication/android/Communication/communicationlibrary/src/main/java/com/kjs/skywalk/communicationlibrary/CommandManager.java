@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 /**
  * Created by kenny on 2017/3/14.
@@ -243,12 +242,6 @@ public class CommandManager implements CommunicationInterface.ICommand {
         return execute(op, pMap);
     }
 
-    @Override
-    public int GetHouseOrdertable(int house_id, int begin, int cnt) {
-        CommunicationBase op = new CmdGetHouseOrderTable(mContext, house_id, begin, cnt);
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(op, pMap);
-    }
 
     @Override
     public int GetPropertyListByName(String sName, int nBegin, int nCount) {
@@ -497,6 +490,20 @@ public class CommandManager implements CommunicationInterface.ICommand {
         CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_DESC, String.valueOf(desc));
+        return execute(op, pMap);
+    }
+
+    @Override
+    public int MakeAppointment_SeeHouse(int house, String phone, String time_begin, String time_end, String desc) {
+        CommunicationBase op = new CmdMakeAppointment_SeeHouse(mContext, house, phone, time_begin, time_end, desc);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
+    public int GetHouseSeeAppointmentList(int house_id, int begin, int cnt) {
+        CommunicationBase op = new CmdGetAppointmentListHouseSee(mContext, house_id, begin, cnt);
+        HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 }
