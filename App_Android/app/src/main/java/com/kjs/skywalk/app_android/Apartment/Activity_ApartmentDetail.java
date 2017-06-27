@@ -46,11 +46,9 @@ import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_APPOINT_HOUSE_SEE_LST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_ORDER_TABLE;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PROPERTY_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
 
 public class Activity_ApartmentDetail extends SKBaseActivity {
@@ -163,8 +161,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 //        房屋设施 -> GetHouseFacilityList
         mCmdMgr.GetHouseFacilityList(mHouseId);
 
-//        调用方式 GetHouseOrdertable(house_id, 0, 0)，返回的 total 就试预约人数
-        mCmdMgr.GetHouseOrdertable(mHouseId, 0, 0);
+//        调用方式 GetHouseSeeAppointmentList(house_id, 0, 0)，返回的 total 就试预约人数
+        mCmdMgr.GetHouseSeeAppointmentList(mHouseId, 0, 0);
 
      }
 
@@ -195,7 +193,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
             }
 
-            if (command == CMD_GET_HOUSE_ORDER_TABLE) {
+            if (command == CMD_APPOINT_HOUSE_SEE_LST) {
                 // IApiResults.IHouseOrdertable
                 updateHouseOrderTable(iResult);
             }
