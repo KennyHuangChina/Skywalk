@@ -5,18 +5,50 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	// "strconv"
+	"strconv"
 	"time"
 )
+
+func DeleAppointment(aid, uid int64) (err error) {
+	FN := "[ DeleAppointment] "
+	beego.Trace(FN, "appointment:", aid, ", login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	beego.Warn(FN, "TODO: ")
+
+	/* Permission checking */
+
+	/* Processing */
+	o := orm.NewOrm()
+	numb, errT := o.Delete(&TblAppointment{Id: aid})
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf("%d records deleted", numb))
+
+	return
+}
 
 /**
 *	Get house order table
 *	Arguments:
-*		hid 	- house id
-*		uid 	- login user
+*		hid 		- house id
+*		uid 		- login user
+*		apType		- appointment type, ref to ORDER_TYPE_XXXX
+*		phone		- contace phone number, if user not login, this field must be filled
+*		time_begin	- the period begin time user expected
+*		time_end	- the period end time user expected
+*		desc		- appointment description
 *	Returns
 *		err 	- error info
-*		hot		- house order table
+*		aid		- new appointment id
  */
 func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, desc string) (err error, aid int64) {
 	FN := "[MakeAppointment] "
@@ -30,31 +62,49 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}()
 
 	/* Argeuments checking */
+	if 0 != hid {
+		if err, _ = getHousePublished(hid); nil != err {
+			return
+		}
+	}
 	if apType < commdef.ORDER_TYPE_BEGIN || apType > commdef.ORDER_TYPE_END {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("apType:%d", apType)}
 		return
 	}
 	tBegin, errT := time.Parse("2006-01-02 15:04", time_begin)
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_begin:%s", time_begin)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_begin:%s, %s", time_begin, errT.Error())}
 		return
 	}
 	tEnd, errT := time.Parse("2006-01-02 15:04", time_end)
 	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end:%s", time_end)}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end:%s, %s", time_end, errT.Error())}
+		return
+	}
+	if tBegin.After(tEnd) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end:%s early than time_begin:%s", time_end, time_begin)}
 		return
 	}
 	if 0 == len(desc) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("desc not set")}
 		return
 	}
+	err1, _ := GetUser(uid)
+	if nil != err1 {
+		if 11 != len(phone) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("phone:%s", phone)}
+			return
+		}
+
+		nPhoneNumb, errT := strconv.ParseInt(phone, 10, 64)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("phone:%s %s", phone, errT.Error())}
+			return
+		}
+		beego.Debug(FN, "nPhoneNumb:", nPhoneNumb)
+	}
 
 	/* Permission checking */
-	err1, _ := GetUser(uid)
-	if nil != err1 && 11 != len(phone) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("phone:%s", phone)}
-		return
-	}
 
 	/* Processing */
 	o := orm.NewOrm()
