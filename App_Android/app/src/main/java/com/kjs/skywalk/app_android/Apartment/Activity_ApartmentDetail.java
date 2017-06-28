@@ -55,7 +55,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private ArrayList<String> mImageLst;
-    private int mHouseId = -1;
+//    private int mHouseId = -1;
     private CommandManager mCmdMgr = null;
 
     private TextView mTvApartmentName;
@@ -131,8 +131,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mImageLst = commonFun.getTestPicList(this);
         sView.setImages(mImageLst, mSvListener);
 
-        Bundle bundle = getIntent().getExtras();
-        mHouseId = bundle.getInt("houseId");
+        // mHouseId get in SKBaseActivity
+//        Bundle bundle = getIntent().getExtras();
+//        mHouseId = bundle.getInt("houseId");
 
         mCmdMgr = new CommandManager(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);

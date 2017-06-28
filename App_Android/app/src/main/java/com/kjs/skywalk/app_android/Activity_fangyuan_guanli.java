@@ -15,6 +15,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     private fragmentFangYuanGuanLiInfo2 mFragInfo2 = null;
     private fragmentFangYuanGuanLiInfo3 mFragInfo3 = null;
     int mTestCount = 0;
+//    int mHouseId = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             case R.id.ll_fangyuanzhaopian:
             {
                 // 房源照片
-                startActivity(new Intent(this, Activity_fangyuan_zhaopian.class));
+                commonFun.startActivityWithHouseId(this, Activity_fangyuan_zhaopian.class, mHouseId);
             }
             break;
             case R.id.ll_kanfangshijian:
@@ -91,13 +92,13 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             case R.id.ll_chuzujiaofu:
             {
                 // 出租交付
-                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
+                commonFun.startActivityWithHouseId(this, Activity_HouseholdDeliverables.class, mHouseId);
             }
             break;
             case R.id.ll_fangwusheshi:
             {
                 // 房屋设施
-                startActivity(new Intent(this, Activity_HouseholdAppliances.class));
+                commonFun.startActivityWithHouseId(this, Activity_HouseholdAppliances.class, mHouseId);
             }
             break;
             case R.id.ll_shegnhuozhanghu:
