@@ -36,7 +36,7 @@ public class fragmentApartment extends Fragment {
     private ListView mListViewSearchResult = null;
     private LinearLayout mSortContainer = null;
     private LinearLayout mLinearLayoutConditionContainer = null;
-    private ScrollView mScrollViewSearchResult = null;
+    private ListView mScrollViewSearchResult = null;
 
     private TextView mTextViewConditionPrice = null;
     private TextView mTextViewConditionHouseType = null;
@@ -87,7 +87,7 @@ public class fragmentApartment extends Fragment {
         mSortContainer = (LinearLayout)view.findViewById(R.id.linearLayoutSortContainer);
         mTextViewConditionPrice = (TextView)view.findViewById(R.id.textViewSearchConditionPrice);
         mTextViewConditionPrice.setOnClickListener(mClickListenerConditionPrice);
-        mScrollViewSearchResult = (ScrollView)view.findViewById(R.id.scrollViewResult);
+        mScrollViewSearchResult = (ListView)view.findViewById(R.id.listViewSearchResult);
         mLinearLayoutConditionContainer = (LinearLayout)view.findViewById(R.id.linearLayoutConditionContainer);
 
         mTextViewConditionHouseType = (TextView)view.findViewById(R.id.textViewSearchConditionHouseType);
