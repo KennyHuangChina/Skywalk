@@ -137,8 +137,8 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 *		err 	- error info
 *		hot		- house order table
  */
-func HouseSeeList(hid, uid int64, begin, fetchCnt int) (err error, total int64, hot []commdef.AppointmentInfo) {
-	FN := "[HouseSeeList] "
+func GetAppointList_SeeHouse(hid, uid int64, begin, fetchCnt int) (err error, total int64, hot []commdef.AppointmentInfo) {
+	FN := "[GetAppointList_SeeHouse] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid, ", begin:", begin, ", fetchCnt:", fetchCnt)
 
 	defer func() {
@@ -170,14 +170,14 @@ func HouseSeeList(hid, uid int64, begin, fetchCnt int) (err error, total int64, 
 			return
 		}
 	}
-
 	total = cnt
 	beego.Debug(FN, fmt.Sprintf("%d records found", total))
 
-	if 0 == fetchCnt {
+	if 0 == fetchCnt { // user just want to get the total number
 		return
 	}
-	if int64(begin) >= total {
+
+	if total > 0 && int64(begin) >= total {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin(%d) is out of bounds", begin)}
 		return
 	}

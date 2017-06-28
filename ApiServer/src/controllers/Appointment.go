@@ -15,7 +15,7 @@ type AppointmentController struct {
 
 func (a *AppointmentController) URLMapping() {
 	a.Mapping("OrderSeeHouse", a.OrderSeeHouse)
-	a.Mapping("HouseSeeList", a.HouseSeeList)
+	a.Mapping("GetAppointList_SeeHouse", a.GetAppointList_SeeHouse)
 }
 
 // @Title OrderSeeHouse
@@ -65,14 +65,14 @@ func (this *AppointmentController) OrderSeeHouse() {
 	return
 }
 
-// @Title HouseSeeList
+// @Title GetAppointList_SeeHouse
 // @Description get the house see appointment list
 // @Success 200 {string}
 // @Failure 403 body is empty
 // @router /house/:id/seelist [get]
-func (this *AppointmentController) HouseSeeList() {
-	FN := "[HouseSeeList] "
-	beego.Warn("[--- API: HouseSeeList ---]")
+func (this *AppointmentController) GetAppointList_SeeHouse() {
+	FN := "[GetAppointList_SeeHouse] "
+	beego.Warn("[--- API: GetAppointList_SeeHouse ---]")
 
 	var result ResGetAppointmenLst_HouseSee
 	var err error
@@ -100,7 +100,7 @@ func (this *AppointmentController) HouseSeeList() {
 	bgn, _ := this.GetInt("bgn")
 	fetchCnt, _ := this.GetInt("fCnt")
 
-	err, total, hot := models.HouseSeeList(hid, uid, bgn, fetchCnt)
+	err, total, hot := models.GetAppointList_SeeHouse(hid, uid, bgn, fetchCnt)
 	if nil == err {
 		result.Total = int64(total)
 		if fetchCnt > 0 {

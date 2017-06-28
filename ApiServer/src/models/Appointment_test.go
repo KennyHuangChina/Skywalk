@@ -122,3 +122,82 @@ func Test_MakeAppointment(t *testing.T) {
 
 	// t.Error("NOT Implement")
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetAppointList_SeeHouse --
+//
+func Test_GetAppointList_SeeHouse(t *testing.T) {
+	t.Log("Test GetAppointList_SeeHouse, Invalid Arguments")
+	seq := 0
+
+	// begin position
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: begin(-1) < 0", seq))
+	if e, _, _ := GetAppointList_SeeHouse(-1, -1, -1, -1); nil == e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// fetch count
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: fetch count(-1) < 0", seq))
+	if e, _, _ := GetAppointList_SeeHouse(-1, -1, 0, -1); nil == e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// record count
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: get record count", seq))
+	e, total, _ := GetAppointList_SeeHouse(2, -1, 0, 0)
+	if nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// begin position
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: begin(%d) over the", seq, total))
+	if e, _, _ := GetAppointList_SeeHouse(2, -1, int(total), int(total)); nil == e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// user
+	xid := []int64{-1, 0, 100000000}
+	xdesc := []string{"not login", "is SYSTEM", "does not exist"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: user(%d) %s", seq, v, xdesc[k]))
+		if e, _, _ := GetAppointList_SeeHouse(2, v, 0, int(total)); nil == e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// house
+	xid = []int64{-1, 100000000}
+	xdesc = []string{"< 0", "does not exist"}
+
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: house(%d) %s", seq, v, xdesc[k]))
+		if e, _, _ := GetAppointList_SeeHouse(v, 5, 0, int(total)); nil == e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// user permission
+	xid = []int64{2 /*, 11*/}
+	xdesc = []string{"is a regular user", "is agency, but not for this house"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> permission: user(%d) %s", seq, v, xdesc[k]))
+		if e, _, _ := GetAppointList_SeeHouse(2, v, 0, int(total)); nil == e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+}
