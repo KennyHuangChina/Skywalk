@@ -54,18 +54,7 @@ public class fragmentHomePage extends Fragment {
         mAdapterRecommend = new homepage_apartment_listitem_adapter(getActivity(), "今日推荐");
         lvRecommend.setAdapter(mAdapterRecommend);
 //        mAdapterRecommend.updateList(loadTestData());
-        mAdapterRecommend.setApartmentListCallback(new homepage_apartment_listitem_adapter.ApartmentListCallback() {
-            @Override
-            public void onItemClicked(ClassDefine.HouseDigest houseDigest) {
-                kjsLogUtil.i("clicked: " + houseDigest.property);
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), Activity_ApartmentDetail.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("houseId", houseDigest.houseId);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        mAdapterRecommend.setApartmentListCallback(mApartListCallback);
         // get recommend house info
         (new GetRecommendHouseListTask(1)).execute();
 
@@ -74,18 +63,7 @@ public class fragmentHomePage extends Fragment {
         lvDeducted.setFocusable(false);
         mAdapterDeducted = new homepage_apartment_listitem_adapter(getActivity(), "降价房源");
         lvDeducted.setAdapter(mAdapterDeducted);
-        mAdapterDeducted.setApartmentListCallback(new homepage_apartment_listitem_adapter.ApartmentListCallback() {
-            @Override
-            public void onItemClicked(ClassDefine.HouseDigest houseDigest) {
-                kjsLogUtil.i("clicked: " + houseDigest.property);
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), Activity_ApartmentDetail.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("houseId", houseDigest.houseId);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        mAdapterDeducted.setApartmentListCallback(mApartListCallback);
         // get deducted house info
         (new GetRecommendHouseListTask(2)).execute();
 
@@ -94,23 +72,20 @@ public class fragmentHomePage extends Fragment {
         lvNew.setFocusable(false);
         mAdapterNew = new homepage_apartment_listitem_adapter(getActivity(), "最新房源");
         lvNew.setAdapter(mAdapterNew);
-        mAdapterNew.setApartmentListCallback(new homepage_apartment_listitem_adapter.ApartmentListCallback() {
-            @Override
-            public void onItemClicked(ClassDefine.HouseDigest houseDigest) {
-                kjsLogUtil.i("clicked: " + houseDigest.property);
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), Activity_ApartmentDetail.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("houseId", houseDigest.houseId);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        mAdapterNew.setApartmentListCallback(mApartListCallback);
         // get new house info
         (new GetRecommendHouseListTask(3)).execute();
 
         return view;
     }
+
+    homepage_apartment_listitem_adapter.ApartmentListCallback mApartListCallback = new homepage_apartment_listitem_adapter.ApartmentListCallback() {
+        @Override
+        public void onItemClicked(ClassDefine.HouseDigest houseDigest) {
+            kjsLogUtil.i("clicked: " + houseDigest.property);
+            commonFun.startActivityWithHouseId(getActivity(), Activity_ApartmentDetail.class, houseDigest.houseId);
+        }
+    };
 
     private ArrayList<ClassDefine.HouseDigest> loadTestData() {
         ArrayList<ClassDefine.HouseDigest> houseDigestsList = new ArrayList<>();

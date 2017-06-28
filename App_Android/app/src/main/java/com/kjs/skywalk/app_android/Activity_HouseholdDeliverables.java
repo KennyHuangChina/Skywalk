@@ -272,6 +272,15 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
 
     }
 
+    private void showErrorMessage(final String msg) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                commonFun.showToast_info(Activity_HouseholdDeliverables.this, Activity_HouseholdDeliverables.this.getWindow().getDecorView(), msg);
+            }
+        });
+    }
+
     public class GetDeliverablesTask extends AsyncTask<Void, Void, Boolean> {
         ArrayList<Object> mIds = null;
         boolean mGotHouseDeliverables = false;
@@ -279,7 +288,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         @Override
         protected Boolean doInBackground(Void... voids) {
             CommandManager CmdMgr = new CommandManager(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
-            int result = CmdMgr.GetHouseDeliverables(6);
+            int result = CmdMgr.GetHouseDeliverables(mHouseId);
             if (result != CommunicationError.CE_ERROR_NO_ERROR) {
                 kjsLogUtil.e("Error to call GetHouseDeliverables");
                 return false;
@@ -324,6 +333,10 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
             @Override
             public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
                 kjsLogUtil.i(String.format("[command: %d] ErrCode:%d(%s)", i, iCommon.GetErrCode(), iCommon.GetErrDesc()));
+                if (iCommon.GetErrCode() != CommunicationError.CE_ERROR_NO_ERROR) {
+                    showErrorMessage(iCommon.GetErrDesc());
+                    return;
+                }
 
                 if (i == CMD_GET_HOUSE_DELIVERABLES && iCommon.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
                     IApiResults.IResultList list = (IApiResults.IResultList)iCommon;

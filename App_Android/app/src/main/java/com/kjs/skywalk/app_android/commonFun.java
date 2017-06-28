@@ -2,6 +2,7 @@ package com.kjs.skywalk.app_android;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -290,5 +293,14 @@ public class commonFun {
 
     public static void displayImageByURL(Context context, String URL, ImageView view) {
         displayImageByURL(context, URL, view, R.drawable.touxiang, R.drawable.touxiang);
+    }
+
+    public static void startActivityWithHouseId(Context context, Class<?> ActivityClass, int houseId) {
+        Intent intent = new Intent(context, ActivityClass);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, houseId);
+//        Bundle bundle = new Bundle();
+//        bundle.putInt(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, houseId);
+//        intent.putExtras(bundle);
+        context.startActivity(intent);
     }
 }
