@@ -12,6 +12,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -34,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sailor.zhou on 2017/2/2.
@@ -303,4 +309,34 @@ public class commonFun {
 //        intent.putExtras(bundle);
         context.startActivity(intent);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static class TextDefine {
+        private String mText;
+        private int mTextSize;          // pixel
+        private int mTextColor;
+
+        public TextDefine(String text, int textSize, int textColor) {
+            mTextSize = textSize;
+            mTextColor = textColor;
+            mText = text;
+        }
+    }
+    // get SpannableString
+    public static SpannableStringBuilder getSpannableString(List<TextDefine> textDefines) {
+        int start = 0;
+        SpannableStringBuilder spannableString = new SpannableStringBuilder();
+        for (TextDefine textDef : textDefines) {
+            spannableString.append(textDef.mText);
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(textDef.mTextColor);
+            AbsoluteSizeSpan sizeSpan = new AbsoluteSizeSpan(textDef.mTextSize);
+            spannableString.setSpan(colorSpan, start, start + textDef.mText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(sizeSpan, start, start + textDef.mText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            start += textDef.mText.length();
+        }
+
+        return spannableString;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
