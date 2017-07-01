@@ -599,13 +599,17 @@ func (this *HouseController) GetHouseDigestList() {
 	begin, _ := this.GetInt64("bgn")
 	count, _ := this.GetInt64("cnt")
 	// sid := this.GetString("sid")
+	err, filter := getHouseFilter(this)
+	if nil != err {
+		return
+	}
 
-	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", sid:", sid, ", uid:", uid)
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count)
 
 	/*
 	 *	Processing
 	 */
-	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count)
+	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count, filter)
 	beego.Debug(FN, "ids:", ids)
 	if nil == err {
 		result.Total = total
@@ -719,4 +723,99 @@ func (this *HouseController) GetHouseInfo() {
 		result.HouseInfo = hif
 		beego.Debug(FN, fmt.Sprintf("%+v", result.HouseInfo))
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+func getHouseFilter(this *HouseController) (err error, filter models.HouseFilter) {
+
+	nVal := int64(0)
+
+	// Rental
+	if nOp, errT := this.GetInt("rtop"); nil == errT && nOp > 0 {
+		if nVal, errT = this.GetInt64("rt1"); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Rental lower, err:%s", errT.Error())}
+			return
+		}
+		filter.Rental.Operator = nOp
+		filter.Rental.Value1 = nVal
+		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Rental.Operator {
+			if nVal, errT = this.GetInt64("rt2"); nil != errT {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Rental upper, err:%s", errT.Error())}
+				return
+			}
+			filter.Rental.Value2 = nVal
+		}
+	}
+
+	// Livingroom
+	if nOp, errT := this.GetInt("lvop"); nil == errT && nOp > 0 {
+		if nVal, errT = this.GetInt64("lr1"); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Livingroom lower, err:%s", errT.Error())}
+			return
+		}
+		filter.Livingroom.Operator = nOp
+		filter.Livingroom.Value1 = nVal
+		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Livingroom.Operator {
+			if nVal, errT = this.GetInt64("lr2"); nil != errT {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Livingroom upper, err:%s", errT.Error())}
+				return
+			}
+			filter.Livingroom.Value2 = nVal
+		}
+	}
+
+	// Bedroom
+	if nOp, errT := this.GetInt("berop"); nil == errT && nOp > 0 {
+		if nVal, errT = this.GetInt64("ber1"); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bedroom lower, err:%s", errT.Error())}
+			return
+		}
+		filter.Bedroom.Operator = nOp
+		filter.Bedroom.Value1 = nVal
+		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Bedroom.Operator {
+			if nVal, errT = this.GetInt64("ber2"); nil != errT {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bedroom upper, err:%s", errT.Error())}
+				return
+			}
+			filter.Bedroom.Value2 = nVal
+		}
+	}
+
+	// Bathroom
+	if nOp, errT := this.GetInt("barop"); nil == errT && nOp > 0 {
+		if nVal, errT = this.GetInt64("bar1"); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bathroom lower, err:%s", errT.Error())}
+			return
+		}
+		filter.Bathroom.Operator = nOp
+		filter.Bathroom.Value1 = nVal
+		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Bathroom.Operator {
+			if nVal, errT = this.GetInt64("bar2"); nil != errT {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bathroom upper, err:%s", errT.Error())}
+				return
+			}
+			filter.Bathroom.Value2 = nVal
+		}
+	}
+
+	// Acreage
+	if nOp, errT := this.GetInt("acop"); nil == errT && nOp > 0 {
+		if nVal, errT = this.GetInt64("ac1"); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Acreage lower, err:%s", errT.Error())}
+			return
+		}
+		filter.Acreage.Operator = nOp
+		filter.Acreage.Value1 = nVal
+		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Acreage.Operator {
+			if nVal, errT = this.GetInt64("ac2"); nil != errT {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Acreage upper, err:%s", errT.Error())}
+				return
+			}
+			filter.Acreage.Value2 = nVal
+		}
+	}
+
+	return
 }

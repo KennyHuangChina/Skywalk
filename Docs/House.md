@@ -67,17 +67,22 @@
 	  		* type			int 	// house type. 0: all; 1: recommend; 2: deducted; 3: new
 	  		* bgn			int		// from which item to fetch
 	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
-	  		* rmin			int		// rental min
-	  		* rmax			int 	// rental max
-	  		* lr			int		// livingroom number
-	  		* lro			int		// livingroom opearator.  -1: <= lr; 0: == lr; 1: >= lr
-	  		* ber			int 	// bedroom number
-	  		* bero			int 	// bedroom opertor. -1: <= ber; 0: == ber; 1: >= ber
-	  		* bar			int		// bathroom number
-	  		* baro			int		// bathroom operator. -1: <= bar; 0 == bar; 1:>= bar
+	  		* rtop			int 	// operator. o: ==; 1: <; 2: <=; 3: >; 4: >=; 5: Between
+	  		* rt1			int     // rental min
+	  		* rt2			int		// rental max
+	  		* lvop			int		// 
+	  		* lr1			int		// livingroom number min
+	  		* lr2			int		// livingroom number max
+	  		* berop			int		// 
+	  		* ber1			int 	// bedroom number min
+	  		* ber2			int		// bedroom number max
+	  		* barop			int		// 
+	  		* bar1			int		// bathroom number min
+	  		* bar2			int 	// bathroom number max
+	  		* acop			int		// 
+	  		* ac1			int		// acreage min
+	  		* ac2			int		// acreage max
 	  		* tags			string	// tags array. like 1,3,5,7
-	  		* acmin			int		// acreage min. 100 times than actual, for example 7000 means 70.00 square meter
-	  		* acmax			int		// acreage max. 100 times than actual, for example 10000 means 100.00 square meter
 	  		* sort			int		// sort condition. Be composed of one or more of the following items 
 			  						//  1: publish time, 	 2: publish time desc
 									//  4: rental, 			 8: rental desc

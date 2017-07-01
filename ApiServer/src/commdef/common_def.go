@@ -203,6 +203,15 @@ const (
 	HOUSE_SHOW_PERIOD_Max = 7 // 1 | 2 | 4
 )
 
+const (
+	HOUSE_FILTER_TYPE_EQ      = 1 // Less Than.     =
+	HOUSE_FILTER_TYPE_LT      = 2 // Less Than.     <
+	HOUSE_FILTER_TYPE_LE      = 3 // Less Equal.	<=
+	HOUSE_FILTER_TYPE_GT      = 4 // Greater Than.  >
+	HOUSE_FILTER_TYPE_GE      = 5 // Greater Equal. >=
+	HOUSE_FILTER_TYPE_BETWEEN = 6 // Between.       >= && <=
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Appointment, Order

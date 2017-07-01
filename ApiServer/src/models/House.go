@@ -150,6 +150,20 @@ func SetHouseShowTime(hid, uid int64, prdw, prdv int, desc string) (err error) {
 	return
 }
 
+type ValueOp struct {
+	Operator int
+	Value1   int64
+	Value2   int64
+}
+
+type HouseFilter struct {
+	Rental     ValueOp
+	Livingroom ValueOp
+	Bedroom    ValueOp
+	Bathroom   ValueOp
+	Acreage    ValueOp
+}
+
 /**
 *	Get house list by id
 *	Arguments:
@@ -162,7 +176,7 @@ func SetHouseShowTime(hid, uid int64, prdw, prdv int, desc string) (err error) {
 *		fetched	- fetched quantity
 *		ids		- house id list
  */
-func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched int64, ids []int64) {
+func GetHouseListByType(ht int, begin, count int64, filter HouseFilter) (err error, total, fetched int64, ids []int64) {
 	FN := "[GetHouseListByType] "
 	beego.Trace(FN, "type:", ht, ", begin:", begin, ", count:", count)
 
@@ -194,7 +208,7 @@ func GetHouseListByType(ht int, begin, count int64) (err error, total, fetched i
 	case commdef.HOUSE_LIST_New:
 		return getNewHouseList(begin, count)
 	case commdef.HOUSE_LIST_All:
-		fallthrough
+		return getHouseListAll(begin, count, filter)
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	}
@@ -1279,6 +1293,20 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 		ids = append(ids, v.HouseId)
 	}
 	fetched = int64(len(ids))
+
+	return
+}
+
+func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, total, fetched int64, ids []int64) {
+	FN := "[getHouseListAll] "
+
+	beego.Trace(FN, "begin:", begin, ", fetch_numb:", fetch_numb, ", filter:", fmt.Sprintf("%+v", filter))
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
 
 	return
 }
