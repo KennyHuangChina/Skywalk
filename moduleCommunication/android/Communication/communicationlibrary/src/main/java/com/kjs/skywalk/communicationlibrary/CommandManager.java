@@ -5,24 +5,23 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 
 /**
  * Created by kenny on 2017/3/14.
  */
 
-public class CommandManager implements CommunicationInterface.ICommand {
+public class CommandManager implements ICommand {
     final String TAG = getClass().getSimpleName();
 
     private Context             mContext        = null;
     private SKCookieManager     mCookieManager  = null;
     private MyUtils             mUtils          = null;
 
-    private CommunicationInterface.CICommandListener    mCmdListener  = null;
-    private CommunicationInterface.CIProgressListener   mProgListener = null;
+    private CICommandListener    mCmdListener  = null;
+    private CIProgressListener   mProgListener = null;
 
-    public CommandManager(Context context,
-                          CommunicationInterface.CICommandListener CmdListener,
-                          CommunicationInterface.CIProgressListener ProgListener) {
+    public CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         mContext = context;
         mCmdListener  = CmdListener;
         mProgListener = ProgListener;
@@ -148,14 +147,14 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int CommitHouseByOwner(CommunicationInterface.HouseInfo houseInfo, int agency) {
+    public int CommitHouseByOwner(HouseInfo houseInfo, int agency) {
         CommunicationBase op = new CmdCommitHouseByOwner(mContext, houseInfo, agency);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int AmendHouse(CommunicationInterface.HouseInfo houseInfo) {
+    public int AmendHouse(HouseInfo houseInfo) {
         CommunicationBase op = new CmdAmendHouse(mContext, houseInfo);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
@@ -219,8 +218,8 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int GetHouseDigestList(int type, int begin, int cnt) {
-        CommunicationBase op = new CmdGetHouseList(mContext);
+    public int GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
+        CommunicationBase op = new CmdGetHouseList(mContext, type, begin, cnt, filter);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
         pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
@@ -383,7 +382,7 @@ public class CommandManager implements CommunicationInterface.ICommand {
     }
 
     @Override
-    public int AddHouseFacility(int house, ArrayList<CommunicationInterface.FacilityItem> list) {
+    public int AddHouseFacility(int house, ArrayList<FacilityItem> list) {
         CommunicationBase op = new CmdAddHouseFacility(mContext, house, list);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);

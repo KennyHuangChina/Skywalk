@@ -50,7 +50,17 @@ public class CommunicationInterface {
         int GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
         int GetBehalfHouses(int type, int begin, int cnt);                      // CMD_GET_BEHALF_HOUSE_LIST,       TODO:
-        int GetHouseDigestList(int type, int begin, int cnt);                   // CMD_GET_HOUSE_DIGEST_LIST,       IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        /*
+        *   CMD     : CMD_GET_HOUSE_DIGEST_LIST
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        *   type    : list type. 0: all house; 1: recommend houses; 2: deducted houses; 3: new houses
+        *   begin   : fetch begin position
+        *   cnt     : fetch count. set to 0 mean just want to get the total number
+        *   filter  : filter confitions. HouseFilterCondition
+        *   sort    : sort condition list
+         */
+        int GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort);
+
         int GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
         int SetHouseShowtime(int house_id, int pw, int pv, String pd);          // CMD_SET_HOUSE_SHOWTIME,          IApiResults.ICommon
 
@@ -296,6 +306,107 @@ public class CommunicationInterface {
             mFId = id;
             mQty = qty;
             mDesc = desc;
+        }
+    }
+
+    // used in GetHouseDigestList
+    static public class HouseFilterCondition {
+
+        static public int   FILTER_TYPE_EQ      = 1,    // Less Than..      =
+                            FILTER_TYPE_LT      = 2,    // Less Than..      <
+                            FILTER_TYPE_LE      = 3,    // Less Equal.      <=
+                            FILTER_TYPE_GT      = 4,    // Greater Than.    >
+                            FILTER_TYPE_GE      = 5,    // Greater Equal.   >=
+                            FILTER_TYPE_BETWEEN = 6;    // Between.         >= && <=
+
+        public IntegerFilter mRental;
+        public IntegerFilter mLivingroom;
+        public IntegerFilter mBedroom;
+        public IntegerFilter mBathroom;
+        public IntegerFilter mAcreage;
+        public ArrayList<Integer> tags;
+
+        public HouseFilterCondition() {
+            mRental     = new IntegerFilter();
+            mLivingroom = new IntegerFilter();
+            mBedroom    = new IntegerFilter();
+            mBathroom   = new IntegerFilter();
+            mAcreage    = new IntegerFilter();
+            tags        = new ArrayList<Integer>();
+        }
+
+        public class IntegerFilter {
+            private String TAG = getClass().getSimpleName();
+            private int mVal1       = -1;
+            private int mVal2       = -1;
+            private int mFilterType = -1;
+
+            IntegerFilter() {
+            }
+
+            public int FilterBetween(int Val1, int Val2) {
+                if (Val1 < 0) {
+                    Log.e(TAG, "Val1:" + Val1);
+                    return -1;
+                }
+                if (Val2 < 0) {
+                    Log.e(TAG, "Val2:" + Val2);
+                    return -1;
+                }
+                if (Val2 <= Val1) {
+                    Log.e(TAG, String.format("Val2(%d) <= Val1(%d)", Val2, Val1));
+                    return -1;
+                }
+
+                mFilterType = FILTER_TYPE_BETWEEN;
+                mVal1       = Val1;
+                mVal2       = Val2;
+                return 0;
+            }
+
+            public int FilterEq(int Val) {
+                if (Val <= 0) {
+                    Log.e(TAG, "Val:" + Val);
+                    return -1;
+                }
+
+                mFilterType = FILTER_TYPE_EQ;
+                mVal1       = Val;
+                return 0;
+            }
+
+            public int FilterLessX(int Val, boolean equal) {
+                if (Val <= 0) {
+                    Log.e(TAG, "Val:" + Val);
+                    return -1;
+                }
+
+                mFilterType = equal ? FILTER_TYPE_LE : FILTER_TYPE_LT;
+                mVal1       = Val;
+                return 0;
+            }
+
+            public int FilterGreatX(int Val, boolean equal) {
+                if (Val <= 0) {
+                    Log.e(TAG, "Val:" + Val);
+                    return -1;
+                }
+
+                mFilterType = equal ? FILTER_TYPE_GE : FILTER_TYPE_GT;
+                mVal1   = Val;
+                return 0;
+            }
+
+            public int GetOp() { return mFilterType; }
+
+            public int GetValue1() { return mVal1; }
+
+            public int GetValue2() {
+                if (FILTER_TYPE_BETWEEN != mFilterType) {
+                    return -1;
+                }
+                return mVal2;
+            }
         }
     }
 }

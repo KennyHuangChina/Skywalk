@@ -132,10 +132,25 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-//        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+        GetHouseDigestList();
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAgencyList(0, mListTotal);
         CmdMgr.GetHouseSeeAppointmentList(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
+    }
+
+    private void GetHouseDigestList() {
+        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+
+        HouseFilterCondition filter = new HouseFilterCondition();
+        filter.mRental.FilterBetween(100, 200);
+        filter.mLivingroom.FilterGreatX(3, true);
+//        filter.mBedroom.FilterLessX(4, true);
+        filter.mBathroom.FilterEq(2);
+        filter.mAcreage.FilterBetween(8000, 10000);
+
+        ArrayList<Integer> sort = new ArrayList<Integer>();
+
+        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, filter, sort);
     }
 
     @Override
