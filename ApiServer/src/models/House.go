@@ -151,7 +151,7 @@ func SetHouseShowTime(hid, uid int64, prdw, prdv int, desc string) (err error) {
 }
 
 type ValueOp struct {
-	Operator int
+	Operator int // HOUSE_FILTER_TYPE_xxx
 	Value1   int64
 	Value2   int64
 }
@@ -199,6 +199,8 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter) (err err
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("Invalid count:%d", count)}
 		return
 	}
+
+	/* Permission Checking */
 
 	switch ht {
 	case commdef.HOUSE_LIST_Recommend:
@@ -1308,6 +1310,97 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, to
 		}
 	}()
 
+	/* Argument checking */
+
+	/* Permission checking */
+
+	/* Processing */
+	// count calculating
+	sqlCondition := ""
+	if filter.Livingroom.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Livingroom, "livingrooms")
+	}
+	if filter.Bedroom.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Bedroom, "bedrooms")
+	}
+	if filter.Bathroom.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Bathroom, "bathrooms")
+	}
+	if filter.Acreage.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Acreage, "acreage")
+	}
+
+	sql := ""
+	sql1 := ""
+	if filter.Rental.Operator > 0 {
+		// rental
+		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid
+							HAVING id=(SELECT MAX(id) FROM tbl_rental WHERE house_id=r.house_id AND active=1)`
+		sql1 = fmt.Sprintf(` FROM tab_house AS h LEFT JOIN (%s) AS r ON h.id=r.house_id WHERE r.house_id IS NOT NULL`, sqlRental)
+
+		switch filter.Rental.Operator {
+		case commdef.HOUSE_FILTER_TYPE_EQ:
+			sql1 += fmt.Sprintf(" AND r.rental_bid=%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_LT:
+			sql1 += fmt.Sprintf(" AND r.rental_bid<%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_LE:
+			sql1 += fmt.Sprintf(" AND r.rental_bid<=%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_GT:
+			sql1 += fmt.Sprintf(" AND r.rental_bid>%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_GE:
+			sql1 += fmt.Sprintf(" AND r.rental_bid>=%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_BETWEEN:
+			sql1 += fmt.Sprintf(" AND r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
+		}
+	} else {
+		sql1 = ` FROM tab_house AS h `
+		if len(sqlCondition) > 0 {
+			sql1 += " WHERE " + sqlCondition
+		}
+	}
+	sql = "SELECT COUNT(*)" + sql1
+
+	Count := int64(0)
+	o := orm.NewOrm()
+	errT := o.Raw(sql).QueryRow(&Count)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	total = Count
+
+	if 0 == fetch_numb || 0 == total { // user just want to get the total number or no record could be fetched
+		return
+	}
+
+	if begin >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin(%d) over the bound(%d)", begin, total)}
+		return
+	}
+
+	// fetch real records
+	sql = "SELECT h.id " + sql1
+	idlst := []int64{}
+	numb, errT := o.Raw(sql).QueryRows(&idlst)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf("%d records fetched", numb))
+
+	ids = idlst
 	return
 }
 
@@ -1332,7 +1425,7 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 		}
 	}()
 
-	// default time window: 7 days
+	// default times window: 7 idlst
 	tNow := time.Now()
 	beego.Debug(FN, "tNow:", tNow, ", UTC:", tNow.UTC())
 	tBegin := tNow.UTC().Add(-7 * 24 * time.Hour)
@@ -1888,5 +1981,25 @@ func delHousePrices(hid int64) (err error) {
 	}
 
 	beego.Debug(FN, fmt.Sprintf("%d records get deleted", numb))
+	return
+}
+
+func getHouseQuery(vo ValueOp, key string) (qs string) {
+
+	switch vo.Operator {
+	case commdef.HOUSE_FILTER_TYPE_EQ:
+		qs += fmt.Sprintf(" %s=%d", key, vo.Value1)
+	case commdef.HOUSE_FILTER_TYPE_LT:
+		qs += fmt.Sprintf(" %s<%d", key, vo.Value1)
+	case commdef.HOUSE_FILTER_TYPE_LE:
+		qs += fmt.Sprintf(" %s<=%d", key, vo.Value1)
+	case commdef.HOUSE_FILTER_TYPE_GT:
+		qs += fmt.Sprintf(" %s>%d", key, vo.Value1)
+	case commdef.HOUSE_FILTER_TYPE_GE:
+		qs += fmt.Sprintf(" %s>=%d", key, vo.Value1)
+	case commdef.HOUSE_FILTER_TYPE_BETWEEN:
+		qs += fmt.Sprintf(" %s BETWEEN %d AND %d", key, vo.Value1, vo.Value2)
+	}
+
 	return
 }
