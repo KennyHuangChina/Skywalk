@@ -83,10 +83,10 @@
 	  		* ac1			int		// acreage min
 	  		* ac2			int		// acreage max
 	  		* tags			string	// tags array. like 1,3,5,7
-	  		* sort			int		// sort condition. Be composed of one or more of the following items 
+	  		* sort			int		// sort condition array. like 1,3,5,7 
 			  						//  1: publish time, 	 2: publish time desc
-									//  4: rental, 			 8: rental desc
-									// 10: appointment		20: appointment desc
+									//  3: rental, 			 4: rental desc
+									//  5: appointment		 6: appointment desc
 	[Response]
 		* SUCCESS:200 
 			* Total    		int		// total number

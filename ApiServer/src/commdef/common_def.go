@@ -212,6 +212,15 @@ const (
 	HOUSE_FILTER_TYPE_BETWEEN = 6 // Between.       >= && <=
 )
 
+const (
+	HOUSE_SORT_PUBLISH      = 1 // sort by publish time, from early to late
+	HOUSE_SORT_PUBLISH_DESC = 2 // sort by publish time, from late to early
+	HOUSE_SORT_RENTAL       = 3 // sort by rental, from low to high
+	HOUSE_SORT_RENTAL_DESC  = 4 // sort by rental, from high to low
+	HOUSE_SORT_APPOINT      = 5 // sort by appointment number, from low to high
+	HOUSE_SORT_APPOINT_DESC = 6 // sort by appointment number, from high to low
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Appointment, Order

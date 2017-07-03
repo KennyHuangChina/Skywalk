@@ -41,6 +41,8 @@ func Test_GetHouseListByType_1(t *testing.T) {
 	} else {
 		// t.Log("Pass, user:", uif)
 	}
+
+	t.Error("Not Implement")
 }
 
 func Test_getRecommendHouseList_1(t *testing.T) {

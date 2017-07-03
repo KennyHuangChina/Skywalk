@@ -600,6 +600,7 @@ func (this *HouseController) GetHouseDigestList() {
 	count, _ := this.GetInt64("cnt")
 	// sid := this.GetString("sid")
 	err, filter := getHouseFilter(this)
+	sort := this.GetString("sort")
 	if nil != err {
 		return
 	}
@@ -609,7 +610,7 @@ func (this *HouseController) GetHouseDigestList() {
 	/*
 	 *	Processing
 	 */
-	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count, filter)
+	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count, filter, sort)
 	beego.Debug(FN, "ids:", ids)
 	if nil == err {
 		result.Total = total

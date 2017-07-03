@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -170,15 +171,17 @@ type HouseFilter struct {
 *		ht 		- list type. ref to commdef.HOUSE_LIST_xxx
 *		begin	- from which item to fetch
 *		count	- how many items to fetch
+*		filter	- query filters. HOUSE_FILTER_TYPE_xxx
+*		sort	- sort type. HOUSE_SORT_xxx
 *	Returns
 *		err 	- error info
 *		total 	- total number
 *		fetched	- fetched quantity
 *		ids		- house id list
  */
-func GetHouseListByType(ht int, begin, count int64, filter HouseFilter) (err error, total, fetched int64, ids []int64) {
+func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort string) (err error, total, fetched int64, ids []int64) {
 	FN := "[GetHouseListByType] "
-	beego.Trace(FN, "type:", ht, ", begin:", begin, ", count:", count)
+	beego.Trace(FN, "type:", ht, ", begin:", begin, ", count:", count, ", filter:", fmt.Sprintf("%+v", filter), ", sort:", sort)
 
 	defer func() {
 		if nil != err {
@@ -200,6 +203,31 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter) (err err
 		return
 	}
 
+	// sort types
+	sorts := []int{}
+	sortT := strings.Split(sort, ",")
+	for _, v := range sortT {
+		i, errT := strconv.Atoi(v)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		sorts = append(sorts, i)
+	}
+
+	if isSortTypeExist(sorts, commdef.HOUSE_SORT_PUBLISH) && isSortTypeExist(sorts, commdef.HOUSE_SORT_PUBLISH_DESC) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "HOUSE_SORT_PUBLISH vs HOUSE_SORT_PUBLISH_DESC"}
+		return
+	}
+	if isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL) && isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL_DESC) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "HOUSE_SORT_RENTAL vs HOUSE_SORT_RENTAL_DESC"}
+		return
+	}
+	if isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT) && isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT_DESC) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "HOUSE_SORT_APPOINT vs HOUSE_SORT_APPOINT_DESC"}
+		return
+	}
+
 	/* Permission Checking */
 
 	switch ht {
@@ -210,7 +238,7 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter) (err err
 	case commdef.HOUSE_LIST_New:
 		return getNewHouseList(begin, count)
 	case commdef.HOUSE_LIST_All:
-		return getHouseListAll(begin, count, filter)
+		return getHouseListAll(begin, count, filter, sorts)
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT}
 	}
@@ -1299,7 +1327,7 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	return
 }
 
-func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, total, fetched int64, ids []int64) {
+func getHouseListAll(begin, fetch_numb int64, filter HouseFilter, sorts []int) (err error, total, fetched int64, ids []int64) {
 	FN := "[getHouseListAll] "
 
 	beego.Trace(FN, "begin:", begin, ", fetch_numb:", fetch_numb, ", filter:", fmt.Sprintf("%+v", filter))
@@ -1344,40 +1372,97 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, to
 
 	sql := ""
 	sql1 := ""
-	if filter.Rental.Operator > 0 {
+	if filter.Rental.Operator > 0 ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL) ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL_DESC) ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT) ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT_DESC) {
+
+		// appointment
+		sqlAppoint := fmt.Sprintf(`SELECT house, COUNT(*) AS appoints FROM tbl_appointment 
+										WHERE close_time IS NULL AND order_type=%d 
+										GROUP BY House`, commdef.ORDER_TYPE_SEE_APARTMENT)
 		// rental
 		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid
 							HAVING id=(SELECT MAX(id) FROM tbl_rental WHERE house_id=r.house_id AND active=1)`
-		sql1 = fmt.Sprintf(` FROM tbl_house AS h LEFT JOIN (%s) AS r ON h.id=r.house_id WHERE r.house_id IS NOT NULL`, sqlRental)
+
+		sql1 = fmt.Sprintf(` FROM v_house_published AS h 
+										LEFT JOIN (%s) AS r ON h.id=r.house_id 
+										LEFT JOIN (%s) AS a ON h.id=a.house 
+									WHERE `, sqlRental, sqlAppoint)
 
 		switch filter.Rental.Operator {
 		case commdef.HOUSE_FILTER_TYPE_EQ:
-			sql1 += fmt.Sprintf(" AND r.rental_bid=%d", filter.Rental.Value1)
+			sql1 += fmt.Sprintf(" r.rental_bid=%d", filter.Rental.Value1)
 		case commdef.HOUSE_FILTER_TYPE_LT:
-			sql1 += fmt.Sprintf(" AND r.rental_bid<%d", filter.Rental.Value1)
+			sql1 += fmt.Sprintf(" r.rental_bid<%d", filter.Rental.Value1)
 		case commdef.HOUSE_FILTER_TYPE_LE:
-			sql1 += fmt.Sprintf(" AND r.rental_bid<=%d", filter.Rental.Value1)
+			sql1 += fmt.Sprintf(" r.rental_bid<=%d", filter.Rental.Value1)
 		case commdef.HOUSE_FILTER_TYPE_GT:
-			sql1 += fmt.Sprintf(" AND r.rental_bid>%d", filter.Rental.Value1)
+			sql1 += fmt.Sprintf(" r.rental_bid>%d", filter.Rental.Value1)
 		case commdef.HOUSE_FILTER_TYPE_GE:
-			sql1 += fmt.Sprintf(" AND r.rental_bid>=%d", filter.Rental.Value1)
+			sql1 += fmt.Sprintf(" r.rental_bid>=%d", filter.Rental.Value1)
 		case commdef.HOUSE_FILTER_TYPE_BETWEEN:
-			sql1 += fmt.Sprintf(" AND r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
+			sql1 += fmt.Sprintf(" r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
+		default:
+			sql1 += " 1 "
 		}
 		if len(sqlCondition) > 0 {
 			sql1 += " AND " + sqlCondition
+		}
+
+		if fetch_numb > 0 {
+			sql = `SELECT h.id ` + sql1
+			if len(sorts) > 0 {
+				sql += " ORDER BY "
+				for k, v := range sorts {
+					if k > 0 {
+						sql += ","
+					}
+					switch v {
+					case commdef.HOUSE_SORT_PUBLISH:
+						sql += " publish_time"
+					case commdef.HOUSE_SORT_PUBLISH_DESC:
+						sql += " publish_time DESC"
+					case commdef.HOUSE_SORT_RENTAL:
+						sql += " rental_bid"
+					case commdef.HOUSE_SORT_RENTAL_DESC:
+						sql += " rental_bid DESC"
+					case commdef.HOUSE_SORT_APPOINT:
+						sql += " appoints"
+					case commdef.HOUSE_SORT_APPOINT_DESC:
+						sql += " appoints DESC"
+					}
+				}
+			}
 		}
 	} else {
 		sql1 = ` FROM tbl_house AS h `
 		if len(sqlCondition) > 0 {
 			sql1 += " WHERE " + sqlCondition
 		}
+		if fetch_numb > 0 {
+			sql = `SELECT h.id ` + sql1
+			if len(sorts) > 0 {
+				sql += " ORDER BY "
+				for k, v := range sorts {
+					if k > 0 {
+						sql1 += ","
+					}
+					switch v {
+					case commdef.HOUSE_SORT_PUBLISH:
+						sql += " publish_time"
+					case commdef.HOUSE_SORT_PUBLISH_DESC:
+						sql += " publish_time DESC"
+					}
+				}
+			}
+		}
 	}
-	sql = "SELECT COUNT(*)" + sql1
 
 	Count := int64(0)
 	o := orm.NewOrm()
-	errT := o.Raw(sql).QueryRow(&Count)
+	errT := o.Raw("SELECT COUNT(*)" + sql1).QueryRow(&Count)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
@@ -1395,9 +1480,9 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, to
 	}
 
 	// fetch real records
-	sql = "SELECT h.id " + sql1
+	sql += " LIMIT ?, ?"
 	idlst := []int64{}
-	numb, errT := o.Raw(sql).QueryRows(&idlst)
+	numb, errT := o.Raw(sql, begin, fetch_numb).QueryRows(&idlst)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
@@ -2006,4 +2091,17 @@ func getHouseQuery(vo ValueOp, key string) (qs string) {
 	}
 
 	return
+}
+
+func isSortTypeExist(sorts []int, sortType int) bool {
+
+	for _, v := range sorts {
+		// beego.Debug("v:", v)
+		if v == sortType {
+			// beego.Debug("found:", sortType)
+			return true
+		}
+	}
+
+	return false
 }
