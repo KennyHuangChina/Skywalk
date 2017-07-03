@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.*;
 
 /**
  * Created by kenny on 2017/3/2.
@@ -22,12 +23,13 @@ class CmdGetHouseList extends CommunicationBase {
     protected HouseFilterCondition  mFilter = null;
     protected ArrayList<Integer>    mSort   = null;
 
-    CmdGetHouseList(Context context, int type, int bgn, int cnt, HouseFilterCondition filter) {
+    CmdGetHouseList(Context context, int type, int bgn, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST);
         mType       = type;
         mBeginPosi  = bgn;
         mFetchCount = cnt;
         mFilter     = filter;
+        mSort       = sort;
     }
 
     @Override
@@ -43,6 +45,21 @@ class CmdGetHouseList extends CommunicationBase {
         if (mFetchCount < 0) {
             Log.e(TAG, "mFetchCount:" + mFetchCount);
             return false;
+        }
+
+        if (mSort.size() > 0) {
+            if (isSortTypeExist(SORT_PUBLISH_TIME) && isSortTypeExist(SORT_PUBLISH_TIME_DESC)) {
+                Log.e(TAG, "SORT_PUBLISH_TIME vs SORT_PUBLISH_TIME_DESC");
+                return false;
+            }
+            if (isSortTypeExist(SORT_RENTAL) && isSortTypeExist(SORT_RENTAL_DESC)) {
+                Log.e(TAG, "SORT_RENTAL vs SORT_RENTAL_DESC");
+                return false;
+            }
+            if (isSortTypeExist(SORT_APPOINT_NUMB) && isSortTypeExist(SORT_APPOINT_NUMB_DESC)) {
+                Log.e(TAG, "SORT_APPOINT_NUMB vs SORT_APPOINT_NUMB_DESC");
+                return false;
+            }
         }
 
         return true;
@@ -133,8 +150,32 @@ class CmdGetHouseList extends CommunicationBase {
                     mRequestData += String.format("&ac2=%d", mFilter.mAcreage.GetValue2());
                 }
             }
-
-            Log.d(TAG, "mRequestData: " + mRequestData);
         }
+
+        String sort = "";
+        for (int n = 0; n < mSort.size(); n++) {
+            if (!sort.isEmpty()) {
+                sort += ",";
+            }
+            sort += String.format("%d", mSort.get(n).intValue());
+        }
+        if (!sort.isEmpty()) {
+            if (!mRequestData.isEmpty()) {
+                mRequestData += "&";
+            }
+            mRequestData += String.format("sort=%s", sort);
+        }
+
+        Log.d(TAG, "mRequestData: " + mRequestData);
+    }
+
+    private boolean isSortTypeExist(int type) {
+        for (int n = 0; n < mSort.size(); n++) {
+            if (mSort.get(n).intValue() == type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.*;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -142,13 +143,17 @@ public class MainActivityFragment extends Fragment
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 
         HouseFilterCondition filter = new HouseFilterCondition();
-        filter.mRental.FilterBetween(115000, 140000);
-        filter.mLivingroom.FilterGreatX(1, true);
-        filter.mBedroom.FilterLessX(3, true);
+//        filter.mRental.FilterBetween(115000, 180000);
+//        filter.mLivingroom.FilterGreatX(1, true);
+//        filter.mBedroom.FilterLessX(3, true);
 //        filter.mBathroom.FilterEq(2);
-        filter.mAcreage.FilterBetween(10000, 13148);
+        filter.mAcreage.FilterBetween(10000, 17788);
 
         ArrayList<Integer> sort = new ArrayList<Integer>();
+        sort.add(new Integer(HouseFilterCondition.SORT_PUBLISH_TIME_DESC));
+//        sort.add(new Integer(HouseFilterCondition.SORT_RENTAL));
+//        sort.add(new Integer(HouseFilterCondition.SORT_RENTAL_DESC));
+//        sort.add(new Integer(HouseFilterCondition.SORT_APPOINT_NUMB_DESC));
 
         CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, filter, sort);
     }

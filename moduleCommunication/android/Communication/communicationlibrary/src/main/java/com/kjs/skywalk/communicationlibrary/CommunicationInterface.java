@@ -318,6 +318,12 @@ public class CommunicationInterface {
                             FILTER_TYPE_GT      = 4,    // Greater Than.    >
                             FILTER_TYPE_GE      = 5,    // Greater Equal.   >=
                             FILTER_TYPE_BETWEEN = 6;    // Between.         >= && <=
+        static public int   SORT_PUBLISH_TIME       = 1,    // sort by publish time, from early to late
+                            SORT_PUBLISH_TIME_DESC  = 2,    // sort by publish time, from late to early
+                            SORT_RENTAL             = 3,    // sort by rental, from low to high
+                            SORT_RENTAL_DESC        = 4,    // sort by rental, from high to low
+                            SORT_APPOINT_NUMB       = 5,    // sort by appointment number, from low to high
+                            SORT_APPOINT_NUMB_DESC  = 6;    // sort by appointment number, from high to low
 
         public IntegerFilter mRental;
         public IntegerFilter mLivingroom;
