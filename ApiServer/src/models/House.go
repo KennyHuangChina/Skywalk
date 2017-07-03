@@ -1348,7 +1348,7 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, to
 		// rental
 		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid
 							HAVING id=(SELECT MAX(id) FROM tbl_rental WHERE house_id=r.house_id AND active=1)`
-		sql1 = fmt.Sprintf(` FROM tab_house AS h LEFT JOIN (%s) AS r ON h.id=r.house_id WHERE r.house_id IS NOT NULL`, sqlRental)
+		sql1 = fmt.Sprintf(` FROM tbl_house AS h LEFT JOIN (%s) AS r ON h.id=r.house_id WHERE r.house_id IS NOT NULL`, sqlRental)
 
 		switch filter.Rental.Operator {
 		case commdef.HOUSE_FILTER_TYPE_EQ:
@@ -1364,8 +1364,11 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, to
 		case commdef.HOUSE_FILTER_TYPE_BETWEEN:
 			sql1 += fmt.Sprintf(" AND r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
 		}
+		if len(sqlCondition) > 0 {
+			sql1 += " AND " + sqlCondition
+		}
 	} else {
-		sql1 = ` FROM tab_house AS h `
+		sql1 = ` FROM tbl_house AS h `
 		if len(sqlCondition) > 0 {
 			sql1 += " WHERE " + sqlCondition
 		}
@@ -1380,6 +1383,7 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter) (err error, to
 		return
 	}
 	total = Count
+	beego.Debug(FN, "total:", total)
 
 	if 0 == fetch_numb || 0 == total { // user just want to get the total number or no record could be fetched
 		return
