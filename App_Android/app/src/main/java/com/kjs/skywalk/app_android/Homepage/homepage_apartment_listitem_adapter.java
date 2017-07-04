@@ -128,7 +128,7 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
             final ClassDefine.HouseDigest houseDigest1 = mList.get(0);
             holder.tvApartment1_name.setText(houseDigest1.property);
             commonFun.displayImageByURL(mContext, houseDigest1.CoverImageUrlS, holder.ivApartment1_thumb);
-            holder.tvApartment1_desc.setText(houseDigest1.addr + "/" + houseDigest1.Acreage + "㎡");
+            holder.tvApartment1_desc.setText(String.format("%s/%d㎡", houseDigest1.addr, houseDigest1.Acreage));
             holder.rlApartment1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -157,7 +157,9 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
                 holder.rlApartment2.setVisibility(View.VISIBLE);
                 holder.tvApartment2_name.setText(houseDigest2.property);
                 commonFun.displayImageByURL(mContext, houseDigest2.CoverImageUrlS, holder.ivApartment2_thumb);
-                holder.tvApartment2_desc.setText(houseDigest2.addr + "/" + houseDigest2.Acreage + "㎡");
+                holder.tvApartment2_desc.setText(String.format("%s/%d㎡", houseDigest2.addr, houseDigest2.Acreage));
+//                holder.tvApartment2_desc.setText(String.format("%s%s/%d㎡", houseDigest2.addr,
+//                        commonFun.getHouseTypeString(houseDigest2.Bedrooms, houseDigest2.Livingrooms, houseDigest2.Bathrooms), houseDigest2.Acreage));
                 holder.rlApartment2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

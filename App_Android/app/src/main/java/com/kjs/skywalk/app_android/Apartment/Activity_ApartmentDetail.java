@@ -2,6 +2,7 @@ package com.kjs.skywalk.app_android.Apartment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -42,6 +43,7 @@ import com.kjs.skywalk.control.LinearLayout_AdaptiveText;
 import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
@@ -200,7 +202,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 public void run() {
                     mTvApartmentNo.setText("房屋编号： NO." + IHouseInfo.HouseId());
                     mTvApartmentLastModifyDate.setText("最后更新： " + IHouseInfo.ModifyDate());
-                    mTvApartmentHuXing.setText(String.format("%d室%d厅%d卫", IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
+//                    mTvApartmentHuXing.setText(String.format("%d室%d厅%d卫", IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
+                    mTvApartmentHuXing.setText(commonFun.getHouseTypeString(IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
                     mTvApartmentAcreage.setText(String.format("%d 平米", IHouseInfo.Acreage() / 100));
                     mTvApartmentYuYue.setText("");
                     mTvApartmentStatus.setText(translateRentStatus(IHouseInfo.RentStat()));
@@ -225,16 +228,27 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 public void run() {
                     mTvApartmentName.setText(briefHouseInfo.GetProperty());         // name
                     mTvApartmentAddr.setText(briefHouseInfo.GetPropertyAddr());     // address
-                    mTvApartmentRentPrice.setText(String.format("%d（元/月）", briefHouseInfo.GetRental() / 100));
 
+                    List<commonFun.TextDefine> rentPriceDefines = new ArrayList<commonFun.TextDefine>(
+                            Arrays.asList(
+                                    new commonFun.TextDefine(String.valueOf(briefHouseInfo.GetRental() / 100), 45, Color.parseColor("#FF3F29")),
+                                    new commonFun.TextDefine("（元/月）", 36, ContextCompat.getColor(Activity_ApartmentDetail.this, R.color.colorTextNormal))
+                            )
+                    );
+                    mTvApartmentRentPrice.setText(commonFun.getSpannableString(rentPriceDefines));
+//                    mTvApartmentRentPrice.setText(String.format("%d（元/月）", briefHouseInfo.GetRental() / 100));
+
+                    List<commonFun.TextDefine> pricingDefines = new ArrayList<>();
                     int pricingValue = briefHouseInfo.GetPricing() / 100;
                     String pricing;
                     if (pricingValue > 0) {
                         pricing = String.format("升%d", pricingValue);
+                        pricingDefines.add(new commonFun.TextDefine(pricing, 36, Color.parseColor("#FF3F29")));
                     } else {
                         pricing = String.format("降%d", Math.abs(pricingValue));
+                        pricingDefines.add(new commonFun.TextDefine(pricing, 36, Color.parseColor("#32BE84")));
                     }
-                    mTvApartmentPricing.setText(pricing);
+                    mTvApartmentPricing.setText(commonFun.getSpannableString(pricingDefines));
 
                     ArrayList<Object> houseTags = ((IApiResults.IResultList) briefHouseInfo).GetList();
                     ArrayList<ClassDefine.HouseTag> tagList = new ArrayList<>();

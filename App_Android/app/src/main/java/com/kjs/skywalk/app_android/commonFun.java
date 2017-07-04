@@ -338,5 +338,23 @@ public class commonFun {
         return spannableString;
     }
 
+    // get house type
+    public static String getHouseTypeString(int bedrooms, int livingrooms, int bathrooms) {
+        String houseType = "";
+
+        if (bedrooms != 0) {
+            houseType += "" + bedrooms + "室";
+        }
+
+        if (livingrooms != 0) {
+            houseType += "" + livingrooms + "厅";
+        }
+
+        if (bathrooms != 0) {
+            houseType += "" + bathrooms + "卫";
+        }
+        return houseType;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

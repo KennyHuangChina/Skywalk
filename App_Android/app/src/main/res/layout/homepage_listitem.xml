@@ -68,19 +68,19 @@
                 android:layout_below="@+id/iv_apartment1_thumb"
                 android:layout_marginLeft="5dp">
 
+                <!--android:text="证大大拇指广场"-->
                 <TextView
                     android:id="@+id/tv_apartment1_name"
                     style="@style/TextView_apartment_name"
-                    android:text="证大大拇指广场"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical" />
 
+                <!--android:text="姑苏白杨湾街道/3室2厅/88m²"-->
                 <TextView
                     android:id="@+id/tv_apartment1_desc"
                     style="@style/TextView_apartment_description"
-                    android:text="姑苏白杨湾街道/3室2厅/88m²"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -143,19 +143,19 @@
                 android:layout_below="@+id/iv_apartment2_thumb"
                 android:layout_marginLeft="5dp">
 
+                <!--android:text="证大大拇指广场"-->
                 <TextView
                     android:id="@+id/tv_apartment2_name"
                     style="@style/TextView_apartment_name"
-                    android:text="证大大拇指广场"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical" />
 
+                <!--android:text="姑苏白杨湾街道/3室2厅/88m²"-->
                 <TextView
                     android:id="@+id/tv_apartment2_desc"
                     style="@style/TextView_apartment_description"
-                    android:text="姑苏白杨湾街道/3室2厅/88m²"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
