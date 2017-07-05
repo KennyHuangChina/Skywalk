@@ -124,7 +124,10 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         holder.tvGroupTitle.setText(mTitle);
         holder.tvGroupCount.setText(mTotalCount);
 
-        if (mList != null && mList.size() > 0) {
+        if (mList != null && mList.size() == 0) {
+            holder.rlApartment1.setVisibility(View.INVISIBLE);
+            holder.rlApartment2.setVisibility(View.INVISIBLE);
+        } else {
             final ClassDefine.HouseDigest houseDigest1 = mList.get(0);
             holder.tvApartment1_name.setText(houseDigest1.property);
             commonFun.displayImageByURL(mContext, houseDigest1.CoverImageUrlS, holder.ivApartment1_thumb);
@@ -151,8 +154,12 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
             }
 
             if (mList.size() == 1) {
+                holder.rlApartment1.setVisibility(View.VISIBLE);
                 holder.rlApartment2.setVisibility(View.INVISIBLE);
             } else {
+                holder.rlApartment1.setVisibility(View.VISIBLE);
+                holder.rlApartment2.setVisibility(View.VISIBLE);
+
                 final ClassDefine.HouseDigest houseDigest2 = mList.get(1);
                 holder.rlApartment2.setVisibility(View.VISIBLE);
                 holder.tvApartment2_name.setText(houseDigest2.property);
@@ -181,6 +188,7 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
                     }
                 }
             }
+
         }
 
         return view;

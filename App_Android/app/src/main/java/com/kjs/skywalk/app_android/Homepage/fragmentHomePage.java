@@ -146,7 +146,7 @@ public class fragmentHomePage extends Fragment {
             CommandManager CmdMgr = new CommandManager(getActivity(), mCmdListener, mProgreessListener);
 
             // get total count
-            int result = CmdMgr.GetHouseDigestList(mType, 0, 0);
+            int result = CmdMgr.GetHouseDigestList(mType, 0, 0, null, new ArrayList<Integer>());
             mResultGot = false;
             if(!waitResult(1000)) {
                 // timeout
@@ -154,7 +154,7 @@ public class fragmentHomePage extends Fragment {
                 return null;
             }
 
-            result = CmdMgr.GetHouseDigestList(mType, 0, 2);
+            result = CmdMgr.GetHouseDigestList(mType, 0, 2, null, new ArrayList<Integer>());
             mResultGot = false;
             if(!waitResult(1000)) {
                 // timeout
