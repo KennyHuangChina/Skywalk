@@ -22,6 +22,10 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 
 public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
 
+    public static int TYPE_ALL = 0;
+    public static int TYPE_RECOMMAND = 1;
+    public static int TYPE_DEDUCTED = 2;
+    public static int TYPE_NEW = 3;
     private int mBegin = 0;
     private int mCount = 0;
     private int mType = 0;
