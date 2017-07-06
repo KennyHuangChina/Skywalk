@@ -206,7 +206,12 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort str
 	// sort types
 	sorts := []int{}
 	sortT := strings.Split(sort, ",")
+	// beego.Debug(FN, "sortT:", sortT)
 	for _, v := range sortT {
+		// beego.Debug(FN, "v:", v)
+		if 0 == len(v) {
+			continue
+		}
 		i, errT := strconv.Atoi(v)
 		if nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
@@ -214,6 +219,7 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort str
 		}
 		sorts = append(sorts, i)
 	}
+	// beego.Debug(FN, "sorts:", sorts)
 
 	if isSortTypeExist(sorts, commdef.HOUSE_SORT_PUBLISH) && isSortTypeExist(sorts, commdef.HOUSE_SORT_PUBLISH_DESC) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "HOUSE_SORT_PUBLISH vs HOUSE_SORT_PUBLISH_DESC"}
@@ -1343,126 +1349,12 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter, sorts []int) (
 	/* Permission checking */
 
 	/* Processing */
+	strFilter, strSort := getHouseListFilterAndSort(filter, sorts)
+
 	// count calculating
-	sqlCondition := ""
-	if filter.Livingroom.Operator > 0 {
-		if len(sqlCondition) > 0 {
-			sqlCondition += " AND "
-		}
-		sqlCondition += getHouseQuery(filter.Livingroom, "livingrooms")
-	}
-	if filter.Bedroom.Operator > 0 {
-		if len(sqlCondition) > 0 {
-			sqlCondition += " AND "
-		}
-		sqlCondition += getHouseQuery(filter.Bedroom, "bedrooms")
-	}
-	if filter.Bathroom.Operator > 0 {
-		if len(sqlCondition) > 0 {
-			sqlCondition += " AND "
-		}
-		sqlCondition += getHouseQuery(filter.Bathroom, "bathrooms")
-	}
-	if filter.Acreage.Operator > 0 {
-		if len(sqlCondition) > 0 {
-			sqlCondition += " AND "
-		}
-		sqlCondition += getHouseQuery(filter.Acreage, "acreage")
-	}
-
-	sql := ""
-	sql1 := ""
-	if filter.Rental.Operator > 0 ||
-		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL) ||
-		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL_DESC) ||
-		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT) ||
-		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT_DESC) {
-
-		// appointment
-		sqlAppoint := fmt.Sprintf(`SELECT house, COUNT(*) AS appoints FROM tbl_appointment 
-										WHERE close_time IS NULL AND order_type=%d 
-										GROUP BY House`, commdef.ORDER_TYPE_SEE_APARTMENT)
-		// rental
-		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid
-							HAVING id=(SELECT MAX(id) FROM tbl_rental WHERE house_id=r.house_id AND active=1)`
-
-		sql1 = fmt.Sprintf(` FROM v_house_published AS h 
-										LEFT JOIN (%s) AS r ON h.id=r.house_id 
-										LEFT JOIN (%s) AS a ON h.id=a.house 
-									WHERE `, sqlRental, sqlAppoint)
-
-		switch filter.Rental.Operator {
-		case commdef.HOUSE_FILTER_TYPE_EQ:
-			sql1 += fmt.Sprintf(" r.rental_bid=%d", filter.Rental.Value1)
-		case commdef.HOUSE_FILTER_TYPE_LT:
-			sql1 += fmt.Sprintf(" r.rental_bid<%d", filter.Rental.Value1)
-		case commdef.HOUSE_FILTER_TYPE_LE:
-			sql1 += fmt.Sprintf(" r.rental_bid<=%d", filter.Rental.Value1)
-		case commdef.HOUSE_FILTER_TYPE_GT:
-			sql1 += fmt.Sprintf(" r.rental_bid>%d", filter.Rental.Value1)
-		case commdef.HOUSE_FILTER_TYPE_GE:
-			sql1 += fmt.Sprintf(" r.rental_bid>=%d", filter.Rental.Value1)
-		case commdef.HOUSE_FILTER_TYPE_BETWEEN:
-			sql1 += fmt.Sprintf(" r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
-		default:
-			sql1 += " 1 "
-		}
-		if len(sqlCondition) > 0 {
-			sql1 += " AND " + sqlCondition
-		}
-
-		if fetch_numb > 0 {
-			sql = `SELECT h.id ` + sql1
-			if len(sorts) > 0 {
-				sql += " ORDER BY "
-				for k, v := range sorts {
-					if k > 0 {
-						sql += ","
-					}
-					switch v {
-					case commdef.HOUSE_SORT_PUBLISH:
-						sql += " publish_time"
-					case commdef.HOUSE_SORT_PUBLISH_DESC:
-						sql += " publish_time DESC"
-					case commdef.HOUSE_SORT_RENTAL:
-						sql += " rental_bid"
-					case commdef.HOUSE_SORT_RENTAL_DESC:
-						sql += " rental_bid DESC"
-					case commdef.HOUSE_SORT_APPOINT:
-						sql += " appoints"
-					case commdef.HOUSE_SORT_APPOINT_DESC:
-						sql += " appoints DESC"
-					}
-				}
-			}
-		}
-	} else {
-		sql1 = ` FROM tbl_house AS h `
-		if len(sqlCondition) > 0 {
-			sql1 += " WHERE " + sqlCondition
-		}
-		if fetch_numb > 0 {
-			sql = `SELECT h.id ` + sql1
-			if len(sorts) > 0 {
-				sql += " ORDER BY "
-				for k, v := range sorts {
-					if k > 0 {
-						sql1 += ","
-					}
-					switch v {
-					case commdef.HOUSE_SORT_PUBLISH:
-						sql += " publish_time"
-					case commdef.HOUSE_SORT_PUBLISH_DESC:
-						sql += " publish_time DESC"
-					}
-				}
-			}
-		}
-	}
-
 	Count := int64(0)
 	o := orm.NewOrm()
-	errT := o.Raw("SELECT COUNT(*)" + sql1).QueryRow(&Count)
+	errT := o.Raw("SELECT COUNT(*)" + strFilter).QueryRow(&Count)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
@@ -1480,7 +1372,7 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter, sorts []int) (
 	}
 
 	// fetch real records
-	sql += " LIMIT ?, ?"
+	sql := `SELECT h.id ` + strFilter + strSort + " LIMIT ?, ?"
 	idlst := []int64{}
 	numb, errT := o.Raw(sql, begin, fetch_numb).QueryRows(&idlst)
 	if nil != errT {
@@ -2104,4 +1996,121 @@ func isSortTypeExist(sorts []int, sortType int) bool {
 	}
 
 	return false
+}
+
+func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strSort string) {
+	FN := "[getHouseListFilterAndSort] "
+
+	sqlCondition := ""
+	if filter.Livingroom.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Livingroom, "livingrooms")
+	}
+	if filter.Bedroom.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Bedroom, "bedrooms")
+	}
+	if filter.Bathroom.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Bathroom, "bathrooms")
+	}
+	if filter.Acreage.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Acreage, "acreage")
+	}
+
+	if filter.Rental.Operator > 0 ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL) ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL_DESC) ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT) ||
+		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT_DESC) {
+
+		// appointment
+		sqlAppoint := fmt.Sprintf(`SELECT house, COUNT(*) AS appoints FROM tbl_appointment 
+										WHERE close_time IS NULL AND order_type=%d 
+										GROUP BY House`, commdef.ORDER_TYPE_SEE_APARTMENT)
+		// rental
+		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid
+							HAVING id=(SELECT MAX(id) FROM tbl_rental WHERE house_id=r.house_id AND active=1)`
+
+		strFilter = fmt.Sprintf(` FROM v_house_published AS h 
+										LEFT JOIN (%s) AS r ON h.id=r.house_id 
+										LEFT JOIN (%s) AS a ON h.id=a.house 
+									WHERE `, sqlRental, sqlAppoint)
+
+		switch filter.Rental.Operator {
+		case commdef.HOUSE_FILTER_TYPE_EQ:
+			strFilter += fmt.Sprintf(" r.rental_bid=%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_LT:
+			strFilter += fmt.Sprintf(" r.rental_bid<%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_LE:
+			strFilter += fmt.Sprintf(" r.rental_bid<=%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_GT:
+			strFilter += fmt.Sprintf(" r.rental_bid>%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_GE:
+			strFilter += fmt.Sprintf(" r.rental_bid>=%d", filter.Rental.Value1)
+		case commdef.HOUSE_FILTER_TYPE_BETWEEN:
+			strFilter += fmt.Sprintf(" r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
+		default:
+			strFilter += " 1 "
+		}
+		if len(sqlCondition) > 0 {
+			strFilter += " AND " + sqlCondition
+		}
+
+		if len(sorts) > 0 {
+			strSort += " ORDER BY "
+			for k, v := range sorts {
+				if k > 0 {
+					strSort += ","
+				}
+				switch v {
+				case commdef.HOUSE_SORT_PUBLISH:
+					strSort += " publish_time"
+				case commdef.HOUSE_SORT_PUBLISH_DESC:
+					strSort += " publish_time DESC"
+				case commdef.HOUSE_SORT_RENTAL:
+					strSort += " rental_bid"
+				case commdef.HOUSE_SORT_RENTAL_DESC:
+					strSort += " rental_bid DESC"
+				case commdef.HOUSE_SORT_APPOINT:
+					strSort += " appoints"
+				case commdef.HOUSE_SORT_APPOINT_DESC:
+					strSort += " appoints DESC"
+				}
+			}
+		}
+	} else {
+		strFilter = ` FROM tbl_house AS h `
+		if len(sqlCondition) > 0 {
+			strFilter += " WHERE " + sqlCondition
+		}
+
+		if len(sorts) > 0 {
+			strSort += " ORDER BY "
+			for k, v := range sorts {
+				if k > 0 {
+					strFilter += ","
+				}
+				switch v {
+				case commdef.HOUSE_SORT_PUBLISH:
+					strSort += " publish_time"
+				case commdef.HOUSE_SORT_PUBLISH_DESC:
+					strSort += " publish_time DESC"
+				}
+			}
+		}
+	}
+
+	beego.Debug(FN, "strFilter:", strFilter)
+	beego.Debug(FN, "strSort:", strSort)
+	return
 }
