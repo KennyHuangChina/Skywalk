@@ -2,12 +2,25 @@ package com.kjs.skywalk.app_android;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
 public class Activity_fangyuan_guanli extends SKBaseActivity {
 
@@ -16,11 +29,19 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     private fragmentFangYuanGuanLiInfo3 mFragInfo3 = null;
     int mTestCount = 0;
 //    int mHouseId = 2;
+    private CommandManager mCmdMgr = null;
+    private String mInfo2 = ""; // "2房2厅1卫 | 105㎡ | 10/11F"
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fangyuan_guanli);
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_fangyuan_guanli);
+
+            mCmdMgr = new CommandManager(this, this, this);
+        mCmdMgr.GetHouseInfo(mHouseId, false);
+        kjsLogUtil.i("GetHouseInfo: " + mHouseId);
+
+        mCmdMgr.GetBriefPublicHouseInfo(mHouseId);
 
         FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
         mFragInfo1 = new fragmentFangYuanGuanLiInfo1();
@@ -52,6 +73,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
                 }
 
                 fragTransaction.commit();
+
             }
         });
     }
@@ -115,4 +137,46 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
 
         }
     }
+
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            return;
+        }
+
+        if (command == CMD_GET_HOUSE_INFO) {
+            updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+        }
+
+    }
+
+    private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                mInfo2 = commonFun.getHouseTypeString(IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms());
+                mInfo2 += " | ";
+                mInfo2 += String.format("%d m²", IHouseInfo.Acreage() / 100);
+                mInfo2 += " | ";
+                mInfo2 += String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal());
+
+                updateFragmentInfo();
+
+            }
+        });
+    }
+
+    private void updateFragmentInfo() {
+        if (mFragInfo1 != null)
+            mFragInfo1.updateInfo(mHouseLocation, mInfo2);
+    }
+
 }

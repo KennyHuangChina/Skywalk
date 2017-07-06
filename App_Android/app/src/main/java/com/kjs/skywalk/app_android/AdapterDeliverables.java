@@ -32,7 +32,7 @@ class AdapterDeliverables extends BaseAdapter {
     }
 
     private Context mContext = null;
-    private ArrayList<Deliverable> mDeliverableLst;
+    private ArrayList<Deliverable> mDeliverableLst = new ArrayList<>();
     private boolean mIsEditMode = false;
     private boolean mIsNumberShow = true;
 

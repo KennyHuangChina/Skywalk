@@ -17,19 +17,23 @@
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
+
+            <!--android:text="世贸.蝶湖湾 175栋1208室"-->
             <TextView
+                android:id="@+id/tv_apartment_info1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextNormal"
-                android:textSize="15sp"
-                android:text="世贸.蝶湖湾 175栋1208室"/>
+                android:textSize="15sp"/>
+
+            <!--android:text="2房2厅1卫 | 105㎡ | 10/11F"-->
             <TextView
+                android:id="@+id/tv_apartment_info2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/colorTextTint"
-                android:textSize="13sp"
-                android:text="2房2厅1卫 | 105㎡ | 10/11F"/>
+                android:textSize="13sp"/>
         </LinearLayout>
 
         <RelativeLayout
