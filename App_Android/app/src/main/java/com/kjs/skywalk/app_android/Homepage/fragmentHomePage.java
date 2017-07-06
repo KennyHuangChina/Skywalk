@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.Server.GetHouseListTask;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -56,7 +57,12 @@ public class fragmentHomePage extends Fragment {
 //        mAdapterRecommend.updateList(loadTestData());
         mAdapterRecommend.setApartmentListCallback(mApartListCallback);
         // get recommend house info
-        (new GetRecommendHouseListTask(1)).execute();
+        new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
+            @Override
+            public void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount) {
+                updateHouseList(houseList, 1, totalCount);
+            }
+        }).execute(1, 0, 2);
 
         // 降价房源
         ListView lvDeducted = (ListView) view.findViewById(R.id.lv_deducted);
@@ -65,7 +71,12 @@ public class fragmentHomePage extends Fragment {
         lvDeducted.setAdapter(mAdapterDeducted);
         mAdapterDeducted.setApartmentListCallback(mApartListCallback);
         // get deducted house info
-        (new GetRecommendHouseListTask(2)).execute();
+        new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
+            @Override
+            public void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount) {
+                updateHouseList(houseList, 2, totalCount);
+            }
+        }).execute(2, 0, 2);
 
         // 最新房源
         ListView lvNew = (ListView) view.findViewById(R.id.lv_new);
@@ -74,7 +85,12 @@ public class fragmentHomePage extends Fragment {
         lvNew.setAdapter(mAdapterNew);
         mAdapterNew.setApartmentListCallback(mApartListCallback);
         // get new house info
-        (new GetRecommendHouseListTask(3)).execute();
+        new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
+            @Override
+            public void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount) {
+                updateHouseList(houseList, 3, totalCount);
+            }
+        }).execute(3, 0, 2);
 
         return view;
     }
@@ -123,163 +139,6 @@ public class fragmentHomePage extends Fragment {
                 }
             }
         });
-    }
-
-
-    public class GetRecommendHouseListTask extends AsyncTask<Void, Void, Boolean> {
-
-        private boolean mResultGot = false;
-        private int[] mHouseIds = null;
-        private int mTotalCount = 0;
-        private ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
-        private int mType = 0;
-
-//       type ---  0: all house; 1: recommend; 2: deducted; 3: new
-        GetRecommendHouseListTask(int type) {
-            mType = type;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            kjsLogUtil.i(String.format("[doInBackground] ------ type: %d", mType));
-            // get house ids
-            CommandManager CmdMgr = new CommandManager(getActivity(), mCmdListener, mProgreessListener);
-
-            // get total count
-            int result = CmdMgr.GetHouseDigestList(mType, 0, 0, null, new ArrayList<Integer>());
-            mResultGot = false;
-            if(!waitResult(1000)) {
-                // timeout
-                kjsLogUtil.i(String.format("[doInBackground] ------ get count timeout"));
-                return null;
-            }
-
-            result = CmdMgr.GetHouseDigestList(mType, 0, 2, null, new ArrayList<Integer>());
-            mResultGot = false;
-            if(!waitResult(1000)) {
-                // timeout
-                kjsLogUtil.i(String.format("[doInBackground] ------ get house list timeout"));
-                return null;
-            }
-
-            updateHouseList(mHouseList, mType, mTotalCount);
-            kjsLogUtil.i(String.format("[doInBackground] ------ end"));
-            return true;
-        }
-
-        boolean waitResult(int nTimeoutMs) {
-            if (nTimeoutMs < 100)
-                return mResultGot;
-
-            int wait_count = 0;
-            while (wait_count < nTimeoutMs / 100) {
-                if (mResultGot)
-                    return true;
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                wait_count++;
-            }
-
-            return false;
-        }
-
-        CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
-
-            @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    mResultGot = true;
-                    return;
-                }
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    mResultGot = true;
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_DIGEST_LIST) {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == -1) {
-                        mTotalCount = resultList.GetTotalNumber();
-                    } else  {
-                        // IApiResults.IHouseDigest
-                        ArrayList<Object> houseDigests = resultList.GetList();
-                        for (Object houseDigestObj : houseDigests) {
-                            IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) houseDigestObj;
-                            ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
-                            houseDigest.houseId = houseDigestRes.GetHouseId();
-                            houseDigest.property = houseDigestRes.GetProperty();
-                            houseDigest.addr = houseDigestRes.GetPropertyAddr();
-                            houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
-                            houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
-                            houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                            houseDigest.Acreage = houseDigestRes.GetAcreage() / 100;
-                            houseDigest.Rental = houseDigestRes.GetRental();
-                            houseDigest.Pricing = houseDigestRes.GetPricing();
-                            houseDigest.CoverImage = houseDigestRes.GetCoverImage();
-                            houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
-                            houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
-
-                            ArrayList<Object> houseTags = ((IApiResults.IResultList) houseDigestRes).GetList();
-                            houseDigest.houseTags = new ArrayList<>();
-                            for (Object houseTagObj : houseTags) {
-                                IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
-                                ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
-                                houseDigest.houseTags.add(houseTag);
-                            }
-
-                            mHouseList.add(houseDigest);
-                        }
-                    }
-                }
-
-                if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
-                    IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) iResult;
-                    ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
-                    houseDigest.houseId = houseDigestRes.GetHouseId();
-                    houseDigest.property = houseDigestRes.GetProperty();
-                    houseDigest.addr = houseDigestRes.GetPropertyAddr();
-                    houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
-                    houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
-                    houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                    houseDigest.Acreage = houseDigestRes.GetAcreage() / 100;
-                    houseDigest.Rental = houseDigestRes.GetRental();
-                    houseDigest.Pricing = houseDigestRes.GetPricing();
-                    houseDigest.CoverImage = houseDigestRes.GetCoverImage();
-
-                    IApiResults.IResultList lst = (IApiResults.IResultList) iResult;
-                    if (lst.GetFetchedNumber() > 0) {
-                        ArrayList<Object> array = lst.GetList();
-                        houseDigest.houseTags = new ArrayList<>();
-                        for (Object obj : array) {
-                            IApiResults.IHouseTag tag = (IApiResults.IHouseTag)obj;
-                            ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
-                            houseDigest.houseTags.add(houseTag);
-                        }
-                    }
-
-                    mHouseList.add(houseDigest);
-               }
-
-                mResultGot = true;
-            }
-        };
-
-        CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
-
-            @Override
-            public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-
-            }
-        };
-
     }
 
 }
