@@ -101,7 +101,16 @@ type HouseInfo struct {
 	BuyDate     string // purchase date
 	ModifyDate  string // last modify date
 	Agency      int64  // house agency id
+	CertStat    int    // House certification status. HOUSE_CERT_STAT_XXX
+	CertTime    string // house certification time
+	CertDesc    string // house certification description
 }
+
+const (
+	HOUSE_CERT_STAT_WAIT   = 1 // house is waiting for certification
+	HOUSE_CERT_STAT_PASSED = 2 // house certification passed
+	HOUSE_CERT_STAT_FAILED = 3 // house certification failed
+)
 
 type HousePrice struct {
 	Id           int64

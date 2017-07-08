@@ -509,6 +509,33 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 		hif.FloorThis = house.FloorThis
 		hif.HouseNo = house.HouseNo
 		hif.BuyDate = fmt.Sprintf("%s", house.PurchaseDate.Local())[:10]
+
+		nullTime := time.Time{}
+		if nullTime != house.PublishTime {
+			hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
+			hif.CertTime = fmt.Sprintf("%s", house.PublishTime.Local())
+		} else {
+			o := orm.NewOrm()
+			qs := o.QueryTable("tbl_house_cert").Filter("House", hid).Limit(1, 0)
+			hc := TblHouseCert{}
+			if errT := qs.One(&hc); nil != errT {
+				if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
+					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+					return
+				} else {
+					// no certificate record found
+					hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
+				}
+			} else {
+				if hc.Pass {
+					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("House certification record out of sync, hc.Pass:%d", hc.Pass)}
+					return
+				}
+				hif.CertStat = commdef.HOUSE_CERT_STAT_FAILED
+				hif.CertTime = fmt.Sprintf("%s", hc.When.Local())
+				hif.CertDesc = hc.Comment
+			}
+		}
 	} else { // hide the privite info
 		hif.BuildingNo = ""
 		hif.HouseNo = ""

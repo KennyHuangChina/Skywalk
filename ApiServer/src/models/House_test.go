@@ -361,6 +361,8 @@ func Test_GetHouseInfo(t *testing.T) {
 		}
 	}
 
+	t.Error("TODO: check new info, certification info")
+
 	return
 	/*
 		seq++
