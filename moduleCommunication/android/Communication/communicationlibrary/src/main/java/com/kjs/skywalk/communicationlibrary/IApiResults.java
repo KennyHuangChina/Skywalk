@@ -117,6 +117,12 @@ public class IApiResults {
         String  ModifyDate();
     }
 
+    public interface IHouseCertInfo {
+        int     CertStat();     // certification stat. 1: wait for certification; 2: Certitication passed; 3: Certification failed
+        Date    CertTime();
+        String  CertDesc();
+    }
+
     public interface IHousePriceInfo {
         int     Id();
         int     RentalTag();
