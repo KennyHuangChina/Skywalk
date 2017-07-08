@@ -3,11 +3,16 @@ package com.kjs.skywalk.communicationlibrary;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by kenny on 2017/3/1.
  */
 
-class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
+class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo {
     private int     mHouseId;       // house id
     private int     mProId;         // property id which the house belong to
     private String  mBuildingNo;    // the building number the house belong to
@@ -27,6 +32,9 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     private boolean mForSale;
     private boolean mForRent;
     private int     mRentStat;
+    private int     mCertStat;      // house certification status
+    private Date    mCertTime;
+    private String  mCertDesc;      //
 
     ResGetHouseInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -52,6 +60,7 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
         mString += "  Agency: " + Agency() + "\n";
         mString += "  Sale: " + ForSale() + "\n";
         mString += "  Rent: " + ForRent() + ", stat:" + RentStat() + "\n";
+        mString += "  Cert: " + CertStat() + ", time: " + CertTime() + ", desc:" + CertDesc() + "\n";
 
         return mString;
     }
@@ -77,6 +86,18 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
             mForSale        = jHouse.getBoolean("ForSale");
             mForRent        = jHouse.getBoolean("ForRent");
             mRentStat       = jHouse.getInt("RentStat");
+            mCertStat       = jHouse.getInt("CertStat");
+            mCertDesc       = jHouse.getString("CertDesc");
+
+            String strCertTime = jHouse.getString("CertTime");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            if (null != strCertTime && !strCertTime.isEmpty()) {
+                try {
+                    mCertTime = format.parse(strCertTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
 
             if (mBuildingNo.isEmpty() || mHouseNo.isEmpty()) {
                 if (mFloorThis == mFloorTotal + 1) {
@@ -207,5 +228,20 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo {
     @Override
     public String ModifyDate() {
         return mModifyDate;
+    }
+
+    @Override
+    public int CertStat() {
+        return mCertStat;
+    }
+
+    @Override
+    public Date CertTime() {
+        return mCertTime;
+    }
+
+    @Override
+    public String CertDesc() {
+        return mCertDesc;
     }
 }
