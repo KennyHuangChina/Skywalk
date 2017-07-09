@@ -20,10 +20,14 @@ import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.Server.GetHouseListTask;
+import com.kjs.skywalk.app_android.kjsLogUtil;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +57,8 @@ public class fragmentApartment extends Fragment {
     private static final int DISPLAY_GRID = 0;
     private static final int DISPLAY_LIST= 1;
     private int mDisplay = DISPLAY_LIST;
+
+    ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
     @Nullable
 
     public void searchConditionFilterItemClicked(View view) {
@@ -100,6 +106,18 @@ public class fragmentApartment extends Fragment {
 
         mDisplayType = (ImageView)view.findViewById(R.id.imageViewDisplayMode);
         mDisplayType.setOnClickListener(mClickListenerDisplayType);
+
+        new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
+            @Override
+            public void onTaskFinished(final ArrayList<ClassDefine.HouseDigest> houseList, final int totalCount) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.addData(houseList, totalCount);
+                    }
+                });
+            }
+        }).execute(GetHouseListTask.TYPE_ALL, 0, 10);
         return view;
     }
 
