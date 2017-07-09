@@ -68,20 +68,15 @@
 	  		* bgn			int		// from which item to fetch
 	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
 	  		* rtop			int 	// operator. o: ==; 1: <; 2: <=; 3: >; 4: >=; 5: Between
-	  		* rt1			int     // rental min
-	  		* rt2			int		// rental max
+	  		* rt			int     // rental values
 	  		* lvop			int		// 
-	  		* lr1			int		// livingroom number min
-	  		* lr2			int		// livingroom number max
+	  		* lr			int		// livingroom number values
 	  		* berop			int		// 
-	  		* ber1			int 	// bedroom number min
-	  		* ber2			int		// bedroom number max
+	  		* ber			int 	// bedroom number values
 	  		* barop			int		// 
-	  		* bar1			int		// bathroom number min
-	  		* bar2			int 	// bathroom number max
+	  		* bar			int		// bathroom number values
 	  		* acop			int		// 
-	  		* ac1			int		// acreage min
-	  		* ac2			int		// acreage max
+	  		* ac			int		// acreage values
 	  		* tags			string	// tags array. like 1,3,5,7
 	  		* sort			int		// sort condition array. like 1,3,5,7 
 			  						//  1: publish time, 	 2: publish time desc

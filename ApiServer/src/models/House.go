@@ -20,7 +20,7 @@ import (
 *		hst		- house showing time
  */
 func GetHouseShowTime(hid, uid int64) (err error, hst commdef.HouseShowTime) {
-	FN := "[GetHouseListByType] "
+	FN := "[GetHouseShowTime] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid)
 
 	defer func() {
@@ -70,7 +70,7 @@ func GetHouseShowTime(hid, uid int64) (err error, hst commdef.HouseShowTime) {
 *		err 	- error info
  */
 func SetHouseShowTime(hid, uid int64, prdw, prdv int, desc string) (err error) {
-	FN := "[GetHouseListByType] "
+	FN := "[SetHouseShowTime] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid, ", period:", prdw, "|", prdv, ", desc:", desc)
 
 	defer func() {
@@ -153,8 +153,7 @@ func SetHouseShowTime(hid, uid int64, prdw, prdv int, desc string) (err error) {
 
 type ValueOp struct {
 	Operator int // HOUSE_FILTER_TYPE_xxx
-	Value1   int64
-	Value2   int64
+	Values   []int64
 }
 
 type HouseFilter struct {
@@ -1994,20 +1993,31 @@ func delHousePrices(hid int64) (err error) {
 }
 
 func getHouseQuery(vo ValueOp, key string) (qs string) {
+	// FN := "[getHouseQuery] "
+	// beego.Debug(FN, fmt.Sprintf("vo:%+v, key:%s", vo, key))
 
 	switch vo.Operator {
 	case commdef.HOUSE_FILTER_TYPE_EQ:
-		qs += fmt.Sprintf(" %s=%d", key, vo.Value1)
+		qs += fmt.Sprintf(" %s=%d", key, vo.Values[0])
 	case commdef.HOUSE_FILTER_TYPE_LT:
-		qs += fmt.Sprintf(" %s<%d", key, vo.Value1)
+		qs += fmt.Sprintf(" %s<%d", key, vo.Values[0])
 	case commdef.HOUSE_FILTER_TYPE_LE:
-		qs += fmt.Sprintf(" %s<=%d", key, vo.Value1)
+		qs += fmt.Sprintf(" %s<=%d", key, vo.Values[0])
 	case commdef.HOUSE_FILTER_TYPE_GT:
-		qs += fmt.Sprintf(" %s>%d", key, vo.Value1)
+		qs += fmt.Sprintf(" %s>%d", key, vo.Values[0])
 	case commdef.HOUSE_FILTER_TYPE_GE:
-		qs += fmt.Sprintf(" %s>=%d", key, vo.Value1)
+		qs += fmt.Sprintf(" %s>=%d", key, vo.Values[0])
 	case commdef.HOUSE_FILTER_TYPE_BETWEEN:
-		qs += fmt.Sprintf(" %s BETWEEN %d AND %d", key, vo.Value1, vo.Value2)
+		qs += fmt.Sprintf(" %s BETWEEN %d AND %d", key, vo.Values[0], vo.Values[1])
+	case commdef.HOUSE_FILTER_TYPE_IN:
+		strIn := ""
+		for k, v := range vo.Values {
+			if k > 0 {
+				strIn += ","
+			}
+			strIn += fmt.Sprintf("%d", v)
+		}
+		qs += fmt.Sprintf(" %s IN (%s)", key, strIn)
 	}
 
 	return
@@ -2076,17 +2086,26 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 
 		switch filter.Rental.Operator {
 		case commdef.HOUSE_FILTER_TYPE_EQ:
-			strFilter += fmt.Sprintf(" r.rental_bid=%d", filter.Rental.Value1)
+			strFilter += fmt.Sprintf(" r.rental_bid=%d", filter.Rental.Values[0])
 		case commdef.HOUSE_FILTER_TYPE_LT:
-			strFilter += fmt.Sprintf(" r.rental_bid<%d", filter.Rental.Value1)
+			strFilter += fmt.Sprintf(" r.rental_bid<%d", filter.Rental.Values[0])
 		case commdef.HOUSE_FILTER_TYPE_LE:
-			strFilter += fmt.Sprintf(" r.rental_bid<=%d", filter.Rental.Value1)
+			strFilter += fmt.Sprintf(" r.rental_bid<=%d", filter.Rental.Values[0])
 		case commdef.HOUSE_FILTER_TYPE_GT:
-			strFilter += fmt.Sprintf(" r.rental_bid>%d", filter.Rental.Value1)
+			strFilter += fmt.Sprintf(" r.rental_bid>%d", filter.Rental.Values[0])
 		case commdef.HOUSE_FILTER_TYPE_GE:
-			strFilter += fmt.Sprintf(" r.rental_bid>=%d", filter.Rental.Value1)
+			strFilter += fmt.Sprintf(" r.rental_bid>=%d", filter.Rental.Values[0])
 		case commdef.HOUSE_FILTER_TYPE_BETWEEN:
-			strFilter += fmt.Sprintf(" r.rental_bid BETWEEN %d AND %d", filter.Rental.Value1, filter.Rental.Value2)
+			strFilter += fmt.Sprintf(" r.rental_bid BETWEEN %d AND %d", filter.Rental.Values[0], filter.Rental.Values[1])
+		case commdef.HOUSE_FILTER_TYPE_IN:
+			strIn := ""
+			for k, v := range filter.Rental.Values {
+				if k > 0 {
+					strIn += ","
+				}
+				strIn += fmt.Sprintf("%d", v)
+			}
+			strFilter += fmt.Sprintf(" r.rental_bid IN (%s)", strIn)
 		default:
 			strFilter += " 1 "
 		}

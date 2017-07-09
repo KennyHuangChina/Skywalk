@@ -219,6 +219,7 @@ const (
 	HOUSE_FILTER_TYPE_GT      = 4 // Greater Than.  >
 	HOUSE_FILTER_TYPE_GE      = 5 // Greater Equal. >=
 	HOUSE_FILTER_TYPE_BETWEEN = 6 // Between.       >= && <=
+	HOUSE_FILTER_TYPE_IN      = 7 // In.			IN(...)
 )
 
 const (

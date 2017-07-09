@@ -7,6 +7,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/astaxie/beego"
+	"strconv"
+	"strings"
 )
 
 type HouseController struct {
@@ -731,93 +733,87 @@ func (this *HouseController) GetHouseInfo() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //
-func getHouseFilter(this *HouseController) (err error, filter models.HouseFilter) {
+func getFilterValues(strVal string) (vs []int64) {
+	// FN := "[getFilterValues] "
 
-	nVal := int64(0)
+	vals := []int64{}
+	strVals := strings.Split(strVal, ",")
+	// beego.Debug(FN, fmt.Sprintf("strVals:%+v", strVals))
+	for _, v := range strVals {
+		if 0 == len(v) {
+			continue
+		}
+		i, errT := strconv.Atoi(v)
+		if nil != errT {
+			return
+		}
+		vals = append(vals, int64(i))
+		// beego.Debug(FN, "vals:", fmt.Sprintf("%+v", vals))
+	}
+
+	vs = vals
+	// beego.Debug(FN, "vs:", fmt.Sprintf("%+v", vs))
+	return
+}
+
+func getHouseFilter(this *HouseController) (err error, filter models.HouseFilter) {
+	// FN := "[getHouseFilter] "
 
 	// Rental
 	if nOp, errT := this.GetInt("rtop"); nil == errT && nOp > 0 {
-		if nVal, errT = this.GetInt64("rt1"); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Rental lower, err:%s", errT.Error())}
+		strVals := this.GetString("rt")
+		if 0 == len(strVals) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Fail to get value for Rental"}
 			return
 		}
 		filter.Rental.Operator = nOp
-		filter.Rental.Value1 = nVal
-		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Rental.Operator {
-			if nVal, errT = this.GetInt64("rt2"); nil != errT {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Rental upper, err:%s", errT.Error())}
-				return
-			}
-			filter.Rental.Value2 = nVal
-		}
+		filter.Rental.Values = getFilterValues(strVals)
 	}
 
 	// Livingroom
 	if nOp, errT := this.GetInt("lvop"); nil == errT && nOp > 0 {
-		if nVal, errT = this.GetInt64("lr1"); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Livingroom lower, err:%s", errT.Error())}
+		strVals := this.GetString("lr")
+		if 0 == len(strVals) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Fail to get value for Livingroom"}
 			return
 		}
 		filter.Livingroom.Operator = nOp
-		filter.Livingroom.Value1 = nVal
-		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Livingroom.Operator {
-			if nVal, errT = this.GetInt64("lr2"); nil != errT {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Livingroom upper, err:%s", errT.Error())}
-				return
-			}
-			filter.Livingroom.Value2 = nVal
-		}
+		filter.Livingroom.Values = getFilterValues(strVals)
 	}
 
 	// Bedroom
 	if nOp, errT := this.GetInt("berop"); nil == errT && nOp > 0 {
-		if nVal, errT = this.GetInt64("ber1"); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bedroom lower, err:%s", errT.Error())}
+		strVals := this.GetString("ber")
+		if 0 == len(strVals) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Fail to get value for Bedroom"}
 			return
 		}
 		filter.Bedroom.Operator = nOp
-		filter.Bedroom.Value1 = nVal
-		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Bedroom.Operator {
-			if nVal, errT = this.GetInt64("ber2"); nil != errT {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bedroom upper, err:%s", errT.Error())}
-				return
-			}
-			filter.Bedroom.Value2 = nVal
-		}
+		filter.Bedroom.Values = getFilterValues(strVals)
 	}
 
 	// Bathroom
 	if nOp, errT := this.GetInt("barop"); nil == errT && nOp > 0 {
-		if nVal, errT = this.GetInt64("bar1"); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bathroom lower, err:%s", errT.Error())}
+		strVals := this.GetString("bar")
+		if 0 == len(strVals) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Fail to get value for Bathroom"}
 			return
 		}
 		filter.Bathroom.Operator = nOp
-		filter.Bathroom.Value1 = nVal
-		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Bathroom.Operator {
-			if nVal, errT = this.GetInt64("bar2"); nil != errT {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Bathroom upper, err:%s", errT.Error())}
-				return
-			}
-			filter.Bathroom.Value2 = nVal
-		}
+		filter.Bathroom.Values = getFilterValues(strVals)
 	}
 
 	// Acreage
 	if nOp, errT := this.GetInt("acop"); nil == errT && nOp > 0 {
-		if nVal, errT = this.GetInt64("ac1"); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Acreage lower, err:%s", errT.Error())}
+		strVals := this.GetString("ac")
+		// beego.Debug(FN, "ac:", strVals)
+		if 0 == len(strVals) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Fail to get value for Acreage"}
 			return
 		}
 		filter.Acreage.Operator = nOp
-		filter.Acreage.Value1 = nVal
-		if commdef.HOUSE_FILTER_TYPE_BETWEEN == filter.Acreage.Operator {
-			if nVal, errT = this.GetInt64("ac2"); nil != errT {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get value for Acreage upper, err:%s", errT.Error())}
-				return
-			}
-			filter.Acreage.Value2 = nVal
-		}
+		filter.Acreage.Values = getFilterValues(strVals)
+		// beego.Debug(FN, "Acreage:", fmt.Sprintf("%+v", filter.Acreage.Values))
 	}
 
 	return
