@@ -611,7 +611,7 @@ func (this *HouseController) GetHouseDigestList() {
 	 *	Processing
 	 */
 	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count, filter, sort)
-	beego.Debug(FN, "ids:", ids)
+	beego.Debug(FN, "ids:", ids, ", fetched:", fetched)
 	if nil == err {
 		result.Total = total
 		if 0 == count {
@@ -619,11 +619,13 @@ func (this *HouseController) GetHouseDigestList() {
 		} else {
 			if fetched > 0 {
 				for _, v := range ids {
+					// beego.Debug(FN, "v:", fmt.Sprintf("%+v", v))
 					hdi := commdef.HouseDigest{}
 					err, hdi = models.GetHouseDigestInfo(v, uid)
 					if nil != err {
 						return
 					}
+					// beego.Debug(FN, "add")
 					result.HouseDigests = append(result.HouseDigests, hdi)
 				}
 			}

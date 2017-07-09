@@ -1409,6 +1409,7 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter, sorts []int) (
 	beego.Debug(FN, fmt.Sprintf("%d records fetched", numb))
 
 	ids = idlst
+	fetched = int64(len(ids))
 	return
 }
 
