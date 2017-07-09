@@ -9,7 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.kjsLogUtil;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 /**
  * Created by admin on 2017/2/8.
@@ -22,11 +28,25 @@ class AdapterSearchResultList extends BaseAdapter {
     private static final int DISPLAY_LIST= 1;
     private int mDisplayType = DISPLAY_LIST;
 
+    ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
+
+    private int mTotal = 0;
+
     public void setDisplayType(int displayType) {
         if(displayType != mDisplayType) {
         }
 
         mDisplayType = displayType;
+    }
+
+    public void addData(ArrayList<ClassDefine.HouseDigest> list, int count) {
+        mTotal = count;
+        for(ClassDefine.HouseDigest digest : list) {
+            mHouseList.add(digest);
+            kjsLogUtil.i("Property Name: " + digest.property);
+        }
+
+        this.notifyDataSetChanged();
     }
 
     public AdapterSearchResultList(Context context) {
@@ -36,21 +56,26 @@ class AdapterSearchResultList extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 8;
+        return mHouseList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return mHouseList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     class ViewHolder {
-        TextView tvContentName;
+        TextView propertyName;
+        TextView briefInfo;
+        TextView price;
+        TextView propertyFee;
+        ImageView flag;
+        ImageView thumb;
     }
 
     @Override
@@ -58,28 +83,28 @@ class AdapterSearchResultList extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
+            holder = new ViewHolder();
             if(mDisplayType == DISPLAY_LIST) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info, null);
             } else {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_brief_house_info_grid, null);
             }
-            ImageView flagView = (ImageView)convertView.findViewById(R.id.imageViewFlag);
-            flagView.setVisibility(View.VISIBLE);
-            ImageView thumbView = (ImageView)convertView.findViewById(R.id.iv_apartment_thumb);
-            if(position % 3 == 0) {
-                thumbView.setImageResource(R.drawable.sample1);
-            } else if(position % 3 == 1) {
-                thumbView.setImageResource(R.drawable.sample2);
-            } else if(position % 3 == 2) {
-                thumbView.setImageResource(R.drawable.homepage_title);
-            }
 
-            holder = new ViewHolder();
-            holder.tvContentName = (TextView) convertView.findViewById(R.id.title);
+            holder.flag = (ImageView)convertView.findViewById(R.id.imageViewFlag);
+            holder.thumb = (ImageView)convertView.findViewById(R.id.iv_apartment_thumb);
+            holder.propertyName = (TextView)convertView.findViewById(R.id.textViewPropertyName);
+            holder.briefInfo = (TextView)convertView.findViewById(R.id.textViewBriefInfo);
+            holder.price = (TextView)convertView.findViewById(R.id.textViewPrice);
+            holder.propertyFee = (TextView)convertView.findViewById(R.id.textViewPropertyFee);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        ClassDefine.HouseDigest digest = mHouseList.get(position);
+        holder.propertyName.setText(digest.property);
+        holder.flag.setVisibility(View.VISIBLE);
 
         return convertView;
     }

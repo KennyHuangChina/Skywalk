@@ -62,7 +62,7 @@ public class fragmentHomePage extends Fragment {
             public void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount) {
                 updateHouseList(houseList, 1, totalCount);
             }
-        }).execute(1, 0, 2);
+        }).execute(GetHouseListTask.TYPE_RECOMMAND, 0, 2);
 
         // 降价房源
         ListView lvDeducted = (ListView) view.findViewById(R.id.lv_deducted);
@@ -76,7 +76,7 @@ public class fragmentHomePage extends Fragment {
             public void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount) {
                 updateHouseList(houseList, 2, totalCount);
             }
-        }).execute(2, 0, 2);
+        }).execute(GetHouseListTask.TYPE_DEDUCTED, 0, 2);
 
         // 最新房源
         ListView lvNew = (ListView) view.findViewById(R.id.lv_new);
@@ -90,7 +90,7 @@ public class fragmentHomePage extends Fragment {
             public void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount) {
                 updateHouseList(houseList, 3, totalCount);
             }
-        }).execute(3, 0, 2);
+        }).execute(GetHouseListTask.TYPE_NEW, 0, 2);
 
         return view;
     }
