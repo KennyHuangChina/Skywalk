@@ -87,68 +87,53 @@ class CmdGetHouseList extends CommunicationBase {
 
         if (null != mFilter) {
             // rental
-            int nVal1 = mFilter.mRental.GetValue1();
-            if (nVal1 >= 0) {
+            int nOp = mFilter.mRental.GetOp();
+            if (nOp > 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                int nOp = mFilter.mRental.GetOp();
-                mRequestData += String.format("rtop=%d&rt1=%d", nOp, nVal1);
-                if (HouseFilterCondition.FILTER_TYPE_BETWEEN == nOp) {
-                    mRequestData += String.format("&rt2=%d", mFilter.mRental.GetValue2());
-                }
+                String strVal = mFilter.mRental.GetValuesString();
+                mRequestData += String.format("rtop=%d&rt=%s", nOp, strVal);
             }
 
             // Livingroom
-            nVal1 = mFilter.mLivingroom.GetValue1();
-            if (nVal1 >= 0) {
+            nOp = mFilter.mLivingroom.GetOp();
+            if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                int nOp = mFilter.mLivingroom.GetOp();
-                mRequestData += String.format("lvop=%d&lr1=%d", nOp, nVal1);
-                if (HouseFilterCondition.FILTER_TYPE_BETWEEN == nOp) {
-                    mRequestData += String.format("&lr2=%d", mFilter.mLivingroom.GetValue2());
-                }
+                String strVal = mFilter.mLivingroom.GetValuesString();
+                mRequestData += String.format("lvop=%d&lr=%s", nOp, strVal);
             }
 
             // Bedroom
-            nVal1 = mFilter.mBedroom.GetValue1();
-            if (nVal1 >= 0) {
+            nOp = mFilter.mBedroom.GetOp();
+            if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                int nOp = mFilter.mBedroom.GetOp();
-                mRequestData += String.format("berop=%d&ber1=%d", nOp, nVal1);
-                if (HouseFilterCondition.FILTER_TYPE_BETWEEN == nOp) {
-                    mRequestData += String.format("&ber2=%d", mFilter.mBedroom.GetValue2());
-                }
+                String strVal = mFilter.mBedroom.GetValuesString();
+                mRequestData += String.format("berop=%d&ber=%s", nOp, strVal);
             }
 
             // Bathroom min
-            nVal1 = mFilter.mBathroom.GetValue1();
-            if (nVal1 >= 0) {
+            nOp = mFilter.mBathroom.GetOp();
+            if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                int nOp = mFilter.mBathroom.GetOp();
-                mRequestData += String.format("barop=%d&bar1=%d", nOp, nVal1);
-                if (HouseFilterCondition.FILTER_TYPE_BETWEEN == nOp) {
-                    mRequestData += String.format("&bar2=%d", mFilter.mBathroom.GetValue2());
-                }
+                String strVal = mFilter.mBathroom.GetValuesString();
+                mRequestData += String.format("barop=%d&bar=%s", nOp, strVal);
             }
 
             // Acreage min
-            nVal1 = mFilter.mAcreage.GetValue1();
-            if (nVal1 >= 0) {
+            nOp = mFilter.mAcreage.GetOp();
+            if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                int nOp = mFilter.mAcreage.GetOp();
-                mRequestData += String.format("acop=%d&ac1=%d", nOp, nVal1);
-                if (HouseFilterCondition.FILTER_TYPE_BETWEEN == nOp) {
-                    mRequestData += String.format("&ac2=%d", mFilter.mAcreage.GetValue2());
-                }
+                String strVal = mFilter.mAcreage.GetValuesString();
+                mRequestData += String.format("acop=%d&ac=%s", nOp, strVal);
             }
         }
 
