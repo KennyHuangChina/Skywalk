@@ -143,10 +143,15 @@ public class MainActivityFragment extends Fragment
         CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
 
         HouseFilterCondition filter = new HouseFilterCondition();
-        filter.mRental.FilterBetween(115000, 180000);
-        filter.mLivingroom.FilterGreatX(1, true);
-        filter.mBedroom.FilterLessX(3, true);
-        filter.mBathroom.FilterEq(2);
+//        filter.mRental.FilterBetween(115000, 180000);
+//        filter.mLivingroom.FilterGreatX(1, true);
+//        filter.mBedroom.FilterLessX(3, true);
+        ArrayList<Integer> ber = new ArrayList<Integer>();
+        ber.add(2);
+        ber.add(3);
+        ber.add(4);
+        filter.mBedroom.FilterIn(ber);
+//        filter.mBathroom.FilterEq(2);
         filter.mAcreage.FilterBetween(10000, 17788);
 
         ArrayList<Integer> sort = new ArrayList<Integer>();
