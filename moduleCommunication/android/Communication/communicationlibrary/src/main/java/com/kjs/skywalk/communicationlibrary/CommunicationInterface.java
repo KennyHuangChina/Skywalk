@@ -325,7 +325,8 @@ public class CommunicationInterface {
                             FILTER_TYPE_LE      = 3,    // Less Equal.      <=
                             FILTER_TYPE_GT      = 4,    // Greater Than.    >
                             FILTER_TYPE_GE      = 5,    // Greater Equal.   >=
-                            FILTER_TYPE_BETWEEN = 6;    // Between.         >= && <=
+                            FILTER_TYPE_BETWEEN = 6,    // Between.         >= && <=
+                            FILTER_TYPE_IN      = 7;    // In               IN (...)
         static public int   SORT_PUBLISH_TIME       = 1,    // sort by publish time, from early to late
                             SORT_PUBLISH_TIME_DESC  = 2,    // sort by publish time, from late to early
                             SORT_RENTAL             = 3,    // sort by rental, from low to high
@@ -333,12 +334,12 @@ public class CommunicationInterface {
                             SORT_APPOINT_NUMB       = 5,    // sort by appointment number, from low to high
                             SORT_APPOINT_NUMB_DESC  = 6;    // sort by appointment number, from high to low
 
-        public IntegerFilter mRental;
-        public IntegerFilter mLivingroom;
-        public IntegerFilter mBedroom;
-        public IntegerFilter mBathroom;
-        public IntegerFilter mAcreage;
-        public ArrayList<Integer> tags;
+        public IntegerFilter        mRental;
+        public IntegerFilter        mLivingroom;
+        public IntegerFilter        mBedroom;
+        public IntegerFilter        mBathroom;
+        public IntegerFilter        mAcreage;
+        public ArrayList<Integer>   tags;
 
         public HouseFilterCondition() {
             mRental     = new IntegerFilter();
@@ -350,12 +351,30 @@ public class CommunicationInterface {
         }
 
         public class IntegerFilter {
-            private String TAG = getClass().getSimpleName();
-            private int mVal1       = -1;
-            private int mVal2       = -1;
-            private int mFilterType = -1;
+            private String              TAG         = getClass().getSimpleName();
+            private int                 mFilterType = -1;
+            public  ArrayList<Integer>  mValues     = null;
 
             IntegerFilter() {
+                mValues = new ArrayList<Integer>();
+            }
+
+            public int FilterIn(ArrayList<Integer> values) {
+                if (null == values || values.isEmpty()) {
+                    Log.e(TAG, "value is null or empty");
+                    return -1;
+                }
+
+                for (int n = 0; n < values.size(); n++) {
+                    if (0 == values.get(n)) {
+                        Log.e(TAG, "value is zero");
+                        return -2;
+                    }
+                }
+
+                mFilterType = FILTER_TYPE_IN;
+                mValues = values;
+                return 0;
             }
 
             public int FilterBetween(int Val1, int Val2) {
@@ -373,8 +392,9 @@ public class CommunicationInterface {
                 }
 
                 mFilterType = FILTER_TYPE_BETWEEN;
-                mVal1       = Val1;
-                mVal2       = Val2;
+                mValues.clear();
+                mValues.add(Val1);
+                mValues.add(Val2);
                 return 0;
             }
 
@@ -385,7 +405,8 @@ public class CommunicationInterface {
                 }
 
                 mFilterType = FILTER_TYPE_EQ;
-                mVal1       = Val;
+                mValues.clear();
+                mValues.add(Val);
                 return 0;
             }
 
@@ -396,7 +417,8 @@ public class CommunicationInterface {
                 }
 
                 mFilterType = equal ? FILTER_TYPE_LE : FILTER_TYPE_LT;
-                mVal1       = Val;
+                mValues.clear();
+                mValues.add(Val);
                 return 0;
             }
 
@@ -407,19 +429,40 @@ public class CommunicationInterface {
                 }
 
                 mFilterType = equal ? FILTER_TYPE_GE : FILTER_TYPE_GT;
-                mVal1   = Val;
+                mValues.clear();
+                mValues.add(Val);
                 return 0;
             }
 
             public int GetOp() { return mFilterType; }
 
-            public int GetValue1() { return mVal1; }
+            public ArrayList<Integer> GetValues() {
+                return mValues;
+            }
 
-            public int GetValue2() {
-                if (FILTER_TYPE_BETWEEN != mFilterType) {
+            public String GetValuesString() {
+                String strVal = "";
+
+                for (int n = 0; n < mValues.size(); n++) {
+                    if (n > 0) {
+                        strVal += ",";
+                    }
+                    strVal += mValues.get(n).toString();
+                }
+
+                return strVal;
+            }
+
+            public int GetValue(int index) {
+                if (null == mValues || mValues.size() < index + 1) {
                     return -1;
                 }
-                return mVal2;
+                if (index > 0) {
+                    if (FILTER_TYPE_BETWEEN != mFilterType && FILTER_TYPE_IN != mFilterType) {
+                        return -2;
+                    }
+                }
+                return mValues.get(index);
             }
         }
     }

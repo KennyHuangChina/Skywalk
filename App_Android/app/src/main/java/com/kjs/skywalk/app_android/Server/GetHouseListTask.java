@@ -64,7 +64,8 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
 
     @Override
     protected  void onPostExecute(Integer result) {
-        mTaskFinished.onTaskFinished(mHouseList, result.intValue());
+        //mTaskFinished.onTaskFinished(mHouseList, result.intValue());
+        //???????some times this function does not called....Why
     }
 
     @Override
@@ -142,6 +143,8 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
 
                         mHouseList.add(houseDigest);
                     }
+
+                    mTaskFinished.onTaskFinished(mHouseList, mTotalCount);
                 }
             }
 
