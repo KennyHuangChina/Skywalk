@@ -36,6 +36,8 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
 
     private ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
 
+    private CommunicationInterface.HouseFilterCondition mFilter = new CommunicationInterface.HouseFilterCondition();
+    private ArrayList<Integer> mSort = new ArrayList<Integer>();
     public GetHouseListTask(Context context, TaskFinished listener) {
         mContext = context;
         mTaskFinished = listener;
@@ -43,6 +45,21 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
 
     public interface TaskFinished {
         void onTaskFinished(ArrayList<ClassDefine.HouseDigest> houseList, int totalCount);
+    }
+
+    public void addFilterRental(int low, int high) {
+        mFilter.mRental.FilterBetween(low, high);
+    }
+
+    public void addFilterBedRoom() {
+    }
+
+    public void addFilterTag() {
+
+    }
+
+    public void setSort(int sortBy) {
+        mSort.add(sortBy);
     }
 
     @Override
@@ -61,13 +78,13 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
         CommandManager CmdMgr = new CommandManager(mContext, mCmdListener, mProgreessListener);
 
         mResultGot = false;
-        result = CmdMgr.GetHouseDigestList(mType, 0, 0, null, new ArrayList<Integer>());
+        result = CmdMgr.GetHouseDigestList(mType, 0, 0, mFilter, mSort);
         if(!waitResult(3000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get count timeout"));
             return 0;
         }
 
-        result = CmdMgr.GetHouseDigestList(mType, mBegin, mCount, null, new ArrayList<Integer>());
+        result = CmdMgr.GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
         if(!waitResult(3000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get house list timeout"));
             return 0;
