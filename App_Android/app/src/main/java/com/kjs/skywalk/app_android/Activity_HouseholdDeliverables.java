@@ -86,8 +86,12 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
 
 
         // get deliverable list
-        mGetDeliverablesTask = new GetDeliverablesTask();
-        mGetDeliverablesTask.execute();
+//        mGetDeliverablesTask = new GetDeliverablesTask();
+//        mGetDeliverablesTask.execute();
+
+        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CmdMgr.GetHouseDeliverables(mHouseId);
+
     }
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
@@ -96,7 +100,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
 
         mLvDeliverables = (ListView) findViewById(R.id.lv_deliverables);
         mDeliverablesAdapter = new AdapterDeliverables(this);
-        mDeliverablesAdapter.updateDeliverablesList(mHouseDeliverables);
+//        mDeliverablesAdapter.updateDeliverablesList(mHouseDeliverables);
         mLvDeliverables.setAdapter(mDeliverablesAdapter);
 
 
@@ -263,13 +267,28 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
     }
 
     @Override
-    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            return;
+        }
 
-    }
-
-    @Override
-    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-
+        if (command == CMD_GET_HOUSE_DELIVERABLES) {
+            IApiResults.IResultList list = (IApiResults.IResultList)iResult;
+            ArrayList<AdapterDeliverables.Deliverable> deliverablesList = new ArrayList<AdapterDeliverables.Deliverable>();
+            for (Object item : list.GetList()) {
+                IApiResults.IDeliverableInfo info = (IApiResults.IDeliverableInfo)item;
+                AdapterDeliverables.Deliverable deliverable = new AdapterDeliverables.Deliverable(R.drawable.gas_n, info.GetName(), info.GetQty());
+                deliverablesList.add(deliverable);
+                kjsLogUtil.i(String.format("[Deliverable:%d] name:%s qty:%d desc:%s", info.GetId(), info.GetName(), info.GetQty(), info.GetDesc()));
+            }
+            updateDeliverableList(deliverablesList);
+        }
     }
 
     private void showErrorMessage(final String msg) {

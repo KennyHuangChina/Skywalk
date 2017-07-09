@@ -17,6 +17,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
@@ -169,6 +170,15 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
                 mInfo2 += String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal());
 
                 updateFragmentInfo();
+
+//                // 1: wait for rent, 2: rented, 3: Due, open for ordering
+//                IHouseInfo.RentStat();
+//                public interface IHouseCertInfo {
+//                    int     CertStat();     // certification stat. 1: wait for certification; 2: Certitication passed; 3: Certification failed
+//                    Date CertTime();
+//                    String  CertDesc();
+//                }
+
 
             }
         });
