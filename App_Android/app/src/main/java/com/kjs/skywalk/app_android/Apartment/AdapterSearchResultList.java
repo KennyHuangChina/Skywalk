@@ -127,13 +127,13 @@ class AdapterSearchResultList extends BaseAdapter {
             int count = 0;
             for (ClassDefine.HouseTag houseTag : digest.houseTags) {
                 if (count == 0) {
-                    commonFun.setHouseTagStyleById(holder.tag1, houseTag.tagName, houseTag.tagId);
+                    commonFun.setHouseTagStyleByIdWithoutSetting(holder.tag1, houseTag.tagName, houseTag.tagId);
                 }
                 if (count == 1) {
-                    commonFun.setHouseTagStyleById(holder.tag2, houseTag.tagName, houseTag.tagId);
+                    commonFun.setHouseTagStyleByIdWithoutSetting(holder.tag2, houseTag.tagName, houseTag.tagId);
                 }
                 if (count == 2) {
-                    commonFun.setHouseTagStyleById(holder.tag3, houseTag.tagName, houseTag.tagId);
+                    commonFun.setHouseTagStyleByIdWithoutSetting(holder.tag3, houseTag.tagName, houseTag.tagId);
                 }
                 count++;
             }
@@ -144,7 +144,7 @@ class AdapterSearchResultList extends BaseAdapter {
         list.add(textDefine1);
         commonFun.TextDefine textDefine2 = new commonFun.TextDefine(String.valueOf(digest.Rental), 45, Color.parseColor("#ff3d19"));
         list.add(textDefine2);
-        commonFun.TextDefine textDefine3 = new commonFun.TextDefine("（元/月）", 32, Color.parseColor("#242224"));
+        commonFun.TextDefine textDefine3 = new commonFun.TextDefine("(元/月)", 32, Color.parseColor("#242224"));
         list.add(textDefine3);
 
         holder.price.setText(commonFun.getSpannableString(list));
@@ -154,7 +154,7 @@ class AdapterSearchResultList extends BaseAdapter {
         list.add(textDefine4);
         commonFun.TextDefine textDefine5 = new commonFun.TextDefine(String.valueOf(200), 45, Color.parseColor("#ff3d19"));
         list.add(textDefine5);
-        commonFun.TextDefine textDefine6 = new commonFun.TextDefine("（月）", 32, Color.parseColor("#242224"));
+        commonFun.TextDefine textDefine6 = new commonFun.TextDefine("(月)", 32, Color.parseColor("#242224"));
         list.add(textDefine6);
         holder.propertyFee.setText(commonFun.getSpannableString(list));
 

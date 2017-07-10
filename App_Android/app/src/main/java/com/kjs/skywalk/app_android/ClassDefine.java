@@ -70,8 +70,8 @@ public class ClassDefine {
         public int Livingrooms;
         public int Bathrooms;
         public double Acreage;
-        public int Rental;
-        public int Pricing;
+        public double Rental;
+        public double Pricing;
         public int CoverImage;
         public String CoverImageUrlS;
         public String CoverImageUrlM;

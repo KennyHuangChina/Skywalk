@@ -129,8 +129,10 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
                         houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
                         double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
                         houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
-                        houseDigest.Rental = houseDigestRes.GetRental();
-                        houseDigest.Pricing = houseDigestRes.GetPricing();
+                        double rental = (double)houseDigestRes.GetRental() / 100.0;
+                        houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
+                        double pricing = (double)houseDigestRes.GetPricing() / 100.0;
+                        houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
                         houseDigest.CoverImage = houseDigestRes.GetCoverImage();
                         houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
                         houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
@@ -161,8 +163,10 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
                 houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
                 double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
                 houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
-                houseDigest.Rental = houseDigestRes.GetRental();
-                houseDigest.Pricing = houseDigestRes.GetPricing();
+                double rental = (double)houseDigestRes.GetRental() / 100.0;
+                houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
+                double pricing = (double)houseDigestRes.GetPricing() / 100.0;
+                houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
                 houseDigest.CoverImage = houseDigestRes.GetCoverImage();
 
                 IApiResults.IResultList lst = (IApiResults.IResultList) iResult;

@@ -348,6 +348,16 @@
         <item name="android:textColor">#ff3d19</item>
     </style>
 
+    <!--类别：TAG on Search House-->
+    <style name="TextView_TAG" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">10sp</item>
+    </style>
     <!--类别：靠近小学-->
     <style name="TextView_Kaojinxiaoxue" parent="@android:style/Widget.TextView">
         <item name="android:layout_width">wrap_content</item>

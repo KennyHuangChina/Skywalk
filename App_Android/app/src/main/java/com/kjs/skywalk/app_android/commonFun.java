@@ -241,7 +241,7 @@ public class commonFun {
     ///////////////////////////////////////////////////////////////////////////
     // translate tag id
     ///////////////////////////////////////////////////////////////////////////
-    public static void setHouseTagStyleById(TextView textview, String text, int tagId) {
+    public static void setHouseTagStyleByIdWithoutSetting(TextView textview, String text, int tagId) {
         switch (tagId) {
             case 1:
             {
@@ -281,10 +281,13 @@ public class commonFun {
             }
         }
 
-        // base setting
         textview.setText(text);
-        textview.setTextSize(11);       // setTextSize --- sp   getTextSize --- pixel
         textview.setGravity(Gravity.CENTER);
+    }
+    public static void setHouseTagStyleById(TextView textview, String text, int tagId) {
+        setHouseTagStyleByIdWithoutSetting(textview, text, tagId);
+        // base setting
+        textview.setTextSize(11);       // setTextSize --- sp   getTextSize --- pixel
         textview.setPadding(30, 15, 30, 15);        // must set padding after setBackgroundResource
     }
 
