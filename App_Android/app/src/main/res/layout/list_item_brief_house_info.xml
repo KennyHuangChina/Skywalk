@@ -57,19 +57,20 @@
             android:gravity="center_vertical">
             <!--158x52px-->
             <TextView
-                android:text="靠近小学"
-                android:id="@+id/tv_content_category1"
-                style="@style/TextView_Kaojinxiaoxue" />
+                android:text=""
+                android:id="@+id/textViewTag1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
             <TextView
-                android:text="电梯房"
-                android:id="@+id/tv_content_category2"
-                style="@style/TextView_diantifang"
-                android:layout_marginLeft="5dp"/>
+                android:text=""
+                android:id="@+id/textViewTag2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
             <TextView
-                android:text="无贷款"
-                android:id="@+id/tv_content_category3"
-                style="@style/TextView_daikuan"
-                android:layout_marginLeft="5dp"/>
+                android:text=""
+                android:id="@+id/textViewTag3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <RelativeLayout

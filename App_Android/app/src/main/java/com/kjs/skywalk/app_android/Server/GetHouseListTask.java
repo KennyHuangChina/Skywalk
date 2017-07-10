@@ -10,6 +10,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -126,7 +127,8 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
                         houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
                         houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
                         houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                        houseDigest.Acreage = houseDigestRes.GetAcreage() / 100;
+                        double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
+                        houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
                         houseDigest.Rental = houseDigestRes.GetRental();
                         houseDigest.Pricing = houseDigestRes.GetPricing();
                         houseDigest.CoverImage = houseDigestRes.GetCoverImage();
@@ -157,7 +159,8 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
                 houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
                 houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
                 houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                houseDigest.Acreage = houseDigestRes.GetAcreage() / 100;
+                double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
+                houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
                 houseDigest.Rental = houseDigestRes.GetRental();
                 houseDigest.Pricing = houseDigestRes.GetPricing();
                 houseDigest.CoverImage = houseDigestRes.GetCoverImage();

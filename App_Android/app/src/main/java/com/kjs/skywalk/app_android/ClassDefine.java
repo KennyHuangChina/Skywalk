@@ -69,7 +69,7 @@ public class ClassDefine {
         public int Bedrooms;
         public int Livingrooms;
         public int Bathrooms;
-        public int Acreage;
+        public double Acreage;
         public int Rental;
         public int Pricing;
         public int CoverImage;
