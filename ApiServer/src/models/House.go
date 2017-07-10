@@ -241,7 +241,7 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort str
 	case commdef.HOUSE_LIST_Deducted:
 		return getDeductedHouseList(begin, count)
 	case commdef.HOUSE_LIST_New:
-		return getNewHouseList(begin, count)
+		return getNewHouseList(begin, count, filter, sorts)
 	case commdef.HOUSE_LIST_All:
 		return getHouseListAll(begin, count, filter, sorts)
 	default:
@@ -1423,7 +1423,7 @@ func getHouseListAll(begin, fetch_numb int64, filter HouseFilter, sorts []int) (
 *		fetched	- fetched quantity
 *		ids		- house id list
 **/
-func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, ids []int64) {
+func getNewHouseList(begin, fetch_numb int64, filter HouseFilter, sorts []int) (err error, total, fetched int64, ids []int64) {
 	FN := "[getNewHouseList] "
 	beego.Trace(FN, "begin:", begin, ", fetch_numb:", fetch_numb)
 
@@ -1433,7 +1433,7 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 		}
 	}()
 
-	// default times window: 7 idlst
+	// default times window: 7 days
 	tNow := time.Now()
 	beego.Debug(FN, "tNow:", tNow, ", UTC:", tNow.UTC())
 	tBegin := tNow.UTC().Add(-7 * 24 * time.Hour)
@@ -1443,15 +1443,14 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 	beego.Debug(FN, "t0:", t0)
 	beego.Warn(FN, "TODO: need to check the real submit_time, UTC or Local?")
 
-	// calculate the total house number
-	sql := fmt.Sprintf("SELECT Id FROM v_house_published WHERE publish_time>='%s'", t0)
-	beego.Debug(FN, "sql:", sql)
+	strFilter, strSort := getHouseListFilterAndSort(filter, sorts)
 
+	// calculate the total house number
 	o := orm.NewOrm()
 
 	// calculate total number
-	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS tmp", sql)
-	var cnt int64
+	sql_cnt := fmt.Sprintf("SELECT COUNT(*) %s AND publish_time>='%s'", strFilter, t0)
+	cnt := int64(0)
 	errT := o.Raw(sql_cnt).QueryRow(&cnt)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
@@ -1469,7 +1468,7 @@ func getNewHouseList(begin, fetch_numb int64) (err error, total, fetched int64, 
 	}
 
 	// fetch records
-	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch_numb)
+	sql := fmt.Sprintf("SELECT h.Id %s AND publish_time>='%s' %s LIMIT %d, %d", strFilter, t0, strSort, begin, fetch_numb)
 	var hs []int64
 	numb, errTmp := o.Raw(sql).QueryRows(&hs)
 	if nil != errTmp {
