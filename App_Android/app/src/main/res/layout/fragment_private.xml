@@ -1,13 +1,535 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:text="@string/tab_menu_private"
+    
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textView"
-        android:gravity="center" />
+        android:layout_height="95dp"
+        android:background="#E5E5E5"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_portrait"
+            android:contentDescription="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="29dp"
+            android:src="@drawable/portrait"/>
+
+        <TextView
+            android:id="@+id/tv_clicktologin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/iv_portrait"
+            android:layout_marginTop="49dp"
+            android:layout_marginStart="10dp"
+            android:textColor="#000000"
+            android:text="点击登录"
+            android:textSize="17sp"/>
+
+        <ImageView
+            android:id="@+id/iv_message"
+            android:contentDescription="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="19dp"
+            android:src="@drawable/mesage3_n"/>
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:contentDescription="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/iv_message"
+            android:layout_marginEnd="11dp"
+            android:layout_marginTop="19dp"
+            android:src="@drawable/setting_n"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:orientation="horizontal"
+        android:background="@drawable/background"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="16"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:textColor="#B2B2B2"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="我的关注"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="#333333"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="16"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:textColor="#B2B2B2"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="浏览记录"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="#333333"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="16"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:textColor="#B2B2B2"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="看房记录"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="#333333"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="16"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:textColor="#B2B2B2"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="我的预约"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="#333333"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 我的交易    start -->
+    <include layout="@layout/seperator_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:text="我的交易"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="62dp"
+            android:layout_height="26dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:background="@drawable/rounded_rect_background_cccccc"
+            android:text="租售委托"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="我的交易"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="我已租出"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="我已租到"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="我的租约"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+    <!-- 我的交易    end -->
+
+    <!-- 我代理的房源    start -->
+    <include layout="@layout/seperator_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:text="我代理的房源"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="所有房源"
+            android:drawableRight="@drawable/right3_n"
+            android:drawablePadding="8dp"
+            android:textColor="#666666"
+            android:textSize="12sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="我已代理"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="待租中"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="出租中"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="待售中"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="本月成交"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:gravity="center_vertical"
+            android:text="待审核"
+            android:textColor="#333333"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="29dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:drawableRight="@drawable/right1_n"
+            android:drawablePadding="8dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+    <!-- 我代理的房源    end -->
+
+    <!-- 产品服务    start -->
+    <include layout="@layout/seperator_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="visible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:text="产品服务"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <TextView
+            android:id="@+id/tv_feedback"
+            android:text="意见反馈"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:drawableTop="@drawable/feedback"
+            android:drawablePadding="5dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"
+            android:onClick="onClickResponse" />
+        <TextView
+            android:id="@+id/tv_feedback_recorder"
+            android:text="反馈记录"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:drawableTop="@drawable/feedback_recorder"
+            android:drawablePadding="5dp"
+            android:textColor="#B2B2B2"
+            android:textSize="10sp"
+            android:onClick="onClickResponse" />
+    </LinearLayout>
+
+    <!-- 产品服务    end -->
 
 </LinearLayout>
+</ScrollView>
