@@ -237,7 +237,7 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort str
 
 	switch ht {
 	case commdef.HOUSE_LIST_Recommend:
-		return getRecommendHouseList(begin, count)
+		return getRecommendHouseList(begin, count, filter, sorts)
 	case commdef.HOUSE_LIST_Deducted:
 		return getDeductedHouseList(begin, count)
 	case commdef.HOUSE_LIST_New:
@@ -1496,7 +1496,7 @@ func getNewHouseList(begin, fetch_numb int64, filter HouseFilter, sorts []int) (
 *		fetched	- fetched quantity
 *		ids		- house id list
  */
-func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int64, ids []int64) {
+func getRecommendHouseList(begin, fetchCnt int64, filter HouseFilter, sorts []int) (err error, total, fetched int64, ids []int64) {
 	FN := "[getRecommendHouseList] "
 	beego.Trace(FN, "begin:", begin, ", fetchCnt:", fetchCnt)
 
@@ -1508,9 +1508,11 @@ func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int
 
 	o := orm.NewOrm()
 
+	strFilter, strSort := getHouseListFilterAndSort(filter, sorts)
+
 	// calculate the total house number
-	sql_cnt := `SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, v_house_published as h 
-						WHERE r.house=h.id AND h.publish_time IS NOT NULL`
+	sql_cnt := fmt.Sprintf(`SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, 
+								(SELECT h.id %s) AS h1 WHERE r.house=h1.id`, strFilter)
 	var Count int64 = 0
 	errT := o.Raw(sql_cnt).QueryRow(&Count)
 	if nil != errT {
@@ -1533,8 +1535,8 @@ func getRecommendHouseList(begin, fetchCnt int64) (err error, total, fetched int
 
 	// fetching
 	beego.Warn(FN, "TODO: all() will be restricted by limit, and return max 1000 records")
-	sql := `SELECT r.house AS id FROM tbl_house_recommend AS r, v_house_published as h 
-					WHERE r.house=h.id AND h.publish_time IS NOT NULL ORDER BY r.when DESC LIMIT ?, ? `
+	sql := fmt.Sprintf(`SELECT h1.id AS id FROM (SELECT h.id %s %s) AS h1, tbl_house_recommend AS r1
+							WHERE h1.id=r1.house LIMIT ?, ? `, strFilter, strSort)
 	idlst := []int64{}
 	numb, errT := o.Raw(sql, begin, fetchCnt).QueryRows(&idlst)
 	if nil != errT {
@@ -2135,7 +2137,7 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 			}
 		}
 	} else {
-		strFilter = ` FROM tbl_house AS h `
+		strFilter = ` FROM v_house_published AS h `
 		if len(sqlCondition) > 0 {
 			strFilter += " WHERE " + sqlCondition
 		}
