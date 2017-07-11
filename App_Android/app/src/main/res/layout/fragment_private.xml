@@ -5,32 +5,86 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
-    <RelativeLayout
+
+        <!--android:background="#E5E5E5"-->
+        <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="95dp"
-        android:background="#E5E5E5"
+        android:background="#00AE63"
         android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/iv_portrait"
-            android:contentDescription="@string/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="33dp"
-            android:layout_marginTop="29dp"
-            android:src="@drawable/portrait"/>
+            <ImageView
+                android:id="@+id/iv_portrait"
+                android:contentDescription="@string/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="29dp"
+                android:src="@drawable/touxiang"/>
+            <ImageView
+                android:id="@+id/iv_portrait_null"
+                android:contentDescription="@string/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="29dp"
+                android:src="@drawable/portrait"/>
+            <RelativeLayout
+                android:id="@+id/rl_user_not_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/iv_portrait"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/tv_clicktologin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="49dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="#000000"
+                    android:text="点击登录"
+                    android:textSize="17sp"/>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_clicktologin"
+        <LinearLayout
+            android:id="@+id/rl_user_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/iv_portrait"
-            android:layout_marginTop="49dp"
-            android:layout_marginStart="10dp"
-            android:textColor="#000000"
-            android:text="点击登录"
-            android:textSize="17sp"/>
+            android:layout_marginTop="42dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            android:layout_toEndOf="@+id/iv_portrait">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:ems="11"
+                    android:background="@null"
+                    android:text="158****6699"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:inputType="text" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/edit1"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingStart="3dp"
+                android:drawableRight="@drawable/right4_n"
+                android:drawablePadding="5dp"
+                android:textColor="#ffffff"
+                android:text="个人信息"
+                android:textSize="12sp"/>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_message"
