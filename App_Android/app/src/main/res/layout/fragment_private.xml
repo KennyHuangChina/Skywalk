@@ -86,6 +86,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
 
+            <!--android:src="@drawable/mesage3_n"-->
         <ImageView
             android:id="@+id/iv_message"
             android:contentDescription="@string/app_name"
@@ -94,8 +95,9 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="32dp"
             android:layout_marginTop="19dp"
-            android:src="@drawable/mesage3_n"/>
+            android:src="@drawable/message4"/>
 
+            <!--android:src="@drawable/setting_n"-->
         <ImageView
             android:id="@+id/iv_setting"
             android:contentDescription="@string/app_name"
@@ -104,7 +106,7 @@
             android:layout_toStartOf="@+id/iv_message"
             android:layout_marginEnd="11dp"
             android:layout_marginTop="19dp"
-            android:src="@drawable/setting_n"/>
+            android:src="@drawable/setting1"/>
 
     </RelativeLayout>
 
