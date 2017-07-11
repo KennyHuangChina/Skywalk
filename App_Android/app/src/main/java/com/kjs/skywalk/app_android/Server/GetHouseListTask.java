@@ -16,6 +16,10 @@ import java.util.HashMap;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_PUBLISH_TIME;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_PUBLISH_TIME_DESC;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_RENTAL;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_RENTAL_DESC;
 
 /**
  * Created by Jackie on 2017/7/6.
@@ -27,6 +31,15 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
     public static int TYPE_RECOMMAND = 1;
     public static int TYPE_DEDUCTED = 2;
     public static int TYPE_NEW = 3;
+
+    public static final int SORT_TYPE_DEFAULT = 0;
+    public static final int SORT_TYPE_PUBLIC_TIME = 0x01;
+    public static final int SORT_TYPE_PUBLIC_TIME_DESC = 0x02;
+    public static final int SORT_TYPE_RENTAL = 0x04;
+    public static final int SORT_TYPE_RENTAL_DESC = 0x08;
+    public static final int SORT_TYPE_APPOINT = 0x10;
+    public static final int SORT_TYPE_APPOINT_DESC = 0x20;
+
     private int mBegin = 0;
     private int mCount = 0;
     private int mType = 0;
@@ -60,7 +73,35 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
     }
 
     public void setSort(int sortBy) {
-        mSort.add(sortBy);
+        switch (sortBy) {
+            case SORT_TYPE_DEFAULT:
+                mSort.clear();
+                break;
+
+            case SORT_TYPE_PUBLIC_TIME:
+                mSort.add(SORT_PUBLISH_TIME);
+                break;
+
+            case SORT_TYPE_PUBLIC_TIME_DESC:
+                mSort.add(SORT_PUBLISH_TIME_DESC);
+                break;
+
+            case SORT_TYPE_RENTAL:
+                mSort.add(SORT_RENTAL);
+                break;
+
+            case SORT_TYPE_RENTAL_DESC:
+                mSort.add(SORT_RENTAL_DESC);
+                break;
+
+            case SORT_TYPE_APPOINT:
+                mSort.add(SORT_RENTAL);
+                break;
+
+            case SORT_TYPE_APPOINT_DESC:
+                mSort.add(SORT_RENTAL_DESC);
+                break;
+        }
     }
 
     @Override

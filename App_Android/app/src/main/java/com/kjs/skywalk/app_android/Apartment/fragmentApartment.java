@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,11 +32,13 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME;
+
 /**
  * Created by sailor.zhou on 2017/1/11.
  */
 
-public class fragmentApartment extends Fragment {
+public class fragmentApartment extends Fragment implements AbsListView.OnScrollListener {
     private String TAG = "FragmentApartment";
     private ListView mListViewSearchResult = null;
     private LinearLayout mSortContainer = null;
@@ -57,6 +60,11 @@ public class fragmentApartment extends Fragment {
     private static final int DISPLAY_GRID = 0;
     private static final int DISPLAY_LIST= 1;
     private int mDisplay = DISPLAY_LIST;
+
+    private int mLastItemInList = 0;
+    private int mTotalCount = 0;
+
+    private int mSortType = SORT_TYPE_PUBLIC_TIME;
 
     ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
     @Nullable
@@ -85,6 +93,7 @@ public class fragmentApartment extends Fragment {
 
         mListViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
         mListViewSearchResult.setFocusable(false);
+        mListViewSearchResult.setOnScrollListener(this);
 
         mAdapter = new AdapterSearchResultList(getActivity());
         mAdapter.setDisplayType(mDisplay);
@@ -107,18 +116,31 @@ public class fragmentApartment extends Fragment {
         mDisplayType = (ImageView)view.findViewById(R.id.imageViewDisplayMode);
         mDisplayType.setOnClickListener(mClickListenerDisplayType);
 
-        new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
+        loadMore();
+
+        return view;
+    }
+
+    private void loadMore() {
+        int countInList = mAdapter.getCount();
+        if(countInList >= mTotalCount && mTotalCount != 0) {
+            return;
+        }
+        GetHouseListTask task = new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
             @Override
             public void onTaskFinished(final ArrayList<ClassDefine.HouseDigest> houseList, final int totalCount) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        mTotalCount = totalCount;
                         mAdapter.addData(houseList, totalCount);
                     }
                 });
             }
-        }).execute(GetHouseListTask.TYPE_ALL, 0, 10);
-        return view;
+        });
+
+        task.setSort(mSortType);
+        task.execute(GetHouseListTask.TYPE_ALL, countInList, 10);
     }
 
     private View.OnClickListener mClickListenerDisplayType = new View.OnClickListener() {
@@ -179,4 +201,16 @@ public class fragmentApartment extends Fragment {
             mPopSearchConditionFilter.showAsDropDown(mLinearLayoutConditionContainer);
         }
     };
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(scrollState == SCROLL_STATE_IDLE && mLastItemInList == mAdapter.getCount()) {
+            loadMore();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        mLastItemInList = firstVisibleItem + visibleItemCount;
+    }
 }
