@@ -58,8 +58,8 @@ class AdapterSearchResultList extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 8;
-        //return mHouseList.size();
+        //return 8;
+        return mHouseList.size();
     }
 
     @Override
@@ -110,7 +110,7 @@ class AdapterSearchResultList extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-/*
+
         ClassDefine.HouseDigest digest = mHouseList.get(position);
 
         commonFun.displayImageByURL(mContext, digest.CoverImageUrlS, holder.thumb);
@@ -159,7 +159,7 @@ class AdapterSearchResultList extends BaseAdapter {
         holder.propertyFee.setText(commonFun.getSpannableString(list));
 
         holder.flag.setVisibility(View.VISIBLE);
-*/
+
         return convertView;
     }
 }
