@@ -75,39 +75,28 @@
 
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
+            style="@style/TextView_SortType"
             android:layout_weight="3"
             android:adjustViewBounds="true"
             android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
-            android:text="@string/fragment_search_sort_date"
-            android:textColor="#272536"
-            android:textSize="13sp" />
+            android:text="@string/fragment_search_sort_date" />
 
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortRental"
             android:text="@string/fragment_search_sort_unit_price"
-            android:textSize="13sp"
-            android:textColor="#272536"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:textColor="@drawable/selector_sort_type"
+            style="@style/TextView_SortType"
             android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="3" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
             android:id="@+id/textViewSortAppointment"
             android:text="@string/fragment_search_sort_total_price"
-            android:textSize="13sp"
-            android:textColor="#272536"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/TextView_SortType"
             android:drawableEnd="@drawable/bothway_n"
             android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
             android:adjustViewBounds="true"
             android:layout_weight="3" />
         <ImageView

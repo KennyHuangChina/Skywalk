@@ -126,6 +126,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         mDisplayType.setOnClickListener(mClickListenerDisplayType);
 
         mTextViewSortByDate = (TextView)view.findViewById(R.id.textViewSortDate);
+        mTextViewSortByDate.setSelected(true);
         mTextViewSortByDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,6 +138,10 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                     mSortType = SORT_TYPE_PUBLIC_TIME;
                 }
 
+                mTextViewSortByAppointment.setSelected(false);
+                mTextViewSortByDate.setSelected(true);
+                mTextViewSortByRental.setSelected(false);
+
                 mAdapter.reset();
                 mTotalCount = 0;
 
@@ -145,6 +150,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         });
 
         mTextViewSortByRental = (TextView)view.findViewById(R.id.textViewSortRental);
+        mTextViewSortByRental.setSelected(false);
         mTextViewSortByRental.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +162,10 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                     mSortType = SORT_TYPE_RENTAL;
                 }
 
+                mTextViewSortByAppointment.setSelected(false);
+                mTextViewSortByDate.setSelected(false);
+                mTextViewSortByRental.setSelected(true);
+
                 mAdapter.reset();
                 mTotalCount = 0;
 
@@ -164,6 +174,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         });
 
         mTextViewSortByAppointment = (TextView)view.findViewById(R.id.textViewSortAppointment);
+        mTextViewSortByAppointment.setSelected(false);
         mTextViewSortByAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,6 +185,10 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                 } else {
                     mSortType = SORT_TYPE_APPOINT;
                 }
+
+                mTextViewSortByAppointment.setSelected(true);
+                mTextViewSortByDate.setSelected(false);
+                mTextViewSortByRental.setSelected(false);
 
                 mAdapter.reset();
                 mTotalCount = 0;
