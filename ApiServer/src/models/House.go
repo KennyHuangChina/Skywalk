@@ -239,7 +239,7 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort str
 	case commdef.HOUSE_LIST_Recommend:
 		return getRecommendHouseList(begin, count, filter, sorts)
 	case commdef.HOUSE_LIST_Deducted:
-		return getDeductedHouseList(begin, count)
+		return getDeductedHouseList(begin, count, filter, sorts)
 	case commdef.HOUSE_LIST_New:
 		return getNewHouseList(begin, count, filter, sorts)
 	case commdef.HOUSE_LIST_All:
@@ -1288,7 +1288,7 @@ type DeductedHouse struct {
 	P1Bide  int
 }
 
-func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched int64, ids []int64) {
+func getDeductedHouseList(begin, fetch_numb int64, filter HouseFilter, sorts []int) (err error, total, fetched int64, ids []int64) {
 	FN := "[getDeductedHouseList] "
 	beego.Trace(FN, "begin:", begin, ", fetch_numb:", fetch_numb)
 
@@ -1304,22 +1304,21 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	sql_now := `SELECT max(r.id) AS id FROM tbl_rental AS r, v_house_published AS h 
 					WHERE r.active=true AND r.house_id=h.id GROUP BY house_id`
 
-	sql_t0 := fmt.Sprintf(`SELECT t0.id, house_id, rental_bid 
-								FROM tbl_rental AS rental LEFT JOIN (%s) AS t0 
-								ON rental.id=t0.id WHERE t0.id IS NOT NULL`, sql_1st)
-	sql_t1 := fmt.Sprintf(`SELECT t1.id, house_id, rental_bid 
-								FROM tbl_rental AS rental LEFT JOIN (%s) AS t1 
-								ON rental.id=t1.id WHERE t1.id IS NOT NULL`, sql_now)
-	sql := fmt.Sprintf(`SELECT p0.id as p0_id, p1.id as p1_id, p0.house_id, p0.rental_bid as p0_bid, p1.rental_bid as p1_bid 
+	sql_t0 := fmt.Sprintf(`SELECT t0.id, house_id, rental_bid FROM (%s) AS t0 LEFT JOIN tbl_rental AS r ON r.id=t0.id`, sql_1st)
+	sql_t1 := fmt.Sprintf(`SELECT t1.id, house_id, rental_bid FROM (%s) AS t1 LEFT JOIN tbl_rental AS r ON r.id=t1.id`, sql_now)
+	sql := fmt.Sprintf(`SELECT p0.id AS p0_id, p1.id AS p1_id, p0.house_id, p0.rental_bid AS p0_bid, p1.rental_bid AS p1_bid 
 							FROM (%s) AS p0, (%s) AS p1 
 							WHERE p0.house_id=p1.house_id
 							HAVING (p1_bid - p0_bid) < 0`, sql_t0, sql_t1)
 	// beego.Debug(FN, "sql:", sql)
 
+	strFilter, strSort := getHouseListFilterAndSort(filter, sorts)
+	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS r1, (SELECT h.id %s) AS h1 WHERE r1.house_id=h1.id", sql, strFilter)
+
 	o := orm.NewOrm()
 
 	// calculate total number
-	sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS tmp", sql)
+	// sql_cnt := fmt.Sprintf("SELECT COUNT(*) AS count FROM (%s) AS tmp", sql)
 	var cnt int64
 	errT := o.Raw(sql_cnt).QueryRow(&cnt)
 	if nil != errT {
@@ -1340,8 +1339,9 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 	}
 
 	// fetch records
-	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch_numb)
-	var hs []DeductedHouse
+	sql = fmt.Sprintf("SELECT r1.* FROM (SELECT h.id %s %s) AS h1, (%s) AS r1 WHERE r1.house_id=h1.id", strFilter, strSort, sql)
+	// sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, fetch_numb)
+	hs := []DeductedHouse{}
 	numb, errTmp := o.Raw(sql).QueryRows(&hs)
 	if nil != errTmp {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
@@ -1351,7 +1351,8 @@ func getDeductedHouseList(begin, fetch_numb int64) (err error, total, fetched in
 		return
 	}
 
-	for /*k*/ _, v := range hs {
+	for k, v := range hs {
+		beego.Debug(FN, fmt.Sprintf("[%d] %+v", k, v))
 		ids = append(ids, v.HouseId)
 	}
 	fetched = int64(len(ids))
