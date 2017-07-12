@@ -87,7 +87,7 @@
             android:textSize="13sp" />
 
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSortUnitPrice"
+            android:id="@+id/textViewSortRental"
             android:text="@string/fragment_search_sort_unit_price"
             android:textSize="13sp"
             android:textColor="#272536"
@@ -99,7 +99,7 @@
             android:adjustViewBounds="true"
             android:layout_weight="3" />
         <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSortTotalPrice"
+            android:id="@+id/textViewSortAppointment"
             android:text="@string/fragment_search_sort_total_price"
             android:textSize="13sp"
             android:textColor="#272536"

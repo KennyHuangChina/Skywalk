@@ -32,8 +32,12 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_APPOINT;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_APPOINT_DESC;
 import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME;
 import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME_DESC;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_RENTAL;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_RENTAL_DESC;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -52,6 +56,8 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     private RelativeLayout mSeperator = null;
 
     private TextView mTextViewSortByDate = null;
+    private TextView mTextViewSortByRental = null;
+    private TextView mTextViewSortByAppointment = null;
 
     private PopupWindowSearchConditionFilter mPopSearchConditionFilter = null;
     private PopupWindowSearchConditionPrice mPopSearchConditionPrice = null;
@@ -129,6 +135,44 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                     mSortType = SORT_TYPE_PUBLIC_TIME;
                 } else {
                     mSortType = SORT_TYPE_PUBLIC_TIME;
+                }
+
+                mAdapter.reset();
+                mTotalCount = 0;
+
+                loadMore();
+            }
+        });
+
+        mTextViewSortByRental = (TextView)view.findViewById(R.id.textViewSortRental);
+        mTextViewSortByRental.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mSortType == SORT_TYPE_RENTAL) {
+                    mSortType = SORT_TYPE_RENTAL_DESC;
+                } else if(mSortType == SORT_TYPE_RENTAL_DESC) {
+                    mSortType = SORT_TYPE_RENTAL;
+                } else {
+                    mSortType = SORT_TYPE_RENTAL;
+                }
+
+                mAdapter.reset();
+                mTotalCount = 0;
+
+                loadMore();
+            }
+        });
+
+        mTextViewSortByAppointment = (TextView)view.findViewById(R.id.textViewSortAppointment);
+        mTextViewSortByAppointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mSortType == SORT_TYPE_APPOINT) {
+                    mSortType = SORT_TYPE_APPOINT_DESC;
+                } else if(mSortType == SORT_TYPE_APPOINT_DESC) {
+                    mSortType = SORT_TYPE_APPOINT;
+                } else {
+                    mSortType = SORT_TYPE_APPOINT;
                 }
 
                 mAdapter.reset();
