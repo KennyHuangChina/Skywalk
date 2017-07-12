@@ -35,6 +35,12 @@ class AdapterSearchResultList extends BaseAdapter {
 
     private int mTotal = 0;
 
+    public void reset() {
+        mHouseList.clear();
+        mTotal = 0;
+        notifyDataSetChanged();
+    }
+
     public void setDisplayType(int displayType) {
         if(displayType != mDisplayType) {
         }

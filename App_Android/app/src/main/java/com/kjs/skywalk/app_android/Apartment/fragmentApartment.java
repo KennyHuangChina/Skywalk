@@ -33,6 +33,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME_DESC;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -49,6 +50,8 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     private TextView mTextViewConditionHouseType = null;
     private TextView mTextViewConditionFilter = null;
     private RelativeLayout mSeperator = null;
+
+    private TextView mTextViewSortByDate = null;
 
     private PopupWindowSearchConditionFilter mPopSearchConditionFilter = null;
     private PopupWindowSearchConditionPrice mPopSearchConditionPrice = null;
@@ -115,6 +118,25 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
 
         mDisplayType = (ImageView)view.findViewById(R.id.imageViewDisplayMode);
         mDisplayType.setOnClickListener(mClickListenerDisplayType);
+
+        mTextViewSortByDate = (TextView)view.findViewById(R.id.textViewSortDate);
+        mTextViewSortByDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mSortType == SORT_TYPE_PUBLIC_TIME) {
+                    mSortType = SORT_TYPE_PUBLIC_TIME_DESC;
+                } else if(mSortType == SORT_TYPE_PUBLIC_TIME_DESC) {
+                    mSortType = SORT_TYPE_PUBLIC_TIME;
+                } else {
+                    mSortType = SORT_TYPE_PUBLIC_TIME;
+                }
+
+                mAdapter.reset();
+                mTotalCount = 0;
+
+                loadMore();
+            }
+        });
 
         loadMore();
 
