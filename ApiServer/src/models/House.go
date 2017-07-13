@@ -2141,6 +2141,8 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 		strFilter = ` FROM v_house_published AS h `
 		if len(sqlCondition) > 0 {
 			strFilter += " WHERE " + sqlCondition
+		} else {
+			strFilter += " WHERE 1"
 		}
 
 		if len(sorts) > 0 {
