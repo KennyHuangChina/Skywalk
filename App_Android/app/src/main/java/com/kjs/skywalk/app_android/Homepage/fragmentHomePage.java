@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android.Homepage;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -127,18 +128,21 @@ public class fragmentHomePage extends Fragment {
     }
 
     private void updateHouseList(final ArrayList<ClassDefine.HouseDigest> list, final int type, final int totalCount) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (type == 1) {
-                    mAdapterRecommend.updateList(list, totalCount);
-                } else if(type == 2) {
-                    mAdapterDeducted.updateList(list, totalCount);
-                }else if(type == 3) {
-                    mAdapterNew.updateList(list, totalCount);
+        Activity activity = getActivity();
+        if(activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (type == 1) {
+                        mAdapterRecommend.updateList(list, totalCount);
+                    } else if (type == 2) {
+                        mAdapterDeducted.updateList(list, totalCount);
+                    } else if (type == 3) {
+                        mAdapterNew.updateList(list, totalCount);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 }
