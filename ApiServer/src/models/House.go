@@ -871,21 +871,21 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
 	bRentEqual := false
 	bPriceEqual := false
 	if h.ForRent {
-		if cp.RentalTag == rental_tp && cp.RentalBottom == rental_bp && cp.PropFee == prop_fee {
+		if cp.RentalBid == int(rental_tp) && cp.RentalBottom == int(rental_bp) && cp.PropFee == prop_fee {
 			bRentEqual = true
 			if !h.ForSale {
 				bDuplicate = true
 			}
 		}
 	}
-	if h.ForSale {
-		if cp.SellingTag == price_tp && cp.SellingBottom == price_bp {
-			bPriceEqual = true
-			if !h.ForRent {
-				bDuplicate = true
-			}
-		}
-	}
+	// if h.ForSale {
+	// 	if cp.SellingTag == price_tp && cp.SellingBottom == price_bp {
+	// 		bPriceEqual = true
+	// 		if !h.ForRent {
+	// 			bDuplicate = true
+	// 		}
+	// 	}
+	// }
 	if !bDuplicate && bRentEqual && bPriceEqual {
 		bDuplicate = true
 	}
@@ -903,16 +903,17 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
 
 	/* Processing */
 	o := orm.NewOrm()
-	np := TblHousePrice{House: hid, Who: uid}
+	np := TblRental{HouseId: hid, Who: int(uid)}
 	if h.ForRent {
-		np.RentalTag = rental_tp
-		np.RentalBottom = rental_bp
+		np.RentalBid = int(rental_tp)
+		np.RentalBottom = int(rental_bp)
 		np.PropFee = prop_fee
+		np.Active = true
 	}
-	if h.ForSale {
-		np.SellingTag = price_tp
-		np.SellingBottom = price_bp
-	}
+	// if h.ForSale {
+	// 	np.SellingTag = price_tp
+	// 	np.SellingBottom = price_bp
+	// }
 
 	nId, errT := o.Insert(&np)
 	if nil != errT {
@@ -1945,12 +1946,12 @@ func canModifyHouse(uid, hid int64) (err error) {
 	return
 }
 
-func getHouseCurentPrice(hid int64) (err error, cp TblHousePrice) {
+func getHouseCurentPrice(hid int64) (err error, cp TblRental) {
 
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_house_price").Filter("House", hid)
+	qs := o.QueryTable("tbl_rental").Filter("HouseId", hid).Filter("Active", true)
 
-	var p TblHousePrice
+	var p TblRental
 	errT := qs.OrderBy("-Id").One(&p)
 	if nil != errT {
 		switch errT {
