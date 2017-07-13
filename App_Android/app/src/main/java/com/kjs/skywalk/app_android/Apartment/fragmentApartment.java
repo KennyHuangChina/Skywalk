@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android.Apartment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.graphics.Rect;
@@ -255,14 +256,17 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         GetHouseListTask task = new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
             @Override
             public void onTaskFinished(final ArrayList<ClassDefine.HouseDigest> houseList, final int totalCount) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTotalCount = totalCount;
-                        mAdapter.addData(houseList, totalCount);
-                        showWaiting(false);
-                    }
-                });
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTotalCount = totalCount;
+                            mAdapter.addData(houseList, totalCount);
+                            showWaiting(false);
+                        }
+                    });
+                }
             }
         });
 
