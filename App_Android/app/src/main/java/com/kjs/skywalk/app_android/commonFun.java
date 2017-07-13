@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,6 +19,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -360,4 +363,55 @@ public class commonFun {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Rect getScreenResolution(Activity activity) {
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        float density  = dm.density;
+        int densityDPI = dm.densityDpi;
+
+        int screenWidthDip = dm.widthPixels;
+        int screenHeightDip = dm.heightPixels;
+
+        int screenWidth  = (int)(dm.widthPixels * density + 0.5f);      // 屏幕宽（px，如：480px）
+        int screenHeight = (int)(dm.heightPixels * density + 0.5f);     // 屏幕高（px，如：800px）
+
+        kjsLogUtil.i("Screen Width: " + screenWidth + " Screen Height: " + screenHeight);
+
+        Rect rc = new Rect();
+        rc.right = dm.widthPixels;
+        rc.bottom = dm.heightPixels;
+
+        return rc;
+    }
+
+    public static int getStatusBarHeight(Activity activity) {
+        int statusHeight = 0;
+        Rect localRect = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
+        statusHeight = localRect.top;
+        if (0 == statusHeight){
+            Class<?> localClass;
+            try {
+                localClass = Class.forName("com.android.internal.R$dimen");
+                Object localObject = localClass.newInstance();
+                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
+                statusHeight = activity.getResources().getDimensionPixelSize(i5);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+        return statusHeight;
+    }
 }

@@ -1,125 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/root_container">
 
-    <include layout="@layout/layout_search_title_text" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_height="40dp"
-        android:id="@+id/linearLayoutConditionContainer">
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSearchConditionRegion"
-            android:text="@string/fragment_search_condition_region"
-            android:textSize="15sp"
-            android:textColor="#272536"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/down_n"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:adjustViewBounds="true"
-            android:layout_weight="1" />
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSearchConditionPrice"
-            android:text="@string/fragment_search_condition_price"
-            android:textSize="15sp"
-            android:textColor="#272536"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/down_n"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:adjustViewBounds="true"
-            android:layout_weight="1" />
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSearchConditionHouseType"
-            android:text="@string/fragment_search_condition_type"
-            android:textSize="15sp"
-            android:textColor="#272536"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/down_n"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:adjustViewBounds="true"
-            android:layout_weight="1" />
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSearchConditionFilter"
-            android:text="@string/fragment_search_condition_filter"
-            android:textSize="15sp"
-            android:textColor="#272536"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/down_n"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:adjustViewBounds="true"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <include layout="@layout/seperator_horizontal"
-        android:id="@+id/seperator_horizontal"/>
+    <!--<include layout="@layout/widget_waiting"-->
+        <!--android:id="@+id/waitingWidget"-->
+        <!--android:visibility="invisible"/>-->
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="#EFEFEF"
-        android:layout_height="40dp"
-        android:id="@+id/linearLayoutSortContainer">
+        android:layout_height="match_parent" >
 
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSortDate"
-            style="@style/TextView_SortType"
-            android:layout_weight="3"
-            android:adjustViewBounds="true"
-            android:drawableEnd="@drawable/bothway_n"
-            android:gravity="center"
-            android:text="@string/fragment_search_sort_date" />
+        <include layout="@layout/layout_search_title_text" />
 
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSortRental"
-            android:text="@string/fragment_search_sort_unit_price"
-            android:textColor="@drawable/selector_sort_type"
-            style="@style/TextView_SortType"
-            android:drawableEnd="@drawable/bothway_n"
-            android:gravity="center"
-            android:adjustViewBounds="true"
-            android:layout_weight="3" />
-        <com.kjs.skywalk.control.TextView_DrawableRightCenter
-            android:id="@+id/textViewSortAppointment"
-            android:text="@string/fragment_search_sort_total_price"
-            style="@style/TextView_SortType"
-            android:drawableEnd="@drawable/bothway_n"
-            android:gravity="center"
-            android:adjustViewBounds="true"
-            android:layout_weight="3" />
-        <ImageView
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:contentDescription=""
-            android:layout_gravity="center"
-            android:background="#E5E5E5" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_height="40dp"
+            android:id="@+id/linearLayoutConditionContainer">
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSearchConditionRegion"
+                android:text="@string/fragment_search_condition_region"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/down_n"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
+                android:layout_weight="1" />
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSearchConditionPrice"
+                android:text="@string/fragment_search_condition_price"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/down_n"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
+                android:layout_weight="1" />
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSearchConditionHouseType"
+                android:text="@string/fragment_search_condition_type"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/down_n"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
+                android:layout_weight="1" />
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSearchConditionFilter"
+                android:text="@string/fragment_search_condition_filter"
+                android:textSize="15sp"
+                android:textColor="#272536"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/down_n"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
+                android:layout_weight="1" />
+        </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/show_grid"
-            android:id="@+id/imageViewDisplayMode"
-            android:layout_gravity="center"
-            android:layout_weight="1" />
+        <include layout="@layout/seperator_horizontal"
+            android:id="@+id/seperator_horizontal"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:background="#EFEFEF"
+            android:layout_height="40dp"
+            android:id="@+id/linearLayoutSortContainer">
+
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSortDate"
+                style="@style/TextView_SortType"
+                android:layout_weight="3"
+                android:adjustViewBounds="true"
+                android:drawableEnd="@drawable/bothway_n"
+                android:gravity="center"
+                android:text="@string/fragment_search_sort_date" />
+
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSortRental"
+                android:text="@string/fragment_search_sort_unit_price"
+                android:textColor="@drawable/selector_sort_type"
+                style="@style/TextView_SortType"
+                android:drawableEnd="@drawable/bothway_n"
+                android:gravity="center"
+                android:adjustViewBounds="true"
+                android:layout_weight="3" />
+            <com.kjs.skywalk.control.TextView_DrawableRightCenter
+                android:id="@+id/textViewSortAppointment"
+                android:text="@string/fragment_search_sort_total_price"
+                style="@style/TextView_SortType"
+                android:drawableEnd="@drawable/bothway_n"
+                android:gravity="center"
+                android:adjustViewBounds="true"
+                android:layout_weight="3" />
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:contentDescription=""
+                android:layout_gravity="center"
+                android:background="#E5E5E5" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/show_grid"
+                android:id="@+id/imageViewDisplayMode"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listViewSearchResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include layout="@layout/seperator_horizontal" />
+
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/listViewSearchResult"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <include layout="@layout/seperator_horizontal" />
-
-</LinearLayout>
+</RelativeLayout>

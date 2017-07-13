@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -76,6 +77,17 @@ public class MainActivity extends SKBaseActivity {
         mFragHomePage = new fragmentHomePage();
         fragTransaction.replace(R.id.fl_container, mFragHomePage);
         fragTransaction.commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(mFragApartment == null || !mFragApartment.isBusy()) {
+                finish();
+            }
+        }
+
+        return true;
     }
 
     private void setTabMenuSelected(View v) {

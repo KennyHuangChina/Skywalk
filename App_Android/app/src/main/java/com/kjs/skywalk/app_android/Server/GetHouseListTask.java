@@ -121,14 +121,17 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
         CommandManager CmdMgr = new CommandManager(mContext, mCmdListener, mProgreessListener);
 
         mResultGot = false;
+        mHouseList.clear();
+        mTotalCount = 0;
+
         result = CmdMgr.GetHouseDigestList(mType, 0, 0, mFilter, mSort);
-        if(!waitResult(3000)) {
+        if(!waitResult(1000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get count timeout"));
             return 0;
         }
 
         result = CmdMgr.GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
-        if(!waitResult(3000)) {
+        if(!waitResult(1000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get house list timeout"));
             return 0;
         }
@@ -148,6 +151,7 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
             if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                 kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
                 mResultGot = true;
+                mTaskFinished.onTaskFinished(mHouseList, mTotalCount);
                 return;
             }
 

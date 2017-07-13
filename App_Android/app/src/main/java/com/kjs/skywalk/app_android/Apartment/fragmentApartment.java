@@ -1,11 +1,14 @@
 package com.kjs.skywalk.app_android.Apartment;
 
+import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,8 +25,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
+import com.kjs.skywalk.app_android.PopupWindowWaitingUnclickable;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.Server.GetHouseListTask;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 
 import org.w3c.dom.Text;
@@ -38,6 +43,7 @@ import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBL
 import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME_DESC;
 import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_RENTAL;
 import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_RENTAL_DESC;
+import static com.kjs.skywalk.app_android.commonFun.getStatusBarHeight;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -50,6 +56,9 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     private LinearLayout mLinearLayoutConditionContainer = null;
     private ListView mScrollViewSearchResult = null;
 
+    private int mActScreenWidth = 1920;
+    private int mActScreenHeight = 1080;
+
     private TextView mTextViewConditionPrice = null;
     private TextView mTextViewConditionHouseType = null;
     private TextView mTextViewConditionFilter = null;
@@ -58,6 +67,9 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     private TextView mTextViewSortByDate = null;
     private TextView mTextViewSortByRental = null;
     private TextView mTextViewSortByAppointment = null;
+    private LinearLayout mLayoutWaiting = null;
+    private RelativeLayout mRoot = null;
+    private PopupWindowWaitingUnclickable mWaitingWindow = null;
 
     private PopupWindowSearchConditionFilter mPopSearchConditionFilter = null;
     private PopupWindowSearchConditionPrice mPopSearchConditionPrice = null;
@@ -90,6 +102,18 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         mPopSearchConditionPrice.onItemClicked(view);
     }
 
+    public boolean isBusy() {
+        if(mWaitingWindow == null) {
+            return false;
+        }
+
+        if(mWaitingWindow.isShowing()) {
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_apartment, container, false);
@@ -99,6 +123,10 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         textView.setTextSize(14);
         textView.setHint(R.string.fragment_search_input_hint);
         textView.setGravity(Gravity.BOTTOM);
+
+        Rect rc = commonFun.getScreenResolution(getActivity());
+        mActScreenWidth = rc.right;
+        mActScreenHeight = rc.bottom;
 
         mListViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
         mListViewSearchResult.setFocusable(false);
@@ -113,6 +141,9 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         mTextViewConditionPrice.setOnClickListener(mClickListenerConditionPrice);
         mScrollViewSearchResult = (ListView)view.findViewById(R.id.listViewSearchResult);
         mLinearLayoutConditionContainer = (LinearLayout)view.findViewById(R.id.linearLayoutConditionContainer);
+
+//        mLayoutWaiting = (LinearLayout)view.findViewById(R.id.waitingWidget);
+        mRoot = (RelativeLayout)view.findViewById(R.id.root_container);
 
         mTextViewConditionHouseType = (TextView)view.findViewById(R.id.textViewSearchConditionHouseType);
         mTextViewConditionHouseType.setOnClickListener(mClickListenerConditionHouseType);
@@ -202,11 +233,25 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         return view;
     }
 
+    private void showWaiting(boolean show) {
+        if(mWaitingWindow == null) {
+            mWaitingWindow = new PopupWindowWaitingUnclickable(getActivity(), mActScreenWidth, mActScreenHeight);
+        }
+        if(show) {
+            mWaitingWindow.show(mRoot);
+        } else {
+            mWaitingWindow.hide();
+        }
+    }
+
     private void loadMore() {
         int countInList = mAdapter.getCount();
         if(countInList >= mTotalCount && mTotalCount != 0) {
             return;
         }
+
+        showWaiting(true);
+
         GetHouseListTask task = new GetHouseListTask(getActivity(), new GetHouseListTask.TaskFinished() {
             @Override
             public void onTaskFinished(final ArrayList<ClassDefine.HouseDigest> houseList, final int totalCount) {
@@ -215,6 +260,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                     public void run() {
                         mTotalCount = totalCount;
                         mAdapter.addData(houseList, totalCount);
+                        showWaiting(false);
                     }
                 });
             }
