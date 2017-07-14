@@ -37,6 +37,9 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
 
     private final int MSG_DISMISS_WINDOW = 0;
 
+    private int mMinPrice = 0;
+    private int mMaxPrice = 0;
+
     public PopupWindowSearchConditionPrice(Context context) {
         super(context);
         mContext = context;
@@ -62,6 +65,10 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EditText textMin = (EditText)mView.findViewById(R.id.editTextLowPrice);
+                EditText textMax = (EditText)mView.findViewById(R.id.editTextHighPrice);
+                String min = textMin.getText().toString();
+                String max = textMax.getText().toString();
 //                mSettings.mPriceTypeFlag = 1;
                 cleanSelection();
                 mHandler.sendEmptyMessageDelayed(MSG_DISMISS_WINDOW, 200);
@@ -81,6 +88,7 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
             }
             if(v.getId() == view.getId()) {
                 select((TextView)v);
+                setPrices(view);
                 //mPopSearchConditionPrice.setCurrentSelection(v);
             } else {
                 unselect((TextView)v);
@@ -94,6 +102,36 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
         textMax.setText("");
 
         mHandler.sendEmptyMessageDelayed(MSG_DISMISS_WINDOW, 200);
+    }
+
+    private void setPrices(View v) {
+        Object obj = v.getTag();
+        if(obj == null) {
+            return;
+        }
+
+        int tag = Integer.valueOf((String)obj);
+        switch (tag) {
+            case 0:
+                mMinPrice = 0;
+                mMaxPrice = 0;
+                break;
+            case 1:
+                mMinPrice = 1;
+                mMaxPrice = 1000;
+                break;
+            case 2:
+                mMinPrice = 1000;
+                mMaxPrice = 1500;
+                break;
+            case 3:
+                mMinPrice = 1500;
+                mMaxPrice = 2000;
+                break;
+            case 4:
+                mMinPrice = 2000;
+                mMaxPrice = 3000;
+        }
     }
 
     Handler mHandler = new Handler(){

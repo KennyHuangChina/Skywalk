@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:id="@+id/houseTypeContainer" >/>
+        <include layout="@layout/seperator_horizontal" />
 
         <TextView
             android:text="不限"

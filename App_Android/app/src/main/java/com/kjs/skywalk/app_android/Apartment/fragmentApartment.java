@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
@@ -136,6 +137,28 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         mAdapter = new AdapterSearchResultList(getActivity());
         mAdapter.setDisplayType(mDisplay);
         mListViewSearchResult.setAdapter(mAdapter);
+
+        mPopSearchConditionPrice = new PopupWindowSearchConditionPrice(getActivity().getBaseContext());
+        mPopSearchConditionPrice.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+            }
+        });
+        mPopSearchConditionFilter = new PopupWindowSearchConditionFilter(getActivity().getBaseContext());
+        mPopSearchConditionFilter.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+            }
+        });
+        mPopSearchConditionHouseType = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
+        mPopSearchConditionHouseType.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+            }
+        });
 
         mSortContainer = (LinearLayout)view.findViewById(R.id.linearLayoutSortContainer);
         mTextViewConditionPrice = (TextView)view.findViewById(R.id.textViewSearchConditionPrice);
@@ -297,9 +320,6 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            if(mPopSearchConditionPrice ==null) {
-                mPopSearchConditionPrice = new PopupWindowSearchConditionPrice(getActivity().getBaseContext());
-            }
             mPopSearchConditionPrice.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
             mPopSearchConditionPrice.showAsDropDown(mLinearLayoutConditionContainer);
         }
@@ -311,9 +331,6 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            if(mPopSearchConditionHouseType == null) {
-                mPopSearchConditionHouseType = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
-            }
             mPopSearchConditionHouseType.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
             mPopSearchConditionHouseType.showAsDropDown(mLinearLayoutConditionContainer);
         }
@@ -325,9 +342,6 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             int nSortContainerHeight = mSortContainer.getHeight();
             int nResultHeight = mScrollViewSearchResult.getHeight();
             int nSeperatorHeight = mSeperator.getHeight() * 2;
-            if(mPopSearchConditionFilter == null) {
-                mPopSearchConditionFilter = new PopupWindowSearchConditionFilter(getActivity().getBaseContext());
-            }
             mPopSearchConditionFilter.setHeight(nSortContainerHeight + nResultHeight + nSeperatorHeight);
             mPopSearchConditionFilter.showAsDropDown(mLinearLayoutConditionContainer);
         }

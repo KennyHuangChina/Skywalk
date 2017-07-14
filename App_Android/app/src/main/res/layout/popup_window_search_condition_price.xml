@@ -22,7 +22,7 @@
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
-            android:text="100万以下"
+            android:text="1000元以下"
             style="@style/text_view_search_condition_item"
             android:tag="1"
             android:id="@+id/textViewPrice1"
@@ -31,7 +31,7 @@
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
-            android:text="100-150万"
+            android:text="1000-1500元"
             style="@style/text_view_search_condition_item"
             android:tag="2"
             android:id="@+id/textViewPrice2"
@@ -40,7 +40,7 @@
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
-            android:text="150-200万"
+            android:text="1500-2000元"
             style="@style/text_view_search_condition_item"
             android:tag="3"
             android:id="@+id/textViewPrice3"
@@ -49,7 +49,7 @@
         <include layout="@layout/seperator_horizontal" />
 
         <TextView
-            android:text="200-300万"
+            android:text="2000-3000元"
             style="@style/text_view_search_condition_item"
             android:tag="4"
             android:id="@+id/textViewPrice4"
