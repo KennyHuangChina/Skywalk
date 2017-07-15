@@ -85,6 +85,9 @@ public class Activity_login extends SKBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        updateLoginLayoutById(R.id.tv_login_telephone);
+
         // Set up the login form.
 //        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 //        List<String> arrAuto = new ArrayList<>();
@@ -144,6 +147,31 @@ public class Activity_login extends SKBaseActivity implements
             }
         }
     };
+
+    // tv_login_telephone or tv_login_account
+    private void updateLoginLayoutById(int viewId) {
+        switch (viewId) {
+            case R.id.tv_login_telephone: {
+                findViewById(R.id.tv_login_telephone).setSelected(true);
+                findViewById(R.id.tv_login_account).setSelected(false);
+                findViewById(R.id.ll_login_telephone).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_login_account).setVisibility(View.GONE);
+                break;
+            }
+
+            case R.id.tv_login_account: {
+                findViewById(R.id.tv_login_telephone).setSelected(false);
+                findViewById(R.id.tv_login_account).setSelected(true);
+                findViewById(R.id.ll_login_telephone).setVisibility(View.GONE);
+                findViewById(R.id.ll_login_account).setVisibility(View.VISIBLE);
+                break;
+            }
+        }
+    }
+
+    public void onLoginTitleClick(View v) {
+        updateLoginLayoutById(v.getId());
+    }
 
     public void onClickResponse(View v) {
         switch (v.getId()) {

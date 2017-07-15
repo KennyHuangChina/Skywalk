@@ -68,7 +68,8 @@
             android:id="@+id/ll_login_telephone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,19 +81,14 @@
                     android:layout_width="51dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icn_telephone"/>
-                <android.support.design.widget.TextInputLayout
+                <AutoCompleteTextView
+                    android:id="@+id/actv_telephone_num"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <AutoCompleteTextView
-                        android:id="@+id/actv_telephone_num"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="请输入手机号码"
-                        app:hintAnimationEnabled="true"
-                        android:inputType="numberSigned"
-                        android:maxLines="1" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="请输入手机号码"
+                    android:inputType="numberSigned"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <ImageView
@@ -113,34 +109,90 @@
                     android:layout_width="51dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icn_verification_code"/>
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="230dp"
-                    android:layout_height="wrap_content">
-                    <AutoCompleteTextView
-                        android:id="@+id/actv_verfication_code"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="请输入短信验证码"
-                        app:hintAnimationEnabled="true"
-                        android:inputType="numberSigned"
-                        android:maxLines="1" />
-                </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/actv_verfication_code"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="请输入短信验证码"
+                    android:inputType="numberSigned"
+                    android:maxLines="1" />
                 <TextView
                     android:id="@+id/tv_get_verfication_code"
                     android:layout_width="85dp"
                     android:layout_height="25dp"
                     style="@style/btnstyle_major"
+                    android:textSize="13sp"
                     android:text="获取验证码"/>
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_login_account"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="51dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_account"/>
+                <AutoCompleteTextView
+                    android:id="@+id/actv_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="请输入您的账号"
+                    android:inputType="numberSigned"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription=""
+                android:background="#E5E5E5"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="51dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_password"/>
+                <EditText
+                    android:id="@+id/actv_password"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="请输入您的密码"
+                    android:inputType="numberSigned"
+                    android:maxLines="1" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="14dp"
+                        android:src="@drawable/icn_password_hide"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
-
-
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"

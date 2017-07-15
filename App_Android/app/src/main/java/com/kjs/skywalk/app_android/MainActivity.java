@@ -134,6 +134,17 @@ public class MainActivity extends SKBaseActivity {
         fragTransaction.commit();
     }
 
+    public void onFragmentPrivateClickResponse(View v) {
+        switch (v.getId()) {
+            case R.id.tv_clicktologin:
+            {
+                startActivity(new Intent(MainActivity.this, Activity_login.class));
+            }
+            break;
+        }
+    }
+
+
     // set in activity_main.xml
     public void onClickResponse(View v) {
         //commonFun.showToast_resEntryName(this, v);

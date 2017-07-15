@@ -8,6 +8,7 @@
 
         <!--android:background="#E5E5E5"-->
         <RelativeLayout
+            android:id="@+id/rl_titlebar"
             android:layout_width="match_parent"
             android:layout_height="95dp"
             android:background="#00AE63"
@@ -33,27 +34,29 @@
                 android:id="@+id/rl_user_not_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/iv_portrait"
-                android:visibility="gone">
-            <TextView
-                android:id="@+id/tv_clicktologin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="49dp"
-                android:layout_marginStart="10dp"
-                android:textColor="#000000"
-                android:text="点击登录"
-                android:textSize="17sp"/>
+                android:layout_toEndOf="@+id/iv_portrait_null"
+                android:visibility="visible">
+                <TextView
+                    android:id="@+id/tv_clicktologin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onFragmentPrivateClickResponse"
+                    android:layout_marginTop="49dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="#000000"
+                    android:text="点击登录"
+                    android:textSize="17sp"/>
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/rl_user_login"
+            android:id="@+id/ll_user_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="42dp"
             android:layout_marginStart="11dp"
             android:orientation="vertical"
-            android:layout_toEndOf="@+id/iv_portrait_null">
+            android:layout_toEndOf="@+id/iv_portrait_null"
+            android:visibility="gone">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -569,7 +572,7 @@
             android:drawablePadding="5dp"
             android:textColor="#B2B2B2"
             android:textSize="10sp"
-            android:onClick="onClickResponse" />
+            android:onClick="onFragmentPrivateClickResponse" />
         <TextView
             android:id="@+id/tv_feedback_recorder"
             android:text="反馈记录"
@@ -582,7 +585,7 @@
             android:drawablePadding="5dp"
             android:textColor="#B2B2B2"
             android:textSize="10sp"
-            android:onClick="onClickResponse" />
+            android:onClick="onFragmentPrivateClickResponse" />
     </LinearLayout>
 
     <!-- 产品服务    end -->
