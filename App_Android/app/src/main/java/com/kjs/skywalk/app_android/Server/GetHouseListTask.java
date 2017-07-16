@@ -66,6 +66,9 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
             return;
         }
 
+        low = low * 100;
+        high = high * 100;
+
         mFilter.mRental.FilterBetween(low, high);
     }
 
