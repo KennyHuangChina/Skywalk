@@ -35,6 +35,7 @@ import com.kjs.skywalk.app_android.kjsLogUtil;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -88,6 +89,9 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     private int mTotalCount = 0;
 
     private int mSortType = SORT_TYPE_PUBLIC_TIME;
+    private int mMinPrice = 0;
+    private int mMaxPrice = 0;
+    private ArrayList<Integer> mRoomList = new ArrayList<>();
 
     ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
     @Nullable
@@ -142,21 +146,25 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         mPopSearchConditionPrice.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+                mMinPrice = mPopSearchConditionPrice.mMinPrice;
+                mMaxPrice = mPopSearchConditionPrice.mMaxPrice;
 
+                loadMore(true);
             }
         });
         mPopSearchConditionFilter = new PopupWindowSearchConditionFilter(getActivity().getBaseContext());
         mPopSearchConditionFilter.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-
+                loadMore(true);
             }
         });
         mPopSearchConditionHouseType = new PopupWindowSearchConditionHouseType(getActivity().getBaseContext());
         mPopSearchConditionHouseType.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-
+                mRoomList = mPopSearchConditionHouseType.getRoomSelection();
+                loadMore(true);
             }
         });
 
@@ -197,10 +205,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                 mTextViewSortByDate.setSelected(true);
                 mTextViewSortByRental.setSelected(false);
 
-                mAdapter.reset();
-                mTotalCount = 0;
-
-                loadMore();
+                loadMore(true);
             }
         });
 
@@ -221,10 +226,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                 mTextViewSortByDate.setSelected(false);
                 mTextViewSortByRental.setSelected(true);
 
-                mAdapter.reset();
-                mTotalCount = 0;
-
-                loadMore();
+                loadMore(true);
             }
         });
 
@@ -245,14 +247,11 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
                 mTextViewSortByDate.setSelected(false);
                 mTextViewSortByRental.setSelected(false);
 
-                mAdapter.reset();
-                mTotalCount = 0;
-
-                loadMore();
+                loadMore(true);
             }
         });
 
-        loadMore();
+        loadMore(true);
 
         return view;
     }
@@ -268,7 +267,12 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         }
     }
 
-    private void loadMore() {
+    private void loadMore(boolean clean) {
+        if(clean) {
+            mAdapter.reset();
+            mTotalCount = 0;
+        }
+
         int countInList = mAdapter.getCount();
         if(countInList >= mTotalCount && mTotalCount != 0) {
             return;
@@ -293,6 +297,8 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             }
         });
 
+        task.addFilterRental(mMinPrice, mMaxPrice);
+        task.addFilterBedRoom(mRoomList);
         task.setSort(mSortType);
         task.execute(GetHouseListTask.TYPE_ALL, countInList, 10);
     }
@@ -350,7 +356,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if(scrollState == SCROLL_STATE_IDLE && mLastItemInList == mAdapter.getCount()) {
-            loadMore();
+            loadMore(false);
         }
     }
 

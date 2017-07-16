@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by admin on 2017/2/9.
  */
@@ -42,6 +45,38 @@ class PopupWindowSearchConditionHouseType extends PopupWindow {
             }
         });
         init();
+    }
+
+    public ArrayList<Integer> getRoomSelection() {
+        TextView v0 = (TextView) mView.findViewById(R.id.textViewHouseType0);
+        TextView v1 = (TextView)mView.findViewById(R.id.textViewHouseType1);
+        TextView v2 = (TextView)mView.findViewById(R.id.textViewHouseType2);
+        TextView v3 = (TextView)mView.findViewById(R.id.textViewHouseType3);
+        TextView v4 = (TextView)mView.findViewById(R.id.textViewHouseType4);
+        TextView v5 = (TextView)mView.findViewById(R.id.textViewHouseType5);
+
+        ArrayList<Integer> list = new ArrayList<>();
+        if(v0.isSelected()) {
+            return list;
+        }
+
+        if(v1.isSelected()) {
+            list.add(1);
+        }
+        if(v2.isSelected()) {
+            list.add(2);
+        }
+        if(v3.isSelected()) {
+            list.add(3);
+        }
+        if(v4.isSelected()) {
+            list.add(4);
+        }
+        if(v5.isSelected()) {
+            list.add(5);
+        }
+
+        return list;
     }
 
     private void select(int index) {

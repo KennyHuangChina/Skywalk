@@ -62,10 +62,27 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
     }
 
     public void addFilterRental(int low, int high) {
+        if(low == 0 && high == 0) {
+            return;
+        }
+
         mFilter.mRental.FilterBetween(low, high);
     }
 
-    public void addFilterBedRoom() {
+    public void addFilterBedRoom(ArrayList<Integer> list) {
+        if(list.size() == 0) {
+            return;
+        }
+
+        for(Integer rooms : list) {
+            if(rooms == 5) {
+                mFilter.mBedroom.FilterGreatX(5, true);
+                list.remove(rooms);
+                break;
+            }
+        }
+
+        mFilter.mBedroom.FilterIn(list);
     }
 
     public void addFilterTag() {

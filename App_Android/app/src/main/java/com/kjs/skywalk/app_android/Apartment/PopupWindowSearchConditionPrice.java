@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKLocalSettings;
+import com.kjs.skywalk.app_android.commonFun;
 
 import org.w3c.dom.Text;
 
@@ -37,8 +38,8 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
 
     private final int MSG_DISMISS_WINDOW = 0;
 
-    private int mMinPrice = 0;
-    private int mMaxPrice = 0;
+    public int mMinPrice = 0;
+    public int mMaxPrice = 0;
 
     public PopupWindowSearchConditionPrice(Context context) {
         super(context);
@@ -69,6 +70,17 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
                 EditText textMax = (EditText)mView.findViewById(R.id.editTextHighPrice);
                 String min = textMin.getText().toString();
                 String max = textMax.getText().toString();
+
+                if(min.isEmpty()) {
+                    min = "0";
+                }
+
+                if(max.isEmpty()) {
+                    max = "0";
+                }
+                mMinPrice = Integer.valueOf(min);
+                mMaxPrice = Integer.valueOf(max);
+
 //                mSettings.mPriceTypeFlag = 1;
                 cleanSelection();
                 mHandler.sendEmptyMessageDelayed(MSG_DISMISS_WINDOW, 200);
