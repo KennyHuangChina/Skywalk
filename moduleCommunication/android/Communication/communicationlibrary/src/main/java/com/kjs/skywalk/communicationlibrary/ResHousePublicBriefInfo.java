@@ -51,6 +51,12 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
     public int GetRental() { return (null != mDigestInfo) ? mDigestInfo.GetRental() : 0; }
     @Override
     public int GetPricing() { return (null != mDigestInfo) ? mDigestInfo.GetPricing() : 0; }
+
+    @Override
+    public boolean IsRentalIncPropFee() {
+        return (null == mDigestInfo) ? false : mDigestInfo.IsRentalIncPropFee();
+    }
+
     @Override
     public int GetCoverImage() { return (null != mDigestInfo) ? mDigestInfo.GetCoverImage() : 0; }
 
@@ -90,6 +96,7 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
     private int     mAcreage        = 0;
     private int     mRental         = 0;
     private int     mPricing        = 0;
+    private boolean mPropFee        = false;
     private int     mCoverImg       = 0;
     private String  mCovImgUrl_s    = null;
     private String  mCovImgUrl_m    = null;
@@ -112,6 +119,7 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
             mAcreage        = objDigest.getInt("Acreage");
             mRental         = objDigest.getInt("Rental");
             mPricing        = objDigest.getInt("Pricing");
+            mPropFee        = objDigest.getBoolean("PropFee");
             mCoverImg       = objDigest.getInt("CoverImg");
             mCovImgUrl_s    = objDigest.getString("CovImgUrlS");
             mCovImgUrl_m    = objDigest.getString("CovImgUrlM");
@@ -149,7 +157,7 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
         sDebugString += (" LivingRooms: " + GetLivingrooms() + "\n");
         sDebugString += (" Bathrooms: " + GetBathrooms() + "\n");
         sDebugString += (" Acreage: " + GetAcreage() + "\n");
-        sDebugString += (" Rental: " + GetRental() + "\n");
+        sDebugString += (" Rental: " + GetRental() + ", include property fee:"  + IsRentalIncPropFee() + "\n");
         sDebugString += (" Pricing: " + GetPricing() + "\n");
         sDebugString += (" CoverImg: " + GetCoverImage() + "\n");
         sDebugString += (" Image URL(s): " + GetCoverImageUrlS() + "\n");
@@ -188,6 +196,11 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
 
     @Override
     public int GetPricing() { return mPricing; }
+
+    @Override
+    public boolean IsRentalIncPropFee() {
+        return mPropFee;
+    }
 
     @Override
     public int GetCoverImage() { return mCoverImg; }

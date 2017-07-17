@@ -67,6 +67,7 @@ public class IApiResults {
         int     GetAcreage();
         int     GetRental();
         int     GetPricing();
+        boolean IsRentalIncPropFee();
         int     GetCoverImage();
         String  GetCoverImageUrlS();
         String  GetCoverImageUrlM();
