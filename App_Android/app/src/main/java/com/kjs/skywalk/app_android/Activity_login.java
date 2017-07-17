@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -173,6 +174,22 @@ public class Activity_login extends SKBaseActivity implements
         updateLoginLayoutById(v.getId());
     }
 
+    private AlertDialog mPasswordErrorDlg;
+    private void showPasswordErroeDlg() {
+        if (mPasswordErrorDlg == null) {
+            mPasswordErrorDlg = new AlertDialog.Builder(this).create();
+        }
+        mPasswordErrorDlg.show();
+        mPasswordErrorDlg.setContentView(R.layout.dialog_password_error);
+
+       mPasswordErrorDlg.findViewById(R.id.tv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPasswordErrorDlg.dismiss();
+            }
+        });
+    }
+
     public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_info_title: {
@@ -181,15 +198,18 @@ public class Activity_login extends SKBaseActivity implements
             }
 
             case R.id.tv_login: {
+
+                showPasswordErroeDlg();
+
                 //attemptLogin();
-                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-                if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
-                    //showProgress(true);
-                    mWaitingWindow.showAtLocation((View)mContainer.getParent(), Gravity.CENTER, 0, 0);
-                } else {
-                    Log.e(this.getClass().getSimpleName(), "Command Error");
-                }
+//                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+//                if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
+//                    //showProgress(true);
+//                    mWaitingWindow.showAtLocation((View)mContainer.getParent(), Gravity.CENTER, 0, 0);
+//                } else {
+//                    Log.e(this.getClass().getSimpleName(), "Command Error");
+//                }
                 break;
             }
         }

@@ -162,6 +162,15 @@
                     android:gravity="center"
                     android:textColor="#32BE84"
                     android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tv_apartment_rentalfee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:textColor="#000"
+                    android:textSize="12sp"/>
             </LinearLayout>
 
             <RelativeLayout

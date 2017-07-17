@@ -70,6 +70,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     private TextView mTvApartmentYuYue;
     private TextView mTvApartmentRentPrice;
     private TextView mTvApartmentPricing;
+    private TextView mTvAapartment_rentalfee;
 
     private TextView mTvApartment_floor;
     private TextView mTvApartment_fangxing;
@@ -107,6 +108,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mTvApartmentAddr = (TextView) findViewById(R.id.tv_apartment_addr);
         mTvApartmentRentPrice = (TextView) findViewById(R.id.tv_apartment_rent_price);
         mTvApartmentPricing = (TextView) findViewById(R.id.tv_apartment_pricing);
+        mTvAapartment_rentalfee = (TextView) findViewById(R.id.tv_apartment_rentalfee);
 
         mTvApartmentNo = (TextView) findViewById(R.id.tv_apartment_no);
         mTvApartmentLastModifyDate = (TextView) findViewById(R.id.tv_apartment_last_modify_date);
@@ -222,7 +224,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             });
         }
 
-        private void updateBriefHouseInfo(final IApiResults.IHouseDigest briefHouseInfo) {
+    private void updateBriefHouseInfo(final IApiResults.IHouseDigest briefHouseInfo) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -249,6 +251,14 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                         pricingDefines.add(new commonFun.TextDefine(pricing, 36, Color.parseColor("#32BE84")));
                     }
                     mTvApartmentPricing.setText(commonFun.getSpannableString(pricingDefines));
+
+                    // 是否包含物业费
+                    boolean isIncludeRentalFee = briefHouseInfo.IsRentalIncPropFee();
+                    if (isIncludeRentalFee) {
+                        mTvAapartment_rentalfee.setText("含物业费");
+                    } else {
+                        mTvAapartment_rentalfee.setText("不含物业费");
+                    }
 
                     ArrayList<Object> houseTags = ((IApiResults.IResultList) briefHouseInfo).GetList();
                     ArrayList<ClassDefine.HouseTag> tagList = new ArrayList<>();
