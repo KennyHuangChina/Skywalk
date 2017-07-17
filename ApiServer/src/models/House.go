@@ -424,11 +424,11 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 
 	if len(rs) > 0 {
 		p0 := rs[0].RentalBid // first bid price
-		dig.PopFee = rs[0].PropFee
+		dig.PropFee = rs[0].PropFee
 		p1 := p0 // last bid price
 		if len(rs) > 1 {
 			p1 = rs[len(rs)-1].RentalBid
-			dig.PopFee = rs[len(rs)-1].PropFee
+			dig.PropFee = rs[len(rs)-1].PropFee
 		}
 		dig.Rental = p1
 		dig.Pricing = p1 - p0

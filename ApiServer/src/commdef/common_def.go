@@ -77,7 +77,7 @@ type HouseDigest struct {
 	Acreage      int
 	Rental       int
 	Pricing      int
-	PopFee       bool
+	PropFee      bool   // if the rental involve the property fee
 	CoverImg     int64  // cover image id
 	CovImgUrlS   string //cover image url for small size
 	CovImgUrlM   string // cover image url for moderate size
