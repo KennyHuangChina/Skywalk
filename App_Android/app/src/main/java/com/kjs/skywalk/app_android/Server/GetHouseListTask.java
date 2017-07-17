@@ -201,6 +201,7 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
                         houseDigest.CoverImage = houseDigestRes.GetCoverImage();
                         houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
                         houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
+                        houseDigest.includePropertyFee = houseDigestRes.IsRentalIncPropFee();
 
                         ArrayList<Object> houseTags = ((IApiResults.IResultList) houseDigestRes).GetList();
                         houseDigest.houseTags = new ArrayList<>();

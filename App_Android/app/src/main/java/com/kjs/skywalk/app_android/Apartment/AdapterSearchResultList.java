@@ -155,14 +155,11 @@ class AdapterSearchResultList extends BaseAdapter {
 
         holder.price.setText(commonFun.getSpannableString(list));
 
-        list.clear();
-        commonFun.TextDefine textDefine4 = new commonFun.TextDefine("物业", 32, Color.parseColor("#242224"));
-        list.add(textDefine4);
-        commonFun.TextDefine textDefine5 = new commonFun.TextDefine(String.valueOf(200), 45, Color.parseColor("#ff3d19"));
-        list.add(textDefine5);
-        commonFun.TextDefine textDefine6 = new commonFun.TextDefine("(月)", 32, Color.parseColor("#242224"));
-        list.add(textDefine6);
-        holder.propertyFee.setText(commonFun.getSpannableString(list));
+        if(digest.includePropertyFee) {
+            holder.propertyFee.setText("包含物业费");
+        } else {
+            holder.propertyFee.setText("不含物业费");
+        }
 
         holder.flag.setVisibility(View.VISIBLE);
 
