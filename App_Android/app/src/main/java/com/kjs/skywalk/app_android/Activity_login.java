@@ -74,6 +74,15 @@ public class Activity_login extends SKBaseActivity implements
     private View mProgressView;
     private View mLoginFormView;
 
+    // telephone login
+    private AutoCompleteTextView mActv_telephone_num;
+    private EditText mEt_verfication_code;
+    private TextView mTv_get_verfication_code;
+
+    // account login
+    private AutoCompleteTextView mActv_account;
+    private EditText mEt_password;
+
     private String mRand = "";
     private String mSalt = "";
     private final int MSG_LOGIN = 0;
@@ -81,13 +90,34 @@ public class Activity_login extends SKBaseActivity implements
 
     PopupWindowWaiting mWaitingWindow = null;
     private LinearLayout mContainer = null;
+    private boolean mIsTelephoneLogin = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        updateLoginLayoutById(R.id.tv_login_telephone);
+        updateLoginLayoutById(R.id.tv_login_account);
+
+        List<String> arrAuto = new ArrayList<>();
+        arrAuto.add("15306261804");
+
+        // telephone login layout
+        mActv_telephone_num = (AutoCompleteTextView) findViewById(R.id.actv_telephone_num);
+        addArrayToAutoComplete(arrAuto, mActv_telephone_num);
+        mActv_telephone_num.setThreshold(1);
+        mActv_telephone_num.setOnEditorActionListener(mEditorActionListener);
+
+        mEt_verfication_code = (EditText) findViewById(R.id.et_verfication_code);
+        mTv_get_verfication_code = (TextView) findViewById(R.id.tv_get_verfication_code);
+
+        // account login layout
+        mActv_account = (AutoCompleteTextView) findViewById(R.id.actv_account);
+        addArrayToAutoComplete(arrAuto, mActv_account);
+        mActv_account.setThreshold(1);
+        mActv_account.setOnEditorActionListener(mEditorActionListener);
+
+        mEt_password = (EditText) findViewById(R.id.et_password);
 
         // Set up the login form.
 //        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -97,7 +127,7 @@ public class Activity_login extends SKBaseActivity implements
 //        mEmailView.setThreshold(1);
 //
 //
-//        mContainer=(LinearLayout) findViewById(R.id.container);
+        mContainer=(LinearLayout) findViewById(R.id.container);
 //
 //        mPasswordView = (EditText) findViewById(R.id.password);
 //        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -114,23 +144,45 @@ public class Activity_login extends SKBaseActivity implements
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        DisplayMetrics dm = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        mWaitingWindow = new PopupWindowWaiting(this);
-        mWaitingWindow.setWidth(dm.widthPixels);
-        mWaitingWindow.setHeight(dm.heightPixels);
+//        DisplayMetrics dm = new DisplayMetrics();
+//        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        mWaitingWindow = new PopupWindowWaiting(this);
+//        mWaitingWindow.setWidth(dm.widthPixels);
+//        mWaitingWindow.setHeight(dm.heightPixels);
     }
+
+    EditText.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.actv_telephone_num || id == R.id.actv_account || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+    };
 
     private void doLogin() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
-        if(CmdMgr.LoginByPassword(mEmailView.getText().toString(), mPasswordView.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
-            mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
+        if (mIsTelephoneLogin) {
+
+        } else {
+            if(CmdMgr.LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+                mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
+            }
         }
+
     }
 
     private int logIn() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
-        return CmdMgr.GetUserSalt(mEmailView.getText().toString());
+        String strUserSalt;
+        if (mIsTelephoneLogin)
+            strUserSalt = mActv_telephone_num.getText().toString();
+        else
+            strUserSalt = mActv_account.getText().toString();
+
+        return CmdMgr.GetUserSalt(strUserSalt);
     }
 
     Handler mHandler = new Handler(){
@@ -141,7 +193,8 @@ public class Activity_login extends SKBaseActivity implements
                     doLogin();
                     break;
                 case MSG_HIDE_WAITING_WINDOW: {
-                    mWaitingWindow.dismiss();
+//                    mWaitingWindow.dismiss();
+                    hideWaiting();
                     break;
                 }
 
@@ -157,6 +210,7 @@ public class Activity_login extends SKBaseActivity implements
                 findViewById(R.id.tv_login_account).setSelected(false);
                 findViewById(R.id.ll_login_telephone).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_login_account).setVisibility(View.GONE);
+                mIsTelephoneLogin = true;
                 break;
             }
 
@@ -165,6 +219,7 @@ public class Activity_login extends SKBaseActivity implements
                 findViewById(R.id.tv_login_account).setSelected(true);
                 findViewById(R.id.ll_login_telephone).setVisibility(View.GONE);
                 findViewById(R.id.ll_login_account).setVisibility(View.VISIBLE);
+                mIsTelephoneLogin = false;
                 break;
             }
         }
@@ -175,19 +230,25 @@ public class Activity_login extends SKBaseActivity implements
     }
 
     private AlertDialog mPasswordErrorDlg;
-    private void showPasswordErroeDlg() {
-        if (mPasswordErrorDlg == null) {
-            mPasswordErrorDlg = new AlertDialog.Builder(this).create();
-        }
-        mPasswordErrorDlg.show();
-        mPasswordErrorDlg.setContentView(R.layout.dialog_password_error);
-
-       mPasswordErrorDlg.findViewById(R.id.tv_back).setOnClickListener(new View.OnClickListener() {
+    private void showPasswordErrorDlg() {
+        this.runOnUiThread(new Runnable() {
             @Override
-            public void onClick(View v) {
-                mPasswordErrorDlg.dismiss();
+            public void run() {
+                if (mPasswordErrorDlg == null) {
+                    mPasswordErrorDlg = new AlertDialog.Builder(Activity_login.this).create();
+                }
+                mPasswordErrorDlg.show();
+                mPasswordErrorDlg.setContentView(R.layout.dialog_password_error);
+
+                mPasswordErrorDlg.findViewById(R.id.tv_back).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPasswordErrorDlg.dismiss();
+                    }
+                });
             }
         });
+
     }
 
     public void onClickResponse(View v) {
@@ -199,17 +260,19 @@ public class Activity_login extends SKBaseActivity implements
 
             case R.id.tv_login: {
 
-                showPasswordErroeDlg();
+//                showPasswordErrorDlg();
 
                 //attemptLogin();
-//                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-//                if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
-//                    //showProgress(true);
+                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+                if (this.getCurrentFocus() != null)
+                    imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+                if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
+                    //showProgress(true);
+                    showWaiting((View)mContainer.getParent());
 //                    mWaitingWindow.showAtLocation((View)mContainer.getParent(), Gravity.CENTER, 0, 0);
-//                } else {
-//                    Log.e(this.getClass().getSimpleName(), "Command Error");
-//                }
+                } else {
+                    Log.e(this.getClass().getSimpleName(), "Command Error");
+                }
                 break;
             }
         }
@@ -314,27 +377,36 @@ public class Activity_login extends SKBaseActivity implements
     }
 
 
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+    private void addArrayToAutoComplete(List<String> emailAddressCollection, AutoCompleteTextView actv) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(Activity_login.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        actv.setAdapter(adapter);
     }
 
     @Override
     public void onCommandFinished(int command, IApiResults.ICommon result) {
+        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == result) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
+
         if(command == CMD_LOGIN_BY_PASSWORD) {
-            Log.i("Login Activity", "command finished: " + command);
-            Log.i("Login Activity", "Result:  " + result.GetErrCode() + " Description: " + result.GetErrDesc());
+//            Log.i("Login Activity", "command finished: " + command);
+//            Log.i("Login Activity", "Result:  " + result.GetErrCode() + " Description: " + result.GetErrDesc());
+            doShowProgress(false);
+            hideWaitingWindow();
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
                 finish();
             } else {
-                commonFun.showToast_info(getApplicationContext(), mEmailView, result.GetErrDesc());
+                commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), result.GetErrDesc());
+                showPasswordErrorDlg();
             }
-            doShowProgress(false);
-            hideWaitingWindow();
+
         } else if(command == CMD_GET_USER_SALT) {
             IApiResults.IGetUserSalt userSalt = (IApiResults.IGetUserSalt) result;
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
@@ -343,7 +415,7 @@ public class Activity_login extends SKBaseActivity implements
 
                 mHandler.sendEmptyMessageDelayed(MSG_LOGIN, 100);
             } else {
-                commonFun.showToast_info(getApplicationContext(), mEmailView, result.GetErrDesc());
+                commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), result.GetErrDesc());
                 doShowProgress(false);
                 hideWaitingWindow();
             }
@@ -424,8 +496,9 @@ public class Activity_login extends SKBaseActivity implements
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+//                mPasswordView.setError(getString(R.string.error_incorrect_password));
+//                mPasswordView.requestFocus();
+                showPasswordErrorDlg();
             }
         }
 

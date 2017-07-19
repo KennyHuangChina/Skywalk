@@ -33,29 +33,28 @@ public class SKBaseActivity extends AppCompatActivity
     public int mActScreenHeight = 0;
 
     protected void showWaiting(final View v) {
-        if(mWaitingWindow == null) {
-            mWaitingWindow = new PopupWindowWaiting(this);
-            mWaitingWindow.setWidth(mActScreenWidth);
-            mWaitingWindow.setHeight(mActScreenHeight);
-        }
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(mWaitingWindow == null) {
+                    mWaitingWindow = new PopupWindowWaiting(SKBaseActivity.this);
+                    mWaitingWindow.setWidth(mActScreenWidth);
+                    mWaitingWindow.setHeight(mActScreenHeight);
+                }
                 mWaitingWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
             }
         });
     }
 
     protected void hideWaiting() {
-        if(mWaitingWindow != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
                     mWaitingWindow.dismiss();
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override

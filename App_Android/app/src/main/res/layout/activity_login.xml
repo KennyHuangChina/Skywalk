@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/icn_verification_code"/>
                 <EditText
-                    android:id="@+id/actv_verfication_code"
+                    android:id="@+id/et_verfication_code"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -172,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/icn_password"/>
                 <EditText
-                    android:id="@+id/actv_password"
+                    android:id="@+id/et_password"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -245,12 +245,12 @@
     </LinearLayout>
 
 
-    <!--<FrameLayout-->
-        <!--android:id="@+id/fl_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" >-->
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <!--</FrameLayout>-->
+    </FrameLayout>
 
 
     <!-- Login progress -->
