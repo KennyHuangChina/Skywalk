@@ -146,4 +146,18 @@ public class ClassDefine {
         public int mTextViewWidth;
         public TextView mView;
     }
+
+    public static class ServerError {
+        public static final int SERVER_NO_ERROR = 0;
+        public static final int SERVER_CONNECTION_ERROR = 0x80001000;
+
+        public static int getErrorType(int errorCode) {
+            switch (errorCode) {
+                case 0x80001007:
+                    return SERVER_CONNECTION_ERROR;
+            }
+
+            return SERVER_NO_ERROR;
+        }
+    }
 }

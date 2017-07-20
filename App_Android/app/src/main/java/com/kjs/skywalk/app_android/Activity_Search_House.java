@@ -210,6 +210,8 @@ public class Activity_Search_House extends SKBaseActivity implements
                         }
                     }
                 }
+
+                Activity_Search_House.super.onCommandFinished(i, iCommon);
             }
         };
 
@@ -299,7 +301,10 @@ public class Activity_Search_House extends SKBaseActivity implements
                 } else {
                     commonFun.showToast_info(getApplicationContext(), mSearchView, iCommon.GetErrDesc());
                 }
+
                 hideWaiting();
+
+                Activity_Search_House.super.onCommandFinished(i, iCommon);
             }
         };
 

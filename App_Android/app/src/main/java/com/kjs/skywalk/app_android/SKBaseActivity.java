@@ -18,6 +18,8 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
 
+import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_CONNECTION_ERROR;
+
 /**
  * Created by Jackie on 2017/5/27.
  */
@@ -76,9 +78,25 @@ public class SKBaseActivity extends AppCompatActivity
         mActScreenHeight = metric.heightPixels;
     }
 
+    protected void processConnectionError() {
+        kjsLogUtil.i("process connection error");
+    }
+
+    protected void processLogin() {
+        startActivity(new Intent(this, Activity_login.class));
+    }
+
+
     @Override
     public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
         kjsLogUtil.i("SKBaseActivity::onCommandFinished");
+        int errorCode = ClassDefine.ServerError.getErrorType(iCommon.GetErrCode());
+        switch (iCommon.GetErrCode()) {
+            case SERVER_CONNECTION_ERROR: {
+                processConnectionError();
+                break;
+            }
+        }
     }
 
     @Override
