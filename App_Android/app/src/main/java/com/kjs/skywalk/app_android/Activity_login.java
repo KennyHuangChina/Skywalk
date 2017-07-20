@@ -66,6 +66,9 @@ public class Activity_login extends SKBaseActivity implements
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
+    private static final String LOGIN_MODE_TELEPHONE = "telephone";
+    private static final String LOGIN_MODE_ACCOUNT = "account";
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -90,14 +93,19 @@ public class Activity_login extends SKBaseActivity implements
 
     PopupWindowWaiting mWaitingWindow = null;
     private LinearLayout mContainer = null;
-    private boolean mIsTelephoneLogin = true;
+    private String mLoginMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        updateLoginLayoutById(R.id.tv_login_account);
+        mLoginMode = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginMode, LOGIN_MODE_TELEPHONE);
+
+        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE))
+            updateLoginLayoutById(R.id.tv_login_telephone);
+        else
+            updateLoginLayoutById(R.id.tv_login_account);
 
         List<String> arrAuto = new ArrayList<>();
         arrAuto.add("15306261804");
@@ -164,7 +172,7 @@ public class Activity_login extends SKBaseActivity implements
 
     private void doLogin() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
-        if (mIsTelephoneLogin) {
+        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
 
         } else {
             if(CmdMgr.LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
@@ -177,7 +185,7 @@ public class Activity_login extends SKBaseActivity implements
     private int logIn() {
         CommandManager CmdMgr = new CommandManager(this, this, this);
         String strUserSalt;
-        if (mIsTelephoneLogin)
+        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE))
             strUserSalt = mActv_telephone_num.getText().toString();
         else
             strUserSalt = mActv_account.getText().toString();
@@ -210,7 +218,9 @@ public class Activity_login extends SKBaseActivity implements
                 findViewById(R.id.tv_login_account).setSelected(false);
                 findViewById(R.id.ll_login_telephone).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_login_account).setVisibility(View.GONE);
-                mIsTelephoneLogin = true;
+
+                mLoginMode = LOGIN_MODE_TELEPHONE;
+                SKLocalSettings.UISettings_set(this, SKLocalSettings.UISettingsKey_LoginMode, mLoginMode);
                 break;
             }
 
@@ -219,7 +229,9 @@ public class Activity_login extends SKBaseActivity implements
                 findViewById(R.id.tv_login_account).setSelected(true);
                 findViewById(R.id.ll_login_telephone).setVisibility(View.GONE);
                 findViewById(R.id.ll_login_account).setVisibility(View.VISIBLE);
-                mIsTelephoneLogin = false;
+
+                mLoginMode = LOGIN_MODE_ACCOUNT;
+                SKLocalSettings.UISettings_set(this, SKLocalSettings.UISettingsKey_LoginMode, mLoginMode);
                 break;
             }
         }

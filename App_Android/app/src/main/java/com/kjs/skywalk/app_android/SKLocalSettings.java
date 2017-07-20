@@ -16,6 +16,8 @@ public class SKLocalSettings {
     private static SKLocalSettings mLocalSettings = null;
     private static String mSPFile = "AdvancedSearchCondition";
 
+    private static String PREF_UISETTINGS = "PrefUiSettings";
+
     private static SearchConditionPrice mSearchConditionSettings = null;
 
     public SKLocalSettings(Context context) {
@@ -88,5 +90,24 @@ public class SKLocalSettings {
 
             editor.commit();
         }
+    }
+
+    // UI Settings
+    public static final String UISettingsKey_LoginMode = "login_mode";       // telephone account
+    public static void UISettings_set(Context context, String key, String value) {
+        SharedPreferences.Editor editor;
+        try {
+            SharedPreferences sysPref = context.getSharedPreferences(PREF_UISETTINGS, 0);
+            editor = sysPref.edit();
+            editor.putString(key, value);
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String UISettings_get(Context context, String key, String defaultVaule) {
+        SharedPreferences sysPref = context.getSharedPreferences(PREF_UISETTINGS, 0);
+        return sysPref.getString(key, defaultVaule);
     }
 }
