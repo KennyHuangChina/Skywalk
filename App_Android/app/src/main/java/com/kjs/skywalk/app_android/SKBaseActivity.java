@@ -80,6 +80,8 @@ public class SKBaseActivity extends AppCompatActivity
 
     protected void processConnectionError() {
         kjsLogUtil.i("process connection error");
+        ClassDefine.NetworkErrorDialog dialog = new ClassDefine.NetworkErrorDialog(this);
+        dialog.showDialog(true);
     }
 
     protected void processLogin() {
@@ -91,9 +93,14 @@ public class SKBaseActivity extends AppCompatActivity
     public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
         kjsLogUtil.i("SKBaseActivity::onCommandFinished");
         int errorCode = ClassDefine.ServerError.getErrorType(iCommon.GetErrCode());
-        switch (iCommon.GetErrCode()) {
+        switch (errorCode) {
             case SERVER_CONNECTION_ERROR: {
-                processConnectionError();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        processConnectionError();
+                    }
+                });
                 break;
             }
         }

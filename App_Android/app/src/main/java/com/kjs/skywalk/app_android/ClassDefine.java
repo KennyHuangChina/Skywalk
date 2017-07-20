@@ -1,8 +1,11 @@
 package com.kjs.skywalk.app_android;
 
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -154,10 +157,35 @@ public class ClassDefine {
         public static int getErrorType(int errorCode) {
             switch (errorCode) {
                 case 0x80001007:
+                case 0x80001009:
                     return SERVER_CONNECTION_ERROR;
             }
 
             return SERVER_NO_ERROR;
+        }
+    }
+
+    public static class NetworkErrorDialog {
+        private Context mContext = null;
+        private static AlertDialog mDialog = null;
+        public NetworkErrorDialog(Context context) {
+            mContext = context;
+            mDialog = new AlertDialog.Builder(context).create();
+        }
+
+        public static void showDialog(boolean show) {
+            if(mDialog.isShowing()) {
+                return;
+            }
+            mDialog.show();
+            mDialog.setContentView(R.layout.dialog_network_error);
+
+            mDialog.findViewById(R.id.tv_back).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDialog.dismiss();
+                }
+            });
         }
     }
 }
