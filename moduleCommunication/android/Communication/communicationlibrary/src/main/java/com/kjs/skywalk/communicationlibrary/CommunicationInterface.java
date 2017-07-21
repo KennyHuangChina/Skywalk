@@ -137,6 +137,10 @@ public class CommunicationInterface {
         int GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
     }
 
+    public static class CmdRes {
+        public static int   CMD_RES_NOERROR     = 0,
+                            CMD_RES_NOT_LOGIN   = 1000;
+    }
     public static class CmdID {
         // Admin
         public static int CMD_LOGIN_BY_PASSWORD     = 0x1001;

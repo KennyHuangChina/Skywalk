@@ -124,6 +124,7 @@ public class IApiResults {
         String  CertDesc();
     }
 
+    // TODO: maybe should be removed
     public interface IHousePriceInfo {
         int     Id();
         int     RentalTag();

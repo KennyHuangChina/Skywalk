@@ -25,7 +25,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.ConnectFailed,
                                     InternalDefines.IApiName {
     protected String  TAG           = getClass().getSimpleName();
-    private   int     mAPI          = CmdID.CMD_TEST;
+    public    int     mAPI          = CmdID.CMD_TEST;
     protected Context mContext      = null;
     protected String  mMethodType   = "GET";
     protected String  mServerURL    = "";
@@ -36,6 +36,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected MyUtils               mUtils              = null;
     protected CIProgressListener    mProgressListener   = null;
     protected CICommandListener     mCommandListener    = null;
+    protected boolean               mNeedLogin          = false;
 
     // common header items
     protected String            mSessionID      = "";
@@ -175,6 +176,8 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     public int doConnectFailed(HttpConnector http) {
         return 0;
     }
+
+    public boolean isNeedLogin() { return mNeedLogin; }
 
     protected String generateRandom() {
         String strRand = "";
