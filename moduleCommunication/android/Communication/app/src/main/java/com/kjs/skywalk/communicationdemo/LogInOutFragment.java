@@ -40,37 +40,37 @@ public class LogInOutFragment extends Fragment
     }
 
     private void doLogin() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.LoginByPassword(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mRand, mSalt);
     }
 
     private void doLoginSms() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.LoginBySms(mEditUserName.getText().toString(), mEditPassword.getText().toString());
     }
 
     private void doLogout() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.Logout();
     }
 
     private void doTest() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.CommandTest();
     }
 
     private void doGetUserSalt() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.GetUserSalt(mEditUserName.getText().toString());
     }
 
     private void doRelogin() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.Relogin(mEditUserName.getText().toString());
     }
 
     private void doGetSmsCode() {
-        CommandManager CmdMgr = new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
         CmdMgr.GetSmsCode(mEditUserName.getText().toString());
     }
 

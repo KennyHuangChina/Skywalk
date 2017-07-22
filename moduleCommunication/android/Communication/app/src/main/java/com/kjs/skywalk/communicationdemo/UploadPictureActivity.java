@@ -59,7 +59,7 @@ public class UploadPictureActivity extends Activity implements DialogConfirmCall
                 mResultString = "";
                 mTextViewResult.setText("");
 
-                CommandManager CmdMgr = new CommandManager(UploadPictureActivity.this, UploadPictureActivity.this, UploadPictureActivity.this);
+                CommandManager CmdMgr = CommandManager.getCmdMgrInstance(UploadPictureActivity.this, UploadPictureActivity.this, UploadPictureActivity.this);
 
                 String picType = mEdtPicType.getText().toString();
                 int nPos = picType.indexOf(":");

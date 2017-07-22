@@ -36,7 +36,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected MyUtils               mUtils              = null;
     protected CIProgressListener    mProgressListener   = null;
     protected CICommandListener     mCommandListener    = null;
-    protected boolean               mNeedLogin          = false;
+    protected boolean               mNeedLogin          = true;
 
     // common header items
     protected String            mSessionID      = "";
@@ -56,7 +56,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
+    public int doOperation(CICommandListener commandListener, CIProgressListener progressListener) {
         Log.i(TAG, "Communication Base: doOperation");
         mCommandListener = commandListener;
         mProgressListener = progressListener;
