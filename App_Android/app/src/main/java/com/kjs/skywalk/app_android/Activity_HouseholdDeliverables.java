@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_DELIVERABLE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
 
@@ -89,7 +90,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
 //        mGetDeliverablesTask = new GetDeliverablesTask();
 //        mGetDeliverablesTask.execute();
 
-        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CommandManager CmdMgr = getCmdMgrInstance(this, this, this);
         CmdMgr.GetHouseDeliverables(mHouseId);
 
     }
@@ -306,7 +307,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         ArrayList<AdapterDeliverables.Deliverable> mDeliverablesList;
         @Override
         protected Boolean doInBackground(Void... voids) {
-            CommandManager CmdMgr = new CommandManager(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
+            CommandManager CmdMgr = getCmdMgrInstance(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
             int result = CmdMgr.GetHouseDeliverables(mHouseId);
             if (result != CommunicationError.CE_ERROR_NO_ERROR) {
                 kjsLogUtil.e("Error to call GetHouseDeliverables");

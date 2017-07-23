@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_PUBLISH_TIME;
@@ -138,7 +139,7 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
         mBegin = params[1].intValue();
         mCount = params[2].intValue();
 
-        CommandManager CmdMgr = new CommandManager(mContext, mCmdListener, mProgreessListener);
+        CommandManager CmdMgr = getCmdMgrInstance(mContext, mCmdListener, mProgreessListener);
 
         mResultGot = false;
         mHouseList.clear();

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 
 /**
@@ -149,7 +150,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                 hideWaiting();
             }
         };
-        CommandManager manager = new CommandManager(this, listener, this);
+        CommandManager manager = getCmdMgrInstance(this, listener, this);
         int res = manager.GetAgencyList(start, end);
         if(res == CE_ERROR_NO_ERROR) {
             showWaiting(mListViewAgents);
