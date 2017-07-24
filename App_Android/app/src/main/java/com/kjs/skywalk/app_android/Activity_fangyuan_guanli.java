@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
@@ -39,7 +38,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_fangyuan_guanli);
 
-            mCmdMgr = getCmdMgrInstance(this, this, this);
+            mCmdMgr = new CommandManager(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
 

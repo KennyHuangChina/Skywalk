@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_FACILITY_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
@@ -70,7 +69,7 @@ public class Activity_HouseholdAppliances extends SKBaseActivity
         });
 
         // get
-        CommandManager CmdMgr = getCmdMgrInstance(this, this, this);
+        CommandManager CmdMgr = new CommandManager(this, this, this);
         int result = CmdMgr.GetHouseFacilityList(6);
         if (result != CommunicationError.CE_ERROR_NO_ERROR) {
             kjsLogUtil.e("Error to call GetHouseFacilityList");

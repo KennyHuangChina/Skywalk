@@ -13,7 +13,6 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
-import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 
 /**
@@ -123,7 +122,7 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
                 }
             }
         };
-        CommandManager manager = getCmdMgrInstance(this, listener, this);
+        CommandManager manager = new CommandManager(this, listener, this);
         if(manager.SetHouseShowtime(mHouseID, mTimeWorkingDay, mTimeHoliday, mTime) == CE_ERROR_NO_ERROR) {
             showWaiting(mContainer);
         } else {

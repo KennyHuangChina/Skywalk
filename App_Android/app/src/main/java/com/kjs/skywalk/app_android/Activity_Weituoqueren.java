@@ -23,7 +23,6 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
 
-import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
@@ -126,7 +125,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     };
 
     private void commitPriceInfo() {
-        CommandManager manager = getCmdMgrInstance(this, mListener, this);
+        CommandManager manager = new CommandManager(this, mListener, this);
         if(manager.SetHousePrice(mHouseId, ClassDefine.HouseInfoForCommit.rental, ClassDefine.HouseInfoForCommit.minRental,
                 ClassDefine.HouseInfoForCommit.includePropertyFee == 0 ? false : true,
                 ClassDefine.HouseInfoForCommit.price, ClassDefine.HouseInfoForCommit.minPrice) != CE_ERROR_NO_ERROR) {
@@ -136,7 +135,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     }
 
     private void commitHouseInfo() {
-        CommandManager manager = getCmdMgrInstance(this, mListener, this);
+        CommandManager manager = new CommandManager(this, mListener, this);
         boolean forSale = ClassDefine.HouseInfoForCommit.forSale();
         boolean forRent = ClassDefine.HouseInfoForCommit.forRental();
 
