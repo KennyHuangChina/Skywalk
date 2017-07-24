@@ -17,13 +17,14 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 
 class CmdRelogin extends CommunicationBase {
 
-    private String mSession = "";   // "1234567890";
-    private String mUserName = "";
-    private String mRadom = "";
+    private String mSession     = "";   // "1234567890";
+    private String mUserName    = "";
+    private String mRadom       = "";
 
     CmdRelogin(Context context) {
         super(context, CmdID.CMD_RELOGIN);
         mMethodType = "POST";
+        mNeedLogin = false;
 
         // generate a random
         mRadom = generateRandom();

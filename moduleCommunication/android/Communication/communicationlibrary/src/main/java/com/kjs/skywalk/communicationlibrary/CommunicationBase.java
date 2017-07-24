@@ -37,6 +37,8 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected CIProgressListener    mProgressListener   = null;
     protected CICommandListener     mCommandListener    = null;
     protected boolean               mNeedLogin          = true;
+    protected CIProgressListener    mProgListenerBak    = null;
+    protected CICommandListener     mCmdListenerBak     = null;
 
     // common header items
     protected String            mSessionID      = "";
@@ -53,6 +55,13 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         mServerURL  = ServerURL.mServerUri;
 
         mCookieManager = SKCookieManager.getManager(context);
+    }
+
+    public CIProgressListener GetBackupProgressListener() { return mProgListenerBak; }
+    public CICommandListener GetBackupCommandListener() { return mCmdListenerBak; }
+    public void SetBackupListener(CIProgressListener p, CICommandListener c) {
+        mProgListenerBak = p;
+        mCmdListenerBak = c;
     }
 
     @Override
@@ -211,7 +220,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         try {
             Utf8String = new String(sb.toString().getBytes("UTF-8"));
             UrlsafeString = URLEncoder.encode(Utf8String, "UTF-8");
-            System.out.println("utf-8 编码：" + UrlsafeString) ;
+            System.out.println("utf-8 编码�? + UrlsafeString) ;
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
