@@ -48,7 +48,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
-import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
+//import static com.kjs.skywalk.communicationlibrary.CommandManager.getCmdMgrInstance;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_SALT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD;
 
@@ -173,7 +173,8 @@ public class Activity_login extends SKBaseActivity implements
     };
 
     private void doLogin() {
-        CommandManager CmdMgr = getCmdMgrInstance(this, this, this);
+//        CommandManager CmdMgr = getCmdMgrInstance(this, this, this);
+        CommandManager CmdMgr = new CommandManager(this, this, this);
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
 
         } else {
@@ -185,7 +186,8 @@ public class Activity_login extends SKBaseActivity implements
     }
 
     private int logIn() {
-        CommandManager CmdMgr = getCmdMgrInstance(this, this, this);
+//        CommandManager CmdMgr = getCmdMgrInstance(this, this, this);
+        CommandManager CmdMgr = new CommandManager(this, this, this);
         String strUserSalt;
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE))
             strUserSalt = mActv_telephone_num.getText().toString();
@@ -292,6 +294,11 @@ public class Activity_login extends SKBaseActivity implements
 
             case R.id.tv_forgot_pw: {
                 startActivity(new Intent(Activity_login.this, Activity_PasswordReset.class));
+                break;
+            }
+
+            case R.id.tv_register: {
+                updateLoginLayoutById(R.id.tv_login_telephone);
                 break;
             }
         }
