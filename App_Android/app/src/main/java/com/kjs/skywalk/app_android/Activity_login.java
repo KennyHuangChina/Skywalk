@@ -3,7 +3,6 @@ package com.kjs.skywalk.app_android;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -287,11 +286,6 @@ public class Activity_login extends SKBaseActivity implements
                 } else {
                     Log.e(this.getClass().getSimpleName(), "Command Error");
                 }
-                break;
-            }
-
-            case R.id.tv_forgot_pw: {
-                startActivity(new Intent(Activity_login.this, Activity_PasswordReset.class));
                 break;
             }
         }
