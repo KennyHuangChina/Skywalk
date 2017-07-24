@@ -93,7 +93,8 @@
         <activity android:name=".Activity_Shenghuozhanghu" />
         <activity
             android:name=".Activity_login"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login"/>
+        <activity android:name=".Activity_PasswordReset">        </activity>
     </application>
 
 </manifest>
