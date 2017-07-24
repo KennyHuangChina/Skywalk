@@ -77,7 +77,8 @@
         <activity android:name=".Activity_Zushouweituo_Jiagesheding" />
         <activity android:name=".Activity_Zushouweituo_Xuanzedaili" />
         <activity android:name=".Activity_Zushouweituo_SelectService" />
-        <activity android:name=".Activity_Zushouweituo_shenhe" />
+        <activity android:name=".Activity_Zushouweituo_shenhe"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
             android:name=".Activity_shenhe_zhengjian"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />

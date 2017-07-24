@@ -2,7 +2,10 @@ package com.kjs.skywalk.app_android;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
@@ -12,7 +15,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         setContentView(R.layout.activity__zushouweituo_shenhe);
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_back:
             {

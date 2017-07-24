@@ -305,9 +305,9 @@ public class MainActivity extends SKBaseActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.action_login:
+                    case R.id.fangyuanshenhe:
                     {
-                        startActivity(new Intent(MainActivity.this, Activity_login.class));
+                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_shenhe.class));
                     }
                     break;
 
