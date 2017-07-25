@@ -64,7 +64,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return mCmdQueue.add(cmd);
     }
 
-    private CommunicationBase removeCmd(int cmd) {
+    private synchronized CommunicationBase removeCmd(int cmd) {
         String FN = "[removeCmd] ";
 
         if (cmd <= 0 && null == mCmdQueue) {
@@ -109,7 +109,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return cmdRelogin.doOperation(this, this);
     }
 
-    private int execute(CommunicationBase cmd, HashMap<String, String> map) {
+    private synchronized int execute(CommunicationBase cmd, HashMap<String, String> map) {
         if (null == cmd) {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
