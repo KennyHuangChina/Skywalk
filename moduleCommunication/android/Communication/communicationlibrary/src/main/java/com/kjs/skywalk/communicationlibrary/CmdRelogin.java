@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 
 //import CommunicationBase;
 
@@ -16,13 +17,14 @@ import java.util.HashMap;
 
 class CmdRelogin extends CommunicationBase {
 
-    private String mSession = "";   // "1234567890";
-    private String mUserName = "";
-    private String mRadom = "";
+    private String mSession     = "";   // "1234567890";
+    private String mUserName    = "";
+    private String mRadom       = "";
 
     CmdRelogin(Context context) {
-        super(context, CommunicationInterface.CmdID.CMD_RELOGIN);
-       mMethodType = "POST";
+        super(context, CmdID.CMD_RELOGIN);
+        mMethodType = "POST";
+        mNeedLogin = false;
 
         // generate a random
         mRadom = generateRandom();
@@ -92,15 +94,13 @@ class CmdRelogin extends CommunicationBase {
     }
 
     @Override
-    public int doOperation(HashMap<String, String> map,
-                           CommunicationInterface.CICommandListener commandListener,
-                           CommunicationInterface.CIProgressListener progressListener)
+    public int doOperation(CICommandListener commandListener, CIProgressListener progressListener)
     {
         if (mSession.isEmpty()) {
             Log.e(TAG, "mSession is empty");
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
-        return super.doOperation(map, commandListener, progressListener);
+        return super.doOperation(commandListener, progressListener);
     }
 
     @Override

@@ -25,7 +25,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.ConnectFailed,
                                     InternalDefines.IApiName {
     protected String  TAG           = getClass().getSimpleName();
-    private   int     mAPI          = CmdID.CMD_TEST;
+    public    int     mAPI          = CmdID.CMD_TEST;
     protected Context mContext      = null;
     protected String  mMethodType   = "GET";
     protected String  mServerURL    = "";
@@ -36,6 +36,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected MyUtils               mUtils              = null;
     protected CIProgressListener    mProgressListener   = null;
     protected CICommandListener     mCommandListener    = null;
+    protected boolean               mNeedLogin          = true;
+    protected CIProgressListener    mProgListenerBak    = null;
+    protected CICommandListener     mCmdListenerBak     = null;
 
     // common header items
     protected String            mSessionID      = "";
@@ -54,8 +57,15 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         mCookieManager = SKCookieManager.getManager(context);
     }
 
+    public CIProgressListener GetBackupProgressListener() { return mProgListenerBak; }
+    public CICommandListener GetBackupCommandListener() { return mCmdListenerBak; }
+    public void SetBackupListener(CIProgressListener p, CICommandListener c) {
+        mProgListenerBak = p;
+        mCmdListenerBak = c;
+    }
+
     @Override
-    public int doOperation(HashMap<String, String> map, CICommandListener commandListener, CIProgressListener progressListener) {
+    public int doOperation(CICommandListener commandListener, CIProgressListener progressListener) {
         Log.i(TAG, "Communication Base: doOperation");
         mCommandListener = commandListener;
         mProgressListener = progressListener;
@@ -176,6 +186,8 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         return 0;
     }
 
+    public boolean isNeedLogin() { return mNeedLogin; }
+
     protected String generateRandom() {
         String strRand = "";
         Random rdm = new Random(System.currentTimeMillis());
@@ -208,7 +220,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         try {
             Utf8String = new String(sb.toString().getBytes("UTF-8"));
             UrlsafeString = URLEncoder.encode(Utf8String, "UTF-8");
-            System.out.println("utf-8 编码：" + UrlsafeString) ;
+            System.out.println("utf-8 编码：" + UrlsafeString);
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -137,75 +137,79 @@ public class CommunicationInterface {
         int GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
     }
 
+    public static class CmdRes {
+        final public static int CMD_RES_NOERROR     = 0,
+                                CMD_RES_NOT_LOGIN   = 1104;
+    }
     public static class CmdID {
         // Admin
-        public static int CMD_LOGIN_BY_PASSWORD     = 0x1001;
-        public static int CMD_LOGIN_BY_SMS          = 0x1002;
-        public static int CMD_GET_USER_SALT         = 0x1003;
-        public static int CMD_GET_USER_INFO         = 0x1004;
-        public static int CMD_LOG_OUT               = 0x1005;
-        public static int CMD_RELOGIN               = 0x1006;
-        public static int CMD_GET_SMS_CODE          = 0x1007;
-        public static int CMD_GET_AGENCY_LIST       = 0x1008;
-        public static int CMD_MODIFY_AGENCY         = 0x1009;
+        final public static int CMD_LOGIN_BY_PASSWORD     = 0x1001,
+                                CMD_LOGIN_BY_SMS          = 0x1002,
+                                CMD_GET_USER_SALT         = 0x1003,
+                                CMD_GET_USER_INFO         = 0x1004,
+                                CMD_LOG_OUT               = 0x1005,
+                                CMD_RELOGIN               = 0x1006,
+                                CMD_GET_SMS_CODE          = 0x1007,
+                                CMD_GET_AGENCY_LIST       = 0x1008,
+                                CMD_MODIFY_AGENCY         = 0x1009;
 
         // House
-        public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001;
-        public static int CMD_GET_HOUSE_DIGEST_LIST         = 0x2002;
-        public static int CMD_GET_BEHALF_HOUSE_LIST         = 0x2003;
-        public static int CMD_GET_HOUSE_INFO                = 0x2004;
-        public static int CMD_COMMIT_HOUSE_BY_OWNER         = 0x2005;
-        public static int CMD_AMEND_HOUSE                   = 0x2006;
-        public static int CMD_CERTIFY_HOUSE                 = 0x2007;
-        public static int CMD_GET_SET_HOUSE_COVER_IMAGE     = 0x2008;
-        public static int CMD_GET_RECOMMEND_HOUSE           = 0x2009;
-        public static int CMD_SET_HOUSE_PRICE               = 0x200A;
-        public static int CMD_GET_HOUSE_PRICE               = 0x200B;
-        public static int CMD_GET_HOUSE_SHOWTIME            = 0x200C;
-        public static int CMD_SET_HOUSE_SHOWTIME            = 0x200D;
+        final public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001,
+                                CMD_GET_HOUSE_DIGEST_LIST         = 0x2002,
+                                CMD_GET_BEHALF_HOUSE_LIST         = 0x2003,
+                                CMD_GET_HOUSE_INFO                = 0x2004,
+                                CMD_COMMIT_HOUSE_BY_OWNER         = 0x2005,
+                                CMD_AMEND_HOUSE                   = 0x2006,
+                                CMD_CERTIFY_HOUSE                 = 0x2007,
+                                CMD_GET_SET_HOUSE_COVER_IMAGE     = 0x2008,
+                                CMD_GET_RECOMMEND_HOUSE           = 0x2009,
+                                CMD_SET_HOUSE_PRICE               = 0x200A,
+                                CMD_GET_HOUSE_PRICE               = 0x200B,
+                                CMD_GET_HOUSE_SHOWTIME            = 0x200C,
+                                CMD_SET_HOUSE_SHOWTIME            = 0x200D;
 
         // Property
-        public static int CMD_GET_PROPERTY_LIST     = 0x3001;
-        public static int CMD_GET_PROPERTY_INFO     = 0x3002;
-        public static int CMD_ADD_PROPERTY          = 0x3003;
-        public static int CMD_MODIFY_PROPERTY       = 0x3004;
+        final public static int CMD_GET_PROPERTY_LIST     = 0x3001,
+                                CMD_GET_PROPERTY_INFO     = 0x3002,
+                                CMD_ADD_PROPERTY          = 0x3003,
+                                CMD_MODIFY_PROPERTY       = 0x3004;
 
         // Deliverables
-        public static int CMD_ADD_DELIVERABLE        = 0x4001;
-        public static int CMD_GET_DELIVERABLE_LIST   = 0x4002;
-        public static int CMD_EDIT_DELIVERABLE       = 0x4003;
-        public static int CMD_ADD_HOUSE_DELIVERABLE  = 0x4004;
-        public static int CMD_GET_HOUSE_DELIVERABLES = 0x4005;
+        final public static int CMD_ADD_DELIVERABLE        = 0x4001,
+                                CMD_GET_DELIVERABLE_LIST   = 0x4002,
+                                CMD_EDIT_DELIVERABLE       = 0x4003,
+                                CMD_ADD_HOUSE_DELIVERABLE  = 0x4004,
+                                CMD_GET_HOUSE_DELIVERABLES = 0x4005;
 
         // Facilities
-        public static int CMD_ADD_FACILITY_TYPE      = 0x5001;
-        public static int CMD_EDIT_FACILITY_TYPE     = 0x5002;
-        public static int CMD_GET_FACILITY_TYPE_LIST = 0x5003;
-        public static int CMD_ADD_FACILITY           = 0x5004;
-        public static int CMD_EDIT_FACILITY          = 0x5005;
-        public static int CMD_GET_FACILITY_LIST      = 0x5006;
-        public static int CMD_ADD_HOUSE_FACILITY     = 0x5007;
-        public static int CMD_GET_HOUSEFACILITY_LIST = 0x5008;
-        public static int CMD_EDIT_HOUSE_FACILITY    = 0x5009;
+        final public static int CMD_ADD_FACILITY_TYPE      = 0x5001,
+                                CMD_EDIT_FACILITY_TYPE     = 0x5002,
+                                CMD_GET_FACILITY_TYPE_LIST = 0x5003,
+                                CMD_ADD_FACILITY           = 0x5004,
+                                CMD_EDIT_FACILITY          = 0x5005,
+                                CMD_GET_FACILITY_LIST      = 0x5006,
+                                CMD_ADD_HOUSE_FACILITY     = 0x5007,
+                                CMD_GET_HOUSEFACILITY_LIST = 0x5008,
+                                CMD_EDIT_HOUSE_FACILITY    = 0x5009;
 
         // Pictures
-        public static int CMD_ADD_PICTURE            = 0x6001;
-        public static int CMD_DEL_PICTURE            = 0x6002;
-        public static int CMD_GET_PIC_URL            = 0x6003;
-        public static int CMD_GET_HOUSE_PIC_LIST     = 0x6004;
+        final public static int CMD_ADD_PICTURE            = 0x6001,
+                                CMD_DEL_PICTURE            = 0x6002,
+                                CMD_GET_PIC_URL            = 0x6003,
+                                CMD_GET_HOUSE_PIC_LIST     = 0x6004;
 
         // Event
-        public static int CMD_GET_NEW_EVENT_CNT         = 0x7001;
-        public static int CMD_GET_HOUSE_NEW_EVENTS      = 0x7002;
-        public static int CMD_READ_NEW_EVENT            = 0x7003;
-        public static int CMD_GET_EVENT_INFO            = 0x7004;
-        public static int CMD_GET_EVENT_PROC_LST        = 0x7005;
-        public static int CMD_GET_HOUSE_EVENT_LST       = 0x7006;
-        public static int CMD_MODIFY_HOUSE_EVENT        = 0x7007;
+        final public static int CMD_GET_NEW_EVENT_CNT         = 0x7001,
+                                CMD_GET_HOUSE_NEW_EVENTS      = 0x7002,
+                                CMD_READ_NEW_EVENT            = 0x7003,
+                                CMD_GET_EVENT_INFO            = 0x7004,
+                                CMD_GET_EVENT_PROC_LST        = 0x7005,
+                                CMD_GET_HOUSE_EVENT_LST       = 0x7006,
+                                CMD_MODIFY_HOUSE_EVENT        = 0x7007;
 
         // Appointment
-        public static int CMD_APPOINT_SEE_HOUSE         = 0x8001;
-        public static int CMD_APPOINT_HOUSE_SEE_LST     = 0x8002;
+        final public static int CMD_APPOINT_SEE_HOUSE         = 0x8001,
+                                CMD_APPOINT_HOUSE_SEE_LST     = 0x8002;
 
         public static int CMD_TEST                   = 0x0001;
     }

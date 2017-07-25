@@ -11,27 +11,106 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
  * Created by kenny on 2017/3/14.
  */
 
-public class CommandManager implements ICommand {
+public class CommandManager implements ICommand, CICommandListener, CIProgressListener {
     final String TAG = getClass().getSimpleName();
 
+    private static CommandManager mCmdMgr   = null;
+
     private Context             mContext        = null;
-    private SKCookieManager     mCookieManager  = null;
+//    private SKCookieManager     mCookieManager  = null;
     private MyUtils             mUtils          = null;
 
-    private CICommandListener    mCmdListener  = null;
-    private CIProgressListener   mProgListener = null;
+    private CICommandListener               mCmdListener    = null;
+    private CIProgressListener              mProgListener   = null;
+    private ArrayList<CommunicationBase>    mCmdQueue       = new ArrayList<CommunicationBase>();
+    private CommunicationBase               mCmdLogin       = null;
 
-    public CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
+    private static final int    AGENT_STATUS_Unknow     = 0,
+                                AGENT_STATUS_NotLogin   = 1,
+                                AGENT_STATUS_Logining   = 2,
+                                AGENT_STATUS_Logined    = 3;
+    private int     mAgentStatus    = AGENT_STATUS_Unknow;
+    private String  mLoginUser      = "15306261804";
+
+    private CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         mContext = context;
         mCmdListener  = CmdListener;
         mProgListener = ProgListener;
 
         mUtils= new MyUtils(context);
-        mCookieManager = SKCookieManager.getManager(context);
+//        mCookieManager = SKCookieManager.getManager(context);
     }
 
-    private int execute(CommunicationBase operation, HashMap<String, String> map) {
-        if (null == operation) {
+//    private CommandManager(Context context) {
+//        mUtils= new MyUtils(context);
+////        mCookieManager = SKCookieManager.getManager(context);
+//    }
+
+    public static synchronized CommandManager getCmdMgrInstance(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
+        if (null == mCmdMgr) {
+            mCmdMgr = new CommandManager(context, CmdListener, ProgListener);
+        }
+        mCmdMgr.mCmdListener  = CmdListener;
+        mCmdMgr.mProgListener = ProgListener;
+
+        return mCmdMgr;
+    }
+
+    private synchronized boolean queueCommand(CommunicationBase cmd) {
+        if (null == mCmdQueue) {
+            mCmdQueue = new ArrayList<CommunicationBase>();
+        }
+        // TODO: check if the command already exist in queue
+        return mCmdQueue.add(cmd);
+    }
+
+    private synchronized CommunicationBase removeCmd(int cmd) {
+        String FN = "[removeCmd] ";
+
+        if (cmd <= 0 && null == mCmdQueue) {
+            return null;
+        }
+
+        CommunicationBase cmd2Remov = null;
+        for (int i = 0; i < mCmdQueue.size(); i++) {
+            CommunicationBase cmdThis = mCmdQueue.get(i);
+            if (cmdThis.mAPI != cmd) {
+                continue;
+            }
+            cmd2Remov = mCmdQueue.remove(i);     // (cmdThis);
+            break;
+        }
+
+        return cmd2Remov;
+    }
+
+
+    private boolean isLoginCmd(CommunicationBase cmd) {
+        return CmdID.CMD_RELOGIN == cmd.mAPI || CmdID.CMD_LOGIN_BY_PASSWORD == cmd.mAPI
+                || CmdID.CMD_LOGIN_BY_SMS == cmd.mAPI /*|| CmdID.CMD_GET_USER_SALT == cmd.mAPI*/;
+    }
+
+    private int sendReloginCmd() {
+        String FN = "[sendReloginCmd] ";
+        Log.d(TAG, "mLoginUser:" + mLoginUser);
+        if (null == mLoginUser || mLoginUser.isEmpty()) {
+            return -1;
+        }
+
+        CommunicationBase cmdRelogin = new CmdRelogin(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mLoginUser);
+        if (!cmdRelogin.checkParameter(pMap)) {
+            return -2;
+        }
+        cmdRelogin.SetBackupListener(mProgListener, mCmdListener);
+        mCmdLogin = cmdRelogin;
+
+        return cmdRelogin.doOperation(this, this);
+    }
+
+    private synchronized int execute(CommunicationBase cmd, HashMap<String, String> map) {
+        if (null == cmd) {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
         if (null == mCmdListener || null == mProgListener) {
@@ -39,17 +118,119 @@ public class CommandManager implements ICommand {
         }
         MyUtils.printContentInMap(map);
 
-        if (!operation.checkParameter(map)) {
+        if (!cmd.checkParameter(map)) {
             Log.w(TAG, "Fail to check parameters");
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
 
-        int ret = operation.doOperation(map, mCmdListener, mProgListener);
+        int ret = CommunicationError.CE_ERROR_NO_ERROR;
+        if (cmd.isNeedLogin() || isLoginCmd(cmd)) {    // commands that need to login first
+            Log.d(TAG, String.format("command(%d) need to be logined, current status:%d", cmd.mAPI, mAgentStatus));
+            cmd.SetBackupListener(mProgListener, mCmdListener);
+            if (!isLoginCmd(cmd)) {
+                queueCommand(cmd);  // que the command into command queue
+            } else {
+                mCmdLogin = cmd;
+            }
+            switch (mAgentStatus) {
+                case AGENT_STATUS_Unknow:   // Check login status
+                case AGENT_STATUS_NotLogin: // Send relogin command
+                    if (!isLoginCmd(cmd)) {
+                        // send relogin command first
+                        if (CommunicationError.CE_ERROR_NO_ERROR != (ret = sendReloginCmd())) {
+                            Log.e(TAG, "Fail to send relogin command, notify user to login");
+                            if (null != mCmdListener) {
+                                ResBase res = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
+                                mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, res);
+                            }
+//                            removeCmd(cmd.mAPI/*, ""*/);
+                            return 0;   // ret;
+                        }
+                        mAgentStatus = AGENT_STATUS_Logining;
+                    } else {
+                        ret  = cmd.doOperation(this, this);
+                    }
+                case AGENT_STATUS_Logining: // relogin command send out, waiting for result
+                    break;
+                case AGENT_STATUS_Logined:  // Already logined
+                    ret  = cmd.doOperation(this, this);
+            }
+        } else {    // commands that do not need to login
+            ret = cmd.doOperation(mCmdListener, mProgListener);
+        }
+
         if (ret != CommunicationError.CE_ERROR_NO_ERROR) {
-            Log.i(InternalDefines.TAG_COMMUNICATION_MANAGER, "failed to execute command: " + operation.GetApiName());
+            Log.e(TAG, "failed to execute command: " + cmd.GetApiName());
         }
 
         return ret;
+    }
+
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon res) {
+        switch (command) {
+            case CmdID.CMD_LOGIN_BY_SMS:
+            case CmdID.CMD_LOGIN_BY_PASSWORD :
+            case CmdID.CMD_RELOGIN: {
+                if (res.GetErrCode() == CmdRes.CMD_RES_NOERROR) {
+                    Log.d(TAG, "Login success, resent all commands in queue");
+                    mAgentStatus = AGENT_STATUS_Logined;
+                    for (int n = 0; n < mCmdQueue.size(); n++) {
+                        CommunicationBase cmd = mCmdQueue.get(n);
+                        cmd.doOperation(this, this);    // mCmdListener, mProgListener);
+                    }
+                } else { // if (res.GetErrCode() == CmdRes.CMD_RES_NOT_LOGIN) {
+                    Log.e(TAG, "silent login failed, notify user to login");
+                }
+                CICommandListener cmdListener = null;
+                if (null != mCmdLogin &&
+                    null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
+                    // Notify UI
+                    cmdListener.onCommandFinished(command, res);
+                }
+                mCmdLogin = null;
+                break;
+            }
+            case CmdID.CMD_LOG_OUT: {
+                mAgentStatus = AGENT_STATUS_NotLogin;
+                break;
+            }
+            default: {
+                int nCmdRes = res.GetErrCode();
+                switch (nCmdRes) {
+                    case CmdRes.CMD_RES_NOT_LOGIN: {
+                        Log.e(TAG, "Command need login, post a silent login command");
+                        mAgentStatus = AGENT_STATUS_NotLogin;
+                        if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
+                            Log.e(TAG, "Fail to send relogin command, notify user to login");
+                            return;
+                        }
+                        mAgentStatus = AGENT_STATUS_Logining;
+                        break;
+                    }
+                    default: {  // command succeed or failed
+                        if (CmdRes.CMD_RES_NOERROR == nCmdRes) {
+                            Log.d(TAG, "command processing succeeded, notify user");
+                        } else {
+                            Log.e(TAG, "command processing failed, notify user");
+                        }
+                        // remove it from command queue
+                        CommunicationBase cmd           = removeCmd(command);
+                        CICommandListener cmdListener   = null;
+                        if (null != cmd &&
+                            null != (cmdListener = cmd.GetBackupCommandListener())) {
+                            // Notify UI
+                            cmdListener.onCommandFinished(command, res);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onProgressChanged(int command, String percent, HashMap<String, String> map) {
+
     }
 
     @Override
@@ -78,6 +259,10 @@ public class CommandManager implements ICommand {
 
     @Override
     public int LoginByPassword(String user, String pass, String rand, String salt) {
+        if (null != user && !user.isEmpty()) {
+            mLoginUser = user;
+        }
+
         CommunicationBase op = new CmdLoginByPassword(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
@@ -89,6 +274,10 @@ public class CommandManager implements ICommand {
 
     @Override
     public int LoginBySms(String user, String smsCode) {
+        if (null != user && !user.isEmpty()) {
+            mLoginUser = user;
+        }
+
         CommunicationBase op = new CmdLoginBySms(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
@@ -119,6 +308,10 @@ public class CommandManager implements ICommand {
 
     @Override
     public int Relogin(String userName) {
+        if (null != userName && !userName.isEmpty()) {
+            mLoginUser = userName;
+        }
+
         CommunicationBase op = new CmdRelogin(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
@@ -505,4 +698,5 @@ public class CommandManager implements ICommand {
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
+
 }

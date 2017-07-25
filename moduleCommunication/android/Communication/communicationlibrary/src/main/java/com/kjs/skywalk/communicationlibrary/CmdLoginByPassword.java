@@ -15,16 +15,18 @@ import java.util.HashMap;
 
 class CmdLoginByPassword extends CommunicationBase {
 
-    private int mType = 1; // client type: 0 - web; 1 - APP
-    private String mSalt = "";  // user salt get from server
-    private String mUserName = "";
-    private String mPassword = "";
+    private int     mType       = 1;    // client type: 0 - web; 1 - APP
+    private String  mSalt       = "";   // user salt get from server
+    private String  mUserName   = "";
+    private String  mPassword   = "";
 
     CmdLoginByPassword(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD);
         mMethodType = "POST";
-        mSessionID = "xxxxx";
+        mSessionID  = "xxxxx";
+        mNeedLogin  = false;
     }
+
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
         if(!map.containsKey(CommunicationParameterKey.CPK_USER_NAME) ||
