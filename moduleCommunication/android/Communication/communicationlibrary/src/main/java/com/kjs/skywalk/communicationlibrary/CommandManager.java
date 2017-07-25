@@ -64,7 +64,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return mCmdQueue.add(cmd);
     }
 
-    private CommunicationBase removeCmd(int cmd/*, final String uuid*/) {
+    private CommunicationBase removeCmd(int cmd) {
         String FN = "[removeCmd] ";
 
         if (cmd <= 0 && null == mCmdQueue) {
@@ -77,11 +77,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             if (cmdThis.mAPI != cmd) {
                 continue;
             }
-//            String uuidThis = cmdThis.GetCmdUuid();
-//            if (null != uuidThis && uuidThis.equals(uuid)) {
-                cmd2Remov = mCmdQueue.remove(i);     // (cmdThis);
-                break;
-//            }
+            cmd2Remov = mCmdQueue.remove(i);     // (cmdThis);
+            break;
         }
 
         return cmd2Remov;
@@ -170,7 +167,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public void onCommandFinished(int command, /*final String uuid,*/ IApiResults.ICommon res) {
+    public void onCommandFinished(int command, IApiResults.ICommon res) {
         switch (command) {
             case CmdID.CMD_LOGIN_BY_SMS:
             case CmdID.CMD_LOGIN_BY_PASSWORD :
@@ -218,12 +215,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             Log.e(TAG, "command processing failed, notify user");
                         }
                         // remove it from command queue
-                        CommunicationBase cmd           = removeCmd(command/*, uuid*/);
+                        CommunicationBase cmd           = removeCmd(command);
                         CICommandListener cmdListener   = null;
                         if (null != cmd &&
                             null != (cmdListener = cmd.GetBackupCommandListener())) {
                             // Notify UI
-                            cmdListener.onCommandFinished(command, /*uuid,*/ res);
+                            cmdListener.onCommandFinished(command, res);
                         }
                     }
                 }
