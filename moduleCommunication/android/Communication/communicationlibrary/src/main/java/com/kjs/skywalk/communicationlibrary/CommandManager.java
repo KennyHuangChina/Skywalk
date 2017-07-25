@@ -129,8 +129,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         int ret = CommunicationError.CE_ERROR_NO_ERROR;
         if (cmd.isNeedLogin() || isLoginCmd(cmd)) {    // commands that need to login first
             Log.d(TAG, String.format("command(%d) need to be logined, current status:%d", cmd.mAPI, mAgentStatus));
+            cmd.SetBackupListener(mProgListener, mCmdListener);
             if (!isLoginCmd(cmd)) {
-                cmd.SetBackupListener(mProgListener, mCmdListener);
                 queueCommand(cmd);  // que the command into command queue
             } else {
                 mCmdLogin = cmd;
@@ -144,7 +144,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             Log.e(TAG, "Fail to send relogin command, notify user to login");
                             if (null != mCmdListener) {
                                 ResBase res = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
-                                mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, /*"",*/ res);
+                                mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, res);
                             }
 //                            removeCmd(cmd.mAPI/*, ""*/);
                             return 0;   // ret;
@@ -184,12 +184,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     }
                 } else { // if (res.GetErrCode() == CmdRes.CMD_RES_NOT_LOGIN) {
                     Log.e(TAG, "silent login failed, notify user to login");
-                    CICommandListener cmdListener = null;
-                    if (null != mCmdLogin &&
-                        null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
-                        // Notify UI
-                        cmdListener.onCommandFinished(command, /*uuid,*/ res);
-                    }
+                }
+                CICommandListener cmdListener = null;
+                if (null != mCmdLogin &&
+                    null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
+                    // Notify UI
+                    cmdListener.onCommandFinished(command, res);
                 }
                 mCmdLogin = null;
                 break;

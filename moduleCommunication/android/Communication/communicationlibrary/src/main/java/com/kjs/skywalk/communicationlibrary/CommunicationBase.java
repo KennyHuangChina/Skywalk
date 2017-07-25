@@ -220,7 +220,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         try {
             Utf8String = new String(sb.toString().getBytes("UTF-8"));
             UrlsafeString = URLEncoder.encode(Utf8String, "UTF-8");
-            System.out.println("utf-8 编码�? + UrlsafeString) ;
+            System.out.println("utf-8 编码：" + UrlsafeString);
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
