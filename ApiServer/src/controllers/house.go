@@ -560,9 +560,12 @@ func (this *HouseController) GetBehalfList() {
 	err, total, fetched, ids := models.GetBehalfList(tp, begin, count, uid)
 	if nil == err {
 		result.Total = total
-		result.Count = fetched
-		result.IDs = ids
-		// TODO: use house digest list, and fetch count set to -1 if count is 0 which means user just want to fetch the total number
+		if count > 0 {
+			result.Count = fetched
+			result.IDs = ids
+		} else {
+			result.Count = -1
+		}
 	}
 }
 

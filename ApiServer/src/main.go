@@ -14,8 +14,8 @@ func main() {
 	beego.BConfig.WebConfig.Session.SessionOn = true
 	beego.BConfig.WebConfig.Session.SessionName = "SKSession"
 	beego.BConfig.WebConfig.Session.SessionAutoSetCookie = true
-	beego.BConfig.WebConfig.Session.SessionGCMaxLifetime = 600
-	beego.BConfig.WebConfig.Session.SessionCookieLifeTime = 600
+	beego.BConfig.WebConfig.Session.SessionGCMaxLifetime = 120
+	beego.BConfig.WebConfig.Session.SessionCookieLifeTime = 120
 
 	switch beego.BConfig.RunMode {
 	case "dev":

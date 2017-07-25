@@ -185,7 +185,7 @@
 	[Security]	private
 	[Request]
   		* GET /v1/house/behalf?type=<>?bgn=<>&cnt=<>
-	  		* type			int 	// house list type. 0: all; 1: to rent; 2: rented; 3: to sale
+	  		* type			int 	// house list type. 0: all; 1: to rent; 2: rented; 3: to sale; 4: to approve
 	  		* bgn			int		// from which item to fetch
 	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
 	[Response]

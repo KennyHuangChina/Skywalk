@@ -266,13 +266,15 @@ func GetHouseListByType(ht int, begin, count int64, filter HouseFilter, sort str
 **/
 func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetched int64, hids []int64) {
 	FN := "[GetBehalfList] "
-	beego.Trace(FN, "typ:", typ, ", begin:", begin, ", tofetch:", tofetch, ", uid:", uid)
+	beego.Trace(FN, "type:", typ, ", fetch:(", begin, ",", tofetch, "), login user:", uid)
 
 	defer func() {
 		if nil != err {
 			beego.Error(FN, err)
 		}
 	}()
+
+	fetched = -1
 
 	/* Argeuments checking */
 	if begin < 0 {
@@ -286,7 +288,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 
 	/* Permission checking
 	1) Agency could just see houses are behalfed by him
-	2) Administrator could see all houses
+	2) Administrator could see all houses (TODO: ?)
 	*/
 	_, bAgency := isAgency(uid)
 	_, bAdmin := isAdministrator(uid)
@@ -296,29 +298,32 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 		return
 	}
 
-	sql_cnt := "SELECT COUNT(*) AS count FROM tbl_house WHERE"
+	sql_query := " FROM tbl_house WHERE"
 	if bAgency && !bAdmin {
-		sql_cnt = sql_cnt + fmt.Sprintf(" agency_id='%d' ", uid)
+		sql_query += fmt.Sprintf(" agency_id='%d' ", uid)
 	} else {
-		sql_cnt = sql_cnt + " 1"
+		sql_query += " 1"
 	}
 	switch typ {
 	case commdef.BEHALF_TYPE_ALL:
-		sql_cnt = sql_cnt + " AND for_rent=1"
+		sql_query += " AND for_rent=1"
 	case commdef.BEHALF_TYPE_TO_RENT:
-		sql_cnt = sql_cnt + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
+		sql_query += fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
 	case commdef.BEHALF_TYPE_RENTED:
-		sql_cnt = sql_cnt + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_RENTED)
+		sql_query += fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_RENTED)
 	case commdef.BEHALF_TYPE_TO_SALE:
-		sql_cnt = sql_cnt + " AND for_sale=1"
+		sql_query += " AND for_sale=1"
+	case commdef.BEHALF_TYPE_TO_APPROVE:
+		sql_query += " AND publish_time IS NULL"
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("list type:%d", typ)}
 		return
 	}
-	// beego.Debug(FN, "sql_cnt:", sql_cnt)
+	// beego.Debug(FN, "sql_query:", sql_query)
 
 	o := orm.NewOrm()
 
+	sql_cnt := "SELECT COUNT(*) AS count" + sql_query
 	cnt := int64(0)
 	errT := o.Raw(sql_cnt).QueryRow(&cnt)
 	if nil != errT {
@@ -328,7 +333,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	total = cnt
 	beego.Debug(FN, "total:", total)
 
-	if 0 == tofetch { // user just want to know the total number
+	if 0 == tofetch || 0 == total { // user just want to know the total number, or no real records could be fetched
 		return
 	}
 
@@ -338,23 +343,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	}
 
 	// fetch real houses
-	sql := "SELECT id FROM tbl_house WHERE "
-	if bAgency && !bAdmin {
-		sql = sql + fmt.Sprintf(" agency_id='%d' ", uid)
-	} else {
-		sql = sql + " 1"
-	}
-	switch typ {
-	case commdef.BEHALF_TYPE_ALL:
-		sql = sql + " AND for_rent=1"
-	case commdef.BEHALF_TYPE_TO_RENT:
-		sql = sql + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_WAIT)
-	case commdef.BEHALF_TYPE_RENTED:
-		sql = sql + fmt.Sprintf(" AND for_rent=1 AND rent_stat=%d", commdef.HOUSE_RENT_RENTED)
-	case commdef.BEHALF_TYPE_TO_SALE:
-		sql = sql + " AND for_sale=1"
-	}
-	sql = sql + fmt.Sprintf(" LIMIT %d, %d", begin, tofetch)
+	sql := "SELECT id" + sql_query + fmt.Sprintf(" LIMIT %d, %d", begin, tofetch)
 	// beego.Debug(FN, "sql:", sql)
 
 	var ids []int64
@@ -366,7 +355,7 @@ func GetBehalfList(typ int, begin, tofetch, uid int64) (err error, total, fetche
 	fetched = numb
 	hids = ids
 	// beego.Debug(FN, "fetched:", fetched)
-	// beego.Debug(FN, "hids:", hids)
+	beego.Debug(FN, "hids:", hids)
 
 	return
 }
