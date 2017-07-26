@@ -293,6 +293,11 @@ public class Activity_login extends SKBaseActivity implements
                 startActivity(new Intent(Activity_login.this, Activity_PasswordReset.class));
                 break;
             }
+
+            case R.id.tv_register: {
+                updateLoginLayoutById(R.id.tv_login_telephone);
+                break;
+            }
         }
     }
 
