@@ -192,8 +192,8 @@
 		* SUCCESS:200 
 			* Total    		int		// total number
 			* Count			int		// how many items fetched. -1 means just fetch the total number.
-			* IDs			array
-				* Id		int		// house id
+			* HouseDigests	array	// house public brief info list
+				* house public brief info
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

@@ -526,7 +526,7 @@ func (this *HouseController) GetBehalfList() {
 	FN := "[GetBehalfList] "
 	beego.Warn("[--- API: GetBehalfList ---]")
 
-	var result ResGetHouseList
+	var result ResGetHouseDigestList
 	var err error
 
 	defer func() {
@@ -561,8 +561,21 @@ func (this *HouseController) GetBehalfList() {
 	if nil == err {
 		result.Total = total
 		if count > 0 {
-			result.Count = fetched
-			result.IDs = ids
+			// result.Count = fetched
+			// result.IDs = ids
+			if fetched > 0 {
+				for _, v := range ids {
+					// beego.Debug(FN, "v:", fmt.Sprintf("%+v", v))
+					hdi := commdef.HouseDigest{}
+					err, hdi = models.GetHouseDigestInfo(v, uid)
+					if nil != err {
+						return
+					}
+					// beego.Debug(FN, "add")
+					result.HouseDigests = append(result.HouseDigests, hdi)
+				}
+			}
+			result.Count = int64(len(result.HouseDigests))
 		} else {
 			result.Count = -1
 		}

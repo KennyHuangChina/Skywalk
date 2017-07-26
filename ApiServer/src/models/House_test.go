@@ -234,6 +234,8 @@ func Test_GetBehalfList_1(t *testing.T) {
 		t.Error("Failed, err: ", e)
 		return
 	}
+
+	t.Error("TODO: new type, to approve")
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
