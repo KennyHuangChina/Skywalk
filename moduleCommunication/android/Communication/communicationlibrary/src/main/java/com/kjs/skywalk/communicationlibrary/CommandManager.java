@@ -402,11 +402,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public int GetBehalfHouses(int type, int begin, int cnt) {
-        CommunicationBase op = new CmdGetBehalfHouses(mContext);
+        CommunicationBase op = new CmdGetBehalfHouses(mContext, type, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
-        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
-        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + cnt);
         return execute(op, pMap);
     }
 

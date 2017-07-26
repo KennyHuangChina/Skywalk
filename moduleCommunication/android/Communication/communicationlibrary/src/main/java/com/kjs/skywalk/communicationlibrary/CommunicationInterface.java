@@ -57,7 +57,17 @@ public class CommunicationInterface {
                           int price_tag, int price_bottom);                     // CMD_SET_HOUSE_PRICE,             IApiResults.IAddRes
         int GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
-        int GetBehalfHouses(int type, int begin, int cnt);                      // CMD_GET_BEHALF_HOUSE_LIST,       TODO:
+
+        /*
+        *   CMD     : CMD_GET_BEHALF_HOUSE_LIST
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        *   type    : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
+        *   begin   : fetch begin position
+        *   cnt     : fetch count. set to 0 mean just want to get the total number
+        *
+         */
+        int GetBehalfHouses(int type, int begin, int cnt);
+
         /*
         *   CMD     : CMD_GET_HOUSE_DIGEST_LIST
         *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
