@@ -38,7 +38,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_fangyuan_guanli);
 
-            mCmdMgr = new CommandManager(this, this, this);
+            mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
 

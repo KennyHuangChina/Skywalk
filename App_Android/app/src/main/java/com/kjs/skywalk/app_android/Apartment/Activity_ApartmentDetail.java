@@ -139,7 +139,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 //        Bundle bundle = getIntent().getExtras();
 //        mHouseId = bundle.getInt("houseId");
 
-        mCmdMgr = new CommandManager(this, this, this);
+        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
 

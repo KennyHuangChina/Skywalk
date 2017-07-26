@@ -138,7 +138,7 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
         mBegin = params[1].intValue();
         mCount = params[2].intValue();
 
-        CommandManager CmdMgr = new CommandManager(mContext, mCmdListener, mProgreessListener);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgreessListener);
 
         mResultGot = false;
         mHouseList.clear();

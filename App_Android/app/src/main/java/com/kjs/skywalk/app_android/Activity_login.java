@@ -172,7 +172,7 @@ public class Activity_login extends SKBaseActivity implements
     };
 
     private void doLogin() {
-        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
 
         } else {
@@ -184,7 +184,7 @@ public class Activity_login extends SKBaseActivity implements
     }
 
     private int logIn() {
-        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         String strUserSalt;
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE))
             strUserSalt = mActv_telephone_num.getText().toString();

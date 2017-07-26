@@ -215,7 +215,7 @@ public class Activity_Search_House extends SKBaseActivity implements
             }
         };
 
-        CommandManager manager = new CommandManager(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
         manager.GetPropertyListByName(keywords, 0, 0);
     }
 
@@ -277,7 +277,7 @@ public class Activity_Search_House extends SKBaseActivity implements
     }
 
     private void fetchPropertyList(String keywords) {
-        CommandManager manager = new CommandManager(this, this, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, this, this);
         manager.GetPropertyListByName(keywords, 0, mPropertyCount);
     }
 
@@ -309,7 +309,7 @@ public class Activity_Search_House extends SKBaseActivity implements
         };
 
         int res = 0;
-        CommandManager manager = new CommandManager(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
         String text = commonFun.getTextOnSearchView(mSearchView);
         res = manager.AddProperty(text, "地址：未填写", "");
         if(res == CE_ERROR_NO_ERROR) {

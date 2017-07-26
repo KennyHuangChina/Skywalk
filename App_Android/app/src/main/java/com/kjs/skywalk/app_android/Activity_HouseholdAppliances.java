@@ -69,7 +69,7 @@ public class Activity_HouseholdAppliances extends SKBaseActivity
         });
 
         // get
-        CommandManager CmdMgr = new CommandManager(this, this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         int result = CmdMgr.GetHouseFacilityList(6);
         if (result != CommunicationError.CE_ERROR_NO_ERROR) {
             kjsLogUtil.e("Error to call GetHouseFacilityList");

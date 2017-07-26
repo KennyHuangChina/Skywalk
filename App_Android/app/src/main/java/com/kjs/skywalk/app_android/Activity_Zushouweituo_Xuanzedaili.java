@@ -149,7 +149,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                 hideWaiting();
             }
         };
-        CommandManager manager = new CommandManager(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
         int res = manager.GetAgencyList(start, end);
         if(res == CE_ERROR_NO_ERROR) {
             showWaiting(mListViewAgents);
