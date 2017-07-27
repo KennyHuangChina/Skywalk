@@ -151,11 +151,13 @@ const (
 )
 
 const (
+	BEHALF_TYPE_Begin      = 0
 	BEHALF_TYPE_ALL        = 0 //
 	BEHALF_TYPE_TO_RENT    = 1 // house is waiting for renting
 	BEHALF_TYPE_RENTED     = 2 // house is rented
 	BEHALF_TYPE_TO_SALE    = 3 // house is waiting for salesing
 	BEHALF_TYPE_TO_APPROVE = 4 // house is waiting for approving
+	BEHALF_TYPE_End        = 4
 )
 
 const (

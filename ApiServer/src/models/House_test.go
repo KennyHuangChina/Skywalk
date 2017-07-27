@@ -16,27 +16,27 @@ func Test_GetHouseListByType_1(t *testing.T) {
 	t.Log("Test GetHouseListByType, Invalid Arguments")
 
 	// Incorrect house type: < 0
-	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Unknown-1, 0, 0); e == nil {
+	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Unknown-1, 0, 0, HouseFilter{}, ""); e == nil {
 		t.Error("Failed, err: ", e)
 	} else {
 		// t.Log("Pass, user:", uif)
 	}
 	// Incorrect house type: > HOUSE_LIST_Max
-	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Max+1, 0, 0); e == nil {
+	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Max+1, 0, 0, HouseFilter{}, ""); e == nil {
 		t.Error("Failed, err: ", e)
 	} else {
 		// t.Log("Pass, user:", uif)
 	}
 
 	// Incorrect begin position
-	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Max, -1, 0); e == nil {
+	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Max, -1, 0, HouseFilter{}, ""); e == nil {
 		t.Error("Failed, err: ", e)
 	} else {
 		// t.Log("Pass, user:", uif)
 	}
 
 	// Incorrect fetch count
-	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Max, 0, -1); e == nil {
+	if e /*total*/, _ /*fetched*/, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Max, 0, -1, HouseFilter{}, ""); e == nil {
 		t.Error("Failed, err: ", e)
 	} else {
 		// t.Log("Pass, user:", uif)
@@ -49,14 +49,14 @@ func Test_getRecommendHouseList_1(t *testing.T) {
 	t.Log("Test getRecommendHouseList")
 
 	// get total number
-	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Recommend, 0, 0)
+	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Recommend, 0, 0, HouseFilter{}, "")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("total:", total)
 
-	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_Recommend, total, 1)
+	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_Recommend, total, 1, HouseFilter{}, "")
 	if e == nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -66,7 +66,7 @@ func Test_getRecommendHouseList_1(t *testing.T) {
 	if total > 10 {
 		nCount = 10
 	}
-	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_Recommend, 0, nCount)
+	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_Recommend, 0, nCount, HouseFilter{}, "")
 	if e != nil || fetched != nCount {
 		t.Error("Failed, err: ", e, ", fetched:", fetched)
 		return
@@ -78,14 +78,14 @@ func Test_getDeductedHouseList_1(t *testing.T) {
 	t.Log("Test getDeductedHouseList")
 
 	// get total number
-	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Deducted, 0, 0)
+	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_Deducted, 0, 0, HouseFilter{}, "")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("total:", total)
 
-	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_Deducted, total, 1)
+	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_Deducted, total, 1, HouseFilter{}, "")
 	if e == nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -95,7 +95,7 @@ func Test_getDeductedHouseList_1(t *testing.T) {
 	if total > 10 {
 		nCount = 10
 	}
-	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_Deducted, 0, nCount)
+	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_Deducted, 0, nCount, HouseFilter{}, "")
 	if e != nil || fetched != nCount {
 		t.Error("Failed, err: ", e, ", fetched:", fetched)
 		return
@@ -107,14 +107,14 @@ func Test_getNewHouseList_1(t *testing.T) {
 	t.Log("Test getNewHouseList")
 
 	// get total number
-	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_New, 0, 0)
+	e, total, _, _ := GetHouseListByType(commdef.HOUSE_LIST_New, 0, 0, HouseFilter{}, "")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("total:", total)
 
-	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_New, total, 1)
+	e, total, _, _ = GetHouseListByType(commdef.HOUSE_LIST_New, total, 1, HouseFilter{}, "")
 	if e == nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -124,7 +124,7 @@ func Test_getNewHouseList_1(t *testing.T) {
 	if total > 10 {
 		nCount = 10
 	}
-	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_New, 0, nCount)
+	e, total, fetched, ids := GetHouseListByType(commdef.HOUSE_LIST_New, 0, nCount, HouseFilter{}, "")
 	if e != nil || fetched != nCount {
 		t.Error("Failed, err: ", e, ", fetched:", fetched)
 		return
@@ -137,53 +137,73 @@ func Test_getNewHouseList_1(t *testing.T) {
 //	-- GetBehalfList --
 //
 func Test_GetBehalfList_1(t *testing.T) {
-	t.Log("Test GetBehalfList, Invalid Arguments")
+	seq := 0
 
-	t.Log("<Case> begin position < 0")
-	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, -1, 0, 0); e == nil {
+	// fetch range
+	xid1 := []int64{-1, 0}
+	xid2 := []int64{0, -1}
+	xdesc := []string{"begin position(%d, %d) < 0", "fetch count(%d, %d) < 0"}
+	for k, v := range xid1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments:", seq), fmt.Sprintf(xdesc[k], xid1[k], xid2[k]))
+		if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, v, xid2[k], 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// type
+	xid1 = []int64{commdef.BEHALF_TYPE_Begin - 1, commdef.BEHALF_TYPE_End + 1}
+	xdesc = []string{"type(%d) < commdef.BEHALF_TYPE_Begin(%d~%d)", "type(%d) > commdef.BEHALF_TYPE_End(%d~%d)"}
+	for k, v := range xid1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments:", seq), fmt.Sprintf(xdesc[k], xid1[k], commdef.BEHALF_TYPE_Begin, commdef.BEHALF_TYPE_End))
+		if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(int(v), 0, 0, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// Login user
+	xid1 = []int64{-1, 0, 100000000, 9 /*, 2 , 6, 4*/}
+	xdesc = []string{"< 0", "is SYSTEM", "does not exist", "is neither agancy nor administrator"}
+	for k, v := range xid1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User Permission: user(%d) %s", seq, v, xdesc[k]))
+		if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xid1 = []int64{6, 4}
+	xid2 = []int64{3, 7}
+	xdesc = []string{"is agency", "is administrator"}
+	total := int64(0)
+	for k, v := range xid1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Test: user(%d) %s", seq, v, xdesc[k]))
+		e, total1, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, v)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("total1:", total1)
+		if total1 != xid2[k] {
+			t.Error(fmt.Sprintf("Failed, total1(%d) != %d", total1, xid2[k]))
+			return
+		}
+		total = total1
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> begin position(%d) over total(%d)", seq, total, total))
+	if e, _, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, total, 1, 4); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
-
-	t.Log("<Case> fetch count < 0")
-	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, -1, 0); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> login user has no right to access, neither agency nor administrator")
-	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 9); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> login user is house owner himself")
-	if e /*total*/, _ /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 2); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> login user is a agency")
-	e, total /*fetched*/, _, _ := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 6)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("total:", total)
-
-	t.Log("<Case> login user is a administrator")
-	e, total /*fetched*/, _, _ = GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, 0, 4)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("total:", total)
-
-	t.Log("<Case> begin position beyond total")
-	if e, total /*fetched*/, _, _ = GetBehalfList(commdef.BEHALF_TYPE_ALL, total, 1, 4); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
+	t.Error("TODO:")
+	return
 
 	t.Log("<Case> all behalfed houses")
 	e, total, fetched, hs := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, total, 4)
