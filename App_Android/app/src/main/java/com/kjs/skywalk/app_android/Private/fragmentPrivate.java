@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
@@ -35,6 +37,12 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
 
+    // 我代理的房源
+    private TextView mTvToRent;
+    private TextView mTvRented;
+    private TextView mTvToSale;
+    private TextView mTvToApprove;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +52,12 @@ public class fragmentPrivate extends Fragment {
         mRlUserNotLogin = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
         mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
 
+        // 我代理的房源
+        final TextView mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
+        final TextView mTvRented = (TextView) view.findViewById(R.id.tv_rented);
+        final TextView mTvToSale = (TextView) view.findViewById(R.id.tv_to_sale);
+        final TextView mTvToApprove = (TextView) view.findViewById(R.id.tv_to_approve);
+
 
         updateLayout(mIsLogin);
 
@@ -51,12 +65,113 @@ public class fragmentPrivate extends Fragment {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 //        type    : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
 //        1- 待租；2-已租； 3-待售； 4-待审核
-        CmdMgr.GetBehalfHouses(1, 0, 0);
-        CmdMgr.GetBehalfHouses(2, 0, 0);
-        CmdMgr.GetBehalfHouses(3, 0, 0);
-        CmdMgr.GetBehalfHouses(4, 0, 0);
+
+        // to rent
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        updateCount(mTvToRent, resultList.GetTotalNumber());
+                    }
+                }
+            }
+        }, mProgreessListener).GetBehalfHouses(1, 0 , 0);
+
+        // rented
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        updateCount(mTvRented, resultList.GetTotalNumber());
+                    }
+                }
+            }
+        }, mProgreessListener).GetBehalfHouses(2, 0 , 0);
+
+        // to sale
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        updateCount(mTvToSale, resultList.GetTotalNumber());
+                    }
+                }
+            }
+        }, mProgreessListener).GetBehalfHouses(3, 0 , 0);
+
+        // to approve
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        updateCount(mTvToApprove, resultList.GetTotalNumber());
+                    }
+                }
+            }
+        }, mProgreessListener).GetBehalfHouses(4, 0 , 0);
 
         return view;
+    }
+
+    private void updateCount(final TextView textview, final int nCount) {
+        this.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textview.setText(nCount);
+            }
+        });
     }
 
     private void updateLayout(boolean isLogin) {
@@ -101,4 +216,5 @@ public class fragmentPrivate extends Fragment {
         public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
         }
     };
+
 }

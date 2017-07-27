@@ -135,6 +135,7 @@ public class MainActivity extends SKBaseActivity {
     }
 
     public void onFragmentPrivateClickResponse(View v) {
+        commonFun.showToast_resEntryName(this, v);
         switch (v.getId()) {
             case R.id.tv_clicktologin:
             {

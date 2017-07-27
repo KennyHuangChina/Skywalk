@@ -407,6 +407,8 @@
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_to_rent"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -418,6 +420,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_to_rent"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -433,6 +436,8 @@
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_rented"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -444,6 +449,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_rented"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -459,6 +465,8 @@
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_to_sale"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -470,6 +478,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_to_sale"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -511,6 +520,8 @@
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_to_approve"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -522,6 +533,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_to_approve"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
