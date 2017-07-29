@@ -15,7 +15,6 @@ class CmdGetUserInfo extends CommunicationBase {
 
     CmdGetUserInfo(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_USER_INFO);
-        mMethodType = "GET";
     }
 
     @Override

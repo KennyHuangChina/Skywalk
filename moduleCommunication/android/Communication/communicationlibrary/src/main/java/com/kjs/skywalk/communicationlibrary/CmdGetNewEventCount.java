@@ -14,7 +14,6 @@ class CmdGetNewEventCount extends CommunicationBase {
 
     CmdGetNewEventCount(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_NEW_EVENT_CNT);
-        mMethodType = "GET";
     }
 
     @Override

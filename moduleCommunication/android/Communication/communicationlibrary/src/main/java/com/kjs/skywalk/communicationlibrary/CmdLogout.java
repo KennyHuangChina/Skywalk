@@ -16,6 +16,7 @@ class CmdLogout extends CommunicationBase {
     CmdLogout(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_LOG_OUT);
         mMethodType = "POST";
+        mNeedLogin  = false;
     }
 
     @Override

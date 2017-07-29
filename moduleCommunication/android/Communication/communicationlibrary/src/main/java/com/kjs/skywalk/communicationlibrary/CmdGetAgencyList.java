@@ -17,9 +17,9 @@ class CmdGetAgencyList extends CommunicationBase {
 
     CmdGetAgencyList(Context context, int begin, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_GET_AGENCY_LIST);
-        mMethodType = "GET";
-        mBegin = begin;
-        mCnt = cnt;
+        mNeedLogin  = false;
+        mBegin      = begin;
+        mCnt        = cnt;
     }
 
     @Override
