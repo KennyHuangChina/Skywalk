@@ -202,60 +202,30 @@ func Test_GetBehalfList_1(t *testing.T) {
 		t.Error("Failed, err: ", e)
 		return
 	}
-	t.Error("TODO:")
-	return
 
-	t.Log("<Case> all behalfed houses")
-	e, total, fetched, hs := GetBehalfList(commdef.BEHALF_TYPE_ALL, 0, total, 4)
-	t.Log("fetched:", fetched, ", houses:", hs)
-	if e != nil || total != fetched {
-		t.Error("Failed, err: ", e)
-		return
+	xid1 = []int64{commdef.BEHALF_TYPE_ALL, commdef.BEHALF_TYPE_TO_RENT, commdef.BEHALF_TYPE_RENTED, commdef.BEHALF_TYPE_TO_SALE, commdef.BEHALF_TYPE_TO_APPROVE}
+	xid2 = []int64{7, 1, 1, 3, 5}
+	xdesc = []string{"all behalfed houses", "all behalfed houses to rent", "all behalfed houses rented", "all behalfed houses to sale", "all behalfed houses to approve"}
+	for k, v := range xid1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> %s", seq, xdesc[k]))
+		e, total, fetched, _ := GetBehalfList(int(v), 0, 0, 4)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		t.Log("total:", total)
+		if total != xid2[k] {
+			t.Error(fmt.Sprintf("total(%d) != %d", total, xid2[k]))
+			return
+		}
+		e, total, fetched, hs := GetBehalfList(int(v), 0, total, 4)
+		t.Log("fetched:", fetched, ", houses:", hs)
+		if e != nil || total != fetched {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
-
-	t.Log("<Case> all behalfed houses to rent")
-	e, total, fetched, _ = GetBehalfList(commdef.BEHALF_TYPE_TO_RENT, 0, 0, 4)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("total:", total)
-	e, total, fetched, hs = GetBehalfList(commdef.BEHALF_TYPE_TO_RENT, 0, total, 4)
-	t.Log("fetched:", fetched, ", houses:", hs)
-	if e != nil || total != fetched {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> all behalfed houses rented")
-	e, total, fetched, _ = GetBehalfList(commdef.BEHALF_TYPE_RENTED, 0, 0, 4)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("total:", total)
-	e, total, fetched, hs = GetBehalfList(commdef.BEHALF_TYPE_RENTED, 0, total, 4)
-	t.Log("fetched:", fetched, ", houses:", hs)
-	if e != nil || total != fetched {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Log("<Case> all behalfed houses to sale")
-	e, total, fetched, _ = GetBehalfList(commdef.BEHALF_TYPE_TO_SALE, 0, 0, 4)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	t.Log("total:", total)
-	e, total, fetched, hs = GetBehalfList(commdef.BEHALF_TYPE_TO_SALE, 0, total, 4)
-	t.Log("fetched:", fetched, ", houses:", hs)
-	if e != nil || total != fetched {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
-	t.Error("TODO: new type, to approve")
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
