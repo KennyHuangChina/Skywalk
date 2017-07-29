@@ -16,7 +16,7 @@ class CmdGetPropertyList extends CommunicationBase {
 
     CmdGetPropertyList(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST);
-        mMethodType = "GET";
+        mNeedLogin = false;
     }
 
     @Override

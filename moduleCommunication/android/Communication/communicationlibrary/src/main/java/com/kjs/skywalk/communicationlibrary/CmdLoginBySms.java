@@ -23,7 +23,7 @@ class CmdLoginBySms extends CommunicationBase {
     CmdLoginBySms(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_LOGIN_BY_SMS);
         mMethodType = "POST";
-        mNeedLogin = false;
+        mNeedLogin  = false;
 
         // generate a random
         mRadom = generateRandom();

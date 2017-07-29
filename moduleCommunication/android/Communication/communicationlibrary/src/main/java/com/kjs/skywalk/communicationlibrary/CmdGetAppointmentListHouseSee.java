@@ -19,6 +19,7 @@ class CmdGetAppointmentListHouseSee extends CommunicationBase {
 
     CmdGetAppointmentListHouseSee(Context context, int house_id, int begin, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_APPOINT_HOUSE_SEE_LST);
+        mNeedLogin  = false;
         mHouseId    = house_id;
         mBeginPosi  = begin;
         mFetchCount = cnt;

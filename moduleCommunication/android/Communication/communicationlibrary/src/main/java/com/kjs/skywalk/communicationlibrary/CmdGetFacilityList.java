@@ -16,7 +16,7 @@ class CmdGetFacilityList extends CommunicationBase {
 
     CmdGetFacilityList(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_FACILITY_LIST);
-        mMethodType = "GET";
+        mNeedLogin = false;
     }
 
     @Override

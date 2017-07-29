@@ -17,9 +17,9 @@ class CmdGetPictureUrls extends CommunicationBase {
 
     CmdGetPictureUrls(Context context, int picId, int picSize) {
         super(context, CommunicationInterface.CmdID.CMD_GET_PIC_URL);
-        mMethodType = "GET";
-        mPicId = picId;
-        mPicSize = picSize;
+        mNeedLogin  = false;
+        mPicId      = picId;
+        mPicSize    = picSize;
     }
 
     @Override

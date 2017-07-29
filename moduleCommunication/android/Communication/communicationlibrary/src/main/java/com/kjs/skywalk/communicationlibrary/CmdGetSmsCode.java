@@ -19,7 +19,7 @@ class CmdGetSmsCode extends CommunicationBase {
 
     CmdGetSmsCode(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_SMS_CODE);
-        mMethodType = "GET";
+        mNeedLogin = false;
     }
 
     @Override

@@ -17,8 +17,8 @@ class CmdGetBriefPublicHouseInfo extends CommunicationBase {
 
     CmdGetBriefPublicHouseInfo(Context context, int house_id){
         super(context, CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO);
-        mMethodType = "GET";
-        mHouseId = house_id;
+        mNeedLogin  = false;
+        mHouseId    = house_id;
     }
 
     @Override
