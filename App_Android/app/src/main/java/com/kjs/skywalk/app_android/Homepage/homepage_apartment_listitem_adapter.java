@@ -164,7 +164,7 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
                 holder.rlApartment2.setVisibility(View.VISIBLE);
                 holder.tvApartment2_name.setText(houseDigest2.property);
                 commonFun.displayImageByURL(mContext, houseDigest2.CoverImageUrlS, holder.ivApartment2_thumb);
-                holder.tvApartment2_desc.setText(String.format("%s/%.02㎡", houseDigest2.addr, houseDigest2.Acreage));
+                holder.tvApartment2_desc.setText(String.format("%s/%.02f㎡", houseDigest2.addr, houseDigest2.Acreage));
 //                holder.tvApartment2_desc.setText(String.format("%s%s/%d㎡", houseDigest2.addr,
 //                        commonFun.getHouseTypeString(houseDigest2.Bedrooms, houseDigest2.Livingrooms, houseDigest2.Bathrooms), houseDigest2.Acreage));
                 holder.rlApartment2.setOnClickListener(new View.OnClickListener() {

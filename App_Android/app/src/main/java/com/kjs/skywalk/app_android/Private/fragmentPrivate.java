@@ -37,6 +37,9 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
 
+    private TextView mTvAppointmentCount;
+
+
     // 我代理的房源
     private TextView mTvToRent;
     private TextView mTvRented;
@@ -52,11 +55,37 @@ public class fragmentPrivate extends Fragment {
         mRlUserNotLogin = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
         mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
 
+        // 我的预约
+        mTvAppointmentCount = (TextView) view.findViewById(R.id.tv_appointment_count);
+//        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+//            @Override
+//            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+//                if (null == iResult) {
+//                    kjsLogUtil.w("result is null");
+//                    return;
+//                }
+//                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+//                    return;
+//                }
+//
+//                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+//                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+//                    int nFetch = resultList.GetFetchedNumber();
+//                    if (nFetch == -1) {
+//                        updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
+//                    }
+//                }
+//            }
+//        }, mProgreessListener).GetHouseSeeAppointmentList(0, 0 , 0);
+
+
         // 我代理的房源
-        final TextView mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
-        final TextView mTvRented = (TextView) view.findViewById(R.id.tv_rented);
-        final TextView mTvToSale = (TextView) view.findViewById(R.id.tv_to_sale);
-        final TextView mTvToApprove = (TextView) view.findViewById(R.id.tv_to_approve);
+        mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
+        mTvRented = (TextView) view.findViewById(R.id.tv_rented);
+        mTvToSale = (TextView) view.findViewById(R.id.tv_to_sale);
+        mTvToApprove = (TextView) view.findViewById(R.id.tv_to_approve);
 
 
         updateLayout(mIsLogin);
@@ -169,7 +198,7 @@ public class fragmentPrivate extends Fragment {
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textview.setText(nCount);
+                textview.setText(String.valueOf(nCount));
             }
         });
     }
