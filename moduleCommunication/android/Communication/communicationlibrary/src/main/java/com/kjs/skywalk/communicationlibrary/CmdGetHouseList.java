@@ -25,6 +25,7 @@ class CmdGetHouseList extends CommunicationBase {
 
     CmdGetHouseList(Context context, int type, int bgn, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST);
+        mNeedLogin  = false;
         mType       = type;
         mBeginPosi  = bgn;
         mFetchCount = cnt;
