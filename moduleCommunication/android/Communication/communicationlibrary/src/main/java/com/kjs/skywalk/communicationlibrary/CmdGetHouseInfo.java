@@ -17,7 +17,7 @@ class CmdGetHouseInfo extends CommunicationBase {
 
     CmdGetHouseInfo(Context context, int house_id, boolean bBackEnd) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO);
-        mMethodType = "GET";
+        mNeedLogin  = false;
         mHouseId    = house_id;
         mbBackend   = bBackEnd;
     }

@@ -16,7 +16,6 @@ class CmdGetHouseFacilityList extends CommunicationBase {
 
     CmdGetHouseFacilityList(Context context, int house) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST);
-        mMethodType = "GET";
         mHouseId = house;
     }
 

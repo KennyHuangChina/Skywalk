@@ -14,7 +14,6 @@ class CmdGetHouseNewEvent extends CommunicationBase {
 
     CmdGetHouseNewEvent(Context context) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_NEW_EVENTS);
-        mMethodType = "GET";
     }
 
     @Override

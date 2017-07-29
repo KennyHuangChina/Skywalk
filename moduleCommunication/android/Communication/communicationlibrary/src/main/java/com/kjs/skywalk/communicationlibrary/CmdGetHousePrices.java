@@ -16,7 +16,6 @@ class CmdGetHousePrices extends CommunicationBase {
 
     CmdGetHousePrices(Context context, int house, int begin, int count) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_PRICE);
-        mMethodType = "GET";
         mHouse = house;
         mBegin = begin;
         mCount = count;

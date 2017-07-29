@@ -16,7 +16,6 @@ class CmdGetHouseEventProcList extends CommunicationBase {
 
     CmdGetHouseEventProcList(Context context, int eventId) {
         super(context, CommunicationInterface.CmdID.CMD_GET_EVENT_PROC_LST);
-        mMethodType = "GET";
         mEventId = eventId;
     }
 
