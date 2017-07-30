@@ -43,3 +43,21 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 3. Get house list of house seeing appointment
+	[Security]	private: landlorad, House Agency and administrator
+				public: could see how many people already ordered
+	[Request]
+  		* GET /v1/appointment/seeHouselist
+	  		* bgn				int
+	  		* fCnt				int
+	[Response]
+		* SUCCESS:200 
+			* Total    			int		// total number
+			* Count				int		// how many items fetched
+			* HouseDigests		array	// house public brief info list
+				* house public brief info
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

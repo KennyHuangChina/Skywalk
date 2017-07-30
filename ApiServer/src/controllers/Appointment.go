@@ -16,6 +16,71 @@ type AppointmentController struct {
 func (a *AppointmentController) URLMapping() {
 	a.Mapping("OrderSeeHouse", a.OrderSeeHouse)
 	a.Mapping("GetAppointList_SeeHouse", a.GetAppointList_SeeHouse)
+	a.Mapping("GetHouseList_AppointSee", a.GetHouseList_AppointSee)
+}
+
+// @Title GetHouseList_AppointSee
+// @Description get house list of appoint house see
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /seeHouselist [get]
+func (this *AppointmentController) GetHouseList_AppointSee() {
+	FN := "[GetHouseList_AppointSee] "
+	beego.Warn("[--- API: GetHouseList_AppointSee ---]")
+
+	var result ResGetHouseDigestList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	begin, _ := this.GetInt64("bgn")
+	count, _ := this.GetInt64("cnt")
+
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, total, fetched, ids := models.GetHouseList_AppointSee(begin, count, uid)
+	if nil == err {
+		result.Total = total
+		if count > 0 {
+			// result.Count = fetched
+			// result.IDs = ids
+			if fetched > 0 {
+				for _, v := range ids {
+					// beego.Debug(FN, "v:", fmt.Sprintf("%+v", v))
+					hdi := commdef.HouseDigest{}
+					err, hdi = models.GetHouseDigestInfo(v, uid)
+					if nil != err {
+						return
+					}
+					// beego.Debug(FN, "add")
+					result.HouseDigests = append(result.HouseDigests, hdi)
+				}
+			}
+			result.Count = int64(len(result.HouseDigests))
+		} else {
+			result.Count = -1
+		}
+	}
 }
 
 // @Title OrderSeeHouse

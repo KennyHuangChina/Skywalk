@@ -9,6 +9,83 @@ import (
 	"time"
 )
 
+/**
+*	Get house list of appointment of house see
+*	Arguments:
+*		begin	- from which item to fetch
+*		tofetch	- how many items to fetch
+*		uid		- login user
+*	Returns
+*		err 	- error info
+*		total 	- total number
+*		fetched	- fetched quantity
+*		hids	- house id list
+**/
+func GetHouseList_AppointSee(begin, tofetch, uid int64) (err error, total, fetched int64, hids []int64) {
+	FN := "[GetHouseList_AppointSee] "
+	beego.Trace(FN, "fetch:(", begin, ",", tofetch, "), login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	fetched = -1
+
+	/* Argeuments checking */
+	if begin < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin:%d", begin)}
+		return
+	}
+	if tofetch < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("tofetch:%d", tofetch)}
+		return
+	}
+
+	/* Permission checking */
+	err, u := GetUser(uid)
+	if nil != err {
+		beego.Error(FN, "err:", err)
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+
+	sqlQuery := " FROM tbl_appointment WHERE subscriber=? OR phone=?"
+	sql := "SELECT COUNT(*) AS count" + sqlQuery
+	count := int64(0)
+	if errT := o.Raw(sql, uid, u.LoginName).QueryRow(&count); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
+		return
+	}
+	beego.Debug(FN, "count:", count)
+
+	total = count
+	if 0 == tofetch || 0 == total {
+		return
+	}
+
+	if begin >= total {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("begin(%d) over the range(%d)", begin, total)}
+		return
+	}
+
+	sql = "SELECT house " + sqlQuery + " LIMIT ?, ?"
+	ids := []int64{}
+	numb, errT := o.Raw(sql, uid, u.LoginName, begin, tofetch).QueryRows(&ids)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
+		return
+	}
+	fetched = numb
+	hids = ids
+	beego.Debug(FN, "hids:", hids)
+
+	return
+}
+
 func DeleAppointment(aid, uid int64) (err error) {
 	FN := "[ DeleAppointment] "
 	beego.Trace(FN, "appointment:", aid, ", login user:", uid)
