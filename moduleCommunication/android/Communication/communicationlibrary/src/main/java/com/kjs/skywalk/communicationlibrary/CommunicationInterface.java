@@ -145,6 +145,15 @@ public class CommunicationInterface {
             cnt     : fetch count. set to 0 to get the total number
          */
         int GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
+
+        /*
+        *   CMD     : CMD_HOUSE_LST_APPOINT_SEE
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        *   begin   : fetch begin position
+        *   cnt     : fetch count. set to 0 mean just want to get the total number
+        *
+         */
+        int GetHouseList_AppointSee(int begin, int cnt);
     }
 
     public static class CmdRes {
@@ -219,7 +228,8 @@ public class CommunicationInterface {
 
         // Appointment
         final public static int CMD_APPOINT_SEE_HOUSE         = 0x8001,
-                                CMD_APPOINT_HOUSE_SEE_LST     = 0x8002;
+                                CMD_APPOINT_HOUSE_SEE_LST     = 0x8002,
+                                CMD_HOUSE_LST_APPOINT_SEE     = 0x8003;
 
         public static int CMD_TEST                   = 0x0001;
     }

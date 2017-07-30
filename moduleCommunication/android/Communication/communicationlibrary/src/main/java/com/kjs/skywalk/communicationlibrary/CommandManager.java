@@ -696,4 +696,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return execute(op, pMap);
     }
 
+    @Override
+    public int GetHouseList_AppointSee(int begin, int cnt) {
+        CommunicationBase op = new CmdGetHouseList_AppointSee(mContext, begin, cnt);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
 }
