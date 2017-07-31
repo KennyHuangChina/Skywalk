@@ -7,22 +7,42 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
+import com.kjs.skywalk.app_android.Server.GetHouseInfo;
+
+public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetHouseInfo.TaskFinished{
 
     private boolean mModifyMode = false;
+    private RelativeLayout mRootLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__zushouweituo_shenhe);
+        mRootLayout = (RelativeLayout)findViewById(R.id.activity__zushouweituo_shenhe);
+
+        GetHouseInfo houseInfo = new GetHouseInfo(this, this);
+        houseInfo.execute(mHouseId, 1);
+    }
+
+    @Override
+    public void onTaskFinished(ClassDefine.HouseInfo houseInfo) {
+        if(houseInfo == null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
+                }
+            });
+            return;
+        }
     }
 
     public void onClickResponse(View v) {
         switch (v.getId()) {
-            case R.id.tv_back:
-            {
+            case R.id.tv_back: {
                 finish();
             }
             break;
@@ -51,4 +71,5 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         }
     }
+
 }
