@@ -26,6 +26,7 @@ import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
@@ -57,29 +58,8 @@ public class fragmentPrivate extends Fragment {
 
         // 我的预约
         mTvAppointmentCount = (TextView) view.findViewById(R.id.tv_appointment_count);
-//        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
-//            @Override
-//            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-//                if (null == iResult) {
-//                    kjsLogUtil.w("result is null");
-//                    return;
-//                }
-//                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-//                    return;
-//                }
-//
-//                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
-//                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-//                    int nFetch = resultList.GetFetchedNumber();
-//                    if (nFetch == -1) {
-//                        updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
-//                    }
-//                }
-//            }
-//        }, mProgreessListener).GetHouseSeeAppointmentList(0, 0 , 0);
-
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
+        CmdMgr.GetHouseList_AppointSee(0, 0);
 
         // 我代理的房源
         mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
@@ -91,7 +71,7 @@ public class fragmentPrivate extends Fragment {
         updateLayout(mIsLogin);
 
         // get behalf info
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
+//        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 //        type    : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
 //        1- 待租；2-已租； 3-待售； 4-待审核
 
@@ -229,11 +209,12 @@ public class fragmentPrivate extends Fragment {
                 return;
             }
 
-            if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+            if (command == CMD_HOUSE_LST_APPOINT_SEE) {
                 IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                 int nFetch = resultList.GetFetchedNumber();
                 if (nFetch == -1) {
-                    int totalCount = resultList.GetTotalNumber();
+                    // 我的预约
+                    updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
                 }
             }
 
