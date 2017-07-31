@@ -356,6 +356,13 @@ func init() {
 			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 
+	beego.GlobalControllerRouter["ApiServer/controllers:HouseWatchController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:HouseWatchController"],
+		beego.ControllerComments{
+			Method: "GetUserWatchList",
+			Router: `/user/:id`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
 	beego.GlobalControllerRouter["ApiServer/controllers:PictureController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:PictureController"],
 		beego.ControllerComments{
 			Method: "GetHousePicList",
