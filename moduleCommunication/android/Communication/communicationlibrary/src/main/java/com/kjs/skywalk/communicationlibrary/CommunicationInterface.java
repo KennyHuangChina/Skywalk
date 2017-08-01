@@ -125,7 +125,9 @@ public class CommunicationInterface {
                               int posi_bgn, int fetch_cnt, boolean bIDO);
         int ModifyHouseEvent(int event_id, String desc);        // CMD_MODIFY_HOUSE_EVENT,      IApiResults.ICommon
 
-        // Appointment APIs
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          Appointment APIs
         /*
         *   CMD         : CmdMakeAppointment_SeeHouse
         *   Result      : IApiResults.IAddRes
@@ -154,6 +156,18 @@ public class CommunicationInterface {
         *
          */
         int GetHouseList_AppointSee(int begin, int cnt);
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          House Watch APIs
+        /*
+        *   CMD     : CMD_GET_USER_HOUSE_WATCH_LIST
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        *   begin   : fetch begin position
+        *   cnt     : fetch count. set to 0 mean just want to get the total number
+        *
+         */
+        int GetUserHouseWatchList(int begin, int cnt);
     }
 
     public static class CmdRes {
@@ -230,6 +244,9 @@ public class CommunicationInterface {
         final public static int CMD_APPOINT_SEE_HOUSE         = 0x8001,
                                 CMD_APPOINT_HOUSE_SEE_LST     = 0x8002,
                                 CMD_HOUSE_LST_APPOINT_SEE     = 0x8003;
+
+        // House watch
+        final public static int CMD_GET_USER_HOUSE_WATCH_LIST = 0x9001;
 
         public static int CMD_TEST                   = 0x0001;
     }

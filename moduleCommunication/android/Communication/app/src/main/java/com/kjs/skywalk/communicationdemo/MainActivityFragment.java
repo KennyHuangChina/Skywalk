@@ -133,7 +133,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
-        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
+//        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
+        CmdMgr.GetUserHouseWatchList(0, mListTotal);
 //        GetHouseDigestList();
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAgencyList(0, mListTotal);
@@ -321,7 +322,7 @@ public class MainActivityFragment extends Fragment
                     mListTotal = 0;
                 }
             } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST ||
-                        command == CMD_HOUSE_LST_APPOINT_SEE) {
+                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
