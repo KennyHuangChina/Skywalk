@@ -34,7 +34,7 @@
 ### 3. Get House Watch list, by login user
 	[Security]	private
 	[Request]
-  		* GET /v1/housewatch/user/:id
+  		* GET /v1/housewatch/user
 	  		* bgn				int
 	  		* fCnt				int
 	[Response]

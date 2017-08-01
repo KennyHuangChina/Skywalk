@@ -125,6 +125,21 @@ func (h *TblHouse) TableUnique() [][]string {
 	}
 }
 
+type TblHouseWatch struct {
+	Id      int64
+	House   int64
+	Watcher int64     // who watch the house
+	When    time.Time `orm:"auto_now_add;type(datetime)"` // when watch the house
+}
+
+func (h *TblHouseWatch) TableIndex() [][]string {
+	return [][]string{
+		[]string{"House"},
+		[]string{"Watcher"},
+		[]string{"House", "Watcher"},
+	}
+}
+
 type TblAppointment struct {
 	Id           int64
 	OrderType    int       // order type. ref to ORDER_TYPE_xxx
@@ -458,7 +473,7 @@ func init() {
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), // new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
-		new(TblHouseEvent), new(TblHouseEventProcess), new(TblAppointment),
+		new(TblHouseEvent), new(TblHouseEventProcess), new(TblAppointment), new(TblHouseWatch),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),
 		new(TblStrings))

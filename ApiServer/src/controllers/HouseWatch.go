@@ -23,7 +23,7 @@ func (h *HouseWatchController) URLMapping() {
 // @Description get house watch list by login user
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /user/:id [get]
+// @router /user [get]
 func (this *HouseWatchController) GetUserWatchList() {
 	FN := "[GetUserWatchList] "
 	beego.Warn("[--- API: GetUserWatchList ---]")

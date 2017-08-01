@@ -4,6 +4,7 @@ import (
 	"ApiServer/commdef"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	// "github.com/astaxie/beego/orm"
 	// "strconv"
 	// "time"
@@ -44,13 +45,35 @@ func GetUserWatchList(begin, tofetch, uid int64) (err error, total, fetched int6
 	}
 
 	/* Permission checking */
-	err, u := GetUser(uid)
-	if nil != err {
+	if err, _ = GetUser(uid); nil != err {
 		beego.Error(FN, "err:", err)
 		return
 	}
 
 	/* Processing */
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_watch").Filter("Watcher", uid)
+	numb, errT := qs.Count()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT)}
+		return
+	}
+	total = numb
+	beego.Debug(FN, "total:", total)
+
+	if 0 == tofetch || 0 == total {
+		return
+	}
+
+	sql := "SELECT house AS id FROM tbl_house_watch WHERE watcher=? LIMIT ?, ?"
+	ids := []int64{}
+	numb, errT = o.Raw(sql, uid, begin, tofetch).QueryRows(&ids)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT)}
+		return
+	}
+	fetched = numb
+	hids = ids
 
 	return
 }
