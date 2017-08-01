@@ -26,6 +26,7 @@ import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_HOUSE_WATCH_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE;
 
 /**
@@ -38,6 +39,7 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
 
+    private TextView mTvWatchListCount;
     private TextView mTvAppointmentCount;
 
 
@@ -56,9 +58,14 @@ public class fragmentPrivate extends Fragment {
         mRlUserNotLogin = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
         mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
 
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
+
+        // 看房记录
+        mTvWatchListCount = (TextView) view.findViewById(R.id.tv_watchlist_count);
+        CmdMgr.GetUserHouseWatchList(0, 0);
+
         // 我的预约
         mTvAppointmentCount = (TextView) view.findViewById(R.id.tv_appointment_count);
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
         CmdMgr.GetHouseList_AppointSee(0, 0);
 
         // 我代理的房源
@@ -215,6 +222,15 @@ public class fragmentPrivate extends Fragment {
                 if (nFetch == -1) {
                     // 我的预约
                     updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
+                }
+            }
+
+            if (command == CMD_GET_USER_HOUSE_WATCH_LIST) {
+                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                int nFetch = resultList.GetFetchedNumber();
+                if (nFetch == -1) {
+                    // 看房记录
+                    updateCount(mTvWatchListCount, resultList.GetTotalNumber());
                 }
             }
 
