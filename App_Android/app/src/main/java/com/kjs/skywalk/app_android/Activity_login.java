@@ -21,6 +21,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,6 +35,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -86,6 +90,7 @@ public class Activity_login extends SKBaseActivity implements
     // account login
     private AutoCompleteTextView mActv_account;
     private EditText mEt_password;
+    private CheckBox mCb_password;
 
     private String mRand = "";
     private String mSalt = "";
@@ -127,6 +132,18 @@ public class Activity_login extends SKBaseActivity implements
         mActv_account.setOnEditorActionListener(mEditorActionListener);
 
         mEt_password = (EditText) findViewById(R.id.et_password);
+
+        mCb_password = (CheckBox) findViewById(R.id.cb_password);
+        mCb_password.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
+                if (bChecked) {
+                    mEt_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    mEt_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
 
         // Set up the login form.
 //        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
