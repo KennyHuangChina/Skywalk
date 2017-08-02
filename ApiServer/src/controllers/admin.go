@@ -29,6 +29,7 @@ type AdminController struct {
 func (a *AdminController) URLMapping() {
 	a.Mapping("GetSecurePic", a.GetSecurePic)
 	a.Mapping("GetUserInfo", a.GetUserInfo)
+	a.Mapping("GetLoginUserInfo", a.GetLoginUserInfo)
 	a.Mapping("GetSaltForUser", a.GetSaltForUser)
 
 	a.Mapping("ModifyAgency", a.ModifyAgency)
@@ -139,6 +140,49 @@ func (this *AdminController) GetAgencyList() {
 			result.Count = -1
 		}
 		// beego.Debug(FN, fmt.Sprintf("agencys:%+v", agencys))
+	}
+}
+
+// @Title GetLoginUserInfo
+// @Description get logined user info
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /loginuser [get]
+func (this *AdminController) GetLoginUserInfo() {
+	FN := "[GetLoginUserInfo] "
+	beego.Warn("[--- API: GetLoginUserInfo ---]")
+
+	var result ResAdminGetUserInfo
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	lu, err := getLoginUser(this.Controller) // login user id
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "lu:", lu)
+
+	/*
+	 *	Extract agreements
+	 */
+	// version := this.GetString("ver")
+
+	/*
+	 *	Processing
+	 */
+	err, uif := models.GetUserInfo(lu, lu)
+	if nil == err {
+		result.UserInfo = uif
 	}
 }
 

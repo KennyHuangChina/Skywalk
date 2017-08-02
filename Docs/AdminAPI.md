@@ -176,3 +176,20 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+
+### 12. Get Logined User Info
+	[Private]	private: logined user
+	[Request]
+  		* GET /v1/admin/loginuser
+	[Response]
+		* SUCCESS:200 	// user info
+			* Id				int			// user id
+			* Name				string		// user name
+			* Phone				string		// user phone number.
+			* IdNo				string		// user ID number or passport number
+			* HeadPortrait		string		// url of user head portrait picture
+			* Role				int 		// 0 - agent manager, 1 - agent, 10 - customer, including house owner and house tenant
+			* RoleDesc			string		// description of role
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description
