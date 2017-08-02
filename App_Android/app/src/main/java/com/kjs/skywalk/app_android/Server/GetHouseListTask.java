@@ -25,7 +25,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseF
  * Created by Jackie on 2017/7/6.
  */
 
-public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
+public class GetHouseListTask extends SKBaseAsyncTask {
 
     public static int TYPE_ALL = 0;
     public static int TYPE_RECOMMAND = 1;
@@ -43,7 +43,6 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
     private int mBegin = 0;
     private int mCount = 0;
     private int mType = 0;
-    private boolean mResultGot = false;
     private int mTotalCount = 0;
     private Context mContext;
     private TaskFinished mTaskFinished = null;
@@ -138,7 +137,7 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
         mBegin = params[1].intValue();
         mCount = params[2].intValue();
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgreessListener);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener);
 
         mResultGot = false;
         mHouseList.clear();
@@ -252,29 +251,4 @@ public class GetHouseListTask extends AsyncTask<Integer, Void, Integer> {
             mResultGot = true;
         }
     };
-
-    CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
-        @Override
-        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-        }
-    };
-
-    boolean waitResult(int nTimeoutMs) {
-        if (nTimeoutMs < 100)
-            return mResultGot;
-
-        int wait_count = 0;
-        while (wait_count < nTimeoutMs / 100) {
-            if (mResultGot)
-                return true;
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            wait_count++;
-        }
-
-        return false;
-    }
 }

@@ -25,13 +25,12 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseF
  * Created by Jackie on 2017/7/6.
  */
 
-public class GetHouseInfo extends AsyncTask<Integer, Void, Integer> {
+public class GetHouseInfo extends SKBaseAsyncTask {
 
     private Context mContext;
     private TaskFinished mTaskFinished = null;
     private int mHouseId = -1;
     private boolean mBackEnd = false;
-    private boolean mResultGot = false;
 
     public GetHouseInfo(Context context, TaskFinished listener) {
         mContext = context;
@@ -60,7 +59,7 @@ public class GetHouseInfo extends AsyncTask<Integer, Void, Integer> {
 
         mResultGot = false;
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgreessListener);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener);
         result = CmdMgr.GetHouseInfo(mHouseId, mBackEnd);
         if(result != CommunicationError.CE_ERROR_NO_ERROR) {
             kjsLogUtil.e("Get House Info failed!");
@@ -94,35 +93,16 @@ public class GetHouseInfo extends AsyncTask<Integer, Void, Integer> {
             if (command == CMD_GET_HOUSE_INFO) {
                 IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
                 ClassDefine.HouseInfo houseInfo = new ClassDefine.HouseInfo();
+                houseInfo.floor = info.Floorthis();
+                houseInfo.totalFloor = info.FloorTotal();
+                houseInfo.bedRooms = info.Bedrooms();
+                houseInfo.livingRooms = info.Livingrooms();
+                houseInfo.bathRooms = info.Bathrooms();
+                houseInfo.area = info.Acreage();
                 mTaskFinished.onTaskFinished(houseInfo);
             }
 
             mResultGot = true;
         }
     };
-
-    CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
-        @Override
-        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-        }
-    };
-
-    boolean waitResult(int nTimeoutMs) {
-        if (nTimeoutMs < 100)
-            return mResultGot;
-
-        int wait_count = 0;
-        while (wait_count < nTimeoutMs / 100) {
-            if (mResultGot)
-                return true;
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            wait_count++;
-        }
-
-        return false;
-    }
 }

@@ -30,6 +30,9 @@ public class SKBaseActivity extends AppCompatActivity
 
     protected int mHouseId = 0;
     protected String mHouseLocation = "";
+    protected int mUserId = 0;
+    protected String mUserName = "";
+    protected String mUserPhone = "";
 
     public int mActScreenWidth = 0;
     public int mActScreenHeight = 0;
@@ -70,6 +73,10 @@ public class SKBaseActivity extends AppCompatActivity
             mHouseLocation = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION);
             Log.i(getClass().getSimpleName().toString(), "House Id: " + mHouseId);
             Log.i(getClass().getSimpleName().toString(), "House Location: " + mHouseLocation);
+
+            mUserId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_USER_ID, 0);
+            mUserName = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_USER_NAME);
+            mUserPhone = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_USER_PHONE);
         }
 
         DisplayMetrics metric = new DisplayMetrics();
