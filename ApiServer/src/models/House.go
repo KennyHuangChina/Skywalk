@@ -1452,9 +1452,10 @@ func getNewHouseList(begin, fetch_numb int64, filter HouseFilter, sorts []int) (
 
 	total = cnt
 
-	if 0 == fetch_numb { // user just want to get the total number of deducted house
+	if 0 == fetch_numb || 0 == total { // user just want to get the total number of deducted house
 		return
 	}
+
 	if begin >= total {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "begin position out of range"}
 		return
