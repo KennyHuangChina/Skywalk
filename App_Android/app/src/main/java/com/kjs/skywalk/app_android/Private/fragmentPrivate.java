@@ -39,7 +39,7 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
 
-    private TextView mTvWatchListCount;
+    private TextView mTvWatchListCount;         // 我的关注
     private TextView mTvAppointmentCount;
 
 
@@ -60,7 +60,7 @@ public class fragmentPrivate extends Fragment {
 
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 
-        // 看房记录
+        // 我的关注
         mTvWatchListCount = (TextView) view.findViewById(R.id.tv_watchlist_count);
         CmdMgr.GetUserHouseWatchList(0, 0);
 
