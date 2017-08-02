@@ -56,7 +56,7 @@ public class LogInOutFragment extends Fragment
 
     private void doTest() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
-        CmdMgr.CommandTest();
+        CmdMgr.GetLoginUserInfo();
     }
 
     private void doGetUserSalt() {
