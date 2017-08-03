@@ -52,6 +52,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_SALT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD;
 
@@ -100,11 +101,14 @@ public class Activity_login extends SKBaseActivity implements
     PopupWindowWaiting mWaitingWindow = null;
     private LinearLayout mContainer = null;
     private String mLoginMode;
+    private CommandManager mCmdMgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
 
         mLoginMode = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginMode, LOGIN_MODE_TELEPHONE);
 
@@ -189,11 +193,10 @@ public class Activity_login extends SKBaseActivity implements
     };
 
     private void doLogin() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
 
         } else {
-            if(CmdMgr.LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+            if(mCmdMgr.LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
                 mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
             }
         }
@@ -201,14 +204,13 @@ public class Activity_login extends SKBaseActivity implements
     }
 
     private int logIn() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         String strUserSalt;
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE))
             strUserSalt = mActv_telephone_num.getText().toString();
         else
             strUserSalt = mActv_account.getText().toString();
 
-        return CmdMgr.GetUserSalt(strUserSalt);
+        return mCmdMgr.GetUserSalt(strUserSalt);
     }
 
     Handler mHandler = new Handler(){
@@ -479,7 +481,6 @@ public class Activity_login extends SKBaseActivity implements
     public void onProgressChanged(int command, String percent, HashMap<String, String> map) {
 
     }
-
 
     private interface ProfileQuery {
         String[] PROJECTION = {

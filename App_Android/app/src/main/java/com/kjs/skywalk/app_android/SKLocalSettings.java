@@ -94,6 +94,7 @@ public class SKLocalSettings {
 
     // UI Settings
     public static final String UISettingsKey_LoginMode = "login_mode";       // telephone account
+    public static final String UISettingsKey_LoginStatus = "login_status";       // telephone account
     public static void UISettings_set(Context context, String key, String value) {
         SharedPreferences.Editor editor;
         try {
@@ -109,5 +110,22 @@ public class SKLocalSettings {
     public static String UISettings_get(Context context, String key, String defaultVaule) {
         SharedPreferences sysPref = context.getSharedPreferences(PREF_UISETTINGS, 0);
         return sysPref.getString(key, defaultVaule);
+    }
+
+    public static void UISettings_set(Context context, String key, boolean bValue) {
+        SharedPreferences.Editor editor;
+        try {
+            SharedPreferences sysPref = context.getSharedPreferences(PREF_UISETTINGS, 0);
+            editor = sysPref.edit();
+            editor.putBoolean(key, bValue);
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean UISettings_get(Context context, String key, boolean bDefaultVaule) {
+        SharedPreferences sysPref = context.getSharedPreferences(PREF_UISETTINGS, 0);
+        return sysPref.getBoolean(key, bDefaultVaule);
     }
 }

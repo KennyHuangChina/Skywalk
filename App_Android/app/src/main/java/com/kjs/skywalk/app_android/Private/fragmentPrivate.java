@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -75,6 +76,7 @@ public class fragmentPrivate extends Fragment {
         mTvToApprove = (TextView) view.findViewById(R.id.tv_to_approve);
 
 
+        mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
         updateLayout(mIsLogin);
 
         // get behalf info

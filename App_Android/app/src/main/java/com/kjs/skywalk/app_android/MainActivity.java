@@ -28,6 +28,7 @@ import com.kjs.skywalk.app_android.Apartment.fragmentApartment;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.BadgeView;
 
 import java.io.File;
@@ -41,6 +42,9 @@ import me.iwf.photopicker.PhotoPreview;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
+
 public class MainActivity extends SKBaseActivity {
     private fragmentHomePage mFragHomePage = null;
     private fragmentApartment mFragApartment = null;
@@ -52,6 +56,7 @@ public class MainActivity extends SKBaseActivity {
     private TextView mTvPrivate;
     private BadgeView mBvMsg;
     private BadgeView mBvMsgInTab;
+    private CommandManager mCmdMgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,8 @@ public class MainActivity extends SKBaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
 
         // copy file from "asset/testPics/" to "cache" dir
         commonFun.copyAssets(this, "testPics", getCacheDir().getAbsolutePath());
@@ -88,6 +95,39 @@ public class MainActivity extends SKBaseActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // check login status
+        if(mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
+//            showWaiting(mTvHomePage);
+        } else {
+            SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon result) {
+//        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == result) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+//        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
+
+        if (command == CMD_GET_LOGIN_USER_INFO) {
+            // IApiResults.IGetUserInfo
+//            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
+            SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
+        }
     }
 
     private void setTabMenuSelected(View v) {
