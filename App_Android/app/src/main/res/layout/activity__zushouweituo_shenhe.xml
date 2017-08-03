@@ -51,8 +51,7 @@
         android:orientation="vertical"
         android:id="@+id/linearLayout"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/relativeLayout">
+        android:layout_alignParentStart="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -156,7 +155,7 @@
                         android:id="@+id/textViewFloor"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
-                        android:text="11/11F"/>
+                        android:text=""/>
 
                 </RelativeLayout>
                 <include layout="@layout/seperator_horizontal"/>
@@ -171,9 +170,10 @@
                         android:textColor="@color/colorText"
                         android:text="产证面积"/>
                     <TextView
+                        android:id="@+id/textViewArea"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
-                        android:text="115m²"/>
+                        android:text=""/>
 
                 </RelativeLayout>
                 <include layout="@layout/seperator_horizontal"/>
@@ -188,9 +188,10 @@
                         android:textColor="@color/colorText"
                         android:text="户型"/>
                     <TextView
+                        android:id="@+id/textViewHouseType"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
-                        android:text="3房2厅2卫"/>
+                        android:text=""/>
 
                 </RelativeLayout>
                 <include layout="@layout/seperator_horizontal"/>

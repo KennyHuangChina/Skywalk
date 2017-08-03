@@ -12,12 +12,18 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Server.GetHouseInfo;
 
+import org.w3c.dom.Text;
+
+import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
+
 public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetHouseInfo.TaskFinished{
 
     private boolean mModifyMode = false;
     private RelativeLayout mRootLayout = null;
     private TextView mTextViewPropertyName = null;
     private TextView mTextViewRoom = null;
+
+    private ClassDefine.HouseInfo mHouseInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +42,25 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
         houseInfo.execute(mHouseId, 1);
     }
 
+    private void update() {
+        if(mHouseInfo == null) {
+            return;
+        }
+
+        TextView floor = (TextView)findViewById(R.id.textViewFloor);
+        floor.setText("" + mHouseInfo.floor + "/" + mHouseInfo.totalFloor + "F");
+
+        TextView area = (TextView)findViewById(R.id.textViewArea);
+        double acreage = (double)mHouseInfo.area / 100.0;
+        area.setText(String.format("%.02f", acreage) + "㎡");
+
+        TextView type = (TextView)findViewById(R.id.textViewHouseType);
+        String strType = getHouseTypeString(mHouseInfo.bedRooms, mHouseInfo.livingRooms, mHouseInfo.bathRooms);
+        type.setText(strType);
+    }
+
     @Override
-    public void onTaskFinished(ClassDefine.HouseInfo houseInfo) {
+    public void onTaskFinished(final ClassDefine.HouseInfo houseInfo) {
         if(houseInfo == null) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -46,6 +69,14 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
                 }
             });
             return;
+        } else {
+            mHouseInfo = houseInfo;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    update();
+                }
+            });
         }
     }
 
