@@ -40,12 +40,6 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         mUtils= new MyUtils(context);
 //        mCookieManager = SKCookieManager.getManager(context);
     }
-
-//    private CommandManager(Context context) {
-//        mUtils= new MyUtils(context);
-////        mCookieManager = SKCookieManager.getManager(context);
-//    }
-
     public static synchronized CommandManager getCmdMgrInstance(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         if (null == mCmdMgr) {
             mCmdMgr = new CommandManager(context, CmdListener, ProgListener);
@@ -246,6 +240,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         CommunicationBase op = new CmdGetUserInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, "" + uid);
+        return execute(op, pMap);
+    }
+
+    @Override
+    public int GetLoginUserInfo() {
+        CommunicationBase op = new CmdGetLoginUserInfo(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 

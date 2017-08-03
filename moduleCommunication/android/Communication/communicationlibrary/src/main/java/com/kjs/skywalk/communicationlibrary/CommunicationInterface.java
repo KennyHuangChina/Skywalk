@@ -27,18 +27,66 @@ public class CommunicationInterface {
 
         int CommandTest();
 
-        /* User Admin */
-        int GetSmsCode(String userName);                                        // CMD_GET_SMS_CODE,        IApiResults.IGetSmsCode
-        int GetUserInfo(int uid);                                               // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
-        int GetUserSalt(String userName);                                       // CMD_GET_USER_SALT,       IApiResults.IGetUserSalt
-        int LoginByPassword(String user, String pass, String rand, String salt);// CMD_LOGIN_BY_PASSWORD,   IApiResults.ILogin
-        int LoginBySms(String user, String smsCode);                            // CMD_LOGIN_BY_SMS,        IApiResults.ILogin
-        int Relogin(String userName);                                           // CMD_RELOGIN,             IApiResults.ILogin
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          User Admin
+        /*
+        *   CMD         : CMD_GET_SMS_CODE,
+        *   Result      : IApiResults.IGetSmsCode
+        *   userName    : login name (cell phone number)
+        */
+        int GetSmsCode(String userName);
+
+        /*
+        *   CMD     : CMD_GET_USER_INFO,
+        *   Result  : IApiResults.IGetUserInfo
+        *   uid     : user id to fetch
+        */
+        int GetUserInfo(int uid);
+
+        /*
+        *   CMD     : CMD_GET_LOGIN_USER_INFO,
+        *   Result  : IApiResults.IGetUserInfo
+        */
+        int GetLoginUserInfo();
+
+        /*
+        *   CMD         : CMD_GET_USER_SALT,
+        *   Result      : IApiResults.IGetUserSalt
+        *   userName    : login name (cell phone number)
+        */
+        int GetUserSalt(String userName);
+
+        /*
+        *   CMD         : CMD_LOGIN_BY_PASSWORD,
+        *   Result      : IApiResults.ILogin
+        *   user        : login name (cell phone number)
+        *   smsCode     : the sms code user received
+        */
+        int LoginByPassword(String user, String pass, String rand, String salt);// ,
+
+        /*
+        *   CMD         : CMD_LOGIN_BY_SMS,
+        *   Result      : IApiResults.ILogin
+        *   user        : login name (cell phone number)
+        *   smsCode     : the sms code user received
+        */
+        int LoginBySms(String user, String smsCode);
+
+        /*
+        *   CMD         : CMD_RELOGIN,
+        *   Result      : IApiResults.ILogin
+        *   userName    : login name (cell phone number)
+         */
+        int Relogin(String userName);
+
         int Logout();                                                           // CMD_LOG_OUT,             IApiResults.ICommon
         int GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
         int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon
 
-        /* House */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          House
         int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
 
         /*
@@ -82,20 +130,26 @@ public class CommunicationInterface {
         int GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
         int SetHouseShowtime(int house_id, int pw, int pv, String pd);          // CMD_SET_HOUSE_SHOWTIME,          IApiResults.ICommon
 
-        /* Property, Community */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          Property, Community
         int GetPropertyListByName(String sName, int nBegin, int nCount);                // CMD_GET_PROPERTY_LIST,   IApiResults.IResultList(IApiResults.IPropertyInfo)
         int AddProperty(String sName, String sAddr, String sDesc);                      // CMD_ADD_PROPERTY,        IApiResults.IAddRes
         int GetPropertyInfo(int nPropId);                                               // CMD_GET_PROPERTY_INFO,   IApiResults.IPropertyInfo
         int ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);  // CMD_MODIFY_PROPERTY,     IApiResults.ICommon
 
-        /* House Deliverables for rent */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          House Deliverables for rent
         int AddDeliverable(String sName);                                                   // CMD_ADD_DELIVERABLE,         IApiResults.IAddRes
         int GetDeliverableList();                                                           // CMD_GET_DELIVERABLE_LIST,    IApiResults.IResultList(IApiResults.IDeliverableItem)
         int ModifyDeliverable(int dev_id, String sName);                                    // CMD_EDIT_DELIVERABLE,        IApiResults.ICommon
         int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);   // CMD_ADD_HOUSE_DELIVERABLE,   IApiResults.IAddRes
         int GetHouseDeliverables(int house_id);                                             // CMD_GET_HOUSE_DELIVERABLES,  IApiResults.IResultList(IApiResults.IDeliverableInfo)
 
-        /* House Facilities */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          House Facilities
         int AddFacilityType(String sTypeName);                          // CMD_ADD_FACILITY_TYPE,       IApiResults.IAddRes
         int EditFacilityType(int typeId, String sTypeName);             // CMD_EDIT_FACILITY_TYPE,      IApiResults.ICommon
         int GetFacilityTypeList();                                      // CMD_GET_FACILITY_TYPE_LIST,  IApiResults.IResultList(IApiResults.IListIdName)
@@ -108,14 +162,18 @@ public class CommunicationInterface {
         int GetHouseFacilityList(int house);                            // CMD_GET_HOUSEFACILITY_LIST,  IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
         int EditHouseFacility(int hfid, int fid, int qty, String desc); // CMD_EDIT_HOUSE_FACILITY,     IApiResults.ICommon
 
-        // Pictures
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          Pictures
         int AddPicture(int house, int type, int refId,
                        String desc, String file);                       // CMD_ADD_PICTURE,         IApiResults.IAddRes
         int DelePicture(int pic);                                       // CMD_DEL_PICTURE,         IApiResults.ICommon
         int GetPicUrls(int pic, int size);                              // CMD_GET_PIC_URL,         IApiResults.IPicUrls
         int GetHousePics(int house, int type);                          // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
 
-        // Event
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //          Event
         int GetNewEventCount();                                 // CMD_GET_NEW_EVENT_CNT,       IApiResults.INewEventCount
         int GetHouseNewEvent();                                 // CMD_GET_HOUSE_NEW_EVENTS,    IApiResults.IResultList(IApiResults.IHouseNewEvent)
         int ReadNewEvent(int event_id);                         // CMD_READ_NEW_EVENT,          IApiResults.ICommon
@@ -184,7 +242,8 @@ public class CommunicationInterface {
                                 CMD_RELOGIN               = 0x1006,
                                 CMD_GET_SMS_CODE          = 0x1007,
                                 CMD_GET_AGENCY_LIST       = 0x1008,
-                                CMD_MODIFY_AGENCY         = 0x1009;
+                                CMD_MODIFY_AGENCY         = 0x1009,
+                                CMD_GET_LOGIN_USER_INFO   = 0x100A;
 
         // House
         final public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001,
