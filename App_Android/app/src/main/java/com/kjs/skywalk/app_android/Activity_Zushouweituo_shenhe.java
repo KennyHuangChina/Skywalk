@@ -16,12 +16,21 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
 
     private boolean mModifyMode = false;
     private RelativeLayout mRootLayout = null;
+    private TextView mTextViewPropertyName = null;
+    private TextView mTextViewRoom = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__zushouweituo_shenhe);
         mRootLayout = (RelativeLayout)findViewById(R.id.activity__zushouweituo_shenhe);
+
+        mTextViewPropertyName = (TextView)findViewById(R.id.textViewPropertyName);
+        mTextViewRoom = (TextView)findViewById(R.id.textViewRoomNo);
+
+        mTextViewPropertyName.setText(mPropertyName);
+        String strRoom = mBuildingNo + "栋" + mRoomNo + "室";
+        mTextViewRoom.setText(strRoom);
 
         GetHouseInfo houseInfo = new GetHouseInfo(this, this);
         houseInfo.execute(mHouseId, 1);

@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_back"
-                android:layout_toLeftOf="@+id/tv_modify"
+                android:layout_toLeftOf="@+id/textViewModify"
                 android:gravity="center"
                 android:textColor="@color/colorTextNormal"
                 android:textSize="17sp"
@@ -120,7 +120,7 @@
                     style="@style/textStyle_page_blockValue"
                     android:textColor="@color/colorTextNormal"
                     android:enabled="false"
-                    android:text="世贸蝶湖湾"/>
+                    android:text=""/>
 
                 </RelativeLayout>
                 <include layout="@layout/seperator_horizontal"/>
@@ -135,9 +135,10 @@
                         android:textColor="@color/colorText"
                         android:text="房号"/>
                     <TextView
+                        android:id="@+id/textViewRoomNo"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
-                        android:text="171栋2301室"/>
+                        android:text=""/>
 
                 </RelativeLayout>
                 <include layout="@layout/seperator_horizontal"/>

@@ -30,6 +30,9 @@ public class SKBaseActivity extends AppCompatActivity
 
     protected int mHouseId = 0;
     protected String mHouseLocation = "";
+    protected String mPropertyName= "";
+    protected String mBuildingNo = "";
+    protected String mRoomNo = "";
     protected int mUserId = 0;
     protected String mUserName = "";
     protected String mUserPhone = "";
@@ -73,6 +76,10 @@ public class SKBaseActivity extends AppCompatActivity
             mHouseLocation = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION);
             Log.i(getClass().getSimpleName().toString(), "House Id: " + mHouseId);
             Log.i(getClass().getSimpleName().toString(), "House Location: " + mHouseLocation);
+
+            mPropertyName = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_NAME);
+            mBuildingNo = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_BUILDING_NO);
+            mRoomNo = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_ROOM_NO);
 
             mUserId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_USER_ID, 0);
             mUserName = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_USER_NAME);

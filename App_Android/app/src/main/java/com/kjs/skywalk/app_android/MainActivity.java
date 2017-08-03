@@ -308,7 +308,13 @@ public class MainActivity extends SKBaseActivity {
                 switch (item.getItemId()) {
                     case R.id.fangyuanshenhe:
                     {
-                        startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_shenhe.class));
+                        Intent intent = new Intent(MainActivity.this, Activity_Zushouweituo_shenhe.class);
+                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, 2);
+                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, "世茂蝶湖湾17栋1208室");
+                        intent.putExtra(IntentExtraKeyValue.KEY_PROPERTY_NAME, "世茂蝶湖湾");
+                        intent.putExtra(IntentExtraKeyValue.KEY_BUILDING_NO, "17");
+                        intent.putExtra(IntentExtraKeyValue.KEY_ROOM_NO, "1208");
+                        startActivity(intent);
                     }
                     break;
 
