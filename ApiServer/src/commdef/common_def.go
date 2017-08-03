@@ -101,7 +101,9 @@ type HouseInfo struct {
 	Decoration  int    // TODO
 	BuyDate     string // purchase date
 	ModifyDate  string // last modify date
+	Landlord    int64  // house landlord id
 	Agency      int64  // house agency id
+	SubmitTime  string // landlord submit time
 	CertStat    int    // House certification status. HOUSE_CERT_STAT_XXX
 	CertTime    string // house certification time
 	CertDesc    string // house certification description

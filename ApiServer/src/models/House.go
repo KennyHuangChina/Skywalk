@@ -500,6 +500,9 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 		hif.HouseNo = house.HouseNo
 		hif.BuyDate = fmt.Sprintf("%s", house.PurchaseDate.Local())[:10]
 
+		hif.Landlord = house.Owner.Id
+		hif.SubmitTime = house.SubmitTime.Local().String()[:19]
+
 		nullTime := time.Time{}
 		if nullTime != house.PublishTime {
 			hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
