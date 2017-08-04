@@ -1,5 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +31,8 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApi
     private String  mBuyDate;       // buy date
     private String  mModifyDate;    // last modify date
     private int     mAgency;        // house agent id
+    private int     mLandlord;      // house landlord id
+    private Date    mSubmitTime;    // house submit time
     private boolean mForSale;
     private boolean mForRent;
     private int     mRentStat;
@@ -58,6 +62,8 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApi
         mString += "  buy date: " + BuyDate() + "\n";
         mString += "  last modify date: " + ModifyDate() + "\n";
         mString += "  Agency: " + Agency() + "\n";
+        mString += "  Landlord: " + Landlord() + "\n";
+        mString += "  Submit at: " + SubmitTime() + "\n";
         mString += "  Sale: " + ForSale() + "\n";
         mString += "  Rent: " + ForRent() + ", stat:" + RentStat() + "\n";
         mString += "  Cert: " + CertStat() + ", time: " + CertTime() + ", desc:" + CertDesc() + "\n";
@@ -83,14 +89,29 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApi
             mBuyDate        = jHouse.getString("BuyDate");
             mModifyDate     = jHouse.getString("ModifyDate");
             mAgency         = jHouse.getInt("Agency");
+            mLandlord       = jHouse.getInt("Landlord");
             mForSale        = jHouse.getBoolean("ForSale");
             mForRent        = jHouse.getBoolean("ForRent");
             mRentStat       = jHouse.getInt("RentStat");
             mCertStat       = jHouse.getInt("CertStat");
             mCertDesc       = jHouse.getString("CertDesc");
 
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String strSubmitTime = jHouse.getString("SubmitTime");
+            if (null != strSubmitTime && !strSubmitTime.isEmpty()) {
+                try {
+                    mSubmitTime = format.parse(strSubmitTime);
+//                    String str = String.format("%d-%d-%d %d:%d:%d", mSubmitTime.getYear(), mSubmitTime.getMonth(), mSubmitTime.getDay(),
+//                                                mSubmitTime.getHours(), mSubmitTime.getMinutes(), mSubmitTime.getSeconds());
+//                    Log.d("mSubmitTime:", str);
+//                    Log.d("mSubmitTime:", mSubmitTime.toString());
+//                    Log.d("mSubmitTime:", mSubmitTime.toLocaleString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
             String strCertTime = jHouse.getString("CertTime");
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             if (null != strCertTime && !strCertTime.isEmpty()) {
                 try {
                     mCertTime = format.parse(strCertTime);
@@ -198,6 +219,16 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApi
     @Override
     public int Agency() {
         return mAgency;
+    }
+
+    @Override
+    public int Landlord() {
+        return mLandlord;
+    }
+
+    @Override
+    public Date SubmitTime() {
+        return mSubmitTime;
     }
 
     @Override
