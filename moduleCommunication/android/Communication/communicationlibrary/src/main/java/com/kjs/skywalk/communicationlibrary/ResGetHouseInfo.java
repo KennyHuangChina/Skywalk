@@ -1,5 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,11 +96,16 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApi
             mCertStat       = jHouse.getInt("CertStat");
             mCertDesc       = jHouse.getString("CertDesc");
 
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             String strSubmitTime = jHouse.getString("SubmitTime");
             if (null != strSubmitTime && !strSubmitTime.isEmpty()) {
                 try {
                     mSubmitTime = format.parse(strSubmitTime);
+//                    String str = String.format("%d-%d-%d %d:%d:%d", mSubmitTime.getYear(), mSubmitTime.getMonth(), mSubmitTime.getDay(),
+//                                                mSubmitTime.getHours(), mSubmitTime.getMinutes(), mSubmitTime.getSeconds());
+//                    Log.d("mSubmitTime:", str);
+//                    Log.d("mSubmitTime:", mSubmitTime.toString());
+//                    Log.d("mSubmitTime:", mSubmitTime.toLocaleString());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
