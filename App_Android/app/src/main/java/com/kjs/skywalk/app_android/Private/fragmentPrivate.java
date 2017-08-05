@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRlTitleBar;
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
+    private ImageView mIv_portrait_mask;
 
     private TextView mTvWatchListCount;         // 我的关注
     private TextView mTvAppointmentCount;
@@ -58,6 +60,7 @@ public class fragmentPrivate extends Fragment {
         mRlTitleBar = (RelativeLayout) view.findViewById(R.id.rl_titlebar);
         mRlUserNotLogin = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
         mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
+        mIv_portrait_mask = (ImageView) view.findViewById(R.id.iv_portrait_mask);
 
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 
@@ -77,6 +80,7 @@ public class fragmentPrivate extends Fragment {
 
 
         mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+        kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
         updateLayout(mIsLogin);
 
         // get behalf info
@@ -198,10 +202,12 @@ public class fragmentPrivate extends Fragment {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#00AE63"));
             mRlUserNotLogin.setVisibility(View.GONE);
             mLlUserLogin.setVisibility(View.VISIBLE);
+//            mIv_portrait_mask.setImageResource(R.drawable.portrait_mask_login);
         } else {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#E5E5E5"));
             mRlUserNotLogin.setVisibility(View.VISIBLE);
             mLlUserLogin.setVisibility(View.GONE);
+//            mIv_portrait_mask.setImageResource(R.drawable.portrait_mask_notlogin);
         }
     }
 

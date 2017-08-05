@@ -121,12 +121,14 @@ public class MainActivity extends SKBaseActivity {
             kjsLogUtil.w("result is null");
             return;
         }
-//        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
+
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
 
         if (command == CMD_GET_LOGIN_USER_INFO) {
             // IApiResults.IGetUserInfo
 //            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
             SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
+            kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
         }
     }
 
