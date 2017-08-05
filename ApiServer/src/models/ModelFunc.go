@@ -17,7 +17,7 @@ import (
 
 func generateMD5(content string) string {
 	raw := md5.Sum([]byte(content))
-	fmt.Println("%x", raw)
+	// fmt.Printf("%x", raw)
 	return fmt.Sprintf("%x", raw)
 }
 

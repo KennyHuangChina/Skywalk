@@ -591,16 +591,17 @@ func LoginSms(login_name, sms, Sid string) (err error, uid int64) {
 		beego.Debug(FN, "uid:", uid)
 	}()
 
-	// argument checking
+	/* Argument Checking */
 	if err = checkPhoneNo(login_name); nil != err {
 		return
 	}
 
-	// check if the sms code is valid
+	/* check if the sms code is valid */
 	if err = checkSms(login_name, sms); nil != err {
 		return
 	}
 
+	/* Processing */
 	o := orm.NewOrm()
 
 	user := TblUser{LoginName: login_name}
@@ -609,28 +610,34 @@ func LoginSms(login_name, sms, Sid string) (err error, uid int64) {
 		if orm.ErrNoRows != err1 && orm.ErrMissPK != err1 {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
 			return
-		} else {
-			beego.Debug(FN, "user:", login_name, "does not exist, create for it")
-			err, user.Salt = newUserSalt()
-			if nil != err {
-				return
-			}
-			user.LoginName = login_name
-			user.Phone = login_name
-			// user.Role = commdef.USER_TYPE_Customer
-
-			id, errTmp := o.Insert(&user)
-			if nil != errTmp {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
-				return
-			}
-			uid = id
 		}
+
+		// the login name(/phone number), create new user for it
+		beego.Debug(FN, "user:", login_name, "does not exist, create for it")
+		err, user.Salt = newUserSalt()
+		if nil != err {
+			return
+		}
+		user.LoginName = login_name
+		user.Phone = login_name
+		// user.Role = commdef.USER_TYPE_Customer
+
+		id, errTmp := o.Insert(&user)
+		if nil != errTmp {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errTmp.Error()}
+			return
+		}
+		uid = id
 	} else {
+		if !user.Enable {
+			err = commdef.SwError{ErrCode: commdef.ERR_USER_NOT_ENABLE}
+			return
+		}
 		uid = user.Id
 	}
 
-	beego.Warn(FN, "NOT IMPLEMENT")
+	// record the session for login
+	err = updateUserSession(uid, Sid)
 
 	return
 }
