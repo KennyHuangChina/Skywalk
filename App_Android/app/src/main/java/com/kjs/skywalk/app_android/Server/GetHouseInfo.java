@@ -27,7 +27,6 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseF
 
 public class GetHouseInfo extends SKBaseAsyncTask {
 
-    private Context mContext;
     private TaskFinished mTaskFinished = null;
     private int mHouseId = -1;
     private boolean mBackEnd = false;
@@ -77,6 +76,7 @@ public class GetHouseInfo extends SKBaseAsyncTask {
     CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
         @Override
         public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            GetHouseInfo.super.onCommandFinished(command, iResult);
             if (null == iResult) {
                 kjsLogUtil.w("result is null");
                 mResultGot = true;
@@ -99,6 +99,8 @@ public class GetHouseInfo extends SKBaseAsyncTask {
                 houseInfo.livingRooms = info.Livingrooms();
                 houseInfo.bathRooms = info.Bathrooms();
                 houseInfo.area = info.Acreage();
+                houseInfo.landlordId = info.Landlord();
+                houseInfo.submitTime = info.SubmitTime();
                 mTaskFinished.onTaskFinished(houseInfo);
             }
 

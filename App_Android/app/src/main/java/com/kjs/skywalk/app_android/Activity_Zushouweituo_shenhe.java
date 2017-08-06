@@ -14,6 +14,8 @@ import com.kjs.skywalk.app_android.Server.GetHouseInfo;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+
 import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
 
 public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetHouseInfo.TaskFinished{
@@ -57,6 +59,11 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
         TextView type = (TextView)findViewById(R.id.textViewHouseType);
         String strType = getHouseTypeString(mHouseInfo.bedRooms, mHouseInfo.livingRooms, mHouseInfo.bathRooms);
         type.setText(strType);
+
+        TextView submitTime = (TextView)findViewById(R.id.textViewSubmitTime);
+        SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = sdformat.format(mHouseInfo.submitTime);
+        submitTime.setText(time);
     }
 
     @Override

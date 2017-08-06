@@ -240,6 +240,7 @@
                         android:textColor="@color/colorText"
                         android:text="业主"/>
                     <TextView
+                        android:id="@+id/textViewLandlord"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onClickResponse"
@@ -249,7 +250,7 @@
                         android:layout_alignParentRight="true"
                         android:textSize="14sp"
                         android:textColor="@color/colorTextNormal"
-                        android:text="张三 13023423456"/>
+                        android:text=""/>
 
                 </RelativeLayout>
                 <include layout="@layout/seperator_horizontal"/>
@@ -262,8 +263,9 @@
                     <TextView
                         style="@style/textStyle_page_blockKey"
                         android:textColor="@color/colorText"
-                        android:text="业主等级时间"/>
+                        android:text="业主登记时间"/>
                     <TextView
+                        android:id="@+id/textViewSubmitTime"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
                         android:text="2016-12-14 10:32:44"/>

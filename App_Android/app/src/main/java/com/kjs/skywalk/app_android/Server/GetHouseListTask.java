@@ -44,7 +44,6 @@ public class GetHouseListTask extends SKBaseAsyncTask {
     private int mCount = 0;
     private int mType = 0;
     private int mTotalCount = 0;
-    private Context mContext;
     private TaskFinished mTaskFinished = null;
 
     private ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
