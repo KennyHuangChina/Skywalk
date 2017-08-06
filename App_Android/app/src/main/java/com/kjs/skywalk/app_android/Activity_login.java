@@ -443,6 +443,8 @@ public class Activity_login extends SKBaseActivity implements
             doShowProgress(false);
             hideWaitingWindow();
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
+                // login in success
+                SKLocalSettings.UISettings_set(Activity_login.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 finish();
             } else {
                 commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), result.GetErrDesc());
@@ -535,6 +537,8 @@ public class Activity_login extends SKBaseActivity implements
             showProgress(false);
 
             if (success) {
+                // login in success
+                SKLocalSettings.UISettings_set(Activity_login.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 finish();
             } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
