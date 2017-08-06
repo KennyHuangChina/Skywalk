@@ -113,6 +113,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
 		beego.ControllerComments{
+			Method: "ResetPass",
+			Router: `/resetpass`,
+			AllowHTTPMethods: []string{"put"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:AdminController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AdminController"],
+		beego.ControllerComments{
 			Method: "ModifyAgency",
 			Router: `/Agency/:id`,
 			AllowHTTPMethods: []string{"put"},

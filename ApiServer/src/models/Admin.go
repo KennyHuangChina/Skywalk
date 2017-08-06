@@ -20,6 +20,74 @@ const (
 	c_PW_HASH_BYTES = 32
 )
 
+func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
+	FN := "[ResetPass] "
+	beego.Trace(FN, "login user:", lu, ", version:", ver, ", user:", user, ", password:", pass, ", rand:", rand, ", sms:", sms)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument checking */
+	if 0 == len(user) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "user could not be empty"}
+		return
+	}
+	if 0 == len(rand) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "random not set"}
+		return
+	}
+	if 0 == len(sms) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "SMS captcha not set"}
+		return
+	}
+
+	// pwd, _ := base64.URLEncoding.DecodeString(pass)
+	// beego.Debug(FN, "pwd:", pwd)
+	// pass = string(pwd)
+	// beego.Debug(FN, "password:", pass)
+
+	err, lgusr := GetUser(lu)
+	if nil != err {
+		return
+	}
+
+	err, tu := getUserByName(user) // target user
+	if nil != err {
+		return
+	}
+
+	/* Permission checking */
+	if lu == tu.Id { //reset password for user himself
+
+	} else if _, bAdmin := isAdministrator(lu); !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("User(%d) is not a administrator", lu)}
+		return
+	}
+
+	// lgusr.Name = ""
+	// check if the sms captcha is correct and valid
+	if err = checkSms(lgusr.LoginName, sms); nil != err {
+		return
+	}
+
+	// Decrypt real password
+	beego.Warn(FN, "TODO: decrypt the real password")
+
+	/* Change the password indeed */
+	o := orm.NewOrm()
+
+	tu.PassLogin = pass
+	beego.Debug(FN, fmt.Sprintf("tu:%+v", tu))
+	if /*numb*/ _, errT := o.Update(&tu, "PassLogin"); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to update pssword for user(%d), err:%s", tu.Id, errT.Error())}
+	}
+
+	return
+}
+
 /**
 *	Modify agency info
 *	Arguments:
@@ -266,18 +334,12 @@ func GetSaltByName(un string) (err error, salt, rand string) {
 		}
 	}()
 
-	o := orm.NewOrm()
-
-	user := TblUser{LoginName: un}
-	if err1 := o.Read(&user, "LoginName"); nil != err1 {
-		// beego.Error(FN, err1)
-		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
-		} else {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
-		}
+	err, user := getUserByName(un)
+	if nil != err {
 		return
 	}
+
+	// o := orm.NewOrm()
 
 	err, r := newUserSalt()
 	if nil != err {
@@ -684,6 +746,25 @@ func GetUser(uid int64) (err error, user TblUser) {
 //		Internal Functions
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func getUserByName(login_name string) (err error, user TblUser) {
+
+	o := orm.NewOrm()
+
+	u := TblUser{LoginName: login_name}
+	if err1 := o.Read(&u, "LoginName"); nil != err1 {
+		// beego.Error(FN, err1)
+		if orm.ErrNoRows == err1 || orm.ErrMissPK == err1 {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: err1.Error()}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
+		}
+		return
+	}
+
+	user = u
+	return
+}
+
 func updateUserSession(uid int64, sid string) (err error) {
 
 	o := orm.NewOrm()
@@ -745,7 +826,7 @@ func checkSms(phone, sms string) (err error) {
 
 	defer func() {
 		if nil != err {
-			beego.Error(FN, err)
+			// beego.Error(FN, err)
 		}
 	}()
 

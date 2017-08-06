@@ -193,3 +193,19 @@
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description
+
+### 13. Rest login password
+	[Private]	private: logined user could reset password for himself; administrator could reset password for all users
+	[Request]
+  		* PUT /v1/admin/resetpass
+	  		* v				string		// version number
+	  		* u				string		// user whos password will be reset. (Only valid for administrator, regualr user have no right to reset any other people's password
+	  		* p				string		// password (Encrypted by AES)
+	  		* r				string		// random
+	  		* s				string		// SMS captcha number
+	[Response]
+		* SUCCESS:200 	// user info
+			* User			string		// user
+		* ERR: 4XX,5XX
+	  		* errCode		int			// error code
+	  		* errDesc		string		// error description

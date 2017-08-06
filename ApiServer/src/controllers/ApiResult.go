@@ -63,6 +63,12 @@ type ResAdminLogin struct {
 	Sid string
 }
 
+// result of API ResetPass
+type ResAdminResetPass struct {
+	ResCommon
+	User string
+}
+
 // result of API get house info
 type ResGetHouseInfo struct {
 	ResCommon

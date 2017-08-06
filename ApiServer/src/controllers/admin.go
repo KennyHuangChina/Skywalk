@@ -40,10 +40,58 @@ func (a *AdminController) URLMapping() {
 	a.Mapping("Relogin", a.Relogin)
 	a.Mapping("Loginsms", a.Loginsms)
 	a.Mapping("Logout", a.Logout)
+	a.Mapping("ResetPass", a.ResetPass)
 	a.Mapping("Test", a.Test)
 }
 
 // TODO: user.id_no could be used to correct the user sex info
+
+// @Title ResetPass
+// @Description reset password for user
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /resetpass [put]
+func (this *AdminController) ResetPass() {
+	FN := "[ResetPass] "
+	beego.Warn("[--- API: ResetPass ---]")
+
+	var result ResAdminResetPass
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	lu, err := getLoginUser(this.Controller) // login user id
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "lu:", lu)
+
+	/*
+	 *	Extract agreements
+	 */
+	ver := this.GetString("v")
+	user := this.GetString("u")
+	pass := this.GetString("p")
+	rand := this.GetString("r")
+	sms := this.GetString("s")
+
+	/*
+	 *	Processing
+	 */
+	err = models.ResetPass(lu, ver, user, pass, rand, sms)
+	if nil == err {
+		result.User = user
+	}
+}
 
 // @Title ModifyAgency
 // @Description modify the agency info
