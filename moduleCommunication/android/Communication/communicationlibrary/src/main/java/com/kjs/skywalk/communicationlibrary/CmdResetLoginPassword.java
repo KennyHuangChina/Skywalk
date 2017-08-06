@@ -69,6 +69,7 @@ class CmdResetLoginPassword extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        return super.doParseResult(nErrCode, jObject);
+        ResResetPass res = new ResResetPass(nErrCode, jObject);
+        return res;
     }
 }

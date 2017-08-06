@@ -96,6 +96,10 @@ public class IApiResults {
         String GetRoleDesc();
     }
 
+    public interface IResetPassword {
+        String GetUser();
+    }
+
     public interface IGetHouseInfo {
         int     HouseId();      // house id
         int     ProId();        // property id which the house belong to
