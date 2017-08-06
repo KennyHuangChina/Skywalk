@@ -294,6 +294,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
+    public int ResetLoginPass(String user, String pass, String sms) {
+        CommunicationBase op = new CmdResetLoginPassword(mContext, user, pass, sms);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int GetAgencyList(int begin, int cnt) {
         CommunicationBase op = new CmdGetAgencyList(mContext, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();

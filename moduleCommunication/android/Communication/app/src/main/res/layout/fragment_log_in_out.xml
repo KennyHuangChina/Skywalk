@@ -68,7 +68,28 @@
                 android:text="123456"
                 android:id="@+id/editTextPassword"
                 android:layout_weight="1" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/sms_container"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username_container" >
+
+            <TextView
+                android:text="SMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/editSms"
+                android:layout_weight="1" />
         </LinearLayout>
 
     </LinearLayout>
@@ -87,6 +108,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonLogin"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="8) Reset Pass"
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRestPass"
             android:layout_weight="1" />
 
         <Button
@@ -140,7 +169,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:text="6) Get SMS code"
+            android:text="6) Get SMS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnGetSmsCode"

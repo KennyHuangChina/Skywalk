@@ -80,7 +80,21 @@ public class CommunicationInterface {
          */
         int Relogin(String userName);
 
-        int Logout();                                                           // CMD_LOG_OUT,             IApiResults.ICommon
+        /*
+        *   CMD         : CMD_LOG_OUT,
+        *   Result      : IApiResults.ICommon
+         */
+        int Logout();
+
+        /*
+        *   CMD         : CMD_RESET_LOGIN_PASS,
+        *   Result      : IApiResults.ICommon
+        *   user        : user name(/phone number)
+        *   pass        : new password
+        *   sms         : sms captcha code
+        */
+        int ResetLoginPass(String user, String pass, String sms);
+
         int GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
         int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon
 
@@ -243,7 +257,8 @@ public class CommunicationInterface {
                                 CMD_GET_SMS_CODE          = 0x1007,
                                 CMD_GET_AGENCY_LIST       = 0x1008,
                                 CMD_MODIFY_AGENCY         = 0x1009,
-                                CMD_GET_LOGIN_USER_INFO   = 0x100A;
+                                CMD_GET_LOGIN_USER_INFO   = 0x100A,
+                                CMD_RESET_LOGIN_PASS      = 0x100B;
 
         // House
         final public static int CMD_GET_BRIEF_PUBLIC_HOUSE_INFO   = 0x2001,
