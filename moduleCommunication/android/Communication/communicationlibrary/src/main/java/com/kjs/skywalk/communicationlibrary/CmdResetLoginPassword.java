@@ -1,6 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 class CmdResetLoginPassword extends CommunicationBase {
     private String mUser    = null;
     private String mNewPass = null;
+    private String mSalt    = null;
     private String mSms     = null;
 
     CmdResetLoginPassword(Context context, String user, String newPass, String sms) {
@@ -64,7 +66,18 @@ class CmdResetLoginPassword extends CommunicationBase {
             return false;
         }
 
-        return true;    // super.checkParameter(map);
+        NativeCall pNC = NativeCall.GetNativeCaller();
+        byte[] pass = pNC.EncryptNewPassword(mNewPass, mSalt, mRadom, mVersion);
+        if (null == pass) {
+            return false;
+        }
+        Log.w(TAG, "pass:" + pass);
+//        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
+//        String strNewPass = new String(pass);
+        mNewPass = Base64.encodeToString(pass, Base64.URL_SAFE);
+        Log.d(TAG, "mNewPass:" + mNewPass);
+
+        return true;
     }
 
     @Override

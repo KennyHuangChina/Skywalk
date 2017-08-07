@@ -23,6 +23,14 @@ JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCal
 JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCall_GenerateReloginSession
   (JNIEnv *, jobject, jstring, jstring, jstring, jint);
 
+/*
+ * Class:     com_kjs_skywalk_communicationlibrary_NativeCall
+ * Method:    GenerateNewPassword
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)[B
+*/
+JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCall_GenerateNewPassword
+  (JNIEnv *, jobject, jstring, jstring, jstring, jint);
+
 #ifdef __cplusplus
 }
 #endif
