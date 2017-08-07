@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by sailor.zhou on 2017/2/2.
@@ -112,6 +113,9 @@ public class ClassDefine {
         public static String agentId = "0";
 
         public static int service = -1;
+
+        public static int landlordId = -1;
+        public static Date submitTime = null;
 
         public static boolean forSale() {
             return price > 0 ? true : false;

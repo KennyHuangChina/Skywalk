@@ -28,6 +28,7 @@ import com.kjs.skywalk.app_android.Apartment.fragmentApartment;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.BadgeView;
 
@@ -84,6 +85,12 @@ public class MainActivity extends SKBaseActivity {
         mFragHomePage = new fragmentHomePage();
         fragTransaction.replace(R.id.fl_container, mFragHomePage);
         fragTransaction.commit();
+
+        // check login status
+        SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+        if(mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
+//            showWaiting(mTvHomePage);
+        }
     }
 
     @Override
@@ -100,13 +107,6 @@ public class MainActivity extends SKBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // check login status
-        if(mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
-//            showWaiting(mTvHomePage);
-        } else {
-            SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-        }
     }
 
     @Override
@@ -121,12 +121,16 @@ public class MainActivity extends SKBaseActivity {
             kjsLogUtil.w("result is null");
             return;
         }
-//        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
+
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
 
         if (command == CMD_GET_LOGIN_USER_INFO) {
             // IApiResults.IGetUserInfo
 //            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
-            SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
+            if (CommunicationError.CE_ERROR_NO_ERROR == result.GetErrCode()) {
+                SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
+                kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
+            }
         }
     }
 
@@ -182,6 +186,7 @@ public class MainActivity extends SKBaseActivity {
                 startActivity(new Intent(MainActivity.this, Activity_login.class));
             }
             break;
+
         }
     }
 
