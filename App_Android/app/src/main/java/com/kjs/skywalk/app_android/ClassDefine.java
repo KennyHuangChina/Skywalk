@@ -221,12 +221,17 @@ public class ClassDefine {
     public static class ServerError {
         public static final int SERVER_NO_ERROR = 0;
         public static final int SERVER_CONNECTION_ERROR = 0x80001000;
+        public static final int SERVER_NEED_LOGIN = 0x80002000;
 
         public static int getErrorType(int errorCode) {
             switch (errorCode) {
                 case 0x80001007:
                 case 0x80001009:
                     return SERVER_CONNECTION_ERROR;
+
+                case 1104:
+                case 1106:
+                    return SERVER_NEED_LOGIN;
             }
 
             return SERVER_NO_ERROR;

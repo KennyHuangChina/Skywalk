@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.kjs.skywalk.app_android.Activity_PasswordReset;
 import com.kjs.skywalk.app_android.Activity_Search;
+import com.kjs.skywalk.app_android.Activity_login;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -13,6 +14,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
 
+import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_NEED_LOGIN;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdRes.CMD_RES_NOERROR;
 
 /**
@@ -26,8 +28,6 @@ public class SKBaseAsyncTask extends AsyncTask<Integer, Void, Integer> implement
 
     @Override
     protected Integer doInBackground(Integer... params) {
-        Intent intent = new Intent(mContext, Activity_PasswordReset.class);
-        mContext.startActivity(intent);
         return null;
     }
 
@@ -65,13 +65,21 @@ public class SKBaseAsyncTask extends AsyncTask<Integer, Void, Integer> implement
             return;
         }
 
-        if(errorCode != CMD_RES_NOERROR) {
-
+        int error = ClassDefine.ServerError.getErrorType(errorCode);
+        switch (error) {
+            case SERVER_NEED_LOGIN:
+                doLogIn();
+                break;
         }
     }
 
     @Override
     public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
 
+    }
+
+    protected void doLogIn() {
+        Intent intent = new Intent(mContext, Activity_login.class);
+        mContext.startActivity(intent);
     }
 }
