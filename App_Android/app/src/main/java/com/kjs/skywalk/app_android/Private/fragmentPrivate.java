@@ -33,6 +33,7 @@ import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_HOUSE_WATCH_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE;
 
@@ -222,17 +223,18 @@ public class fragmentPrivate extends Fragment {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#00AE63"));
             mRlUserNotLogin.setVisibility(View.GONE);
             mLlUserLogin.setVisibility(View.VISIBLE);
-            mIv_portrait_mask.setImageResource(R.drawable.portrait_mask_login);
+            mIv_portrait_mask.setImageResource(R.drawable.head_portrait_mask_2);
 
             mCmdMgr.GetUserHouseWatchList(0, 0);
             mCmdMgr.GetHouseList_AppointSee(0, 0);
             updateBehalfHouseCount();
+            mCmdMgr.GetLoginUserInfo();
 
         } else {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#E5E5E5"));
             mRlUserNotLogin.setVisibility(View.VISIBLE);
             mLlUserLogin.setVisibility(View.GONE);
-            mIv_portrait_mask.setImageResource(R.drawable.portrait_mask_notlogin);
+            mIv_portrait_mask.setImageResource(R.drawable.head_portrait_mask_1);
         }
     }
 
@@ -287,8 +289,16 @@ public class fragmentPrivate extends Fragment {
                 IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                 int nFetch = resultList.GetFetchedNumber();
                 if (nFetch == -1) {
-                    // 看房记录
+                    // 我的关注
                     updateCount(mTvWatchListCount, resultList.GetTotalNumber());
+                }
+            }
+
+            if (command == CMD_GET_LOGIN_USER_INFO) {
+                // IApiResults.IGetUserInfo
+//            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
+                if (CommunicationError.CE_ERROR_NO_ERROR == iResult.GetErrCode()) {
+//                    SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 }
             }
 
