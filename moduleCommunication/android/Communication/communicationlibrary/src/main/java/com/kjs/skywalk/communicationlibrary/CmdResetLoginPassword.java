@@ -18,14 +18,16 @@ class CmdResetLoginPassword extends CommunicationBase {
     private String mSalt    = null;
     private String mSms     = null;
 
-    CmdResetLoginPassword(Context context, String user, String newPass, String sms) {
+    CmdResetLoginPassword(Context context, String user, String newPass, String sms, String salt, String rand) {
         super(context, CommunicationInterface.CmdID.CMD_RESET_LOGIN_PASS);
         mMethodType = "PUT";
         mNeedLogin  = false;
         mUser       = user;
         mNewPass    = newPass;
+        mSalt       = salt;
         mSms        = sms;
 
+//        mRadom = rand;
         // generate a random
         mRadom = generateRandom();
     }

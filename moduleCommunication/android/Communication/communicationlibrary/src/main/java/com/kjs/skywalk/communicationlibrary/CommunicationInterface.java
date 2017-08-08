@@ -92,8 +92,10 @@ public class CommunicationInterface {
         *   user        : user name(/phone number)
         *   pass        : new password
         *   sms         : sms captcha code
+        *   salt        : salt
+        *   rand        : rand
         */
-        int ResetLoginPass(String user, String pass, String sms);
+        int ResetLoginPass(String user, String pass, String sms, String salt, String rand);
 
         int GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
         int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon

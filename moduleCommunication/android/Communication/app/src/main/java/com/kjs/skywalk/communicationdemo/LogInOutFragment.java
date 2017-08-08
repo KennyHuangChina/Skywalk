@@ -52,7 +52,7 @@ public class LogInOutFragment extends Fragment
 
     private void doRestPass() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
-        CmdMgr.ResetLoginPass(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mEditSms.getText().toString());
+        CmdMgr.ResetLoginPass(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mEditSms.getText().toString(), mSalt, mRand);
     }
 
     private void doLogout() {

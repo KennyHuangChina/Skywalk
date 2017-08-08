@@ -7,6 +7,7 @@
 #include <string.h>
 #include "SkMD5Abstract.h"
 #include "DP.h"
+#include "aes_encryptor.h"
 
 //using std::string;
 
@@ -144,11 +145,33 @@ JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCal
     return jbArray;
 }
 
+char* MakeAesKey(const char* szSalt, const char* szRand, int ver, char* szKey)
+{
+    szKey[0] = 0x00;
+    if (NULL == szSalt || 0 == szSalt[0] || NULL == szRand || 0 == szRand[0] || ver <= 0)
+    {
+        return NULL;
+    }
+
+    switch (ver)
+    {
+        case 1:
+            strcpy(szKey, szSalt);
+            strcat(szKey, szRand);
+            break;
+    }
+
+    DP_LOG("szKey:%s", szKey);
+    return szKey;
+}
+
 /*
  * Class:     com_kjs_skywalk_communicationlibrary_NativeCall
  * Method:    GeneratePassword
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)[B
  */
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotAssignable"
 JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCall_GenerateNewPassword
         (JNIEnv* env, jobject thiz, jstring pswd, jstring salt, jstring rand, jint ver)
 {
@@ -175,43 +198,32 @@ JNIEXPORT jbyteArray JNICALL Java_com_kjs_skywalk_communicationlibrary_NativeCal
     }
     DP_LOG("random:%s", szRand);
 
-    SkMD5Abstract* md5 = GetMD5Instance(env);
-    if (NULL == md5)
+    // make key for AES encrypting
+    char szKey[100];
+    if (NULL == MakeAesKey(szSalt, szRand, ver, szKey))
     {
+        DP_ERR("Fail to make AES key");
         return NULL;
     }
 
-    // ver1: md5(md5(pass+salt)+rand)
-    char szSrc[100];
-    strcpy(szSrc, szPswd);
-    strcat(szSrc, szSalt);
-
-    DP_LOG("szSrc:%s", szSrc);
-    unsigned char * md5Result = md5->Digest((unsigned char*)szSrc, strlen(szSrc));
-    if (NULL == md5Result)
+    AesEncryptor *pAesEncryptor = new AesEncryptor((unsigned char*)szKey);
+    if (NULL == pAesEncryptor)
     {
+        DP_ERR("Fail to create AES encryptor");
         return NULL;
     }
-    DP_LOG("md5Result:%s", md5Result);
-//    PRINT_BUFF("md5Result", (const char*)md5Result, MD5_BYTES);
 
-    strcpy(szSrc, (const char*)md5Result);
-    strcat(szSrc, szRand);
-    DP_LOG("szSrc:%s", szSrc);
-    PRINT_BUFF("szSrc", (const char*)md5Result, MD5_BYTES + strlen(szRand));
-    md5Result = md5->Digest((unsigned char*)szSrc, strlen(szSrc));
-    if (NULL == md5Result)
-    {
-        return NULL;
-    }
-    DP_LOG("md5Result:%s", md5Result);
-    PRINT_BUFF("md5Result", (const char*)md5Result, MD5_BYTES);
+//    std::string strPass = szPswd;
+    std::string strPass = pAesEncryptor->EncryptString(szPswd);
+    DP_LOG("strPass:%s", strPass.data());
+    PRINT_BUFF("strPass", (const char*)strPass.data(), strPass.length());
 
     // Export
-    int nLen = strlen((const char*)md5Result);
+    int nLen = strPass.length();
     jbyteArray jbArray = env->NewByteArray(nLen);
-    env->SetByteArrayRegion(jbArray, 0, nLen, (jbyte*)md5Result);
+    env->SetByteArrayRegion(jbArray, 0, nLen, (jbyte*)strPass.data());
 //    sigGen.ReleaseSignature(md5Result);
 
     return jbArray;
 }
+#pragma clang diagnostic pop
