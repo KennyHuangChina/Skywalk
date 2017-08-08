@@ -62,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <EditText
+                    android:id="@+id/et_user_name"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"

@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:maskimage="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:text="@string/tab_menu_msg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/textView"
         android:gravity="center" />
+
+    <com.kjs.skywalk.control.MaskImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        maskimage:image="@drawable/touxiang"
+        maskimage:mask="@drawable/watch_on"
+        />
 </LinearLayout>

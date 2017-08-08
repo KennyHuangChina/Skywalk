@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -42,12 +43,14 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
  */
 
 public class fragmentPrivate extends Fragment {
-    private CommandManager mCmdMgr;
+//    private CommandManager mCmdMgr;
     private boolean mIsLogin = false;
     private RelativeLayout mRlTitleBar;
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
     private ImageView mIv_portrait_mask;
+
+    private EditText mEt_user_name;
 
     private TextView mTvWatchListCount;         // 我的关注
     private TextView mTvAppointmentCount;
@@ -78,6 +81,9 @@ public class fragmentPrivate extends Fragment {
         mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
         mIv_portrait_mask = (ImageView) view.findViewById(R.id.iv_portrait_mask);
 
+        mEt_user_name = (EditText) view.findViewById(R.id.et_user_name);
+
+
         (view.findViewById(R.id.iv_setting)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +91,7 @@ public class fragmentPrivate extends Fragment {
             }
         });
 
-        mCmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
+//        mCmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 
         // 我的关注
         mTvWatchListCount = (TextView) view.findViewById(R.id.tv_watchlist_count);
@@ -225,10 +231,10 @@ public class fragmentPrivate extends Fragment {
             mLlUserLogin.setVisibility(View.VISIBLE);
             mIv_portrait_mask.setImageResource(R.drawable.head_portrait_mask_2);
 
-            mCmdMgr.GetUserHouseWatchList(0, 0);
-            mCmdMgr.GetHouseList_AppointSee(0, 0);
+            CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetUserHouseWatchList(0, 0);
+            CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetHouseList_AppointSee(0, 0);
             updateBehalfHouseCount();
-            mCmdMgr.GetLoginUserInfo();
+            CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
 
         } else {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#E5E5E5"));
@@ -236,6 +242,15 @@ public class fragmentPrivate extends Fragment {
             mLlUserLogin.setVisibility(View.GONE);
             mIv_portrait_mask.setImageResource(R.drawable.head_portrait_mask_1);
         }
+    }
+
+    private void updateUserInfo(final IApiResults.IGetUserInfo userInfo) {
+        this.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mEt_user_name.setText(userInfo.GetName());
+            }
+        });
     }
 
     private void showPasswordResetActivity() {
@@ -296,8 +311,9 @@ public class fragmentPrivate extends Fragment {
 
             if (command == CMD_GET_LOGIN_USER_INFO) {
                 // IApiResults.IGetUserInfo
-//            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
+            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)iResult;
                 if (CommunicationError.CE_ERROR_NO_ERROR == iResult.GetErrCode()) {
+                    updateUserInfo(userInfo);
 //                    SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 }
             }
