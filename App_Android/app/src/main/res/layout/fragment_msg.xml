@@ -12,10 +12,15 @@
         android:id="@+id/textView"
         android:gravity="center" />
 
+    <ImageView
+        android:id="@+id/iv_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <com.kjs.skywalk.control.MaskImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         maskimage:image="@drawable/touxiang"
-        maskimage:mask="@drawable/watch_on"
+        maskimage:mask="@drawable/head_portrait_mask"
         />
 </LinearLayout>

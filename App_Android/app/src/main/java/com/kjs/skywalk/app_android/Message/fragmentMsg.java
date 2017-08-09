@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
@@ -40,6 +41,11 @@ public class fragmentMsg extends Fragment {
         TextView textV = (TextView) view.findViewById(R.id.textView);
         textV.setText(commonFun.getSpannableString(textDefines));
         //
+
+//        commonFun.displayImageWithMask(this.getActivity(), (ImageView) view.findViewById(R.id.iv_test), R.drawable.huxingtu1, R.drawable.head_portrait_mask);
+        commonFun.displayImageWithMask(this.getActivity(), (ImageView) view.findViewById(R.id.iv_test),
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502280826114&di=109e9c8df04726531b9a247a0e5744f8&imgtype=0&src=http%3A%2F%2Fwww.th7.cn%2Fd%2Ffile%2Fp%2F2016%2F11%2F17%2F7dc8d2aa0bd854e87295e6df73eaef19.jpg", R.drawable.head_portrait_mask);
+
 
         return view;
     }

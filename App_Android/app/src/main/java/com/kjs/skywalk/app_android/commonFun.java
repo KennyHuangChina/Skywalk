@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 
 import java.io.File;
@@ -305,6 +311,35 @@ public class commonFun {
 
     public static void displayImageByURL(Context context, String URL, ImageView view) {
         displayImageByURL(context, URL, view, R.drawable.touxiang, R.drawable.touxiang);
+    }
+
+    public static void displayImageWithMask(Context context, ImageView view, int srcImageResId, int maskImageResId) {
+        Bitmap srcBmp = BitmapFactory.decodeResource(context.getResources(), srcImageResId);
+        Bitmap maskBmp = BitmapFactory.decodeResource(context.getResources(), maskImageResId);
+        displayImageWithMask(context, view, srcBmp, maskBmp);
+    }
+
+    public static void displayImageWithMask(final Context context, final ImageView view, String srcImageUrl, final int maskImageResId) {
+        Glide.with(context).load(srcImageUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                Bitmap maskBmp = BitmapFactory.decodeResource(context.getResources(), maskImageResId);
+                displayImageWithMask(context, view, resource, maskBmp);
+            }
+        });
+    }
+
+    public static void displayImageWithMask(Context context, ImageView view, Bitmap srcBmp, Bitmap maskBmp) {
+        Bitmap imgResult = Bitmap.createBitmap(maskBmp.getWidth(), maskBmp.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(imgResult);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        canvas.drawBitmap(srcBmp, 0, 0, null);
+        canvas.drawBitmap(maskBmp, 0, 0, paint);
+        paint.setXfermode(null);
+        view.setImageBitmap(imgResult);
+        view.setScaleType(ImageView.ScaleType.CENTER);
     }
 
     public static void startActivityWithHouseId(Context context, Class<?> ActivityClass, int houseId) {

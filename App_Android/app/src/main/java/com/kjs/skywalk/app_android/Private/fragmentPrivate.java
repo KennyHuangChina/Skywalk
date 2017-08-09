@@ -48,7 +48,7 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRlTitleBar;
     private RelativeLayout mRlUserNotLogin;
     private LinearLayout mLlUserLogin;
-    private ImageView mIv_portrait_mask;
+    private ImageView mIv_head_portrait;
 
     private EditText mEt_user_name;
 
@@ -79,7 +79,7 @@ public class fragmentPrivate extends Fragment {
         mRlTitleBar = (RelativeLayout) view.findViewById(R.id.rl_titlebar);
         mRlUserNotLogin = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
         mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
-        mIv_portrait_mask = (ImageView) view.findViewById(R.id.iv_portrait_mask);
+        mIv_head_portrait = (ImageView) view.findViewById(R.id.iv_head_portrait);
 
         mEt_user_name = (EditText) view.findViewById(R.id.et_user_name);
 
@@ -229,7 +229,8 @@ public class fragmentPrivate extends Fragment {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#00AE63"));
             mRlUserNotLogin.setVisibility(View.GONE);
             mLlUserLogin.setVisibility(View.VISIBLE);
-            mIv_portrait_mask.setImageResource(R.drawable.head_portrait_mask_2);
+            commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
+
 
             CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetUserHouseWatchList(0, 0);
             CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetHouseList_AppointSee(0, 0);
@@ -240,7 +241,7 @@ public class fragmentPrivate extends Fragment {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#E5E5E5"));
             mRlUserNotLogin.setVisibility(View.VISIBLE);
             mLlUserLogin.setVisibility(View.GONE);
-            mIv_portrait_mask.setImageResource(R.drawable.head_portrait_mask_1);
+            commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
         }
     }
 

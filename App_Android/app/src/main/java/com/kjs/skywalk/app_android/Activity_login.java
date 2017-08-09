@@ -101,14 +101,11 @@ public class Activity_login extends SKBaseActivity implements
     PopupWindowWaiting mWaitingWindow = null;
     private LinearLayout mContainer = null;
     private String mLoginMode;
-    private CommandManager mCmdMgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
 
         mLoginMode = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginMode, LOGIN_MODE_TELEPHONE);
 
@@ -196,7 +193,7 @@ public class Activity_login extends SKBaseActivity implements
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
 
         } else {
-            if(mCmdMgr.LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+            if(CommandManager.getCmdMgrInstance(this, this, this).LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
                 mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
             }
         }
@@ -210,7 +207,7 @@ public class Activity_login extends SKBaseActivity implements
         else
             strUserSalt = mActv_account.getText().toString();
 
-        return mCmdMgr.GetUserSalt(strUserSalt);
+        return CommandManager.getCmdMgrInstance(this, this, this).GetUserSalt(strUserSalt);
     }
 
     Handler mHandler = new Handler(){
