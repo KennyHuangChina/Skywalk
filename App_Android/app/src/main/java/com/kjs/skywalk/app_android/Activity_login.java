@@ -53,8 +53,10 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_SMS_CODE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_SALT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_SMS;
 
 /**
  * A login screen that offers login via email/password.
@@ -86,7 +88,7 @@ public class Activity_login extends SKBaseActivity implements
     // telephone login
     private AutoCompleteTextView mActv_telephone_num;
     private EditText mEt_verfication_code;
-    private TextView mTv_get_verfication_code;
+//    private TextView mTv_get_verfication_code;
 
     // account login
     private AutoCompleteTextView mActv_account;
@@ -124,7 +126,7 @@ public class Activity_login extends SKBaseActivity implements
         mActv_telephone_num.setOnEditorActionListener(mEditorActionListener);
 
         mEt_verfication_code = (EditText) findViewById(R.id.et_verfication_code);
-        mTv_get_verfication_code = (TextView) findViewById(R.id.tv_get_verfication_code);
+//        mTv_get_verfication_code = (TextView) findViewById(R.id.tv_get_verfication_code);
 
         // account login layout
         mActv_account = (AutoCompleteTextView) findViewById(R.id.actv_account);
@@ -190,22 +192,20 @@ public class Activity_login extends SKBaseActivity implements
     };
 
     private void doLogin() {
-        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
+        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
+            return;
 
-        } else {
-            if(CommandManager.getCmdMgrInstance(this, this, this).LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
-                mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
-            }
+        if(CommandManager.getCmdMgrInstance(this, this, this).LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+            mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
         }
-
     }
 
     private int logIn() {
+        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
+            return 0;
+
         String strUserSalt;
-        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE))
-            strUserSalt = mActv_telephone_num.getText().toString();
-        else
-            strUserSalt = mActv_account.getText().toString();
+        strUserSalt = mActv_telephone_num.getText().toString();
 
         return CommandManager.getCmdMgrInstance(this, this, this).GetUserSalt(strUserSalt);
     }
@@ -289,19 +289,32 @@ public class Activity_login extends SKBaseActivity implements
 
             case R.id.tv_login: {
 
+                if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
+                    if(CommandManager.getCmdMgrInstance(this, this, this).LoginBySms(mActv_telephone_num.getText().toString(), mEt_verfication_code.getText().toString()) != CommunicationError.CE_ERROR_NO_ERROR)
+                        mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
+
+                } else {
 //                showPasswordErrorDlg();
 
-                //attemptLogin();
-                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-                if (this.getCurrentFocus() != null)
-                    imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-                if(logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
-                    //showProgress(true);
-                    showWaiting((View)mContainer.getParent());
+                    //attemptLogin();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+                    if (this.getCurrentFocus() != null)
+                        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+                    if (logIn() == CommunicationError.CE_ERROR_NO_ERROR) {
+                        //showProgress(true);
+                        showWaiting((View) mContainer.getParent());
 //                    mWaitingWindow.showAtLocation((View)mContainer.getParent(), Gravity.CENTER, 0, 0);
-                } else {
-                    Log.e(this.getClass().getSimpleName(), "Command Error");
+                    } else {
+                        Log.e(this.getClass().getSimpleName(), "Command Error");
+                    }
+
                 }
+
+                break;
+            }
+
+            case R.id.tv_get_verfication_code: {
+                CommandManager.getCmdMgrInstance(this, this, this).GetSmsCode(mActv_telephone_num.getText().toString());
                 break;
             }
 
@@ -434,7 +447,7 @@ public class Activity_login extends SKBaseActivity implements
         }
         kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
 
-        if(command == CMD_LOGIN_BY_PASSWORD) {
+        if(command == CMD_LOGIN_BY_PASSWORD || command == CMD_LOGIN_BY_SMS) {
 //            Log.i("Login Activity", "command finished: " + command);
 //            Log.i("Login Activity", "Result:  " + result.GetErrCode() + " Description: " + result.GetErrDesc());
             doShowProgress(false);
@@ -460,7 +473,19 @@ public class Activity_login extends SKBaseActivity implements
                 doShowProgress(false);
                 hideWaitingWindow();
             }
+        } else if (command == CMD_GET_SMS_CODE) {
+            IApiResults.IGetSmsCode smsCode = (IApiResults.IGetSmsCode)result;
+            showSMSCodeForTest(smsCode);
         }
+    }
+
+    private void showSMSCodeForTest(final IApiResults.IGetSmsCode smsCode) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), smsCode.GetSmsCode());
+            }
+        });
     }
 
     private void hideWaitingWindow() {
