@@ -30,9 +30,10 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 		}
 	}()
 
-	track_id := "f1c0fb8578e356746e0f98ce07b7a27f"
+	// for testing
+	// track_id := "f1c0fb8578e356746e0f98ce07b7a27f"
 	// plaintxt := "123456"
-	rand = "666666"
+	// rand = "666666"
 
 	// ciphertxt, err := EncryptString(plaintxt, track_id, rand)
 	// if nil == err {
@@ -56,8 +57,14 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 		return
 	}
 
-	pwd, err1 := base64.URLEncoding.DecodeString(pass)
-	beego.Debug(FN, "err1:", err1, "pwd:", pwd, ",", string(pwd))
+	// pwd, err1 := base64.URLEncoding.DecodeString(pass)
+	// beego.Debug(FN, "err1:", err1, "pwd:", pwd, ",", string(pwd))
+	pwd, err1 := base64.StdEncoding.DecodeString(pass)
+	if nil != err1 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err1:", err1)}
+		return
+	}
+	beego.Debug(FN, "pwd:", pwd, ",", string(pwd))
 
 	err, tu := getUserByName(user) // target user
 	if nil != err {
@@ -66,9 +73,12 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 
 	// err, pp := DecryptString(pwd, tu.Salt, rand, ver) // plain password
 	pp, err := DecryptString(string(pwd), tu.Salt, rand) // plain password
+	if nil != err {
+		return
+	}
 	beego.Debug(FN, "plain password(DecryptString):", pp, "\n")
-	pp, err = DecryptBuff(pwd, track_id, rand) // plain password
-	beego.Debug(FN, "plain password(DecryptBuff):", pp)
+	// pp, err = DecryptBuff(pwd, track_id, rand) // plain password
+	// beego.Debug(FN, "plain password(DecryptBuff):", pp)
 
 	return
 
