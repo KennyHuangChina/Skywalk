@@ -30,6 +30,18 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 		}
 	}()
 
+	track_id := "f1c0fb8578e356746e0f98ce07b7a27f"
+	// plaintxt := "123456"
+	rand = "666666"
+
+	// ciphertxt, err := EncryptString(plaintxt, track_id, rand)
+	// if nil == err {
+	// 	beego.Debug(FN, "ciphertxt:", ciphertxt)
+	// 	beego.Debug(FN, "ciphertxt:", []byte(ciphertxt))
+	// 	plaintxt, _ = DecryptString(ciphertxt, track_id, rand)
+	// 	beego.Debug(FN, "plaintxt:", plaintxt, ", err:", err)
+	// }
+
 	/* Argument checking */
 	if 0 == len(user) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "user could not be empty"}
@@ -44,20 +56,31 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 		return
 	}
 
-	// pwd, _ := base64.URLEncoding.DecodeString(pass)
-	// beego.Debug(FN, "pwd:", pwd)
-	// pass = string(pwd)
-	// beego.Debug(FN, "password:", pass)
+	pwd, err1 := base64.URLEncoding.DecodeString(pass)
+	beego.Debug(FN, "err1:", err1, "pwd:", pwd, ",", string(pwd))
+
+	err, tu := getUserByName(user) // target user
+	if nil != err {
+		return
+	}
+
+	// err, pp := DecryptString(pwd, tu.Salt, rand, ver) // plain password
+	pp, err := DecryptString(string(pwd), tu.Salt, rand) // plain password
+	beego.Debug(FN, "plain password(DecryptString):", pp, "\n")
+	pp, err = DecryptBuff(pwd, track_id, rand) // plain password
+	beego.Debug(FN, "plain password(DecryptBuff):", pp)
+
+	return
 
 	err, lgusr := GetUser(lu)
 	if nil != err {
 		return
 	}
 
-	err, tu := getUserByName(user) // target user
-	if nil != err {
-		return
-	}
+	// err, tu := getUserByName(user) // target user
+	// if nil != err {
+	// 	return
+	// }
 
 	/* Permission checking */
 	if lu == tu.Id { //reset password for user himself
@@ -1029,4 +1052,14 @@ func isOwnerAgency(uid, aid int64) (bAgency bool) {
 
 func getName4System() string {
 	return getSpecialString(KEY_USER_SYSTEM) // "系统"
+}
+
+func DecryptPass(cipherpass, salt, rand, ver string) (err error, plainpass string) {
+	FN := "[DecryptPass] "
+	beego.Info(FN, "cipherpass:", cipherpass, ", salt:", salt, ", rand:", rand, ", ver:", ver)
+
+	plainpass, err = DecryptString(cipherpass, salt, rand)
+	beego.Debug(FN, "plainpass:", plainpass, ", err:", err)
+
+	return
 }
