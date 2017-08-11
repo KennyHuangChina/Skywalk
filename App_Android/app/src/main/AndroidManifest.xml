@@ -77,8 +77,9 @@
         <activity android:name=".Activity_Zushouweituo_Jiagesheding" />
         <activity android:name=".Activity_Zushouweituo_Xuanzedaili" />
         <activity android:name=".Activity_Zushouweituo_SelectService" />
-        <activity android:name=".Activity_Zushouweituo_shenhe"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".Activity_Zushouweituo_shenhe"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".Activity_shenhe_zhengjian"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
@@ -94,8 +95,9 @@
         <activity android:name=".Activity_Shenghuozhanghu" />
         <activity
             android:name=".Activity_login"
-            android:label="@string/title_activity_login"/>
-        <activity android:name=".Activity_PasswordReset">        </activity>
+            android:label="@string/title_activity_login" />
+        <activity android:name=".Activity_PasswordReset"></activity>
+        <activity android:name=".Activity_ApartmentList"></activity>
     </application>
 
 </manifest>
