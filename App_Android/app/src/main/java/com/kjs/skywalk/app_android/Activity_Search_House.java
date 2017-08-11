@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.kjs.skywalk.app_android.Server.AddNewPropertyTask;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -37,8 +36,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults.IPropertyInfo;
  */
 
 public class Activity_Search_House extends SKBaseActivity implements
-        CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener,
-        AddNewPropertyTask.TaskFinished{
+        CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
     private final String TAG = getClass().getSimpleName().toString();
     private ListView mListViewHistory = null;
     private ListView mListViewProperty = null;
@@ -284,10 +282,41 @@ public class Activity_Search_House extends SKBaseActivity implements
     }
 
     private void addProperty() {
-        AddNewPropertyTask task = new AddNewPropertyTask(this, this);
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                    commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
+                    IApiResults.IAddRes res = (IApiResults.IAddRes)iCommon;
+                    mPropertyId = res.GetId();
+                    Log.i(TAG, "New Property ID: " + mPropertyId);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String text = commonFun.getTextOnSearchView(mSearchView);
+                            doSelected(text, mPropertyId);
+                            finish();
+                        }
+                    });
+                } else {
+                    commonFun.showToast_info(getApplicationContext(), mSearchView, iCommon.GetErrDesc());
+                }
+
+                hideWaiting();
+
+                Activity_Search_House.super.onCommandFinished(i, iCommon);
+            }
+        };
+
+        int res = 0;
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
         String text = commonFun.getTextOnSearchView(mSearchView);
-        task.setPropertyAttributes(text, "地址：未填写", "");
-        task.execute();
+        res = manager.AddProperty(text, "地址：未填写", "");
+        if(res == CE_ERROR_NO_ERROR) {
+            showWaiting(mSearchView);
+        } else {
+            commonFun.showToast_info(getApplicationContext(), mSearchView, "失败");
+        }
     }
 
     Handler mHandler = new Handler(){
@@ -328,25 +357,5 @@ public class Activity_Search_House extends SKBaseActivity implements
     @Override
     public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
 
-    }
-
-    @Override
-    public void onTaskFinished(int propertyId) {
-        hideWaiting();
-
-        if(propertyId > 0) {
-            commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
-            mPropertyId = propertyId;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String text = commonFun.getTextOnSearchView(mSearchView);
-                    doSelected(text, mPropertyId);
-                    finish();
-                }
-            });
-        } else {
-            commonFun.showToast_info(getApplicationContext(), mSearchView, "添加失败");
-        }
     }
 }
