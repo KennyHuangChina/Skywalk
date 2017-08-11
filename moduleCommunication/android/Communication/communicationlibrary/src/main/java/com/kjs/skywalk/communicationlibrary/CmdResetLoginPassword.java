@@ -55,30 +55,32 @@ class CmdResetLoginPassword extends CommunicationBase {
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if (null == mUser || mUser.isEmpty()) {
-            Log.e(TAG, "mUser not set");
-            return false;
-        }
-        if (null == mNewPass || mNewPass.isEmpty()) {
-            Log.e(TAG, "mNewPass not set");
-            return false;
-        }
-        if (null == mSms || mSms.isEmpty()) {
-            Log.e(TAG, "mSms not set");
-            return false;
-        }
+//        if (null == mUser || mUser.isEmpty()) {
+//            Log.e(TAG, "mUser not set");
+//            return false;
+//        }
+//        if (null == mNewPass || mNewPass.isEmpty()) {
+//            Log.e(TAG, "mNewPass not set");
+//            return false;
+//        }
+//        if (null == mSms || mSms.isEmpty()) {
+//            Log.e(TAG, "mSms not set");
+//            return false;
+//        }
 
         NativeCall pNC = NativeCall.GetNativeCaller();
-        byte[] pass = pNC.EncryptNewPassword(mNewPass, mSalt, mRadom, mVersion);
+//        byte[] pass = pNC.EncryptNewPassword(mNewPass, mSalt, mRadom, mVersion);
+        byte[] pass = pNC.EncryptNewPassword(mNewPass, "f1c0fb8578e356746e0f98ce07b7a27f", "666666", mVersion);
         if (null == pass) {
             return false;
         }
         Log.w(TAG, "pass:" + pass);
 //        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
 //        String strNewPass = new String(pass);
-        mNewPass = Base64.encodeToString(pass, Base64.URL_SAFE);
+        mNewPass = new String(pass);
+//        mNewPass = Base64.encodeToString(pass, Base64.URL_SAFE);
         Log.d(TAG, "mNewPass:" + mNewPass);
-
+//        return false;
         return true;
     }
 

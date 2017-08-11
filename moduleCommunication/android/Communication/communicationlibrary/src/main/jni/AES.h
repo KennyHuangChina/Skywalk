@@ -2,38 +2,81 @@
 // Created by kenny on 2017/8/7.
 //
 
-#ifndef COMMUNICATION_AES_H
-#define COMMUNICATION_AES_H
+/*
+
+https://github.com/kokke/tiny-AES128-C
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
+
+*/
+
+#ifndef AES_H
+#define AES_H
+
+#include <stdint.h>
 
 
-class AES {
+// #define the macros below to 1/0 to enable/disable the mode of operation.
+//
+// CBC enables AES128 encryption in CBC-mode of operation and handles 0-padding.
+// ECB enables the basic ECB 16-byte block algorithm. Both can be enabled simultaneously.
 
-public:
-    AES(unsigned char* key);
-    virtual ~AES();
+// The #ifndef-guard allows it to be configured before #include'ing or at compile time.
+#ifndef CBC
+#define CBC 1
+#endif
 
-    unsigned char* Cipher(unsigned char* input);       // 加密，传入的数组大小必须是16字节
-    unsigned char* InvCipher(unsigned char* input);    // 解密，传入的数组也必须是16字节
-    void* Cipher(void* input, int length=0);            // 可以传入数组，大小必须是16的整数倍，如果不是将会越界操作；如果不传length而默认为0，那么将按照字符串处理，遇'\0'结束
-    void* InvCipher(void* input, int length);           // 必须传入数组和大小，必须是16的整数倍
+#ifndef ECB
+#define ECB 1
+#endif
 
-private:
-    unsigned char Sbox[256];
-    unsigned char InvSbox[256];
-    unsigned char w[11][4][4];
 
-    void KeyExpansion(unsigned char* key, unsigned char w[][4][4]);
-    unsigned char FFmul(unsigned char a, unsigned char b);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-    void SubBytes(unsigned char state[][4]);
-    void ShiftRows(unsigned char state[][4]);
-    void MixColumns(unsigned char state[][4]);
-    void AddRoundKey(unsigned char state[][4], unsigned char k[][4]);
+#if defined(ECB) && ECB
 
-    void InvSubBytes(unsigned char state[][4]);
-    void InvShiftRows(unsigned char state[][4]);
-    void InvMixColumns(unsigned char state[][4]);
+void AES128_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t *output);
+void AES128_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *output);
 
-};
+#endif // #if defined(ECB) && ECB
+
+
+#if defined(CBC) && CBC
+
+void AES128_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv);
+void AES128_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // #if defined(CBC) && CBC
+
+
 
 #endif //COMMUNICATION_AES_H

@@ -15,6 +15,5 @@ LOCAL_SRC_FILES := \
 	DigUtil.cpp \
 	JniUtil.cpp \
 	AES.cpp \
-	aes_encryptor.cpp \
 
 include $(BUILD_SHARED_LIBRARY)
