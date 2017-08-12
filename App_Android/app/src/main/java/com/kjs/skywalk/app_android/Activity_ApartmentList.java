@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,6 +45,15 @@ public class Activity_ApartmentList extends SKBaseActivity {
         mListView = (ListView)findViewById(R.id.lv_apartment_list);
         mAdapter = new AdapterForApartmentList(this);
         mListView.setAdapter(mAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ClassDefine.HouseDigest item = (ClassDefine.HouseDigest)mAdapter.getItem(position);
+
+                doSelectItem(item);
+            }
+        });
 
         loadDataFromServer();
     }
@@ -168,5 +178,10 @@ public class Activity_ApartmentList extends SKBaseActivity {
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
         manager.GetBehalfHouses(4, 0, 0);
+    }
+
+    private void doSelectItem(ClassDefine.HouseDigest digest) {
+        kjsLogUtil.i("Property Name: " + digest.property);
+        kjsLogUtil.i("location: " + digest.addr);
     }
 }
