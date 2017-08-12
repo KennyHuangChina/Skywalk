@@ -302,7 +302,7 @@ public class commonFun {
 
 
     public static void displayImageByURL(Context context, String URL, ImageView view, int placeHolderResourceId, int errorResourceId) {
-        if (context == null || URL == null || URL.isEmpty() || view == null) {
+        if (context == null || URL == null || view == null) {
             return;
         }
 

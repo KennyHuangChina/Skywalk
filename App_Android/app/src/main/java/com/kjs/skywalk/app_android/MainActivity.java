@@ -186,7 +186,11 @@ public class MainActivity extends SKBaseActivity {
                 startActivity(new Intent(MainActivity.this, Activity_login.class));
             }
             break;
-
+            case R.id.rl_to_approve: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_TO_APPROVE);
+                startActivity(i);
+            }
         }
     }
 
