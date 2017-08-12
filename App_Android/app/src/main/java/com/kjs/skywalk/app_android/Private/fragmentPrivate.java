@@ -62,6 +62,9 @@ public class fragmentPrivate extends Fragment {
     private TextView mTvToSale;
     private TextView mTvToApprove;
 
+    private String mUserName;
+    private String mUserTelephoneNum;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -249,13 +252,22 @@ public class fragmentPrivate extends Fragment {
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mEt_user_name.setText(userInfo.GetName());
+                mUserName = userInfo.GetName();
+                mUserTelephoneNum = userInfo.GetPhoneNo();
+                mEt_user_name.setText(mUserName);
             }
         });
     }
 
     private void showPasswordResetActivity() {
-        startActivity(new Intent(this.getActivity(), Activity_PasswordReset.class));
+        Intent intent = new Intent(getActivity(), Activity_PasswordReset.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("islogin", mIsLogin);
+        bundle.putString("user_name", mUserName);
+        bundle.putString("user_telephone_num", mUserTelephoneNum);
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
+
     }
 
     private void showSettingsMenu(View view) {
