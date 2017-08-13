@@ -37,8 +37,8 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
         mTextViewRoom = (TextView)findViewById(R.id.textViewRoomNo);
 
         mTextViewPropertyName.setText(mPropertyName);
-        String strRoom = mBuildingNo + "栋" + mRoomNo + "室";
-        mTextViewRoom.setText(strRoom);
+//        String strRoom = mBuildingNo + "栋" + mRoomNo + "室";
+//        mTextViewRoom.setText(strRoom);
 
         GetHouseInfo houseInfo = new GetHouseInfo(this, this);
         houseInfo.execute(mHouseId, 1);
@@ -47,6 +47,14 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
     private void update() {
         if(mHouseInfo == null) {
             return;
+        }
+        
+        if(mHouseInfo.buildingNo != null && !mHouseInfo.buildingNo.isEmpty() &&
+                mHouseInfo.roomNo != null && !mHouseInfo.roomNo.isEmpty()) {
+            String strRoom = mHouseInfo.buildingNo + "栋" + mHouseInfo.roomNo + "室";
+            mTextViewRoom.setText(strRoom);
+        } else {
+            mTextViewRoom.setText("未知");
         }
 
         TextView floor = (TextView)findViewById(R.id.textViewFloor);

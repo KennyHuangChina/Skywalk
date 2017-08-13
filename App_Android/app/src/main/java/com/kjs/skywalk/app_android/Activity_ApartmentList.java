@@ -180,8 +180,18 @@ public class Activity_ApartmentList extends SKBaseActivity {
         manager.GetBehalfHouses(4, 0, 0);
     }
 
+    private void startApproveActivity(ClassDefine.HouseDigest digest) {
+        Intent intent = new Intent(Activity_ApartmentList.this, Activity_Zushouweituo_shenhe.class);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, digest.houseId);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_NAME, digest.property);
+        startActivity(intent);
+    }
+
     private void doSelectItem(ClassDefine.HouseDigest digest) {
-        kjsLogUtil.i("Property Name: " + digest.property);
-        kjsLogUtil.i("location: " + digest.addr);
+        switch (mType) {
+            case TYPE_TO_APPROVE: {
+                startApproveActivity(digest);
+            }
+        }
     }
 }

@@ -95,7 +95,7 @@ class AdapterForApartmentList extends BaseAdapter {
         }
 
         ClassDefine.HouseDigest digest = mHouseList.get(position);
-        
+
         //commonFun.displayImageByURL(mContext, digest.CoverImageUrlS, holder.thumb);
         commonFun.displayImageByURL(mContext, digest.CoverImageUrlS, holder.thumb, R.drawable.sample1, R.drawable.sample1);
 
