@@ -19,6 +19,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.util.HashMap;
 
 import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_CONNECTION_ERROR;
+import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_NEED_LOGIN;
 
 /**
  * Created by Jackie on 2017/5/27.
@@ -116,6 +117,14 @@ public class SKBaseActivity extends AppCompatActivity
                     }
                 });
                 break;
+            }
+            case SERVER_NEED_LOGIN: {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        processLogin();
+                    }
+                });
             }
         }
     }

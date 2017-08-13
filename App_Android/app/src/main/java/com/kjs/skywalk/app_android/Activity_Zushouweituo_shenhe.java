@@ -48,7 +48,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
         if(mHouseInfo == null) {
             return;
         }
-        
+
         if(mHouseInfo.buildingNo != null && !mHouseInfo.buildingNo.isEmpty() &&
                 mHouseInfo.roomNo != null && !mHouseInfo.roomNo.isEmpty()) {
             String strRoom = mHouseInfo.buildingNo + "栋" + mHouseInfo.roomNo + "室";
