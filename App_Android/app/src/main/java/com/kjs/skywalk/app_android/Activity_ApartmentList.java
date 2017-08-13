@@ -67,6 +67,8 @@ public class Activity_ApartmentList extends SKBaseActivity {
         }
     }
 
+    //        type    : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
+    //        1- 待租；2-已租； 3-待售； 4-待审核
     private void loadDataFromServer() {
         switch(mType){
             case TYPE_TO_APPROVE: {
@@ -74,12 +76,15 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 break;
             }
             case TYPE_TO_RENT: {
+                getBehalfHousesList(1);
                 break;
             }
             case TYPE_TO_SALE: {
+                getBehalfHousesList(3);
                 break;
             }
             case TYPE_RENTED: {
+                getBehalfHousesList(2);
                 break;
             }
         }
@@ -93,12 +98,15 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 break;
             }
             case TYPE_TO_RENT: {
+                title.setText("待租房源");
                 break;
             }
             case TYPE_TO_SALE: {
+                title.setText("待售房源");
                 break;
             }
             case TYPE_RENTED: {
+                title.setText("已租房源");
                 break;
             }
         }
@@ -108,8 +116,117 @@ public class Activity_ApartmentList extends SKBaseActivity {
         mAdapter.addData(mDataList, mDataList.size());
     }
 
-    private void getToApproveListDetail() {
-        if(mTotal <= 0){
+//    private void getToApproveListDetail() {
+//        if(mTotal <= 0){
+//            return;
+//        }
+//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+//            @Override
+//            public void onCommandFinished(int command, final IApiResults.ICommon iResult) {
+//                if (null == iResult) {
+//                    kjsLogUtil.w("result is null");
+//                    return;
+//                }
+//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+//                    return;
+//                }
+//
+//                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+//                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+//                    int nFetch = resultList.GetFetchedNumber();
+//                    if (nFetch != -1) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
+//                                updateList();
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        };
+//
+//        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+//        manager.GetBehalfHouses(4, 0, mTotal);
+//    }
+
+
+    private void getToApproveList() {
+        getBehalfHousesList(4);
+
+//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+//            @Override
+//            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+//                if (null == iResult) {
+//                    kjsLogUtil.w("result is null");
+//                    return;
+//                }
+//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+//                    return;
+//                }
+//
+//                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+//                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+//                    int nFetch = resultList.GetFetchedNumber();
+//                    if (nFetch == -1) {
+//                        mTotal = ((IApiResults.IResultList) iResult).GetTotalNumber();
+//                        if (mTotal > 0) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    getToApproveListDetail();
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
+//            }
+//        };
+//
+//        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+//        manager.GetBehalfHouses(4, 0, 0);
+    }
+
+    private void getBehalfHousesList(final int type) {
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        final int total = ((IApiResults.IResultList) iResult).GetTotalNumber();
+                        if (total > 0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    gettBehalfHousesListDetail(type, total);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        };
+
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        manager.GetBehalfHouses(type, 0, 0);
+    }
+
+    private void gettBehalfHousesListDetail(int type, int total) {
+        if(total <= 0){
             return;
         }
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
@@ -121,6 +238,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 }
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    Activity_ApartmentList.super.onCommandFinished(command, iResult);
                     return;
                 }
 
@@ -141,44 +259,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
         };
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        manager.GetBehalfHouses(4, 0, mTotal);
-    }
-
-
-    private void getToApproveList() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_ApartmentList.super.onCommandFinished(command, iResult);
-                    return;
-                }
-
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == -1) {
-                        mTotal = ((IApiResults.IResultList) iResult).GetTotalNumber();
-                        if (mTotal > 0) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getToApproveListDetail();
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        };
-
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        manager.GetBehalfHouses(4, 0, 0);
+        manager.GetBehalfHouses(type, 0, total);
     }
 
     private void startApproveActivity(ClassDefine.HouseDigest digest) {

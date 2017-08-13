@@ -186,12 +186,32 @@ public class MainActivity extends SKBaseActivity {
                 startActivity(new Intent(MainActivity.this, Activity_login.class));
             }
             break;
+            case R.id.rl_to_rent: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_TO_RENT);
+                startActivity(i);
+            }
+            break;
+            case R.id.rl_rented: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_RENTED);
+                startActivity(i);
+            }
+            break;
+            case R.id.rl_to_sale: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_TO_SALE);
+                startActivity(i);
+            }
+            break;
             case R.id.rl_to_approve: {
                 Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
                 i.putExtra("type", Activity_ApartmentList.TYPE_TO_APPROVE);
                 startActivity(i);
             }
+            break;
         }
+
     }
 
 
