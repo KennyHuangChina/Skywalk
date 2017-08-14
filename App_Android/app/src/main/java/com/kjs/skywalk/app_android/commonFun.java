@@ -449,4 +449,27 @@ public class commonFun {
         }
         return statusHeight;
     }
+
+    // password verify
+    public static boolean verifyPassword(String paasword) {
+        // 检测密码由6-16个字母和数字组成，可以是纯数字或纯字母
+        boolean bMatch = paasword.matches("^[0-9a-zA-Z]{6,16}$");
+
+        // 检测密码由6-16个字母和数字组成，不可以是纯数字或纯字母
+//        boolean bMatch = paasword.matches("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$");
+
+        return bMatch;
+    }
+
+    public void showSoftInput(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+    }
+
+    public void hideSoftInput(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+//        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

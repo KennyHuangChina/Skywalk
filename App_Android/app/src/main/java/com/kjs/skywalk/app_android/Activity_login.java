@@ -195,7 +195,13 @@ public class Activity_login extends SKBaseActivity implements
         if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
             return;
 
-        if(CommandManager.getCmdMgrInstance(this, this, this).LoginByPassword(mActv_account.getText().toString(), mEt_password.getText().toString(), mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+        String passowrd = mEt_password.getText().toString();
+        if (!commonFun.verifyPassword(passowrd)) {
+            commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), "密码必须由6-16个字母和数字组成，可以是纯数字或纯字母");
+            return;
+        }
+
+        if(CommandManager.getCmdMgrInstance(this, this, this).LoginByPassword(mActv_account.getText().toString(), passowrd, mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
             mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
         }
     }
