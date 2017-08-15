@@ -144,9 +144,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     } else {
                         ret  = cmd.doOperation(this, this);
                     }
-                case AGENT_STATUS_Logining: // relogin command send out, waiting for result
                     break;
-                case AGENT_STATUS_Logined:  // Already logined
+                case AGENT_STATUS_Logining: // relogin command sent out, waiting for result
+                    break;
+                case AGENT_STATUS_Logined:  // Already logined, send command directly
                     ret  = cmd.doOperation(this, this);
             }
         } else {    // commands that do not need to login
@@ -167,7 +168,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             case CmdID.CMD_LOGIN_BY_PASSWORD :
             case CmdID.CMD_RELOGIN: {
                 if (res.GetErrCode() == CmdRes.CMD_RES_NOERROR) {
-                    Log.d(TAG, "Login success, resent all commands in queue");
+                    Log.d(TAG, String.format("Login success, try to resent all (%d) commands in queue", mCmdQueue.size()));
                     mAgentStatus = AGENT_STATUS_Logined;
                     for (int n = 0; n < mCmdQueue.size(); n++) {
                         CommunicationBase cmd = mCmdQueue.get(n);
@@ -175,7 +176,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     }
                 } else { // if (res.GetErrCode() == CmdRes.CMD_RES_NOT_LOGIN) {
                     Log.e(TAG, "silent login failed, notify user to login");
+                    mAgentStatus = AGENT_STATUS_NotLogin;
                 }
+
+                // notify UI no matter command succeeded or failed
                 CICommandListener cmdListener = null;
                 if (null != mCmdLogin &&
                     null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
@@ -197,6 +201,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         mAgentStatus = AGENT_STATUS_NotLogin;
                         if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
                             Log.e(TAG, "Fail to send relogin command, notify user to login");
+                            if (null != mCmdListener) {
+                                ResBase resNotLogin = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
+                                mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, resNotLogin);
+                            }
                             return;
                         }
                         mAgentStatus = AGENT_STATUS_Logining;
