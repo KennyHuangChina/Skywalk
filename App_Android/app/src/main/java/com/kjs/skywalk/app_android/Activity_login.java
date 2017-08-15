@@ -193,12 +193,13 @@ public class Activity_login extends SKBaseActivity implements
     };
 
     private void doLogin() {
-        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
+        if (!mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
             return;
 
         String passowrd = mEt_password.getText().toString();
         if (!commonFun.verifyPassword(passowrd)) {
             commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), "密码必须由6-16个字母和数字组成，可以是纯数字或纯字母");
+            mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
             return;
         }
 
@@ -208,11 +209,11 @@ public class Activity_login extends SKBaseActivity implements
     }
 
     private int logIn() {
-        if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
+        if (!mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
             return 0;
 
         String strUserSalt;
-        strUserSalt = mActv_telephone_num.getText().toString();
+        strUserSalt = mActv_account.getText().toString();
 
         return CommandManager.getCmdMgrInstance(this, this, this).GetUserSalt(strUserSalt);
     }
@@ -297,7 +298,14 @@ public class Activity_login extends SKBaseActivity implements
             case R.id.tv_login: {
 
                 if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
-                    if(CommandManager.getCmdMgrInstance(this, this, this).LoginBySms(mActv_telephone_num.getText().toString(), mEt_verfication_code.getText().toString()) != CommunicationError.CE_ERROR_NO_ERROR)
+                    String verficationg_code = mEt_verfication_code.getText().toString();
+                    if (!commonFun.verifyPassword(verficationg_code)) {
+                        commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), "验证码必须由6-16个字母和数字组成，可以是纯数字或纯字母");
+                        mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
+                        return;
+                    }
+
+                    if(CommandManager.getCmdMgrInstance(this, this, this).LoginBySms(mActv_telephone_num.getText().toString(), verficationg_code) != CommunicationError.CE_ERROR_NO_ERROR)
                         mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
 
                 } else {
