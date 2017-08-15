@@ -213,6 +213,11 @@ public class ClassDefine {
         public static String KEY_USER_ID = "user_id";
         public static String KEY_USER_NAME = "user_name";
         public static String KEY_USER_PHONE = "phone_no";
+        public static String KEY_LOGIN_RESULT = "login_result";
+    }
+
+    public static class ActivityResultValue {
+        public static int RESULT_VALUE_LOGIN = 50;
     }
 
     public static class TextItem {

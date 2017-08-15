@@ -3,6 +3,7 @@ package com.kjs.skywalk.app_android;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -461,6 +462,9 @@ public class Activity_login extends SKBaseActivity implements
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
                 // login in success
                 SKLocalSettings.UISettings_set(Activity_login.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
+                Intent data = new Intent();
+                data.putExtra(ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT, 1);
+                setResult(ClassDefine.ActivityResultValue.RESULT_VALUE_LOGIN, data);
                 finish();
             } else {
                 commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), result.GetErrDesc());

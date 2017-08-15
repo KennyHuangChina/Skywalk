@@ -29,6 +29,7 @@ import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.BadgeView;
 
@@ -43,6 +44,7 @@ import me.iwf.photopicker.PhotoPreview;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
+import static com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
 
@@ -214,6 +216,21 @@ public class MainActivity extends SKBaseActivity {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0) {
+            if(resultCode == ClassDefine.ActivityResultValue.RESULT_VALUE_LOGIN) {
+                int loginResult = data.getIntExtra(KEY_LOGIN_RESULT, 0);
+                if(loginResult != 0) {
+                    commonFun.showToast_info(getApplicationContext(), mTvHomePage, "登录成功");
+                    startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
+                } else {
+                    commonFun.showToast_info(getApplicationContext(), mTvHomePage, "登录失败");
+                }
+            }
+        }
+    }
 
     // set in activity_main.xml
     public void onClickResponse(View v) {
@@ -232,8 +249,12 @@ public class MainActivity extends SKBaseActivity {
 
 //                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
                 // need check login status
-                startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
-
+                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+                if(!logined) {
+                    startActivityForResult(new Intent(MainActivity.this, Activity_login.class), 0);
+                } else {
+                    startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
+                }
             }
             break;
 
