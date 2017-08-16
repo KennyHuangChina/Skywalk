@@ -501,7 +501,10 @@ public class Activity_login extends SKBaseActivity implements
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // only for develop
                 commonFun.showToast_info(getApplicationContext(), getWindow().getDecorView(), smsCode.GetSmsCode());
+                commonFun.hideSoftKeyboard(Activity_login.this, getWindow().getDecorView());
+                mEt_verfication_code.setText(smsCode.GetSmsCode());
             }
         });
     }

@@ -57,6 +57,7 @@ public class fragmentPrivate extends Fragment {
 
 
     // 我代理的房源
+    private TextView mTv_agency_houses;
     private TextView mTvToRent;
     private TextView mTvRented;
     private TextView mTvToSale;
@@ -105,6 +106,7 @@ public class fragmentPrivate extends Fragment {
 //        mCmdMgr.GetHouseList_AppointSee(0, 0);
 
         // 我代理的房源
+        mTv_agency_houses = (TextView) view.findViewById(R.id.tv_agency_houses);
         mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
         mTvRented = (TextView) view.findViewById(R.id.tv_rented);
         mTvToSale = (TextView) view.findViewById(R.id.tv_to_sale);
@@ -117,7 +119,12 @@ public class fragmentPrivate extends Fragment {
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textview.setText(String.valueOf(nCount));
+                if (textview.getId() == R.id.tv_agency_houses) {
+                    // 我代理的房源
+                    textview.setText(String.format("所有房源 ( %d )", nCount));
+                } else {
+                    textview.setText(String.valueOf(nCount));
+                }
             }
         });
     }
@@ -128,6 +135,30 @@ public class fragmentPrivate extends Fragment {
 //        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 //        type    : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
 //        1- 待租；2-已租； 3-待售； 4-待审核
+
+        // all agency houses
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        updateCount(mTv_agency_houses, resultList.GetTotalNumber());
+                    }
+                }
+            }
+        }, mProgreessListener).GetBehalfHouses(0, 0 , 0);
 
         // to rent
         CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {

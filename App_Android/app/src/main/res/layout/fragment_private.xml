@@ -358,12 +358,13 @@
             android:textColor="#000000"
             android:textSize="16sp"/>
         <TextView
+            android:id="@+id/tv_agency_houses"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="29dp"
             android:gravity="center_vertical"
-            android:text="所有房源"
+            android:text="所有房源 ( 0 )"
             android:drawableRight="@drawable/right3_n"
             android:drawablePadding="8dp"
             android:textColor="#666666"
@@ -372,29 +373,29 @@
 
     <include layout="@layout/seperator_horizontal"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:gravity="center_vertical"
-            android:text="我已代理"
-            android:textColor="#333333"
-            android:textSize="13sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:drawableRight="@drawable/right1_n"
-            android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
-            android:textSize="10sp"/>
-    </RelativeLayout>
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="36dp">-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginStart="30dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:text="我已代理"-->
+            <!--android:textColor="#333333"-->
+            <!--android:textSize="13sp"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_marginEnd="29dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:text="0"-->
+            <!--android:drawableRight="@drawable/right1_n"-->
+            <!--android:drawablePadding="8dp"-->
+            <!--android:textColor="#B2B2B2"-->
+            <!--android:textSize="10sp"/>-->
+    <!--</RelativeLayout>-->
 
     <include layout="@layout/seperator_horizontal"/>
 
