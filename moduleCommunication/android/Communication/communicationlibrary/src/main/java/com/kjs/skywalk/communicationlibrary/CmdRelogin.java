@@ -49,7 +49,8 @@ class CmdRelogin extends CommunicationBase {
         if (null == mUserName || mUserName.isEmpty()) {
             return false;
         }
-        if (mSession.isEmpty() /*0 == mSession.length()*/) {
+        // Kenny 2017-08-16: move it to method doOperation()
+/*        if (mSession.isEmpty() ) {
             Log.e(TAG, "mSession is empty");
             return false;
         }
@@ -73,7 +74,7 @@ class CmdRelogin extends CommunicationBase {
         String strSession = new String(sid);
         mSession = strSession;
         Log.d(TAG, "mSession:" + mSession);
-
+*/
         return true;
     }
 
@@ -96,10 +97,25 @@ class CmdRelogin extends CommunicationBase {
     @Override
     public int doOperation(CICommandListener commandListener, CIProgressListener progressListener)
     {
-        if (mSession.isEmpty()) {
-            Log.e(TAG, "mSession is empty");
-            return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
+        String FN = "[doOperation] ";
+        if (mSession.isEmpty() /*0 == mSession.length()*/) {
+            Log.e(TAG, FN + "mSession is empty");
+            return CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN;
         }
+
+        Log.d(TAG, FN + "mSession:" + mSession);
+        NativeCall pNC = NativeCall.GetNativeCaller();
+        byte[] sid = pNC.EncryptReloginSession(mUserName, mRadom, mSession, mVersion);
+        if (null == sid) {
+            Log.e(TAG, FN + "Fail to encrypt relogin session");
+            return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
+        }
+        Log.w(TAG, FN + "session:" + sid);
+//        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
+        String strSession = new String(sid);
+        mSession = strSession;
+        Log.d(TAG, FN + "mSession:" + mSession);
+
         return super.doOperation(commandListener, progressListener);
     }
 
