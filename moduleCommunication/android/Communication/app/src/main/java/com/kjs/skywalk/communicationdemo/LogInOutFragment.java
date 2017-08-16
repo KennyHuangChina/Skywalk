@@ -30,8 +30,9 @@ public class LogInOutFragment extends Fragment
     private String mResultString = "";
 
     TextView mTextViewResult = null;
-    EditText mEditUserName = null;
-    EditText mEditPassword = null;
+    EditText mEditUserName  = null;
+    EditText mEditPassword  = null;
+    EditText mEditSms       = null;
 
     private String mSalt = "";
     private String mRand = "";
@@ -46,7 +47,12 @@ public class LogInOutFragment extends Fragment
 
     private void doLoginSms() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
-        CmdMgr.LoginBySms(mEditUserName.getText().toString(), mEditPassword.getText().toString());
+        CmdMgr.LoginBySms(mEditUserName.getText().toString(), mEditSms.getText().toString());
+    }
+
+    private void doRestPass() {
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CmdMgr.ResetLoginPass(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mEditSms.getText().toString(), mSalt, mRand);
     }
 
     private void doLogout() {
@@ -85,8 +91,10 @@ public class LogInOutFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_log_in_out, container, false);
         mTextViewResult = (TextView)view.findViewById(R.id.textViewResult);
-        mEditUserName = (EditText)view.findViewById(R.id.editTextUserName);
-        mEditPassword = (EditText)view.findViewById(R.id.editTextPassword);
+        mEditUserName   = (EditText)view.findViewById(R.id.editTextUserName);
+        mEditPassword   = (EditText)view.findViewById(R.id.editTextPassword);
+        mEditSms        = (EditText)view.findViewById(R.id.editSms);
+
         Button loginButton = (Button)view.findViewById(R.id.buttonLogin);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +163,16 @@ public class LogInOutFragment extends Fragment
                 doLoginSms();
             }
         });
+
+        Button bnRestPass = (Button)view.findViewById(R.id.btnRestPass);
+        bnRestPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearResultDisplay();
+                doRestPass();
+            }
+        });
+
 
         return view;
     }

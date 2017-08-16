@@ -21,6 +21,7 @@ public:
     static const char * Digest(JNIEnv * env, const char * input, string & output);
     static unsigned char * Digest(JNIEnv * env, unsigned char * input, int inSize, vector<unsigned char> & output);
     static unsigned  char* Digest2Bcd(const char* pDigest, unsigned int nDigLen, unsigned char* szBcd, unsigned int nBcdSize);
+    static unsigned  char* Bcd2Digest(const char* szBCD, unsigned char* szDigest, unsigned int& nDigestSize);
 };
 
 #endif //COMMUNICATION_DIGUTIL_H

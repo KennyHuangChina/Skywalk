@@ -126,3 +126,39 @@ unsigned  char* SkDigestUtil::Digest2Bcd(const char* pDigest, unsigned int nDigL
 
     return szBcd;
 }
+
+int ahextoi( const char* hex_str)
+{
+    int r =0;
+    if(hex_str)
+        sscanf(hex_str,"%x",&r);
+    return r;
+}
+
+unsigned char* SkDigestUtil::Bcd2Digest(const char* szBCD, unsigned char* szDigest, unsigned int& nDigestSize)
+{
+    if (NULL == szBCD || 0 == strlen(szBCD) || NULL == szDigest || nDigestSize * 2 < strlen(szBCD))
+    {
+        DP_ERR("error arguments: szBCD:%#x, szDigest:%#x, nDigestSize:%d", szBCD, szDigest, nDigestSize);
+        return NULL;
+    }
+//    DP_LOG("szBCD:%#x, nDigLen:%d, szDigest:%#x, nDigestSize:%d", szBCD, strlen(szBCD), szDigest, nDigestSize);
+    szDigest[0] = 0x00;
+    nDigestSize = 0;
+
+    int nBcdLen = strlen(szBCD);
+    int nV = 0;
+    char szV[5];
+    for (int i = 0; i < nBcdLen; i += 2)
+    {
+        strcpy(szV, "0x");
+        memcpy(szV+2, szBCD + i, 2);
+        szV[4] = 0;
+        nV = ahextoi(szV);
+        szDigest[i] = nV;
+        nDigestSize ++;
+        DP_LOG("%d:, szV:%s, %.2x, %d %c", i/2, szV, szDigest[i], szDigest[i], szDigest[i]);
+    }
+
+    return szDigest;
+}

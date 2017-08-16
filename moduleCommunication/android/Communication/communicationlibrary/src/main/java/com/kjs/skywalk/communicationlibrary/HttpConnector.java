@@ -105,10 +105,10 @@ class HttpConnector {
 
         int nRetCode = InternalDefines.ERROR_CODE_OK;
         if(mStringServerURL == null || mStringServerURL.isEmpty()) {
-            return InternalDefines.ERROR_CODE_HTTP_INVALID_URL;
+            return CommunicationError.CE_ERROR_HTTP_INVALID_URL;
         }
         if(mStringURL == null || mStringURL.isEmpty()) {
-            return InternalDefines.ERROR_CODE_HTTP_INVALID_URL;
+            return CommunicationError.CE_ERROR_HTTP_INVALID_URL;
         }
 
         String url = mStringServerURL + mStringURL ;
@@ -121,7 +121,7 @@ class HttpConnector {
             mURL = new URL(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            return InternalDefines.ERROR_CODE_HTTP_CONNECTION;
+            return CommunicationError.CE_ERROR_HTTP_CONNECTION;
         }
 
         try {
@@ -150,7 +150,7 @@ class HttpConnector {
                 // Create an SSLContext that uses our TrustManager
                 SSLContext context = createSSLSocketContext();
                 if (context == null) {
-                    return InternalDefines.ERROR_CODE_HTTP_CONNECTION_SSL;
+                    return CommunicationError.CE_ERROR_HTTP_CONNECTION_SSL;
                 }
                 httpsUrlConnection.setSSLSocketFactory(context.getSocketFactory());
             } else {
@@ -191,7 +191,7 @@ class HttpConnector {
 
     public int sendRequest() {
         if(mConnection == null) {
-            return InternalDefines.ERROR_CODE_HTTP_CONNECTION;
+            return CommunicationError.CE_ERROR_HTTP_CONNECTION;
         }
 
         mJsonObj = null;
@@ -283,7 +283,7 @@ class HttpConnector {
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                        return InternalDefines.ERROR_CODE_HTTP_SOURCE_FILE_NOT_FOUND;
+                        return CommunicationError.CE_ERROR_HTTP_SOURCE_FILE_NOT_FOUND;
                     }
                 }
 
@@ -307,13 +307,13 @@ class HttpConnector {
 
         } catch (ProtocolException e1) {
             e1.printStackTrace();
-            mErrorCode = InternalDefines.ERROR_CODE_PROTOCOL;
+            mErrorCode = CommunicationError.CE_ERROR_PROTOCOL;
         } catch (JSONException e) {
             e.printStackTrace();
-            mErrorCode = InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+            mErrorCode = CommunicationError.CE_ERROR_HTTP_REQUEST_FAILED;
         } catch (UnknownHostException eHost) {
             eHost.printStackTrace();
-            mErrorCode = InternalDefines.ERROR_CODE_HTTP_UNKNOWN_HOST;
+            mErrorCode = CommunicationError.CE_ERROR_HTTP_UNKNOWN_HOST;
         } catch (IOException e) {
             e.printStackTrace();
             if (-1 != (mErrorCode = checkIOException(e))) {
@@ -325,7 +325,7 @@ class HttpConnector {
                 mJsonObj = getResponsObject(in);
             } catch (IOException e1) {
                 e1.printStackTrace();
-                mErrorCode = InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+                mErrorCode = CommunicationError.CE_ERROR_HTTP_REQUEST_FAILED;
             } catch (JSONException e1) {
                 e1.printStackTrace();
                 try {
@@ -333,7 +333,7 @@ class HttpConnector {
 //                    mErrorDescription = mConnection.getResponseMessage();
                 } catch (IOException e2) {
                     e2.printStackTrace();
-                    mErrorCode = InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
+                    mErrorCode = CommunicationError.CE_ERROR_HTTP_REQUEST_FAILED;
                 }
             }
         }
@@ -373,15 +373,15 @@ class HttpConnector {
     private int checkIOException(IOException exception) {
         int nErrCode = -1;
         if (exception instanceof java.net.SocketTimeoutException) {
-            nErrCode = InternalDefines.ERROR_CODE_SCOCKET_TIMEOUT;
+            nErrCode = CommunicationError.CE_ERROR_SCOCKET_TIMEOUT;
         } else if (exception instanceof java.net.ConnectException) {
             String err = exception.getMessage();
             if (err.indexOf("ENETUNREACH") >= 0) {
-                nErrCode = InternalDefines.ERROR_CODE_NETWORK_UNREACH;
+                nErrCode = CommunicationError.CE_ERROR_NETWORK_UNREACH;
             } else if (err.indexOf("EHOSTUNREACH") >= 0) {
-                nErrCode = InternalDefines.ERROR_CODE_HOST_UNREACH;
+                nErrCode = CommunicationError.CE_ERROR_HOST_UNREACH;
             } else if (err.indexOf("ECONNREFUSED") >= 0) {
-                nErrCode = InternalDefines.ERROR_CODE_CONNECTION_REFUSED;
+                nErrCode = CommunicationError.CE_ERROR_CONNECTION_REFUSED;
             } else {
                 Log.w(TAG, "error string: " + err);
             }
