@@ -83,7 +83,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 // check network status
                 ConnectionDetector cd = new ConnectionDetector(mContext);
                 if (!cd.isConnectingToInternet()) {
-                    IApiResults.ICommon result = doParseResult(InternalDefines.ERROR_CODE_NETWORK_NOTAVAILABLE, null);
+                    IApiResults.ICommon result = doParseResult(CommunicationError.CE_ERROR_NETWORK_NOTAVAILABLE, null);
                     mCommandListener.onCommandFinished(mAPI, result);
                     return;
                 }
@@ -99,7 +99,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
                 doBeforeConnect(http);
                 if ((retValue = http.connect()) != InternalDefines.ERROR_CODE_OK) {
-                    String strError = InternalDefines.getErrorDescription(retValue);
+                    String strError = CommunicationError.getErrorDescription(retValue);
                     Log.e(TAG, "Fail to connect to server. error: " +  strError);
                     returnCode = "" + retValue;
                     mCommandListener.onCommandFinished(mAPI, null);
@@ -134,7 +134,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
                 IApiResults.ICommon result = doParseResult(InternalDefines.ERROR_CODE_OK, jObject);
 
-                String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_OK);
+                String strError = CommunicationError.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
                 mCommandListener.onCommandFinished(mAPI, result);
 

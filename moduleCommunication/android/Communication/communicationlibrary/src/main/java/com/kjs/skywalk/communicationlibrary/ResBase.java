@@ -51,7 +51,7 @@ class ResBase implements IApiResults.ICommon {
                 return parseResult(obj);
             }
         } else {    // use the error code passed in
-            mErrDesc = InternalDefines.getErrorDescription(mErrCode);
+            mErrDesc = CommunicationError.getErrorDescription(mErrCode);
         }
 
         return 0;
