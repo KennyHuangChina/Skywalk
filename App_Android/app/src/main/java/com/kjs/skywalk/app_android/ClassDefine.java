@@ -232,10 +232,6 @@ public class ClassDefine {
 
         public static int getErrorType(int errorCode) {
             switch (errorCode) {
-                case 0x80001007:
-                case 0x80001009:
-                    return SERVER_CONNECTION_ERROR;
-
                 case 1104:
                 case 1106:
                     return SERVER_NEED_LOGIN;
