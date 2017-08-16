@@ -735,6 +735,9 @@ func (this *HouseController) GetHouseInfo() {
 	// if 0 == pri {
 	// 	uid = -1
 	// }
+	if be && uid <= 0 {
+		return
+	}
 
 	/*
 	 *	Processing
