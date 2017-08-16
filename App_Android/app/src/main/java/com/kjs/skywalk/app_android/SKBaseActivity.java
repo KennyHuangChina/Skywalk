@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupWindow;
 
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
@@ -20,6 +21,7 @@ import java.util.HashMap;
 
 import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_CONNECTION_ERROR;
 import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_NEED_LOGIN;
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 
 /**
  * Created by Jackie on 2017/5/27.
@@ -105,27 +107,33 @@ public class SKBaseActivity extends AppCompatActivity
 
 
     @Override
-    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
         kjsLogUtil.i("SKBaseActivity::onCommandFinished");
-        int errorCode = ClassDefine.ServerError.getErrorType(iCommon.GetErrCode());
-        switch (errorCode) {
-            case SERVER_CONNECTION_ERROR: {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        processConnectionError();
-                    }
-                });
-                break;
-            }
-            case SERVER_NEED_LOGIN: {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        processLogin();
-                    }
-                });
-            }
+        int errorCode = iResult.GetErrCode();
+        if(errorCode == CE_ERROR_NO_ERROR) {
+            return;
+        }
+
+        if(CommunicationError.IsNetworkError(errorCode)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    processConnectionError();
+                }
+            });
+
+            return;
+        }
+
+        if(SERVER_NEED_LOGIN == ClassDefine.ServerError.getErrorType(errorCode)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    processLogin();
+                }
+            });
+
+            return;
         }
     }
 

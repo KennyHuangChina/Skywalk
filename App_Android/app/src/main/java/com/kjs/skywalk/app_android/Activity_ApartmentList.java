@@ -200,6 +200,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 }
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    Activity_ApartmentList.super.onCommandFinished(command, iResult);
                     return;
                 }
 
