@@ -141,6 +141,7 @@ public class Activity_Search_House extends SKBaseActivity implements
         if(property == null || property.isEmpty()) {
             return;
         }
+        commonFun.hideSoftKeyboard(getApplicationContext(), mListViewProperty);
 
         String history = property + "=" + propertyId;
         mHistory.addHistory(history);

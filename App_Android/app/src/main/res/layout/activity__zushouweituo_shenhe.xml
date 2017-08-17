@@ -119,6 +119,7 @@
                     android:id="@+id/textViewPropertyName"
                     style="@style/textStyle_page_blockValue"
                     android:textColor="@color/colorTextNormal"
+                    android:onClick="onClickResponse"
                     android:enabled="false"
                     android:text=""/>
 
@@ -138,6 +139,8 @@
                         android:id="@+id/textViewRoomNo"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
+                        android:onClick="onClickResponse"
+                        android:enabled="false"
                         android:text=""/>
 
                 </RelativeLayout>
@@ -156,6 +159,8 @@
                         android:id="@+id/textViewFloor"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
+                        android:onClick="onClickResponse"
+                        android:enabled="false"
                         android:text=""/>
 
                 </RelativeLayout>
@@ -174,6 +179,8 @@
                         android:id="@+id/textViewArea"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
+                        android:onClick="onClickResponse"
+                        android:enabled="false"
                         android:text=""/>
 
                 </RelativeLayout>
@@ -192,6 +199,8 @@
                         android:id="@+id/textViewHouseType"
                         style="@style/textStyle_page_blockValue"
                         android:textColor="@color/colorTextNormal"
+                        android:onClick="onClickResponse"
+                        android:enabled="false"
                         android:text=""/>
 
                 </RelativeLayout>
