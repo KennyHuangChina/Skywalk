@@ -325,6 +325,96 @@ public class CommunicationInterface {
         final public static int CMD_GET_USER_HOUSE_WATCH_LIST = 0x9001;
 
         public static int CMD_TEST                   = 0x0001;
+
+        private static HashMap<Integer, String> cmdMap;
+        static {
+            cmdMap = new HashMap<Integer, String>();
+            cmdMap.put(CMD_LOGIN_BY_PASSWORD,   "CMD_LOGIN_BY_PASSWORD");
+            cmdMap.put(CMD_LOGIN_BY_SMS,        "CMD_LOGIN_BY_SMS");
+            cmdMap.put(CMD_GET_USER_SALT,       "CMD_GET_USER_SALT");
+            cmdMap.put(CMD_GET_USER_INFO,       "CMD_GET_USER_INFO");
+            cmdMap.put(CMD_LOG_OUT,             "CMD_LOG_OUT");
+            cmdMap.put(CMD_RELOGIN,             "CMD_RELOGIN");
+            cmdMap.put(CMD_GET_SMS_CODE,        "CMD_GET_SMS_CODE");
+            cmdMap.put(CMD_GET_AGENCY_LIST,     "CMD_GET_AGENCY_LIST");
+            cmdMap.put(CMD_MODIFY_AGENCY,       "CMD_MODIFY_AGENCY");
+            cmdMap.put(CMD_GET_LOGIN_USER_INFO, "CMD_GET_LOGIN_USER_INFO");
+            cmdMap.put(CMD_RESET_LOGIN_PASS,    "CMD_RESET_LOGIN_PASS");
+
+            cmdMap.put(CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, "CMD_GET_BRIEF_PUBLIC_HOUSE_INFO");
+            cmdMap.put(CMD_GET_HOUSE_DIGEST_LIST,       "CMD_GET_HOUSE_DIGEST_LIST");
+            cmdMap.put(CMD_GET_BEHALF_HOUSE_LIST,       "CMD_GET_BEHALF_HOUSE_LIST");
+            cmdMap.put(CMD_GET_HOUSE_INFO,              "CMD_GET_HOUSE_INFO");
+            cmdMap.put(CMD_COMMIT_HOUSE_BY_OWNER,       "CMD_COMMIT_HOUSE_BY_OWNER");
+            cmdMap.put(CMD_AMEND_HOUSE,                 "CMD_AMEND_HOUSE");
+            cmdMap.put(CMD_CERTIFY_HOUSE,               "CMD_CERTIFY_HOUSE");
+            cmdMap.put(CMD_GET_SET_HOUSE_COVER_IMAGE,   "CMD_GET_SET_HOUSE_COVER_IMAGE");
+            cmdMap.put(CMD_GET_RECOMMEND_HOUSE,         "CMD_GET_RECOMMEND_HOUSE");
+            cmdMap.put(CMD_SET_HOUSE_PRICE,             "CMD_SET_HOUSE_PRICE");
+            cmdMap.put(CMD_GET_HOUSE_PRICE,             "CMD_GET_HOUSE_PRICE");
+            cmdMap.put(CMD_GET_HOUSE_SHOWTIME,          "CMD_GET_HOUSE_SHOWTIME");
+            cmdMap.put(CMD_SET_HOUSE_SHOWTIME,          "CMD_SET_HOUSE_SHOWTIME");
+
+            // Property
+            cmdMap.put(CMD_GET_PROPERTY_LIST,   "CMD_GET_PROPERTY_LIST");
+            cmdMap.put(CMD_GET_PROPERTY_INFO,   "CMD_GET_PROPERTY_INFO");
+            cmdMap.put(CMD_ADD_PROPERTY,        "CMD_ADD_PROPERTY");
+            cmdMap.put(CMD_MODIFY_PROPERTY,     "CMD_MODIFY_PROPERTY");
+
+            // Deliverables
+            cmdMap.put(CMD_ADD_DELIVERABLE,         "CMD_ADD_DELIVERABLE");
+            cmdMap.put(CMD_GET_DELIVERABLE_LIST,    "CMD_GET_DELIVERABLE_LIST");
+            cmdMap.put(CMD_EDIT_DELIVERABLE,        "CMD_EDIT_DELIVERABLE");
+            cmdMap.put(CMD_ADD_HOUSE_DELIVERABLE,   "CMD_ADD_HOUSE_DELIVERABLE");
+            cmdMap.put(CMD_GET_HOUSE_DELIVERABLES,  "CMD_GET_HOUSE_DELIVERABLES");
+
+            // Facilities
+            cmdMap.put(CMD_ADD_FACILITY_TYPE,       "CMD_ADD_FACILITY_TYPE");
+            cmdMap.put(CMD_EDIT_FACILITY_TYPE,      "CMD_EDIT_FACILITY_TYPE");
+            cmdMap.put(CMD_GET_FACILITY_TYPE_LIST,  "CMD_GET_FACILITY_TYPE_LIST");
+            cmdMap.put(CMD_ADD_FACILITY,            "CMD_ADD_FACILITY");
+            cmdMap.put(CMD_EDIT_FACILITY,           "CMD_EDIT_FACILITY");
+            cmdMap.put(CMD_GET_FACILITY_LIST,       "CMD_GET_FACILITY_LIST");
+            cmdMap.put(CMD_ADD_HOUSE_FACILITY,      "CMD_ADD_HOUSE_FACILITY");
+            cmdMap.put(CMD_GET_HOUSEFACILITY_LIST,  "CMD_GET_HOUSEFACILITY_LIST");
+            cmdMap.put(CMD_EDIT_HOUSE_FACILITY,     "CMD_EDIT_HOUSE_FACILITY");
+
+            // Pictures
+            cmdMap.put(CMD_ADD_PICTURE,         "CMD_ADD_PICTURE");
+            cmdMap.put(CMD_DEL_PICTURE,         "CMD_DEL_PICTURE");
+            cmdMap.put(CMD_GET_PIC_URL,         "CMD_GET_PIC_URL");
+            cmdMap.put(CMD_GET_HOUSE_PIC_LIST,  "CMD_GET_HOUSE_PIC_LIST");
+
+            // Event
+            cmdMap.put(CMD_GET_NEW_EVENT_CNT,       "CMD_GET_NEW_EVENT_CNT");
+            cmdMap.put(CMD_GET_HOUSE_NEW_EVENTS,    "CMD_GET_HOUSE_NEW_EVENTS");
+            cmdMap.put(CMD_READ_NEW_EVENT,          "CMD_READ_NEW_EVENT");
+            cmdMap.put(CMD_GET_EVENT_INFO,          "CMD_GET_EVENT_INFO");
+            cmdMap.put(CMD_GET_EVENT_PROC_LST,      "CMD_GET_EVENT_PROC_LST");
+            cmdMap.put(CMD_GET_HOUSE_EVENT_LST,     "CMD_GET_HOUSE_EVENT_LST");
+            cmdMap.put(CMD_MODIFY_HOUSE_EVENT,      "CMD_MODIFY_HOUSE_EVENT");
+
+            // Appointment
+            cmdMap.put(CMD_APPOINT_SEE_HOUSE,       "CMD_APPOINT_SEE_HOUSE");
+            cmdMap.put(CMD_APPOINT_HOUSE_SEE_LST,   "CMD_APPOINT_HOUSE_SEE_LST");
+            cmdMap.put(CMD_HOUSE_LST_APPOINT_SEE,   "CMD_HOUSE_LST_APPOINT_SEE");
+
+            // House watch
+            cmdMap.put(CMD_GET_USER_HOUSE_WATCH_LIST, "CMD_GET_USER_HOUSE_WATCH_LIST");
+        }
+
+        public static String GetCmdDesc(int nCmd) {
+            if (!cmdMap.containsKey(nCmd)) {
+                return "Unnamed command";
+            }
+
+            String description = cmdMap.get(nCmd);
+            if(description == null) {
+                description = "";
+            }
+
+            return description;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
