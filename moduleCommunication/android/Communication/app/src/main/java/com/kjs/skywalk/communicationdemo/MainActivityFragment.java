@@ -285,7 +285,7 @@ public class MainActivityFragment extends Fragment
             return;
         }
         String cmd = CommunicationInterface.CmdID.GetCmdDesc(command);
-        mResultString = String.format("command(%d): %s, \n Result: %s", command, cmd, result.DebugString());
+        mResultString = String.format("command(%d): %s \nResult: %s", command, cmd, result.DebugString());
 
         if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
             Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
