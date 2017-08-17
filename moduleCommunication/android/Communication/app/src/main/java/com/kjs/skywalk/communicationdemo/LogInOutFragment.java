@@ -233,7 +233,8 @@ public class LogInOutFragment extends Fragment
             Log.w(TAG, "result is null");
             return;
         }
-        mResultString = "Request: " + command + "\n" + result.DebugString();
+        String cmd = CommunicationInterface.CmdID.GetCmdDesc(command);
+        mResultString = String.format("command(%d): %s \nResult: %s", command, cmd, result.DebugString());
 
         if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
             Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
