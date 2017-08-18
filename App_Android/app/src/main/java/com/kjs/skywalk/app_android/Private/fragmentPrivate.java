@@ -61,6 +61,7 @@ public class fragmentPrivate extends Fragment {
     private TextView mTvToRent;
     private TextView mTvRented;
     private TextView mTvToSale;
+    private TextView mTv_month_turnoff;
     private TextView mTvToApprove;
 
     private String mUserName;
@@ -110,7 +111,10 @@ public class fragmentPrivate extends Fragment {
         mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
         mTvRented = (TextView) view.findViewById(R.id.tv_rented);
         mTvToSale = (TextView) view.findViewById(R.id.tv_to_sale);
+        mTv_month_turnoff = (TextView) view.findViewById(R.id.tv_month_turnoff);
         mTvToApprove = (TextView) view.findViewById(R.id.tv_to_approve);
+
+        ((RelativeLayout)view.findViewById(R.id.rl_to_rent)).setEnabled(false);
 
         return view;
     }
