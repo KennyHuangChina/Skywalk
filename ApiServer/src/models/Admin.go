@@ -80,6 +80,7 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 	// pp, err = DecryptBuff(pwd, track_id, rand) // plain password
 	// beego.Debug(FN, "plain password(DecryptBuff):", pp)
 
+	beego.Warn(FN, "Not Implement")
 	return
 
 	err, lgusr := GetUser(lu)

@@ -31,8 +31,9 @@ func makeValidityKey(track_id, rand string) ([]byte, error) {
 	// 	key = append(key, byte(v))
 	// }
 
-	md5 := md5.Sum([]byte(track_id + rand))
-	beego.Debug(FN, "key:", track_id+rand)
+	plaintxt := track_id + "@" + rand + "#2017*" + rand
+	md5 := md5.Sum([]byte(plaintxt))
+	// beego.Debug(FN, "plaintxt:", plaintxt)
 	beego.Debug(FN, "md5:", md5)
 
 	k := ""
@@ -88,8 +89,8 @@ func DecryptString(ciphertxt, track_id, rand string) (plaintext string, err erro
 	beego.Debug(FN, "key:", key, ", len:", len(key))
 
 	plaintext1, err := AesDecrypt([]byte(ciphertxt), key)
-	beego.Debug(FN, "plaintext1:", plaintext1, ", err:", err)
-	beego.Debug(FN, "plaintext1:", string(plaintext1))
+	// beego.Debug(FN, "plaintext1:", plaintext1, ", err:", err)
+	// beego.Debug(FN, "plaintext1:", string(plaintext1))
 
 	return string(plaintext1), nil
 }
