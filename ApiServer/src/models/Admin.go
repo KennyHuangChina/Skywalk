@@ -80,9 +80,6 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 	// pp, err = DecryptBuff(pwd, track_id, rand) // plain password
 	// beego.Debug(FN, "plain password(DecryptBuff):", pp)
 
-	beego.Warn(FN, "Not Implement")
-	return
-
 	err, lgusr := GetUser(lu)
 	if nil != err {
 		return
@@ -96,7 +93,7 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 	/* Permission checking */
 	if lu == tu.Id { //reset password for user himself
 
-	} else if _, bAdmin := isAdministrator(lu); !bAdmin {
+	} else if _, bAdmin := isAdministrator(lu); !bAdmin { // Only administrator could reset the password for other people
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("User(%d) is not a administrator", lu)}
 		return
 	}
@@ -113,7 +110,11 @@ func ResetPass(lu int64, ver, user, pass, rand, sms string) (err error) {
 	/* Change the password indeed */
 	o := orm.NewOrm()
 
-	tu.PassLogin = pass
+	hasher := md5.New()
+	hasher.Write([]byte(pp))
+	hasher.Write([]byte(tu.Salt))
+	np := hex.EncodeToString(hasher.Sum(nil)) // new password
+	tu.PassLogin = np
 	beego.Debug(FN, fmt.Sprintf("tu:%+v", tu))
 	if /*numb*/ _, errT := o.Update(&tu, "PassLogin"); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to update pssword for user(%d), err:%s", tu.Id, errT.Error())}
