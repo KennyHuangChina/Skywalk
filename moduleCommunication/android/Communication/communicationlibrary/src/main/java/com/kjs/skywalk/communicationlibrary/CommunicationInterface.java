@@ -89,7 +89,7 @@ public class CommunicationInterface {
         /*
         *   CMD         : CMD_RESET_LOGIN_PASS,
         *   Result      : IApiResults.ICommon
-        *   user        : user name(/phone number)
+        *   user        : target user name(/phone number)
         *   pass        : new password
         *   sms         : sms captcha code
         *   salt        : salt

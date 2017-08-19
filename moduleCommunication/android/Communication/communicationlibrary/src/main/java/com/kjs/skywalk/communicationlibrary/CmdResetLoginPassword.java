@@ -13,6 +13,7 @@ import java.util.HashMap;
  */
 
 class CmdResetLoginPassword extends CommunicationBase {
+    private String mSession = "";   // "1234567890";
     private String mUser    = null;
     private String mNewPass = null;
     private String mSalt    = null;
@@ -30,6 +31,12 @@ class CmdResetLoginPassword extends CommunicationBase {
 //        mRadom = rand;
         // generate a random
         mRadom = generateRandom();
+
+        // Load session for previous login
+        SKSessionStore sessStore = SKSessionStore.getInstance(mContext);
+        if (null != sessStore) {
+            mSession = sessStore.get();
+        }
     }
 
     @Override
@@ -41,15 +48,22 @@ class CmdResetLoginPassword extends CommunicationBase {
     @Override
     public void generateRequestData() {
         mRequestData = ("v=1.0");
-        mRequestData += "&";
-        mRequestData += ("u=" + mUser);
-        mRequestData += "&";
-        mRequestData += ("p=" + mNewPass);
-        mRequestData += "&";
-        mRequestData += ("r=" + mRadom);
-        mRequestData += "&";
-        mRequestData += ("s=" + mSms);
-
+        if (null != mUser && !mUser.isEmpty()) {
+            mRequestData += "&";
+            mRequestData += ("u=" + mUser);
+        }
+        if (null != mNewPass && !mNewPass.isEmpty()) {
+            mRequestData += "&";
+            mRequestData += ("p=" + mNewPass);
+        }
+        if (null != mRadom && !mRadom.isEmpty()) {
+            mRequestData += "&";
+            mRequestData += ("r=" + mRadom);
+        }
+        if (null != mSms && !mSms.isEmpty()) {
+            mRequestData += "&";
+            mRequestData += ("s=" + mSms);
+        }
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
@@ -67,12 +81,43 @@ class CmdResetLoginPassword extends CommunicationBase {
             Log.e(TAG, "mSms not set");
             return false;
         }
+        if (null == mSalt || mSalt.isEmpty()) {
+            Log.e(TAG, "mSalt not set");
+            return false;
+        }
+
+//        NativeCall pNC = NativeCall.GetNativeCaller();
+//        byte[] pass = pNC.EncryptNewPassword(mNewPass, mSalt, mRadom, mVersion);
+////        byte[] pass = pNC.EncryptNewPassword(mNewPass, "f1c0fb8578e356746e0f98ce07b7a27f", "666666", mVersion);
+//        if (null == pass) {
+//            return false;
+//        }
+//        Log.w(TAG, "pass:" + pass);
+////        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
+////        String strNewPass = new String(pass);
+//        mNewPass = new String(pass);
+////        mNewPass = Base64.encodeToString(pass, Base64.URL_SAFE);
+//        Log.d(TAG, "mNewPass:" + mNewPass);
+////        return false;
+        return true;
+    }
+
+    @Override
+    public int doOperation(CommunicationInterface.CICommandListener commandListener,
+                           CommunicationInterface.CIProgressListener progressListener) {
+        String FN = "[doOperation] ";
+
+        if (mSession.isEmpty() /*0 == mSession.length()*/) {
+            Log.e(TAG, FN + "mSession is empty");
+            return CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN;
+        }
 
         NativeCall pNC = NativeCall.GetNativeCaller();
         byte[] pass = pNC.EncryptNewPassword(mNewPass, mSalt, mRadom, mVersion);
 //        byte[] pass = pNC.EncryptNewPassword(mNewPass, "f1c0fb8578e356746e0f98ce07b7a27f", "666666", mVersion);
         if (null == pass) {
-            return false;
+            Log.e(TAG, FN + "Fail to encrypt relogin session");
+            return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
         Log.w(TAG, "pass:" + pass);
 //        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
@@ -80,8 +125,8 @@ class CmdResetLoginPassword extends CommunicationBase {
         mNewPass = new String(pass);
 //        mNewPass = Base64.encodeToString(pass, Base64.URL_SAFE);
         Log.d(TAG, "mNewPass:" + mNewPass);
-//        return false;
-        return true;
+
+        return super.doOperation(commandListener, progressListener);
     }
 
     @Override
