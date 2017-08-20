@@ -12,15 +12,18 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kjs.skywalk.app_android.Server.GetHouseInfo;
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
 
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 
 import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
-public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetHouseInfo.TaskFinished{
+public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
     private boolean mModifyMode = false;
     private RelativeLayout mRootLayout = null;
@@ -42,8 +45,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
 //        String strRoom = mBuildingNo + "栋" + mRoomNo + "室";
 //        mTextViewRoom.setText(strRoom);
 
-        GetHouseInfo houseInfo = new GetHouseInfo(this, this);
-        houseInfo.execute(mHouseId, 1);
+        getHouseInfo();
     }
 
     private void update() {
@@ -74,27 +76,6 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
         SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = sdformat.format(mHouseInfo.submitTime);
         submitTime.setText(time);
-    }
-
-    @Override
-    public void onTaskFinished(final ClassDefine.HouseInfo houseInfo) {
-        if(houseInfo == null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
-                }
-            });
-            return;
-        } else {
-            mHouseInfo = houseInfo;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    update();
-                }
-            });
-        }
     }
 
     public void onClickResponse(View v) {
@@ -180,6 +161,55 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
             }
         }
 
+    }
+
+    private int getHouseInfo() {
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    return;
+                }
+
+                if (command == CMD_GET_HOUSE_INFO) {
+                    mHouseInfo = new ClassDefine.HouseInfo();
+                    IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
+                    mHouseInfo.floor = info.Floorthis();
+                    mHouseInfo.totalFloor = info.FloorTotal();
+                    mHouseInfo.bedRooms = info.Bedrooms();
+                    mHouseInfo.livingRooms = info.Livingrooms();
+                    mHouseInfo.bathRooms = info.Bathrooms();
+                    mHouseInfo.area = info.Acreage();
+                    mHouseInfo.landlordId = info.Landlord();
+                    mHouseInfo.submitTime = info.SubmitTime();
+                    mHouseInfo.buildingNo = info.BuildingNo();
+                    mHouseInfo.roomNo = info.HouseNo();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            update();
+                        }
+                    });
+                }
+            }
+        };
+
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
+        int result = CmdMgr.GetHouseInfo(mHouseId, true);
+        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
+            return -1;
+        }
+
+        return 0;
     }
 
 }
