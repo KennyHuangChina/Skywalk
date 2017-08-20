@@ -1,14 +1,17 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,6 +19,7 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
+import com.kjs.skywalk.control.kjsNumberPicker;
 
 
 import java.text.SimpleDateFormat;
@@ -31,6 +35,11 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private TextView mTextViewRoom = null;
 
     private ClassDefine.HouseInfo mHouseInfo = null;
+    private int mRooms = 0;
+    private int mLounges = 0;
+    private int mBaths = 0;
+
+    ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +95,10 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             break;
             case R.id.textViewPropertyName: {
                 startActivityForResult(new Intent(Activity_Zushouweituo_shenhe.this, Activity_Search_House.class), 0);
+                break;
+            }
+            case R.id.textViewHouseType: {
+                selectHouseType();
                 break;
             }
             case R.id.textViewModify: {
@@ -210,6 +223,26 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         }
 
         return 0;
+    }
+
+    private void selectHouseType() {
+        DialogInterface.OnDismissListener listener = new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(mHouseTypeSelector.mDirty) {
+                    mRooms = mHouseTypeSelector.mRoomIndex + 1;
+                    mBaths =mHouseTypeSelector.mBathIndex + 1;
+                    mLounges = mHouseTypeSelector.mLoungeIndex + 1;
+
+                    TextView type = (TextView) findViewById(R.id.textViewHouseType);
+                    String strType = getHouseTypeString(mRooms, mLounges, mBaths);
+                    type.setText(strType);
+                }
+            }
+        };
+        mHouseTypeSelector = new ClassDefine.HouseTypeSelector(this);
+        mHouseTypeSelector.setHouseType(mHouseInfo.bedRooms, mHouseInfo.livingRooms, mHouseInfo.bathRooms);
+        mHouseTypeSelector.show(listener);
     }
 
 }

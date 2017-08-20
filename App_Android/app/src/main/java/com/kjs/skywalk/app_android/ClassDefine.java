@@ -2,13 +2,17 @@ package com.kjs.skywalk.app_android;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.view.View;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.IApiResults;
+import com.kjs.skywalk.control.kjsNumberPicker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -300,5 +304,102 @@ public class ClassDefine {
             }
             return list;
         }
+    }
+
+    public static class HouseTypeSelector {
+        private static Context mContext = null;
+        private static AlertDialog mDialog = null;
+        private static int mRooms = 0;
+        private static int mBaths = 0;
+        private static int mLounges = 0;
+        public static int mRoomIndex = 0;
+        public static int mBathIndex = 0;
+        public static int mLoungeIndex = 0;
+        public static boolean mDirty = false;
+
+        private static final String[] arrShi = {"1室", "2室", "3室", "4室", "5室"};
+        private static final String[] arrTing = {"1厅", "2厅", "3厅", "4厅", "5厅"};
+        private static final String[] arrWei = {"1卫", "2卫", "3卫", "4卫", "5卫"};
+
+        public HouseTypeSelector(Context context) {
+            mContext= context;
+        }
+
+        public static void setHouseType(int rooms, int lounges, int bathRooms) {
+            mRooms = rooms;
+            mBaths = bathRooms;
+            mLounges = lounges;
+            mRoomIndex = rooms - 1;
+            mBathIndex = bathRooms - 1;
+            mLoungeIndex = lounges - 1;
+        }
+
+        public static void show(DialogInterface.OnDismissListener listener) {
+            if (mDialog == null) {
+                mDialog = new AlertDialog.Builder(mContext).create();
+            }
+            mDialog.setOnDismissListener(listener);
+            mDialog.show();
+            mDialog.setContentView(R.layout.dialog_fangyuanxinxi_fangxing);
+
+            kjsNumberPicker npShi = (kjsNumberPicker)mDialog.findViewById(R.id.np_unit_shi);
+            kjsNumberPicker npTing = (kjsNumberPicker)mDialog.findViewById(R.id.np_unit_ting);
+            kjsNumberPicker npWei = (kjsNumberPicker)mDialog.findViewById(R.id.np_unit_wei);
+
+            npShi.setDisplayedValues(arrShi);
+            npShi.setMinValue(0);
+            npShi.setMaxValue(arrShi.length - 1);
+            npShi.setDividerColor();
+
+            npTing.setDisplayedValues(arrTing);
+            npTing.setMinValue(0);
+            npTing.setMaxValue(arrTing.length - 1);
+            npTing.setDividerColor();
+
+            npWei.setDisplayedValues(arrWei);
+            npWei.setMinValue(0);
+            npWei.setMaxValue(arrWei.length - 1);
+            npWei.setDividerColor();
+
+            npWei.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    mBathIndex = newVal;
+                }
+            });
+
+            npTing.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    mLoungeIndex = newVal;
+                }
+            });
+
+            npShi.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    mRoomIndex = newVal;
+                }
+            });
+
+            TextView tvBack = (TextView) mDialog.findViewById(R.id.tv_back);
+            tvBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDirty = false;
+                    mDialog.dismiss();
+                }
+            });
+
+            TextView tvConfirm = (TextView) mDialog.findViewById(R.id.tv_confirm);
+            tvConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDirty = true;
+                    mDialog.dismiss();
+                }
+            });
+        }
+
     }
 }
