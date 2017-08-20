@@ -1,26 +1,37 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kjs.skywalk.app_android.Server.GetHouseInfo;
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+import com.kjs.skywalk.control.kjsNumberPicker;
+
 
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 
 import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
-public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetHouseInfo.TaskFinished{
+public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
     private boolean mModifyMode = false;
     private RelativeLayout mRootLayout = null;
@@ -28,6 +39,14 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
     private TextView mTextViewRoom = null;
 
     private ClassDefine.HouseInfo mHouseInfo = null;
+    private int mRooms = 0;
+    private int mLounges = 0;
+    private int mBaths = 0;
+
+    private String mBuildingNo = "";
+    private String mRoomNo = "";
+
+    ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +61,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
 //        String strRoom = mBuildingNo + "栋" + mRoomNo + "室";
 //        mTextViewRoom.setText(strRoom);
 
-        GetHouseInfo houseInfo = new GetHouseInfo(this, this);
-        houseInfo.execute(mHouseId, 1);
+        getHouseInfo();
     }
 
     private void update() {
@@ -76,27 +94,6 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
         submitTime.setText(time);
     }
 
-    @Override
-    public void onTaskFinished(final ClassDefine.HouseInfo houseInfo) {
-        if(houseInfo == null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
-                }
-            });
-            return;
-        } else {
-            mHouseInfo = houseInfo;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    update();
-                }
-            });
-        }
-    }
-
     public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_back: {
@@ -107,6 +104,15 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
                 startActivityForResult(new Intent(Activity_Zushouweituo_shenhe.this, Activity_Search_House.class), 0);
                 break;
             }
+            case R.id.textViewHouseType: {
+                selectHouseType();
+                break;
+            }
+            case R.id.textViewRoomNo: {
+                modifyRoomNo();
+                break;
+            }
+
             case R.id.textViewModify: {
                 mModifyMode = !mModifyMode;
                 TextView button = (TextView)v;
@@ -182,4 +188,121 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity implements GetH
 
     }
 
+    private int getHouseInfo() {
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    return;
+                }
+
+                if (command == CMD_GET_HOUSE_INFO) {
+                    mHouseInfo = new ClassDefine.HouseInfo();
+                    IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
+                    mHouseInfo.floor = info.Floorthis();
+                    mHouseInfo.totalFloor = info.FloorTotal();
+                    mHouseInfo.bedRooms = info.Bedrooms();
+                    mHouseInfo.livingRooms = info.Livingrooms();
+                    mHouseInfo.bathRooms = info.Bathrooms();
+                    mHouseInfo.area = info.Acreage();
+                    mHouseInfo.landlordId = info.Landlord();
+                    mHouseInfo.submitTime = info.SubmitTime();
+                    mHouseInfo.buildingNo = info.BuildingNo();
+                    mHouseInfo.roomNo = info.HouseNo();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            update();
+                        }
+                    });
+                }
+            }
+        };
+
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
+        int result = CmdMgr.GetHouseInfo(mHouseId, true);
+        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
+            return -1;
+        }
+
+        return 0;
+    }
+
+    private void selectHouseType() {
+        DialogInterface.OnDismissListener listener = new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(mHouseTypeSelector.mDirty) {
+                    mRooms = mHouseTypeSelector.mRoomIndex + 1;
+                    mBaths =mHouseTypeSelector.mBathIndex + 1;
+                    mLounges = mHouseTypeSelector.mLoungeIndex + 1;
+
+                    TextView type = (TextView) findViewById(R.id.textViewHouseType);
+                    String strType = getHouseTypeString(mRooms, mLounges, mBaths);
+                    type.setText(strType);
+                }
+            }
+        };
+        mHouseTypeSelector = new ClassDefine.HouseTypeSelector(this);
+        mHouseTypeSelector.setHouseType(mHouseInfo.bedRooms, mHouseInfo.livingRooms, mHouseInfo.bathRooms);
+        mHouseTypeSelector.show(listener);
+    }
+
+    private AlertDialog mDialogRoomNo = null;
+    private void modifyRoomNo() {
+        if(mDialogRoomNo == null) {
+            mDialogRoomNo = new AlertDialog.Builder(this).create();
+        }
+
+        mDialogRoomNo.show();
+        mDialogRoomNo.setContentView(R.layout.dialog_change_room_no);
+        mDialogRoomNo.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
+        vBuildingNo.setText(mHouseInfo.buildingNo);
+        TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
+        vRoomNo.setText(mHouseInfo.roomNo);
+
+        mDialogRoomNo.findViewById(R.id.textViewCannel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                mDialogRoomNo.dismiss();
+            }
+        });
+        mDialogRoomNo.findViewById(R.id.textViewOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
+                String building = vBuildingNo.getText().toString();
+                if(building.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vBuildingNo, "请输入正确的楼栋号");
+                    return;
+                }
+                TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
+                String room = vRoomNo.getText().toString();
+                if(room.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vRoomNo, "请输入正确的房间号");
+                    return;
+                }
+
+                mBuildingNo = building;
+                mRoomNo = room;
+                mDialogRoomNo.dismiss();
+
+                TextView roomView = (TextView)findViewById(R.id.textViewRoomNo);
+                roomView.setText(mBuildingNo + "栋" + mRoomNo + "室");
+            }
+        });
+    }
 }

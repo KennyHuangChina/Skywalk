@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.IntegerRes;
@@ -25,6 +26,8 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
+
 public class Activity_Zushouweituo_Fangyuanxinxi extends SKBaseActivity {
 
     private PopupWindowZhuangxiuSelector mZhuangxiuSelector = null;
@@ -42,6 +45,8 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends SKBaseActivity {
     private int mBuyYear = 0;
     private int mBuyMonth = 0;
     private int mBuyDay = 0;
+
+    ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +78,7 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends SKBaseActivity {
 
             case R.id.tv_huxing_selector:
             {
-                showHuXingSelectorDlg();
+                selectHouseType();
             }
             break;
 
@@ -294,80 +299,24 @@ public class Activity_Zushouweituo_Fangyuanxinxi extends SKBaseActivity {
         });
     }
 
-    private AlertDialog mHuXingSelectorDlg;
-    private void showHuXingSelectorDlg() {
-        if (mHuXingSelectorDlg == null) {
-            mHuXingSelectorDlg = new AlertDialog.Builder(this).create();
-        }
-        mHuXingSelectorDlg.show();
-        mHuXingSelectorDlg.setContentView(R.layout.dialog_fangyuanxinxi_fangxing);
-
-        mRoomIndex = 0;
-        mBathIndex = 0;
-        mLoungeIndex = 0;
-
-        kjsNumberPicker npShi = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_shi);
-        kjsNumberPicker npTing = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_ting);
-        final kjsNumberPicker npWei = (kjsNumberPicker)mHuXingSelectorDlg.findViewById(R.id.np_unit_wei);
-        final String[] arrShi = {"1室", "2室", "3室", "4室", "5室"};
-        final String[] arrTing = {"1厅", "2厅", "3厅", "4厅", "5厅"};
-        final String[] arrWei = {"1卫", "2卫", "3卫", "4卫", "5卫"};
-
-        npShi.setDisplayedValues(arrShi);
-        npShi.setMinValue(0);
-        npShi.setMaxValue(arrShi.length - 1);
-        npShi.setDividerColor();
-
-        npTing.setDisplayedValues(arrTing);
-        npTing.setMinValue(0);
-        npTing.setMaxValue(arrTing.length - 1);
-        npTing.setDividerColor();
-
-        npWei.setDisplayedValues(arrWei);
-        npWei.setMinValue(0);
-        npWei.setMaxValue(arrWei.length - 1);
-        npWei.setDividerColor();
-
-        npWei.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+    private void selectHouseType() {
+        DialogInterface.OnDismissListener listener = new DialogInterface.OnDismissListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mBathIndex = newVal;
-            }
-        });
+            public void onDismiss(DialogInterface dialog) {
+                if(mHouseTypeSelector.mDirty) {
+                    mRoomIndex = mHouseTypeSelector.mRoomIndex;
+                    mBathIndex = mHouseTypeSelector.mBathIndex;
+                    mLoungeIndex = mHouseTypeSelector.mLoungeIndex;
 
-        npTing.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mLoungeIndex = newVal;
+                    TextView type = (TextView) findViewById(R.id.tv_huxing_selector);
+                    String strType = getHouseTypeString(mRoomIndex + 1, mLoungeIndex + 1, mBathIndex + 1);
+                    type.setText(strType);
+                }
             }
-        });
+        };
 
-        npShi.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mRoomIndex = newVal;
-            }
-        });
-
-        TextView tvBack = (TextView) mHuXingSelectorDlg.findViewById(R.id.tv_back);
-        tvBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mHuXingSelectorDlg.dismiss();
-            }
-        });
-
-        TextView tvConfirm = (TextView) mHuXingSelectorDlg.findViewById(R.id.tv_confirm);
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBathString = arrWei[mBathIndex];
-                mRoomString = arrShi[mRoomIndex];
-                mLoungeString = arrTing[mLoungeIndex];
-                TextView tmp = (TextView)findViewById(R.id.tv_huxing_selector);
-                tmp.setText(mRoomString + mLoungeString + mBathString);
-                mHuXingSelectorDlg.dismiss();
-            }
-        });
+        mHouseTypeSelector = new ClassDefine.HouseTypeSelector(this);
+        mHouseTypeSelector.setHouseType(1, 1, 1);
+        mHouseTypeSelector.show(listener);
     }
 }
