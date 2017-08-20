@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/text_margin"
+            android:paddingRight="@dimen/text_margin">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="楼栋号："
+                android:textSize="15sp" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <EditText
+                    android:id="@+id/editTextBuildingNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_rect_with_edge"
+                    android:ems="10"
+                    android:gravity="center_vertical"
+                    android:hint="点击输入"
+                    android:inputType="text"
+                    android:nextFocusDown="@+id/editTextRoomNo"
+                    android:paddingBottom="7dp"
+                    android:paddingTop="7dp"
+                    android:textColorHint="@color/colorTextTint"
+                    android:textSize="13sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/text_margin"
+            android:paddingRight="@dimen/text_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="房间号："
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="15sp"
+                android:layout_weight="1"/>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/editTextRoomNo"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:ems="10"
+                    android:background="@drawable/shape_rect_with_edge"
+                    android:textColorHint="@color/colorTextTint"
+                    android:hint="点击输入"
+                    android:textSize="13sp"
+                    android:inputType="text" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/seperator_horizontal" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_weight="1">
+
+        <TextView
+            android:text="取消"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewCannel"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:contentDescription=""
+            android:background="#EFEFEF" />
+
+        <TextView
+            android:text="确认"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewOk"
+            android:textColor="@color/colorFontSelected"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </LinearLayout>
+</LinearLayout>

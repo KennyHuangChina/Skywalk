@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -21,6 +23,8 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.kjsNumberPicker;
 
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 
@@ -38,6 +42,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private int mRooms = 0;
     private int mLounges = 0;
     private int mBaths = 0;
+
+    private String mBuildingNo = "";
+    private String mRoomNo = "";
 
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
@@ -101,6 +108,11 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 selectHouseType();
                 break;
             }
+            case R.id.textViewRoomNo: {
+                modifyRoomNo();
+                break;
+            }
+
             case R.id.textViewModify: {
                 mModifyMode = !mModifyMode;
                 TextView button = (TextView)v;
@@ -245,4 +257,35 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         mHouseTypeSelector.show(listener);
     }
 
+    private AlertDialog mDialogRoomNo = null;
+    private void modifyRoomNo() {
+        if(mDialogRoomNo == null) {
+            mDialogRoomNo = new AlertDialog.Builder(this).create();
+        }
+        mDialogRoomNo.show();
+        mDialogRoomNo.setContentView(R.layout.dialog_change_room_no);
+        mDialogRoomNo.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        mDialogRoomNo.findViewById(R.id.textViewCannel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                mDialogRoomNo.dismiss();
+            }
+        });
+        mDialogRoomNo.findViewById(R.id.textViewOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
+                mBuildingNo = vBuildingNo.getText().toString();
+                TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
+                mRoomNo = vRoomNo.getText().toString();
+                mDialogRoomNo.dismiss();
+
+                TextView room = (TextView)findViewById(R.id.textViewRoomNo);
+                room.setText(mBuildingNo + "栋" + mRoomNo + "室");
+            }
+        });
+    }
 }

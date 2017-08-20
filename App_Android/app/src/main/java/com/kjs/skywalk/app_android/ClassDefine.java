@@ -400,6 +400,5 @@ public class ClassDefine {
                 }
             });
         }
-
     }
 }
