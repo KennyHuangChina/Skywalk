@@ -111,6 +111,8 @@
         android:visibility="visible">
 
         <LinearLayout
+            android:id="@+id/ll_watchlist_count"
+            android:onClick="onFragmentPrivateClickResponse"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -123,7 +125,7 @@
                 android:text="0"
                 android:textSize="10sp"
                 android:gravity="center"
-                android:textColor="#B2B2B2"/>
+                android:textColor="@drawable/itemcount1_text_selector"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,18 +137,21 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_browsing_history"
+            android:onClick="onFragmentPrivateClickResponse"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tv_browsing_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textSize="10sp"
                 android:gravity="center"
-                android:textColor="#B2B2B2"/>
+                android:textColor="@drawable/itemcount1_text_selector"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,6 +163,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_see_count"
+            android:onClick="onFragmentPrivateClickResponse"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -169,8 +176,9 @@
                 android:text="0"
                 android:textSize="10sp"
                 android:gravity="center"
-                android:textColor="#B2B2B2"/>
+                android:textColor="@drawable/itemcount1_text_selector"/>
             <TextView
+                android:id="@+id/tv_see_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -181,6 +189,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_appointment_count"
+            android:onClick="onFragmentPrivateClickResponse"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -193,7 +203,7 @@
                 android:text="0"
                 android:textSize="10sp"
                 android:gravity="center"
-                android:textColor="#B2B2B2"/>
+                android:textColor="@drawable/itemcount1_text_selector"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -346,6 +356,8 @@
         android:layout_height="7dp"/>
 
     <RelativeLayout
+        android:id="@+id/rl_agency_houses"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <TextView
@@ -452,7 +464,7 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
 
@@ -481,7 +493,7 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
 
@@ -489,6 +501,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_month_turnoff"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -509,7 +522,7 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
 
@@ -538,7 +551,7 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
     <!-- 我代理的房源    end -->

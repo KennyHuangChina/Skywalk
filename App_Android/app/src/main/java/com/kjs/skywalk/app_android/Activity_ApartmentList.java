@@ -16,6 +16,8 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.util.ArrayList;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_HOUSE_WATCH_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE;
 
 public class Activity_ApartmentList extends SKBaseActivity {
 
@@ -23,6 +25,9 @@ public class Activity_ApartmentList extends SKBaseActivity {
     public static final int TYPE_TO_SALE = 1;
     public static final int TYPE_TO_RENT = 2;
     public static final int TYPE_RENTED = 3;
+    public static final int TYPE_ALL_AGENCY_HOUSES = 4;
+    public static final int TYPE_WATCH_LIST = 5;
+    public static final int TYPE_APPOINTMENT = 6;
 
     private ListView mListView = null;
     private AdapterForApartmentList mAdapter = null;
@@ -71,6 +76,10 @@ public class Activity_ApartmentList extends SKBaseActivity {
     //        1- 待租；2-已租； 3-待售； 4-待审核
     private void loadDataFromServer() {
         switch(mType){
+            case TYPE_ALL_AGENCY_HOUSES: {
+                getBehalfHousesList(0);
+                break;
+            }
             case TYPE_TO_APPROVE: {
                 getToApproveList();
                 break;
@@ -87,12 +96,24 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 getBehalfHousesList(2);
                 break;
             }
+            case TYPE_WATCH_LIST: {
+                getBehalfHousesList(5);
+                break;
+            }
+            case TYPE_APPOINTMENT: {
+                getBehalfHousesList(6);
+                break;
+            }
         }
     }
 
     private void updateTitle(int type) {
         TextView title = (TextView)findViewById(R.id.tv_title);
         switch(type){
+            case TYPE_ALL_AGENCY_HOUSES: {
+                title.setText("我代理的房源");
+                break;
+            }
             case TYPE_TO_APPROVE: {
                 title.setText("待审核房源");
                 break;
@@ -107,6 +128,14 @@ public class Activity_ApartmentList extends SKBaseActivity {
             }
             case TYPE_RENTED: {
                 title.setText("已租房源");
+                break;
+            }
+            case TYPE_WATCH_LIST: {
+                title.setText("我的关注");
+                break;
+            }
+            case TYPE_APPOINTMENT: {
+                title.setText("我的预约");
                 break;
             }
         }
@@ -204,7 +233,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
@@ -223,7 +252,27 @@ public class Activity_ApartmentList extends SKBaseActivity {
         };
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        manager.GetBehalfHouses(type, 0, 0);
+        switch (type) {
+            case TYPE_TO_APPROVE:
+            case TYPE_TO_SALE:
+            case TYPE_TO_RENT:
+            case TYPE_RENTED:
+            case TYPE_ALL_AGENCY_HOUSES:
+            {
+                manager.GetBehalfHouses(type, 0, 0);
+                break;
+            }
+            case TYPE_WATCH_LIST:
+            {
+                manager.GetUserHouseWatchList(0, 0);
+                break;
+            }
+            case TYPE_APPOINTMENT:
+            {
+                manager.GetHouseList_AppointSee(0, 0);
+                break;
+            }
+        }
     }
 
     private void gettBehalfHousesListDetail(int type, int total) {
@@ -243,7 +292,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch != -1) {
@@ -260,7 +309,27 @@ public class Activity_ApartmentList extends SKBaseActivity {
         };
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        manager.GetBehalfHouses(type, 0, total);
+        switch (type) {
+            case TYPE_TO_APPROVE:
+            case TYPE_TO_SALE:
+            case TYPE_TO_RENT:
+            case TYPE_RENTED:
+            case TYPE_ALL_AGENCY_HOUSES:
+            {
+                manager.GetBehalfHouses(type, 0, total);
+                break;
+            }
+            case TYPE_WATCH_LIST:
+            {
+                manager.GetUserHouseWatchList(0, total);
+                break;
+            }
+            case TYPE_APPOINTMENT:
+            {
+                manager.GetHouseList_AppointSee(0, total);
+                break;
+            }
+        }
     }
 
     private void startApproveActivity(ClassDefine.HouseDigest digest) {

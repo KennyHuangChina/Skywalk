@@ -52,11 +52,24 @@ public class fragmentPrivate extends Fragment {
 
     private EditText mEt_user_name;
 
-    private TextView mTvWatchListCount;         // 我的关注
-    private TextView mTvAppointmentCount;
+    private LinearLayout mLlWatchListCount;         // 我的关注
+    private LinearLayout mLl_browsing_history;      // 浏览记录
+    private LinearLayout mLl_see_count;             // 看房记录
+    private LinearLayout mLlAppointmentCount;       // 我的预约
 
+    private TextView mTvWatchListCount;         // 我的关注
+    private TextView mTv_browsing_history;      // 浏览记录
+    private TextView mTv_see_count;             // 看房记录
+    private TextView mTvAppointmentCount;       // 我的预约
 
     // 我代理的房源
+    private RelativeLayout mRl_to_rent;
+    private RelativeLayout mRl_rented;
+    private RelativeLayout mRl_to_sale;
+    private RelativeLayout mRl_month_turnoff;
+    private RelativeLayout mRl_to_approve;
+
+
     private TextView mTv_agency_houses;
     private TextView mTvToRent;
     private TextView mTvRented;
@@ -98,15 +111,23 @@ public class fragmentPrivate extends Fragment {
 
 //        mCmdMgr = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener);
 
-        // 我的关注
-        mTvWatchListCount = (TextView) view.findViewById(R.id.tv_watchlist_count);
-//        mCmdMgr.GetUserHouseWatchList(0, 0);
+        mLlWatchListCount = (LinearLayout) view.findViewById(R.id.ll_watchlist_count);          // 我的关注
+        mLl_browsing_history = (LinearLayout) view.findViewById(R.id.ll_browsing_history);      // 浏览记录
+        mLl_see_count = (LinearLayout) view.findViewById(R.id.ll_see_count);                    // 看房记录
+        mLlAppointmentCount = (LinearLayout) view.findViewById(R.id.ll_appointment_count);      // 我的预约
 
-        // 我的预约
-        mTvAppointmentCount = (TextView) view.findViewById(R.id.tv_appointment_count);
-//        mCmdMgr.GetHouseList_AppointSee(0, 0);
+        mTvWatchListCount = (TextView) view.findViewById(R.id.tv_watchlist_count);              //        mCmdMgr.GetUserHouseWatchList(0, 0);
+        mTv_browsing_history = (TextView) view.findViewById(R.id.tv_browsing_history);
+        mTv_see_count = (TextView) view.findViewById(R.id.tv_see_count);
+        mTvAppointmentCount = (TextView) view.findViewById(R.id.tv_appointment_count);          //        mCmdMgr.GetHouseList_AppointSee(0, 0);
 
         // 我代理的房源
+        mRl_to_rent = (RelativeLayout) view.findViewById(R.id.rl_to_rent);
+        mRl_rented = (RelativeLayout) view.findViewById(R.id.rl_rented);
+        mRl_to_sale = (RelativeLayout) view.findViewById(R.id.rl_to_sale);
+        mRl_month_turnoff = (RelativeLayout) view.findViewById(R.id.rl_month_turnoff);
+        mRl_to_approve = (RelativeLayout) view.findViewById(R.id.rl_to_approve);
+
         mTv_agency_houses = (TextView) view.findViewById(R.id.tv_agency_houses);
         mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
         mTvRented = (TextView) view.findViewById(R.id.tv_rented);
@@ -263,6 +284,7 @@ public class fragmentPrivate extends Fragment {
 
     private void updateLayout(boolean isLogin) {
 
+        boolean bEnabled = false;
         if (isLogin) {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#00AE63"));
             mRlUserNotLogin.setVisibility(View.GONE);
@@ -275,12 +297,24 @@ public class fragmentPrivate extends Fragment {
             updateBehalfHouseCount();
             CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
 
+            bEnabled = true;
+
         } else {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#E5E5E5"));
             mRlUserNotLogin.setVisibility(View.VISIBLE);
             mLlUserLogin.setVisibility(View.GONE);
             commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
         }
+        mLlWatchListCount.setEnabled(bEnabled);
+        mLl_browsing_history.setEnabled(bEnabled);
+        mLl_see_count.setEnabled(bEnabled);
+        mLlAppointmentCount.setEnabled(bEnabled);
+
+        mRl_to_rent.setEnabled(bEnabled);
+        mRl_rented.setEnabled(bEnabled);
+        mRl_to_sale.setEnabled(bEnabled);
+        mRl_month_turnoff.setEnabled(bEnabled);
+        mRl_to_approve.setEnabled(bEnabled);
     }
 
     private void updateUserInfo(final IApiResults.IGetUserInfo userInfo) {

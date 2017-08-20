@@ -188,6 +188,33 @@ public class MainActivity extends SKBaseActivity {
                 startActivity(new Intent(MainActivity.this, Activity_login.class));
             }
             break;
+            case R.id.ll_watchlist_count: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_WATCH_LIST);
+                startActivity(i);
+            }
+            break;
+            case R.id.ll_browsing_history: {
+
+            }
+            break;
+            case R.id.ll_see_count: {
+
+            }
+            break;
+            case R.id.ll_appointment_count: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_APPOINTMENT);
+                startActivity(i);
+            }
+            break;
+            case R.id.rl_agency_houses: {
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_ALL_AGENCY_HOUSES);
+                startActivity(i);
+            }
+            break;
+
             case R.id.rl_to_rent: {
                 Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
                 i.putExtra("type", Activity_ApartmentList.TYPE_TO_RENT);
