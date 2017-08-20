@@ -262,9 +262,15 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         if(mDialogRoomNo == null) {
             mDialogRoomNo = new AlertDialog.Builder(this).create();
         }
+
         mDialogRoomNo.show();
         mDialogRoomNo.setContentView(R.layout.dialog_change_room_no);
         mDialogRoomNo.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
+        vBuildingNo.setText(mHouseInfo.buildingNo);
+        TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
+        vRoomNo.setText(mHouseInfo.roomNo);
 
         mDialogRoomNo.findViewById(R.id.textViewCannel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,13 +284,24 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             public void onClick(View v) {
                 commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
                 TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
-                mBuildingNo = vBuildingNo.getText().toString();
+                String building = vBuildingNo.getText().toString();
+                if(building.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vBuildingNo, "请输入正确的楼栋号");
+                    return;
+                }
                 TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
-                mRoomNo = vRoomNo.getText().toString();
+                String room = vRoomNo.getText().toString();
+                if(room.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vRoomNo, "请输入正确的房间号");
+                    return;
+                }
+
+                mBuildingNo = building;
+                mRoomNo = room;
                 mDialogRoomNo.dismiss();
 
-                TextView room = (TextView)findViewById(R.id.textViewRoomNo);
-                room.setText(mBuildingNo + "栋" + mRoomNo + "室");
+                TextView roomView = (TextView)findViewById(R.id.textViewRoomNo);
+                roomView.setText(mBuildingNo + "栋" + mRoomNo + "室");
             }
         });
     }
