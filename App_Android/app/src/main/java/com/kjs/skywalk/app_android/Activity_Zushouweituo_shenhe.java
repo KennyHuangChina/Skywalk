@@ -46,6 +46,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private String mBuildingNo = "";
     private String mRoomNo = "";
 
+    private int mCurrentFloor = 0;
+    private int mTotalFloor = 0;
+
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
     @Override
@@ -110,6 +113,10 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
             case R.id.textViewRoomNo: {
                 modifyRoomNo();
+                break;
+            }
+            case R.id.textViewFloor: {
+                modifyFloor();
                 break;
             }
 
@@ -305,4 +312,61 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         });
     }
+
+    private AlertDialog mDialogFloor = null;
+    private void modifyFloor() {
+        if(mDialogFloor == null) {
+            mDialogFloor = new AlertDialog.Builder(this).create();
+        }
+
+        mDialogFloor.show();
+        mDialogFloor.setContentView(R.layout.dialog_change_floor);
+        mDialogFloor.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        EditText vFloor = (EditText)mDialogFloor.findViewById(R.id.editTextFloor);
+        vFloor.setText(String.valueOf(mHouseInfo.floor));
+        EditText vTotalFloor = (EditText)mDialogFloor.findViewById(R.id.editTextTotalFloor);
+        vTotalFloor.setText(String.valueOf(mHouseInfo.totalFloor));
+
+        mDialogFloor.findViewById(R.id.textViewCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                mDialogFloor.dismiss();
+            }
+        });
+        mDialogFloor.findViewById(R.id.textViewOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                TextView vFloor = (TextView)mDialogFloor.findViewById(R.id.editTextFloor);
+                String floor = vFloor.getText().toString();
+                if(floor.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vFloor, "请输入正确的楼层");
+                    return;
+                }
+                int nFloor = Integer.valueOf(floor);
+                TextView vTotalFloor = (TextView)mDialogFloor.findViewById(R.id.editTextTotalFloor);
+                String totalFloor = vTotalFloor.getText().toString();
+                if(totalFloor.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vTotalFloor, "请输入正确的楼层");
+                    return;
+                }
+
+                int nTotalFloor = Integer.valueOf(totalFloor);
+                if(nFloor > nTotalFloor) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vTotalFloor, "当前楼层不能大于总楼层");
+                    return;
+                }
+
+                mCurrentFloor = nFloor;
+                mTotalFloor = nTotalFloor;
+                mDialogFloor.dismiss();
+
+                TextView textViewFloor = (TextView)findViewById(R.id.textViewFloor);
+                textViewFloor.setText("" + mCurrentFloor + "/" + mTotalFloor);
+            }
+        });
+    }
+
 }
