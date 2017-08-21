@@ -62,6 +62,17 @@ public class fragmentPrivate extends Fragment {
     private TextView mTv_see_count;             // 看房记录
     private TextView mTvAppointmentCount;       // 我的预约
 
+    // 我的交易
+    private RelativeLayout mRl_transaction;     // 我的交易
+    private RelativeLayout mRl_rent_out;        // 我已租出
+    private RelativeLayout mRl_house_rented;    // 我已租到
+    private RelativeLayout mRl_lease;           // 我的租约
+
+    private TextView mTv_transaction;
+    private TextView mTv_rent_out;
+    private TextView mTv_house_rented;
+    private TextView mTv_lease;
+
     // 我代理的房源
     private RelativeLayout mRl_to_rent;
     private RelativeLayout mRl_rented;
@@ -120,6 +131,17 @@ public class fragmentPrivate extends Fragment {
         mTv_browsing_history = (TextView) view.findViewById(R.id.tv_browsing_history);
         mTv_see_count = (TextView) view.findViewById(R.id.tv_see_count);
         mTvAppointmentCount = (TextView) view.findViewById(R.id.tv_appointment_count);          //        mCmdMgr.GetHouseList_AppointSee(0, 0);
+
+        // 我的交易
+        mRl_transaction  = (RelativeLayout) view.findViewById(R.id.rl_transaction);
+        mRl_rent_out  = (RelativeLayout) view.findViewById(R.id.rl_rent_out);
+        mRl_house_rented  = (RelativeLayout) view.findViewById(R.id.rl_house_rented);
+        mRl_lease  = (RelativeLayout) view.findViewById(R.id.rl_lease);
+
+        mTv_transaction = (TextView) view.findViewById(R.id.tv_transaction);
+        mTv_rent_out = (TextView) view.findViewById(R.id.tv_rent_out);
+        mTv_house_rented = (TextView) view.findViewById(R.id.tv_house_rented);
+        mTv_lease = (TextView) view.findViewById(R.id.tv_lease);
 
         // 我代理的房源
         mRl_to_rent = (RelativeLayout) view.findViewById(R.id.rl_to_rent);
@@ -309,6 +331,11 @@ public class fragmentPrivate extends Fragment {
         mLl_browsing_history.setEnabled(bEnabled);
         mLl_see_count.setEnabled(bEnabled);
         mLlAppointmentCount.setEnabled(bEnabled);
+
+        mRl_transaction.setEnabled(bEnabled);
+        mRl_rent_out.setEnabled(bEnabled);
+        mRl_house_rented.setEnabled(bEnabled);
+        mRl_lease.setEnabled(bEnabled);
 
         mRl_to_rent.setEnabled(bEnabled);
         mRl_rented.setEnabled(bEnabled);

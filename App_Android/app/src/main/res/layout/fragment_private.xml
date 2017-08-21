@@ -248,6 +248,8 @@
     <include layout="@layout/seperator_horizontal"/>
     
     <RelativeLayout
+        android:id="@+id/rl_transaction"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -259,6 +261,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_transaction"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -267,13 +270,15 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
 
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_rent_out"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -285,6 +290,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_rent_out"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -293,13 +299,15 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
 
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_house_rented"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -311,6 +319,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_house_rented"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -319,13 +328,15 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
 
     <include layout="@layout/seperator_horizontal"/>
 
     <RelativeLayout
+        android:id="@+id/rl_lease"
+        android:onClick="onFragmentPrivateClickResponse"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <TextView
@@ -337,6 +348,7 @@
             android:textColor="#333333"
             android:textSize="13sp"/>
         <TextView
+            android:id="@+id/tv_lease"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
@@ -345,7 +357,7 @@
             android:text="0"
             android:drawableRight="@drawable/right1_n"
             android:drawablePadding="8dp"
-            android:textColor="#B2B2B2"
+            android:textColor="@drawable/itemcount_text_selector"
             android:textSize="10sp"/>
     </RelativeLayout>
     <!-- 我的交易    end -->
