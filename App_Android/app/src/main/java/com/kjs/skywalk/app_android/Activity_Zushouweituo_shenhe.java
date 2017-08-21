@@ -95,6 +95,12 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = sdformat.format(mHouseInfo.submitTime);
         submitTime.setText(time);
+
+        mBuildingNo = mHouseInfo.buildingNo;
+        mRoomNo = mHouseInfo.roomNo;
+
+        mCurrentFloor = mHouseInfo.floor;
+        mTotalFloor = mHouseInfo.totalFloor;
     }
 
     public void onClickResponse(View v) {
@@ -275,9 +281,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         mDialogRoomNo.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 
         TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
-        vBuildingNo.setText(mHouseInfo.buildingNo);
+        vBuildingNo.setText(mBuildingNo);
         TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
-        vRoomNo.setText(mHouseInfo.roomNo);
+        vRoomNo.setText(mRoomNo);
 
         mDialogRoomNo.findViewById(R.id.textViewCannel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,9 +330,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         mDialogFloor.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 
         EditText vFloor = (EditText)mDialogFloor.findViewById(R.id.editTextFloor);
-        vFloor.setText(String.valueOf(mHouseInfo.floor));
+        vFloor.setText(String.valueOf(mCurrentFloor));
         EditText vTotalFloor = (EditText)mDialogFloor.findViewById(R.id.editTextTotalFloor);
-        vTotalFloor.setText(String.valueOf(mHouseInfo.totalFloor));
+        vTotalFloor.setText(String.valueOf(mTotalFloor));
 
         mDialogFloor.findViewById(R.id.textViewCancel).setOnClickListener(new View.OnClickListener() {
             @Override
