@@ -46,6 +46,11 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private String mBuildingNo = "";
     private String mRoomNo = "";
 
+    private int mCurrentFloor = 0;
+    private int mTotalFloor = 0;
+
+    private int mArea = 0;
+
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
     @Override
@@ -92,6 +97,14 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = sdformat.format(mHouseInfo.submitTime);
         submitTime.setText(time);
+
+        mBuildingNo = mHouseInfo.buildingNo;
+        mRoomNo = mHouseInfo.roomNo;
+
+        mCurrentFloor = mHouseInfo.floor;
+        mTotalFloor = mHouseInfo.totalFloor;
+
+        mArea = mHouseInfo.area;
     }
 
     public void onClickResponse(View v) {
@@ -112,7 +125,14 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 modifyRoomNo();
                 break;
             }
-
+            case R.id.textViewFloor: {
+                modifyFloor();
+                break;
+            }
+            case R.id.textViewArea: {
+                modifyArea();
+                break;
+            }
             case R.id.textViewModify: {
                 mModifyMode = !mModifyMode;
                 TextView button = (TextView)v;
@@ -268,9 +288,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         mDialogRoomNo.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 
         TextView vBuildingNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextBuildingNo);
-        vBuildingNo.setText(mHouseInfo.buildingNo);
+        vBuildingNo.setText(mBuildingNo);
         TextView vRoomNo = (TextView)mDialogRoomNo.findViewById(R.id.editTextRoomNo);
-        vRoomNo.setText(mHouseInfo.roomNo);
+        vRoomNo.setText(mRoomNo);
 
         mDialogRoomNo.findViewById(R.id.textViewCannel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,4 +325,107 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         });
     }
+
+    private AlertDialog mDialogFloor = null;
+    private void modifyFloor() {
+        if(mDialogFloor == null) {
+            mDialogFloor = new AlertDialog.Builder(this).create();
+        }
+
+        mDialogFloor.show();
+        mDialogFloor.setContentView(R.layout.dialog_change_floor);
+        mDialogFloor.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        EditText vFloor = (EditText)mDialogFloor.findViewById(R.id.editTextFloor);
+        vFloor.setText(String.valueOf(mCurrentFloor));
+        EditText vTotalFloor = (EditText)mDialogFloor.findViewById(R.id.editTextTotalFloor);
+        vTotalFloor.setText(String.valueOf(mTotalFloor));
+
+        mDialogFloor.findViewById(R.id.textViewCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                mDialogFloor.dismiss();
+            }
+        });
+        mDialogFloor.findViewById(R.id.textViewOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                TextView vFloor = (TextView)mDialogFloor.findViewById(R.id.editTextFloor);
+                String floor = vFloor.getText().toString();
+                if(floor.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vFloor, "请输入正确的楼层");
+                    return;
+                }
+                int nFloor = Integer.valueOf(floor);
+                TextView vTotalFloor = (TextView)mDialogFloor.findViewById(R.id.editTextTotalFloor);
+                String totalFloor = vTotalFloor.getText().toString();
+                if(totalFloor.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vTotalFloor, "请输入正确的楼层");
+                    return;
+                }
+
+                int nTotalFloor = Integer.valueOf(totalFloor);
+                if(nFloor > nTotalFloor) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vTotalFloor, "当前楼层不能大于总楼层");
+                    return;
+                }
+
+                mCurrentFloor = nFloor;
+                mTotalFloor = nTotalFloor;
+                mDialogFloor.dismiss();
+
+                TextView textViewFloor = (TextView)findViewById(R.id.textViewFloor);
+                textViewFloor.setText("" + mCurrentFloor + "/" + mTotalFloor);
+            }
+        });
+    }
+
+
+    private AlertDialog mDialogArea = null;
+    private void modifyArea() {
+        if(mDialogArea == null) {
+            mDialogArea = new AlertDialog.Builder(this).create();
+        }
+
+        mDialogArea.show();
+        mDialogArea.setContentView(R.layout.dialog_change_area);
+        mDialogArea.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        EditText vArea = (EditText)mDialogArea.findViewById(R.id.editTextArea);
+        double acreage = (double)mArea / 100.0;
+        String strArea = String.format("%.02f", acreage);
+        vArea.setText(strArea);
+
+        mDialogArea.findViewById(R.id.textViewCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                mDialogArea.dismiss();
+            }
+        });
+        mDialogArea.findViewById(R.id.textViewOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                TextView vArea = (TextView)mDialogArea.findViewById(R.id.editTextArea);
+                String area = vArea.getText().toString();
+                if(area.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vArea, "请输入正确的面积");
+                    return;
+                }
+                Double dArea = Double.valueOf(area);
+                area = String.format("%.02f", dArea);
+                dArea = Double.valueOf(area);
+                mArea = (int)(dArea * 100);
+                mDialogArea.dismiss();
+
+                String strArea = String.format("%.02f", dArea);
+                TextView textViewArea = (TextView)findViewById(R.id.textViewArea);
+                textViewArea.setText( strArea + "㎡");
+            }
+        });
+    }
+
 }
