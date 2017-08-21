@@ -49,6 +49,8 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private int mCurrentFloor = 0;
     private int mTotalFloor = 0;
 
+    private int mArea = 0;
+
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
 
     @Override
@@ -101,6 +103,8 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
         mCurrentFloor = mHouseInfo.floor;
         mTotalFloor = mHouseInfo.totalFloor;
+
+        mArea = mHouseInfo.area;
     }
 
     public void onClickResponse(View v) {
@@ -125,7 +129,10 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 modifyFloor();
                 break;
             }
-
+            case R.id.textViewArea: {
+                modifyArea();
+                break;
+            }
             case R.id.textViewModify: {
                 mModifyMode = !mModifyMode;
                 TextView button = (TextView)v;
@@ -371,6 +378,52 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
                 TextView textViewFloor = (TextView)findViewById(R.id.textViewFloor);
                 textViewFloor.setText("" + mCurrentFloor + "/" + mTotalFloor);
+            }
+        });
+    }
+
+
+    private AlertDialog mDialogArea = null;
+    private void modifyArea() {
+        if(mDialogArea == null) {
+            mDialogArea = new AlertDialog.Builder(this).create();
+        }
+
+        mDialogArea.show();
+        mDialogArea.setContentView(R.layout.dialog_change_area);
+        mDialogArea.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+        EditText vArea = (EditText)mDialogArea.findViewById(R.id.editTextArea);
+        double acreage = (double)mArea / 100.0;
+        String strArea = String.format("%.02f", acreage);
+        vArea.setText(strArea);
+
+        mDialogArea.findViewById(R.id.textViewCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                mDialogArea.dismiss();
+            }
+        });
+        mDialogArea.findViewById(R.id.textViewOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commonFun.hideSoftKeyboard(Activity_Zushouweituo_shenhe.this, v);
+                TextView vArea = (TextView)mDialogArea.findViewById(R.id.editTextArea);
+                String area = vArea.getText().toString();
+                if(area.isEmpty()) {
+                    commonFun.showToast_info(Activity_Zushouweituo_shenhe.this, vArea, "请输入正确的面积");
+                    return;
+                }
+                Double dArea = Double.valueOf(area);
+                area = String.format("%.02f", dArea);
+                dArea = Double.valueOf(area);
+                mArea = (int)(dArea * 100);
+                mDialogArea.dismiss();
+
+                String strArea = String.format("%.02f", dArea);
+                TextView textViewArea = (TextView)findViewById(R.id.textViewArea);
+                textViewArea.setText( strArea + "㎡");
             }
         });
     }
