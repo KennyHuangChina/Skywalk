@@ -159,6 +159,9 @@ public class fragmentPrivate extends Fragment {
 
         ((RelativeLayout)view.findViewById(R.id.rl_to_rent)).setEnabled(false);
 
+        // for emulator test
+//        SKLocalSettings.UISettings_set(this.getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+
         return view;
     }
 
@@ -394,7 +397,9 @@ public class fragmentPrivate extends Fragment {
                 kjsLogUtil.w("result is null");
                 return;
             }
-            kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+
+            kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
             if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                 kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
                 return;

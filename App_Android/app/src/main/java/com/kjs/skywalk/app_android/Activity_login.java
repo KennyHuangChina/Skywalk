@@ -460,7 +460,7 @@ public class Activity_login extends SKBaseActivity implements
             kjsLogUtil.w("result is null");
             return;
         }
-        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), result.DebugString()));
 
         if(command == CMD_LOGIN_BY_PASSWORD || command == CMD_LOGIN_BY_SMS) {
 //            Log.i("Login Activity", "command finished: " + command);
