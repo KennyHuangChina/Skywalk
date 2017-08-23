@@ -133,6 +133,20 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 modifyArea();
                 break;
             }
+            case R.id.textViewNotPassed:
+            case R.id.textViewPassed: {
+                if(mModifyMode) {
+                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "请先点击完成，保存修改");
+                    break;
+                }
+                EditText editText = (EditText)findViewById(R.id.editTextShenheShuomin);
+                String text = editText.getText().toString();
+                if(text == null || text.isEmpty()) {
+                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "请填写审核说明");
+                    break;
+                }
+                break;
+            }
             case R.id.textViewModify: {
                 mModifyMode = !mModifyMode;
                 TextView button = (TextView)v;
