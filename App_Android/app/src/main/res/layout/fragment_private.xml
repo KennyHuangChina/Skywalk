@@ -237,6 +237,7 @@
             android:textColor="#000000"
             android:textSize="16sp"/>
         <TextView
+            android:id="@+id/tv_rental_sales"
             android:layout_width="62dp"
             android:layout_height="26dp"
             android:layout_alignParentEnd="true"

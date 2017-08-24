@@ -68,6 +68,8 @@ public class fragmentPrivate extends Fragment {
     private RelativeLayout mRl_house_rented;    // 我已租到
     private RelativeLayout mRl_lease;           // 我的租约
 
+    private TextView mTv_rental_sales;
+
     private TextView mTv_transaction;
     private TextView mTv_rent_out;
     private TextView mTv_house_rented;
@@ -137,6 +139,8 @@ public class fragmentPrivate extends Fragment {
         mRl_rent_out  = (RelativeLayout) view.findViewById(R.id.rl_rent_out);
         mRl_house_rented  = (RelativeLayout) view.findViewById(R.id.rl_house_rented);
         mRl_lease  = (RelativeLayout) view.findViewById(R.id.rl_lease);
+
+        mTv_rental_sales = (TextView) view.findViewById(R.id.tv_rental_sales);
 
         mTv_transaction = (TextView) view.findViewById(R.id.tv_transaction);
         mTv_rent_out = (TextView) view.findViewById(R.id.tv_rent_out);
@@ -334,6 +338,8 @@ public class fragmentPrivate extends Fragment {
         mLl_browsing_history.setEnabled(bEnabled);
         mLl_see_count.setEnabled(bEnabled);
         mLlAppointmentCount.setEnabled(bEnabled);
+
+        mTv_rental_sales.setEnabled(bEnabled);
 
         mRl_transaction.setEnabled(bEnabled);
         mRl_rent_out.setEnabled(bEnabled);
