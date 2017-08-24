@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.midi.MidiManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +53,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private int mArea = 0;
 
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
+    ClassDefine.ConfirmDialog mConfirmDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,14 +150,13 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 break;
             }
             case R.id.textViewModify: {
-                mModifyMode = !mModifyMode;
                 TextView button = (TextView)v;
                 TextView floor = (TextView)findViewById(R.id.textViewFloor);
                 TextView propertyName = (TextView)findViewById(R.id.textViewPropertyName);
                 TextView room = (TextView)findViewById(R.id.textViewRoomNo);
                 TextView area  = (TextView)findViewById(R.id.textViewArea);
                 TextView type = (TextView)findViewById(R.id.textViewHouseType);
-                if(mModifyMode) {
+                if(!mModifyMode) {
                     Drawable drawable = ContextCompat.getDrawable(this, R.drawable.right_n);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     floor.setCompoundDrawablePadding(15);
@@ -183,30 +184,59 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                     type.setEnabled(true);
 
                     button.setText("完成");
+                    mModifyMode = true;
                 } else {
-                    floor.setCompoundDrawables(null, null, null, null);
-                    propertyName.setCompoundDrawables(null, null, null, null);
-                    room.setCompoundDrawables(null, null, null, null);
-                    area.setCompoundDrawables(null, null, null, null);
-                    type.setCompoundDrawables(null, null, null, null);
-                    int color = ContextCompat.getColor(this, R.color.colorTextNormal);
-                    floor.setTextColor(color);
-                    propertyName.setTextColor(color);
-                    room.setTextColor(color);
-                    area.setTextColor(color);
-                    type.setTextColor(color);
+                    if(mConfirmDialog == null) {
+                        mConfirmDialog = new ClassDefine.ConfirmDialog(this);
+                    }
 
-                    floor.setEnabled(false);
-                    propertyName.setEnabled(false);
-                    room.setEnabled(false);
-                    area.setEnabled(false);
-                    type.setEnabled(false);
-                    button.setText("修改");
+                    DialogInterface.OnDismissListener listener = new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if(mConfirmDialog.getConfirmed()) {
+                                doModifyConfirmed();
+                                mModifyMode = false;
+                            } else {
+
+                            }
+                        }
+                    };
+                    mConfirmDialog.setConfirmString("是否确认修改并提交？");
+                    mConfirmDialog.setDismissListener(listener);
+                    mConfirmDialog.showDialog(true);
                 }
 
                 break;
             }
         }
+    }
+
+    private void doModifyConfirmed() {
+        TextView button = (TextView)findViewById(R.id.textViewModify);
+        TextView floor = (TextView)findViewById(R.id.textViewFloor);
+        TextView propertyName = (TextView)findViewById(R.id.textViewPropertyName);
+        TextView room = (TextView)findViewById(R.id.textViewRoomNo);
+        TextView area  = (TextView)findViewById(R.id.textViewArea);
+        TextView type = (TextView)findViewById(R.id.textViewHouseType);
+
+        floor.setCompoundDrawables(null, null, null, null);
+        propertyName.setCompoundDrawables(null, null, null, null);
+        room.setCompoundDrawables(null, null, null, null);
+        area.setCompoundDrawables(null, null, null, null);
+        type.setCompoundDrawables(null, null, null, null);
+        int color = ContextCompat.getColor(this, R.color.colorTextNormal);
+        floor.setTextColor(color);
+        propertyName.setTextColor(color);
+        room.setTextColor(color);
+        area.setTextColor(color);
+        type.setTextColor(color);
+
+        floor.setEnabled(false);
+        propertyName.setEnabled(false);
+        room.setEnabled(false);
+        area.setEnabled(false);
+        type.setEnabled(false);
+        button.setText("修改");
     }
 
     @Override

@@ -401,4 +401,63 @@ public class ClassDefine {
             });
         }
     }
+
+    public static class ConfirmDialog {
+        private Context mContext = null;
+        private static AlertDialog mDialog = null;
+        private static String mContent = "是否确认";
+        private static DialogInterface.OnDismissListener mDismissListener = null;
+        private static boolean mConfirmed = false;
+        public ConfirmDialog(Context context) {
+            mContext = context;
+            mDialog = new AlertDialog.Builder(context).create();
+        }
+
+        public void setConfirmString(String text) {
+            mContent = text;
+        }
+
+        public void setDismissListener(DialogInterface.OnDismissListener listener) {
+            mDismissListener = listener;
+        }
+
+        public boolean getConfirmed() {
+            return mConfirmed;
+        }
+
+        public static void showDialog(boolean show) {
+            if(mDialog.isShowing()) {
+                return;
+            }
+            mConfirmed = false;
+
+            mDialog.show();
+            mDialog.setContentView(R.layout.dialog_confirm);
+            if(mDismissListener != null) {
+                mDialog.setOnDismissListener(mDismissListener);
+            }
+
+            TextView contentView = (TextView)mDialog.findViewById(R.id.textViewContent);
+            contentView.setText(mContent);
+
+            TextView viewOk = (TextView) mDialog.findViewById(R.id.textViewOk);
+            viewOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mConfirmed = true;
+                    mDialog.dismiss();
+                }
+            });
+
+            TextView viewCancel = (TextView)mDialog.findViewById(R.id.textViewCancel);
+            viewCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mConfirmed = false;
+                    mDialog.dismiss();
+                }
+            });
+        }
+    }
+
 }
