@@ -189,23 +189,30 @@ public class MainActivity extends SKBaseActivity {
             }
             break;
             case R.id.ll_watchlist_count: {
+                // 我的关注
                 Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
                 i.putExtra("type", Activity_ApartmentList.TYPE_WATCH_LIST);
                 startActivity(i);
             }
             break;
             case R.id.ll_browsing_history: {
-
+                // 浏览记录
             }
             break;
             case R.id.ll_see_count: {
-
+                // 看房记录
             }
             break;
             case R.id.ll_appointment_count: {
+                // 我的预约
                 Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
                 i.putExtra("type", Activity_ApartmentList.TYPE_APPOINTMENT);
                 startActivity(i);
+            }
+            break;
+            case R.id.tv_rental_sales: {
+                // 租售委托
+                startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
             }
             break;
             case R.id.rl_agency_houses: {

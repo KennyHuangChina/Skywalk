@@ -238,15 +238,15 @@
             android:textSize="16sp"/>
         <TextView
             android:id="@+id/tv_rental_sales"
+            android:onClick="onFragmentPrivateClickResponse"
             android:layout_width="62dp"
             android:layout_height="26dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:background="@drawable/rounded_rect_background_cccccc"
             android:text="租售委托"
-            android:textColor="#FFFFFF"
+            style="@style/btnstyle_major"
             android:textSize="12sp"/>
     </RelativeLayout>
 
