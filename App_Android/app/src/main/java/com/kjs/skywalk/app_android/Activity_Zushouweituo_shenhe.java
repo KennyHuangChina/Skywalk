@@ -30,6 +30,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 
 import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_AMEND_HOUSE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
 public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
@@ -51,9 +52,13 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private int mTotalFloor = 0;
 
     private int mArea = 0;
+    private int mPropertyId = 0;
+    private String mBuyDate = "";
 
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
     ClassDefine.ConfirmDialog mConfirmDialog = null;
+
+    private PopupWindowWaitingUnclickable mWaitingWindow = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,6 +242,52 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         area.setEnabled(false);
         type.setEnabled(false);
         button.setText("修改");
+
+        commitModification();
+    }
+
+    private void commitModification() {
+        CommunicationInterface.HouseInfo houseInfo =
+                new CommunicationInterface.HouseInfo(
+                        mHouseId,
+                        mPropertyId,
+                        mBuildingNo,
+                        mRoomNo,
+                        mTotalFloor,
+                        mCurrentFloor,
+                        mLounges,
+                        mRooms,
+                        mBaths,
+                        mArea,
+                        false,
+                        true,
+                        mHouseInfo.decorate,
+                        mBuyDate);
+
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    showWaiting(false);
+                    return;
+                }
+
+                if(command == CMD_AMEND_HOUSE) {
+
+                    showWaiting(false);
+                }
+            }
+        };
+
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        int result = manager.AmendHouse(houseInfo);
+        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交房屋信息失败");
+        } else {
+            showWaiting(true);
+        }
     }
 
     @Override
@@ -247,6 +298,8 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 TextView view = (TextView)findViewById(R.id.textViewPropertyName);
                 String name = data.getStringExtra("name");
                 view.setText(name);
+
+                mPropertyId = data.getIntExtra("id", 0);
             }
         }
 
@@ -281,6 +334,14 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                     mHouseInfo.submitTime = info.SubmitTime();
                     mHouseInfo.buildingNo = info.BuildingNo();
                     mHouseInfo.roomNo = info.HouseNo();
+                    mHouseInfo.decorate = info.Decorate();
+
+                    mPropertyId = info.ProId();
+                    mBuyDate = info.BuyDate();
+                    mRooms = info.Bedrooms();
+                    mLounges = info.Livingrooms();
+                    mBaths = info.Bathrooms();
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -472,4 +533,20 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         });
     }
 
+    private void showWaiting(final boolean show) {
+        if(mWaitingWindow == null) {
+            mWaitingWindow = new PopupWindowWaitingUnclickable(this, mActScreenWidth, mActScreenHeight);
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(show) {
+                    mWaitingWindow.show(mRootLayout);
+                } else {
+                    mWaitingWindow.hide();
+                }
+            }
+        });
+
+    }
 }
