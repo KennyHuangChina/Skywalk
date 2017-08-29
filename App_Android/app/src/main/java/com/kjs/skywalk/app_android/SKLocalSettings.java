@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by admin on 2017/2/22.
  */
@@ -95,6 +98,8 @@ public class SKLocalSettings {
     // UI Settings
     public static final String UISettingsKey_LoginMode = "login_mode";       // telephone account
     public static final String UISettingsKey_LoginStatus = "login_status";       // telephone account
+    public static final String UISettingsKey_BrowsingHistory = "browsing_history";       // browsing_history
+
     public static void UISettings_set(Context context, String key, String value) {
         SharedPreferences.Editor editor;
         try {
@@ -127,5 +132,40 @@ public class SKLocalSettings {
     public static boolean UISettings_get(Context context, String key, boolean bDefaultVaule) {
         SharedPreferences sysPref = context.getSharedPreferences(PREF_UISETTINGS, 0);
         return sysPref.getBoolean(key, bDefaultVaule);
+    }
+
+    // 浏览记录
+    public static List<String> browsing_history_read(Context context) {
+        String history = UISettings_get(context, UISettingsKey_BrowsingHistory, "");
+        String[] historys = history.split(";");
+        List<String> list = new ArrayList<>();
+        if (historys.length > 0) {
+            for (int i = 0; i < historys.length; i++) {
+                list.add(historys[i]);
+            }
+        }
+
+        return list;
+    }
+
+    public static int BROWSING_HISTORY_LENGTH = 10;
+    public static void browsing_history_insert(Context context, String value) {
+        String history = UISettings_get(context, UISettingsKey_BrowsingHistory, "");
+        if (history.isEmpty()) {
+            UISettings_set(context, UISettingsKey_BrowsingHistory, value);
+            return;
+        }
+
+        String[] historys = history.split(";");
+        for (int i = 0; i < historys.length; i++) {
+            if (historys[i].equals(value))
+                return;     // repeat
+        }
+
+        if (historys.length < BROWSING_HISTORY_LENGTH - 1) {
+            UISettings_set(context, UISettingsKey_BrowsingHistory, value + ";" + history);
+        } else {
+            UISettings_set(context, UISettingsKey_BrowsingHistory, value + ";" + history.substring(0, history.lastIndexOf(";")));
+        }
     }
 }
