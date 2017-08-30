@@ -54,6 +54,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private int mArea = 0;
     private int mPropertyId = 0;
     private String mBuyDate = "";
+    private boolean mPassed = false;
 
     ClassDefine.HouseTypeSelector mHouseTypeSelector = null;
     ClassDefine.ConfirmDialog mConfirmDialog = null;
@@ -152,6 +153,30 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                     commonFun.showToast_info(getApplicationContext(), mRootLayout, "请填写审核说明");
                     break;
                 }
+
+                if(mConfirmDialog == null) {
+                    mConfirmDialog = new ClassDefine.ConfirmDialog(this);
+                }
+
+                DialogInterface.OnDismissListener listener = new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if(mConfirmDialog.getConfirmed()) {
+                            doCertificateConfirm(mPassed);
+                        } else {
+
+                        }
+                    }
+                };
+                if(v.getId() == R.id.textViewNotPassed) {
+                    mConfirmDialog.setConfirmString("是否确认未通过审核？");
+                    mPassed = false;
+                } else {
+                    mConfirmDialog.setConfirmString("是否确认通过审核？");
+                    mPassed = true;
+                }
+                mConfirmDialog.setDismissListener(listener);
+                mConfirmDialog.showDialog(true);
                 break;
             }
             case R.id.textViewModify: {
@@ -213,6 +238,38 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
                 break;
             }
+        }
+    }
+
+    private void doCertificateConfirm(boolean pass) {
+        EditText textView = (EditText)findViewById(R.id.editTextShenheShuomin);
+        String string = textView.getText().toString();
+
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    return;
+                }
+
+                if (command == CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE) {
+                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果成功");
+                    showWaiting(false);
+                }
+            }
+        };
+
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        if(manager.CertificateHouse(mHouseId, pass, string) != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果失败");
         }
     }
 
