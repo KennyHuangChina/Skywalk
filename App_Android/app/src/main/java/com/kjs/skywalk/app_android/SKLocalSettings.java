@@ -148,7 +148,7 @@ public class SKLocalSettings {
         return list;
     }
 
-    public static int BROWSING_HISTORY_LENGTH = 10;
+    public static int BROWSING_HISTORY_LENGTH = 3;
     public static void browsing_history_insert(Context context, String value) {
         String history = UISettings_get(context, UISettingsKey_BrowsingHistory, "");
         if (history.isEmpty()) {
@@ -162,7 +162,7 @@ public class SKLocalSettings {
                 return;     // repeat
         }
 
-        if (historys.length < BROWSING_HISTORY_LENGTH - 1) {
+        if (historys.length < BROWSING_HISTORY_LENGTH) {
             UISettings_set(context, UISettingsKey_BrowsingHistory, value + ";" + history);
         } else {
             UISettings_set(context, UISettingsKey_BrowsingHistory, value + ";" + history.substring(0, history.lastIndexOf(";")));

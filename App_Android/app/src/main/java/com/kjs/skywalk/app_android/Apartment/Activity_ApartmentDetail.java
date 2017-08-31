@@ -33,6 +33,7 @@ import com.kjs.skywalk.app_android.Activity_Search;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
+import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -142,6 +143,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
+
+        SKLocalSettings.browsing_history_insert(this, String.valueOf(mHouseId));
+        kjsLogUtil.i("idLst:" + SKLocalSettings.browsing_history_read(this));
 
         mCmdMgr.GetBriefPublicHouseInfo(mHouseId);
 
