@@ -378,21 +378,22 @@ func (he *TblHouseEventProcess) TableIndex() [][]string {
 	}
 }
 
+/***************************************************************************
+	tables for system messages
+***************************************************************************/
 type TblMessage struct {
 	Id         int64
-	Type       int       // message type
+	Type       int       // message type. ref to MSG_xxxx
+	RefId      int64     // reference id, depend on what type the message is
 	Msg        string    `orm:"size(200)"`
-	Sender     int64     // who send the message
-	Receiver   int64     // who is targe receiver of message
+	Receiver   int64     // who the message send to
 	CreateTime time.Time `orm:"auto_now_add;type(datetime);not null"`
 	ReadTime   time.Time `orm:"type(datetime);null"` // when the receiver read the message
-	RefId      int64     // reference id, depend on what type the message is
 }
 
 func (he *TblMessage) TableIndex() [][]string {
 	return [][]string{
 		[]string{"Receiver"},
-		[]string{"Sender"},
 		[]string{"Type", "RefId"},
 	}
 }
