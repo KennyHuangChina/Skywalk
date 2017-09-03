@@ -520,8 +520,10 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 					hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
 				}
 			} else {
-				if hc.Pass {
-					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("House certification record out of sync, hc.Pass:%d", hc.Pass)}
+				// if hc.Pass {
+				if hc.CertStatu == commdef.HOUSE_CERT_STAT_PASSED {
+					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED,
+						ErrInfo: fmt.Sprintf("House certification record out of sync, hc.CertStatu:%d", hc.CertStatu)}
 					return
 				}
 				hif.CertStat = commdef.HOUSE_CERT_STAT_FAILED
@@ -933,7 +935,7 @@ func SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp int64, pro
  */
 func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	FN := "[CertHouse] "
-	beego.Trace(FN, "hid:", hid, ", uid:", uid, ", pass:", pass, ", comment:", comment)
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", pass:", pass, ", comment:", comment)
 
 	defer func() {
 		if nil != err {
@@ -980,9 +982,24 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 		}
 	}()
 
+	// the last record should be HOUSE_CERT_STAT_WAIT
+	hc, err := getHouseNewestCert(hid)
+	if nil != err {
+		return
+	}
+	if commdef.HOUSE_CERT_STAT_WAIT != hc.CertStatu {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
+		return
+	}
+
 	// add new record in TblHouseCert
-	hc := TblHouseCert{House: hid, Who: uid, Comment: comment, Pass: pass}
-	/*nId*/ _, errT := o.Insert(&hc)
+	hc = TblHouseCert{House: hid, Who: uid, Comment: comment /*, Pass: pass*/}
+	if pass {
+		hc.CertStatu = commdef.HOUSE_CERT_STAT_PASSED
+	} else {
+		hc.CertStatu = commdef.HOUSE_CERT_STAT_FAILED
+	}
+	hc_id, errT := o.Insert(&hc)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
@@ -1005,6 +1022,13 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	}
 	numb, _ := res.RowsAffected()
 	beego.Debug(FN, "affect", numb, "records")
+
+	// create a system message to notify the landlord
+	msg := TblMessage{Type: commdef.MSG_HouseCertification, RefId: hc_id, Receiver: h.Owner.Id, Msg: "房源审核"}
+	if /*nId*/ _, errT = o.Insert(&msg); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
 
 	return
 }
@@ -1042,8 +1066,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	}
 
 	// Agency
-	// Kenny: when house owner commit new house, they may not assign the agency,
-	// 			so the agency 0 is possible.
+	// Kenny: when house owner commit new house, they may not assign the agency, so the agency 0 is possible.
 	if 0 != aid {
 		if errT, _ := GetUser(aid); nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("agency:%d", aid)}
@@ -1053,12 +1076,22 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 
 	/* processing */
 	o := orm.NewOrm()
+
 	qs := o.QueryTable("tbl_house").Filter("Property__Id", hif.Property).Filter("BuildingNo", hif.BuildingNo).Filter("HouseNo", hif.HouseNo)
 	bExist := qs.Exist()
 	if bExist {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("property:%d, building:%s, house:%s", hif.Property, hif.BuildingNo, hif.HouseNo)}
 		return
 	}
+
+	o.Begin()
+	defer func() {
+		if nil == err {
+			o.Commit()
+		} else {
+			o.Rollback()
+		}
+	}()
 
 	tSubmit := time.Now() // .UTC()
 	submitTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", tSubmit.Year(), tSubmit.Month(), tSubmit.Day(), tSubmit.Hour(), tSubmit.Minute(), tSubmit.Second())
@@ -1079,7 +1112,45 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 		return
 	}
 
-	beego.Warn(FN, "post a message to house agency or administrator if no agency assigned")
+	// add new record in TblHouseCert
+	comment := "业主提交新房源"
+	hc := TblHouseCert{House: newId, Who: oid, Comment: comment, CertStatu: commdef.HOUSE_CERT_STAT_WAIT}
+	hc_id, errT := o.Insert(&hc)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	// generate a system message to notify the agency or administrator if no agency assigned
+	if aid > 0 { // agency assinged
+		msg := TblMessage{Type: commdef.MSG_HouseCertification, RefId: hc_id, Receiver: aid, Msg: comment}
+		if /*nId*/ _, errT = o.Insert(&msg); nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+	} else { // no agency assigned
+		// ags := []TblUserGroup{} 		// admin groups
+		// numb, errT := o.QueryTable("tbl_user_group").Filter("Admin", true).All(&ags)
+		// if nil != errT {
+		// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		// 	return
+		// }
+		var aus []TblUserGroupMember // admin users
+		// numb, errT = o.QueryTable("tbl_user_group_member").Filter("Group", ags).All(&aus)
+		numb, errT := o.QueryTable("tbl_user_group_member").Filter("Group__Admin", true).All(&aus)
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(FN, fmt.Sprintf("%d administrators found", numb))
+		for _, v := range aus { // send system message to each administrator
+			msg := TblMessage{Type: commdef.MSG_HouseCertification, RefId: hc_id, Receiver: v.User.Id, Msg: comment}
+			if /*nId*/ _, errT = o.Insert(&msg); nil != errT {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+				return
+			}
+		}
+	}
 
 	id = newId
 	return
@@ -1871,6 +1942,43 @@ func delHouse(hid, luid int64) (err error) {
 	beego.Warn(FN, "checking house relation or just delete all of them along with house")
 
 	o := orm.NewOrm()
+	o.Begin()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
+
+	// tbl_house_cert
+	hcs := []TblHouseCert{}
+	qs := o.QueryTable("tbl_house_cert").Filter("House", hid)
+	numb, errT := qs.All(&hcs)
+	if errT != nil {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	if numb, errT = qs.Delete(); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf("delete %d records from TblHouseCert", numb))
+
+	// tbl_message
+	if numb > 0 {
+		hcids := []int64{}
+		for _, v := range hcs {
+			hcids = append(hcids, v.Id)
+		}
+		numb, errT = o.QueryTable("tbl_message").Filter("Type", commdef.MSG_HouseCertification).Filter("RefId__in", hcids).Delete()
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(FN, fmt.Sprintf("delete %d records from tbl_message", numb))
+	}
+
 	if /*num*/ _, err1 := o.Delete(&TblHouse{Id: hid}); err1 != nil {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
 		return
@@ -2159,5 +2267,29 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 
 	beego.Debug(FN, "strFilter:", strFilter)
 	beego.Debug(FN, "strSort:", strSort)
+	return
+}
+
+func getHouseNewestCert(hid int64) (hc TblHouseCert, err error) {
+	Fn := "[getHouseNewestCert] "
+	beego.Info(Fn, "House:", hid)
+
+	if hid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("house:", hid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_house_cert").Filter("House", hid).OrderBy("-Id").Limit(1, 0)
+	if errT := qs.One(&hc); nil != errT {
+		if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		} else {
+			// no certificate record found
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house:", hid)}
+		}
+		return
+	}
+
 	return
 }

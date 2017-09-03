@@ -207,7 +207,7 @@ func Test_GetAppointList_SeeHouse(t *testing.T) {
 //	-- GetHouseList_AppointSee --
 //
 func Test_GetHouseList_AppointSee(t *testing.T) {
-	seq := 0
+	// seq := 0
 
 	t.Error("TODO:")
 }

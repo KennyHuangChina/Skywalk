@@ -179,19 +179,20 @@ func (h *TblAppointment) TableIndex() [][]string {
 // 	}
 // }
 
+// house certification history
 type TblHouseCert struct {
-	Id      int64
-	House   int64     // house id
-	Who     int64     // who made the certification
-	When    time.Time `orm:"auto_now_add;type(datetime)"` // when made the certification
-	Comment string    `orm:"size(200)"`                   // certification comments
-	Pass    bool      // certificat result, pass or not
+	Id        int64
+	House     int64     // house id
+	Who       int64     // who made the certification
+	When      time.Time `orm:"auto_now_add;type(datetime)"` // when made the certification
+	Comment   string    `orm:"size(200)"`                   // certification comments
+	CertStatu int       `orm:"default(0)"`                  // HOUSE_CERT_STAT_xxx, default to HOUSE_CERT_STAT_Unknown
 }
 
 func (h *TblHouseCert) TableIndex() [][]string {
 	return [][]string{
 		[]string{"House"},
-		[]string{"When"},
+		[]string{"Who", "When"},
 	}
 }
 
@@ -395,6 +396,7 @@ func (he *TblMessage) TableIndex() [][]string {
 	return [][]string{
 		[]string{"Receiver"},
 		[]string{"Type", "RefId"},
+		[]string{"Receiver", "ReadTime", "CreateTime"},
 	}
 }
 
@@ -474,7 +476,7 @@ func init() {
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), // new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
-		new(TblHouseEvent), new(TblHouseEventProcess), new(TblAppointment), new(TblHouseWatch),
+		new(TblHouseEvent), new(TblHouseEventProcess), new(TblAppointment), new(TblHouseWatch), new(TblMessage),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),
 		new(TblStrings))

@@ -1094,10 +1094,23 @@ func Test_CommitHouseByOwner(t *testing.T) {
 	}
 
 	seq++
-	t.Log(fmt.Sprintf("<Case %d> commit new house", seq))
+	t.Log(fmt.Sprintf("<Case %d> commit new house with agency assigned", seq))
 	hif = commdef.HouseInfo{Property: 7, BuildingNo: "156", FloorTotal: 45, FloorThis: 26, HouseNo: "2605", Bedrooms: 2,
 		Livingrooms: 1, Bathrooms: 1, Acreage: 12400, BuyDate: "2017-06-07"}
 	e, id := CommitHouseByOwner(&hif, 9, 6)
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new house:", id)
+	if e = delHouse(id, 4); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> commit new house without agency assigned", seq))
+	e, id = CommitHouseByOwner(&hif, 9, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return

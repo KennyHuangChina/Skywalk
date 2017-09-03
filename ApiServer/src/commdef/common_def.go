@@ -110,9 +110,10 @@ type HouseInfo struct {
 }
 
 const (
-	HOUSE_CERT_STAT_WAIT   = 1 // house is waiting for certification
-	HOUSE_CERT_STAT_PASSED = 2 // house certification passed
-	HOUSE_CERT_STAT_FAILED = 3 // house certification failed
+	HOUSE_CERT_STAT_Unknown = 0
+	HOUSE_CERT_STAT_WAIT    = 1 // house is waiting for certification
+	HOUSE_CERT_STAT_PASSED  = 2 // house certification passed
+	HOUSE_CERT_STAT_FAILED  = 3 // house certification failed
 )
 
 type HousePrice struct {
@@ -270,7 +271,7 @@ type AppointmentInfo struct {
 const (
 	MSG_Begin = 1
 
-	MSG_HouseCertification = 1 // messages of house certificaion
+	MSG_HouseCertification = 1 // messages of house certificaion, ref to TblHouseCert
 	MSG_ScheduleHouseWatch = 2 // messages of house watching
 
 	MSG_End = 2
