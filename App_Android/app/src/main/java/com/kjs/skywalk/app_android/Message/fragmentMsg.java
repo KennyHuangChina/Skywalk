@@ -49,15 +49,15 @@ public class fragmentMsg extends Fragment {
                 "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502280826114&di=109e9c8df04726531b9a247a0e5744f8&imgtype=0&src=http%3A%2F%2Fwww.th7.cn%2Fd%2Ffile%2Fp%2F2016%2F11%2F17%2F7dc8d2aa0bd854e87295e6df73eaef19.jpg", R.drawable.head_portrait_mask);
 
         // test
-        List<String> idLst = new ArrayList<>();
-        SKLocalSettings.browsing_history_insert(getActivity(), "1");
-        SKLocalSettings.browsing_history_insert(getActivity(), "3");
-        SKLocalSettings.browsing_history_insert(getActivity(), "5");
-        SKLocalSettings.browsing_history_insert(getActivity(), "7");
-        SKLocalSettings.browsing_history_insert(getActivity(), "9");
-
-        idLst = SKLocalSettings.browsing_history_read(getActivity());
-        kjsLogUtil.i("idLst:" + idLst);
+//        List<String> idLst = new ArrayList<>();
+//        SKLocalSettings.browsing_history_insert(getActivity(), "1");
+//        SKLocalSettings.browsing_history_insert(getActivity(), "3");
+//        SKLocalSettings.browsing_history_insert(getActivity(), "5");
+//        SKLocalSettings.browsing_history_insert(getActivity(), "7");
+//        SKLocalSettings.browsing_history_insert(getActivity(), "9");
+//
+//        idLst = SKLocalSettings.browsing_history_read(getActivity());
+//        kjsLogUtil.i("idLst:" + idLst);
 
         return view;
     }

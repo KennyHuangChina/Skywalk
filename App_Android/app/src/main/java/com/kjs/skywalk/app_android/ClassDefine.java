@@ -273,36 +273,67 @@ public class ClassDefine {
         public static ArrayList<ClassDefine.HouseDigest> IHouseDigestListToHouseDigestList(ArrayList<Object> houseList) {
             ArrayList<ClassDefine.HouseDigest> list = new ArrayList<>();
             for (Object houseDigestObj : houseList) {
-                IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) houseDigestObj;
-                ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
-                houseDigest.houseId = houseDigestRes.GetHouseId();
-                houseDigest.property = houseDigestRes.GetProperty();
-                houseDigest.addr = houseDigestRes.GetPropertyAddr();
-                houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
-                houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
-                houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
-                houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
-                double rental = (double)houseDigestRes.GetRental() / 100.0;
-                houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
-                double pricing = (double)houseDigestRes.GetPricing() / 100.0;
-                houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
-                houseDigest.CoverImage = houseDigestRes.GetCoverImage();
-                houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
-                houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
-                houseDigest.includePropertyFee = houseDigestRes.IsRentalIncPropFee();
-
-                ArrayList<Object> houseTags = ((IApiResults.IResultList) houseDigestRes).GetList();
-                houseDigest.houseTags = new ArrayList<>();
-                for (Object houseTagObj : houseTags) {
-                    IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
-                    ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
-                    houseDigest.houseTags.add(houseTag);
-                }
+                ClassDefine.HouseDigest houseDigest = IHouseDigestToHouseDigest((IApiResults.IHouseDigest) houseDigestObj);
+//                IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) houseDigestObj;
+//                ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
+//                houseDigest.houseId = houseDigestRes.GetHouseId();
+//                houseDigest.property = houseDigestRes.GetProperty();
+//                houseDigest.addr = houseDigestRes.GetPropertyAddr();
+//                houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
+//                houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
+//                houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
+//                double acreage = (double) houseDigestRes.GetAcreage() / 100.0;
+//                houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
+//                double rental = (double) houseDigestRes.GetRental() / 100.0;
+//                houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
+//                double pricing = (double) houseDigestRes.GetPricing() / 100.0;
+//                houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
+//                houseDigest.CoverImage = houseDigestRes.GetCoverImage();
+//                houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
+//                houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
+//                houseDigest.includePropertyFee = houseDigestRes.IsRentalIncPropFee();
+//
+//                ArrayList<Object> houseTags = ((IApiResults.IResultList) houseDigestRes).GetList();
+//                houseDigest.houseTags = new ArrayList<>();
+//                for (Object houseTagObj : houseTags) {
+//                    IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
+//                    ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
+//                    houseDigest.houseTags.add(houseTag);
+//                }
 
                 list.add(houseDigest);
             }
             return list;
+        }
+
+        public static ClassDefine.HouseDigest IHouseDigestToHouseDigest(IApiResults.IHouseDigest apiHouseDigest) {
+            ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
+            houseDigest.houseId = apiHouseDigest.GetHouseId();
+            houseDigest.property = apiHouseDigest.GetProperty();
+            houseDigest.addr = apiHouseDigest.GetPropertyAddr();
+            houseDigest.Bedrooms = apiHouseDigest.GetBedrooms();
+            houseDigest.Livingrooms = apiHouseDigest.GetLivingrooms();
+            houseDigest.Bathrooms = apiHouseDigest.GetBathrooms();
+            double acreage = (double) apiHouseDigest.GetAcreage() / 100.0;
+            houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
+            double rental = (double) apiHouseDigest.GetRental() / 100.0;
+            houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
+            double pricing = (double) apiHouseDigest.GetPricing() / 100.0;
+            houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
+            houseDigest.CoverImage = apiHouseDigest.GetCoverImage();
+            houseDigest.CoverImageUrlS = apiHouseDigest.GetCoverImageUrlS();
+            houseDigest.CoverImageUrlM = apiHouseDigest.GetCoverImageUrlM();
+            houseDigest.includePropertyFee = apiHouseDigest.IsRentalIncPropFee();
+
+            ArrayList<Object> houseTags = ((IApiResults.IResultList) apiHouseDigest).GetList();
+            houseDigest.houseTags = new ArrayList<>();
+            for (Object houseTagObj : houseTags) {
+                IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
+                ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
+                houseDigest.houseTags.add(houseTag);
+            }
+
+            return houseDigest;
         }
     }
 

@@ -137,8 +137,12 @@ public class SKLocalSettings {
     // 浏览记录
     public static List<String> browsing_history_read(Context context) {
         String history = UISettings_get(context, UISettingsKey_BrowsingHistory, "");
-        String[] historys = history.split(";");
         List<String> list = new ArrayList<>();
+        if (history.isEmpty()) {
+            return list;
+        }
+
+        String[] historys = history.split(";");
         if (historys.length > 0) {
             for (int i = 0; i < historys.length; i++) {
                 list.add(historys[i]);

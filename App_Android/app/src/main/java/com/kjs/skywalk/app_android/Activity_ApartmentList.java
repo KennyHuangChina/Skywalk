@@ -14,8 +14,13 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_NEED_LOGIN;
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_HOUSE_WATCH_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE;
 
@@ -28,6 +33,8 @@ public class Activity_ApartmentList extends SKBaseActivity {
     public static final int TYPE_ALL_AGENCY_HOUSES = 4;
     public static final int TYPE_WATCH_LIST = 5;
     public static final int TYPE_APPOINTMENT = 6;
+    public static final int TYPE_BROWSING_HISTORY = 7;
+
 
     private ListView mListView = null;
     private AdapterForApartmentList mAdapter = null;
@@ -104,6 +111,10 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 getBehalfHousesList(6);
                 break;
             }
+            case TYPE_BROWSING_HISTORY: {
+                getBrowingHistory();
+                break;
+            }
         }
     }
 
@@ -138,11 +149,63 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 title.setText("我的预约");
                 break;
             }
+            case TYPE_BROWSING_HISTORY: {
+                title.setText("浏览记录");
+                break;
+            }
         }
     }
 
     private void updateList() {
         mAdapter.addData(mDataList, mDataList.size());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void getBrowingHistory() {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, this, this);
+        List<String> idLst = SKLocalSettings.browsing_history_read(this);
+        kjsLogUtil.i("idLst:" + idLst);
+        for (String houseId : idLst) {
+            manager.GetBriefPublicHouseInfo(Integer.valueOf(houseId));
+        }
+    }
+
+    private void fillHouseInfo(final IApiResults.IHouseDigest apiHouseDigest) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
+                houseDigest.houseId = apiHouseDigest.GetHouseId();
+                houseDigest.property = apiHouseDigest.GetProperty();
+                houseDigest.addr = apiHouseDigest.GetPropertyAddr();
+                houseDigest.Bedrooms = apiHouseDigest.GetBedrooms();
+                houseDigest.Livingrooms = apiHouseDigest.GetLivingrooms();
+                houseDigest.Bathrooms = apiHouseDigest.GetBathrooms();
+                double acreage = (double) apiHouseDigest.GetAcreage() / 100.0;
+                houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
+                double rental = (double) apiHouseDigest.GetRental() / 100.0;
+                houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
+                double pricing = (double) apiHouseDigest.GetPricing() / 100.0;
+                houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
+                houseDigest.CoverImage = apiHouseDigest.GetCoverImage();
+                houseDigest.CoverImageUrlS = apiHouseDigest.GetCoverImageUrlS();
+                houseDigest.CoverImageUrlM = apiHouseDigest.GetCoverImageUrlM();
+                houseDigest.includePropertyFee = apiHouseDigest.IsRentalIncPropFee();
+
+                ArrayList<Object> houseTags = ((IApiResults.IResultList) apiHouseDigest).GetList();
+                houseDigest.houseTags = new ArrayList<>();
+                for (Object houseTagObj : houseTags) {
+                    IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
+                    ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
+                    houseDigest.houseTags.add(houseTag);
+                }
+
+                ArrayList<ClassDefine.HouseDigest> dataList = new ArrayList<>();
+                dataList.add(houseDigest);
+                mAdapter.addData(dataList, dataList.size());
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
 //    private void getToApproveListDetail() {
@@ -344,6 +407,25 @@ public class Activity_ApartmentList extends SKBaseActivity {
             case TYPE_TO_APPROVE: {
                 startApproveActivity(digest);
             }
+        }
+    }
+
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            return;
+        }
+
+        if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
+            // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+            fillHouseInfo((IApiResults.IHouseDigest) iResult);
         }
     }
 }

@@ -197,6 +197,9 @@ public class MainActivity extends SKBaseActivity {
             break;
             case R.id.ll_browsing_history: {
                 // 浏览记录
+                Intent i = new Intent(MainActivity.this, Activity_ApartmentList.class);
+                i.putExtra("type", Activity_ApartmentList.TYPE_BROWSING_HISTORY);
+                startActivity(i);
             }
             break;
             case R.id.ll_see_count: {

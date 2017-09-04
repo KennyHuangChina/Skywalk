@@ -30,6 +30,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
@@ -313,6 +314,10 @@ public class fragmentPrivate extends Fragment {
 
     private void updateLayout(boolean isLogin) {
 
+        // 浏览记录
+        List<String> idLst = SKLocalSettings.browsing_history_read(getActivity());
+        mTv_browsing_history.setText(String.valueOf(idLst.size()));
+
         boolean bEnabled = false;
         if (isLogin) {
             mRlTitleBar.setBackgroundColor(Color.parseColor("#00AE63"));
@@ -335,7 +340,7 @@ public class fragmentPrivate extends Fragment {
             commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
         }
         mLlWatchListCount.setEnabled(bEnabled);
-        mLl_browsing_history.setEnabled(bEnabled);
+//        mLl_browsing_history.setEnabled(bEnabled);
         mLl_see_count.setEnabled(bEnabled);
         mLlAppointmentCount.setEnabled(bEnabled);
 
