@@ -471,14 +471,14 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 	// House owner, agency and administrator could see the private info
 	// front-end using, could just retrieve the private info, no matter what kind user is, and whatever user login or not
 	// back-end using, user can see the private info, depend on what kind of user is and if he logined
-	bPriv := false
+	bShowPrivInfo := false
 	if be {
 		if err = canAccessHouse(uid, hid); nil != err {
 			return
 		}
-		bPriv = true
+		bShowPrivInfo = true
 	}
-	beego.Debug(FN, "bPriv:", bPriv)
+	beego.Debug(FN, "bShowPrivInfo:", bShowPrivInfo)
 
 	hif.Id = house.Id
 	hif.Property = house.Property.Id
@@ -494,7 +494,7 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 	hif.ModifyDate = fmt.Sprintf("%s", house.ModifyTime.Local())[:10]
 	hif.Agency = house.Agency.Id
 
-	if bPriv { // get privite info
+	if bShowPrivInfo { // get privite info
 		hif.BuildingNo = house.BuildingNo
 		hif.FloorThis = house.FloorThis
 		hif.HouseNo = house.HouseNo
@@ -508,25 +508,16 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 			hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
 			hif.CertTime = fmt.Sprintf("%s", house.PublishTime.Local())
 		} else { // house not been published
-			o := orm.NewOrm()
-			qs := o.QueryTable("tbl_house_cert").Filter("House", hid).Limit(1, 0)
 			hc := TblHouseCert{}
-			if errT := qs.One(&hc); nil != errT {
-				if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
-					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-					return
-				} else {
-					// no certificate record found
-					hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
-				}
-			} else {
-				// if hc.Pass {
-				if hc.CertStatu == commdef.HOUSE_CERT_STAT_PASSED {
-					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED,
-						ErrInfo: fmt.Sprintf("House certification record out of sync, hc.CertStatu:%d", hc.CertStatu)}
-					return
-				}
-				hif.CertStat = commdef.HOUSE_CERT_STAT_FAILED
+			if hc, err = getHouseNewestCert(hid); nil != err {
+				return
+			}
+			if commdef.HOUSE_CERT_STAT_Unknown == hc.CertStatu {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
+				return
+			}
+			hif.CertStat = hc.CertStatu // HOUSE_CERT_STAT_FAILED or HOUSE_CERT_STAT_WAIT
+			if commdef.HOUSE_CERT_STAT_FAILED == hc.CertStatu {
 				hif.CertTime = fmt.Sprintf("%s", hc.When.Local())
 				hif.CertDesc = hc.Comment
 			}

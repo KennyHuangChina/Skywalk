@@ -299,7 +299,7 @@ func Test_GetHouseInfo(t *testing.T) {
 		}
 		t.Log(fmt.Sprintf("house: %+v", hd))
 		if len(hd.BuildingNo) > 0 || len(hd.HouseNo) > 0 || hd.FloorThis <= hd.FloorTotal ||
-			hd.FloorThis > hd.FloorTotal+3 || len(hd.BuyDate) > 0 {
+			hd.FloorThis > hd.FloorTotal+3 || len(hd.BuyDate) > 4 {
 			t.Error("BuildingNo:", hd.BuildingNo, ", HouseNo:", hd.HouseNo, ", FloorThis:", hd.FloorThis, ", buy date:", hd.BuyDate)
 			return
 		}
