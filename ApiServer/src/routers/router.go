@@ -39,6 +39,11 @@ func init() {
 				&controllers.EventController{},
 			),
 		),
+		beego.NSNamespace("/sysmsg",
+			beego.NSInclude(
+				&controllers.MsgController{},
+			),
+		),
 		beego.NSNamespace("/appointment",
 			beego.NSInclude(
 				&controllers.AppointmentController{},

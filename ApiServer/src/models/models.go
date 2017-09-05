@@ -344,6 +344,7 @@ type TblHouseShowTime struct {
 /***************************************************************************
 	tables for events
 ***************************************************************************/
+// TODO: should be replaced by TblMessage
 type TblHouseEvent struct {
 	Id         int64
 	House      int64 // house id
@@ -477,7 +478,7 @@ func init() {
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), // new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
-		new(TblHouseEvent), new(TblHouseEventProcess), new(TblAppointment), new(TblHouseWatch), new(TblMessage),
+		/*new(TblHouseEvent), new(TblHouseEventProcess), */ new(TblAppointment), new(TblHouseWatch), new(TblMessage),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),
 		new(TblStrings))

@@ -9,6 +9,44 @@ import (
 	// "time"
 )
 
+/**
+*	Get new system message count
+*	Arguments:
+*		uid 	- logined user id
+*	Returns
+*		err 	- error info
+*		nmc 	- new message count
+**/
+func GetNewMsgCount(uid int64) (err error, nmc int64) {
+	Fn := "[GetNewMsgCount] "
+	beego.Info(Fn, "login user:", uid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(Fn, err)
+		}
+	}()
+
+	/* Argument checking */
+	err, _ = GetUser(uid)
+	if nil != err {
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_message").Filter("Receiver", uid).Filter("ReadTime_isnull")
+	cnt, errT := qs.Count()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("%d new messages found", cnt))
+
+	nmc = cnt
+	return
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		-- Internal Functions --

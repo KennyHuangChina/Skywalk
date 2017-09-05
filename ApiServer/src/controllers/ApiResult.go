@@ -147,7 +147,13 @@ type ResGetPicUrl struct {
 	Url_l string
 }
 
-// result of API get new event count
+// result of API get new system message count
+type ResGetNewMsgCnt struct {
+	ResCommon
+	NewMsgCnt int64
+}
+
+// result of API get new event count  TODO: replaced by ResGetNewMsgCnt
 type ResGetNewEventCnt struct {
 	ResCommon
 	NewEvent int64
