@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 
 import java.lang.reflect.Array;
@@ -117,9 +118,7 @@ class PopupWindowSearchConditionHouseType extends PopupWindow {
                 return;
         }
 
-        Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.select4_check);
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        v.setCompoundDrawables(null, null, drawable, null);
+        commonFun.setTextViewDrawableRight(mContext, v, R.drawable.select4_check);
         v.setTextColor(ContextCompat.getColor(mContext, R.color.colorFontSelected));
         v.setSelected(true);
     }
@@ -162,7 +161,7 @@ class PopupWindowSearchConditionHouseType extends PopupWindow {
                 return;
         }
 
-        v.setCompoundDrawables(null, null, null, null);
+        commonFun.cleanTextViewDrawable(v);
         v.setTextColor(Color.rgb(0, 0, 0));
         v.setSelected(false);
     }

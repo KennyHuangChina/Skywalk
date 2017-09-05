@@ -18,6 +18,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -471,5 +472,39 @@ public class commonFun {
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
 //        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
+    //update text view drawable
+    public static void setTextViewDrawableLeft(Context context, TextView view, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        view.setCompoundDrawables(drawable, null, null, null);
+        view.setTextColor(ContextCompat.getColor(context, R.color.colorFontSelected));
+        view.setSelected(true);
+    }
+    public static void setTextViewDrawableTop(Context context, TextView view, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        view.setCompoundDrawables(null, drawable, null, null);
+        view.setTextColor(ContextCompat.getColor(context, R.color.colorFontSelected));
+        view.setSelected(true);
+    }
+    public static void setTextViewDrawableRight(Context context, TextView view, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        view.setCompoundDrawables(null, null, drawable, null);
+        view.setTextColor(ContextCompat.getColor(context, R.color.colorFontSelected));
+        view.setSelected(true);
+    }
+    public static void setTextViewDrawableBottom(Context context, TextView view, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        view.setCompoundDrawables(null, null, null, drawable);
+        view.setTextColor(ContextCompat.getColor(context, R.color.colorFontSelected));
+        view.setSelected(true);
+    }
+    public static void cleanTextViewDrawable(TextView view) {
+        view.setCompoundDrawables(null, null, null, null);
     }
 }

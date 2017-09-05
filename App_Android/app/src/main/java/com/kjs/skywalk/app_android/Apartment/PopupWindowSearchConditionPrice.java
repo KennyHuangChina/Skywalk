@@ -169,15 +169,13 @@ class PopupWindowSearchConditionPrice extends PopupWindow {
     }
 
     private void unselect(TextView view) {
-        view.setCompoundDrawables(null, null, null, null);
+        commonFun.cleanTextViewDrawable(view);
         view.setTextColor(Color.rgb(0, 0, 0));
         view.setSelected(false);
     }
 
     private void select(TextView view) {
-        Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.select4_check);
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        view.setCompoundDrawables(null, null, drawable, null);
+        commonFun.setTextViewDrawableRight(mContext, view, R.drawable.select4_check);
         view.setTextColor(ContextCompat.getColor(mContext, R.color.colorFontSelected));
         view.setSelected(true);
     }

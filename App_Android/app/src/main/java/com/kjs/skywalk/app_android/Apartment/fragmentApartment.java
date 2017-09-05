@@ -88,7 +88,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
     private int mLastItemInList = 0;
     private int mTotalCount = 0;
 
-    private int mSortType = SORT_TYPE_PUBLIC_TIME;
+    private int mSortType = SORT_TYPE_PUBLIC_TIME_DESC;
     private int mMinPrice = 0;
     private int mMaxPrice = 0;
     private ArrayList<Integer> mRoomList = new ArrayList<>();
@@ -195,11 +195,17 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             public void onClick(View v) {
                 if(mSortType == SORT_TYPE_PUBLIC_TIME) {
                     mSortType = SORT_TYPE_PUBLIC_TIME_DESC;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByDate, R.drawable.sort_desc);
                 } else if(mSortType == SORT_TYPE_PUBLIC_TIME_DESC) {
                     mSortType = SORT_TYPE_PUBLIC_TIME;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByDate, R.drawable.sort_aesc);
                 } else {
                     mSortType = SORT_TYPE_PUBLIC_TIME;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByDate, R.drawable.sort_aesc);
                 }
+
+                commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByRental, R.drawable.sort_none);
+                commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByAppointment, R.drawable.sort_none);
 
                 mTextViewSortByAppointment.setSelected(false);
                 mTextViewSortByDate.setSelected(true);
@@ -216,11 +222,17 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             public void onClick(View v) {
                 if(mSortType == SORT_TYPE_RENTAL) {
                     mSortType = SORT_TYPE_RENTAL_DESC;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByRental, R.drawable.sort_desc);
                 } else if(mSortType == SORT_TYPE_RENTAL_DESC) {
                     mSortType = SORT_TYPE_RENTAL;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByRental, R.drawable.sort_aesc);
                 } else {
                     mSortType = SORT_TYPE_RENTAL;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByRental, R.drawable.sort_aesc);
                 }
+
+                commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByDate, R.drawable.sort_none);
+                commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByAppointment, R.drawable.sort_none);
 
                 mTextViewSortByAppointment.setSelected(false);
                 mTextViewSortByDate.setSelected(false);
@@ -237,11 +249,16 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             public void onClick(View v) {
                 if(mSortType == SORT_TYPE_APPOINT) {
                     mSortType = SORT_TYPE_APPOINT_DESC;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByAppointment, R.drawable.sort_desc);
                 } else if(mSortType == SORT_TYPE_APPOINT_DESC) {
                     mSortType = SORT_TYPE_APPOINT;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByAppointment, R.drawable.sort_aesc);
                 } else {
                     mSortType = SORT_TYPE_APPOINT;
+                    commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByAppointment, R.drawable.sort_aesc);
                 }
+                commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByDate, R.drawable.sort_none);
+                commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByRental, R.drawable.sort_none);
 
                 mTextViewSortByAppointment.setSelected(true);
                 mTextViewSortByDate.setSelected(false);
@@ -251,6 +268,7 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
             }
         });
 
+        commonFun.setTextViewDrawableRight(getActivity().getApplicationContext(), mTextViewSortByDate, R.drawable.sort_desc);
         loadMore(true);
 
         return view;
