@@ -137,7 +137,7 @@
                 android:textColor="#272536"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableLeft="@drawable/bothway_d"
+                android:drawableLeft="@drawable/sort_none"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:adjustViewBounds="true"
