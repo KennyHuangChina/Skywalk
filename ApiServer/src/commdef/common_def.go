@@ -277,6 +277,14 @@ const (
 	MSG_End = 2
 )
 
+const (
+	MSG_PRIORITY_Begin   = 0
+	MSG_PRIORITY_Info    = 0
+	MSG_PRIORITY_Warning = 1
+	MSG_PRIORITY_Error   = 2
+	MSG_PRIORITY_End     = 2
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events

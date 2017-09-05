@@ -387,6 +387,7 @@ type TblMessage struct {
 	Type       int       // message type. ref to MSG_xxxx
 	RefId      int64     // reference id, depend on what type the message is
 	Msg        string    `orm:"size(200)"`
+	Priority   int       `orm:"not null; default(0)"` // MSG_PRIORITY_xxx, default to MSG_PRIORITY_Info
 	Receiver   int64     // who the message send to
 	CreateTime time.Time `orm:"auto_now_add;type(datetime);not null"`
 	ReadTime   time.Time `orm:"type(datetime);null"` // when the receiver read the message

@@ -507,7 +507,7 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 		if nullTime != house.PublishTime {
 			hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
 			hif.CertTime = fmt.Sprintf("%s", house.PublishTime.Local())
-		} else {
+		} else { // house not been published
 			o := orm.NewOrm()
 			qs := o.QueryTable("tbl_house_cert").Filter("House", hid).Limit(1, 0)
 			hc := TblHouseCert{}
@@ -1024,10 +1024,15 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	beego.Debug(FN, "affect", numb, "records")
 
 	// create a system message to notify the landlord
-	msg := TblMessage{Type: commdef.MSG_HouseCertification, RefId: hc_id, Receiver: h.Owner.Id, Msg: "房源审核"}
-	if /*nId*/ _, errT = o.Insert(&msg); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		return
+	pri := commdef.MSG_PRIORITY_Info
+	msg := "审核通过"
+	if !pass {
+		pri = commdef.MSG_PRIORITY_Error
+		msg = "审核未通过"
+	}
+	err, _ = addMessage(commdef.MSG_HouseCertification, pri, hc_id, h.Owner.Id, msg)
+	if nil != err {
+
 	}
 
 	return
@@ -1123,18 +1128,11 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 
 	// generate a system message to notify the agency or administrator if no agency assigned
 	if aid > 0 { // agency assinged
-		msg := TblMessage{Type: commdef.MSG_HouseCertification, RefId: hc_id, Receiver: aid, Msg: comment}
-		if /*nId*/ _, errT = o.Insert(&msg); nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hc_id, aid, comment)
+		if nil != err {
 			return
 		}
 	} else { // no agency assigned
-		// ags := []TblUserGroup{} 		// admin groups
-		// numb, errT := o.QueryTable("tbl_user_group").Filter("Admin", true).All(&ags)
-		// if nil != errT {
-		// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-		// 	return
-		// }
 		var aus []TblUserGroupMember // admin users
 		// numb, errT = o.QueryTable("tbl_user_group_member").Filter("Group", ags).All(&aus)
 		numb, errT := o.QueryTable("tbl_user_group_member").Filter("Group__Admin", true).All(&aus)
@@ -1144,9 +1142,8 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 		}
 		beego.Debug(FN, fmt.Sprintf("%d administrators found", numb))
 		for _, v := range aus { // send system message to each administrator
-			msg := TblMessage{Type: commdef.MSG_HouseCertification, RefId: hc_id, Receiver: v.User.Id, Msg: comment}
-			if /*nId*/ _, errT = o.Insert(&msg); nil != errT {
-				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hc_id, v.User.Id, comment)
+			if nil != err {
 				return
 			}
 		}
