@@ -35,7 +35,7 @@ func GetNewMsgCount(uid int64) (err error, nmc int64) {
 
 	/* Processing */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_message").Filter("Receiver", uid).Filter("ReadTime_isnull")
+	qs := o.QueryTable("tbl_message").Filter("Receiver", uid).Filter("ReadTime__isnull", true)
 	cnt, errT := qs.Count()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
