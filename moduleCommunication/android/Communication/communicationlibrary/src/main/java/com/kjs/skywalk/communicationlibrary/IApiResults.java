@@ -204,9 +204,9 @@ public class IApiResults {
         String  GetChecksum();
     }
 
-    // command: GetNewEventCount
-    public interface INewEventCount {
-        int     GetNewEventCount();
+    // command: GetNewMsgCount
+    public interface INewMsgCount {
+        int     GetNewMsgCount();
     }
 
     // command: CmdGetHouseNewEvent
