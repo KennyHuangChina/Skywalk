@@ -6,8 +6,68 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	// "strconv"
-	// "time"
+	"time"
 )
+
+/**
+*	Get system message by id
+*	Arguments:
+*		uid 	- logined user id
+*	Returns
+*		err 	- error info
+*		mst		- system message
+**/
+func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
+	Fn := "[GetSysMsg] "
+	beego.Info(Fn, "login user:", uid, ", message:", mid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(Fn, err)
+		}
+	}()
+
+	/* Argument checking */
+	err, _ = GetUser(uid)
+	if nil != err {
+		return
+	}
+
+	if mid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid message id"}
+		return
+	}
+
+	/* Permission Checking*/
+
+	/* Processing */
+	o := orm.NewOrm()
+
+	m := TblMessage{Id: mid}
+	if errT := o.Read(&m); nil != errT {
+		if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+			return
+		}
+	}
+
+	msg.Id = m.Id
+	msg.Type = m.Type
+	msg.Priority = m.Priority
+	msg.Msg = m.Msg
+	msg.CreateTime = m.CreateTime.Local().String()[:19]
+
+	nilTime := time.Time{}
+	if nilTime == m.ReadTime {
+		msg.ReadTime = m.ReadTime.Local().String()[:19]
+	}
+
+	beego.Debug(Fn, fmt.Sprintf("msg:%+v", msg))
+
+	beego.Warn(Fn, "TODO: ...")
+
+	return
+}
 
 /**
 *	Get new system message count

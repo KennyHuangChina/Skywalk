@@ -285,6 +285,23 @@ const (
 	MSG_PRIORITY_End     = 2
 )
 
+type MsgHouse struct {
+	Property    string
+	Bedrooms    int
+	Livingrooms int
+	Bathrooms   int
+}
+
+type SysMessage struct {
+	Id         int64
+	Type       int // MSG_XXX
+	Priority   int // MSG_PRIORITY_xxx
+	Msg        string
+	CreateTime string
+	ReadTime   string
+	House      MsgHouse
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		Events

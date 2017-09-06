@@ -153,6 +153,12 @@ type ResGetNewMsgCnt struct {
 	NewMsgCnt int64
 }
 
+// result of API get system message
+type ResGetSysMsg struct {
+	ResCommon
+	Msg commdef.SysMessage
+}
+
 // result of API get new event count  TODO: replaced by ResGetNewMsgCnt
 type ResGetNewEventCnt struct {
 	ResCommon
