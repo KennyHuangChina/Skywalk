@@ -50,7 +50,15 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 			return
 		}
 	}
+	// permission checking, only message receiver himself and administrator could access this message
+	if m.Receiver != uid {
+		if _, bAdmin := isAdministrator(uid); !bAdmin {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user(%d) != receiver(%d), and is not an administrator", uid, m.Receiver)}
+			return
+		}
+	}
 
+	// message info
 	msg.Id = m.Id
 	msg.Type = m.Type
 	msg.Priority = m.Priority
@@ -58,14 +66,49 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 	msg.CreateTime = m.CreateTime.Local().String()[:19]
 
 	nilTime := time.Time{}
-	if nilTime == m.ReadTime {
+	if nilTime != m.ReadTime {
 		msg.ReadTime = m.ReadTime.Local().String()[:19]
 	}
 
+	hid := int64(0)
+	switch m.Type {
+	case commdef.MSG_HouseCertification:
+		{
+			hc := TblHouseCert{}
+			if err, hc = getMsgReference_HouseCert(m.RefId); nil != err {
+				return
+			}
+			beego.Debug(Fn, fmt.Sprintf("hc:%+v", hc))
+			hid = hc.House
+		}
+	case commdef.MSG_ScheduleHouseWatch:
+		beego.Warn(Fn, "TODO: MSG_ScheduleHouseWatch")
+		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT, ErrInfo: "MSG_ScheduleHouseWatch"}
+		return
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("message type:%d", m.Type)}
+		return
+	}
+
+	// house info
+	err, h := getHouse(hid)
+	if nil != err { // && commdef.ERR_COMMON_PERMISSION != err {
+		return
+	}
+	err, pif := GetPropertyInfo(h.Property.Id)
+	if nil != err {
+		return
+	}
+	msg.House.Property = pif.PropName
+	if errT := canAccessHouse(uid, hid); nil == errT {
+		msg.House.BuildingNo = h.BuildingNo
+		msg.House.HouseNo = h.HouseNo
+	}
+	msg.House.Bedrooms = h.Bedrooms
+	msg.House.Livingrooms = h.Livingrooms
+	msg.House.Bathrooms = h.Bathrooms
+
 	beego.Debug(Fn, fmt.Sprintf("msg:%+v", msg))
-
-	beego.Warn(Fn, "TODO: ...")
-
 	return
 }
 
@@ -111,6 +154,22 @@ func GetNewMsgCount(uid int64) (err error, nmc int64) {
 //
 //		-- Internal Functions --
 //
+func getMsgReference_HouseCert(hcid int64) (err error, hc TblHouseCert) {
+	Fn := "[getMsgReference_HouseCert] "
+	beego.Info(Fn, "house cert record:", hcid)
+
+	o := orm.NewOrm()
+	hc1 := TblHouseCert{Id: hcid}
+	errT := o.Read(&hc1)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	hc = hc1
+	return
+}
+
 func addMessage(mt, pri int, refId, receiver int64, msg string) (err error, msg_id int64) {
 	Fn := "[addMessage] "
 	beego.Info(Fn, fmt.Sprintf("type:%d, priority:%d, refId:%d, receiver:%d, msg:%s", mt, pri, refId, receiver, msg))

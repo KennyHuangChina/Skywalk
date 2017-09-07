@@ -287,6 +287,8 @@ const (
 
 type MsgHouse struct {
 	Property    string
+	BuildingNo  string
+	HouseNo     string
 	Bedrooms    int
 	Livingrooms int
 	Bathrooms   int

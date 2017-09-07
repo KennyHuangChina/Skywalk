@@ -45,7 +45,7 @@
 	  		* ErrDesc			string		// error description
 
 ##
-### 4. Get message by id (TODO)
+### 4. Get message by id 
 	[Security]	private
 	[Request]
   		* GET /v1/sysmsg/:id
