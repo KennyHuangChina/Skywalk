@@ -23,7 +23,7 @@
       android:paddingLeft="20dip"
       android:paddingBottom="20dip"
       android:id="@+id/v_selected"
-      android:src="@drawable/__picker_checkbox_bg"
+      android:src="@drawable/__picker_selector_checkbox"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       />
