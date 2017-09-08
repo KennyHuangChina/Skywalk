@@ -379,6 +379,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:MsgController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:MsgController"],
 		beego.ControllerComments{
+			Method: "ReadMsg",
+			Router: `/:id/read`,
+			AllowHTTPMethods: []string{"get"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:MsgController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:MsgController"],
+		beego.ControllerComments{
 			Method: "GetSysMsg",
 			Router: `/:id`,
 			AllowHTTPMethods: []string{"get"},

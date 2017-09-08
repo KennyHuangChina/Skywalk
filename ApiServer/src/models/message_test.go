@@ -61,6 +61,51 @@ func Test_GetNewMsgCount(t *testing.T) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
+//	-- ReadMsg --
+//
+func Test_ReadMsg(t *testing.T) {
+	t.Log("Test ReadMsg")
+	seq := 0
+
+	xid := []int64{-1, 0, 100000000, 4, 6}
+	xdesc := []string{"not login", "is system user", "does not exist", "is an administrator, but not receiver", "is an agency, but not receiver"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
+		if e := ReadMsg(v, 3); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	xid = []int64{-1, 0, 100000000, 2, 1}
+	xdesc = []string{"== -1", "== 0", "does not exist", "alread readed", "is not for current login user"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: message(%d) %s", seq, v, xdesc[k]))
+		if e := ReadMsg(10, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	mid := int64(3)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Testing: read message(%d)", seq, mid))
+	if e := ReadMsg(10, mid); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log(fmt.Sprintf("<Case %d> Testing: unread message(%d)", seq, mid))
+	if e := unreadMsg(mid); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
 //	-- GetSysMsg --
 //
 func Test_GetSysMsg(t *testing.T) {

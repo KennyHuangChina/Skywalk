@@ -9,10 +9,13 @@ import (
 	"time"
 )
 
+var nilTime time.Time
+
 /**
 *	Get system message by id
 *	Arguments:
 *		uid 	- logined user id
+*		mid 	- message id
 *	Returns
 *		err 	- error info
 *		mst		- system message
@@ -33,23 +36,14 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 		return
 	}
 
-	if mid <= 0 {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid message id"}
+	err, m := getSysMsg(mid)
+	if nil != err {
 		return
 	}
 
 	/* Permission Checking*/
 
 	/* Processing */
-	o := orm.NewOrm()
-
-	m := TblMessage{Id: mid}
-	if errT := o.Read(&m); nil != errT {
-		if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
-			return
-		}
-	}
 	// permission checking, only message receiver himself and administrator could access this message
 	if m.Receiver != uid {
 		if _, bAdmin := isAdministrator(uid); !bAdmin {
@@ -66,7 +60,6 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 	msg.Msg = m.Msg
 	msg.CreateTime = m.CreateTime.Local().String()[:19]
 
-	nilTime := time.Time{}
 	if nilTime != m.ReadTime {
 		msg.ReadTime = m.ReadTime.Local().String()[:19]
 	}
@@ -110,6 +103,58 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 	msg.House.Bathrooms = h.Bathrooms
 
 	beego.Debug(Fn, fmt.Sprintf("msg:%+v", msg))
+	return
+}
+
+/**
+*	set system message as readed
+*	Arguments:
+*		uid 	- logined user id
+*		mid 	- message id
+*	Returns
+*		err 	- error info
+**/
+func ReadMsg(uid, mid int64) (err error) {
+	Fn := "[ReadMsg] "
+	beego.Info(Fn, "login user:", uid, ", message:", mid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(Fn, err)
+		}
+	}()
+
+	/* Argument checking */
+	err, _ = GetUser(uid)
+	if nil != err {
+		return
+	}
+
+	err, m := getSysMsg(mid)
+	if nil != err {
+		return
+	}
+	if m.ReadTime != nilTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "message already readed"}
+		return
+	}
+
+	/* Permission Checking*/
+	if uid != m.Receiver {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user(%d) is not receiver(%d)", uid, m.Receiver)}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	m.ReadTime = time.Now()
+	numb, errT := o.Update(&m, "ReadTime")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to set message readed, err:%s", errT.Error())}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("%d messages set", numb))
+
 	return
 }
 
@@ -207,5 +252,56 @@ func addMessage(mt, pri int, refId, receiver int64, msg string) (err error, msg_
 	}
 
 	msg_id = nId
+	return
+}
+
+func getSysMsg(mid int64) (err error, m TblMessage) {
+	Fn := "[getSysMsg] "
+	beego.Info(Fn, "message:", mid)
+
+	if mid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid message id"}
+		return
+	}
+
+	o := orm.NewOrm()
+
+	msg := TblMessage{Id: mid}
+	if errT := o.Read(&msg); nil != errT {
+		if orm.ErrNoRows != errT && orm.ErrMissPK != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+		} else {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND}
+		}
+		return
+	}
+
+	m = msg
+	return
+}
+
+func unreadMsg(mid int64) (err error) {
+	Fn := "[UnreadMsg] "
+	beego.Info(Fn, "message:", mid)
+
+	err, m := getSysMsg(mid)
+	if nil != err {
+		return
+	}
+	if m.ReadTime == nilTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "message not readed"}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	m.ReadTime = nilTime
+	numb, errT := o.Update(&m, "ReadTime")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to set message readed, err:%s", errT.Error())}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("%d messages set", numb))
+
 	return
 }

@@ -16,6 +16,49 @@ type MsgController struct {
 func (m *MsgController) URLMapping() {
 	m.Mapping("GetNewMsgCount", m.GetNewMsgCount)
 	m.Mapping("GetSysMsg", m.GetSysMsg)
+	m.Mapping("ReadMsg", m.ReadMsg)
+}
+
+// @Title ReadMsg
+// @Description get system message by id
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/read [get]
+func (this *MsgController) ReadMsg() {
+	FN := "[ReadMsg] "
+	beego.Warn("[--- API: ReadMsg ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "uid:", uid)
+
+	mid, _ := this.GetInt64(":id")
+
+	/*
+	 *	Processing
+	 */
+	err = models.ReadMsg(uid, mid)
+	if nil == err {
+	}
 }
 
 // @Title GetSysMsg

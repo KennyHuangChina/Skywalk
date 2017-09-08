@@ -33,11 +33,11 @@
 	  		* ErrDesc			string		// error description
 
 ##
-### 3. Read New Event (TODO)
-	[Security]	private. Only the event receiver could set the read status
+### 3. Read New message
+	[Security]	private. Only the message receiver could set the read status
 	[Request]
-  		* PUT /v1/event/:id/read
-	  		* :id				int 		// event id
+  		* PUT /v1/sysmsg/:id/read
+	  		* :id				int 		// message id
 	[Response]
 		* SUCCESS:200
 		* ERR: 4XX,5XX
@@ -49,17 +49,17 @@
 	[Security]	private
 	[Request]
   		* GET /v1/sysmsg/:id
-	  		* :id				int 		// event id
+	  		* :id				int 		// message id
 	[Response]
 		* SUCCESS:200
 			* Msg
-				* Id 			int 		// event id 
+				* Id 			int 		// message id 
 				* Type			int			// message type. 1 - House Certification. 2 - Planed House Watch
 				* Receiver		int			// message receiver
 				* Priority		int			// message priority. 0 - info. 1 - Warning. 2 - Error
 				* Msg			string		// message text
-				* CreateTime	string		// Event create time
-				* ReadTime		string		// Event read time
+				* CreateTime	string		// message create time
+				* ReadTime		string		// message read time
 				* House
 					* HouseId		int 		// house id
 					* Property		string		// property name
