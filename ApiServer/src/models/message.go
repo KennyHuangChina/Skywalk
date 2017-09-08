@@ -61,6 +61,7 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 	// message info
 	msg.Id = m.Id
 	msg.Type = m.Type
+	msg.Receiver = m.Receiver
 	msg.Priority = m.Priority
 	msg.Msg = m.Msg
 	msg.CreateTime = m.CreateTime.Local().String()[:19]

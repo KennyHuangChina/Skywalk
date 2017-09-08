@@ -297,6 +297,7 @@ type MsgHouse struct {
 type SysMessage struct {
 	Id         int64
 	Type       int // MSG_XXX
+	Receiver   int64
 	Priority   int // MSG_PRIORITY_xxx
 	Msg        string
 	CreateTime string
