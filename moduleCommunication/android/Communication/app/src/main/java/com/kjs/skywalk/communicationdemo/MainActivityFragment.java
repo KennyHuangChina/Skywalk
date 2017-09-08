@@ -90,11 +90,11 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
 //                                    Integer.parseInt(mEditText1.getText().toString()),
 //                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
-        CmdMgr.AddFacilityType(mEditText.getText().toString());
+//        CmdMgr.AddFacilityType(mEditText.getText().toString());
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
 //
-//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "177X", "2305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
-//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "178X", "1305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
+        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
 //        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
@@ -116,9 +116,9 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
-        CmdMgr.GetNewMsgCount();
+//        CmdMgr.GetNewMsgCount();
 //        CmdMgr.GetHouseNewEvent();
-//        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
@@ -180,8 +180,7 @@ public class MainActivityFragment extends Fragment
         {
             @Override
             public void onClick(View v)
-            {
-                mResultString = "";
+            {mResultString = "";
                 mTextViewResult.setText("");
                 doTestGetList();
             }
