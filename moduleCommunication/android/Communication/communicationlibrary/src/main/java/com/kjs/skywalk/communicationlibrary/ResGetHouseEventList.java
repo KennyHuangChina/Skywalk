@@ -88,7 +88,7 @@ class ResGetHouseEventList extends ResBase implements IApiResults.IResultList {
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         //
-        class EventInfo extends HouseEventInfo implements InternalDefines.IListItemInfoInner {
+        class EventInfo extends SysMsgInfo implements InternalDefines.IListItemInfoInner {
 
             EventInfo(JSONObject jsonObject) {
                 super(jsonObject);
@@ -96,16 +96,16 @@ class ResGetHouseEventList extends ResBase implements IApiResults.IResultList {
             @Override
             public String ListItemInfo2String() {
                 String dbString = "";
-                dbString += " id: " + mEventId;
-                dbString += ", Hosue id: " + mHouseId;
+                dbString += " id: " + mMsgId;
                 dbString += "  Property: " + mProperty;
                 dbString += ", " + mBuilding + "栋 " + mHouseNo + "室";
-                dbString += ", Sender: " + mSender + ", Receiver:" + mReceiver;
-                dbString += ", Create: " + mCreateTime;
-                dbString += ", Read: " + mReadTime;
-                dbString += ", Type: " + mType;
-                dbString += ", Desc: " + mDesc;
-                dbString += ", Proc: " + mProcCount;
+                // TODO:
+//                dbString += ", Sender: " + mSender + ", Receiver:" + mReceiver;
+//                dbString += ", Create: " + mCreateTime;
+//                dbString += ", Read: " + mReadTime;
+//                dbString += ", Type: " + mType;
+//                dbString += ", Desc: " + mDesc;
+//                dbString += ", Proc: " + mProcCount;
 
                 return dbString;
             }

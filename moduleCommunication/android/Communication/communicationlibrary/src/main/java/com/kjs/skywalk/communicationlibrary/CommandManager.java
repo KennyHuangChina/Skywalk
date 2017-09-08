@@ -669,13 +669,6 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHouseEventInfo(int event_id) {
-        CommunicationBase op = new CmdGetHouseEventInfo(mContext, event_id);
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(op, pMap);
-    }
-
-    @Override
     public int GetHouseEventProcList(int event_id) {
         CommunicationBase op = new CmdGetHouseEventProcList(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -705,6 +698,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     @Override
     public int GetNewMsgCount() {
         CommunicationBase op = new CmdGetNewMsgCount(mContext);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
+    public int GetSysMsgInfo(int event_id) {
+        CommunicationBase op = new CmdGetSysMsgInfo(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
