@@ -71,12 +71,12 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.EditHouseFacility(Integer.parseInt(mEditText.getText().toString()),
 //                Integer.parseInt(mEditText1.getText().toString()),
 //                Integer.parseInt(mEditText2.getText().toString()), "");
-//        CmdMgr.ReadNewEvent(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.ReadNewMsg(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
-        CmdMgr.MofidyAgency(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-                Integer.parseInt(mEditText2.getText().toString()), 2016);
-        CmdMgr.SetHouseShowtime(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-                Integer.parseInt(mEditText2.getText().toString()), mEditText1.getText().toString() + mEditText2.getText().toString());
+//        CmdMgr.MofidyAgency(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+//                Integer.parseInt(mEditText2.getText().toString()), 2016);
+//        CmdMgr.SetHouseShowtime(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+//                Integer.parseInt(mEditText2.getText().toString()), mEditText1.getText().toString() + mEditText2.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, "57", "1606", 35, 16, 2, 4, 3, 17788, false, true, 3, "2017-06-08");

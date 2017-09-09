@@ -9,25 +9,25 @@ import java.util.HashMap;
  * Created by kenny on 2017/5/16.
  */
 
-class CmdNewEventRead extends CommunicationBase {
-    private int mEventId = 0;
+class CmdNewMsgRead extends CommunicationBase {
+    private int mMsgId = 0;
 
-    CmdNewEventRead(Context context, int eventId) {
-        super(context, CommunicationInterface.CmdID.CMD_READ_NEW_EVENT);
+    CmdNewMsgRead(Context context, int msgId) {
+        super(context, CommunicationInterface.CmdID.CMD_READ_NEW_MSG);
         mMethodType = "PUT";
-        mEventId = eventId;
+        mMsgId = msgId;
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/event/"+ mEventId + "/read";
+        mCommandURL = "/v1/sysmsg/"+ mMsgId + "/read";
         return mCommandURL;
     }
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if (mEventId <= 0) {
-            Log.e(TAG, "event:" + mEventId);
+        if (mMsgId <= 0) {
+            Log.e(TAG, "msg:" + mMsgId);
             return false;
         }
         return true;
