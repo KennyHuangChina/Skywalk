@@ -381,7 +381,7 @@ func init() {
 		beego.ControllerComments{
 			Method: "ReadMsg",
 			Router: `/:id/read`,
-			AllowHTTPMethods: []string{"get"},
+			AllowHTTPMethods: []string{"put"},
 			Params: nil})
 
 	beego.GlobalControllerRouter["ApiServer/controllers:MsgController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:MsgController"],

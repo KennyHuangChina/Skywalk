@@ -23,7 +23,7 @@ func (m *MsgController) URLMapping() {
 // @Description get system message by id
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /:id/read [get]
+// @router /:id/read [put]
 func (this *MsgController) ReadMsg() {
 	FN := "[ReadMsg] "
 	beego.Warn("[--- API: ReadMsg ---]")
@@ -49,6 +49,7 @@ func (this *MsgController) ReadMsg() {
 	if nil != err {
 		return
 	}
+	// uid = 10
 	beego.Debug(FN, "uid:", uid)
 
 	mid, _ := this.GetInt64(":id")
