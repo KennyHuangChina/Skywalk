@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -106,6 +107,25 @@ public class PhotoPickerActivity extends AppCompatActivity {
         return true;
       }
     });
+
+    // new title bar
+      findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              onBackPressed();
+          }
+      });
+
+      findViewById(R.id.tv_finish).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              Intent intent = new Intent();
+              ArrayList<String> selectedPhotos = pickerFragment.getPhotoGridAdapter().getSelectedPhotoPaths();
+              intent.putStringArrayListExtra(KEY_SELECTED_PHOTOS, selectedPhotos);
+              setResult(RESULT_OK, intent);
+              finish();
+          }
+      });
 
   }
 
