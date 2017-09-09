@@ -67,6 +67,13 @@ public class Activity_ApartmentList extends SKBaseActivity {
             }
         });
 
+        //loadDataFromServer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.reset();
         loadDataFromServer();
     }
 
