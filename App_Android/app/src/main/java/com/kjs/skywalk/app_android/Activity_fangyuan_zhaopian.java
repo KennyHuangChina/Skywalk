@@ -202,29 +202,46 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
         ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).updateSelectMode(isSelectMode);
+        updateStatus();
     }
 
     private void updateStatus() {
         int total_select_count = 0;
         int select_count = ((PicFragStatePageAdapter)mVPHuXing.getAdapter()).getSelectCount();
         int total = mHuXingPicLst.size();
-        mTvStatus1.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus1.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus1.setText("(" + total + ")");
+        }
 
         select_count = ((PicFragStatePageAdapter)mVpFangJianJieGou.getAdapter()).getSelectCount();
         total = mFangJianJieGouPicLst.size();
-        mTvStatus2.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus2.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus2.setText("(" + total + ")");
+        }
 
         select_count = ((PicFragStatePageAdapter)mVpJiaJuYongPin.getAdapter()).getSelectCount();
         total = mJiaJuYongPinPicLst.size();
-        mTvStatus3.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus3.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus3.setText("(" + total + ")");
+        }
 
         select_count = ((PicFragStatePageAdapter)mVpDianQi.getAdapter()).getSelectCount();
         total = mDianQiPicLst.size();
-        mTvStatus4.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus4.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus4.setText("(" + total + ")");
+        }
 
         if (total_select_count > 0) {
             mTvDelete.setEnabled(true);
