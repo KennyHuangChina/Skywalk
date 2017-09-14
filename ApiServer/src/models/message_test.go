@@ -176,3 +176,71 @@ func Test_GetSysMsg(t *testing.T) {
 		return
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetNewMsgList --
+//
+func Test_GetNewMsgList(t *testing.T) {
+	t.Log("Test GetNewMsgList")
+	seq := 0
+
+	// user
+	xid := []int64{-1, 0, 100000000}                                   //, 9, 6}
+	xdesc := []string{"not login", "is system user", "does not exist"} //, "is not receiver", "is not receiver"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) %s", seq, v, xdesc[k]))
+		if e, _, _ := GetNewMsgList(v, 0, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// fetch range
+	xid = []int64{-1, 0}
+	xid1 := []int64{0, -1}
+	xdesc = []string{"begin < 0", "count < 0"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Fetch range(%d, %d) %s", seq, v, xid1[k], xdesc[k]))
+		if e, _, _ := GetNewMsgList(4, v, xid1[k]); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// testing
+	xid = []int64{4, 5, 10}
+	xid1 = []int64{1, 0, 1}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) has %d new messages", seq, v, xid1[k]))
+		e, total, _ := GetNewMsgList(v, 0, 0)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if total != xid1[k] {
+			t.Error("total is", total)
+			return
+		}
+	}
+
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) has %d new messages", seq, v, xid1[k]))
+		e, total, _ := GetNewMsgList(v, 0, xid1[k])
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if total != xid1[k] {
+			t.Error("total is", total)
+			return
+		}
+	}
+
+	return
+
+}

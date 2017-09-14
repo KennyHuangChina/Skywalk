@@ -12,6 +12,61 @@ import (
 var nilTime time.Time
 
 /**
+*	Get new system message list
+*	Arguments:
+*		uid 	- logined user id
+*		bgn 	- fetch begin position, zero-based
+*		cnt		- how many recrods want to fetch
+*	Returns
+*		err 	- error info
+*		mst		- system message
+**/
+func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
+	Fn := "[GetNewMsgList] "
+	beego.Info(Fn, fmt.Sprintf("login user:%d, fetch(%d - %d)", uid, bgn, cnt))
+
+	defer func() {
+		if nil != err {
+			beego.Error(Fn, err)
+		}
+	}()
+
+	/* Argument checking */
+	// GetNewMsgCount will check the login user inside
+	// if err, _ = GetUser(uid); nil != err {
+	// 	return
+	// }
+	if bgn < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid begin position"}
+		return
+	}
+	if cnt < 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid fetch count"}
+		return
+	}
+
+	/* Processing */
+	err, tn := GetNewMsgCount(uid)
+	if nil != err {
+		return
+	}
+
+	total = tn
+	if 0 == cnt { // user just want to fetch the total number of new message
+		return
+	}
+	// beego.Debug(Fn, fmt.Sprintf("total %d new messages found", total))
+
+	if 0 == total { // there is no new message for login user
+		return
+	}
+
+	beego.Warning(Fn, "TODO ...")
+
+	return
+}
+
+/**
 *	Get system message by id
 *	Arguments:
 *		uid 	- logined user id

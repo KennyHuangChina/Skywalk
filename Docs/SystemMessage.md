@@ -1,4 +1,4 @@
-# Event APIs
+# System Message APIs
 
 ##
 ### 1. Get new message count
@@ -13,21 +13,33 @@
 	  		* ErrDesc		string		// error description
 
 ##
-### 2. Get new message info by house (TODO)
+### 2. Get new message list (Ongoing...)
 	[Security]	private
 	[Request]
-  		* GET /v1/event/houses
+  		* GET /v1/sysmsg/newmsgs?bgn=<>&cnt=<>&ff=<>
+	  		* bgn			int 	// from where to begin fetch. zero-based
+	  		* cnt			int		// how many records try to fetch
+	  		* ff			int		// full fetch? 1: yes(msg info), 0: no(id only)
 	[Response]
 		* SUCCESS:200 
-			* Houses				array
-				* HouseId		int 		// house id
-				* Property		string		// property name
-				* Building		int			// bulding number
-				* HouseNo		string		// house number
-				* Picture		int			// picture id
-				* EventCnt		int			// new event number
-				* Time			string		// newest event time
-				* Desc			string		// newest event description
+			* Total				int 		// total number
+			* Count				int			// actual fetched number
+			* Msg
+				* Id 			int 		// message id 
+				* Type			int			// message type. 1 - House Certification. 2 - Planed House Watch
+				* Receiver		int			// message receiver
+				* Priority		int			// message priority. 0 - info. 1 - Warning. 2 - Error
+				* Msg			string		// message text
+				* CreateTime	string		// message create time
+				* ReadTime		string		// message read time
+				* House
+					* HouseId		int 		// house id
+					* Property		string		// property name
+					* BuildingNo	int			// building number
+					* HouseNo		string		// house number
+					* Livingrooms	int			// livingroom quantity
+					* Bedrooms		int			// bedroom quantity
+					* Bathrooms		int			// bathroom quantity 
 		* ERR: 4XX,5XX
 	  		* ErrCode			int			// error code
 	  		* ErrDesc			string		// error description

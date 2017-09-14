@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	// "ApiServer/commdef"
+	"ApiServer/commdef"
 	// "encoding/base64"
 	// "fmt"
 	"github.com/astaxie/beego"
@@ -17,6 +17,64 @@ func (m *MsgController) URLMapping() {
 	m.Mapping("GetNewMsgCount", m.GetNewMsgCount)
 	m.Mapping("GetSysMsg", m.GetSysMsg)
 	m.Mapping("ReadMsg", m.ReadMsg)
+	m.Mapping("GetNewMsgList", m.GetNewMsgList)
+}
+
+// @Title GetNewMsgList
+// @Description get system message list
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /newmsgs [get]
+func (this *MsgController) GetNewMsgList() {
+	FN := "[GetNewMsgList] "
+	beego.Warn("[--- API: GetNewMsgList ---]")
+
+	var result ResGetSysMsgList
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	beego.Debug(FN, "uid:", uid)
+
+	bgn, _ := this.GetInt64("bgn")
+	cnt, _ := this.GetInt64("cnt")
+	ff, _ := this.GetInt("ff")
+
+	/*
+	 *	Processing
+	 */
+	err, total, ids := models.GetNewMsgList(uid, bgn, cnt)
+	if nil == err {
+		result.Total = total
+		result.Count = int64(len(ids))
+
+		for _, v := range ids {
+			msg := commdef.SysMessage{Id: v}
+			if ff > 0 {
+				if err, msg = models.GetSysMsg(uid, v); nil != err {
+					break
+				}
+			}
+			result.Msgs = append(result.Msgs, msg)
+		}
+		// result.Msg = msg
+	}
 }
 
 // @Title ReadMsg
