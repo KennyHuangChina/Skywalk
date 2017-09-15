@@ -192,8 +192,6 @@ public class CommunicationInterface {
         //          Event
         int GetHouseNewEvent();                                 // CMD_GET_HOUSE_NEW_EVENTS,    IApiResults.IResultList(IApiResults.IHouseNewEvent)
         int GetHouseEventProcList(int event_id);                // CMD_GET_EVENT_PROC_LST,      IApiResults.IResultList(IApiResults.IEventProcInfo)
-        int GetHouseEventList(int house_id, int stat, int type, // CMD_GET_HOUSE_EVENT_LST,     IApiResults.IResultList(IApiResults.IHouseEventInfo)
-                              int posi_bgn, int fetch_cnt, boolean bIDO);
         int ModifyHouseEvent(int event_id, String desc);        // CMD_MODIFY_HOUSE_EVENT,      IApiResults.ICommon
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +214,16 @@ public class CommunicationInterface {
         *   Result  : IApiResults.ICommon
          */
         int ReadNewMsg(int msg_id);
+
+        /*
+        *   CMD : CMD_GET_SYSTEM_MSG_LST
+        *       posi_bgn  : begin position to fetch
+        *       fetch_cnt : how many records want to fetch
+        *       ido       : true  - only fetch message id;
+        *                   false - fetch whole message info
+        *   Result : IApiResults.IResultList(IApiResults.ISysMsgInfo)
+         */
+        int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -328,7 +336,6 @@ public class CommunicationInterface {
         // Event. TODO: to be removed, replaced by system message
         final public static int CMD_GET_HOUSE_NEW_EVENTS      = 0x7002,
                                 CMD_GET_EVENT_PROC_LST        = 0x7005,
-                                CMD_GET_HOUSE_EVENT_LST       = 0x7006,
                                 CMD_MODIFY_HOUSE_EVENT        = 0x7007;
 
         // Appointment
@@ -342,7 +349,8 @@ public class CommunicationInterface {
         // System Message
         final public static int CMD_GET_NEW_MSG_CNT         = 0xA001,
                                 CMD_GET_MSG_INFO            = 0xA002,
-                                CMD_READ_NEW_MSG            = 0xA003;
+                                CMD_READ_NEW_MSG            = 0xA003,
+                                CMD_GET_SYSTEM_MSG_LST      = 0xA004;
 
         public static int CMD_TEST                   = 0x0001;
 
@@ -408,13 +416,13 @@ public class CommunicationInterface {
             // Event
             cmdMap.put(CMD_GET_HOUSE_NEW_EVENTS,    "CMD_GET_HOUSE_NEW_EVENTS");
             cmdMap.put(CMD_GET_EVENT_PROC_LST,      "CMD_GET_EVENT_PROC_LST");
-            cmdMap.put(CMD_GET_HOUSE_EVENT_LST,     "CMD_GET_HOUSE_EVENT_LST");
             cmdMap.put(CMD_MODIFY_HOUSE_EVENT,      "CMD_MODIFY_HOUSE_EVENT");
 
             // System Message
             cmdMap.put(CMD_GET_NEW_MSG_CNT,         "CMD_GET_NEW_MSG_CNT");
             cmdMap.put(CMD_GET_MSG_INFO,            "CMD_GET_MSG_INFO");
             cmdMap.put(CMD_READ_NEW_MSG,            "CMD_READ_NEW_MSG");
+            cmdMap.put(CMD_GET_SYSTEM_MSG_LST,      "CMD_GET_SYSTEM_MSG_LST");
 
             // Appointment
             cmdMap.put(CMD_APPOINT_SEE_HOUSE,       "CMD_APPOINT_SEE_HOUSE");

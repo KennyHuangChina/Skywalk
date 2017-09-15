@@ -144,7 +144,7 @@ class ResGetSysMsgInfo extends ResBase implements IApiResults.ISysMsgInfo {
     }
 }
 
-class SysMsgInfo implements IApiResults.ISysMsgInfo {
+class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemInfoInner {
     protected int      mMsgId       = 0;    // message id
     protected int      mMsgType     = -1;   // message type
     protected int      mMsgPriority = 0;    // message priority
@@ -262,5 +262,10 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo {
     @Override
     public String MsgBody() {
         return mMsgTxt;
+    }
+
+    @Override
+    public String ListItemInfo2String() {
+        return DebugString();
     }
 }

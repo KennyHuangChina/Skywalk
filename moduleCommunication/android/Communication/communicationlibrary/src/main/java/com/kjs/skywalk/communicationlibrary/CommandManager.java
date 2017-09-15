@@ -670,14 +670,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHouseEventList(int house_id, int stat, int type, int posi_bgn, int fetch_cnt, boolean bIDO) {
-        CommunicationBase op = new CmdGetHouseEventList(mContext, house_id);
+    public int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido) {
+        CommunicationBase op = new CmdGetSysMsgList(mContext, posi_bgn, fetch_cnt, ido);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_EVENT_STAT, String.valueOf(stat));
-        pMap.put(CommunicationParameterKey.CPK_EVENT_TYPE, String.valueOf(type));
-        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, String.valueOf(posi_bgn));
-        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, String.valueOf(fetch_cnt));
-        pMap.put(CommunicationParameterKey.CPK_EVENT_IDO, String.valueOf(bIDO));
         return execute(op, pMap);
     }
 
