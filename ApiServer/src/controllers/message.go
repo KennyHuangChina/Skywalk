@@ -17,17 +17,17 @@ func (m *MsgController) URLMapping() {
 	m.Mapping("GetNewMsgCount", m.GetNewMsgCount)
 	m.Mapping("GetSysMsg", m.GetSysMsg)
 	m.Mapping("ReadMsg", m.ReadMsg)
-	m.Mapping("GetNewMsgList", m.GetNewMsgList)
+	m.Mapping("GetMsgList", m.GetMsgList)
 }
 
-// @Title GetNewMsgList
+// @Title GetMsgList
 // @Description get system message list
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /newmsgs [get]
-func (this *MsgController) GetNewMsgList() {
-	FN := "[GetNewMsgList] "
-	beego.Warn("[--- API: GetNewMsgList ---]")
+// @router /lst [get]
+func (this *MsgController) GetMsgList() {
+	FN := "[GetMsgList] "
+	beego.Warn("[--- API: GetMsgList ---]")
 
 	var result ResGetSysMsgList
 	var err error
@@ -50,11 +50,11 @@ func (this *MsgController) GetNewMsgList() {
 	if nil != err {
 		return
 	}
-	beego.Debug(FN, "uid:", uid)
 
 	bgn, _ := this.GetInt64("bgn")
 	cnt, _ := this.GetInt64("cnt")
 	ff, _ := this.GetInt("ff")
+	beego.Debug(FN, "uid:", uid, ", ff:", ff)
 
 	/*
 	 *	Processing

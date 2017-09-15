@@ -13,10 +13,10 @@
 	  		* ErrDesc		string		// error description
 
 ##
-### 2. Get new message list (Ongoing...)
+### 2. Get new message list 
 	[Security]	private
 	[Request]
-  		* GET /v1/sysmsg/newmsgs?bgn=<>&cnt=<>&ff=<>
+  		* GET /v1/sysmsg/lst?bgn=<>&cnt=<>&ff=<>
 	  		* bgn			int 	// from where to begin fetch. zero-based
 	  		* cnt			int		// how many records try to fetch
 	  		* ff			int		// full fetch? 1: yes(msg info), 0: no(id only)
@@ -24,7 +24,7 @@
 		* SUCCESS:200 
 			* Total				int 		// total number
 			* Count				int			// actual fetched number
-			* Msg
+			* Msgs
 				* Id 			int 		// message id 
 				* Type			int			// message type. 1 - House Certification. 2 - Planed House Watch
 				* Receiver		int			// message receiver

@@ -46,6 +46,7 @@ func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
 	}
 
 	/* Processing */
+	// calculate total number
 	err, tn := GetNewMsgCount(uid)
 	if nil != err {
 		return
@@ -61,8 +62,21 @@ func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
 		return
 	}
 
-	beego.Warning(Fn, "TODO ...")
+	// fetch message ids
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_message").Filter("Receiver", uid).Filter("ReadTime__isnull", true).OrderBy("-Id")
+	qs = qs.Limit(cnt, bgn)
 
+	idlst := []TblMessage{}
+	_, errT := qs.All(&idlst)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	for _, v := range idlst {
+		ids = append(ids, v.Id)
+	}
 	return
 }
 
