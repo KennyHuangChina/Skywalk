@@ -12,18 +12,19 @@ import (
 var nilTime time.Time
 
 /**
-*	Get new system message list
+*	Get system message list
 *	Arguments:
 *		uid 	- logined user id
 *		bgn 	- fetch begin position, zero-based
 *		cnt		- how many recrods want to fetch
+*		nm		- new message?
 *	Returns
 *		err 	- error info
 *		mst		- system message
 **/
-func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
-	Fn := "[GetNewMsgList] "
-	beego.Info(Fn, fmt.Sprintf("login user:%d, fetch(%d - %d)", uid, bgn, cnt))
+func GetSysMsgList(uid, bgn, cnt int64, nm bool) (err error, total int64, ids []int64) {
+	Fn := "[GetSysMsgList] "
+	beego.Info(Fn, fmt.Sprintf("login user:%d, fetch(%d - %d), new message:%t", uid, bgn, cnt, nm))
 
 	defer func() {
 		if nil != err {
@@ -32,7 +33,7 @@ func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
 	}()
 
 	/* Argument checking */
-	// GetNewMsgCount will check the login user inside
+	// GetSysMsgCount will check the login user inside
 	// if err, _ = GetUser(uid); nil != err {
 	// 	return
 	// }
@@ -47,7 +48,7 @@ func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
 
 	/* Processing */
 	// calculate total number
-	err, tn := GetNewMsgCount(uid)
+	err, tn := GetSysMsgCount(uid, nm)
 	if nil != err {
 		return
 	}
@@ -64,8 +65,11 @@ func GetNewMsgList(uid, bgn, cnt int64) (err error, total int64, ids []int64) {
 
 	// fetch message ids
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_message").Filter("Receiver", uid).Filter("ReadTime__isnull", true).OrderBy("-Id")
-	qs = qs.Limit(cnt, bgn)
+	qs := o.QueryTable("tbl_message").Filter("Receiver", uid)
+	if nm {
+		qs = qs.Filter("ReadTime__isnull", true).OrderBy("-Id")
+	}
+	qs = qs.OrderBy("-Id").Limit(cnt, bgn)
 
 	idlst := []TblMessage{}
 	_, errT := qs.All(&idlst)
@@ -231,13 +235,14 @@ func ReadMsg(uid, mid int64) (err error) {
 *	Get new system message count
 *	Arguments:
 *		uid 	- logined user id
+*		nm		- only fetch new message?
 *	Returns
 *		err 	- error info
 *		nmc 	- new message count
 **/
-func GetNewMsgCount(uid int64) (err error, nmc int64) {
-	Fn := "[GetNewMsgCount] "
-	beego.Info(Fn, "login user:", uid)
+func GetSysMsgCount(uid int64, nm bool) (err error, nmc int64) {
+	Fn := "[GetSysMsgCount] "
+	beego.Info(Fn, "login user:", uid, ", new message:", nm)
 
 	defer func() {
 		if nil != err {
@@ -253,13 +258,16 @@ func GetNewMsgCount(uid int64) (err error, nmc int64) {
 
 	/* Processing */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_message").Filter("Receiver", uid).Filter("ReadTime__isnull", true)
+	qs := o.QueryTable("tbl_message").Filter("Receiver", uid)
+	if nm {
+		qs = qs.Filter("ReadTime__isnull", true)
+	}
 	cnt, errT := qs.Count()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
-	beego.Debug(Fn, fmt.Sprintf("%d new messages found", cnt))
+	beego.Debug(Fn, fmt.Sprintf("%d messages found", cnt))
 
 	nmc = cnt
 	return

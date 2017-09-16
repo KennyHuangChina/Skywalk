@@ -54,15 +54,24 @@ func (this *MsgController) GetMsgList() {
 	bgn, _ := this.GetInt64("bgn")
 	cnt, _ := this.GetInt64("cnt")
 	ff, _ := this.GetInt("ff")
-	beego.Debug(FN, "uid:", uid, ", ff:", ff)
+	nm, _ := this.GetInt("nm")
+	beego.Debug(FN, "uid:", uid, ", ff:", ff, ", nm:", nm)
 
 	/*
 	 *	Processing
 	 */
-	err, total, ids := models.GetNewMsgList(uid, bgn, cnt)
+	newMsg := false
+	if 0 != nm {
+		newMsg = true
+	}
+	err, total, ids := models.GetSysMsgList(uid, bgn, cnt, newMsg)
 	if nil == err {
 		result.Total = total
-		result.Count = int64(len(ids))
+		if cnt > 0 {
+			result.Count = int64(len(ids))
+		} else {
+			result.Count = -1
+		}
 
 		for _, v := range ids {
 			msg := commdef.SysMessage{Id: v}
@@ -198,7 +207,7 @@ func (this *MsgController) GetNewMsgCount() {
 	/*
 	 *	Processing
 	 */
-	err, nmsg := models.GetNewMsgCount(uid)
+	err, nmsg := models.GetSysMsgCount(uid, true)
 	if nil == err {
 		result.NewMsgCnt = nmsg
 	}

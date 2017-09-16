@@ -11,50 +11,40 @@ import (
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	-- GetNewMsgCount --
+//	-- GetSysMsgCount --
 //
-func Test_GetNewMsgCount(t *testing.T) {
-	t.Log("Test GetNewMsgCount")
+func Test_GetSysMsgCount(t *testing.T) {
+	t.Log("Test GetSysMsgCount")
 	seq := 0
 
+	// user
 	xid := []int64{-1, 0, 100000000}
 	xdesc := []string{"not login", "is system user", "does not exist"}
 	for k, v := range xid {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Permission: user(%d) %s", seq, v, xdesc[k]))
-		if e, _ := GetNewMsgCount(v); e == nil {
+		t.Log(fmt.Sprintf("<Case %d> User(%d) %s", seq, v, xdesc[k]))
+		if e, _ := GetSysMsgCount(v, true); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
 
-	u := int64(11)
-	seq++
-	t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) do not have new message", seq, u))
-	e, n := GetNewMsgCount(u)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
+	xid = []int64{4, 4, 5, 5, 10, 10, 11, 11}
+	xid1 := []bool{true, false, true, false, true, false, true, false}
+	xid2 := []int64{1, 1, 0, 1, 1, 1, 0, 0}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) have %d messages", seq, v, xid2[k]))
+		e, mc := GetSysMsgCount(v, xid1[k])
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if mc != xid2[k] {
+			t.Error("Failed, message count: ", mc)
+			return
+		}
 	}
-	if 0 != n {
-		t.Error(fmt.Sprintf("Failed, user(%d) has %d messages", u, n))
-		return
-	}
-
-	u = 4
-	seq++
-	t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) have new message", seq, u))
-	e, n = GetNewMsgCount(u)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 0 == n {
-		t.Error(fmt.Sprintf("Failed, user(%d) do not has messages", u))
-		return
-	}
-
-	// t.Error("TODO: ")
 
 	return
 }
@@ -179,10 +169,10 @@ func Test_GetSysMsg(t *testing.T) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	-- GetNewMsgList --
+//	-- GetSysMsgList --
 //
-func Test_GetNewMsgList(t *testing.T) {
-	t.Log("Test GetNewMsgList")
+func Test_GetSysMsgList(t *testing.T) {
+	t.Log("Test GetSysMsgList")
 	seq := 0
 
 	// user
@@ -191,7 +181,7 @@ func Test_GetNewMsgList(t *testing.T) {
 	for k, v := range xid {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> User(%d) %s", seq, v, xdesc[k]))
-		if e, _, _ := GetNewMsgList(v, 0, 0); e == nil {
+		if e, _, _ := GetSysMsgList(v, 0, 0, false); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -204,19 +194,20 @@ func Test_GetNewMsgList(t *testing.T) {
 	for k, v := range xid {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Fetch range(%d, %d) %s", seq, v, xid1[k], xdesc[k]))
-		if e, _, _ := GetNewMsgList(4, v, xid1[k]); e == nil {
+		if e, _, _ := GetSysMsgList(4, v, xid1[k], false); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
 
 	// testing
-	xid = []int64{4, 5, 10}
-	xid1 = []int64{1, 0, 1}
+	xid = []int64{4, 4, 5, 5, 10, 10}
+	x2 := []bool{true, false, true, false, true, false}
+	xid1 = []int64{1, 1, 0, 1, 1, 1}
 	for k, v := range xid {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) has %d new messages", seq, v, xid1[k]))
-		e, total, _ := GetNewMsgList(v, 0, 0)
+		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) has %d messages", seq, v, xid1[k]))
+		e, total, _ := GetSysMsgList(v, 0, 0, x2[k])
 		if e != nil {
 			t.Error("Failed, err: ", e)
 			return
@@ -225,12 +216,26 @@ func Test_GetNewMsgList(t *testing.T) {
 			t.Error("total is", total)
 			return
 		}
+
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) has %d messages", seq, v, xid1[k]))
+		e, total, ml := GetSysMsgList(v, 0, xid1[k], x2[k])
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if int64(len(ml)) != xid1[k] {
+			t.Error("fetched count:", len(ml))
+			return
+		}
 	}
+
+	return
 
 	for k, v := range xid {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Testing: user(%d) has %d new messages", seq, v, xid1[k]))
-		e, total, _ := GetNewMsgList(v, 0, xid1[k])
+		e, total, _ := GetSysMsgList(v, 0, xid1[k], false)
 		if e != nil {
 			t.Error("Failed, err: ", e)
 			return

@@ -13,13 +13,14 @@
 	  		* ErrDesc		string		// error description
 
 ##
-### 2. Get new message list 
+### 2. Get message list 
 	[Security]	private
 	[Request]
-  		* GET /v1/sysmsg/lst?bgn=<>&cnt=<>&ff=<>
+  		* GET /v1/sysmsg/lst?bgn=<>&cnt=<>&ff=<>&nm=<>
 	  		* bgn			int 	// from where to begin fetch. zero-based
 	  		* cnt			int		// how many records try to fetch
 	  		* ff			int		// full fetch? 1: yes(msg info), 0: no(id only)
+	  		* nm			int		// new message? 1: yes, only feth new message; 0: no, fetch all message
 	[Response]
 		* SUCCESS:200 
 			* Total				int 		// total number
