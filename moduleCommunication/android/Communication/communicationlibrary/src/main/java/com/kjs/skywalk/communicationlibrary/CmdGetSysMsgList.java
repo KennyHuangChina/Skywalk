@@ -14,13 +14,15 @@ import java.util.HashMap;
 class CmdGetSysMsgList extends CommunicationBase {
     private int mBegin      = 0;
     private int mFetchCnt   = 0;
-    private boolean mIDO    = false;    // if only fetch event id. true - fetch evvent id / false - fetch whole event info
+    private boolean mIDO    = false;    // if only fetch message id. true - fetch evvent id / false - fetch whole message info
+    private boolean mNMO    = false;    // if only fetch new message. true - only fetch new messages / false - fetch all messages
 
-    CmdGetSysMsgList(Context context, int bgn, int cnt, boolean ido) {
+    CmdGetSysMsgList(Context context, int bgn, int cnt, boolean ido, boolean nmo) {
         super(context, CommunicationInterface.CmdID.CMD_GET_SYSTEM_MSG_LST);
         mBegin      = bgn;
         mFetchCnt   = cnt;
         mIDO        = ido;
+        mNMO        = nmo;
     }
 
     @Override
@@ -49,6 +51,12 @@ class CmdGetSysMsgList extends CommunicationBase {
                 mArgu += "&";
             }
             mArgu += "ff=1";
+        }
+        if (mNMO) {
+            if (!mArgu.isEmpty()) {
+                mArgu += "&";
+            }
+            mArgu += "nm=1";
         }
         mRequestData += mArgu;
 

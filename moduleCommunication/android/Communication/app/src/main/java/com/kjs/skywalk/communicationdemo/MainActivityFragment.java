@@ -136,9 +136,9 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
 //        CmdMgr.GetUserHouseWatchList(0, mListTotal);
 //        GetHouseDigestList();
-        CmdMgr.GetSysMsgList(Integer.parseInt(mEditText.getText().toString()),
-                            Integer.parseInt(mEditText1.getText().toString()),
-                            Boolean.parseBoolean(mEditText.getText().toString()));
+        CmdMgr.GetSysMsgList(0, mListTotal,
+                            Boolean.parseBoolean(mEditText.getText().toString()),
+                            Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAgencyList(0, mListTotal);
 //        CmdMgr.GetHouseSeeAppointmentList(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
@@ -294,7 +294,7 @@ public class MainActivityFragment extends Fragment
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            if (CMD_APPOINT_HOUSE_SEE_LST == command) {
+            if (CMD_APPOINT_HOUSE_SEE_LST == command || command == CMD_GET_SYSTEM_MSG_LST) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -325,7 +325,7 @@ public class MainActivityFragment extends Fragment
                     mListTotal = 0;
                 }
             } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST ||
-                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
+                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST ) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;

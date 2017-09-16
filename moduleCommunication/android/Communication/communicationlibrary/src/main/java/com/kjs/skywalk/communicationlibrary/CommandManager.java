@@ -670,8 +670,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido) {
-        CommunicationBase op = new CmdGetSysMsgList(mContext, posi_bgn, fetch_cnt, ido);
+    public int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo) {
+        CommunicationBase op = new CmdGetSysMsgList(mContext, posi_bgn, fetch_cnt, ido, nmo);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }

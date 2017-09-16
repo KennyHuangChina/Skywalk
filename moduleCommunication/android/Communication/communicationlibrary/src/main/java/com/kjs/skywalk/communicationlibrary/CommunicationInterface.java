@@ -221,9 +221,11 @@ public class CommunicationInterface {
         *       fetch_cnt : how many records want to fetch
         *       ido       : true  - only fetch message id;
         *                   false - fetch whole message info
+        *       nmo       : true  - only fetch new messages
+        *                   false - fetch all messages
         *   Result : IApiResults.IResultList(IApiResults.ISysMsgInfo)
          */
-        int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido);
+        int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
