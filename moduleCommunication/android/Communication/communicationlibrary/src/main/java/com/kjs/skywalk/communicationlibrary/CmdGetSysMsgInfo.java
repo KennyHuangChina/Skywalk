@@ -11,24 +11,24 @@ import java.util.HashMap;
  * Created by kenny on 2017/5/16.
  */
 
-class CmdGetHouseEventInfo extends CommunicationBase {
-    private int mEventId = 0;
+class CmdGetSysMsgInfo extends CommunicationBase {
+    private int mMsgId = 0;
 
-    CmdGetHouseEventInfo(Context context, int eventId) {
-        super(context, CommunicationInterface.CmdID.CMD_GET_EVENT_INFO);
-        mEventId = eventId;
+    CmdGetSysMsgInfo(Context context, int msgId) {
+        super(context, CommunicationInterface.CmdID.CMD_GET_MSG_INFO);
+        mMsgId = msgId;
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/event/"+ mEventId;
+        mCommandURL = "/v1/sysmsg/"+ mMsgId;
         return mCommandURL;
     }
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if (mEventId <= 0) {
-            Log.e(TAG, "event:" + mEventId);
+        if (mMsgId <= 0) {
+            Log.e(TAG, "message:" + mMsgId);
             return false;
         }
         return true;
@@ -36,7 +36,7 @@ class CmdGetHouseEventInfo extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResGetEventInfo result = new ResGetEventInfo(nErrCode, jObject);
+        ResGetSysMsgInfo result = new ResGetSysMsgInfo(nErrCode, jObject);
         return result;
     }
 }

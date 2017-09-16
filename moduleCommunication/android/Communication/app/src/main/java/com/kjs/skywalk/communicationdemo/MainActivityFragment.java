@@ -71,12 +71,12 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.EditHouseFacility(Integer.parseInt(mEditText.getText().toString()),
 //                Integer.parseInt(mEditText1.getText().toString()),
 //                Integer.parseInt(mEditText2.getText().toString()), "");
-//        CmdMgr.ReadNewEvent(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.ReadNewMsg(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.ModifyHouseEvent(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
-        CmdMgr.MofidyAgency(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-                Integer.parseInt(mEditText2.getText().toString()), 2016);
-        CmdMgr.SetHouseShowtime(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
-                Integer.parseInt(mEditText2.getText().toString()), mEditText1.getText().toString() + mEditText2.getText().toString());
+//        CmdMgr.MofidyAgency(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+//                Integer.parseInt(mEditText2.getText().toString()), 2016);
+//        CmdMgr.SetHouseShowtime(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()),
+//                Integer.parseInt(mEditText2.getText().toString()), mEditText1.getText().toString() + mEditText2.getText().toString());
     }
     private void doTestModifyApi_ModifyHouse(CommandManager CmdMgr) {
         CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(6, 2, "57", "1606", 35, 16, 2, 4, 3, 17788, false, true, 3, "2017-06-08");
@@ -90,11 +90,11 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
 //                                    Integer.parseInt(mEditText1.getText().toString()),
 //                                    Integer.parseInt(mEditText2.getText().toString()), "交付物说明");
-        CmdMgr.AddFacilityType(mEditText.getText().toString());
+//        CmdMgr.AddFacilityType(mEditText.getText().toString());
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
 //
-//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "177X", "2305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
-//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "178X", "1305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
+        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
 //        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
@@ -112,13 +112,13 @@ public class MainActivityFragment extends Fragment
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
+//        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
-//        CmdMgr.GetNewEventCount();
+//        CmdMgr.GetNewMsgCount();
 //        CmdMgr.GetHouseNewEvent();
-//        CmdMgr.GetHouseEventInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
@@ -135,7 +135,10 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
 //        CmdMgr.GetUserHouseWatchList(0, mListTotal);
-        GetHouseDigestList();
+//        GetHouseDigestList();
+        CmdMgr.GetSysMsgList(0, mListTotal,
+                            Boolean.parseBoolean(mEditText.getText().toString()),
+                            Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAgencyList(0, mListTotal);
 //        CmdMgr.GetHouseSeeAppointmentList(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
@@ -180,8 +183,7 @@ public class MainActivityFragment extends Fragment
         {
             @Override
             public void onClick(View v)
-            {
-                mResultString = "";
+            {mResultString = "";
                 mTextViewResult.setText("");
                 doTestGetList();
             }
@@ -292,7 +294,7 @@ public class MainActivityFragment extends Fragment
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            if (CMD_APPOINT_HOUSE_SEE_LST == command) {
+            if (CMD_APPOINT_HOUSE_SEE_LST == command || command == CMD_GET_SYSTEM_MSG_LST) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -323,7 +325,7 @@ public class MainActivityFragment extends Fragment
                     mListTotal = 0;
                 }
             } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST ||
-                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
+                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST ) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
