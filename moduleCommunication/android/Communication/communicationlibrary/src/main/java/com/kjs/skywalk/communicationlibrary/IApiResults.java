@@ -204,9 +204,9 @@ public class IApiResults {
         String  GetChecksum();
     }
 
-    // command: GetNewEventCount
-    public interface INewEventCount {
-        int     GetNewEventCount();
+    // command: GetNewMsgCount
+    public interface INewMsgCount {
+        int     GetNewMsgCount();
     }
 
     // command: CmdGetHouseNewEvent
@@ -221,20 +221,21 @@ public class IApiResults {
         String  GetDescription();
     }
 
-    // command: CmdGetHouseEventInfo, CmdGetHouseEventList
-    public interface IHouseEventInfo {
-        int     EventId();      // event id
-        int     HouseId();      // house id
+    // command: CMD_GET_MSG_INFO, CmdGetHouseEventList
+    public interface ISysMsgInfo {
+        int     MsgId();        // message id
+        int     MsgType();      // message type. 1 - House Certification. 2 - Planed House Watch
+        int     MsgPriority();  // message priority. 0 - info. 1 - Warning. 2 - Error
         String  Property();     // property name
-        int     BuildingNo();   // the building number the house belong to
+        String  BuildingNo();   // the building number the house belong to
         String  HouseNo();      // exact house number. like house 1305#
-        String  Sender();       // people who send the event
+        int     Livingrooms();  // how many livingrooms
+        int     Bedrooms();     // how many bedrooms
+        int     Bathrooms();    // bathrooms
         String  Receiver();     // people who the event send to
         String  CreateTime();   // exact time when the event created
         String  ReadTime();     // exact time when the event get readed
-        String  EventType();    // event type
-        String  EventDesc();    // event description
-        int     ProcCnt();      // how many procs follows the event
+        String  MsgBody();      // message text
     }
 
     // command: CmdGetHouseEventProcList

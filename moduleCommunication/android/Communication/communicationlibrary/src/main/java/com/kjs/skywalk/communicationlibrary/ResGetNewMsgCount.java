@@ -7,10 +7,10 @@ import org.json.JSONObject;
  * Created by kenny on 2017/5/14.
  */
 
-class ResGetNewEventCount extends ResBase implements IApiResults.INewEventCount {
-    private int mNewEventCount = 0;
+class ResGetNewMsgCount extends ResBase implements IApiResults.INewMsgCount {
+    private int mNewMsgCount = 0;
 
-    ResGetNewEventCount(int nErrCode, JSONObject jObject) {
+    ResGetNewMsgCount(int nErrCode, JSONObject jObject) {
         super(nErrCode);
         parse(jObject);
     }
@@ -19,14 +19,14 @@ class ResGetNewEventCount extends ResBase implements IApiResults.INewEventCount 
     public String DebugString() {
         super.DebugString();
 
-        mString += "  new event: " + mNewEventCount + "\n";
+        mString += "  new event: " + mNewMsgCount + "\n";
         return mString;
     }
 
     @Override
     protected int parseResult(JSONObject obj) {
         try {
-            mNewEventCount = obj.getInt("NewEvent");
+            mNewMsgCount = obj.getInt("NewMsgCnt");
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
@@ -36,7 +36,7 @@ class ResGetNewEventCount extends ResBase implements IApiResults.INewEventCount 
     }
 
     @Override
-    public int GetNewEventCount() {
-        return mNewEventCount;
+    public int GetNewMsgCount() {
+        return mNewMsgCount;
     }
 }
