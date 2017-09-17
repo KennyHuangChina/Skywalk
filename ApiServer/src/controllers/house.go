@@ -29,6 +29,8 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHousePrice", h.GetHousePrice)
 
 	h.Mapping("CertHouse", h.CertHouse)
+	h.Mapping("GetHouseCertHist", h.GetHouseCertHist)
+
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
@@ -211,6 +213,52 @@ func (this *HouseController) SetHousePrice() {
 	err, pid := models.SetHousePrice(hid, uid, rental_tp, rental_bp, price_tp, price_bp, prop_fee)
 	if nil == err {
 		result.Id = pid
+	}
+
+	return
+}
+
+// @Title GetHouseCertHist
+// @Description get house certification history
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/certhist [get]
+func (this *HouseController) GetHouseCertHist() {
+	FN := "[GetHouseCertHist] "
+	beego.Warn("[--- API: GetHouseCertHist ---]")
+
+	var result ResGetHouseCertHist
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+
+	/*
+	 *	Processing
+	 */
+	err, hcs := models.GetHouseCertHist(hid, uid)
+	if nil == err {
+		result.Total = len(hcs)
+		result.Count = len(hcs)
+		result.CertHist = hcs
 	}
 
 	return

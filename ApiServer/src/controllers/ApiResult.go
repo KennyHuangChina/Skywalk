@@ -242,6 +242,14 @@ type ResGetHousePicList struct {
 	Pics  []commdef.HousePicture
 }
 
+// result of API get house certification history
+type ResGetHouseCertHist struct {
+	ResCommon
+	Total    int
+	Count    int
+	CertHist []commdef.HouseCert
+}
+
 /************************************************************************************
 *
 *		Functions

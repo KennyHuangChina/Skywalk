@@ -116,6 +116,16 @@ const (
 	HOUSE_CERT_STAT_FAILED  = 3 // house certification failed
 )
 
+type HouseCert struct {
+	Id      int64
+	Uid     int64
+	User    string
+	Phone   string
+	Time    string
+	Stat    int
+	CertTxt string
+}
+
 type HousePrice struct {
 	Id           int64
 	RentalTag    int    // rental, tag price

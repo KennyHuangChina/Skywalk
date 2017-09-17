@@ -17,7 +17,7 @@ var nilTime time.Time
 *		uid 	- logined user id
 *		bgn 	- fetch begin position, zero-based
 *		cnt		- how many recrods want to fetch
-*		nm		- new message?
+*		nm		- new message only?
 *	Returns
 *		err 	- error info
 *		mst		- system message
