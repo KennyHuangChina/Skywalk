@@ -39,21 +39,10 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 	}
 
 	/* Permission checking */
-	// 	1. landlord, house agency and administrator could get the house certification hist
-	//	2. landload could see the private info of himeself and agency and administrator, like phone number
-	//	3. house agency and administrator could see the private info
-	//	4.
+	// Only the person who can SEE the house info could get the certificate history of the house
 	if err = canAccessHouse(uid, hid); nil != err {
 		return
 	}
-
-	// canModifyHouse(uid, hid)
-	// if isHouseAgency(h, uid) {
-	// } else if _, bAdmin := isAdministrator(uid); bAdmin {
-	// } else {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
-	// 	return
-	// }
 
 	// Processing
 	o := orm.NewOrm()
@@ -63,29 +52,44 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 				WHERE c.who=u.id AND house=?`
 
 	cs := []commdef.HouseCert{}
-	errT := o.Raw(sql, hid).QueryRow(&cs)
+	_, errT := o.Raw(sql, hid).QueryRows(&cs)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
 
-	for k, v := range cs {
-		v.Uid = 0
+	// Only the landlord and agency(including house agency, other agency, admin) could go here
+	bLoginLandlord := isHouseOwner(h, uid)
+	beego.Debug(Fn, "login user is landlord?", bLoginLandlord)
+
+	for _, v := range cs {
+		// beego.Debug(Fn, fmt.Sprintf("v:%+v", v))
+		// there are 3 kind of roles in hist records: landlord, ex-landlord, agency(including administrator)
+		// landlord could see the agency's phone number
+		// agency(including admin) could see the current landlord's phone number
+		bHidePrivateInfo := false
+		if v.Uid == uid { // login user himself, do not need to see phone number, no matter who he is, landlord or agency
+			bHidePrivateInfo = true
+		} else {
+			if bLoginLandlord { // login user is current landlord
+				if _, bAgency := isAgency(v.Uid); !bAgency {
+					bHidePrivateInfo = true
+				}
+			} else { // login user is agency who can see this house
+				// if isHouseOwner(h, v.Uid) {
+				// 	bHidePrivateInfo = true
+				// }
+			}
+		}
+		// bHidePrivateInfo = true
+
+		if bHidePrivateInfo {
+			v.Uid = 0
+			v.Phone = ""
+		}
+		beego.Debug(Fn, fmt.Sprintf("v:%+v", v))
+		hcs = append(hcs, v)
 	}
-
-	// qs := o.QueryTable("tbl_house_cert").Filter("House", hid).OrderBy("-Id")
-
-	// cs := []TblHouseCert{}
-	// numb, errT := qs.All(&cs)
-	// if nil != errT {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-	// 	return
-	// }
-	// beego.Debug(Fn, fmt.Sprintf("%d records found", numb))
-
-	// for k, v := range cs {
-
-	// }
 
 	return
 }
