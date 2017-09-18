@@ -122,6 +122,13 @@ public class CommunicationInterface {
         int GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
 
+
+        /*
+        *   CMD     : CMD_GET_HOUSE_CERTIFY_HIST
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseCertInfo))
+         */
+        int GetHouseCertHist(int house_id);
+
         /*
         *   CMD     : CMD_GET_BEHALF_HOUSE_LIST
         *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
@@ -303,7 +310,8 @@ public class CommunicationInterface {
                                 CMD_SET_HOUSE_PRICE               = 0x200A,
                                 CMD_GET_HOUSE_PRICE               = 0x200B,
                                 CMD_GET_HOUSE_SHOWTIME            = 0x200C,
-                                CMD_SET_HOUSE_SHOWTIME            = 0x200D;
+                                CMD_SET_HOUSE_SHOWTIME            = 0x200D,
+                                CMD_GET_HOUSE_CERTIFY_HIST        = 0x200E;
 
         // Property
         final public static int CMD_GET_PROPERTY_LIST     = 0x3001,
@@ -384,6 +392,7 @@ public class CommunicationInterface {
             cmdMap.put(CMD_GET_HOUSE_PRICE,             "CMD_GET_HOUSE_PRICE");
             cmdMap.put(CMD_GET_HOUSE_SHOWTIME,          "CMD_GET_HOUSE_SHOWTIME");
             cmdMap.put(CMD_SET_HOUSE_SHOWTIME,          "CMD_SET_HOUSE_SHOWTIME");
+            cmdMap.put(CMD_GET_HOUSE_CERTIFY_HIST,      "CMD_GET_HOUSE_CERTIFY_HIST");
 
             // Property
             cmdMap.put(CMD_GET_PROPERTY_LIST,   "CMD_GET_PROPERTY_LIST");
