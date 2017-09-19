@@ -204,7 +204,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 		pri = commdef.MSG_PRIORITY_Error
 		msg = "审核未通过"
 	}
-	err, _ = addMessage(commdef.MSG_HouseCertification, pri, hc_id, h.Owner.Id, msg)
+	err, _ = addMessage(commdef.MSG_HouseCertification, pri, hc_id, h.Owner.Id, msg, o)
 	if nil != err {
 
 	}

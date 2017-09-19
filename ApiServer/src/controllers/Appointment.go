@@ -15,6 +15,7 @@ type AppointmentController struct {
 
 func (a *AppointmentController) URLMapping() {
 	a.Mapping("OrderSeeHouse", a.OrderSeeHouse)
+
 	a.Mapping("GetAppointList_SeeHouse", a.GetAppointList_SeeHouse)
 	a.Mapping("GetHouseList_AppointSee", a.GetHouseList_AppointSee)
 }
@@ -84,7 +85,7 @@ func (this *AppointmentController) GetHouseList_AppointSee() {
 }
 
 // @Title OrderSeeHouse
-// @Description make a appointment to see the house
+// @Description make a appointment to see house
 // @Success 200 {string}
 // @Failure 403 body is empty
 // @router /see/house/:id [post]
@@ -122,7 +123,7 @@ func (this *AppointmentController) OrderSeeHouse() {
 	tmp, _ := base64.URLEncoding.DecodeString(desc)
 	desc = string(tmp)
 
-	err, aid := models.MakeAppointment(hid, uid, commdef.ORDER_TYPE_SEE_APARTMENT, phone, period_bgn, period_end, desc)
+	err, aid := models.MakeAppointment(hid, uid, commdef.ORDER_TYPE_SEE_HOUSE, phone, period_bgn, period_end, desc)
 	if nil == err {
 		result.Id = aid
 	}

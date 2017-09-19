@@ -148,9 +148,9 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 			beego.Debug(Fn, fmt.Sprintf("hc:%+v", hc))
 			hid = hc.House
 		}
-	case commdef.MSG_ScheduleHouseWatch:
-		beego.Warn(Fn, "TODO: MSG_ScheduleHouseWatch")
-		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT, ErrInfo: "MSG_ScheduleHouseWatch"}
+	case commdef.MSG_AppointSeeHouse:
+		beego.Warn(Fn, "TODO: MSG_AppointSeeHouse")
+		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT, ErrInfo: "MSG_AppointSeeHouse"}
 		return
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("message type:%d", m.Type)}
@@ -293,7 +293,45 @@ func getMsgReference_HouseCert(hcid int64) (err error, hc TblHouseCert) {
 	return
 }
 
-func addMessage(mt, pri int, refId, receiver int64, msg string) (err error, msg_id int64) {
+func sendMsg2Admin(mt, pri int, refId int64, msg string, o orm.Ormer) (err error, msg_id int64) {
+	Fn := "[sendMsg2Admin] "
+
+	// var o orm.Ormer
+	// o = orm.NewOrm()
+
+	var aus []TblUserGroupMember // admin users
+	numb, errT := o.QueryTable("tbl_user_group_member").Filter("Group__Admin", true).All(&aus)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("%d administrators found", numb))
+	for _, v := range aus { // send system message to each administrator
+		err, _ = addMessage(mt, pri, refId, v.User.Id, msg, o)
+		if nil != err {
+			return
+		}
+	}
+
+	return
+}
+
+func delMessageByRefId(msgType int, refId int64, o orm.Ormer) (err error, delCnt int64) {
+	Fn := "[delMessageByRefId] "
+	beego.Info(Fn, "type:", msgType, ", ref id:", refId)
+
+	numb, errT := o.QueryTable("tbl_message").Filter("Type", msgType).Filter("RefId", refId).Delete()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("delete %d records from tbl_message", numb))
+
+	delCnt = numb
+	return
+}
+
+func addMessage(mt, pri int, refId, receiver int64, msg string, o orm.Ormer) (err error, msg_id int64) {
 	Fn := "[addMessage] "
 	beego.Info(Fn, fmt.Sprintf("type:%d, priority:%d, refId:%d, receiver:%d, msg:%s", mt, pri, refId, receiver, msg))
 
@@ -319,8 +357,6 @@ func addMessage(mt, pri int, refId, receiver int64, msg string) (err error, msg_
 	}
 
 	/* processing */
-	o := orm.NewOrm()
-
 	m := TblMessage{Type: mt, RefId: refId, Receiver: receiver, Msg: msg}
 	nId, errT := o.Insert(&m)
 	if nil != errT {

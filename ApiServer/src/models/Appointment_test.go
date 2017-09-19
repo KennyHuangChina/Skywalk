@@ -48,7 +48,7 @@ func Test_MakeAppointment(t *testing.T) {
 	for _, v := range xitem {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint time begin(%s) Incorrect", seq, v))
-		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_APARTMENT, "", v, "", ""); e == nil {
+		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", v, "", ""); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -60,7 +60,7 @@ func Test_MakeAppointment(t *testing.T) {
 	for _, v := range xitem {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint time end(%s) Incorrect", seq, v))
-		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_APARTMENT, "", "2017-06-25 17:00", v, ""); e == nil {
+		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", "2017-06-25 17:00", v, ""); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -70,7 +70,7 @@ func Test_MakeAppointment(t *testing.T) {
 	t2 := "2017-06-25 16:30"
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint time end(%s) early than begin(%s)", seq, t2, t1))
-	if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_APARTMENT, "", t1, t2, ""); e == nil {
+	if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -78,7 +78,7 @@ func Test_MakeAppointment(t *testing.T) {
 	// description
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment description not set", seq))
-	if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_APARTMENT, "", t2, t1, ""); e == nil {
+	if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", t2, t1, ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -89,7 +89,7 @@ func Test_MakeAppointment(t *testing.T) {
 	for k, v := range xitem {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint phone(%s) %s", seq, v, xdesc[k]))
-		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_APARTMENT, v, t2, t2, "test"); e == nil {
+		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, v, t2, t2, "test"); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -98,7 +98,7 @@ func Test_MakeAppointment(t *testing.T) {
 	// Appointment already exist
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment already exist", seq))
-	if e, _ := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_APARTMENT, "15306261804", t2, t2, "test"); e == nil {
+	if e, _ := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "15306261804", t2, t2, "test"); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -106,7 +106,7 @@ func Test_MakeAppointment(t *testing.T) {
 	// Make Appointment
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: make appointment", seq))
-	e, nid := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_APARTMENT, "13862601240", t2, t2, "test")
+	e, nid := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "13862601240", t2, t2, "test")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -114,7 +114,7 @@ func Test_MakeAppointment(t *testing.T) {
 	t.Log("new appointment:", nid)
 
 	seq++
-	t.Log(fmt.Sprintf("<Case %d> Test: delte the appointment(%d) just added above", seq, nid))
+	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, nid))
 	if e := DeleAppointment(nid, 5); nil != e {
 		t.Error("Failed, err: ", e)
 		return

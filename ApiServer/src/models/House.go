@@ -1002,25 +1002,12 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 
 	// generate a system message to notify the agency or administrator if no agency assigned
 	if aid > 0 { // agency assinged
-		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, aid, comment)
-		if nil != err {
-			return
-		}
+		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, aid, comment, o)
 	} else { // no agency assigned
-		var aus []TblUserGroupMember // admin users
-		// numb, errT = o.QueryTable("tbl_user_group_member").Filter("Group", ags).All(&aus)
-		numb, errT := o.QueryTable("tbl_user_group_member").Filter("Group__Admin", true).All(&aus)
-		if nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-			return
-		}
-		beego.Debug(FN, fmt.Sprintf("%d administrators found", numb))
-		for _, v := range aus { // send system message to each administrator
-			err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, v.User.Id, comment)
-			if nil != err {
-				return
-			}
-		}
+		err, _ = sendMsg2Admin(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, comment, o)
+	}
+	if nil != err {
+		return
 	}
 
 	id = newId
@@ -2043,7 +2030,7 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 		// appointment
 		sqlAppoint := fmt.Sprintf(`SELECT house, COUNT(*) AS appoints FROM tbl_appointment 
 										WHERE close_time IS NULL AND order_type=%d 
-										GROUP BY House`, commdef.ORDER_TYPE_SEE_APARTMENT)
+										GROUP BY House`, commdef.ORDER_TYPE_SEE_HOUSE)
 		// rental
 		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid
 							HAVING id=(SELECT MAX(id) FROM tbl_rental WHERE house_id=r.house_id AND active=1)`

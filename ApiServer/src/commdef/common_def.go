@@ -255,7 +255,7 @@ const (
 const (
 	ORDER_TYPE_BEGIN = 1
 
-	ORDER_TYPE_SEE_APARTMENT = 1 // make a appointment to see the apartment
+	ORDER_TYPE_SEE_HOUSE = 1 // make a appointment to see house
 
 	ORDER_TYPE_END = 1
 )
@@ -282,7 +282,7 @@ const (
 	MSG_Begin = 1
 
 	MSG_HouseCertification = 1 // messages of house certificaion, ref to TblHouseCert
-	MSG_ScheduleHouseWatch = 2 // messages of house watching
+	MSG_AppointSeeHouse    = 2 // messages of house watching
 
 	MSG_End = 2
 )

@@ -88,7 +88,7 @@ func GetHouseList_AppointSee(begin, tofetch, uid int64) (err error, total, fetch
 
 func DeleAppointment(aid, uid int64) (err error) {
 	FN := "[ DeleAppointment] "
-	beego.Trace(FN, "appointment:", aid, ", login user:", uid)
+	beego.Info(FN, "appointment:", aid, ", login user:", uid)
 
 	defer func() {
 		if nil != err {
@@ -100,15 +100,52 @@ func DeleAppointment(aid, uid int64) (err error) {
 	beego.Warn(FN, "TODO: ")
 
 	/* Permission checking */
+	// Only the administrator could delet the appointment, for now
+	if _, bAdmin := isAdministrator(uid); !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+		return
+	}
 
 	/* Processing */
 	o := orm.NewOrm()
-	numb, errT := o.Delete(&TblAppointment{Id: aid})
+
+	a := TblAppointment{Id: aid}
+	errT := o.Read(&a)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 		return
 	}
-	beego.Debug(FN, fmt.Sprintf("%d records deleted", numb))
+
+	o.Begin()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
+
+	// Delete in appointment table
+	numb, errT := o.Delete(&a)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+		return
+	}
+	beego.Debug(FN, fmt.Sprintf(" delete %d records in TblAppointment", numb))
+
+	// Delete in messages
+	msgType := int(0) // commdef.MSG_Begin
+	switch a.OrderType {
+	case commdef.ORDER_TYPE_SEE_HOUSE:
+		msgType = commdef.MSG_AppointSeeHouse
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT, ErrInfo: fmt.Sprintf("Unknown appointment type:%d", a.OrderType)}
+		return
+	}
+	err, numb = delMessageByRefId(msgType, aid, o)
+	if nil != err {
+		return
+	}
 
 	return
 }
@@ -129,7 +166,7 @@ func DeleAppointment(aid, uid int64) (err error) {
  */
 func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, desc string) (err error, aid int64) {
 	FN := "[MakeAppointment] "
-	beego.Trace(FN, "house:", hid, ", login user:", uid, ", type:", apType,
+	beego.Info(FN, "house:", hid, ", login user:", uid, ", type:", apType,
 		fmt.Sprintf(", period(%s - %s)", time_begin, time_end), ", desc:", desc)
 
 	defer func() {
@@ -139,8 +176,9 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}()
 
 	/* Argeuments checking */
-	if 0 != hid {
-		if err, _ = getHousePublished(hid); nil != err {
+	h := TblHouse{}
+	if 0 != hid { // appointment is related with house
+		if err, h = getHousePublished(hid); nil != err {
 			return
 		}
 	}
@@ -182,6 +220,7 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}
 
 	/* Permission checking */
+	// seems everyone could make an appointment
 
 	/* Processing */
 	o := orm.NewOrm()
@@ -193,15 +232,39 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 		return
 	}
 
-	nid, errT := o.Insert(&TblAppointment{OrderType: apType, House: hid, Phone: phone,
+	o.Begin()
+	defer func() {
+		if nil == err {
+			o.Commit()
+		} else {
+			beego.Error(FN, "failed")
+			o.Rollback()
+		}
+	}()
+
+	// Insert into appointment table
+	naid, errT := o.Insert(&TblAppointment{OrderType: apType, House: hid, Phone: phone,
 		ApomtTimeBgn: tBegin, ApomtTimeEnd: tEnd, ApomtDesc: desc})
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 		return
 	}
-	beego.Debug(FN, "new appointment:", nid)
+	beego.Debug(FN, "new appointment:", naid)
 
-	aid = nid
+	// generate system message
+	if 0 != hid { // appointment is related with house
+		msgTxt := "客人约看"
+		if h.Agency.Id > 0 { // agency assigned
+			err, _ = addMessage(commdef.MSG_AppointSeeHouse, commdef.MSG_PRIORITY_Info, naid, h.Agency.Id, msgTxt, o)
+		} else { // no agency assigned
+			err, _ = sendMsg2Admin(commdef.MSG_AppointSeeHouse, commdef.MSG_PRIORITY_Info, naid, msgTxt, o)
+		}
+		if nil != err {
+			return
+		}
+	}
+
+	aid = naid
 	return
 }
 
@@ -236,7 +299,7 @@ func GetAppointList_SeeHouse(hid, uid int64, begin, fetchCnt int) (err error, to
 
 	/* Get total number */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_appointment").Filter("OrderType", commdef.ORDER_TYPE_SEE_APARTMENT).Filter("House", hid).Filter("CloseTime__isnull", true)
+	qs := o.QueryTable("tbl_appointment").Filter("OrderType", commdef.ORDER_TYPE_SEE_HOUSE).Filter("House", hid).Filter("CloseTime__isnull", true)
 	cnt, errT := qs.Count()
 	if nil != errT {
 		if orm.ErrNoRows != errT {
@@ -278,7 +341,7 @@ func GetAppointList_SeeHouse(hid, uid int64, begin, fetchCnt int) (err error, to
 				LIMIT ?, ?`
 
 	ot := []commdef.AppointmentInfo{}
-	_, errT = o.Raw(sql, commdef.ORDER_TYPE_SEE_APARTMENT, tp_see_house, nameUnset, hid, begin, fetchCnt).QueryRows(&ot)
+	_, errT = o.Raw(sql, commdef.ORDER_TYPE_SEE_HOUSE, tp_see_house, nameUnset, hid, begin, fetchCnt).QueryRows(&ot)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house see appointment list, err:%s", errT.Error())}
 		return
