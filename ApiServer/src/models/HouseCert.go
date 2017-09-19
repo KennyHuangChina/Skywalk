@@ -47,9 +47,9 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 	// Processing
 	o := orm.NewOrm()
 
-	sql := `SELECT c.id, c.who AS uid, u.name AS user, u.phone, c.when AS time, c.cert_statu AS stat, c.comment AS cert_txt
+	sql := `SELECT c.id, c.who AS uid, u.name AS user, u.login_name AS phone, c.when AS time, c.cert_statu AS stat, c.comment AS cert_txt
 				FROM tbl_house_cert AS c, tbl_user AS u  
-				WHERE c.who=u.id AND house=?`
+				WHERE c.who=u.id AND house=? ORDER BY c.id DESC`
 
 	cs := []commdef.HouseCert{}
 	_, errT := o.Raw(sql, hid).QueryRows(&cs)
@@ -72,7 +72,9 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 			bHidePrivateInfo = true
 		} else {
 			if bLoginLandlord { // login user is current landlord
-				if _, bAgency := isAgency(v.Uid); !bAgency {
+				_, bAgency := isAgency(v.Uid)
+				_, bAdmin := isAdministrator(v.Uid)
+				if !bAgency && !bAdmin {
 					bHidePrivateInfo = true
 				}
 			} else { // login user is agency who can see this house
@@ -82,6 +84,7 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 			}
 		}
 		// bHidePrivateInfo = true
+		// beego.Debug(Fn, "bHidePrivateInfo:", bHidePrivateInfo)
 
 		if bHidePrivateInfo {
 			v.Uid = 0

@@ -84,13 +84,38 @@ func Test_GetHouseCertHist(t *testing.T) {
 	seq := 0
 
 	// House
-	x1 := []int64{17}
-	x2 := []int64{1}
-	// d1 := []string{"< 0"}
+	x1 := []int64{-1, 0, 100000000}
+	d1 := []string{"< 0", " = 0", "does not exist"}
 	for k, v := range x1 {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> House (%d) has %d certification records", seq, v, x2[k]))
-		e, hcs := GetHouseCertHist(v, 6)
+		t.Log(fmt.Sprintf("<Case %d> House (%d)  %s", seq, v, d1[k]))
+		if e, _ := GetHouseCertHist(v, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// User
+	x1 = []int64{-1, 0, 100000000, 10}
+	d1 = []string{"not login", " is a SYSTEM", "does not exist", "is not a legal user to see the house cert"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User (%d)  %s", seq, v, d1[k]))
+		if e, _ := GetHouseCertHist(17, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	//
+	x1 = []int64{9, 6, 4, 5}
+	x2 := []int64{4, 4, 4, 4}
+	x3 := []int64{1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1}
+	// d1 = []string{"< 0"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> House (17) has %d certification records", seq, x2[k]))
+		e, hcs := GetHouseCertHist(17, v)
 		if e != nil {
 			t.Error("Failed, err: ", e)
 			return
@@ -98,6 +123,22 @@ func Test_GetHouseCertHist(t *testing.T) {
 		if x2[k] != int64(len(hcs)) {
 			t.Error("hist count:", len(hcs))
 			return
+		}
+
+		for k1, v1 := range hcs {
+			bPrivateInfo := x3[k*4+k1]
+			// beego.Debug("bPrivateInfo:", bPrivateInfo)
+			if 0 != bPrivateInfo {
+				if v1.Uid == 0 || 0 == len(v1.Phone) {
+					t.Error("Error 1, :", fmt.Sprintf("%+v", v1))
+					return
+				}
+			} else {
+				if v1.Uid != 0 || len(v1.Phone) > 0 {
+					t.Error("Error 2, :", fmt.Sprintf("%+v", v1))
+					return
+				}
+			}
 		}
 	}
 }
