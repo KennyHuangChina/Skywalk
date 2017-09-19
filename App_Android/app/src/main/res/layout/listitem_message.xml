@@ -12,6 +12,7 @@
             android:layout_height="33dp"
             android:background="#F2F2F2">
             <TextView
+                android:id="@+id/tv_msg_time"
                 android:layout_width="92dp"
                 android:layout_height="14dp"
                 android:layout_marginTop="15dp"
@@ -66,6 +67,7 @@
             android:background="#E5E5E5" />
         
         <TextView
+            android:id="@+id/tv_msg_description"
             android:layout_width="match_parent"
             android:layout_height="39dp"
             android:gravity="center"

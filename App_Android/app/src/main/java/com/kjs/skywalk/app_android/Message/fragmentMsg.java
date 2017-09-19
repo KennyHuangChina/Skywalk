@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
@@ -26,9 +27,16 @@ import java.util.List;
 
 public class fragmentMsg extends Fragment {
     @Nullable
+    private ListView mLvMessage;
+    private AdapterMessage mAdapterMsg;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_msg, container, false);
+
+        mLvMessage = (ListView) view.findViewById(R.id.lv_message);
+        mAdapterMsg = new AdapterMessage(getActivity());
+        mLvMessage.setAdapter(mAdapterMsg);
 
         // test
 //        commonFun.TextDefine t = new commonFun.TextDefine("123", 12, R.color.colorFontNormal);

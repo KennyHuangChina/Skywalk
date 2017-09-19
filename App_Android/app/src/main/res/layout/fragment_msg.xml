@@ -23,8 +23,12 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <include layout="@layout/listitem_message"/>
+        <ListView
+            android:id="@+id/lv_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+        </ListView>
 
         <!--<TextView-->
             <!--android:text="@string/tab_menu_msg"-->
