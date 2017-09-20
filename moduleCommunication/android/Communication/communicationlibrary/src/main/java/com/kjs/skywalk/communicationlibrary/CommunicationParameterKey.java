@@ -42,8 +42,4 @@ class CommunicationParameterKey {
 
     public static String CPK_DELIVERABLE_ID     = "DeliverableId";
     public static String CPK_FACILITY_ID        = "FacilityId";
-
-    public static String CPK_EVENT_TYPE         = "EventType";
-    public static String CPK_EVENT_STAT         = "EventStatus";
-    public static String CPK_EVENT_IDO          = "EventIdOnly";
 }

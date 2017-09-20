@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PIC_URL;
 
 public class Activity_fangyuan_zhaopian extends SKBaseActivity {
     ViewPager mVPHuXing;
@@ -58,6 +67,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
 
         mTvUpload = (TextView) findViewById(R.id.tv_upload);
         mTvDelete = (TextView) findViewById(R.id.tv_delete);
+
+        getHousePictures(0);
 
         // test pics
         ArrayList<String> photosLst = commonFun.getTestPicList(this);
@@ -127,6 +138,59 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
 //        );
         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
+    }
+
+    private void getHousePictures(final int type) {
+        CommandManager.getCmdMgrInstance(this,  new CommunicationInterface.CICommandListener() {
+
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+                // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
+                if (command == CMD_GET_HOUSE_PIC_LIST) {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    for (Object item : resultList.GetList()) {
+                        IApiResults.IHousePicInfo picInfo = (IApiResults.IHousePicInfo) item;
+                        getPicUrlById(type, picInfo.GetId());
+                    }
+                }
+            }
+        }, this).GetHousePics(mHouseId, type);
+    }
+
+    private void getPicUrlById(int type, final int picId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CommandManager.getCmdMgrInstance(Activity_fangyuan_zhaopian.this,  new CommunicationInterface.CICommandListener() {
+
+                    @Override
+                    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                        if (null == iResult) {
+                            kjsLogUtil.w("result is null");
+                            return;
+                        }
+                        kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                            return;
+                        }
+                        // CMD_GET_PIC_URL,         IApiResults.IPicUrls
+                        if (command == CMD_GET_PIC_URL) {
+                            IApiResults.IPicUrls picUrls = (IApiResults.IPicUrls) iResult;
+                        }
+                    }
+                }, Activity_fangyuan_zhaopian.this).GetPicUrls(picId, 1);
+            }
+        });
     }
 
     public void onViewClick(View v) {
@@ -202,29 +266,46 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
         ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).updateSelectMode(isSelectMode);
+        updateStatus();
     }
 
     private void updateStatus() {
         int total_select_count = 0;
         int select_count = ((PicFragStatePageAdapter)mVPHuXing.getAdapter()).getSelectCount();
         int total = mHuXingPicLst.size();
-        mTvStatus1.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus1.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus1.setText("(" + total + ")");
+        }
 
         select_count = ((PicFragStatePageAdapter)mVpFangJianJieGou.getAdapter()).getSelectCount();
         total = mFangJianJieGouPicLst.size();
-        mTvStatus2.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus2.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus2.setText("(" + total + ")");
+        }
 
         select_count = ((PicFragStatePageAdapter)mVpJiaJuYongPin.getAdapter()).getSelectCount();
         total = mJiaJuYongPinPicLst.size();
-        mTvStatus3.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus3.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus3.setText("(" + total + ")");
+        }
 
         select_count = ((PicFragStatePageAdapter)mVpDianQi.getAdapter()).getSelectCount();
         total = mDianQiPicLst.size();
-        mTvStatus4.setText("(" + select_count + "/" + total + ")");
-        total_select_count += select_count;
+        if (mIsPicSelectMode) {
+            mTvStatus4.setText("(" + select_count + "/" + total + ")");
+            total_select_count += select_count;
+        } else {
+            mTvStatus4.setText("(" + total + ")");
+        }
 
         if (total_select_count > 0) {
             mTvDelete.setEnabled(true);
