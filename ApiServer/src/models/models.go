@@ -161,6 +161,23 @@ func (h *TblAppointment) TableIndex() [][]string {
 	}
 }
 
+type TblAppointmentAction struct {
+	Id      int64
+	Appoint int64 // TblAppointment.Id
+	Action  int   // APPOINT_ACTION_xxx
+	Who     int64
+	When    time.Time `orm:"auto_now_add;type(datetime);default(now)"`
+	TimeBgn time.Time `orm:"type(datetime)"`
+	TimeEnd time.Time `orm:"type(datetime)"`
+	Comment string    `orm:"size(200)"`
+}
+
+func (h *TblAppointmentAction) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Appoint"},
+	}
+}
+
 // type TblHousePrice struct {
 // 	Id            int64
 // 	House         int64     // house
@@ -478,7 +495,7 @@ func init() {
 		new(TblProperty), new(TblHouse), new(TblRental), new(TblTag), new(TblHouseTag), new(TblHouseRecommend),
 		new(TblDeliverables), new(TblHouseDeliverable), new(TblHouseCert), // new(TblHousePrice),
 		new(TblFacilityType), new(TblFacilitys), new(TblHouseFacility), new(TblHouseShowTime),
-		/*new(TblHouseEvent), new(TblHouseEventProcess), */ new(TblAppointment) /*new(TblHouseWatch),*/, new(TblMessage),
+		/*new(TblHouseEvent), new(TblHouseEventProcess), */ new(TblAppointment), new(TblAppointmentAction) /*new(TblHouseWatch),*/, new(TblMessage),
 		new(TblPictures), new(TblPicSet),
 		new(TblSmsCode),
 		new(TblStrings))

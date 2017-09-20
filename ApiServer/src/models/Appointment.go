@@ -151,6 +151,61 @@ func DeleAppointment(aid, uid int64) (err error) {
 }
 
 /**
+*	make a action for an appointment
+*	Arguments:
+*		uid 		- login user
+*		act			- action type, ref to APPOINT_ACTION_xxxx
+*		time_begin	- the period begin time user expected
+*		time_end	- the period end time user expected
+*		comment		- action comments
+*	Returns
+*		err 	- error info
+*		aid		- new action id
+ */
+func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, comment string) (err error, act_id int64) {
+	FN := "[MakeAppointmentAction] "
+	beego.Info(FN, "login user:", uid, ", appointment:", aid, ", act:", act,
+		fmt.Sprintf(", period(%s - %s)", time_begin, time_end), ", comment:", comment)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	// err, apmt := getAppointment(aid)
+	// if nil != err {
+	// 	return
+	// }
+	// if commdef.ORDER_TYPE_SEE_HOUSE != apmt.OrderType {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("order type:%d", apmt.OrderType)}
+	// 	return
+	// }
+
+	/* Permission checking */
+	// appointment subscriber, house agency, agency(if house is opened), administrator
+
+	/* Processing */
+	o := orm.NewOrm()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
+
+	err, nact_id := addAppointmentAction(uid, aid, act, time_begin, time_end, comment, o)
+	if nil != err {
+		return
+	}
+
+	act_id = nact_id
+	return
+}
+
+/**
 *	Get house order table
 *	Arguments:
 *		hid 		- house id
@@ -176,9 +231,8 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}()
 
 	/* Argeuments checking */
-	h := TblHouse{}
 	if 0 != hid { // appointment is related with house
-		if err, h = getHousePublished(hid); nil != err {
+		if err, _ = getHousePublished(hid); nil != err {
 			return
 		}
 	}
@@ -186,24 +240,17 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("apType:%d", apType)}
 		return
 	}
-	tBegin, errT := time.Parse("2006-01-02 15:04", time_begin)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_begin:%s, %s", time_begin, errT.Error())}
+
+	err, tBegin, tEnd := getScheduleTime(time_begin, time_end)
+	if nil != err {
 		return
 	}
-	tEnd, errT := time.Parse("2006-01-02 15:04", time_end)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end:%s, %s", time_end, errT.Error())}
-		return
-	}
-	if tBegin.After(tEnd) {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end:%s early than time_begin:%s", time_end, time_begin)}
-		return
-	}
+
 	if 0 == len(desc) {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("desc not set")}
 		return
 	}
+
 	err1, _ := GetUser(uid)
 	if nil != err1 {
 		if 11 != len(phone) {
@@ -251,17 +298,10 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}
 	beego.Debug(FN, "new appointment:", naid)
 
-	// generate system message
-	if 0 != hid { // appointment is related with house
-		msgTxt := "客人约看"
-		if h.Agency.Id > 0 { // agency assigned
-			err, _ = addMessage(commdef.MSG_AppointSeeHouse, commdef.MSG_PRIORITY_Info, naid, h.Agency.Id, msgTxt, o)
-		} else { // no agency assigned
-			err, _ = sendMsg2Admin(commdef.MSG_AppointSeeHouse, commdef.MSG_PRIORITY_Info, naid, msgTxt, o)
-		}
-		if nil != err {
-			return
-		}
+	// Appointment action. add submit action automatically
+	err, _ = addAppointmentAction(uid, aid, commdef.APPOINT_ACTION_Submit, time_begin, time_end, "客人约看", o)
+	if nil != err {
+		return
 	}
 
 	aid = naid
@@ -350,6 +390,182 @@ func GetAppointList_SeeHouse(hid, uid int64, begin, fetchCnt int) (err error, to
 	beego.Warn(FN, "TODO: add other type support")
 
 	hot = ot
+	return
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		-- Internal Functions --
+//
+func getAppointment(aid int64) (err error, apmt TblAppointment) {
+	// Fn := "[getAppointment] "
+
+	if aid <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("appointment:%d", aid)}
+		return
+	}
+
+	o := orm.NewOrm()
+	a := TblAppointment{Id: aid}
+	errT := o.Read(&a)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+		return
+	}
+
+	apmt = a
+	return
+}
+
+func getScheduleTime(time_begin, time_end string) (err error, tb, te time.Time) {
+	Fn := "[getScheduleTime] "
+	beego.Info(Fn, fmt.Sprintf("period: %s - %s", time_begin, time_end))
+
+	if 0 == len(time_begin) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid time_begin"}
+		return
+	}
+	if 0 == len(time_end) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid time_end"}
+		return
+	}
+
+	tBegin, errT := time.Parse("2006-01-02 15:04", time_begin)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_begin: %s", errT.Error())}
+		return
+	}
+	tEnd, errT := time.Parse("2006-01-02 15:04", time_end)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end: %s", errT.Error())}
+		return
+	}
+	if tBegin.After(tEnd) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("time_end:%s early than time_begin:%s", time_end, time_begin)}
+		return
+	}
+
+	tb = tBegin
+	te = tEnd
+	return
+}
+
+func addAppointmentAction(uid, aid int64, act int, time_begin, time_end, comment string, o orm.Ormer) (err error, act_id int64) {
+	FN := "[addAppointmentAction] "
+	beego.Info(FN, "login user:", uid, ", appointment:", aid, ", act:", act,
+		fmt.Sprintf(", period(%s - %s)", time_begin, time_end), ", comment:", comment)
+
+	/* Argeuments checking */
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+
+	err, apmt := getAppointment(aid)
+	if nil != err {
+		return
+	}
+
+	if act <= commdef.APPOINT_ACTION_Begin || act > commdef.APPOINT_ACTION_End {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid action"}
+		return
+	}
+
+	tBgn, tEnd := time.Time{}, time.Time{}
+	if act == commdef.APPOINT_ACTION_Reschedule {
+		err, tBgn, tEnd = getScheduleTime(time_begin, time_end)
+		if nil != err {
+			return
+		}
+	}
+
+	if 0 == len(comment) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("comment not set")}
+		return
+	}
+
+	/* Permission checking */
+	// appointment subscriber, house agency, agency(if house is opened), administrator
+
+	/* Processing */
+	// appointment action table
+	nact := TblAppointmentAction{Appoint: aid, Action: act, Who: uid, TimeBgn: tBgn, TimeEnd: tEnd, Comment: comment}
+	nact_id, errT := o.Insert(&nact)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+		return
+	}
+
+	// appointment table
+	if tBgn != nilTime {
+		a := TblAppointment{Id: aid, ApomtTimeBgn: tBgn, ApomtTimeEnd: tEnd}
+		_, errT = o.Update(&a, "ApomtTimeBgn", "ApomtTimeEnd")
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+			return
+		}
+	}
+
+	// generate system message
+	if apmt.House > 0 { // appointment is related with house
+		h := TblHouse{}
+		if err, h = getHouse(apmt.House); nil != err {
+			return
+		}
+
+		role := ""
+		if uid == apmt.Subscriber {
+			role = "客人"
+		} else {
+			role = "经纪人"
+		}
+
+		msgTxt := ""
+		msgType := 0
+		err, msgTxt, msgType = getMsgTxt(apmt.OrderType, act, role)
+		if nil != err {
+			return
+		}
+
+		// TODO: commdef.MSG_AppointSeeHouse should be changed
+		if h.Agency.Id > 0 { // agency assigned
+			err, _ = addMessage(msgType, commdef.MSG_PRIORITY_Info, aid, h.Agency.Id, msgTxt, o)
+		} else { // no agency assigned
+			err, _ = sendMsg2Admin(msgType, commdef.MSG_PRIORITY_Info, aid, msgTxt, o)
+		}
+		if nil != err {
+			return
+		}
+	}
+
+	act_id = nact_id
+	return
+}
+
+func getMsgTxt(order_type, act int, role string) (err error, msg string, apmtType int) {
+	Fn := "[getMsgTxt] "
+	beego.Info(Fn, fmt.Sprintf("order_type:%d, act:%d", order_type, act))
+
+	switch order_type {
+	case commdef.ORDER_TYPE_SEE_HOUSE:
+		apmtType = commdef.MSG_AppointSeeHouse
+		switch act {
+		case commdef.APPOINT_ACTION_Submit:
+			msg = role + "约看"
+		case commdef.APPOINT_ACTION_Confirm:
+			msg = role + "同意时间"
+		case commdef.APPOINT_ACTION_Reschedule:
+			msg = role + "请求改期"
+		case commdef.APPOINT_ACTION_Done:
+			msg = "约看完成"
+		case commdef.APPOINT_ACTION_Cancel:
+			msg = role + "取消约看"
+		default:
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment action type"}
+		}
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment order type"}
+	}
+
 	return
 }
 

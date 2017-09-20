@@ -255,7 +255,7 @@ const (
 const (
 	ORDER_TYPE_BEGIN = 1
 
-	ORDER_TYPE_SEE_HOUSE = 1 // make a appointment to see house
+	ORDER_TYPE_SEE_HOUSE = 1 // make a appointment to see house. ref to MSG_AppointSeeHouse
 
 	ORDER_TYPE_END = 1
 )
@@ -274,6 +274,19 @@ type AppointmentInfo struct {
 	CloseTime    string
 }
 
+const (
+	APPOINT_ACTION_Begin = 0
+
+	APPOINT_ACTION_Unknow     = 0
+	APPOINT_ACTION_Submit     = 1
+	APPOINT_ACTION_Confirm    = 2
+	APPOINT_ACTION_Reschedule = 3
+	APPOINT_ACTION_Done       = 4
+	APPOINT_ACTION_Cancel     = 5
+
+	APPOINT_ACTION_End = 5
+)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //		System Message
@@ -282,7 +295,7 @@ const (
 	MSG_Begin = 1
 
 	MSG_HouseCertification = 1 // messages of house certificaion, ref to TblHouseCert
-	MSG_AppointSeeHouse    = 2 // messages of house watching
+	MSG_AppointSeeHouse    = 2 // messages of house watching. ref to ORDER_TYPE_SEE_HOUSE
 
 	MSG_End = 2
 )

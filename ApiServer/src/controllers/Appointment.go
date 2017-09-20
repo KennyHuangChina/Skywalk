@@ -15,9 +15,58 @@ type AppointmentController struct {
 
 func (a *AppointmentController) URLMapping() {
 	a.Mapping("OrderSeeHouse", a.OrderSeeHouse)
+	a.Mapping("MakeAppointmentAction", a.MakeAppointmentAction)
 
 	a.Mapping("GetAppointList_SeeHouse", a.GetAppointList_SeeHouse)
 	a.Mapping("GetHouseList_AppointSee", a.GetHouseList_AppointSee)
+}
+
+// @Title MakeAppointmentAction
+// @Description make a action for an appointment
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/act [put]
+func (this *AppointmentController) MakeAppointmentAction() {
+	FN := "[MakeAppointmentAction] "
+	beego.Warn("[--- API: MakeAppointmentAction ---]")
+
+	var result ResAddResource
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	aid, _ := this.GetInt64(":id")
+	act, _ := this.GetInt("act")
+	tb := this.GetString("tb")
+	te := this.GetString("te")
+	ac := this.GetString("ac")
+
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, act_id := models.MakeAppointmentAction(uid, aid, act, tb, te, ac)
+	if nil == err {
+		result.Id = act_id
+	}
 }
 
 // @Title GetHouseList_AppointSee

@@ -61,3 +61,18 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 4. make action for an appointment
+	[Security]	private: landlorad, House Agency and administrator
+	[Request]
+  		* PUT /v1/appointment/:id/act
+	  		* act				int		// appointment action. 
+	  		* tb				string	// time begin
+	  		* te				string	// time end
+	  		* ac				string	// action comments
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
