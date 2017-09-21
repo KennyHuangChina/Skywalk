@@ -14,6 +14,9 @@
     <color name="colorText">#9D9C9D</color>
     <color name="colorEditTextTint">#DADADA</color>
     <color name="colorTextTitle">#000000</color>
+    <color name="colorTextError">#FF6600</color>
+    <color name="colorTextRed">#FF0000</color>
+    <color name="colorTextTel">#515151</color>
 
     <color name="colorButtonText">#939499</color>
     <color name="colorButtonTextHighlight">#00af60</color>
