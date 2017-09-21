@@ -294,6 +294,7 @@ const (
 const (
 	MSG_Begin = 1
 
+	MSG_Unknown            = 0
 	MSG_HouseCertification = 1 // messages of house certificaion, ref to TblHouseCert
 	MSG_AppointSeeHouse    = 2 // messages of house watching. ref to ORDER_TYPE_SEE_HOUSE
 
@@ -301,11 +302,13 @@ const (
 )
 
 const (
-	MSG_PRIORITY_Begin   = 0
+	MSG_PRIORITY_Begin = 0
+
 	MSG_PRIORITY_Info    = 0
 	MSG_PRIORITY_Warning = 1
 	MSG_PRIORITY_Error   = 2
-	MSG_PRIORITY_End     = 2
+
+	MSG_PRIORITY_End = 2
 )
 
 type MsgHouse struct {

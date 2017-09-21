@@ -76,3 +76,15 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 5. assign appointment receptionist (TODO://)
+	[Security]	private: administrator
+	[Request]
+  		* PUT /v1/appointment/:id/recpt?r=<>
+	  		* r				int		// appointment receptionist id. 
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

@@ -748,7 +748,7 @@ func LoginSms(login_name, sms, Sid string) (err error, uid int64) {
 *		user	- user info
 **/
 func GetUser(uid int64) (err error, user TblUser) {
-	// FN := "[GetUser] "
+	FN := "[GetUser] "
 
 	if uid < 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_NOT_LOGIN, ErrInfo: fmt.Sprintf("uid:%d", uid)}

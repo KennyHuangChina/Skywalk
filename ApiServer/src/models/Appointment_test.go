@@ -16,80 +16,62 @@ func Test_MakeAppointment(t *testing.T) {
 	t.Log("Test MakeAppointment, Invalid Arguments")
 	seq := 0
 
-	xid := []int64{-1, 100000000, 11}
-	xdesc := []string{"< 0", "does not exist", "not published"}
-
-	// house
-	for k, v := range xid {
-		seq++
-		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: house(%d) %s", seq, v, xdesc[k]))
-		if e, _ := MakeAppointment(v, -1, -1, "", "", "", ""); e == nil {
-			t.Error("Failed, err: ", e)
-			return
-		}
-	}
-
 	// appointment type
-	xid = []int64{commdef.ORDER_TYPE_BEGIN - 1, commdef.ORDER_TYPE_END + 1}
-	xdesc = []string{"< commdef.ORDER_TYPE_BEGIN(%d)", "> commdef.ORDER_TYPE_END(%d)"}
-	xid2 := []int{commdef.ORDER_TYPE_BEGIN, commdef.ORDER_TYPE_END}
-	for k, v := range xid {
+	x1 := []int64{commdef.ORDER_TYPE_BEGIN - 1, commdef.ORDER_TYPE_END + 1}
+	xdesc := []string{"< commdef.ORDER_TYPE_BEGIN(%d)", "> commdef.ORDER_TYPE_END(%d)"}
+	x2 := []int{commdef.ORDER_TYPE_BEGIN, commdef.ORDER_TYPE_END}
+	for k, v := range x1 {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment type(%d) %s", seq, v, fmt.Sprintf(xdesc[k], xid2[k])))
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment type(%d) %s", seq, v, fmt.Sprintf(xdesc[k], x2[k])))
 		if e, _ := MakeAppointment(0, 0, int(v), "", "", "", ""); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
 
-	// appoint period, begin
-	xitem := []string{"20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130",
-		"2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30"}
-	for _, v := range xitem {
+	// appoint period
+	x3 := []string{"", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130",
+		"2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:30"}
+	x4 := []string{"", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130",
+		"2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:29"}
+	for k, v := range x3 {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint time begin(%s) Incorrect", seq, v))
-		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", v, "", ""); e == nil {
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: schedule time(%s - %s) Incorrect", seq, v, x4[k]))
+		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", v, x4[k], ""); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
 
-	// appoint period, end
-	xitem = []string{"20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130",
-		"2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30"}
-	for _, v := range xitem {
-		seq++
-		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint time end(%s) Incorrect", seq, v))
-		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", "2017-06-25 17:00", v, ""); e == nil {
-			t.Error("Failed, err: ", e)
-			return
-		}
-	}
-
-	t1 := "2017-06-25 17:00"
-	t2 := "2017-06-25 16:30"
+	// description
+	t1 := "2016-06-25 11:30"
+	t2 := "2016-06-25 12:30"
 	seq++
-	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint time end(%s) early than begin(%s)", seq, t2, t1))
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment description not set", seq))
 	if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, ""); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
-	// description
-	seq++
-	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment description not set", seq))
-	if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, "", t2, t1, ""); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// house
+	x1 = []int64{-1, 100000000, 11}
+	xdesc = []string{"< 0", "does not exist", "not published"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: house(%d) %s", seq, v, xdesc[k]))
+		if e, _ := MakeAppointment(v, -1, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, "test appointment"); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
 	// user not login, and phone not set
-	xitem = []string{"", "1", "1530626", "153062618044", "153a6261804", "153 6261804"}
-	xdesc = []string{"not set", "incomplete", "incomplete", "over length", "include non-numeric character", "include non-numeric character"}
+	xitem := []string{"", "1", "1530626", "153062618044", "153a6261804", "153 6261804"}
+	xdesc = []string{"not set", "incomplete", "incomplete", "over length", "include non-numeric character", "include space"}
 	for k, v := range xitem {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint phone(%s) %s", seq, v, xdesc[k]))
-		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, v, t2, t2, "test"); e == nil {
+		if e, _ := MakeAppointment(0, 0, commdef.ORDER_TYPE_SEE_HOUSE, v, t1, t2, "test appointment"); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -98,7 +80,7 @@ func Test_MakeAppointment(t *testing.T) {
 	// Appointment already exist
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment already exist", seq))
-	if e, _ := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "15306261804", t2, t2, "test"); e == nil {
+	if e, _ := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "15306261804", t2, t2, "test appointment"); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -106,12 +88,13 @@ func Test_MakeAppointment(t *testing.T) {
 	// Make Appointment
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: make appointment", seq))
-	e, nid := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "13862601240", t2, t2, "test")
+	e, nid := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "13862601240", t2, t2, "test appointment")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("new appointment:", nid)
+	return
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, nid))

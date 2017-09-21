@@ -144,8 +144,9 @@ type TblAppointment struct {
 	Id           int64
 	OrderType    int       // order type. ref to ORDER_TYPE_xxx
 	House        int64     // House id
-	Subscriber   int64     // who make the subscription
+	Subscriber   int64     `orm:"not null; default(0)"` // who make the subscription
 	Phone        string    // contace phone number. it is obligatory if user not login
+	Receptionist int64     `orm:"not null; default(0)"`        // appointment receptionist, 0 means the receptionist will be assigned by Admin
 	ApomtTimeBgn time.Time `orm:"type(datetime); not null"`    // appointment period begin, like 2017-06-23 9:00
 	ApomtTimeEnd time.Time `orm:"type(datetime); not null"`    // appointment period end, like 2017-06-23 9:30
 	ApomtDesc    string    `orm:"size(200)"`                   // appointment description
