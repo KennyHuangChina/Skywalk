@@ -150,7 +150,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#color/TextTel"
+                            android:textColor="@color/colorTextTel"
                             android:textSize="19sp"
                             android:text="400-888-8888"/>
                     </LinearLayout>
