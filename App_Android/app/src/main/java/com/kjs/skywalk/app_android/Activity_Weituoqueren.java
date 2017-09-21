@@ -41,6 +41,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     private final int MSG_HIDE_PROGRESS_BAR = 0;
     private final int MSG_HOUSE_INFO_COMMIT_DONE = 1;
     private final int MSG_HOUSE_PRICE_COMMIT_DONE = 2;
+    private final int MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR = 3;
     private int mHouseId = 0;
     private boolean mHouseInfoCommitted = false;
     private boolean mPriceInfoCommitted = false;
@@ -103,8 +104,9 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
                     Log.i(TAG, "House Info Committed: " + mHouseId);
                 } else {
                     Log.i(TAG, iCommon.GetErrDesc()) ;
-                    commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+                    //commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
                     hideWaiting();
+                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
                 }
 
                 runOnUiThread(new Runnable() {
@@ -206,6 +208,17 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mWebView.loadUrl(mURL);
     }
 
+    private void showErrorFinishedActivity() {
+        Log.i(TAG, "提交失败");
+
+        hideWaiting();
+        Intent intent = new Intent(Activity_Weituoqueren.this, Activity_Zushouweituo_Finish_Error.class);
+        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
+        String location = ClassDefine.HouseInfoForCommit.getHouseLocation();
+        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
+        startActivity(intent);
+    }
+
     private void showFinishedActivity() {
         if(!mPriceInfoCommitted || !mHouseInfoCommitted) {
             return;
@@ -230,6 +243,9 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
                 case MSG_HOUSE_INFO_COMMIT_DONE:
                     mHouseInfoCommitted = true;
                     commitPriceInfo();
+                    break;
+                case MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR:
+                    showErrorFinishedActivity();
                     break;
                 case MSG_HOUSE_PRICE_COMMIT_DONE:
                     mPriceInfoCommitted = true;
