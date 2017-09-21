@@ -74,6 +74,7 @@
         <activity android:name=".Activity_Zushouweituo_Fangyuanxinxi" />
         <activity android:name=".Activity_Weituoqueren" />
         <activity android:name=".Activity_Zushouweituo_Finish" />
+        <activity android:name=".Activity_Zushouweituo_Finish_Error" />
         <activity android:name=".Activity_Zushouweituo_Jiagesheding" />
         <activity android:name=".Activity_Zushouweituo_Xuanzedaili" />
         <activity android:name=".Activity_Zushouweituo_SelectService" />
