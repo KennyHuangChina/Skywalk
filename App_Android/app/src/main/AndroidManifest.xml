@@ -98,7 +98,8 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".Activity_PasswordReset" />
         <activity android:name=".Activity_ApartmentList" />
-        <activity android:name=".Message.Activity_Message_fangyuanshenhe"></activity>
+        <activity android:name=".Message.Activity_Message_fangyuanshenhe" />
+        <activity android:name=".Message.Activity_Message_yuyuekanfang"></activity>
     </application>
 
 </manifest>
