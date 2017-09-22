@@ -178,10 +178,10 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 	}()
 
 	/* Argeuments checking */
-	// err, apmt := getAppointment(aid)
-	// if nil != err {
-	// 	return
-	// }
+	err, apmt := getAppointment(aid)
+	if nil != err {
+		return
+	}
 	// if commdef.ORDER_TYPE_SEE_HOUSE != apmt.OrderType {
 	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("order type:%d", apmt.OrderType)}
 	// 	return
@@ -192,13 +192,6 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 
 	/* Processing */
 	o := orm.NewOrm()
-
-	apmt := TblAppointment{Id: aid}
-	errT := o.Read(&apmt)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err: %s", errT.Error())}
-		return
-	}
 
 	defer func() {
 		if nil != err {
@@ -280,7 +273,7 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 			return
 		}
 		beego.Debug(FN, "nPhoneNumb:", nPhoneNumb)
-		beego.Warn(FN, "TODO: add new user by phone number")
+		beego.Warn(FN, "TODO: add new user by phone number if it does not exit")
 	}
 
 	/* Permission checking */
@@ -476,7 +469,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 
 	defer func() {
 		if nil != err {
-			beego.Error(FN, err)
+			// beego.Error(FN, err)
 		}
 	}()
 
@@ -501,6 +494,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 	}
 
 	if 0 == len(comment) {
+		beego.Debug(FN, fmt.Sprintf("order type:%d, act:%d", apmt.OrderType, act))
 		if commdef.ORDER_TYPE_SEE_HOUSE == apmt.OrderType && commdef.APPOINT_ACTION_Submit == act {
 			comment = "预约看房"
 		}

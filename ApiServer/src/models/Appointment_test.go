@@ -30,10 +30,11 @@ func Test_MakeAppointment(t *testing.T) {
 	}
 
 	// appoint period
-	x3 := []string{"", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130",
-		"2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:30"}
-	x4 := []string{"", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130",
-		"2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:29"}
+	x3 := []string{"", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130", "2016-06-25 11.30",
+		"2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30",
+		"2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30"}
+	x4 := []string{"", "", "", "", "", "", "", "", "", "", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130",
+		"2016-06-25 1130", "2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:29"}
 	for k, v := range x3 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: schedule time(%s - %s) Incorrect", seq, v, x4[k]))
@@ -103,6 +104,97 @@ func Test_MakeAppointment(t *testing.T) {
 	}
 
 	// t.Error("NOT Implement")
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- MakeAppointmentAction --
+//
+func Test_MakeAppointmentAction(t *testing.T) {
+	t.Log("Test MakeAppointmentAction")
+	seq := 0
+
+	// appointment
+	x1 := []int64{-1, 0, 100000000}
+	s1 := []string{"< 0", " == 0", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment (%d) %s", seq, v, s1[k]))
+		if e, _ := MakeAppointmentAction(0, v, commdef.APPOINT_ACTION_Unknow, "", "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// User
+	x1 = []int64{-1, 0, 100000000}
+	s1 = []string{"< 0", " == 0", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: User (%d) %s", seq, v, s1[k]))
+		if e, _ := MakeAppointmentAction(v, 1, commdef.APPOINT_ACTION_Unknow, "", "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// Action
+	x1 = []int64{commdef.APPOINT_ACTION_Begin, commdef.APPOINT_ACTION_End + 1}
+	s1 = []string{"<= commdef.APPOINT_ACTION_Begin", "> commdef.APPOINT_ACTION_End"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: Action (%d) %s", seq, v, s1[k]))
+		if e, _ := MakeAppointmentAction(4, 1, int(v), "", "", ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// time period
+	s3 := []string{"", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130", "2016-06-25 1130", "2016-06-25 11.30",
+		"2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30",
+		"2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30", "2016-06-25 11:30"}
+	s4 := []string{"", "", "", "", "", "", "", "", "", "", "20170623", "201", "abcd", "2016-06-251130", "2016/06/25 1130",
+		"2016-06-25 1130", "2016-06-25 11.30", "2016-06-25 11-30", "2016-06-25 11A30", "2016-06-25 11:29"}
+	for k, v := range s3 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: time period (%s -> %s)", seq, v, s4[k]))
+		if e, _ := MakeAppointmentAction(4, 1, commdef.APPOINT_ACTION_Submit, v, s4[k], ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: time period (%s -> %s)", seq, v, s4[k]))
+		if e, _ := MakeAppointmentAction(4, 1, commdef.APPOINT_ACTION_Reschedule, v, s4[k], ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// Comments
+	t1 := "2017-09-22 17:00"
+	t2 := "2017-09-22 18:00"
+	x1 = []int64{commdef.APPOINT_ACTION_Confirm, commdef.APPOINT_ACTION_Reschedule, commdef.APPOINT_ACTION_Done, commdef.APPOINT_ACTION_Cancel}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: comments (not set) for action: %d", seq, v))
+		if e, _ := MakeAppointmentAction(4, 1, int(v), t1, t2, ""); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// login user permission
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: Appointment receptionist not assigned for action: %d", seq, v))
+		if e, _ := MakeAppointmentAction(4, 1, int(v), t1, t2, "test receptionist"); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	t.Error("TODO:")
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
