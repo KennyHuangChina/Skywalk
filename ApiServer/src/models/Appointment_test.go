@@ -77,24 +77,23 @@ func Test_MakeAppointment(t *testing.T) {
 		}
 	}
 
-	// Appointment already exist
-	seq++
-	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment already exist", seq))
-	if e, _ := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "15306261804", t2, t2, "test appointment"); e == nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-
 	// Make Appointment
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: make appointment", seq))
-	e, nid := MakeAppointment(2, 0, commdef.ORDER_TYPE_SEE_HOUSE, "13862601240", t2, t2, "test appointment")
+	e, nid := MakeAppointment(2, 10, commdef.ORDER_TYPE_SEE_HOUSE, "13862601240", t2, t2, "test appointment")
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 	t.Log("new appointment:", nid)
-	return
+
+	// Appointment already exist
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment already exist", seq))
+	if e, _ := MakeAppointment(2, 10, commdef.ORDER_TYPE_SEE_HOUSE, "13862601240", t2, t2, "test appointment"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, nid))

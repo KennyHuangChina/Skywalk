@@ -109,8 +109,8 @@ func DeleAppointment(aid, uid int64) (err error) {
 	/* Processing */
 	o := orm.NewOrm()
 
-	a := TblAppointment{Id: aid}
-	errT := o.Read(&a)
+	apmt := TblAppointment{Id: aid}
+	errT := o.Read(&apmt)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 		return
@@ -125,25 +125,29 @@ func DeleAppointment(aid, uid int64) (err error) {
 		}
 	}()
 
-	// Delete in appointment table
-	numb, errT := o.Delete(&a)
+	// Delete record in appointment table
+	numb, errT := o.Delete(&apmt)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 		return
 	}
 	beego.Debug(FN, fmt.Sprintf(" delete %d records in TblAppointment", numb))
 
-	// Delete in messages
-	msgType := int(0) // commdef.MSG_Begin
-	switch a.OrderType {
-	case commdef.ORDER_TYPE_SEE_HOUSE:
-		msgType = commdef.MSG_AppointSeeHouse
-	default:
-		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT, ErrInfo: fmt.Sprintf("Unknown appointment type:%d", a.OrderType)}
+	// Delete record in appointment action table
+	numb, errT = o.QueryTable("tbl_appointment_action").Filter("appoint", aid).Delete()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 		return
 	}
-	err, numb = delMessageByRefId(msgType, aid, o)
+	beego.Debug(FN, fmt.Sprintf(" delete %d records in TblAppointmentAction", numb))
+
+	// Delete records in messages
+	err, msgType := appointType2MessageType(apmt.OrderType)
 	if nil != err {
+		return
+	}
+
+	if err, numb = delMessageByRefId(msgType, aid, o); nil != err {
 		return
 	}
 
@@ -188,6 +192,14 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 
 	/* Processing */
 	o := orm.NewOrm()
+
+	apmt := TblAppointment{Id: aid}
+	errT := o.Read(&apmt)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err: %s", errT.Error())}
+		return
+	}
+
 	defer func() {
 		if nil != err {
 			o.Rollback()
@@ -196,7 +208,7 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 		}
 	}()
 
-	err, nact_id := addAppointmentAction(uid, aid, act, time_begin, time_end, comment, o)
+	err, nact_id := addAppointmentAction(uid, &apmt, act, time_begin, time_end, comment, o)
 	if nil != err {
 		return
 	}
@@ -222,7 +234,7 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, desc string) (err error, aid int64) {
 	FN := "[MakeAppointment] "
 	beego.Info(FN, "house:", hid, ", login user:", uid, ", type:", apType,
-		fmt.Sprintf(", period(%s - %s)", time_begin, time_end), ", desc:", desc)
+		fmt.Sprintf(", period: %s -> %s", time_begin, time_end), ", desc:", desc)
 
 	defer func() {
 		if nil != err {
@@ -268,6 +280,7 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 			return
 		}
 		beego.Debug(FN, "nPhoneNumb:", nPhoneNumb)
+		beego.Warn(FN, "TODO: add new user by phone number")
 	}
 
 	/* Permission checking */
@@ -294,16 +307,18 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}()
 
 	// Insert into appointment table
-	naid, errT := o.Insert(&TblAppointment{OrderType: apType, House: hid, Phone: phone, Receptionist: recpt,
-		ApomtTimeBgn: tBegin, ApomtTimeEnd: tEnd, ApomtDesc: desc})
+	na := TblAppointment{OrderType: apType, House: hid, Subscriber: uid, Phone: phone, Receptionist: recpt, ApomtTimeBgn: tBegin, ApomtTimeEnd: tEnd, ApomtDesc: desc}
+	naid, errT := o.Insert(&na)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 		return
 	}
 	beego.Debug(FN, "new appointment:", naid)
 
+	na.Id = naid
+
 	// Appointment action. add submit action automatically
-	err, _ = addAppointmentAction(uid, aid, commdef.APPOINT_ACTION_Submit, time_begin, time_end, "", o)
+	err, _ = addAppointmentAction(uid, &na, commdef.APPOINT_ACTION_Submit, time_begin, time_end, "", o)
 	if nil != err {
 		return
 	}
@@ -454,18 +469,21 @@ func getScheduleTime(time_begin, time_end string) (err error, tb, te time.Time) 
 	return
 }
 
-func addAppointmentAction(uid, aid int64, act int, time_begin, time_end string, comment string, o orm.Ormer) (err error, act_id int64) {
+func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, time_end string, comment string, o orm.Ormer) (err error, act_id int64) {
 	FN := "[addAppointmentAction] "
-	beego.Info(FN, "login user:", uid, ", appointment:", aid, ", act:", act,
+	beego.Info(FN, "login user:", uid, ", appointment:", apmt.Id, ", act:", act,
 		fmt.Sprintf(", period(%s - %s)", time_begin, time_end), ", comment:", comment)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	aid := apmt.Id
 
 	/* Argeuments checking */
 	if err, _ = GetUser(uid); nil != err {
-		return
-	}
-
-	err, apmt := getAppointment(aid)
-	if nil != err {
 		return
 	}
 
@@ -499,6 +517,7 @@ func addAppointmentAction(uid, aid int64, act int, time_begin, time_end string, 
 	}
 
 	// appointment subscriber, appointment receptionist, administrator could manipulate the appointment
+	beego.Debug(FN, fmt.Sprintf("Subscriber: %d, Receptionist: %d", apmt.Subscriber, apmt.Receptionist))
 	bPermission := false
 	if apmt.Subscriber == uid || apmt.Receptionist == uid {
 		bPermission = true
@@ -535,7 +554,7 @@ func addAppointmentAction(uid, aid int64, act int, time_begin, time_end string, 
 	msgTxt := ""
 	if 0 == apmt.Receptionist {
 		// appointment receptionist not assigned, send message to admin for assigning
-		if err, _, msgType, _ = getMsgParameters(apmt.OrderType, act, ""); nil != err {
+		if err, msgType = appointType2MessageType(apmt.OrderType); nil != err {
 			return
 		}
 		err, _ = sendMsg2Admin(msgType, commdef.MSG_PRIORITY_Warning, aid, "指派预约处理人", o)
@@ -558,6 +577,17 @@ func addAppointmentAction(uid, aid int64, act int, time_begin, time_end string, 
 	}
 
 	act_id = nact_id
+	return
+}
+
+func appointType2MessageType(apType int) (err error, msgType int) {
+	switch apType {
+	case commdef.ORDER_TYPE_SEE_HOUSE:
+		msgType = commdef.MSG_AppointSeeHouse
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment order type"}
+	}
+
 	return
 }
 
