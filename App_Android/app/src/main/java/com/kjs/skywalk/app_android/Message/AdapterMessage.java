@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android.Message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ class AdapterMessage extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
         if (convertView == null) {
@@ -89,6 +90,16 @@ class AdapterMessage extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (position % 2 == 0)
+                    mContext.startActivity(new Intent(mContext, Activity_Message_fangyuanshenhe.class));
+                else
+                    mContext.startActivity(new Intent(mContext, Activity_Message_yuyuekanfang.class));
+            }
+        });
 
          return convertView;
     }
