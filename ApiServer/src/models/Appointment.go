@@ -182,10 +182,12 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 	if nil != err {
 		return
 	}
-	// if commdef.ORDER_TYPE_SEE_HOUSE != apmt.OrderType {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("order type:%d", apmt.OrderType)}
-	// 	return
-	// }
+
+	if commdef.APPOINT_ACTION_Submit == act {
+		// action submit is only for system using, not for user using
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "Invalid Action"}
+		return
+	}
 
 	/* Permission checking */
 	// appointment subscriber, house agency, agency(if house is opened), administrator
@@ -481,7 +483,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 	}
 
 	if act <= commdef.APPOINT_ACTION_Begin || act > commdef.APPOINT_ACTION_End {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "invalid action"}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "Action out of range"}
 		return
 	}
 
@@ -510,7 +512,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 		return
 	}
 
-	// appointment subscriber, appointment receptionist, administrator could manipulate the appointment
+	// appointment subscriber, appointment receptionist and administrator could manipulate the appointment
 	beego.Debug(FN, fmt.Sprintf("Subscriber: %d, Receptionist: %d", apmt.Subscriber, apmt.Receptionist))
 	bPermission := false
 	if apmt.Subscriber == uid || apmt.Receptionist == uid {
@@ -526,7 +528,12 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 
 	/* Processing */
 	// appointment action table
-	nact := TblAppointmentAction{Appoint: aid, Action: act, Who: uid, TimeBgn: tBgn, TimeEnd: tEnd, Comment: comment}
+	nact := TblAppointmentAction{Appoint: aid, Action: act, Who: uid, Comment: comment}
+	if tBgn != nilTime && tEnd != nilTime {
+		nact.TimeBgn = tBgn
+		nact.TimeEnd = tEnd
+	}
+
 	nact_id, errT := o.Insert(&nact)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
@@ -546,7 +553,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 	// generate system message
 	msgType := commdef.MSG_Unknown
 	msgTxt := ""
-	if 0 == apmt.Receptionist {
+	if 0 == apmt.Receptionist { // action must be commdef.APPOINT_ACTION_Submit
 		// appointment receptionist not assigned, send message to admin for assigning
 		if err, msgType = appointType2MessageType(apmt.OrderType); nil != err {
 			return
@@ -597,7 +604,7 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 		msgType = commdef.MSG_AppointSeeHouse
 		switch act {
 		case commdef.APPOINT_ACTION_Submit:
-			msg = role + "约看"
+			msg = "客人约看"
 		case commdef.APPOINT_ACTION_Confirm:
 			msg = role + "同意时间"
 		case commdef.APPOINT_ACTION_Reschedule:

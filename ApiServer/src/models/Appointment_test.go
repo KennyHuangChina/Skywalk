@@ -139,8 +139,8 @@ func Test_MakeAppointmentAction(t *testing.T) {
 	}
 
 	// Action
-	x1 = []int64{commdef.APPOINT_ACTION_Begin, commdef.APPOINT_ACTION_End + 1}
-	s1 = []string{"<= commdef.APPOINT_ACTION_Begin", "> commdef.APPOINT_ACTION_End"}
+	x1 = []int64{commdef.APPOINT_ACTION_Begin, commdef.APPOINT_ACTION_End + 1, commdef.APPOINT_ACTION_Submit}
+	s1 = []string{"<= commdef.APPOINT_ACTION_Begin", "> commdef.APPOINT_ACTION_End", "commdef.APPOINT_ACTION_Submit"}
 	for k, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: Action (%d) %s", seq, v, s1[k]))
@@ -184,7 +184,8 @@ func Test_MakeAppointmentAction(t *testing.T) {
 		}
 	}
 
-	// login user permission
+	// Appointment receptionist not assigned
+	x1 = []int64{commdef.APPOINT_ACTION_Confirm, commdef.APPOINT_ACTION_Reschedule, commdef.APPOINT_ACTION_Done, commdef.APPOINT_ACTION_Cancel}
 	for _, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Permission: Appointment receptionist not assigned for action: %d", seq, v))
@@ -194,7 +195,46 @@ func Test_MakeAppointmentAction(t *testing.T) {
 		}
 	}
 
-	t.Error("TODO:")
+	// login user permission
+	x1 = []int64{1, 2, 9, 11}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: Login user(%d) ", seq, v))
+		if e, _ := MakeAppointmentAction(v, 16, commdef.APPOINT_ACTION_Confirm, t1, t2, "test user permission"); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// create new appointment for testing
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: make appointment", seq))
+	e, nid := MakeAppointment(2, 11, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, "test appointment")
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new appointment:", nid)
+
+	t1 = "2017-09-23 18:01"
+	t2 = "2017-09-23 19:01"
+	x1 = []int64{commdef.APPOINT_ACTION_Confirm, commdef.APPOINT_ACTION_Reschedule, commdef.APPOINT_ACTION_Done, commdef.APPOINT_ACTION_Cancel}
+	x2 := []int64{6, 11, 6, 11}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing add action: (%d) ", seq, v))
+		if e, _ := MakeAppointmentAction(x2[k], nid, int(v), t1, t2, "test appointment action"); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, nid))
+	if e := DeleAppointment(nid, 5); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
