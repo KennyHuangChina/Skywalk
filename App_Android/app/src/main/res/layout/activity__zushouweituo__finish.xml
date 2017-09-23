@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     android:orientation="vertical"
 
-    tools:context="com.kjs.skywalk.app_android.Activity_rentals_expiration">
+    tools:context="com.kjs.skywalk.app_android.Activity_Zushouweituo_Finish">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -34,7 +34,8 @@
         android:orientation="vertical"
         android:id="@+id/linearLayout"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/relativeLayout">
 
         <include layout="@layout/layout_title_bar_with_close_button" />
 
@@ -53,16 +54,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"  >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:gravity="center"
-                    android:textSize="14sp"
+                    android:text="您已经成功委托"
                     android:textColor="@color/colorTextNormal"
-                    android:text="您已经成功委托"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textViewHouseLocation"
@@ -70,54 +71,56 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:textSize="14sp"
+                    android:text="世贸蝶湖湾175栋2108室"
                     android:textColor="@color/colorTextNormal"
-                    android:text="世贸蝶湖湾175栋2108室"/>
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
                         <TextView
+                            android:id="@+id/textViewRent"
                             android:layout_width="57dp"
                             android:layout_height="27dp"
-                            android:layout_marginTop="15dp"
+                            android:layout_alignParentRight="true"
                             android:layout_marginBottom="15dp"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:onClick="onClickResponse"
-                            android:gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:textColor="@drawable/selector_rental_sale_text_color"
+                            android:layout_marginTop="15dp"
                             android:background="@drawable/selector_rental_sale_background"
+                            android:gravity="center"
+                            android:onClick="onClickResponse"
                             android:text="出租"
-                            android:textSize="13sp"
-                            android:id="@+id/textViewRent" />
+                            android:textColor="@drawable/selector_rental_sale_text_color"
+                            android:textSize="13sp" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
                         <TextView
+                            android:id="@+id/textViewSale"
                             android:layout_width="57dp"
                             android:layout_height="27dp"
-                            android:layout_marginTop="15dp"
+                            android:layout_alignParentLeft="true"
                             android:layout_marginBottom="15dp"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:onClick="onClickResponse"
-                            android:gravity="center"
-                            android:layout_alignParentLeft="true"
-                            android:textColor="@drawable/selector_rental_sale_text_color"
+                            android:layout_marginTop="15dp"
                             android:background="@drawable/selector_rental_sale_background"
+                            android:gravity="center"
+                            android:onClick="onClickResponse"
                             android:text="出售"
-                            android:id="@+id/textViewSale" />
+                            android:textColor="@drawable/selector_rental_sale_text_color" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -128,22 +131,23 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:textSize="13sp"
+                    android:text="我们会有专人与您联系，协助您完成房源发布，请保持手机畅通！"
                     android:textColor="#9d9c9d"
-                    android:text="我们会有专人与您联系，协助您完成房源发布，请保持手机畅通！"/>
+                    android:textSize="13sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="#dfdfdf">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:layout_marginLeft="15dp"
                         android:layout_centerInParent="true"
+                        android:layout_marginLeft="15dp"
                         android:text="接下来您可以继续"
-                        android:textColor="@color/colorTextNormal" />
+                        android:textColor="@color/colorTextNormal"
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -152,8 +156,8 @@
                     android:layout_height="83dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:orientation="horizontal"
-                    android:onClick="onClickResponse">
+                    android:onClick="onClickResponse"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -161,38 +165,41 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/photo_n"/>
+                        android:src="@drawable/photo_n" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:orientation="vertical">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="13sp"
-                            android:textColor="@color/colorTextNormal"
-                            android:text="上传房源图片"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="上传房源图片"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="1张漂亮的房源照片比100句广告词效果更好"
                             android:textColor="#9d9c9d"
-                            android:textSize="12sp"
-                            android:text="1张漂亮的房源照片比100句广告词效果更好"/>
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                 </LinearLayout>
-                <include layout="@layout/seperator_horizontal"/>
+
+                <include layout="@layout/seperator_horizontal" />
+
                 <LinearLayout
                     android:id="@+id/improveContainer"
                     android:layout_width="match_parent"
                     android:layout_height="83dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:orientation="horizontal"
-                    android:onClick="onClickResponse">
+                    android:onClick="onClickResponse"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -200,29 +207,31 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/list_n"/>
+                        android:src="@drawable/list_n" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:orientation="vertical">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="13sp"
-                            android:textColor="@color/colorTextNormal"
-                            android:text="完善房源信息"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="完善房源信息"
+                            android:textColor="@color/colorTextNormal"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="如果您今日有空, 就可以去完善房源信息咯"
                             android:textColor="#9d9c9d"
-                            android:textSize="12sp"
-                            android:text="如果您今日有空, 就可以去完善房源信息咯"/>
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
-                <include layout="@layout/seperator_horizontal"/>
+
+                <include layout="@layout/seperator_horizontal" />
             </LinearLayout>
         </ScrollView>
 

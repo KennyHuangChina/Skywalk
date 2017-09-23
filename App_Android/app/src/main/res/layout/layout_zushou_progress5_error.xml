@@ -88,5 +88,5 @@
         android:textSize="12sp"
         android:drawablePadding="5dp"
         android:drawableTop="@drawable/error_icon"
-        android:text="完成"/>
+        android:text="错误"/>
 </LinearLayout>
