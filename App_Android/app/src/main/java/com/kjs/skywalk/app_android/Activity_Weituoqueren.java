@@ -103,10 +103,17 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
                     myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE, 0);
                     Log.i(TAG, "House Info Committed: " + mHouseId);
                 } else {
-                    Log.i(TAG, iCommon.GetErrDesc()) ;
+                    Log.i(TAG, "Error Code: " + iCommon.GetErrCode() + " " + iCommon.GetErrDesc()) ;
                     //commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
                     hideWaiting();
-                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
+
+                    //0x451: duplicate
+                    if(iCommon.GetErrCode() == 0x451) {
+                        myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
+                    } else {
+                        Activity_Weituoqueren.super.onCommandFinished(i, iCommon);
+                        return;
+                    }
                 }
 
                 runOnUiThread(new Runnable() {
