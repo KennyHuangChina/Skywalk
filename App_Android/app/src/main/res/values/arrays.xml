@@ -16,4 +16,11 @@
         <item>html</item>
     </string-array>
 
+    <string-array name="time_selector">
+        <item>8:30 - 9:00</item>
+        <item>9:30 - 10:00 </item>
+        <item>10:30 - 11:00</item>
+        <item>11:30 - 12:00</item>
+        <item>12:30 - 13:00</item>
+    </string-array>
 </resources>
