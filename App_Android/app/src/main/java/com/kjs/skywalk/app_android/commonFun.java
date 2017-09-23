@@ -507,4 +507,15 @@ public class commonFun {
     public static void cleanTextViewDrawable(TextView view) {
         view.setCompoundDrawables(null, null, null, null);
     }
+
+    public static String getErrorDescriptionByErrorCode(int errorCode) {
+        String error = "";
+        switch (errorCode) {
+            case 0x451:
+                error = "房源重复";
+                break;
+        }
+
+        return error;
+    }
 }

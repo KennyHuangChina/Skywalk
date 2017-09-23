@@ -45,6 +45,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     private int mHouseId = 0;
     private boolean mHouseInfoCommitted = false;
     private boolean mPriceInfoCommitted = false;
+    private int mErrorCode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
                     hideWaiting();
 
                     //0x451: duplicate
+                    mErrorCode = iCommon.GetErrCode();
                     if(iCommon.GetErrCode() == 0x451) {
                         myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
                     } else {
@@ -223,6 +225,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
         String location = ClassDefine.HouseInfoForCommit.getHouseLocation();
         intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
+        intent.putExtra(IntentExtraKeyValue.KEY_ERROR_CODE, mErrorCode);
         startActivity(intent);
     }
 

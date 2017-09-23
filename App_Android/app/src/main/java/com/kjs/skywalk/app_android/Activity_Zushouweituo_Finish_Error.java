@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 public class Activity_Zushouweituo_Finish_Error extends SKBaseActivity {
 
+    private int mErrorCode = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +22,8 @@ public class Activity_Zushouweituo_Finish_Error extends SKBaseActivity {
         titleText.setText("租售委托-完成");
         ImageView closeButton = (ImageView)findViewById(R.id.imageViewActivityClose);
         closeButton.setVisibility(View.INVISIBLE);
+
+        mErrorCode = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_ERROR_CODE, 0);
     }
 
     @Override
@@ -28,13 +32,10 @@ public class Activity_Zushouweituo_Finish_Error extends SKBaseActivity {
 
         TextView view = (TextView)findViewById(R.id.textViewHouseLocation);
         view.setText(mHouseLocation);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        doFinish();
+        TextView viewReason = (TextView)findViewById(R.id.textViewReason);
+        String error = commonFun.getErrorDescriptionByErrorCode(mErrorCode);
+        viewReason.setText(error);
     }
 
     private void  doFinish() {
@@ -46,13 +47,14 @@ public class Activity_Zushouweituo_Finish_Error extends SKBaseActivity {
     }
 
     public void onClickResponse(View v) {
+        int id = v.getId();
         switch (v.getId()) {
             case R.id.textViewBack:
             {
-                doFinish();
+                finish();
                 break;
             }
-            case R.id.textViewCommitAgain:
+            case R.id.textViewClose:
             {
                 doFinish();
                 break;
@@ -62,10 +64,6 @@ public class Activity_Zushouweituo_Finish_Error extends SKBaseActivity {
                 intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
                 intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION, mHouseLocation);
                 startActivityForResult(intent, 0);
-                break;
-            }
-            case R.id.uploadContainer: {
-                startActivityForResult(new Intent(Activity_Zushouweituo_Finish_Error.this, Activity_fangyuan_zhaopian.class), 1);
                 break;
             }
             case R.id.imageViewActivityBack: {
