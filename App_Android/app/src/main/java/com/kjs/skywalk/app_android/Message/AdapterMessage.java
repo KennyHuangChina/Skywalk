@@ -36,8 +36,7 @@ class AdapterMessage extends BaseAdapter {
 
     private Context mContext = null;
     private ArrayList<Deliverable> mDeliverableLst = new ArrayList<>();
-    private boolean mIsEditMode = false;
-    private boolean mIsNumberShow = true;
+
 
     public AdapterMessage(Context context) {
         super();
