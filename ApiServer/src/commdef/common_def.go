@@ -274,6 +274,30 @@ type AppointmentInfo struct {
 	CloseTime    string
 }
 
+type AppointmentAct struct {
+	Id        int64
+	Act       int
+	Who       string
+	When      string
+	TimeBegin string
+	TimeEnd   string
+	Comment   string
+}
+
+type AppointmentInfo1 struct {
+	House             MsgHouse
+	Date              string
+	TimeBegin         string
+	TimeEnd           string
+	Subscriber        string
+	SubscriberPhone   string
+	Receptionist      string
+	ReceptionistPhone string
+	ApmtDesc          string
+	SubscribeTime     string
+	Acts              []AppointmentAct
+}
+
 const (
 	APPOINT_ACTION_Begin = 0
 

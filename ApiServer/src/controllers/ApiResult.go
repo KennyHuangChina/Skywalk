@@ -250,6 +250,12 @@ type ResGetHouseCertHist struct {
 	CertHist []commdef.HouseCert
 }
 
+// result of API GetAppointmentInfo
+type ResGetAppointmentInfo struct {
+	ResCommon
+	Appointment commdef.AppointmentInfo1
+}
+
 /************************************************************************************
 *
 *		Functions

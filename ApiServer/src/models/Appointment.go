@@ -10,6 +10,118 @@ import (
 )
 
 /**
+*	get appointment info and its actions by appointment id
+*	Arguments:
+*		uid 		- login user
+*	Returns
+*		err 		- error info
+*		apt_info	- appointment info
+ */
+func GetAppointmentInfo(uid, aid int64) (err error, apt_info commdef.AppointmentInfo1) {
+	FN := "[GetAppointmentInfo] "
+	beego.Info(FN, "login user:", uid, ", appointment:", aid)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	if err, _ = GetUser(uid); nil != err {
+		return
+	}
+	err, apmt := getAppointment(aid)
+	if nil != err {
+		return
+	}
+
+	/* Permission checking */
+	// appointment subscriber, appointment receptionest & administrator are able to see
+	beego.Debug(FN, fmt.Sprintf("Subscriber: %d, Receptionist: %d", apmt.Subscriber, apmt.Receptionist))
+	bPermission := false
+	if apmt.Subscriber == uid || apmt.Receptionist == uid {
+		bPermission = true
+	} else if _, bAdmin := isAdministrator(uid); bAdmin {
+		bPermission = true
+	}
+
+	if !bPermission {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+		return
+	}
+
+	/* Processing */
+	err, h := getHouse(apmt.House)
+	if nil != err {
+		return
+	}
+	// beego.Debug(FN, fmt.Sprintf("house:%+v", h))
+	// beego.Debug(FN, fmt.Sprintf("property:%+v", h.Property))
+
+	err, pif := GetPropertyInfo(h.Property.Id)
+	if nil != err {
+		return
+	}
+	apt_info.House.Property = pif.PropName // h.Property.Name
+	apt_info.House.Bedrooms = h.Bedrooms
+	apt_info.House.Livingrooms = h.Livingrooms
+	apt_info.House.Bathrooms = h.Bathrooms
+	if errT := canAccessHouse(uid, apmt.House); nil == errT {
+		apt_info.House.BuildingNo = h.BuildingNo
+		apt_info.House.HouseNo = h.HouseNo
+	}
+
+	apt_info.Date = apmt.ApomtTimeBgn.Local().String()[:10]
+	apt_info.TimeBegin = apmt.ApomtTimeBgn.Local().String()[11:16]
+	apt_info.TimeEnd = apmt.ApomtTimeEnd.Local().String()[11:16]
+	err, u := GetUser(apmt.Subscriber)
+	if nil != err {
+		return
+	}
+	apt_info.Subscriber = u.Name
+	apt_info.SubscriberPhone = u.LoginName
+	err, u = GetUser(apmt.Receptionist)
+	if nil != err {
+		return
+	}
+	apt_info.Receptionist = u.Name
+	apt_info.ReceptionistPhone = u.LoginName
+	apt_info.ApmtDesc = apmt.ApomtDesc
+	apt_info.SubscribeTime = apmt.SubscTime.Local().String()[:19]
+
+	// apt_info.Acts
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_appointment_action").Filter("Appoint", aid)
+	acts := []TblAppointmentAction{}
+	_, errT := qs.OrderBy("-Id").All(&acts)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
+		return
+	}
+
+	for _, v := range acts {
+		// beego.Debug(FN, fmt.Sprintf("v:%+v", v))
+		na := commdef.AppointmentAct{Id: v.Id, Act: v.Action, When: v.When.Local().String()[:20], Comment: v.Comment}
+		err1, u := GetUser(v.Who)
+		if nil != err1 {
+			err = err1
+			return
+		}
+		na.Who = u.Name
+		// na.Phone = u.LoginName
+		if nilTime != v.TimeBgn && nilTime != v.TimeEnd {
+			na.TimeBegin = v.TimeBgn.Local().String()[:20]
+			na.TimeEnd = v.TimeEnd.Local().String()[:20]
+		}
+		apt_info.Acts = append(apt_info.Acts, na)
+	}
+
+	beego.Debug(FN, fmt.Sprintf("appointment:%+v", apt_info))
+	return
+}
+
+/**
 *	Get house list of appointment of house see
 *	Arguments:
 *		begin	- from which item to fetch

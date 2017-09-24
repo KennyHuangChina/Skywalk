@@ -325,3 +325,58 @@ func Test_GetHouseList_AppointSee(t *testing.T) {
 
 	t.Error("TODO:")
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetAppointmentInfo --
+//
+func Test_GetAppointmentInfo(t *testing.T) {
+	t.Log("Test GetAppointmentInfo")
+	seq := 0
+
+	// login user
+	x1 := []int64{-1, 0, 100000000}
+	s1 := []string{"< 0", "is SYSTEM", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: user(%d) %s", seq, v, s1[k]))
+		if e, _ := GetAppointmentInfo(v, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// appointment
+	s1 = []string{"< 0", " = 0", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appointment(%d) %s", seq, v, s1[k]))
+		if e, _ := GetAppointmentInfo(4, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// permission: user
+	x1 = []int64{1, 2, 9, 11}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: User(%d) do not have permission to get appointment info", seq, v))
+		if e, _ := GetAppointmentInfo(v, 16); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// Testing
+	x1 = []int64{4, 5, 6, 10}
+	s1 = []string{"administrator", "administrator", "receptionist", "subscriber"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s", seq, v, s1[k]))
+		if e, _ := GetAppointmentInfo(v, 16); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+}

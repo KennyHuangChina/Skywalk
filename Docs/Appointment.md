@@ -66,13 +66,14 @@
 ### 4. make action for an appointment
 	[Security]	private: landlorad, House Agency and administrator
 	[Request]
-  		* PUT /v1/appointment/:id/act
+  		* POST /v1/appointment/:id/act
 	  		* act				int		// appointment action. 
 	  		* tb				string	// time begin
 	  		* te				string	// time end
 	  		* ac				string	// action comments
 	[Response]
 		* SUCCESS:200 
+			* Id			int			// new action id
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
@@ -85,6 +86,42 @@
 	  		* r				int		// appointment receptionist id. 
 	[Response]
 		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+##
+
+### 6. get appointment info
+	[Security]	private: appointment subscriber, appointment receptionist & administrator
+	[Request]
+  		* GET /v1/appointment/:id
+	[Response]
+		* SUCCESS:200
+			* House
+				* HouseId		int 		// house id
+				* Property		string		// property name
+				* BuildingNo	int			// building number
+				* HouseNo		string		// house number
+				* Livingrooms	int			// livingroom quantity
+				* Bedrooms		int			// bedroom quantity
+				* Bathrooms		int			// bathroom quantity 
+			* Date				string		// appointment date
+			* TimeBegin			string		// appointment begin time
+			* TimeEnd			string		// appointment end time
+			* Subscriber		string		// subscriber name
+			* SubscriberPhone	string		// phone number of subscriber
+			* Receptionist		string		// receptionist name
+			* ReceptionistPhone	string		// phone number of receptionist
+			* ApmtDesc			string 		// appointment description
+			* SubscribeTime		string		// suberibe time
+			* Actions
+				* Id			int			// action id
+				* Act			int 		// action type
+				* Who			string		// people who made the action
+				* When			string		// when the people made the action
+				* TimeBegin		string		// new begin time
+				* TimeEnd		string		// new end time
+				* Comment		string		// action comments
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

@@ -16,9 +16,54 @@ type AppointmentController struct {
 func (a *AppointmentController) URLMapping() {
 	a.Mapping("OrderSeeHouse", a.OrderSeeHouse)
 	a.Mapping("MakeAppointmentAction", a.MakeAppointmentAction)
+	a.Mapping("GetAppointmentInfo", a.GetAppointmentInfo)
 
 	a.Mapping("GetAppointList_SeeHouse", a.GetAppointList_SeeHouse)
 	a.Mapping("GetHouseList_AppointSee", a.GetHouseList_AppointSee)
+}
+
+// @Title GetAppointmentInfo
+// @Description get appointment info
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id [get]
+func (this *AppointmentController) GetAppointmentInfo() {
+	FN := "[GetAppointmentInfo] "
+	beego.Warn("[--- API: GetAppointmentInfo ---]")
+
+	var result ResGetAppointmentInfo
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result.ResCommon)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	aid, _ := this.GetInt64(":id")
+
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err, apt_info := models.GetAppointmentInfo(uid, aid)
+	if nil == err {
+		result.Appointment = apt_info
+	}
 }
 
 // @Title MakeAppointmentAction
