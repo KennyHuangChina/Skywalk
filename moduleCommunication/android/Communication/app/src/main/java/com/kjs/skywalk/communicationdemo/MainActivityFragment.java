@@ -93,8 +93,9 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddFacilityType(mEditText.getText().toString());
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
 //
-        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "178X", "1305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
-        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+
+//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "178X", "1305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
+//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
 //        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
@@ -107,6 +108,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.SetHousePrice(11, 1000, 800, true, 500000, 470000);
 //        CmdMgr.MakeAppointment_SeeHouse(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString(),
 //                                            "2017-06-23 9:00", "2017-06-23 10:30", mEditText2.getText().toString());
+
+        CmdMgr.MakeAppointmentAction(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), "2017-09-22 8:00", "2017-09-22 9:00", mEditText2.getText().toString());
     }
     private void doTestGetApi() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);

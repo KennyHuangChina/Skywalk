@@ -238,7 +238,7 @@ public class CommunicationInterface {
         //
         //          Appointment APIs
         /*
-        *   CMD         : CmdMakeAppointment_SeeHouse
+        *   CMD         : CMD_APPOINT_SEE_HOUSE
         *   Result      : IApiResults.IAddRes
         *   house       : house id
         *   phone       : contact phone. if user logined, it could be empty
@@ -265,6 +265,17 @@ public class CommunicationInterface {
         *
          */
         int GetHouseList_AppointSee(int begin, int cnt);
+
+        /*
+        *   CMD : CMD_MAKE_APPOINTMENT_ACTION
+        *       apid        - appointment id
+        *       act         - action id. 2: Confirm; 3: Reschedule; 4: Done; 5: Cancel
+        *       time_begin  - appointment period begin, like 2017-06-24 09:00
+        *       time_end    - appointment period end, like 2017-06-24 09:30
+        *       comments    - appointment comments
+        *   Result : IApiResults.IAddRes
+         */
+        int MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -351,7 +362,8 @@ public class CommunicationInterface {
         // Appointment
         final public static int CMD_APPOINT_SEE_HOUSE         = 0x8001,
                                 CMD_APPOINT_HOUSE_SEE_LST     = 0x8002,
-                                CMD_HOUSE_LST_APPOINT_SEE     = 0x8003;
+                                CMD_HOUSE_LST_APPOINT_SEE     = 0x8003,
+                                CMD_MAKE_APPOINTMENT_ACTION   = 0x8004;
 
         // House watch
         final public static int CMD_GET_USER_HOUSE_WATCH_LIST = 0x9001;
@@ -439,6 +451,7 @@ public class CommunicationInterface {
             cmdMap.put(CMD_APPOINT_SEE_HOUSE,       "CMD_APPOINT_SEE_HOUSE");
             cmdMap.put(CMD_APPOINT_HOUSE_SEE_LST,   "CMD_APPOINT_HOUSE_SEE_LST");
             cmdMap.put(CMD_HOUSE_LST_APPOINT_SEE,   "CMD_HOUSE_LST_APPOINT_SEE");
+            cmdMap.put(CMD_MAKE_APPOINTMENT_ACTION, "CMD_MAKE_APPOINTMENT_ACTION");
 
             // House watch
             cmdMap.put(CMD_GET_USER_HOUSE_WATCH_LIST, "CMD_GET_USER_HOUSE_WATCH_LIST");
