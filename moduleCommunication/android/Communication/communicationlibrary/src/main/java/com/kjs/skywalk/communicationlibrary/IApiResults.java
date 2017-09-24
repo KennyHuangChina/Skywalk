@@ -124,9 +124,19 @@ public class IApiResults {
         String  ModifyDate();
     }
 
-    public interface IHouseCertInfo {
+    public interface IHouseCertDigestInfo {
         int     CertStat();     // certification stat. 1: wait for certification; 2: Certitication passed; 3: Certification failed
         Date    CertTime();
+        String  CertDesc();
+    }
+
+    public interface IHouseCertInfo {
+        int     CertId();
+        int     UserId();
+        String  UserName();
+        String  UserPhone();
+        Date    CertTime();
+        int     CertStat();     // certification stat. 1: wait for certification; 2: Certitication passed; 3: Certification failed
         String  CertDesc();
     }
 

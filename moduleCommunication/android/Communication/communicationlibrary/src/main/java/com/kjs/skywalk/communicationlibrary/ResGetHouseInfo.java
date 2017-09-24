@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by kenny on 2017/3/1.
  */
 
-class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo {
+class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApiResults.IHouseCertDigestInfo {
     private int     mHouseId;       // house id
     private int     mProId;         // property id which the house belong to
     private String  mBuildingNo;    // the building number the house belong to

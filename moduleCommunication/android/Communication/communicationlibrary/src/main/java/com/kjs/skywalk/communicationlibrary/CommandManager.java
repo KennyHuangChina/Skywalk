@@ -428,6 +428,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
+    public int GetHouseCertHist(int house_id) {
+        CommunicationBase op = new CmdGetHouseCertHist(mContext, house_id);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int GetBehalfHouses(int type, int begin, int cnt) {
         CommunicationBase op = new CmdGetBehalfHouses(mContext, type, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -722,6 +729,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     @Override
     public int GetHouseList_AppointSee(int begin, int cnt) {
         CommunicationBase op = new CmdGetHouseList_AppointSee(mContext, begin, cnt);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
+    public int MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments) {
+        CommunicationBase op = new CmdMakeAppointmentAction(mContext, apid, act, time_begin, time_end, comments);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
