@@ -25,7 +25,7 @@ func (a *AppointmentController) URLMapping() {
 // @Description make a action for an appointment
 // @Success 200 {string}
 // @Failure 403 body is empty
-// @router /:id/act [put]
+// @router /:id/act [post]
 func (this *AppointmentController) MakeAppointmentAction() {
 	FN := "[MakeAppointmentAction] "
 	beego.Warn("[--- API: MakeAppointmentAction ---]")
@@ -57,6 +57,8 @@ func (this *AppointmentController) MakeAppointmentAction() {
 	tb := this.GetString("tb")
 	te := this.GetString("te")
 	ac := this.GetString("ac")
+	tmp, _ := base64.URLEncoding.DecodeString(ac)
+	ac = string(tmp)
 
 	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
 
