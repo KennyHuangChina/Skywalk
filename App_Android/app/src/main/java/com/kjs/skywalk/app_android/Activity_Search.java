@@ -131,13 +131,16 @@ public class Activity_Search extends SKBaseActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title:
-            {
+            case R.id.imageViewBack: {
                 finish();
+                break;
             }
-            break;
+            case R.id.buttonCleanHistory: {
+                kjsLogUtil.i("clean history");
+                break;
+            }
         }
     }
 
