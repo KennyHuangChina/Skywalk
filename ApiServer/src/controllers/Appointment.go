@@ -17,9 +17,54 @@ func (a *AppointmentController) URLMapping() {
 	a.Mapping("OrderSeeHouse", a.OrderSeeHouse)
 	a.Mapping("MakeAppointmentAction", a.MakeAppointmentAction)
 	a.Mapping("GetAppointmentInfo", a.GetAppointmentInfo)
+	a.Mapping("AssignAppointReceptionist", a.AssignAppointReceptionist)
 
 	a.Mapping("GetAppointList_SeeHouse", a.GetAppointList_SeeHouse)
 	a.Mapping("GetHouseList_AppointSee", a.GetHouseList_AppointSee)
+}
+
+// @Title AssignAppointReceptionist
+// @Description get appointment info
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/recpt [put]
+func (this *AppointmentController) AssignAppointReceptionist() {
+	FN := "[AssignAppointReceptionist] "
+	beego.Warn("[--- API: AssignAppointReceptionist ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	aid, _ := this.GetInt64(":id")
+	recpt, _ := this.GetInt64("r")
+
+	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
+
+	/*
+	 *	Processing
+	 */
+	err = models.AssignAppointmentRectptionist(uid, aid, recpt)
+	if nil == err {
+	}
 }
 
 // @Title GetAppointmentInfo

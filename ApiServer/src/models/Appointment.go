@@ -10,6 +10,78 @@ import (
 )
 
 /**
+*	Assign receptionist to specified appointment
+*	Arguments:
+*		uid 	- login user
+*		aid		- appointment id
+*		rectp	- appoint receptionist
+*	Returns
+*		err 	- error info
+ */
+func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
+	FN := "[GetAppointmentInfo] "
+	beego.Info(FN, "login user:", uid, ", appointment:", aid, ", recpt:", recpt)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	// GetUser(uid)		// isAdministrator will call GetUser either, so skip it here
+	if err, _ = getAppointment(aid); nil != err {
+		return
+	}
+	if err, _ = GetUser(recpt); nil != err {
+		return
+	}
+
+	/* Permission checking */
+	// Only the administrator could assign the receptionist for appointment
+	if _, bAdmin := isAdministrator(uid); !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+
+	apmt := TblAppointment{Id: aid}
+	if errT := o.Read(&apmt); nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
+		return
+	}
+
+	if apmt.Receptionist == recpt {
+		beego.Debug(FN, fmt.Sprintf("apmt.Receptionist(%d) == recpt(%d)", apmt.Receptionist, recpt))
+		return
+	}
+
+	defer func() {
+		if nil == err {
+			o.Commit()
+		} else {
+			o.Rollback()
+		}
+	}()
+
+	// recrptionist in appointment table
+	apmt.Receptionist = recpt
+	_, errT := o.Update(&apmt, "Receptionist")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
+		return
+	}
+
+	// appointment action table and fire system message
+	err, act_id := addAppointmentAction(uid, &apmt, commdef.APPOINT_ACTION_SetRectptionist, "", "", "指派预约处理人", o)
+	beego.Debug(FN, "new action:", act_id)
+
+	return
+}
+
+/**
 *	get appointment info and its actions by appointment id
 *	Arguments:
 *		uid 		- login user
@@ -652,7 +724,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 		return
 	}
 
-	// appointment table
+	// update schedule time in appointment table
 	if tBgn != nilTime {
 		a := TblAppointment{Id: aid, ApomtTimeBgn: tBgn, ApomtTimeEnd: tEnd}
 		_, errT = o.Update(&a, "ApomtTimeBgn", "ApomtTimeEnd")
@@ -683,8 +755,10 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 			return
 		}
 		if uid == apmt.Subscriber {
+			// current user is subscriber, so send message to receptionist
 			err, _ = addMessage(msgType, msgPri, aid, apmt.Receptionist, msgTxt, o)
 		} else {
+			// current user is receptionist, so send message to subscriber
 			err, _ = addMessage(msgType, msgPri, aid, uid, msgTxt, o)
 		}
 	}
@@ -727,6 +801,9 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 		case commdef.APPOINT_ACTION_Cancel:
 			msg = role + "取消约看"
 			msgPriority = commdef.MSG_PRIORITY_Error
+		case commdef.APPOINT_ACTION_SetRectptionist:
+			msg = "请处理预约"
+			msgPriority = commdef.MSG_PRIORITY_Info
 		default:
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment action type"}
 		}

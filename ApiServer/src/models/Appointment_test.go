@@ -380,3 +380,71 @@ func Test_GetAppointmentInfo(t *testing.T) {
 		}
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AssignAppointmentRectptionist --
+//
+func Test_AssignAppointmentRectptionist(t *testing.T) {
+	t.Log("Test AssignAppointmentRectptionist")
+	seq := 0
+
+	// appointment
+	x1 := []int64{-1, 0, 100000000}
+	s1 := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Argument: Appointment(%d) %s", seq, v, s1[k]))
+		if e := AssignAppointmentRectptionist(0, v, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// receptionist
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Argument: Receptionist(%d) %s", seq, v, s1[k]))
+		if e := AssignAppointmentRectptionist(0, 1, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Argument: Receptionist(6) not change", seq))
+	if e := AssignAppointmentRectptionist(4, 16, 6); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// login user
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Argument: login user(%d) %s", seq, v, s1[k]))
+		if e := AssignAppointmentRectptionist(v, 1, 6); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	x1 = []int64{1, 2, 6, 9, 10, 11}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Argument: login user(%d) is not an administrator", seq, v))
+		if e := AssignAppointmentRectptionist(v, 1, 6); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	x1 = []int64{4} //, 5}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: login user(%d) reassign the receptionist", seq, v))
+		if e := AssignAppointmentRectptionist(v, 1, 6); e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+}

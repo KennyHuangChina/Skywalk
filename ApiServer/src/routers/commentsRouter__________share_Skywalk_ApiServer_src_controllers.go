@@ -204,6 +204,13 @@ func init() {
 
 	beego.GlobalControllerRouter["ApiServer/controllers:AppointmentController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AppointmentController"],
 		beego.ControllerComments{
+			Method: "AssignAppointReceptionist",
+			Router: `/:id/recpt`,
+			AllowHTTPMethods: []string{"put"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["ApiServer/controllers:AppointmentController"] = append(beego.GlobalControllerRouter["ApiServer/controllers:AppointmentController"],
+		beego.ControllerComments{
 			Method: "GetAppointmentInfo",
 			Router: `/:id`,
 			AllowHTTPMethods: []string{"get"},

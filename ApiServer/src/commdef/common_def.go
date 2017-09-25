@@ -301,14 +301,15 @@ type AppointmentInfo1 struct {
 const (
 	APPOINT_ACTION_Begin = 0
 
-	APPOINT_ACTION_Unknow     = 0
-	APPOINT_ACTION_Submit     = 1
-	APPOINT_ACTION_Confirm    = 2
-	APPOINT_ACTION_Reschedule = 3
-	APPOINT_ACTION_Done       = 4
-	APPOINT_ACTION_Cancel     = 5
+	APPOINT_ACTION_Unknow          = 0
+	APPOINT_ACTION_Submit          = 1
+	APPOINT_ACTION_Confirm         = 2
+	APPOINT_ACTION_Reschedule      = 3
+	APPOINT_ACTION_Done            = 4
+	APPOINT_ACTION_Cancel          = 5
+	APPOINT_ACTION_SetRectptionist = 6
 
-	APPOINT_ACTION_End = 5
+	APPOINT_ACTION_End = 6
 )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

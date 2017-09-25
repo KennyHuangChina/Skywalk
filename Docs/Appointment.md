@@ -79,7 +79,7 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 5. assign appointment receptionist (TODO://)
+### 5. assign appointment receptionist (Ongoing...)
 	[Security]	private: administrator
 	[Request]
   		* PUT /v1/appointment/:id/recpt?r=<>
