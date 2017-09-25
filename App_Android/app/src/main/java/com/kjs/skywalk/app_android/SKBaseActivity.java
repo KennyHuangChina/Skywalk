@@ -34,6 +34,7 @@ public class SKBaseActivity extends AppCompatActivity
     protected int mHouseId = 0;
     protected String mHouseLocation = "";
     protected String mPropertyName= "";
+    protected int mPropertyId = 0;
     protected String mBuildingNo = "";
     protected String mRoomNo = "";
     protected int mUserId = 0;
@@ -81,6 +82,7 @@ public class SKBaseActivity extends AppCompatActivity
             Log.i(getClass().getSimpleName().toString(), "House Location: " + mHouseLocation);
 
             mPropertyName = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_NAME);
+            mPropertyId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_ID, 0);
             mBuildingNo = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_BUILDING_NO);
             mRoomNo = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_ROOM_NO);
 

@@ -56,6 +56,9 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
         mDisplayType.setOnClickListener(mClickListenerDisplayType);
 
         mTextViewSort = (TextView)findViewById(R.id.textViewSort);
+
+        kjsLogUtil.i("property name: " + mPropertyName);
+        kjsLogUtil.i("property id: " + mPropertyId);
     }
 
     public void onClickResponse(View v) {

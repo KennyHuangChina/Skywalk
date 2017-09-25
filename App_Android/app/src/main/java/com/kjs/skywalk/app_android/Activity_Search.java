@@ -13,14 +13,21 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 
 /**
  * Created by admin on 2017/3/22.
@@ -31,12 +38,14 @@ public class Activity_Search extends SKBaseActivity {
     private ListView mListView = null;
     private LinearLayout mContainer = null;
     private LinearLayout mContainerEmpty = null;
-    private ArrayList<String> mHistory = new ArrayList<String>();
+    private PropertySearchHistory mHistory = null;
     private ArrayList<String> mGuess = new ArrayList<String>();
     private int mActScreenWidth = 1080;
     private Context mContext;
     AdapterHouseSearchResult mAdapter = null;
-    private ArrayList<ClassDefine.Property> mGardenList = new ArrayList<ClassDefine.Property>();
+
+    private ArrayList<IApiResults.IPropertyInfo> mPropertyList = new ArrayList<>();
+    private int mPropertyCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,9 @@ public class Activity_Search extends SKBaseActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         mActScreenWidth = metric.widthPixels;
         mActScreenWidth -= 100;
-        SearchView searchView = (SearchView)findViewById(R.id.search_view);
+        final SearchView searchView = (SearchView)findViewById(R.id.search_view);
+
+        mHistory = new PropertySearchHistory(this);
 
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         TextView textView = (TextView) searchView.findViewById(id);
@@ -72,6 +83,17 @@ public class Activity_Search extends SKBaseActivity {
         mAdapter = new AdapterHouseSearchResult(this);
         mListView.setAdapter(mAdapter);
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ClassDefine.Property property = (ClassDefine.Property)parent.getAdapter().getItem(position);
+                int propertyId = getPropertyIdFromList(property.mName);
+                if(propertyId >= 0) {
+                    doSelected(property.mName, propertyId);
+                }
+            }
+        });
+
         mContainer = (LinearLayout)findViewById(R.id.searchResultContainer);
         mContainerEmpty = (LinearLayout)findViewById(R.id.searchResultEmptyContainer);
 
@@ -80,13 +102,13 @@ public class Activity_Search extends SKBaseActivity {
 
         initHistory();
         initGuess();
-        initGardenList();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                startHouseListActivity();
-                finish();
+                commonFun.hideSoftKeyboard(mContext, searchView);
+//                startHouseListActivity();
+//                finish();
                 return true;
             }
 
@@ -96,7 +118,7 @@ public class Activity_Search extends SKBaseActivity {
                     mContainer.setVisibility(View.GONE);
                     mContainerEmpty.setVisibility(View.VISIBLE);
                 } else {
-                    updateAdapter(newText);
+                    updatePropertyList(newText);
                     if(!mContainer.isShown()) {
                         mContainer.setVisibility(View.VISIBLE);
                         mContainerEmpty.setVisibility(View.GONE);
@@ -108,6 +130,87 @@ public class Activity_Search extends SKBaseActivity {
         });
     }
 
+    private void doSelected(String property, int propertyId) {
+        if(property == null || property.isEmpty()) {
+            return;
+        }
+        commonFun.hideSoftKeyboard(getApplicationContext(), mListView);
+
+        String history = property + "=" + propertyId;
+        mHistory.addHistory(history);
+
+        startHouseListActivity(property, propertyId);
+
+        finish();
+    }
+
+    private int getPropertyIdFromList(String property) {
+        int itemCount = mPropertyList.size();
+        if(itemCount != 0) {
+            for(IApiResults.IPropertyInfo info : mPropertyList) {
+                if(info.GetName().equals(property)) {
+                    return info.GetId();
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private void makePropertyList(ArrayList<Object> array) {
+        for(Object obj : array) {
+            IApiResults.IPropertyInfo info = (IApiResults.IPropertyInfo)obj;
+            mPropertyList.add(info);
+            Log.i(TAG, "Property ++ " + info.GetName());
+        }
+    }
+
+    private void updateAdapterProperty() {
+        ArrayList<ClassDefine.Property> newList = new ArrayList<>();
+        for(IApiResults.IPropertyInfo info : mPropertyList) {
+            ClassDefine.Property property = new ClassDefine.Property();
+            property.mName = info.GetName();
+            property.mAddress = info.GetAddress();
+            newList.add(property);
+        }
+
+        mAdapter.setDataList(newList);
+        mListView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void updatePropertyList(final String keywords) {
+        mListView.removeAllViewsInLayout();
+        mPropertyList.clear();
+
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+                if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
+                    if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
+                        IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
+                        mPropertyCount = list.GetTotalNumber();
+                        int nFetchCount = list.GetFetchedNumber();
+                        if(nFetchCount > 0) {
+                            makePropertyList(list.GetList());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateAdapterProperty();
+                                }
+                            });
+                        }
+                    }
+                }
+
+                Activity_Search.super.onCommandFinished(i, iCommon);
+            }
+        };
+
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        manager.GetPropertyListByName(keywords, 0, 0x7FFFFFF);
+    }
+
     protected void onResume() {
         super.onResume();
 
@@ -116,19 +219,6 @@ public class Activity_Search extends SKBaseActivity {
         searchView.onActionViewExpanded();
         searchView.setIconifiedByDefault(false);
 
-        updateAdapter("");
-    }
-
-    private void updateAdapter(String keywords) {
-        mListView.removeAllViewsInLayout();
-        ArrayList<ClassDefine.Property> newList = new ArrayList<ClassDefine.Property>();
-        for(ClassDefine.Property garden : mGardenList) {
-            if(garden.mName.contains(keywords)) {
-                newList.add(garden);
-            }
-        }
-        mAdapter.setDataList(newList);
-        mAdapter.notifyDataSetChanged();
     }
 
     public void onClickResponse(View v) {
@@ -138,7 +228,8 @@ public class Activity_Search extends SKBaseActivity {
                 break;
             }
             case R.id.buttonCleanHistory: {
-                kjsLogUtil.i("clean history");
+                mHistory.cleanHistory();
+                initHistory();
                 break;
             }
         }
@@ -171,10 +262,10 @@ public class Activity_Search extends SKBaseActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                TextView v = (TextView)view;
-//                String textOnView = v.getText().toString();
-//                commonFun.showToast_info(mContext, view, textOnView);
-                startHouseListActivity();
+                TextView v = (TextView)view;
+                String textOnView = v.getText().toString();
+                int id = mHistory.getPropertyIdByName(textOnView);
+                startHouseListActivity(textOnView, id);
                 finish();
             }
         });
@@ -184,8 +275,11 @@ public class Activity_Search extends SKBaseActivity {
         return item;
     }
 
-    private void startHouseListActivity() {
-        startActivity(new Intent(this, Activity_Search_Fangyuanliebiao.class));
+    private void startHouseListActivity(String propertyName, int propertyId) {
+        Intent intent = new Intent(this, Activity_Search_Fangyuanliebiao.class);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_NAME, propertyName);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_ID, propertyId);
+        startActivity(intent);
     }
 
     private void initGuess() {
@@ -237,20 +331,16 @@ public class Activity_Search extends SKBaseActivity {
     }
 
     private void initHistory() {
-        mHistory.add("世茂蝶湖湾");
-        mHistory.add("中冶昆廷");
-        mHistory.add("印象欧洲");
-        mHistory.add("中冶昆廷");
-        mHistory.add("香溢紫君");
-        mHistory.add("绿地21新城");
-        mHistory.add("万科魅力花园MIXTOWN");
-        mHistory.add("两岸新天地");
-        mHistory.add("中汇爱丁堡");
-        mHistory.add("中环时代");
-        mHistory.add("新时代");
+        ArrayList<String> list = new ArrayList<>();
+        int historyCount = mHistory.getCount();
+        for(int i = 0; i < historyCount; i ++) {
+            String property = mHistory.getPropertyNameByIndex(i);
+            list.add(property);
+        }
 
-        ArrayList<String> list = mHistory;
         LinearLayout container = (LinearLayout)findViewById(R.id.layoutRecent);
+        container.removeAllViews();
+
         while(list.size() != 0) {
             int count = addToContainer(container, list);
             for(int i = 0; i < count; i ++) {
@@ -259,38 +349,4 @@ public class Activity_Search extends SKBaseActivity {
         }
     }
 
-    private void initGardenList() {
-        ClassDefine.Property garden = new ClassDefine.Property();
-        garden.mName = "世茂蝶湖湾";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "万科魅力花园MIXTOWN";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "印象欧洲";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "绿地21新城";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "万科花园MIXTOWN";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "印象de欧洲";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "绿地26新城";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-        garden = new ClassDefine.Property();
-        garden.mName = "新时代";
-        garden.mAddress = "昆山市玉山镇";
-        mGardenList.add(garden);
-    }
 }
