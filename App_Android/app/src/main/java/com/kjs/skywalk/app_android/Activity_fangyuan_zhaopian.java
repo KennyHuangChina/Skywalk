@@ -491,9 +491,16 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
         }
 
         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+        mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
+
         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+        mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
+
         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+        mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
+
         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+        mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
 
         adapter.notifyDataSetChanged();
     }
