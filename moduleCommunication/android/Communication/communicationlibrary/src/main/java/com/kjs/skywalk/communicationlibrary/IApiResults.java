@@ -231,17 +231,20 @@ public class IApiResults {
         String  GetDescription();
     }
 
-    // command: CMD_GET_MSG_INFO, CmdGetHouseEventList
-    public interface ISysMsgInfo {
-        int     MsgId();        // message id
-        int     MsgType();      // message type. 1 - House Certification. 2 - Planed House Watch
-        int     MsgPriority();  // message priority. 0 - info. 1 - Warning. 2 - Error
+    interface IHouseTitleInfo {
         String  Property();     // property name
         String  BuildingNo();   // the building number the house belong to
         String  HouseNo();      // exact house number. like house 1305#
         int     Livingrooms();  // how many livingrooms
         int     Bedrooms();     // how many bedrooms
         int     Bathrooms();    // bathrooms
+    }
+
+    // command: CMD_GET_MSG_INFO, CmdGetHouseEventList
+    public interface ISysMsgInfo extends IHouseTitleInfo {
+        int     MsgId();        // message id
+        int     MsgType();      // message type. 1 - House Certification. 2 - Planed House Watch
+        int     MsgPriority();  // message priority. 0 - info. 1 - Warning. 2 - Error
         String  Receiver();     // people who the event send to
         String  CreateTime();   // exact time when the event created
         String  ReadTime();     // exact time when the event get readed
@@ -255,5 +258,27 @@ public class IApiResults {
         String  Time();         // proc time
         String  Operation();    // proc operation
         String  Desc();         // proc description
+    }
+
+    public interface IAppointmentInfo extends IHouseTitleInfo {
+        Date    ScheduleDate();
+        Date    ScheduleBeginTime();
+        Date    ScheduleEndTime();
+        String  Subscriber();
+        String  SubscriberPhone();
+        String  Receptionist();
+        String  ReceptionistPhone();
+        String  AppointmentDesc();
+        Date    SubscribeTime();
+    }
+
+    public interface IAppointmentAct {
+        int     Id();
+        int     Act();
+        String  Who();
+        Date    When();
+        Date    PeriodBegin();
+        Date    PeriodEnd();
+        String  Comment();
     }
 }
