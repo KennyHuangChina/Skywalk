@@ -280,7 +280,7 @@ public class CommunicationInterface {
         /*
         *   CMD : CMD_GET_APPOINTMENT_INFO
         *       apid        - appointment id
-        *   Result : IApiResults.IAppointmentInfo
+        *   Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
          */
         int GetAppointmentInfo(int apid);
 
