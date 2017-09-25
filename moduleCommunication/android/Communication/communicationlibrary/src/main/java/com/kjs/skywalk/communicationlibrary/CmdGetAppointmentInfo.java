@@ -36,6 +36,6 @@ class CmdGetAppointmentInfo extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        return super.doParseResult(nErrCode, jObject);
+        return new ResGetAppointmentInfo(nErrCode, jObject);
     }
 }

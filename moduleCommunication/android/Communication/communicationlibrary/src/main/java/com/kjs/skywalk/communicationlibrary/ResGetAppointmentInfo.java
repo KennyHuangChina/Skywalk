@@ -1,18 +1,20 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by kenny on 2017/9/24.
  */
 
-class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentInfo {
+class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentInfo, IApiResults.IResultList {
 
     private ResHouseTitleInfo   mHouseTitle         = null;
     private Date                mScheduleDate       = null;
@@ -24,9 +26,11 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     private String              mReceptionistPhone  = null;
     private String              mAppointDesc        = null;
     private Date                mSubscribeTime      = null;
+    private ActList             mActList            = null;
 
     ResGetAppointmentInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
+        mActList = new ActList();
         mHouseTitle = new ResHouseTitleInfo();
         parse(jObject);
     }
@@ -34,12 +38,15 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     @Override
     public String DebugString() {
         super.DebugString();
-//        mString += "  user id: " + mId + "\n";
-//        mString += "  user name: " + mName + "\n";
-//        mString += "  phone: " + mPhoneNo + "\n";
-//        mString += "  ID: " + mIdNo + "\n";
-//        mString += "  header potrait: " + mHeadPotrait + "\n";
-//        mString += "  role: " + mRole + " (" + mRoleDesc + ")\n";
+        mString += mHouseTitle.DebugString() + "\n";
+        mString += String.format(" Schedule: %s %s -> %s\n", ScheduleDate().toString(), ScheduleBeginTime().toString(), ScheduleEndTime().toString());
+        mString += String.format(" Subscriber: %s phone: %s\n", Subscriber(), SubscriberPhone());
+        mString += String.format(" Receptionist: %s phone: %s\n", Receptionist(), ReceptionistPhone());
+        mString += String.format(" Description: %s \n", AppointmentDesc());
+        mString += String.format(" Subscribe Time: %s \n", SubscribeTime().toString());
+        if (null != mActList) {
+            mString += mActList.DebugList();
+        }
         return mString;
     }
 
@@ -53,38 +60,45 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
         DateFormat df_schedule  = new SimpleDateFormat("hh:mm");
         DateFormat df_time      = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            if (0 != mHouseTitle.parse(obj.getJSONObject("House"))) {
+            JSONObject objAptm = obj.getJSONObject("Appointment");
+
+            if (0 != mHouseTitle.parse(objAptm.getJSONObject("House"))) {
                 return -6;
             }
-            String strTmp = obj.getString("Date");
+            String strTmp = objAptm.getString("Date");
             if (null == strTmp || strTmp.isEmpty()) {
                 return -3;
             }
             mScheduleDate = df_date.parse(strTmp);
 
-            strTmp = obj.getString("TimeBegin");
+            strTmp = objAptm.getString("TimeBegin");
             if (null == strTmp || strTmp.isEmpty()) {
                 return -4;
             }
             mScheduleTimeBegin = df_schedule.parse(strTmp);
 
-            strTmp = obj.getString("TimeEnd");
-            if (null == strTmp || strTmp.isEmpty()) {
-                return -4;
-            }
-            mScheduleTimeEnd = df_schedule.parse(strTmp);
-
-            mSubscriber         = obj.getString("Subscriber");
-            mSubscriberPhone    = obj.getString("SubscriberPhone");
-            mReceptionist       = obj.getString("Receptionist");
-            mReceptionistPhone  = obj.getString("ReceptionistPhone");
-            mAppointDesc        = obj.getString("ApmtDesc");
-
-            strTmp = obj.getString("SubscribeTime");
+            strTmp = objAptm.getString("TimeEnd");
             if (null == strTmp || strTmp.isEmpty()) {
                 return -5;
             }
+            mScheduleTimeEnd = df_schedule.parse(strTmp);
+
+            mSubscriber         = objAptm.getString("Subscriber");
+            mSubscriberPhone    = objAptm.getString("SubscriberPhone");
+            mReceptionist       = objAptm.getString("Receptionist");
+            mReceptionistPhone  = objAptm.getString("ReceptionistPhone");
+            mAppointDesc        = objAptm.getString("ApmtDesc");
+
+            strTmp = objAptm.getString("SubscribeTime");
+            if (null == strTmp || strTmp.isEmpty()) {
+                return -6;
+            }
             mSubscribeTime = df_time.parse(strTmp);
+
+            // action list
+            if (null != mActList) {
+                mActList.parseList(objAptm);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -188,6 +202,142 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     @Override
     public Date SubscribeTime() {
         return mSubscribeTime;
+    }
+
+    @Override
+    public int GetTotalNumber() {
+        if (null == mActList) {
+            return -1;
+        }
+        return mActList.GetTotalNumber();
+    }
+
+    @Override
+    public int GetFetchedNumber() {
+        if (null == mActList) {
+            return -1;
+        }
+        return mActList.GetFetchedNumber();
+    }
+
+    @Override
+    public ArrayList<Object> GetList() {
+        if (null == mActList) {
+            return null;
+        }
+        return mActList.GetList();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class ActList extends ResList {
+        ActList() {
+            mForceGetList = true;   // list without properties: total & fetched
+        }
+
+        @Override
+        public int parseListItems(JSONObject obj) {
+            try {
+                JSONArray array = obj.getJSONArray("Acts");
+                if (null == array) {
+                    return -1;
+                }
+                for (int n = 0; n < array.length(); n++) {
+                    AppointmentAct newItem = new AppointmentAct(array.getJSONObject(n));
+                    if (null == newItem) {
+                        return -2;
+                    }
+                    mList.add(newItem);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return -3;
+            }
+
+            return 0;
+        }
+   }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class AppointmentAct implements IApiResults.IAppointmentAct, InternalDefines.IListItemInfoInner {
+        private int     mId         = 0;
+        private int     mAct        = 0;
+        private String  mWho        = null;
+        private Date    mWhen       = null;
+        private Date    mTimeBgn    = null;
+        private Date    mTimeEnd    = null;
+        private String  mComment    = null;
+
+        AppointmentAct(JSONObject obj) {
+            try {
+                mId = obj.getInt("Id");
+                mAct = obj.getInt("Act");
+                mWho = obj.getString("Who");
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                mWhen = df.parse(obj.getString("When"));
+
+                String strTmp = obj.getString("TimeBegin");
+                if (null != strTmp && !strTmp.isEmpty()) {
+                    mTimeBgn = df.parse(strTmp);
+                }
+
+                strTmp = obj.getString("TimeEnd");
+                if (null != strTmp && !strTmp.isEmpty()) {
+                    mTimeEnd = df.parse(strTmp);
+                }
+
+                mComment = obj.getString("Comment");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public int Id() {
+            return mId;
+        }
+
+        @Override
+        public int Act() {
+            return mAct;
+        }
+
+        @Override
+        public String Who() {
+            return mWho;
+        }
+
+        @Override
+        public Date When() {
+            return mWhen;
+        }
+
+        @Override
+        public Date PeriodBegin() {
+            return mTimeBgn;
+        }
+
+        @Override
+        public Date PeriodEnd() {
+            return mTimeEnd;
+        }
+
+        @Override
+        public String Comment() {
+            return mComment;
+        }
+
+        @Override
+        public String ListItemInfo2String() {
+            return String.format("id:%d, act:%d, who:%s, when:%s, schedule:%s - %s, comments:%s\n",
+                    Id(), Act(), Who(), When().toString(), PeriodBegin(), PeriodEnd(), Comment());
+        }
     }
 }
 
