@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 
@@ -18,24 +19,13 @@ import java.util.ArrayList;
  */
 
 class AdapterMessage extends BaseAdapter {
-    static class Deliverable {
-        int mIcon;
-        String mDesc;
-        int mNum;
-
-        public Deliverable(int icon, String description, int number) {
-            mIcon = icon;
-            mDesc = description;
-            mNum = number;
-        }
-    }
 
     public static interface AdapterDeliverablesListener {
-        public void onItemChanged(int pos, Deliverable deliverable);
+//        public void onItemChanged(int pos, Deliverable deliverable);
     }
 
     private Context mContext = null;
-    private ArrayList<Deliverable> mDeliverableLst = new ArrayList<>();
+    private ArrayList<Object> mList = new ArrayList<>();
 
 
     public AdapterMessage(Context context) {
@@ -43,14 +33,15 @@ class AdapterMessage extends BaseAdapter {
         mContext = context;
     }
 
-    public void updateDeliverablesList(ArrayList<Deliverable> list) {
-        mDeliverableLst = list;
+    // IApiResults.ISysMsgInfo
+    public void updateList(ArrayList<Object> list) {
+        mList = list;
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return mList.size();
     }
 
     @Override
@@ -99,6 +90,10 @@ class AdapterMessage extends BaseAdapter {
                     mContext.startActivity(new Intent(mContext, Activity_Message_yuyuekanfang.class));
             }
         });
+
+        // IApiResults.ISysMsgInfo
+        IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
+        holder.tv_msg_title.setText(msgInfo.MsgBody());
 
          return convertView;
     }
