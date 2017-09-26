@@ -284,6 +284,14 @@ public class CommunicationInterface {
          */
         int GetAppointmentInfo(int apid);
 
+        /*
+        *   CMD : CMD_ASSIGN_APPOINTMENT_RECEPTIONIST
+        *       aid             - appointment id
+        *       receptionist    - new receptionist
+        *   Result : IApiResults.ICommon
+         */
+        int AssignAppointmentReceptionist(int aid, int receptionist);
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House Watch APIs
@@ -367,11 +375,12 @@ public class CommunicationInterface {
                                 CMD_MODIFY_HOUSE_EVENT        = 0x7007;
 
         // Appointment
-        final public static int CMD_APPOINT_SEE_HOUSE         = 0x8001,
-                                CMD_APPOINT_HOUSE_SEE_LST     = 0x8002,
-                                CMD_HOUSE_LST_APPOINT_SEE     = 0x8003,
-                                CMD_MAKE_APPOINTMENT_ACTION   = 0x8004,
-                                CMD_GET_APPOINTMENT_INFO      = 0x8005;
+        final public static int CMD_APPOINT_SEE_HOUSE               = 0x8001,
+                                CMD_APPOINT_HOUSE_SEE_LST           = 0x8002,
+                                CMD_HOUSE_LST_APPOINT_SEE           = 0x8003,
+                                CMD_MAKE_APPOINTMENT_ACTION         = 0x8004,
+                                CMD_GET_APPOINTMENT_INFO            = 0x8005,
+                                CMD_ASSIGN_APPOINTMENT_RECEPTIONIST = 0x8006;
 
         // House watch
         final public static int CMD_GET_USER_HOUSE_WATCH_LIST = 0x9001;
@@ -456,11 +465,12 @@ public class CommunicationInterface {
             cmdMap.put(CMD_GET_SYSTEM_MSG_LST,      "CMD_GET_SYSTEM_MSG_LST");
 
             // Appointment
-            cmdMap.put(CMD_APPOINT_SEE_HOUSE,       "CMD_APPOINT_SEE_HOUSE");
-            cmdMap.put(CMD_APPOINT_HOUSE_SEE_LST,   "CMD_APPOINT_HOUSE_SEE_LST");
-            cmdMap.put(CMD_HOUSE_LST_APPOINT_SEE,   "CMD_HOUSE_LST_APPOINT_SEE");
-            cmdMap.put(CMD_MAKE_APPOINTMENT_ACTION, "CMD_MAKE_APPOINTMENT_ACTION");
-            cmdMap.put(CMD_GET_APPOINTMENT_INFO,    "CMD_GET_APPOINTMENT_INFO");
+            cmdMap.put(CMD_APPOINT_SEE_HOUSE,               "CMD_APPOINT_SEE_HOUSE");
+            cmdMap.put(CMD_APPOINT_HOUSE_SEE_LST,           "CMD_APPOINT_HOUSE_SEE_LST");
+            cmdMap.put(CMD_HOUSE_LST_APPOINT_SEE,           "CMD_HOUSE_LST_APPOINT_SEE");
+            cmdMap.put(CMD_MAKE_APPOINTMENT_ACTION,         "CMD_MAKE_APPOINTMENT_ACTION");
+            cmdMap.put(CMD_GET_APPOINTMENT_INFO,            "CMD_GET_APPOINTMENT_INFO");
+            cmdMap.put(CMD_ASSIGN_APPOINTMENT_RECEPTIONIST, "CMD_ASSIGN_APPOINTMENT_RECEPTIONIST");
 
             // House watch
             cmdMap.put(CMD_GET_USER_HOUSE_WATCH_LIST, "CMD_GET_USER_HOUSE_WATCH_LIST");
