@@ -174,8 +174,12 @@ func GetAppointmentInfo(uid, aid int64) (err error, apt_info commdef.Appointment
 		return
 	}
 
-	for _, v := range acts {
+	for k, v := range acts {
 		// beego.Debug(FN, fmt.Sprintf("v:%+v", v))
+		if 0 == k {
+			// Operations calcualting
+			_, apt_info.Ops = getAppointmenOps(uid, &apmt, &v)
+		}
 		na := commdef.AppointmentAct{Id: v.Id, Act: v.Action, When: v.When.Local().String()[:20], Comment: v.Comment}
 		err1, u := GetUser(v.Who)
 		if nil != err1 {
@@ -827,6 +831,63 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment order type"}
 	}
 
+	return
+}
+
+func getAppointmenOps(uid int64, apmt *TblAppointment, act *TblAppointmentAction) (err error, Ops int) {
+	Fn := "[getAppointmenOps] "
+	beego.Info(Fn, fmt.Sprintf("login user:%d, appointment:%+v, act:%+v", uid, apmt, act))
+
+	Ops = 0
+
+	switch act.Action {
+	case commdef.APPOINT_ACTION_Submit:
+		if uid == apmt.Subscriber { // appointment subscriber
+			Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			Ops = commdef.APPOINT_OP_Reschedule + commdef.APPOINT_OP_Confirm
+		} else { // administrator
+			Ops = commdef.APPOINT_OP_AssignReceptionist
+		}
+	case commdef.APPOINT_ACTION_Confirm:
+		if uid == apmt.Subscriber { // appointment subscriber
+			Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			Ops = commdef.APPOINT_OP_Reschedule + commdef.APPOINT_OP_Done
+		} else { // administrator
+			Ops = commdef.APPOINT_OP_AssignReceptionist
+		}
+	case commdef.APPOINT_ACTION_Reschedule:
+		if uid == apmt.Subscriber { // appointment subscriber
+			if act.Who == apmt.Subscriber { // reschedule requested by subscriber
+				Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule
+			} else if act.Who == apmt.Receptionist { // reschedule requested by receptionist
+				Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule + commdef.APPOINT_OP_Confirm
+			}
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			if act.Who == apmt.Subscriber { // reschedule requested by subscriber
+				Ops = commdef.APPOINT_OP_Reschedule + commdef.APPOINT_OP_Confirm
+			} else if act.Who == apmt.Receptionist { // reschedule requested by receptionist
+				Ops = commdef.APPOINT_OP_Reschedule
+			}
+		} else { // administrator
+			Ops = commdef.APPOINT_OP_AssignReceptionist
+		}
+	case commdef.APPOINT_ACTION_Done:
+	case commdef.APPOINT_ACTION_Cancel:
+	case commdef.APPOINT_ACTION_SetRectptionist:
+		if uid == apmt.Subscriber { // appointment subscriber
+			Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			Ops = commdef.APPOINT_OP_Reschedule + commdef.APPOINT_OP_Confirm
+		} else { // administrator
+			Ops = commdef.APPOINT_OP_AssignReceptionist
+		}
+	default:
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "Unknow action"}
+	}
+
+	beego.Debug(Fn, "Options:", Ops)
 	return
 }
 

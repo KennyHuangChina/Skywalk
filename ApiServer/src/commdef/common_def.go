@@ -295,8 +295,17 @@ type AppointmentInfo1 struct {
 	ReceptionistPhone string
 	ApmtDesc          string
 	SubscribeTime     string
+	Ops               int // APPOINT_OP_xxx
 	Acts              []AppointmentAct
 }
+
+const (
+	APPOINT_OP_Cancel             = 0x01
+	APPOINT_OP_Reschedule         = 0x02
+	APPOINT_OP_Confirm            = 0x04
+	APPOINT_OP_Done               = 0x08
+	APPOINT_OP_AssignReceptionist = 0x10
+)
 
 const (
 	APPOINT_ACTION_Begin = 0
