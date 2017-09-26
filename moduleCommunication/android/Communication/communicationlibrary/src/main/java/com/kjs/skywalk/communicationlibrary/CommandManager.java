@@ -748,6 +748,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
+    public int AssignAppointmentReceptionist(int aid, int receptionist) {
+        CommunicationBase op = new CmdAssignAppointmentReceptionist(mContext, aid, receptionist);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int GetUserHouseWatchList(int begin, int cnt) {
         CommunicationBase op = new CmdGetUserHouseWatchList(mContext, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
