@@ -82,7 +82,7 @@
 ### 5. assign appointment receptionist
 	[Security]	private: administrator
 	[Request]
-  		* PUT /v1/appointment/:id/recpt?r=<>
+  		* PUT /v1/appointment/:id/recpt
 	  		* r				int		// appointment receptionist id. 
 	[Response]
 		* SUCCESS:200 

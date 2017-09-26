@@ -33,7 +33,8 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 	if err, _ = getAppointment(aid); nil != err {
 		return
 	}
-	if err, _ = GetUser(recpt); nil != err {
+	err, ur := GetUser(recpt) // user receptionist
+	if nil != err {
 		return
 	}
 
@@ -75,7 +76,8 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 	}
 
 	// appointment action table and fire system message
-	err, act_id := addAppointmentAction(uid, &apmt, commdef.APPOINT_ACTION_SetRectptionist, "", "", "指派预约处理人", o)
+	comments := fmt.Sprintf("指派%s处理客人预约", ur.Name)
+	err, act_id := addAppointmentAction(uid, &apmt, commdef.APPOINT_ACTION_SetRectptionist, "", "", comments, o)
 	beego.Debug(FN, "new action:", act_id)
 
 	return
@@ -816,7 +818,7 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 			msg = role + "取消约看"
 			msgPriority = commdef.MSG_PRIORITY_Error
 		case commdef.APPOINT_ACTION_SetRectptionist:
-			msg = "请处理预约"
+			msg = "请处理客人预约"
 			msgPriority = commdef.MSG_PRIORITY_Info
 		default:
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment action type"}
