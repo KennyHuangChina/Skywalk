@@ -12,7 +12,7 @@ import (
 //
 //	-- MakeAppointment --
 //
-func Test_MakeAppointment(t *testing.T) {
+func Test_MakeAppointment_(t *testing.T) {
 	t.Log("Test MakeAppointment, Invalid Arguments")
 	seq := 0
 
@@ -76,6 +76,15 @@ func Test_MakeAppointment(t *testing.T) {
 			t.Error("Failed, err: ", e)
 			return
 		}
+	}
+
+	//
+	u := int64(9)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: appoint subscriber(%d) is landlord", seq, u))
+	if e, _ := MakeAppointment(2, u, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, "test appointment"); e == nil {
+		t.Error("Failed, err: ", e)
+		return
 	}
 
 	// Make Appointment
@@ -431,20 +440,43 @@ func Test_AssignAppointmentRectptionist(t *testing.T) {
 	x1 = []int64{1, 2, 6, 9, 10, 11}
 	for _, v := range x1 {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Argument: login user(%d) is not an administrator", seq, v))
+		t.Log(fmt.Sprintf("<Case %d> Permission: login user(%d) is not an administrator", seq, v))
 		if e := AssignAppointmentRectptionist(v, 1, 6); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
 
+	/* Testing */
+	// create a appointment for testing
+	t1 := "2016-06-25 12:00"
+	t2 := "2016-06-25 12:30"
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: make appointment", seq))
+	e, naid := MakeAppointment(6, 10, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, "test AssignAppointmentRectptionist")
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new appointment:", naid)
+
+	// assign receptionist
 	x1 = []int64{4} //, 5}
 	for _, v := range x1 {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> Testing: login user(%d) reassign the receptionist", seq, v))
-		if e := AssignAppointmentRectptionist(v, 1, 6); e != nil {
+		t.Log(fmt.Sprintf("<Case %d> Test: login user(%d) reassign the receptionist", seq, v))
+		if e := AssignAppointmentRectptionist(v, naid, 11); e != nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
 	}
+
+	// delete the testing appointment
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, naid))
+	if e := DeleAppointment(naid, 5); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
 }

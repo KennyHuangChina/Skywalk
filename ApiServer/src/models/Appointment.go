@@ -437,13 +437,15 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 		return
 	}
 
-	recpt := int64(0) // appointment receptionist
-	if hid > 0 {      // appointment is related with house
+	landlord := int64(0) // house landlord
+	recpt := int64(0)    // default appointment receptionist
+	if hid > 0 {         // appointment is related with house
 		h := TblHouse{}
 		if err, h = getHousePublished(hid); nil != err {
 			return
 		}
 		recpt = h.Agency.Id
+		landlord = h.Owner.Id
 	}
 
 	err1, _ := GetUser(uid) // TODO: Kenny
@@ -463,7 +465,12 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	}
 
 	/* Permission checking */
-	// seems everyone could make an appointment
+	// seems everyone could make an appointment, except house owner
+	// beego.Debug(FN, fmt.Sprintf("uid:%d, landlord:%d", uid, landlord))
+	if uid == landlord {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "appointment subscriber is landlord himself"}
+		return
+	}
 
 	/* Processing */
 	o := orm.NewOrm()
@@ -757,9 +764,16 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 		if uid == apmt.Subscriber {
 			// current user is subscriber, so send message to receptionist
 			err, _ = addMessage(msgType, msgPri, aid, apmt.Receptionist, msgTxt, o)
-		} else {
+		} else if uid == apmt.Receptionist {
 			// current user is receptionist, so send message to subscriber
-			err, _ = addMessage(msgType, msgPri, aid, uid, msgTxt, o)
+			err, _ = addMessage(msgType, msgPri, aid, apmt.Subscriber, msgTxt, o)
+		} else {
+			// current user is an administrator, the only thing he can do is assign receptionist so far
+			if act != commdef.APPOINT_ACTION_SetRectptionist {
+				err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "Invalid action"}
+				return
+			}
+			err, _ = addMessage(msgType, msgPri, aid, apmt.Receptionist, msgTxt, o)
 		}
 	}
 
