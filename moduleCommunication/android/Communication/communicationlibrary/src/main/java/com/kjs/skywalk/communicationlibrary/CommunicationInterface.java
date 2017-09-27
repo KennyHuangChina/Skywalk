@@ -269,7 +269,7 @@ public class CommunicationInterface {
         /*
         *   CMD : CMD_MAKE_APPOINTMENT_ACTION
         *       apid        - appointment id
-        *       act         - action id. 2: Confirm; 3: Reschedule; 4: Done; 5: Cancel
+        *       act         - action type: APPOINTMENT_ACTION_xxxx 2: Confirm; 3: Reschedule; 4: Done; 5: Cancel
         *       time_begin  - appointment period begin, like 2017-06-24 09:00
         *       time_end    - appointment period end, like 2017-06-24 09:30
         *       comments    - appointment comments
@@ -494,6 +494,12 @@ public class CommunicationInterface {
     //
     //         -- API data definitions --
     //
+    static public int   APPOINTMENT_ACTION_Min          = 2,
+                        APPOINTMENT_ACTION_Confirm      = 2,
+                        APPOINTMENT_ACTION_Reschedule   = 3,
+                        APPOINTMENT_ACTION_Done         = 4,
+                        APPOINTMENT_ACTION_Cancel       = 5,
+                        APPOINTMENT_ACTION_Max          = 5;
     // used in CommitHouse, AmendHouse
     static public class HouseInfo {
         public int      mHouseId        = 0;
