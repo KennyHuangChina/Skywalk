@@ -270,6 +270,7 @@ public class IApiResults {
         String  ReceptionistPhone();
         String  AppointmentDesc();
         Date    SubscribeTime();
+        int     Operations();
     }
 
     public interface IAppointmentAct {
