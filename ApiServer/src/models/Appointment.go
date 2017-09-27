@@ -1,4 +1,4 @@
-package models
+﻿package models
 
 import (
 	"ApiServer/commdef"
@@ -78,7 +78,7 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 	}
 
 	// appointment action table and fire system message
-	comments := fmt.Sprintf("指派%s处理客人预约", ur.Name)
+	comments := fmt.Sprintf("指派[%s]处理客人预约", ur.Name)
 	err, act_id := addAppointmentAction(uid, &apmt, commdef.APPOINT_ACTION_SetRectptionist, "", "", comments, o)
 	beego.Debug(FN, "new action:", act_id)
 
@@ -380,6 +380,7 @@ func MakeAppointmentAction(uid, aid int64, act int, time_begin, time_end, commen
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "Invalid Action"}
 		return
 	}
+	beego.Warn("TODO: 每个状态对应的可执行的操作是不一样的")
 
 	/* Permission checking */
 	// appointment subscriber, house agency, agency(if house is opened), administrator
@@ -757,13 +758,13 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 		if err, msgType = appointType2MessageType(apmt.OrderType); nil != err {
 			return
 		}
-		err, _ = sendMsg2Admin(msgType, commdef.MSG_PRIORITY_Warning, aid, "指派预约处理�?, o)
+		err, _ = sendMsg2Admin(msgType, commdef.MSG_PRIORITY_Warning, aid, "指派预约接待人", o)
 	} else {
 		role := ""
 		if uid == apmt.Subscriber {
 			role = "客人"
 		} else {
-			role = "经纪�?
+			role = "经纪人"
 		}
 		msgPri := commdef.MSG_PRIORITY_Info
 		if err, msgTxt, msgType, msgPri = getMsgParameters(apmt.OrderType, act, role); nil != err {
@@ -819,12 +820,12 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 			msg = role + "请求改期"
 			msgPriority = commdef.MSG_PRIORITY_Warning
 		case commdef.APPOINT_ACTION_Done:
-			msg = "约看完成"
+			msg = "约看完成"
 		case commdef.APPOINT_ACTION_Cancel:
 			msg = role + "取消约看"
 			msgPriority = commdef.MSG_PRIORITY_Error
 		case commdef.APPOINT_ACTION_SetRectptionist:
-			msg = "请处理客人预�?
+			msg = "请处理客人预约"
 			msgPriority = commdef.MSG_PRIORITY_Info
 		default:
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment action type"}
