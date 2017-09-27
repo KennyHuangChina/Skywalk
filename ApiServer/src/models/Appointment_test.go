@@ -388,6 +388,199 @@ func Test_GetAppointmentInfo(t *testing.T) {
 			return
 		}
 	}
+
+	// Options
+	// create a appointment for testing
+	t1 := "2016-06-25 12:00"
+	t2 := "2016-06-25 12:30"
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: make appointment", seq))
+	e, naid := MakeAppointment(2, 11, commdef.ORDER_TYPE_SEE_HOUSE, "", t1, t2, "test Appointment Options")
+	if e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	t.Log("new appointment:", naid)
+
+	// status: APPOINT_ACTION_Submit
+	x1 = []int64{11, 6, 4}
+	x2 := []int64{0x03, 0x06, 0x10}
+	recept := "周署.Sailor"
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Receptionist != recept {
+			t.Error("Incorrect receptionist: ", apmt.Receptionist)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+	// status: APPOINT_ACTION_SetRectptionist
+	recept = "黄凯.Kenny"
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: APPOINT_ACTION_SetRectptionist %s", seq))
+	if e := AssignAppointmentRectptionist(5, naid, 4); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	x1 = []int64{11, 4, 5}
+	x2 = []int64{0x03, 0x06, 0x10}
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Receptionist != recept {
+			t.Error("Incorrect receptionist: ", apmt.Receptionist)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+	// status: APPOINT_ACTION_Reschedule
+	t1 = "2016-06-26 12:00"
+	t2 = "2016-06-26 12:30"
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: APPOINT_ACTION_Reschedule", seq))
+	if e, _ := MakeAppointmentAction(11, naid, commdef.APPOINT_ACTION_Reschedule, t1, t2, "请求改期"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	x1 = []int64{11, 4, 5}
+	x2 = []int64{0x03, 0x06, 0x10}
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+	// status: APPOINT_ACTION_Reschedule
+	t1 = "2016-06-27 12:00"
+	t2 = "2016-06-27 12:30"
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: APPOINT_ACTION_Reschedule", seq))
+	if e, _ := MakeAppointmentAction(4, naid, commdef.APPOINT_ACTION_Reschedule, t1, t2, "请求改期"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	x1 = []int64{11, 4, 5}
+	x2 = []int64{0x07, 0x02, 0x10}
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+	// status: APPOINT_ACTION_Confirm
+	t1 = "2016-06-27 12:00"
+	t2 = "2016-06-27 12:30"
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: APPOINT_ACTION_Confirm", seq))
+	if e, _ := MakeAppointmentAction(4, naid, commdef.APPOINT_ACTION_Confirm, t1, t2, "确认预约"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	x1 = []int64{11, 4, 5}
+	x2 = []int64{0x03, 0x0A, 0x10}
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+	// status: APPOINT_ACTION_Done
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: APPOINT_ACTION_Done", seq))
+	if e, _ := MakeAppointmentAction(4, naid, commdef.APPOINT_ACTION_Done, t1, t2, "预约完成"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	x1 = []int64{11, 4, 5}
+	x2 = []int64{0, 0, 0}
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+	// status: APPOINT_ACTION_Cancel
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: APPOINT_ACTION_Cancel", seq))
+	if e, _ := MakeAppointmentAction(4, naid, commdef.APPOINT_ACTION_Cancel, t1, t2, "预约取消"); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+	x1 = []int64{11, 4, 5}
+	x2 = []int64{0, 0, 0}
+	s1 = []string{"subscriber", "receptionist", "administrator"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Testing: User(%d) is %s, his options: %d", seq, v, s1[k], x2[k]))
+		e, apmt := GetAppointmentInfo(v, naid)
+		if e != nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+		if apmt.Ops != int(x2[k]) {
+			t.Error("Incorrect Operation code: ", apmt.Ops)
+			return
+		}
+	}
+
+	// delete the testing appointment
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, naid))
+	if e := DeleAppointment(naid, 5); nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -411,6 +604,8 @@ func Test_AssignAppointmentRectptionist(t *testing.T) {
 	}
 
 	// receptionist
+	x1 = []int64{-1, 0, 100000000, 9}
+	s1 = []string{"< 0", "= 0", "does not exist", "is not an agency"}
 	for k, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> Argument: Receptionist(%d) %s", seq, v, s1[k]))

@@ -33,10 +33,12 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 	if err, _ = getAppointment(aid); nil != err {
 		return
 	}
-	err, ur := GetUser(recpt) // user receptionist
-	if nil != err {
+	// user receptionist
+	if _, bAgency := isAgency(recpt); !bAgency { // isAgency will check GetUser inside
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "receptionist is not a agency"}
 		return
 	}
+	_, ur := GetUser(recpt)
 
 	/* Permission checking */
 	// Only the administrator could assign the receptionist for appointment
@@ -755,13 +757,13 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 		if err, msgType = appointType2MessageType(apmt.OrderType); nil != err {
 			return
 		}
-		err, _ = sendMsg2Admin(msgType, commdef.MSG_PRIORITY_Warning, aid, "指派预约处理人", o)
+		err, _ = sendMsg2Admin(msgType, commdef.MSG_PRIORITY_Warning, aid, "指派预约处理�?, o)
 	} else {
 		role := ""
 		if uid == apmt.Subscriber {
 			role = "客人"
 		} else {
-			role = "经纪人"
+			role = "经纪�?
 		}
 		msgPri := commdef.MSG_PRIORITY_Info
 		if err, msgTxt, msgType, msgPri = getMsgParameters(apmt.OrderType, act, role); nil != err {
@@ -822,7 +824,7 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 			msg = role + "取消约看"
 			msgPriority = commdef.MSG_PRIORITY_Error
 		case commdef.APPOINT_ACTION_SetRectptionist:
-			msg = "请处理客人预约"
+			msg = "请处理客人预�?
 			msgPriority = commdef.MSG_PRIORITY_Info
 		default:
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "appointment action type"}
@@ -850,6 +852,7 @@ func getAppointmenOps(uid int64, apmt *TblAppointment, act *TblAppointmentAction
 			Ops = commdef.APPOINT_OP_AssignReceptionist
 		}
 	case commdef.APPOINT_ACTION_Confirm:
+		// beego.Debug(Fn, fmt.Sprintf("Subscriber: %d, Receptionist: %d", apmt.Subscriber, apmt.Receptionist))
 		if uid == apmt.Subscriber { // appointment subscriber
 			Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule
 		} else if uid == apmt.Receptionist { // appointment receptionist
