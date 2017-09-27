@@ -17,22 +17,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/homepage_title"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/homepage_title" />
+
         <TextView
-            android:layout_alignParentBottom="true"
-            android:textSize="17sp"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
+            android:id="@+id/textViewPropertyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="世贸蝶湖湾"/>
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:text="小区名称"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
     </RelativeLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"

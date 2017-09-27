@@ -35,6 +35,9 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
     private static final int DISPLAY_GRID = 0;
     private static final int DISPLAY_LIST= 1;
     private int mDisplay = DISPLAY_LIST;
+
+    private TextView mViewPropertyName = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,14 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
 
         kjsLogUtil.i("property name: " + mPropertyName);
         kjsLogUtil.i("property id: " + mPropertyId);
+
+        mViewPropertyName = (TextView)findViewById(R.id.textViewPropertyName);
+    }
+
+    public void onResume() {
+        super.onResume();
+
+        mViewPropertyName.setText(mPropertyName);
     }
 
     public void onClickResponse(View v) {
