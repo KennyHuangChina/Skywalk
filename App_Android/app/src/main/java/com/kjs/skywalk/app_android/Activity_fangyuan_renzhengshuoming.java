@@ -25,7 +25,8 @@ public class Activity_fangyuan_renzhengshuoming extends SKBaseActivity {
             case R.id.textViewCommit:
             {
                 finish();
-                startActivity(new Intent(this, Activity_shenhe_zhengjian.class));
+//                startActivity(new Intent(this, Activity_shenhe_zhengjian.class));
+                startActivity(new Intent(this, Activity_fangyuan_renzheng_customer.class));
             }
             break;
         }
