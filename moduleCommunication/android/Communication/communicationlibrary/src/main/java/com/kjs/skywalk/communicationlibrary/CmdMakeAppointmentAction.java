@@ -64,7 +64,7 @@ class CmdMakeAppointmentAction extends CommunicationBase {
     public boolean checkParameter(HashMap<String, String> map) {
         String Fn = "[checkParameter] ";
 
-        if (mAct < 2 || mAct > 5) {
+        if (mAct < CommunicationInterface.APPOINTMENT_ACTION_Min || mAct > CommunicationInterface.APPOINTMENT_ACTION_Max) {
             Log.e(TAG, Fn + String.format("Invalid action:%d, (2 ~ 5)", mAct));
             return false;
         }
