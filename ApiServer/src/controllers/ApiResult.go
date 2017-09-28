@@ -248,6 +248,7 @@ type ResGetHouseCertHist struct {
 	Total    int
 	Count    int
 	CertHist []commdef.HouseCert
+	Ops      int // valid operations
 }
 
 // result of API GetAppointmentInfo

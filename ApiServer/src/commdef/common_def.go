@@ -122,9 +122,15 @@ type HouseCert struct {
 	User    string
 	Phone   string
 	Time    string
-	Stat    int
+	Stat    int // HOUSE_CERT_STAT_xxx
 	CertTxt string
 }
+
+const (
+	HOUSE_COP_Certify  = 0x01 // certify
+	HOUSE_COP_Recommit = 0x02 // recommit the house certification
+	HOUSE_COP_Revoke   = 0x04 // revoke the house certification
+)
 
 type HousePrice struct {
 	Id           int64

@@ -114,6 +114,7 @@
 			* ReceptionistPhone	string		// phone number of receptionist
 			* ApmtDesc			string 		// appointment description
 			* SubscribeTime		string		// suberibe time
+			* Ops				int			// valid operations
 			* Actions
 				* Id			int			// action id
 				* Act			int 		// action type

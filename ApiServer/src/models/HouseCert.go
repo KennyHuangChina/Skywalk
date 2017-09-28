@@ -16,9 +16,11 @@ import (
 *		hid 	- house id
 *		uid		- login user who made the certification
 *	Returns
-*		err - error info
+*		err 	- error info
+*		hcs		- house certification list
+*		ops		- valid operations
  */
-func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
+func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert, ops int) {
 	Fn := "[CertHouse] "
 	beego.Trace(Fn, "house:", hid, ", login user:", uid)
 
@@ -40,6 +42,7 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 
 	/* Permission checking */
 	// Only the person who can SEE the house info could get the certificate history of the house
+	// include landlord, current agency and administrator
 	if err = canAccessHouse(uid, hid); nil != err {
 		return
 	}
@@ -62,8 +65,11 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 	bLoginLandlord := isHouseOwner(h, uid)
 	beego.Debug(Fn, "login user is landlord?", bLoginLandlord)
 
-	for _, v := range cs {
+	for k, v := range cs {
 		// beego.Debug(Fn, fmt.Sprintf("v:%+v", v))
+		if 0 == k {
+			_, ops = getHouseCertOps(uid, &h, &v)
+		}
 		// there are 3 kind of roles in hist records: landlord, ex-landlord, agency(including administrator)
 		// landlord could see the agency's phone number
 		// agency(including admin) could see the current landlord's phone number
@@ -86,7 +92,7 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert) {
 		// bHidePrivateInfo = true
 		// beego.Debug(Fn, "bHidePrivateInfo:", bHidePrivateInfo)
 
-		if bHidePrivateInfo {
+		if bHidePrivateInfo { // hide the privecy info
 			v.Uid = 0
 			v.Phone = ""
 		}
@@ -289,6 +295,37 @@ func getHouseNewestCert(hid int64) (hc TblHouseCert, err error) {
 		}
 		return
 	}
+
+	return
+}
+
+func getHouseCertOps(uid int64, h *TblHouse, hc *commdef.HouseCert) (err error, ops int) {
+	Fn := "[getHouseCertOps] "
+	// beego.Info(Fn, "uid:")
+
+	bLandlord := isHouseOwner(*h, uid)
+	bAgency := isHouseAgency(*h, uid)
+	_, bAdmin := isAdministrator(uid)
+	beego.Debug(Fn, "bLandlord:", bLandlord, ", bAgency:", bAgency, ", bAdmin:", bAdmin)
+
+	switch hc.Stat {
+	case commdef.HOUSE_CERT_STAT_WAIT:
+		if bLandlord {
+		} else if bAgency || bAdmin {
+			ops = commdef.HOUSE_COP_Certify
+		}
+	case commdef.HOUSE_CERT_STAT_PASSED:
+		if bLandlord {
+		} else if bAgency || bAdmin {
+			ops = commdef.HOUSE_COP_Revoke
+		}
+	case commdef.HOUSE_CERT_STAT_FAILED:
+		if bLandlord {
+			ops = commdef.HOUSE_COP_Recommit
+		} else if bAgency || bAdmin {
+		}
+	}
+	beego.Debug(Fn, "ops:", ops)
 
 	return
 }

@@ -254,11 +254,12 @@ func (this *HouseController) GetHouseCertHist() {
 	/*
 	 *	Processing
 	 */
-	err, hcs := models.GetHouseCertHist(hid, uid)
+	err, hcs, ops := models.GetHouseCertHist(hid, uid)
 	if nil == err {
 		result.Total = len(hcs)
 		result.Count = len(hcs)
 		result.CertHist = hcs
+		result.Ops = ops
 	}
 
 	return

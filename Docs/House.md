@@ -144,8 +144,8 @@
 	  		* ErrDesc		string		// error description
 ##
 
-### 6. certificate House (By agency)
-	[Security]	private
+### 6. certificate House (By agency & administrator)
+	[Security]	private, agency and administrator
 	[Request]
   		* POST /v1/house/cert/:id
 	  		* cc			string		// certificate comment
@@ -277,16 +277,17 @@
   		* GET /v1/house/:id/certhist
 	[Response]
 		* SUCCESS:200 
-			* Total    		int		// total number
-			* Count			int		// how many items fetched. -1 means just fetch the total number
-			* CertHist		array	// house certification hist
-				* Id		int			// certificate id
-				* Uid		int			// user id
-				* User		string		// user name
-				* Phone		string		// user phone
-				* Time		string		// certificate time
-				* CertStat	int			// certificate status
-				* Comm		string		// certificate comments
+			* Total    		int			// total number
+			* Count			int			// how many items fetched. -1 means just fetch the total number
+			* CertHist					// house certification hist
+				* Id			int			// certificate id
+				* Uid			int			// user id
+				* User			string		// user name
+				* Phone			string		// user phone
+				* Time			string		// certificate time
+				* CertStat		int			// certificate status
+				* Comm			string		// certificate comments
+			* Ops			int 		// valid operations
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
