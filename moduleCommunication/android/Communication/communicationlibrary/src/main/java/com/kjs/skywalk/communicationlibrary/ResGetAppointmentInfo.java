@@ -26,6 +26,7 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     private String              mReceptionistPhone  = null;
     private String              mAppointDesc        = null;
     private Date                mSubscribeTime      = null;
+    private int                 mOperations         = 0;
     private ActList             mActList            = null;
 
     ResGetAppointmentInfo(int nErrCode, JSONObject jObject) {
@@ -39,11 +40,12 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     public String DebugString() {
         super.DebugString();
         mString += mHouseTitle.DebugString() + "\n";
-        mString += String.format(" Schedule: %s %s -> %s\n", ScheduleDate().toString(), ScheduleBeginTime().toString(), ScheduleEndTime().toString());
+        mString += String.format(" Schedule: %s %s -> %s\n", ScheduleDate(), ScheduleBeginTime(), ScheduleEndTime());
         mString += String.format(" Subscriber: %s phone: %s\n", Subscriber(), SubscriberPhone());
         mString += String.format(" Receptionist: %s phone: %s\n", Receptionist(), ReceptionistPhone());
         mString += String.format(" Description: %s \n", AppointmentDesc());
-        mString += String.format(" Subscribe Time: %s \n", SubscribeTime().toString());
+        mString += String.format(" Subscribe Time: %s \n", SubscribeTime());
+        mString += String.format(" Valid Operations: %d \n", Operations());
         if (null != mActList) {
             mString += mActList.DebugList();
         }
@@ -94,6 +96,8 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
                 return -6;
             }
             mSubscribeTime = df_time.parse(strTmp);
+
+            mOperations = objAptm.getInt("Ops");
 
             // action list
             if (null != mActList) {
@@ -202,6 +206,11 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     @Override
     public Date SubscribeTime() {
         return mSubscribeTime;
+    }
+
+    @Override
+    public int Operations() {
+        return mOperations;
     }
 
     @Override

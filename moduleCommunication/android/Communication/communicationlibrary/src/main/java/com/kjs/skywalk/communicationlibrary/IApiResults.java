@@ -140,6 +140,10 @@ public class IApiResults {
         String  CertDesc();
     }
 
+    public interface IHouseCertHist {
+        int     Operations();
+    }
+
     // TODO: maybe should be removed
     public interface IHousePriceInfo {
         int     Id();
@@ -270,6 +274,7 @@ public class IApiResults {
         String  ReceptionistPhone();
         String  AppointmentDesc();
         Date    SubscribeTime();
+        int     Operations();
     }
 
     public interface IAppointmentAct {
