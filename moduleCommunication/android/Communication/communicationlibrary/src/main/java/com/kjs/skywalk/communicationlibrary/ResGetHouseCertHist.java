@@ -16,9 +16,10 @@ import java.util.Date;
  * Created by kenny on 2017/9/18.
  */
 
-class ResGetHouseCertHist extends ResBase implements IApiResults.IResultList {
+class ResGetHouseCertHist extends ResBase implements IApiResults.IResultList, IApiResults.IHouseCertHist {
 
-    private HouseCertList mList = null;
+    private HouseCertList   mList       = null;
+    private int             mOperations = 0;
 
     ResGetHouseCertHist(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -29,6 +30,7 @@ class ResGetHouseCertHist extends ResBase implements IApiResults.IResultList {
     @Override
     public String DebugString() {
         super.DebugString();
+        mString += String.format(" Ops: %d\n", Operations());
         if (null != mList) {
             mString += mList.DebugList();
         }
@@ -37,6 +39,14 @@ class ResGetHouseCertHist extends ResBase implements IApiResults.IResultList {
 
     @Override
     protected int parseResult(JSONObject obj) {
+        // valid operations
+        try {
+            mOperations = obj.getInt("Ops");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
         // parse house cert list
         if (null != mList) {
             return mList.parseList(obj);
@@ -66,6 +76,11 @@ class ResGetHouseCertHist extends ResBase implements IApiResults.IResultList {
             return mList.GetList();
         }
         return null;
+    }
+
+    @Override
+    public int Operations() {
+        return mOperations;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////

@@ -140,6 +140,10 @@ public class IApiResults {
         String  CertDesc();
     }
 
+    public interface IHouseCertHist {
+        int     Operations();
+    }
+
     // TODO: maybe should be removed
     public interface IHousePriceInfo {
         int     Id();

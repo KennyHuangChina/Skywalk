@@ -125,7 +125,7 @@ public class CommunicationInterface {
 
         /*
         *   CMD     : CMD_GET_HOUSE_CERTIFY_HIST
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseCertInfo))
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
          */
         int GetHouseCertHist(int house_id);
 

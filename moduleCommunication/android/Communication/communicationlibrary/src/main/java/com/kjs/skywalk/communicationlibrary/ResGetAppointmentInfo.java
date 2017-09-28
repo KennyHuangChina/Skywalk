@@ -40,11 +40,11 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     public String DebugString() {
         super.DebugString();
         mString += mHouseTitle.DebugString() + "\n";
-        mString += String.format(" Schedule: %s %s -> %s\n", ScheduleDate().toString(), ScheduleBeginTime().toString(), ScheduleEndTime().toString());
+        mString += String.format(" Schedule: %s %s -> %s\n", ScheduleDate(), ScheduleBeginTime(), ScheduleEndTime());
         mString += String.format(" Subscriber: %s phone: %s\n", Subscriber(), SubscriberPhone());
         mString += String.format(" Receptionist: %s phone: %s\n", Receptionist(), ReceptionistPhone());
         mString += String.format(" Description: %s \n", AppointmentDesc());
-        mString += String.format(" Subscribe Time: %s \n", SubscribeTime().toString());
+        mString += String.format(" Subscribe Time: %s \n", SubscribeTime());
         mString += String.format(" Valid Operations: %d \n", Operations());
         if (null != mActList) {
             mString += mActList.DebugList();
