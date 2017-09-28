@@ -335,8 +335,8 @@ const (
 	MSG_Begin = 1
 
 	MSG_Unknown            = 0
-	MSG_HouseCertification = 1 // messages of house certificaion, ref to TblHouseCert
-	MSG_AppointSeeHouse    = 2 // messages of house watching. ref to ORDER_TYPE_SEE_HOUSE
+	MSG_HouseCertification = 1 // messages of house certificaion, ref to TblHouseCert. 		ref_id = TblHouseCert.Id
+	MSG_AppointSeeHouse    = 2 // messages of house watching. ref to ORDER_TYPE_SEE_HOUSE, 	ref_id = TblAppointment.Id
 
 	MSG_End = 2
 )

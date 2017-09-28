@@ -149,9 +149,14 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 			hid = hc.House
 		}
 	case commdef.MSG_AppointSeeHouse:
-		beego.Warn(Fn, "TODO: MSG_AppointSeeHouse")
-		err = commdef.SwError{ErrCode: commdef.ERR_NOT_IMPLEMENT, ErrInfo: "MSG_AppointSeeHouse"}
-		return
+		{
+			apmt := TblAppointment{}
+			if err, apmt = getMsgReference_AppointSeeHouse(m.RefId); nil != err {
+				return
+			}
+			beego.Debug(Fn, fmt.Sprintf("appointment: %+v", apmt))
+			hid = apmt.House
+		}
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("message type:%d", m.Type)}
 		return
@@ -277,6 +282,9 @@ func GetSysMsgCount(uid int64, nm bool) (err error, nmc int64) {
 //
 //		-- Internal Functions --
 //
+/*
+	hcid: house cert id
+*/
 func getMsgReference_HouseCert(hcid int64) (err error, hc TblHouseCert) {
 	Fn := "[getMsgReference_HouseCert] "
 	beego.Info(Fn, "house cert record:", hcid)
@@ -290,6 +298,25 @@ func getMsgReference_HouseCert(hcid int64) (err error, hc TblHouseCert) {
 	}
 
 	hc = hc1
+	return
+}
+
+/*
+	apid: appointment id
+*/
+func getMsgReference_AppointSeeHouse(apid int64) (err error, apmt TblAppointment) {
+	Fn := "[getMsgReference_AppointSeeHouse] "
+	beego.Info(Fn, "appointment:", apid)
+
+	o := orm.NewOrm()
+	ap := TblAppointment{Id: apid}
+	errT := o.Read(&ap)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+
+	apmt = ap
 	return
 }
 
