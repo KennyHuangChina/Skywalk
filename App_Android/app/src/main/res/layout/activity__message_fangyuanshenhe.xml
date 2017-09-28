@@ -139,7 +139,7 @@
                 android:layout_height="45dp"
                 android:textColor="#ffffff"
                 android:textSize="15sp"
-                android:background="@drawable/rounded_rect_background_orange"
+                android:background="@drawable/rounded_rect_background_2DB1FD"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
