@@ -52,8 +52,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity {
 
     private void startPhotoPickerActivity(View host_view) {
         mPhotoPickerHostId = host_view.getId();
-        PhotoPicker.builder()
-                .start(Activity_fangyuan_renzheng_customer.this);
+        PhotoPicker.builder().setPhotoCount(2).start(Activity_fangyuan_renzheng_customer.this);
     }
 
     private void onPhotoPickerReturn(List<String> photos) {
