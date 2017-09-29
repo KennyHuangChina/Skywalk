@@ -188,8 +188,17 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Pictures
-        int AddPicture(int house, int type, int refId,
-                       String desc, String file);                       // CMD_ADD_PICTURE,         IApiResults.IAddRes
+        /*
+        *   CMD : CMD_ADD_PICTURE
+        *       - house : house id
+        *       - type  : picture type. PIC_TYPE_MAJOR_xxx + PIC_TYPE_SUB_xxx
+        *       - refId : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
+        *       - desc  : picture description
+        *       - file  : picture file in local
+        *   Result  : IApiResults.IAddRes
+         */
+        int AddPicture(int house, int type, int refId, String desc, String file);
+
         int DelePicture(int pic);                                       // CMD_DEL_PICTURE,         IApiResults.ICommon
         int GetPicUrls(int pic, int size);                              // CMD_GET_PIC_URL,         IApiResults.IPicUrls
         int GetHousePics(int house, int type);                          // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
@@ -494,6 +503,16 @@ public class CommunicationInterface {
     //
     //         -- API data definitions --
     //
+    static public int   PIC_TYPE_MAJOR_User             = 100,
+                        PIC_TYPE_MAJOR_House            = 200,
+                        PIC_TYPE_MAJOR_Rental           = 300;
+    static public int   PIC_TYPE_SUB_USER_IDCard            = 1,    // User's ID card
+                        PIC_TYPE_SUB_USER_Headportrait      = 2;    // user's head-portrait
+    static public int   PIC_TYPE_SUB_HOUSE_FLOOR_PLAN       = 1,    // house plan
+                        PIC_TYPE_SUB_HOUSE_FURNITURE        = 2,    // house furnitures
+                        PIC_TYPE_SUB_HOUSE_APPLIANCE        = 3,    // house appliances
+                        PIC_TYPE_SUB_HOUSE_OwnershipCert    = 4;    // owernship certification
+
     static public int   APPOINTMENT_ACTION_Min          = 2,
                         APPOINTMENT_ACTION_Confirm      = 2,
                         APPOINTMENT_ACTION_Reschedule   = 3,
