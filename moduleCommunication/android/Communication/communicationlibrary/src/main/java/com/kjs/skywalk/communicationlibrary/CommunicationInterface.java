@@ -31,16 +31,16 @@ public class CommunicationInterface {
         //
         //          User Admin
         /*
-        *   CMD         : CMD_GET_SMS_CODE,
-        *   Result      : IApiResults.IGetSmsCode
-        *   userName    : login name (cell phone number)
+        *   CMD: CMD_GET_SMS_CODE,
+        *       - userName: login name (cell phone number)
+        *   Result: IApiResults.IGetSmsCode
         */
         int GetSmsCode(String userName);
 
         /*
-        *   CMD     : CMD_GET_USER_INFO,
-        *   Result  : IApiResults.IGetUserInfo
-        *   uid     : user id to fetch
+        *   CMD: CMD_GET_USER_INFO,
+        *       - uid: user id to fetch
+        *   Result: IApiResults.IGetUserInfo
         */
         int GetUserInfo(int uid);
 
@@ -51,32 +51,34 @@ public class CommunicationInterface {
         int GetLoginUserInfo();
 
         /*
-        *   CMD         : CMD_GET_USER_SALT,
-        *   Result      : IApiResults.IGetUserSalt
-        *   userName    : login name (cell phone number)
+        *   CMD: CMD_GET_USER_SALT,
+        *       - userName: login name (cell phone number)
+        *   Result: IApiResults.IGetUserSalt
         */
         int GetUserSalt(String userName);
 
         /*
-        *   CMD         : CMD_LOGIN_BY_PASSWORD,
-        *   Result      : IApiResults.ILogin
-        *   user        : login name (cell phone number)
-        *   smsCode     : the sms code user received
+        *   CMD: CMD_LOGIN_BY_PASSWORD,
+        *       - user  : login name (cell phone number)
+        *       - pass  : password
+        *       - rand  : rand number
+        *       - salt  : the session salt returned by GetUserSalt
+        *   Result: IApiResults.ILogin
         */
         int LoginByPassword(String user, String pass, String rand, String salt);// ,
 
         /*
-        *   CMD         : CMD_LOGIN_BY_SMS,
-        *   Result      : IApiResults.ILogin
-        *   user        : login name (cell phone number)
-        *   smsCode     : the sms code user received
+        *   CMD: CMD_LOGIN_BY_SMS,
+        *       - user      : login name (cell phone number)
+        *       - smsCode   : the sms code user received
+        *   Result: IApiResults.ILogin
         */
         int LoginBySms(String user, String smsCode);
 
         /*
-        *   CMD         : CMD_RELOGIN,
-        *   Result      : IApiResults.ILogin
-        *   userName    : login name (cell phone number)
+        *   CMD: CMD_RELOGIN,
+        *       - userName : login name (cell phone number)
+        *   Result: IApiResults.ILogin
          */
         int Relogin(String userName);
 
@@ -87,13 +89,13 @@ public class CommunicationInterface {
         int Logout();
 
         /*
-        *   CMD         : CMD_RESET_LOGIN_PASS,
-        *   Result      : IApiResults.ICommon
-        *   user        : target user name(/phone number)
-        *   pass        : new password
-        *   sms         : sms captcha code
-        *   salt        : salt
-        *   rand        : rand
+        *   CMD: CMD_RESET_LOGIN_PASS,
+        *       - user  : target user name(/phone number)
+        *       - pass  : new password
+        *       - sms   : sms captcha code
+        *       - salt  : salt
+        *       - rand  : rand
+        *   Result: IApiResults.ICommon
         */
         int ResetLoginPass(String user, String pass, String sms, String salt, String rand);
 
@@ -106,10 +108,10 @@ public class CommunicationInterface {
         int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
 
         /*
-        *   CMD         : CMD_GET_HOUSE_INFO,
-        *   Result      : IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo
-        *   houseid     : house id
-        *   bBackend    : is it for backend using
+        *   CMD: CMD_GET_HOUSE_INFO,
+        *       - houseid   : house id
+        *       - bBackend  : is it for backend using
+        *   Result: IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo
          */
         int GetHouseInfo(int houseId, boolean bBackend);
 
@@ -125,28 +127,28 @@ public class CommunicationInterface {
 
         /*
         *   CMD     : CMD_GET_HOUSE_CERTIFY_HIST
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseCertInfo))
+        *   Result  : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
          */
         int GetHouseCertHist(int house_id);
 
         /*
-        *   CMD     : CMD_GET_BEHALF_HOUSE_LIST
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-        *   type    : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
-        *   begin   : fetch begin position
-        *   cnt     : fetch count. set to 0 mean just want to get the total number
+        *   CMD: CMD_GET_BEHALF_HOUSE_LIST
+        *       - type  : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
+        *       - begin : fetch begin position
+        *       - cnt   : fetch count. set to 0 mean just want to get the total number
+        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
         *
          */
         int GetBehalfHouses(int type, int begin, int cnt);
 
         /*
-        *   CMD     : CMD_GET_HOUSE_DIGEST_LIST
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-        *   type    : list type. 0: all house; 1: recommend houses; 2: deducted houses; 3: new houses
-        *   begin   : fetch begin position
-        *   cnt     : fetch count. set to 0 mean just want to get the total number
-        *   filter  : filter confitions. HouseFilterCondition
-        *   sort    : sort condition list
+        *   CMD: CMD_GET_HOUSE_DIGEST_LIST
+        *       - type  : list type. 0: all house; 1: recommend houses; 2: deducted houses; 3: new houses
+        *       - begin : fetch begin position
+        *       - cnt   : fetch count. set to 0 mean just want to get the total number
+        *       - filter: filter confitions. HouseFilterCondition
+        *       - sort  : sort condition list
+        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         int GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort);
 
@@ -188,11 +190,39 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Pictures
-        int AddPicture(int house, int type, int refId,
-                       String desc, String file);                       // CMD_ADD_PICTURE,         IApiResults.IAddRes
-        int DelePicture(int pic);                                       // CMD_DEL_PICTURE,         IApiResults.ICommon
-        int GetPicUrls(int pic, int size);                              // CMD_GET_PIC_URL,         IApiResults.IPicUrls
-        int GetHousePics(int house, int type);                          // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
+        /*
+        *   CMD : CMD_ADD_PICTURE
+        *       - house : house id
+        *       - type  : picture type. PIC_TYPE_MAJOR_xxx + PIC_TYPE_SUB_xxx
+        *       - refId : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
+        *       - desc  : picture description
+        *       - file  : picture file in local
+        *   Result  : IApiResults.IAddRes
+         */
+        int AddPicture(int house, int type, int refId, String desc, String file);
+
+        /*
+        *   CMD: CMD_DEL_PICTURE
+        *       pic: picture id
+        *   Result: IApiResults.ICommon
+         */
+        int DelePicture(int pic);
+
+        /*
+        *   CMD: CMD_GET_PIC_URL
+        *       - pic   : picture id
+        *       - size  : picture size. PIC_SIZE_xxx
+        *   Result: IApiResults.IPicUrls
+         */
+        int GetPicUrls(int pic, int size);
+
+        /*
+        *   CMD: CMD_GET_HOUSE_PIC_LIST
+        *       - house : house id
+        *       - type  : house picture sub-type. PIC_TYPE_SUB_xxx
+        *   Result: IApiResults.IResultList(IApiResults.IHousePicInfo)
+         */
+        int GetHousePics(int house, int type);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -211,25 +241,27 @@ public class CommunicationInterface {
         int GetNewMsgCount();
 
         /*
-        *   CMD     : CMD_GET_MSG_INFO
-        *   Result  : IApiResults.ISysMsgInfo
+        *   CMD: CMD_GET_MSG_INFO
+        *       - msg_id: message id
+        *   Result: IApiResults.ISysMsgInfo
          */
         int GetSysMsgInfo(int msg_id);
 
         /*
-        *   CMD     : CMD_READ_NEW_MSG
+        *   CMD : CMD_READ_NEW_MSG
+        *       - msg_id: message id
         *   Result  : IApiResults.ICommon
          */
         int ReadNewMsg(int msg_id);
 
         /*
         *   CMD : CMD_GET_SYSTEM_MSG_LST
-        *       posi_bgn  : begin position to fetch
-        *       fetch_cnt : how many records want to fetch
-        *       ido       : true  - only fetch message id;
-        *                   false - fetch whole message info
-        *       nmo       : true  - only fetch new messages
-        *                   false - fetch all messages
+        *       - posi_bgn  :   begin position to fetch
+        *       - fetch_cnt :   how many records want to fetch
+        *       - ido       :   true  - only fetch message id;
+        *                       false - fetch whole message info
+        *       - nmo       :   true  - only fetch new messages
+        *                       false - fetch all messages
         *   Result : IApiResults.IResultList(IApiResults.ISysMsgInfo)
          */
         int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo);
@@ -238,56 +270,55 @@ public class CommunicationInterface {
         //
         //          Appointment APIs
         /*
-        *   CMD         : CMD_APPOINT_SEE_HOUSE
-        *   Result      : IApiResults.IAddRes
-        *   house       : house id
-        *   phone       : contact phone. if user logined, it could be empty
-        *   time_begin  : appointment period begin, like 2017-06-24 09:00
-        *   time_end    : appointment period end, like 2017-06-24 09:30
-        *   desc        : appointment description
+        *   CMD: CMD_APPOINT_SEE_HOUSE
+        *       - house       : house id
+        *       - phone       : contact phone. if user logined, it could be empty
+        *       - time_begin  : appointment period begin, like 2017-06-24 09:00
+        *       - time_end    : appointment period end, like 2017-06-24 09:30
+        *       - desc        : appointment description
+        *   Result: IApiResults.IAddRes
          */
         int MakeAppointment_SeeHouse(int house, String phone, String time_begin, String time_end, String desc);
 
         /*
-            CMD     : CMD_APPOINT_HOUSE_SEE_LST
-            Result  : IApiResults.IResultList(IApiResults.IAppointment)
-            house_id: house id
-            begin   : fetch begin position
-            cnt     : fetch count. set to 0 to get the total number
+            CMD: CMD_APPOINT_HOUSE_SEE_LST
+                - house_id: house id
+                - begin   : fetch begin position
+                - cnt     : fetch count. set to 0 to get the total number
+            Result: IApiResults.IResultList(IApiResults.IAppointment)
          */
         int GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
 
         /*
-        *   CMD     : CMD_HOUSE_LST_APPOINT_SEE
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-        *   begin   : fetch begin position
-        *   cnt     : fetch count. set to 0 mean just want to get the total number
-        *
+        *   CMD: CMD_HOUSE_LST_APPOINT_SEE
+        *       - begin   : fetch begin position
+        *       - cnt     : fetch count. set to 0 mean just want to get the total number
+        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         int GetHouseList_AppointSee(int begin, int cnt);
 
         /*
         *   CMD : CMD_MAKE_APPOINTMENT_ACTION
-        *       apid        - appointment id
-        *       act         - action id. 2: Confirm; 3: Reschedule; 4: Done; 5: Cancel
-        *       time_begin  - appointment period begin, like 2017-06-24 09:00
-        *       time_end    - appointment period end, like 2017-06-24 09:30
-        *       comments    - appointment comments
+        *       - apid      : appointment id
+        *       - act       : action type: APPOINTMENT_ACTION_xxxx 2: Confirm; 3: Reschedule; 4: Done; 5: Cancel
+        *       - time_begin: appointment period begin, like 2017-06-24 09:00
+        *       - time_end  : appointment period end, like 2017-06-24 09:30
+        *       - comments  : appointment comments
         *   Result : IApiResults.IAddRes
          */
         int MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments);
 
         /*
         *   CMD : CMD_GET_APPOINTMENT_INFO
-        *       apid        - appointment id
+        *       - apid  : appointment id
         *   Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
          */
         int GetAppointmentInfo(int apid);
 
         /*
         *   CMD : CMD_ASSIGN_APPOINTMENT_RECEPTIONIST
-        *       aid             - appointment id
-        *       receptionist    - new receptionist
+        *       - aid           : appointment id
+        *       - receptionist  : new receptionist
         *   Result : IApiResults.ICommon
          */
         int AssignAppointmentReceptionist(int aid, int receptionist);
@@ -296,10 +327,10 @@ public class CommunicationInterface {
         //
         //          House Watch APIs
         /*
-        *   CMD     : CMD_GET_USER_HOUSE_WATCH_LIST
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-        *   begin   : fetch begin position
-        *   cnt     : fetch count. set to 0 mean just want to get the total number
+        *   CMD: CMD_GET_USER_HOUSE_WATCH_LIST
+        *       - begin : fetch begin position
+        *       - cnt   : fetch count. set to 0 mean just want to get the total number
+        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
         *
          */
         int GetUserHouseWatchList(int begin, int cnt);
@@ -494,6 +525,27 @@ public class CommunicationInterface {
     //
     //         -- API data definitions --
     //
+    static public int   PIC_TYPE_MAJOR_User             = 100,
+                        PIC_TYPE_MAJOR_House            = 200,
+                        PIC_TYPE_MAJOR_Rental           = 300;
+    static public int   PIC_TYPE_SUB_USER_IDCard            = 1,    // User's ID card
+                        PIC_TYPE_SUB_USER_Headportrait      = 2;    // user's head-portrait
+    static public int   PIC_TYPE_SUB_HOUSE_FLOOR_PLAN       = 1,    // house plan
+                        PIC_TYPE_SUB_HOUSE_FURNITURE        = 2,    // house furnitures
+                        PIC_TYPE_SUB_HOUSE_APPLIANCE        = 3,    // house appliances
+                        PIC_TYPE_SUB_HOUSE_OwnershipCert    = 4;    // owernship certification
+    static public int   PIC_SIZE_ALL                        = 0,
+                        PIC_SIZE_Small                      = 2,
+                        PIC_SIZE_Moderate                   = 3,
+                        PIC_SIZE_Large                      = 4;
+
+    static public int   APPOINTMENT_ACTION_Min          = 2,
+                        APPOINTMENT_ACTION_Confirm      = 2,
+                        APPOINTMENT_ACTION_Reschedule   = 3,
+                        APPOINTMENT_ACTION_Done         = 4,
+                        APPOINTMENT_ACTION_Cancel       = 5,
+                        APPOINTMENT_ACTION_Max          = 5;
+
     // used in CommitHouse, AmendHouse
     static public class HouseInfo {
         public int      mHouseId        = 0;

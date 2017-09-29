@@ -101,6 +101,8 @@
         <activity android:name=".Activity_ApartmentList" />
         <activity android:name=".Message.Activity_Message_fangyuanshenhe" />
         <activity android:name=".Message.Activity_Message_yuyuekanfang"></activity>
+        <activity android:name=".Activity_fangyuan_renzheng_customer" />
+
     </application>
 
 </manifest>
