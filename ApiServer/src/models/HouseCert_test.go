@@ -1,7 +1,7 @@
 package models
 
 import (
-	// "ApiServer/commdef"
+	"ApiServer/commdef"
 	"fmt"
 	// "strconv"
 	// "github.com/astaxie/beego"
@@ -89,7 +89,7 @@ func Test_GetHouseCertHist(t *testing.T) {
 	for k, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> House (%d)  %s", seq, v, d1[k]))
-		if e, _ := GetHouseCertHist(v, 0); e == nil {
+		if e, _, _ := GetHouseCertHist(v, 0); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -101,7 +101,7 @@ func Test_GetHouseCertHist(t *testing.T) {
 	for k, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> User (%d)  %s", seq, v, d1[k]))
-		if e, _ := GetHouseCertHist(17, v); e == nil {
+		if e, _, _ := GetHouseCertHist(17, v); e == nil {
 			t.Error("Failed, err: ", e)
 			return
 		}
@@ -115,7 +115,7 @@ func Test_GetHouseCertHist(t *testing.T) {
 	for k, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> House (17) has %d certification records", seq, x2[k]))
-		e, hcs := GetHouseCertHist(17, v)
+		e, hcs, _ := GetHouseCertHist(17, v)
 		if e != nil {
 			t.Error("Failed, err: ", e)
 			return
@@ -141,4 +141,49 @@ func Test_GetHouseCertHist(t *testing.T) {
 			}
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- House Certification --
+//
+func Test_HouseCertification(t *testing.T) {
+	t.Log("Test_HouseCertification")
+	seq := 0
+
+	/* Create new house for testing */
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Commit new house for testing", seq))
+	hif := commdef.HouseInfo{Property: 7, BuildingNo: "999B", FloorTotal: 20, FloorThis: 16,
+		HouseNo: "1608", Bedrooms: 9, Livingrooms: 8, Bathrooms: 7, Acreage: 200000,
+		ForSale: true, ForRent: true, Decoration: 3, BuyDate: "2017-09-29"}
+	err, nHouse := CommitHouseByOwner(&hif, 2, 11)
+	if nil != err {
+		t.Error("Error:", err)
+		return
+	}
+	t.Log("new house:", nHouse)
+
+	/* testing */
+	x1 := []int64{2, 11, 5}
+	s1 := []string{"landlord", "agency", "administration"}
+	x2 := []int{0, 0x01, 0x01}
+
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, ops: %d", seq, s1[k], x2[k]))
+		err, _, ops := GetHouseCertHist(nHouse, v)
+		if nil != err {
+			t.Error("Error:", err)
+			return
+		}
+		if ops != x2[k] {
+			t.Error("ops:", ops)
+			return
+		}
+	}
+	t.Error("TODO: ")
+
+	/* Delete the house, house certifications, system messages just created above */
+
 }
