@@ -104,6 +104,89 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert, ops i
 }
 
 /**
+*	Recommit the house certification request
+*	Arguments:
+*		hid 	- house id
+*		uid		- login user
+*		comment	- certificate comment
+*	Returns
+*		err - error info
+ */
+func RecommitHouseCert(hid, uid int64, comment string) (err error) {
+	FN := "[CertHouse] "
+	beego.Trace(FN, "house:", hid, ", login user:", uid, ", comment:", comment)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/*	argument checking */
+	if 0 == len(comment) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "No comments"}
+		return
+	}
+
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+
+	if nilTime != h.PublishTime {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "already published"}
+		return
+	}
+
+	/* Permission checking */
+	// Only the landlord could recommit the certification request
+	if !isHouseOwner(h, uid) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("uid:%d", uid)}
+		return
+	}
+
+	// Processing
+	o := orm.NewOrm()
+	o.Begin()
+	defer func() {
+		if nil != err {
+			o.Rollback()
+		} else {
+			o.Commit()
+		}
+	}()
+
+	// the last record should be HOUSE_CERT_STAT_FAILED
+	hc, err := getHouseNewestCert(hid)
+	if nil != err {
+		return
+	}
+	if commdef.HOUSE_CERT_STAT_FAILED != hc.CertStatu {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
+		return
+	}
+
+	// add new record in TblHouseCert
+	err, hcid := addHouseCertRec(hid, uid, commdef.HOUSE_CERT_STAT_WAIT, comment, o)
+	if nil != err {
+		return
+	}
+
+	// create a system message to notify the landlord
+	// generate a system message to notify the agency or administrator if no agency assigned
+	if h.Agency.Id > 0 { // agency assinged
+		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, h.Agency.Id, comment, o)
+	} else { // no agency assigned
+		err, _ = sendMsg2Admin(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, comment, o)
+	}
+	if nil != err {
+		return
+	}
+
+	return
+}
+
+/**
 *	Certify House
 *	Arguments:
 *		hid 	- house id
@@ -173,15 +256,19 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	}
 
 	// add new record in TblHouseCert
-	hc = TblHouseCert{House: hid, Who: uid, Comment: comment /*, Pass: pass*/}
-	if pass {
-		hc.CertStatu = commdef.HOUSE_CERT_STAT_PASSED
-	} else {
-		hc.CertStatu = commdef.HOUSE_CERT_STAT_FAILED
-	}
-	hc_id, errT := o.Insert(&hc)
-	if nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+	// hc = TblHouseCert{House: hid, Who: uid, Comment: comment /*, Pass: pass*/}
+	// if pass {
+	// 	hc.CertStatu = commdef.HOUSE_CERT_STAT_PASSED
+	// } else {
+	// 	hc.CertStatu = commdef.HOUSE_CERT_STAT_FAILED
+	// }
+	// hc_id, errT := o.Insert(&hc)
+	// if nil != errT {
+	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+	// 	return
+	// }
+	err, hc_id := addHouseCertRec(hid, uid, commdef.HOUSE_CERT_STAT_WAIT, comment, o)
+	if nil != err {
 		return
 	}
 
@@ -223,7 +310,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 *	Internal Functions
 *
 **********************************************************************************************************/
-func addHouseCertRec(hid, uid int64, cs int, cc string) (err error, cid int64) {
+func addHouseCertRec(hid, uid int64, cs int, cc string, o orm.Ormer) (err error, cid int64) {
 	Fn := "[addHouseCertRec] "
 	beego.Info(Fn, fmt.Sprintf("login user:%d, house:%d, cert status:%d, comment:%s", uid, hid, cs, cc))
 
@@ -232,7 +319,7 @@ func addHouseCertRec(hid, uid int64, cs int, cc string) (err error, cid int64) {
 	/* Permission checking */
 
 	/* Processing */
-	o := orm.NewOrm()
+	// o := orm.NewOrm()
 
 	// add new record in TblHouseCert
 	// comment := "业主提交新房源"

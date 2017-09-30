@@ -291,3 +291,15 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+##
+
+### 15. reommit the house certification request (By landlord)
+	[Security]	private, landlord
+	[Request]
+  		* POST /v1/house/:id/recert
+	  		* cc			string		// comments of recommit certification
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

@@ -164,14 +164,20 @@ func Test_HouseCertification(t *testing.T) {
 	}
 	t.Log("new house:", nHouse)
 
+	defer func() {
+		/* Delete the house, house certifications, system messages just created above */
+		// t.Log(fmt.Sprintf("<Case %d> delete house: %d", seq+1, nHouse))
+		// delHouse(nHouse, 5)
+	}()
+
 	/* testing */
+	// Status: House Commited
 	x1 := []int64{2, 11, 5}
 	s1 := []string{"landlord", "agency", "administration"}
 	x2 := []int{0, 0x01, 0x01}
-
 	for k, v := range x1 {
 		seq++
-		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, ops: %d", seq, s1[k], x2[k]))
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, ops: %d", seq, v, s1[k], x2[k]))
 		err, _, ops := GetHouseCertHist(nHouse, v)
 		if nil != err {
 			t.Error("Error:", err)
@@ -182,8 +188,64 @@ func Test_HouseCertification(t *testing.T) {
 			return
 		}
 	}
-	t.Error("TODO: ")
 
-	/* Delete the house, house certifications, system messages just created above */
+	// Status: Certification Failed
+	x2 = []int{0, 1, 0}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, certificate house should be %d", seq, v, s1[k], x2[k]))
+		err := CertHouse(nHouse, v, false, "test 房源审核失败")
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Error:", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Fail")
+				return
+			}
+		}
+	}
+
+	x2 = []int{0x02, 0, 0}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, ops: %d", seq, v, s1[k], x2[k]))
+		err, _, ops := GetHouseCertHist(nHouse, v)
+		if nil != err {
+			t.Error("Error:", err)
+			return
+		}
+		if ops != x2[k] {
+			t.Error("ops:", ops)
+			return
+		}
+	}
+
+	// Status: Recommit house certification
+	x1 = []int64{11, 5, 2}
+	s1 = []string{"agency", "administration", "landlord"}
+	x2 = []int{0, 0, 1}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, recommit should be %d", seq, v, s1[k], x2[k]))
+		err := CertHouse(nHouse, v, false, "test 重新提交审核")
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Error:", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Fail")
+				return
+			}
+		}
+	}
+
+	// Status: Certification Success
+
+	// t.Error("TODO: ")
 
 }

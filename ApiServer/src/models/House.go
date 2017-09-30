@@ -995,7 +995,7 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 
 	// add new record in TblHouseCert
 	comment := "业主提交新房源"
-	err, hcid := addHouseCertRec(newId, oid, commdef.HOUSE_CERT_STAT_WAIT, comment)
+	err, hcid := addHouseCertRec(newId, oid, commdef.HOUSE_CERT_STAT_WAIT, comment, o)
 	if nil != err {
 		return
 	}

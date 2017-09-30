@@ -30,6 +30,7 @@ func (h *HouseController) URLMapping() {
 
 	h.Mapping("CertHouse", h.CertHouse)
 	h.Mapping("GetHouseCertHist", h.GetHouseCertHist)
+	h.Mapping("RecommitHouseCert", h.RecommitHouseCert)
 
 	h.Mapping("SetHouseCoverImage", h.SetHouseCoverImage)
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
@@ -260,6 +261,53 @@ func (this *HouseController) GetHouseCertHist() {
 		result.Count = len(hcs)
 		result.CertHist = hcs
 		result.Ops = ops
+	}
+
+	return
+}
+
+// @Title RecommitHouseCert
+// @Description recommit the house certification request
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/recert [post]
+func (this *HouseController) RecommitHouseCert() {
+	FN := "[RecommitHouseCert] "
+	beego.Warn("[--- API: RecommitHouseCert ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	hid, _ := this.GetInt64(":id")
+	comment := this.GetString("cc")
+	tmp, _ := base64.URLEncoding.DecodeString(comment)
+	comment = string(tmp)
+
+	/*
+	 *	Processing
+	 */
+	err = models.RecommitHouseCert(hid, uid, comment)
+	if nil == err {
+		// result.Id = id
 	}
 
 	return
