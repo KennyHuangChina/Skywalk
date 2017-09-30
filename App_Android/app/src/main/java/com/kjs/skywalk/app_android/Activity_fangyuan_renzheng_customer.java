@@ -1,13 +1,28 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.ArrayRes;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPicker;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_House;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_User;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
 public class Activity_fangyuan_renzheng_customer extends SKBaseActivity {
     int mPhotoPickerHostId;
@@ -31,10 +46,14 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity {
         }
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_info_title: {
                 finish();
+                break;
+            }
+            case R.id.tv_upload_pic: {
+                break;
             }
         }
     }
@@ -102,6 +121,53 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity {
 
                 break;
             }
+        }
+    }
+
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+
+        }
+    };
+
+    class ImageUpload implements CommunicationInterface.CIProgressListener{
+
+        public final int UPLOAD_TYPE_IDCARD = PIC_TYPE_MAJOR_User + PIC_TYPE_SUB_USER_IDCard;
+        public final int UPLOAD_TYPE_OWNER_CERT = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_OwnershipCert;
+
+        private Context mContext = null;
+        private int mUploadType = 0;
+
+        ImageUpload(Context context) {
+            mContext = context;
+        }
+
+        public void setUploadType(int type) {
+            mUploadType = type;
+        }
+
+        public int upload(ArrayList<String> fileList) {
+            if(fileList.size() == 0) {
+                return -1;
+            }
+
+            CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+
+                @Override
+                public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+
+                }
+            };
+
+            CommandManager manager = CommandManager.getCmdMgrInstance(mContext, listener, this);
+            return 0;
+        }
+
+        @Override
+        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
         }
     }
 }
