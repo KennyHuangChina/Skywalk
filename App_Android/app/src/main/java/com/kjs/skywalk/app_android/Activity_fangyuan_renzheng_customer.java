@@ -24,7 +24,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
-public class Activity_fangyuan_renzheng_customer extends SKBaseActivity {
+public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ClassDefine.UploadFinished{
     int mPhotoPickerHostId;
 
     @Override
@@ -132,42 +132,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity {
         }
     };
 
-    class ImageUpload implements CommunicationInterface.CIProgressListener{
+    @Override
+    public void onUploadFinished(int current, int total, String image, boolean succeed) {
 
-        public final int UPLOAD_TYPE_IDCARD = PIC_TYPE_MAJOR_User + PIC_TYPE_SUB_USER_IDCard;
-        public final int UPLOAD_TYPE_OWNER_CERT = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_OwnershipCert;
-
-        private Context mContext = null;
-        private int mUploadType = 0;
-
-        ImageUpload(Context context) {
-            mContext = context;
-        }
-
-        public void setUploadType(int type) {
-            mUploadType = type;
-        }
-
-        public int upload(ArrayList<String> fileList) {
-            if(fileList.size() == 0) {
-                return -1;
-            }
-
-            CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-
-                @Override
-                public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
-
-                }
-            };
-
-            CommandManager manager = CommandManager.getCmdMgrInstance(mContext, listener, this);
-            return 0;
-        }
-
-        @Override
-        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-
-        }
     }
 }
