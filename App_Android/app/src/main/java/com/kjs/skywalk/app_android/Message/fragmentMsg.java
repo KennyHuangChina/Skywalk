@@ -99,8 +99,7 @@ public class fragmentMsg extends Fragment {
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
                     }
-
-                    mAdapterMsg.updateList(resultList.GetList());
+                    updateMsgList(resultList.GetList());
                 }
             }
         }, mProgreessListener).GetSysMsgList(0, 100 , false, false);
@@ -111,4 +110,13 @@ public class fragmentMsg extends Fragment {
         public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
         }
     };
+
+    private void updateMsgList(final ArrayList<Object> list) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapterMsg.updateList(list);
+            }
+        });
+    }
 }
