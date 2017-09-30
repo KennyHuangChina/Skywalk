@@ -2,6 +2,8 @@ package com.kjs.skywalk.app_android.Message;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by admin on 2017/2/8.
@@ -34,6 +39,15 @@ class AdapterMessage extends BaseAdapter {
     }
 
     // IApiResults.ISysMsgInfo
+//    public interface ISysMsgInfo extends IHouseTitleInfo {
+//        int     MsgId();        // message id
+//        int     MsgType();      // message type. 1 - House Certification. 2 - Planed House Watch
+//        int     MsgPriority();  // message priority. 0 - info. 1 - Warning. 2 - Error
+//        String  Receiver();     // people who the event send to
+//        String  CreateTime();   // exact time when the event created
+//        String  ReadTime();     // exact time when the event get readed
+//        String  MsgBody();      // message text
+//    }
     public void updateList(ArrayList<Object> list) {
         mList = list;
         this.notifyDataSetChanged();
@@ -93,8 +107,34 @@ class AdapterMessage extends BaseAdapter {
 
         // IApiResults.ISysMsgInfo
         IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
-        holder.tv_msg_title.setText(msgInfo.MsgBody());
+        holder.tv_msg_time.setText(msgInfo.CreateTime());
 
-         return convertView;
+        int msgType = msgInfo.MsgType();
+        if (msgType == 1) {
+            // 1 - House Certification
+            holder.iv_msg_icon.setImageResource(R.drawable.cert_house_icon);
+            holder.tv_msg_title.setText("房源审核");
+        } else if (msgType == 2) {
+            // 2 - Planed House Watch
+            holder.iv_msg_icon.setImageResource(R.drawable.see_house_icon);
+            holder.tv_msg_title.setText("预约看房");
+        } else {
+            // undefined
+        }
+
+        holder.tv_msg_result.setText(msgInfo.MsgBody());
+
+        List<commonFun.TextDefine> houseInfo = new ArrayList<commonFun.TextDefine>(
+                Arrays.asList(
+                        new commonFun.TextDefine("房源：" + msgInfo.Property(), 39, Color.parseColor("#000000")),
+                        new commonFun.TextDefine( msgInfo.BuildingNo(), 36,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine( "栋", 36,  Color.parseColor("#000000")),
+                        new commonFun.TextDefine( msgInfo.HouseNo(), 36,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine( "室", 36,  Color.parseColor("#000000"))
+                       )
+        );
+        holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
+
+        return convertView;
     }
 }
