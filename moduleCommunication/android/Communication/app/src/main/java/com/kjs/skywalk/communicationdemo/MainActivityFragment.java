@@ -110,8 +110,10 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.MakeAppointment_SeeHouse(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString(),
 //                                            "2017-06-23 9:00", "2017-06-23 10:30", mEditText2.getText().toString());
 
-        CmdMgr.MakeAppointmentAction(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), "2017-09-22 8:00", "2017-09-22 9:00", mEditText2.getText().toString());
+//        CmdMgr.MakeAppointmentAction(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), "2017-09-22 8:00", "2017-09-22 9:00", mEditText2.getText().toString());
+        CmdMgr.RecommitHouseCertification(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
     }
+
     private void doTestGetApi() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
