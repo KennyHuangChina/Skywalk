@@ -1810,25 +1810,11 @@ func delHouse(hid, luid int64) (err error) {
 	}()
 
 	// tbl_house_cert  delHouseCertRecByHose
-	err, numb, hcs := removeHouseCertRecByHose(hid)
-	if nil != err {
+	if err = removeHouseCertRecByHose(hid, o); nil != err {
 		return
 	}
 
-	// tbl_message
-	if numb > 0 {
-		hcids := []int64{}
-		for _, v := range hcs {
-			hcids = append(hcids, v.Id)
-		}
-		numb, errT := o.QueryTable("tbl_message").Filter("Type", commdef.MSG_HouseCertification).Filter("RefId__in", hcids).Delete()
-		if nil != errT {
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-			return
-		}
-		beego.Debug(FN, fmt.Sprintf("delete %d records from tbl_message", numb))
-	}
-
+	// tbl_house
 	if /*num*/ _, err1 := o.Delete(&TblHouse{Id: hid}); err1 != nil {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}
 		return

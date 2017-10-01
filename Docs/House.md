@@ -302,4 +302,5 @@
 		* SUCCESS:200 
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
+		  		* Id 		int 		// new house certification id
 	  		* ErrDesc		string		// error description

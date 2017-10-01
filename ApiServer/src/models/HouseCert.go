@@ -112,8 +112,8 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert, ops i
 *	Returns
 *		err - error info
  */
-func RecommitHouseCert(hid, uid int64, comment string) (err error) {
-	FN := "[CertHouse] "
+func RecommitHouseCert(hid, uid int64, comment string) (err error, hcid int64) {
+	FN := "[RecommitHouseCert] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid, ", comment:", comment)
 
 	defer func() {
@@ -135,6 +135,10 @@ func RecommitHouseCert(hid, uid int64, comment string) (err error) {
 
 	if nilTime != h.PublishTime {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "already published"}
+		return
+	}
+
+	if err, _ = GetUser(uid); nil != err {
 		return
 	}
 
@@ -167,7 +171,7 @@ func RecommitHouseCert(hid, uid int64, comment string) (err error) {
 	}
 
 	// add new record in TblHouseCert
-	err, hcid := addHouseCertRec(hid, uid, commdef.HOUSE_CERT_STAT_WAIT, comment, o)
+	err, hcid = addHouseCertRec(hid, uid, commdef.HOUSE_CERT_STAT_WAIT, comment, o)
 	if nil != err {
 		return
 	}
@@ -334,7 +338,44 @@ func addHouseCertRec(hid, uid int64, cs int, cc string, o orm.Ormer) (err error,
 	return
 }
 
-func removeHouseCertRecByHose(hid int64) (err error, numb int64, hcs []TblHouseCert) {
+func deleHouseCertRec(hcid int64, o orm.Ormer) (err error) {
+	Fn := "[deleHouseCertRec] "
+	beego.Info(Fn, "house certification:", hcid)
+
+	if nil == o {
+		beego.Warn(Fn, "no ormer set, create one")
+		o = orm.NewOrm()
+
+		o.Begin()
+		defer func() {
+			if nil != err {
+				o.Rollback()
+			} else {
+				o.Commit()
+			}
+		}()
+	}
+
+	// TblHouseCert
+	numb, errT := o.QueryTable("tbl_house_cert").Filter("Id", hcid).Delete()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("delete %d records from tbl_house_cert", numb))
+
+	// TblMessage
+	numb, errT = o.QueryTable("tbl_message").Filter("Type", commdef.MSG_HouseCertification).Filter("RefId", hcid).Delete()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("delete %d records from tbl_message", numb))
+
+	return
+}
+
+func removeHouseCertRecByHose(hid int64, o orm.Ormer) (err error /*, numb int64, hcs []TblHouseCert*/) {
 	Fn := "[removeHouseCertRecByHose] "
 	beego.Info(Fn, "house:", hid)
 
@@ -343,22 +384,37 @@ func removeHouseCertRecByHose(hid int64) (err error, numb int64, hcs []TblHouseC
 	/* Permission checking */
 
 	/* Processing */
-	o := orm.NewOrm()
+	// o := orm.NewOrm()
+
 	// tbl_house_cert
 	qs := o.QueryTable("tbl_house_cert").Filter("House", hid)
-	n, errT := qs.All(&hcs)
+	hcs := []TblHouseCert{}
+	numb, errT := qs.All(&hcs)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
-	n, errT = qs.Delete()
+	numb, errT = qs.Delete()
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
+	}
+	beego.Debug(Fn, fmt.Sprintf("delete %d records from TblHouseCert", numb))
+
+	// tbl_message
+	if numb > 0 {
+		hcids := []int64{}
+		for _, v := range hcs {
+			hcids = append(hcids, v.Id)
+		}
+		numb1, errT := o.QueryTable("tbl_message").Filter("Type", commdef.MSG_HouseCertification).Filter("RefId__in", hcids).Delete()
+		if nil != errT {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+			return
+		}
+		beego.Debug(Fn, fmt.Sprintf("delete %d records from tbl_message", numb1))
 	}
 
-	numb = n
-	beego.Debug(Fn, fmt.Sprintf("delete %d records from TblHouseCert", numb))
 	return
 }
 

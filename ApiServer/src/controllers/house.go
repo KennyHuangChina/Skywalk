@@ -275,11 +275,11 @@ func (this *HouseController) RecommitHouseCert() {
 	FN := "[RecommitHouseCert] "
 	beego.Warn("[--- API: RecommitHouseCert ---]")
 
-	var result ResCommon
+	var result ResAddResource
 	var err error
 
 	defer func() {
-		err = api_result(err, this.Controller, &result)
+		err = api_result(err, this.Controller, &result.ResCommon)
 		if nil != err {
 			beego.Error(FN, err.Error())
 		}
@@ -305,9 +305,9 @@ func (this *HouseController) RecommitHouseCert() {
 	/*
 	 *	Processing
 	 */
-	err = models.RecommitHouseCert(hid, uid, comment)
+	err, hcid := models.RecommitHouseCert(hid, uid, comment)
 	if nil == err {
-		// result.Id = id
+		result.Id = hcid
 	}
 
 	return

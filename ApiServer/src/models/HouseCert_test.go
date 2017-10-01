@@ -145,6 +145,92 @@ func Test_GetHouseCertHist(t *testing.T) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
+//	-- RecommitHouseCert --
+//
+func Test_RecommitHouseCert(t *testing.T) {
+	t.Log("Test_RecommitHouseCert")
+	seq := 0
+
+	// comments
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Arguments: comment not set", seq))
+	if e, _ := RecommitHouseCert(0, 0, ""); nil == e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// house
+	x1 := []int64{-1, 0, 100000000}
+	s1 := []string{"< 0", "= 0", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Arguments: House(%d) %s", seq, v, s1[k]))
+		if e, _ := RecommitHouseCert(v, 0, "Test_RecommitHouseCert"); nil == e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// user
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Arguments: User(%d) %s", seq, v, s1[k]))
+		if e, _ := RecommitHouseCert(17, v, "Test_RecommitHouseCert"); nil == e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// house not publish
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Arguments: house not published", seq))
+	if e, _ := RecommitHouseCert(17, 0, "Test_RecommitHouseCert"); nil == e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// user permission
+	x1 = []int64{1, 2, 4, 5, 6, 10, 11}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Permission: User(%d) is not landlord", seq, v))
+		if e, _ := RecommitHouseCert(17, v, "Test_RecommitHouseCert"); nil == e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// house cert status
+	h := int64(17)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> status: House(%d) status is not not correct", seq, h))
+	if e, _ := RecommitHouseCert(h, 9, "Test_RecommitHouseCert"); nil == e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	h = int64(4)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Testing: Recommit certification request for House(%d)", seq, h))
+	e, hcid := RecommitHouseCert(h, 4, "Test_RecommitHouseCert")
+	if nil != e {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	// delete the house certification record just added above
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Testing: delete the house certification record(%d) just created above", seq, hcid))
+	if e = deleHouseCertRec(hcid, nil); nil != e {
+		if nil != e {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
 //	-- House Certification --
 //
 func Test_HouseCertification(t *testing.T) {
