@@ -124,12 +124,20 @@ public class CommunicationInterface {
         int GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
 
-
         /*
-        *   CMD     : CMD_GET_HOUSE_CERTIFY_HIST
-        *   Result  : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
+        *   CMD: CMD_RECOMMIT_HOUSE_CERTIFICATON
+        *       - house_id : house id
+        *   Result: IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
          */
         int GetHouseCertHist(int house_id);
+
+        /*
+        *   CMD: CMD_RECOMMIT_HOUSE_CERTIFICATON
+        *       - house_id  : house id
+        *       - comments  : recommit comments
+        *   Result: IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
+         */
+        int RecommitHouseCertification(int house_id, String comments);
 
         /*
         *   CMD: CMD_GET_BEHALF_HOUSE_LIST
@@ -368,7 +376,8 @@ public class CommunicationInterface {
                                 CMD_GET_HOUSE_PRICE               = 0x200B,
                                 CMD_GET_HOUSE_SHOWTIME            = 0x200C,
                                 CMD_SET_HOUSE_SHOWTIME            = 0x200D,
-                                CMD_GET_HOUSE_CERTIFY_HIST        = 0x200E;
+                                CMD_GET_HOUSE_CERTIFY_HIST        = 0x200E,
+                                CMD_RECOMMIT_HOUSE_CERTIFICATON   = 0x200F;
 
         // Property
         final public static int CMD_GET_PROPERTY_LIST     = 0x3001,
@@ -453,6 +462,7 @@ public class CommunicationInterface {
             cmdMap.put(CMD_GET_HOUSE_SHOWTIME,          "CMD_GET_HOUSE_SHOWTIME");
             cmdMap.put(CMD_SET_HOUSE_SHOWTIME,          "CMD_SET_HOUSE_SHOWTIME");
             cmdMap.put(CMD_GET_HOUSE_CERTIFY_HIST,      "CMD_GET_HOUSE_CERTIFY_HIST");
+            cmdMap.put(CMD_RECOMMIT_HOUSE_CERTIFICATON, "CMD_RECOMMIT_HOUSE_CERTIFICATON");
 
             // Property
             cmdMap.put(CMD_GET_PROPERTY_LIST,   "CMD_GET_PROPERTY_LIST");
@@ -550,8 +560,8 @@ public class CommunicationInterface {
     static public class HouseInfo {
         public int      mHouseId        = 0;
         public int      mPropId         = 0;    // property, community
-        public String   mBuilding       = "";   // building number, like 177A�?
-        public String   mHouseNo        = "";   // house number, 1505�?
+        public String   mBuilding       = "";   // building number, like 177A栋
+        public String   mHouseNo        = "";   // house number, 1505室
         public int      mFloorTotal     = 0;    // total floor
         public int      mFloorThis      = 0;    // house floor
         public int      mLivingrooms    = 0;
@@ -560,7 +570,7 @@ public class CommunicationInterface {
         public int      mAcreage        = 0;    // acreage, 100 times than actual. 10300 means 103 平米
         public boolean  mForSale        = false;
         public boolean  mForRent        = false;
-        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简�?/ 2 - 中等 / 3 - 精装 / 4 - 豪华
+        public int      mDecorate       = 0;    // decoration. 0 - 毛坯 / 1 - 简装 / 2 - 中等 / 3 - 精装 / 4 - 豪华
         public String   mBuyDate        = "";   // exact date of buying this house
 
         public HouseInfo() {
