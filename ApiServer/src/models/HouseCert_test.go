@@ -1,4 +1,4 @@
-package models
+﻿package models
 
 import (
 	"ApiServer/commdef"
@@ -238,8 +238,7 @@ func Test_HouseCertification(t *testing.T) {
 	seq := 0
 
 	/* Create new house for testing */
-	seq++
-	t.Log(fmt.Sprintf("<Case %d> Commit new house for testing", seq))
+	t.Log("-- Create new house for testing --")
 	hif := commdef.HouseInfo{Property: 7, BuildingNo: "999B", FloorTotal: 20, FloorThis: 16,
 		HouseNo: "1608", Bedrooms: 9, Livingrooms: 8, Bathrooms: 7, Acreage: 200000,
 		ForSale: true, ForRent: true, Decoration: 3, BuyDate: "2017-09-29"}
@@ -252,12 +251,12 @@ func Test_HouseCertification(t *testing.T) {
 
 	defer func() {
 		/* Delete the house, house certifications, system messages just created above */
-		// t.Log(fmt.Sprintf("<Case %d> delete house: %d", seq+1, nHouse))
-		// delHouse(nHouse, 5)
+		t.Log(fmt.Sprintf("-- Delete house: %d --", nHouse))
+		delHouse(nHouse, 5)
 	}()
 
 	/* testing */
-	// Status: House Commited
+	t.Log("-- Status: House Commited --")
 	x1 := []int64{2, 11, 5}
 	s1 := []string{"landlord", "agency", "administration"}
 	x2 := []int{0, 0x01, 0x01}
@@ -275,7 +274,7 @@ func Test_HouseCertification(t *testing.T) {
 		}
 	}
 
-	// Status: Certification Failed
+	t.Log("-- Status: Certification Failed --")
 	x2 = []int{0, 1, 0}
 	for k, v := range x1 {
 		seq++
@@ -309,14 +308,54 @@ func Test_HouseCertification(t *testing.T) {
 		}
 	}
 
-	// Status: Recommit house certification
+	//
+	t.Log("-- Status: Recommit house certification --")
 	x1 = []int64{11, 5, 2}
 	s1 = []string{"agency", "administration", "landlord"}
 	x2 = []int{0, 0, 1}
 	for k, v := range x1 {
 		seq++
 		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, recommit should be %d", seq, v, s1[k], x2[k]))
-		err := CertHouse(nHouse, v, false, "test 重新提交审核")
+		err, hcid := RecommitHouseCert(nHouse, v, "test 重新提交审核")
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Error:", err)
+				return
+			}
+			t.Log("new house certification:", hcid)
+		} else {
+			if nil == err {
+				t.Error("Fail")
+				return
+			}
+		}
+	}
+
+	x1 = []int64{2, 11, 5}
+	s1 = []string{"landlord", "agency", "administration"}
+	x2 = []int{0, 0x01, 0x01}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, ops: %d", seq, v, s1[k], x2[k]))
+		err, _, ops := GetHouseCertHist(nHouse, v)
+		if nil != err {
+			t.Error("Error:", err)
+			return
+		}
+		if ops != x2[k] {
+			t.Error("ops:", ops)
+			return
+		}
+	}
+
+	t.Log("-- Status: Certification Success --")
+	x1 = []int64{2, 5, 11}
+	s1 = []string{"landlord", "administration", "agency"}
+	x2 = []int{0, 1, 0}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, certificate house should be %d", seq, v, s1[k], x2[k]))
+		err := CertHouse(nHouse, v, true, "test 房源审核成功")
 		if x2[k] > 0 {
 			if nil != err {
 				t.Error("Error:", err)
@@ -330,7 +369,21 @@ func Test_HouseCertification(t *testing.T) {
 		}
 	}
 
-	// Status: Certification Success
+	x1 = []int64{2, 11, 5}
+	x2 = []int{0, 0x04, 0x04}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) is %s, ops: %d", seq, v, s1[k], x2[k]))
+		err, _, ops := GetHouseCertHist(nHouse, v)
+		if nil != err {
+			t.Error("Error:", err)
+			return
+		}
+		if ops != x2[k] {
+			t.Error("ops:", ops)
+			return
+		}
+	}
 
 	// t.Error("TODO: ")
 

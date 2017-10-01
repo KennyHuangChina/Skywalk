@@ -47,7 +47,7 @@ func GetHouseCertHist(hid, uid int64) (err error, hcs []commdef.HouseCert, ops i
 		return
 	}
 
-	// Processing
+	/* Processing */
 	o := orm.NewOrm()
 
 	sql := `SELECT c.id, c.who AS uid, u.name AS user, u.login_name AS phone, c.when AS time, c.cert_statu AS stat, c.comment AS cert_txt
@@ -222,9 +222,8 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	}
 
 	// beego.Debug(FN, fmt.Sprintf("%+v", h))
-	nullTime := time.Time{}
 	// beego.Debug(FN, "publish time:", interface{}(h.PublishTime), ", is null:", nullTime == h.PublishTime)
-	if pass && nullTime != h.PublishTime {
+	if pass && nilTime != h.PublishTime {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "already published"}
 		return
 	}
@@ -238,7 +237,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 		return
 	}
 
-	// Processing
+	/* Processing */
 	o := orm.NewOrm()
 	o.Begin()
 	defer func() {
@@ -254,24 +253,18 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	if nil != err {
 		return
 	}
+	beego.Debug(FN, "CertStatu:", hc.CertStatu)
 	if commdef.HOUSE_CERT_STAT_WAIT != hc.CertStatu {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
 		return
 	}
 
 	// add new record in TblHouseCert
-	// hc = TblHouseCert{House: hid, Who: uid, Comment: comment /*, Pass: pass*/}
-	// if pass {
-	// 	hc.CertStatu = commdef.HOUSE_CERT_STAT_PASSED
-	// } else {
-	// 	hc.CertStatu = commdef.HOUSE_CERT_STAT_FAILED
-	// }
-	// hc_id, errT := o.Insert(&hc)
-	// if nil != errT {
-	// 	err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
-	// 	return
-	// }
-	err, hc_id := addHouseCertRec(hid, uid, commdef.HOUSE_CERT_STAT_WAIT, comment, o)
+	cs := commdef.HOUSE_CERT_STAT_FAILED
+	if pass {
+		cs = commdef.HOUSE_CERT_STAT_PASSED
+	}
+	err, hc_id := addHouseCertRec(hid, uid, cs, comment, o)
 	if nil != err {
 		return
 	}
@@ -450,6 +443,7 @@ func getHouseCertOps(uid int64, h *TblHouse, hc *commdef.HouseCert) (err error, 
 	bAgency := isHouseAgency(*h, uid)
 	_, bAdmin := isAdministrator(uid)
 	beego.Debug(Fn, "bLandlord:", bLandlord, ", bAgency:", bAgency, ", bAdmin:", bAdmin)
+	beego.Debug(Fn, "Stat:", hc.Stat)
 
 	switch hc.Stat {
 	case commdef.HOUSE_CERT_STAT_WAIT:
