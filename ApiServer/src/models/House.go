@@ -1814,6 +1814,19 @@ func delHouse(hid, luid int64) (err error) {
 		return
 	}
 
+	// tbl_appointment & tbl_appointment_act
+	aps := []TblAppointment{}
+	_, errT := o.QueryTable("tbl_appointment").Filter("House", hid).All(&aps)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err: %s", errT.Error())}
+		return
+	}
+	for _, v := range aps {
+		if e := DeleAppointment(v.Id, luid, o); nil != e {
+			return
+		}
+	}
+
 	// tbl_house
 	if /*num*/ _, err1 := o.Delete(&TblHouse{Id: hid}); err1 != nil {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: err1.Error()}

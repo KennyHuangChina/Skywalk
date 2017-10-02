@@ -107,7 +107,7 @@ func Test_MakeAppointment_(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, nid))
-	if e := DeleAppointment(nid, 5); nil != e {
+	if e := DeleAppointment(nid, 5, nil); nil != e {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -240,7 +240,7 @@ func Test_MakeAppointmentAction(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, nid))
-	if e := DeleAppointment(nid, 5); nil != e {
+	if e := DeleAppointment(nid, 5, nil); nil != e {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -577,7 +577,7 @@ func Test_GetAppointmentInfo(t *testing.T) {
 	// delete the testing appointment
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, naid))
-	if e := DeleAppointment(naid, 5); nil != e {
+	if e := DeleAppointment(naid, 5, nil); nil != e {
 		t.Error("Failed, err: ", e)
 		return
 	}
@@ -669,9 +669,323 @@ func Test_AssignAppointmentRectptionist(t *testing.T) {
 	// delete the testing appointment
 	seq++
 	t.Log(fmt.Sprintf("<Case %d> Test: del the appointment(%d) just added above", seq, naid))
-	if e := DeleAppointment(naid, 5); nil != e {
+	if e := DeleAppointment(naid, 5, nil); nil != e {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- Schedule for house seeing --
+//
+func Test_ScheduleHouseSee(t *testing.T) {
+	t.Log("Schedule for house seeing")
+	seq := 0
+
+	/* Create new house for testing */
+	t.Log("-- Create new house for testing --")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> create new house", seq))
+	hif := commdef.HouseInfo{Property: 7, BuildingNo: "999B", FloorTotal: 20, FloorThis: 16,
+		HouseNo: "1608", Bedrooms: 9, Livingrooms: 8, Bathrooms: 7, Acreage: 200000,
+		ForSale: true, ForRent: true, Decoration: 3, BuyDate: "2017-09-29"}
+	err, nHouse := CommitHouseByOwner(&hif, 2, 0) // landlord: 2, agency: 11
+	if nil != err {
+		t.Error("Error:", err)
+		return
+	}
+	t.Log("new house:", nHouse)
+
+	defer func() {
+		/* Delete the house, house certifications, system messages just created above */
+		t.Log(fmt.Sprintf("-- Delete house: %d --", nHouse))
+		delHouse(nHouse, 5)
+	}()
+
+	t.Log("-- Certificate and Publish the house --")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> approve house publish", seq))
+	err = CertHouse(nHouse, 5, true, "房源已经验证，准许发布")
+	if nil != err {
+		t.Error("Failed, err: ", err)
+		return
+	}
+
+	t.Log("-- User submit request for house seeing --")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> schedule for house seeing", seq))
+	err, apid := MakeAppointment(nHouse, 10, commdef.ORDER_TYPE_SEE_HOUSE, "", "2017-10-01 9:00", "2017-10-01 9:00", "测试预约看房")
+	if nil != err {
+		t.Error("Failed, err: ", err)
+		return
+	}
+
+	t.Log("-- Status: House seeing request submitted --")
+	x1 := []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 := []int64{0, 0, 1, 1, 0, 0, 1, 0}
+	x3 := []int64{0, 0, 0x10, 0x10, 0, 0, 0x03, 0}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
+
+	t.Log("-- Appointment receptionist not assigned --")
+	x2 = []int64{commdef.APPOINT_ACTION_Unknow, commdef.APPOINT_ACTION_Submit, commdef.APPOINT_ACTION_Confirm,
+		commdef.APPOINT_ACTION_Reschedule, commdef.APPOINT_ACTION_Done, commdef.APPOINT_ACTION_Cancel /*, commdef.APPOINT_ACTION_SetRectptionist*/}
+	s1 := []string{"APPOINT_ACTION_Unknow", "APPOINT_ACTION_Submit", "APPOINT_ACTION_Confirm",
+		"APPOINT_ACTION_Reschedule", "APPOINT_ACTION_Done", "APPOINT_ACTION_Cancel" /*, "APPOINT_ACTION_SetRectptionist"*/}
+	t1 := "2017-10-02 9:30"
+	t2 := "2017-10-02 10:30"
+	for k1, v1 := range x2 {
+		for _, v := range x1 {
+			seq++
+			t.Log(fmt.Sprintf("<Case %d> User(%d) can not %s", seq, v, s1[k1]))
+			err, _ := MakeAppointmentAction(v, apid, int(v1), t1, t2, "测试在没有 receptionist 的时候的后续操作")
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+	}
+
+	t.Log("-- Assign Appointment receptionist --")
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> assign user(11) as receptionist", seq))
+	if e := AssignAppointmentRectptionist(5, apid, 11); nil != e {
+		t.Error("Failed, err: ", err)
+		return
+	}
+
+	t.Log("-- Status: appointment receptionist assigned --")
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 = []int64{0, 0, 1, 1, 0, 0, 1, 1}
+	x3 = []int64{0, 0, 0x10, 0x10, 0, 0, 0x03, 0x06}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
+
+	// subscriber: 10, receptionist: 11
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x3 = []int64{commdef.APPOINT_ACTION_Cancel, commdef.APPOINT_ACTION_Reschedule, commdef.APPOINT_ACTION_Confirm,
+		commdef.APPOINT_ACTION_Done, commdef.APPOINT_ACTION_SetRectptionist}
+	//           1              2              4              5              6              9              10             11
+	x2 = []int64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0}
+	for k, v := range x1 {
+		for k1, v1 := range x3 {
+			if x2[5*k+k1] > 0 { // skip the action that supposed to be success
+				continue
+			}
+			seq++
+			t.Log(fmt.Sprintf("<Case %d> User(%d) could not perform action: %d", seq, v, v1))
+			if e, _ := MakeAppointmentAction(v, apid, int(v1), t1, t2, "指派经纪人后，不能执行的操作"); nil == e {
+				t.Error("Failed ")
+				return
+			}
+		}
+	}
+
+	t.Log("-- Customer request reschedule --")
+	u := int64(10)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> User(%d) request reschedule", seq, u))
+	if e, _ := MakeAppointmentAction(u, apid, commdef.APPOINT_ACTION_Reschedule, t1, t2, "客人要求改期"); nil != e {
+		t.Error("Failed, err:", e)
+		return
+	}
+
+	t.Log("-- Status: rescheduled by customer --")
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 = []int64{0, 0, 1, 1, 0, 0, 1, 1}
+	x3 = []int64{0, 0, 0x10, 0x10, 0, 0, 0x03, 0x06}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
+
+	t.Log("-- Receptionist confirmed schedule --")
+	u = int64(11)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> User(%d) confirm reschedule", seq, u))
+	if e, _ := MakeAppointmentAction(u, apid, commdef.APPOINT_ACTION_Confirm, t1, t2, "经纪人确认客人改期"); nil != e {
+		t.Error("Failed, err:", e)
+		return
+	}
+
+	t.Log("-- Status: schedule confirmed --")
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 = []int64{0, 0, 1, 1, 0, 0, 1, 1}
+	x3 = []int64{0, 0, 0x10, 0x10, 0, 0, 0x03, 0x0A}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
+
+	t.Log("-- Receptionist request reschedule --")
+	u = int64(11)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> User(%d) request reschedule", seq, u))
+	if e, _ := MakeAppointmentAction(u, apid, commdef.APPOINT_ACTION_Reschedule, t1, t2, "经纪人要求改期"); nil != e {
+		t.Error("Failed, err:", e)
+		return
+	}
+
+	t.Log("-- Status: rescheduled by receptionist --")
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 = []int64{0, 0, 1, 1, 0, 0, 1, 1}
+	x3 = []int64{0, 0, 0x10, 0x10, 0, 0, 0x07, 0x02}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
+
+	t.Log("-- Customer confirmed schedule --")
+	u = int64(10)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> User(%d) confirm the schedule", seq, u))
+	if e, _ := MakeAppointmentAction(u, apid, commdef.APPOINT_ACTION_Confirm, t1, t2, "客户确认经纪人改期要求"); nil != e {
+		t.Error("Failed, err:", e)
+		return
+	}
+
+	t.Log("-- Status: schedule confirmed --")
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 = []int64{0, 0, 1, 1, 0, 0, 1, 1}
+	x3 = []int64{0, 0, 0x10, 0x10, 0, 0, 0x03, 0x0A}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
+
+	t.Log("-- Customer confirmed schedule --")
+	u = int64(11)
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> User(%d) finish the schedule", seq, u))
+	if e, _ := MakeAppointmentAction(u, apid, commdef.APPOINT_ACTION_Done, t1, t2, "经纪人完成预约看房"); nil != e {
+		t.Error("Failed, err:", e)
+		return
+	}
+
+	t.Log("-- Status: schedule finished --")
+	x1 = []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	x2 = []int64{0, 0, 1, 1, 0, 0, 1, 1}
+	x3 = []int64{0, 0, 0, 0, 0, 0, 0, 0}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> User(%d) could see the appointment? %d, ops: 0x%x", seq, v, x2[k], x3[k]))
+		err, apinfo := GetAppointmentInfo(v, apid)
+		if x2[k] > 0 {
+			if nil != err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		} else {
+			if nil == err {
+				t.Error("Failed, err: ", err)
+				return
+			}
+		}
+		if apinfo.Ops != int(x3[k]) {
+			t.Error("Failed, incorrect operations: ", apinfo.Ops)
+			return
+		}
+	}
 }

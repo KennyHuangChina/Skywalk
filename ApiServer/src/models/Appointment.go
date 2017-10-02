@@ -86,7 +86,7 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 }
 
 /**
-*	get appointment info and its actions by appointment id
+*	get appointment info and its actions hist by appointment id
 *	Arguments:
 *		uid 		- login user
 *	Returns
@@ -144,6 +144,7 @@ func GetAppointmentInfo(uid, aid int64) (err error, apt_info commdef.Appointment
 	apt_info.House.Livingrooms = h.Livingrooms
 	apt_info.House.Bathrooms = h.Bathrooms
 	if errT := canAccessHouse(uid, apmt.House); nil == errT {
+		beego.Debug(FN, "Can access house:", apmt.House)
 		apt_info.House.BuildingNo = h.BuildingNo
 		apt_info.House.HouseNo = h.HouseNo
 	}
@@ -157,12 +158,17 @@ func GetAppointmentInfo(uid, aid int64) (err error, apt_info commdef.Appointment
 	}
 	apt_info.Subscriber = u.Name
 	apt_info.SubscriberPhone = u.LoginName
-	err, u = GetUser(apmt.Receptionist)
-	if nil != err {
-		return
+	if 0 == apmt.Receptionist { // appointment receptionist not assigned yet
+		apt_info.Receptionist = "未指派"
+		apt_info.ReceptionistPhone = ""
+	} else {
+		err, u = GetUser(apmt.Receptionist)
+		if nil != err {
+			return
+		}
+		apt_info.Receptionist = u.Name
+		apt_info.ReceptionistPhone = u.LoginName
 	}
-	apt_info.Receptionist = u.Name
-	apt_info.ReceptionistPhone = u.LoginName
 	apt_info.ApmtDesc = apmt.ApomtDesc
 	apt_info.SubscribeTime = apmt.SubscTime.Local().String()[:19]
 
@@ -278,7 +284,7 @@ func GetHouseList_AppointSee(begin, tofetch, uid int64) (err error, total, fetch
 	return
 }
 
-func DeleAppointment(aid, uid int64) (err error) {
+func DeleAppointment(aid, uid int64, o orm.Ormer) (err error) {
 	FN := "[ DeleAppointment] "
 	beego.Info(FN, "appointment:", aid, ", login user:", uid)
 
@@ -299,7 +305,11 @@ func DeleAppointment(aid, uid int64) (err error) {
 	}
 
 	/* Processing */
-	o := orm.NewOrm()
+	bNewOrmer := false
+	if nil == o {
+		o = orm.NewOrm()
+		bNewOrmer = true
+	}
 
 	apmt := TblAppointment{Id: aid}
 	errT := o.Read(&apmt)
@@ -308,14 +318,16 @@ func DeleAppointment(aid, uid int64) (err error) {
 		return
 	}
 
-	o.Begin()
-	defer func() {
-		if nil != err {
-			o.Rollback()
-		} else {
-			o.Commit()
-		}
-	}()
+	if bNewOrmer {
+		o.Begin()
+		defer func() {
+			if nil != err {
+				o.Rollback()
+			} else {
+				o.Commit()
+			}
+		}()
+	}
 
 	// Delete record in appointment table
 	numb, errT := o.Delete(&apmt)
@@ -687,7 +699,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 		return
 	}
 
-	tBgn, tEnd := time.Time{}, time.Time{}
+	tBgn, tEnd := nilTime, nilTime // time.Time{}, time.Time{}
 	if commdef.APPOINT_ACTION_Reschedule == act || commdef.APPOINT_ACTION_Submit == act {
 		err, tBgn, tEnd = getScheduleTime(time_begin, time_end)
 		if nil != err {
@@ -723,6 +735,12 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 
 	if !bPermission {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
+		return
+	}
+
+	// operations
+	if !checkAppointmentNewAction(uid, apmt, act) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "Incorrect action"}
 		return
 	}
 
@@ -837,6 +855,104 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 	return
 }
 
+func checkAppointmentNewAction(uid int64, apmt *TblAppointment, act int) bool {
+	Fn := "[checkAppointmentNewAction] "
+	beego.Info(Fn, fmt.Sprintf("login user: %d, act: %d", uid, act))
+	beego.Info(Fn, fmt.Sprintf("appointment: %+v", apmt))
+
+	o := orm.NewOrm()
+
+	qs := o.QueryTable("tbl_appointment_action").Filter("Appoint", apmt.Id)
+	act1 := TblAppointmentAction{}
+	errT := qs.OrderBy("-Id").One(&act1)
+	if nil != errT {
+		if (orm.ErrNoRows == errT || orm.ErrMissPK == errT) && commdef.APPOINT_ACTION_Submit == act {
+			beego.Debug(Fn, "1st action record")
+			return true
+		}
+		beego.Error(Fn, errT.Error())
+		return false
+	}
+
+	beego.Debug(Fn, "act1.Action:", act1.Action)
+	switch act1.Action {
+	case commdef.APPOINT_ACTION_Submit:
+		if uid == apmt.Subscriber { // appointment subscriber
+			if commdef.APPOINT_ACTION_Cancel == act || commdef.APPOINT_ACTION_Reschedule == act {
+				return true
+			}
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			if commdef.APPOINT_ACTION_Confirm == act || commdef.APPOINT_ACTION_Reschedule == act {
+				return true
+			}
+		} else { // administrator
+			if commdef.APPOINT_ACTION_SetRectptionist == act {
+				return true
+			}
+		}
+	case commdef.APPOINT_ACTION_Confirm:
+		// beego.Debug(Fn, fmt.Sprintf("Subscriber: %d, Receptionist: %d", apmt.Subscriber, apmt.Receptionist))
+		if uid == apmt.Subscriber { // appointment subscriber
+			if commdef.APPOINT_ACTION_Cancel == act || commdef.APPOINT_ACTION_Reschedule == act {
+				return true
+			}
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			if commdef.APPOINT_ACTION_Done == act || commdef.APPOINT_ACTION_Reschedule == act {
+				return true
+			}
+		} else { // administrator
+			if commdef.APPOINT_ACTION_SetRectptionist == act {
+				return true
+			}
+		}
+	case commdef.APPOINT_ACTION_Reschedule:
+		if uid == apmt.Subscriber { // appointment subscriber
+			if act1.Who == apmt.Subscriber { // reschedule requested by subscriber
+				if commdef.APPOINT_ACTION_Cancel == act || commdef.APPOINT_ACTION_Reschedule == act {
+					return true
+				}
+			} else if act1.Who == apmt.Receptionist { // reschedule requested by receptionist
+				if commdef.APPOINT_ACTION_Cancel == act || commdef.APPOINT_ACTION_Reschedule == act || commdef.APPOINT_ACTION_Confirm == act {
+					return true
+				}
+			}
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			if act1.Who == apmt.Subscriber { // reschedule requested by subscriber
+				if commdef.APPOINT_ACTION_Confirm == act || commdef.APPOINT_ACTION_Reschedule == act {
+					return true
+				}
+			} else if act1.Who == apmt.Receptionist { // reschedule requested by receptionist
+				if commdef.APPOINT_ACTION_Reschedule == act {
+					return true
+				}
+			}
+		} else { // administrator
+			if commdef.APPOINT_ACTION_SetRectptionist == act {
+				return true
+			}
+		}
+	case commdef.APPOINT_ACTION_SetRectptionist:
+		if uid == apmt.Subscriber { // appointment subscriber
+			if commdef.APPOINT_ACTION_Cancel == act || commdef.APPOINT_ACTION_Reschedule == act {
+				return true
+			}
+		} else if uid == apmt.Receptionist { // appointment receptionist
+			if commdef.APPOINT_ACTION_Confirm == act || commdef.APPOINT_ACTION_Reschedule == act {
+				return true
+			}
+		} else { // administrator
+			if commdef.APPOINT_ACTION_SetRectptionist == act {
+				return true
+			}
+		}
+	case commdef.APPOINT_ACTION_Done:
+	case commdef.APPOINT_ACTION_Cancel:
+	default:
+	}
+
+	return false
+}
+
 func getAppointmenOps(uid int64, apmt *TblAppointment, act *TblAppointmentAction) (err error, Ops int) {
 	Fn := "[getAppointmenOps] "
 	beego.Info(Fn, fmt.Sprintf("login user:%d, appointment:%+v, act:%+v", uid, apmt, act))
@@ -877,8 +993,6 @@ func getAppointmenOps(uid int64, apmt *TblAppointment, act *TblAppointmentAction
 		} else { // administrator
 			Ops = commdef.APPOINT_OP_AssignReceptionist
 		}
-	case commdef.APPOINT_ACTION_Done:
-	case commdef.APPOINT_ACTION_Cancel:
 	case commdef.APPOINT_ACTION_SetRectptionist:
 		if uid == apmt.Subscriber { // appointment subscriber
 			Ops = commdef.APPOINT_OP_Cancel + commdef.APPOINT_OP_Reschedule
@@ -887,6 +1001,8 @@ func getAppointmenOps(uid int64, apmt *TblAppointment, act *TblAppointmentAction
 		} else { // administrator
 			Ops = commdef.APPOINT_OP_AssignReceptionist
 		}
+	case commdef.APPOINT_ACTION_Done:
+	case commdef.APPOINT_ACTION_Cancel:
 	default:
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNKNOWN, ErrInfo: "Unknow action"}
 	}
