@@ -441,6 +441,7 @@ public class MainActivity extends SKBaseActivity {
                         intent.putExtra(IntentExtraKeyValue.KEY_PROPERTY_NAME, "世茂蝶湖湾");
                         intent.putExtra(IntentExtraKeyValue.KEY_BUILDING_NO, "17");
                         intent.putExtra(IntentExtraKeyValue.KEY_ROOM_NO, "1208");
+                        intent.putExtra(IntentExtraKeyValue.KEY_USER_ID, 1);
                         startActivity(intent);
                     }
                     break;

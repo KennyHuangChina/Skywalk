@@ -15,7 +15,7 @@ public class Activity_fangyuan_renzhengshuoming extends SKBaseActivity {
 
     }
 
-    public void onViewClick(View v) {
+    public void onClickResponse(View v) {
         switch (v.getId()) {
             case R.id.tv_info_title:
             {
@@ -26,7 +26,10 @@ public class Activity_fangyuan_renzhengshuoming extends SKBaseActivity {
             {
                 finish();
 //                startActivity(new Intent(this, Activity_shenhe_zhengjian.class));
-                startActivity(new Intent(this, Activity_fangyuan_renzheng_customer.class));
+                Intent i = new Intent(this, Activity_fangyuan_renzheng_customer.class);
+                i.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
+                i.putExtra(ClassDefine.IntentExtraKeyValue.KEY_USER_ID, mUserId);
+                startActivity(i);
             }
             break;
         }

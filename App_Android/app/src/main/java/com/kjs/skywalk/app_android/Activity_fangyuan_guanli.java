@@ -89,7 +89,10 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             case R.id.tv_lijirenzheng:
             {
                 // 立即认证
-                startActivity(new Intent(this, Activity_fangyuan_renzhengshuoming.class));
+                Intent i = new Intent(this, Activity_fangyuan_renzhengshuoming.class);
+                i.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, mHouseId);
+                i.putExtra(IntentExtraKeyValue.KEY_USER_ID, mUserId);
+                startActivity(i);
             }
             break;
             case R.id.ll_fangyuanzhaopian:

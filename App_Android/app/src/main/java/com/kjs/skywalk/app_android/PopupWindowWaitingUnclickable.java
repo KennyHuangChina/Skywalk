@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 /**
  * Created by Jackie on 2017/2/10.
@@ -33,6 +34,12 @@ public class PopupWindowWaitingUnclickable extends PopupWindow {
         setWidth(width);
         setHeight(height);
         kjsLogUtil.i("Screen Width: " + width + " Screen Height: " + height);
+    }
+
+    public void updateProgressText(String text) {
+        TextView view = (TextView)mView.findViewById(R.id.textViewInfo);
+
+        view.setText(text);
     }
 
     public void show(View parent) {
