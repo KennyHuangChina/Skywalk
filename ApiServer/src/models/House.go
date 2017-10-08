@@ -162,6 +162,7 @@ type HouseFilter struct {
 	Bedroom    ValueOp
 	Bathroom   ValueOp
 	Acreage    ValueOp
+	Property   ValueOp
 }
 
 /**
@@ -1995,31 +1996,43 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 	FN := "[getHouseListFilterAndSort] "
 
 	sqlCondition := ""
+	// Livingrooms
 	if filter.Livingroom.Operator > 0 {
 		if len(sqlCondition) > 0 {
 			sqlCondition += " AND "
 		}
 		sqlCondition += getHouseQuery(filter.Livingroom, "livingrooms")
 	}
+	// Bedrooms
 	if filter.Bedroom.Operator > 0 {
 		if len(sqlCondition) > 0 {
 			sqlCondition += " AND "
 		}
 		sqlCondition += getHouseQuery(filter.Bedroom, "bedrooms")
 	}
+	// Bathrooms
 	if filter.Bathroom.Operator > 0 {
 		if len(sqlCondition) > 0 {
 			sqlCondition += " AND "
 		}
 		sqlCondition += getHouseQuery(filter.Bathroom, "bathrooms")
 	}
+	// Acreage
 	if filter.Acreage.Operator > 0 {
 		if len(sqlCondition) > 0 {
 			sqlCondition += " AND "
 		}
 		sqlCondition += getHouseQuery(filter.Acreage, "acreage")
 	}
+	// Property
+	if filter.Property.Operator > 0 {
+		if len(sqlCondition) > 0 {
+			sqlCondition += " AND "
+		}
+		sqlCondition += getHouseQuery(filter.Property, "property_id")
+	}
 
+	// Rental Price
 	if filter.Rental.Operator > 0 ||
 		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL) ||
 		isSortTypeExist(sorts, commdef.HOUSE_SORT_RENTAL_DESC) ||

@@ -932,5 +932,18 @@ func getHouseFilter(this *HouseController) (err error, filter models.HouseFilter
 		// beego.Debug(FN, "Acreage:", fmt.Sprintf("%+v", filter.Acreage.Values))
 	}
 
+	// Property
+	if nOp, errT := this.GetInt("pop"); nil == errT && nOp > 0 {
+		strVals := this.GetString("prop")
+		// beego.Debug(FN, "ac:", strVals)
+		if 0 == len(strVals) {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: "Fail to get value for property"}
+			return
+		}
+		filter.Property.Operator = nOp
+		filter.Property.Values = getFilterValues(strVals)
+		// beego.Debug(FN, "Property:", fmt.Sprintf("%+v", filter.Property.Values))
+	}
+
 	return
 }

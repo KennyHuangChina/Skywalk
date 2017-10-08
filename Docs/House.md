@@ -77,6 +77,8 @@
 	  		* bar			int		// bathroom number values
 	  		* acop			int		// 
 	  		* ac			int		// acreage values
+	  		* pop			int		// property op
+	  		* prop			int		// property value
 	  		* tags			string	// tags array. like 1,3,5,7
 	  		* sort			int		// sort condition array. like 1,3,5,7 
 			  						//  1: publish time, 	 2: publish time desc
