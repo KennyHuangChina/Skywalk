@@ -3,6 +3,7 @@ package com.kjs.skywalk.communicationdemo;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,14 +143,14 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
 //        CmdMgr.GetUserHouseWatchList(0, mListTotal);
-//        GetHouseDigestList();
+        GetHouseDigestList();
 //        CmdMgr.GetSysMsgList(0, mListTotal,
 //                            Boolean.parseBoolean(mEditText.getText().toString()),
 //                            Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAgencyList(0, mListTotal);
 //        CmdMgr.GetHouseSeeAppointmentList(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
-        CmdMgr.GetHouseCertHist(Integer.parseInt(String.valueOf(mEditText.getText())));
+//        CmdMgr.GetHouseCertHist(Integer.parseInt(String.valueOf(mEditText.getText())));
     }
 
     private void GetHouseDigestList() {
@@ -166,6 +167,11 @@ public class MainActivityFragment extends Fragment
         filter.mBedroom.FilterIn(ber);
 //        filter.mBathroom.FilterEq(2);
         filter.mAcreage.FilterBetween(10000, 17788);
+        Editable prop = (Editable) mEditText1.getText();
+        if (null != prop && prop.toString().length() > 0) {
+            int nPropId = Integer.parseInt(prop.toString());
+            filter.mProperty.FilterEq(nPropId);
+        }
 
         ArrayList<Integer> sort = new ArrayList<Integer>();
         sort.add(new Integer(HouseFilterCondition.SORT_PUBLISH_TIME_DESC));
