@@ -62,6 +62,8 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
     private int mLastItemInList = 0;
     private PopupWindowWaitingUnclickable mWaitingWindow = null;
 
+    private ArrayList<Integer> mRoomList = new ArrayList<>();
+
     private static final int MSG_INIT_HOUSE_LIST = 0;
     private static final int MSG_DELAY_HIDE_WAITING_WINDOW = 1;
 
@@ -113,6 +115,13 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
                 finish();
                 break;
             }
+            case R.id.textViewButtonOK: {
+                if(mPopFilter != null) {
+                    mPopFilter.dismiss();
+                }
+                processFilterOk();
+                break;
+            }
             case R.id.textViewSort: {
                 if(mPopSort == null) {
                     mPopSort = new PopupWindowFangyuanliebiaoSort(getBaseContext());
@@ -150,6 +159,12 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
                 break;
             }
         }
+    }
+
+    private void processFilterOk() {
+        mRoomList.clear();
+        mRoomList = mPopFilter.getSelectedRooms();
+        loadMore(true);
     }
 
     private View.OnClickListener mClickListenerDisplayType = new View.OnClickListener() {
@@ -263,6 +278,7 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
         });
 
         task.addFilterPropertyId(mPropertyId);
+        task.addFilterBedRoom(mRoomList);
         task.execute(GetHouseListTask.TYPE_ALL, countInList, 10);
     }
 
