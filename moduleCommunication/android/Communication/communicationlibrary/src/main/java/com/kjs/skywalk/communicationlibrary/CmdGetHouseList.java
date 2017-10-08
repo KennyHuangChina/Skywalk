@@ -136,6 +136,16 @@ class CmdGetHouseList extends CommunicationBase {
                 String strVal = mFilter.mAcreage.GetValuesString();
                 mRequestData += String.format("acop=%d&ac=%s", nOp, strVal);
             }
+
+            // Property
+            nOp = mFilter.mProperty.GetOp();
+            if (nOp >= 0) {
+                if (!mRequestData.isEmpty()) {
+                    mRequestData += "&";
+                }
+                String strVal = mFilter.mProperty.GetValuesString();
+                mRequestData += String.format("pop=%d&prop=%s", nOp, strVal);
+            }
         }
 
         String sort = "";

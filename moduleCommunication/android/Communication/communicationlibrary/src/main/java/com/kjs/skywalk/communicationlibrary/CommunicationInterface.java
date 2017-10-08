@@ -669,6 +669,7 @@ public class CommunicationInterface {
                             FILTER_TYPE_GE      = 5,    // Greater Equal.   >=
                             FILTER_TYPE_BETWEEN = 6,    // Between.         >= && <=
                             FILTER_TYPE_IN      = 7;    // In               IN (...)
+
         static public int   SORT_PUBLISH_TIME       = 1,    // sort by publish time, from early to late
                             SORT_PUBLISH_TIME_DESC  = 2,    // sort by publish time, from late to early
                             SORT_RENTAL             = 3,    // sort by rental, from low to high
@@ -682,6 +683,7 @@ public class CommunicationInterface {
         public IntegerFilter        mBathroom;
         public IntegerFilter        mAcreage;
         public ArrayList<Integer>   tags;
+        public IntegerFilter        mProperty;
 
         public HouseFilterCondition() {
             mRental     = new IntegerFilter();
@@ -690,6 +692,7 @@ public class CommunicationInterface {
             mBathroom   = new IntegerFilter();
             mAcreage    = new IntegerFilter();
             tags        = new ArrayList<Integer>();
+            mProperty   = new IntegerFilter();
         }
 
         public class IntegerFilter {
