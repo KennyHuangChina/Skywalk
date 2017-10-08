@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by admin on 2017/2/8.
  */
@@ -19,6 +21,10 @@ class AdapterFangyuanliebiao extends BaseAdapter {
     private static final int DISPLAY_LIST= 1;
     private int mDisplayType = DISPLAY_LIST;
 
+    ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
+
+    private int mTotal = 0;
+
     public void setDisplayType(int displayType) {
         mDisplayType = displayType;
     }
@@ -26,6 +32,21 @@ class AdapterFangyuanliebiao extends BaseAdapter {
     public AdapterFangyuanliebiao(Context context) {
         super();
         mContext = context;
+    }
+
+    public void reset() {
+        mHouseList.clear();
+        mTotal = 0;
+        notifyDataSetChanged();
+    }
+
+    public void addData(ArrayList<ClassDefine.HouseDigest> list, int count) {
+        mTotal = count;
+        for(ClassDefine.HouseDigest digest : list) {
+            mHouseList.add(digest);
+        }
+
+        this.notifyDataSetChanged();
     }
 
     @Override

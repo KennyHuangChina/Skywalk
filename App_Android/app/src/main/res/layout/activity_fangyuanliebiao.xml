@@ -4,7 +4,8 @@
     tools:context="com.kjs.skywalk.app_android.Activity_Search_Fangyuanliebiao"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/root_container">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -88,83 +89,94 @@
     <include layout="@layout/seperator_horizontal"
         android:layout_height="8dp"
         android:layout_width="match_parent"/>
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/linearLayoutCondition"
         android:layout_width="match_parent"
-        android:layout_marginLeft="5dp"
         android:layout_height="40dp"
-        android:id="@+id/linearLayoutCondition">
+        android:layout_marginLeft="5dp"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center">
+
             <TextView
-                android:text="共24套"
-                android:textSize="15sp"
-                android:textColor="#272536"
+                android:id="@+id/textViewTotalHouse"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
                 android:drawableLeft="@drawable/green_bar"
                 android:drawablePadding="5dp"
                 android:gravity="center"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:adjustViewBounds="true" />
+                android:text="共0套"
+                android:textColor="#272536"
+                android:textSize="15sp" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center">
+
             <TextView
                 android:id="@+id/textViewDisplayMode"
-                android:text="大图模式"
-                android:textSize="15sp"
-                android:textColor="#272536"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
                 android:drawableLeft="@drawable/show_grid"
                 android:gravity="center"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:adjustViewBounds="true" />
+                android:text="大图模式"
+                android:textColor="#272536"
+                android:textSize="15sp" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center">
+
             <TextView
                 android:id="@+id/textViewSort"
-                android:text="排序"
-                android:textSize="15sp"
-                android:textColor="#272536"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
                 android:drawableLeft="@drawable/sort_none"
                 android:gravity="center"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:adjustViewBounds="true"
-                android:onClick="onClickResponse"/>
+                android:onClick="onClickResponse"
+                android:text="排序"
+                android:textColor="#272536"
+                android:textSize="15sp" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center">
+
             <TextView
                 android:id="@+id/textViewFilter"
-                android:text="筛选"
-                android:textSize="15sp"
-                android:textColor="#272536"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableLeft="@drawable/filter_n"
-                android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:adjustViewBounds="true"
-                android:onClick="onClickResponse"/>
+                android:drawableLeft="@drawable/filter_n"
+                android:gravity="center"
+                android:onClick="onClickResponse"
+                android:text="筛选"
+                android:textColor="#272536"
+                android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>
+
     <include layout="@layout/seperator_horizontal" />
     <ScrollView
         android:layout_width="match_parent"

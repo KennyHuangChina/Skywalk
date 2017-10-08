@@ -24,7 +24,7 @@ import java.util.List;
  * Created by admin on 2017/2/8.
  */
 
-class AdapterSearchResultList extends BaseAdapter {
+public class AdapterSearchResultList extends BaseAdapter {
     private Context mContext = null;
 
     private static final int DISPLAY_GRID = 0;

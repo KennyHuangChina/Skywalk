@@ -5,29 +5,48 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Apartment.AdapterSearchResultList;
+import com.kjs.skywalk.app_android.Server.GetHouseListTask;
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiResults;
+
 import org.w3c.dom.Text;
+import org.w3c.dom.ls.LSInput;
+
+import java.util.ArrayList;
+
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 
 /**
  * Created by admin on 2017/3/22.
  */
 
-public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
+public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements AbsListView.OnScrollListener{
     private ListView mListView = null;
 
     private TextView mDisplayType = null;
     private TextView mTextViewSort = null;
-    private AdapterFangyuanliebiao mAdapter = null;
+    private AdapterSearchResultList mAdapter = null;
+    private LinearLayout mRoot = null;
+    private TextView mTextViewTotalHouse = null;
 
     private PopupWindowFangyuanliebiaoSort mPopSort = null;
     private PopupWindowFangyuanliebiaoFilter mPopFilter = null;
@@ -37,11 +56,22 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
     private int mDisplay = DISPLAY_LIST;
 
     private TextView mViewPropertyName = null;
+    private ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
+    private int mTotalCount = 0;
+
+    private int mLastItemInList = 0;
+    private PopupWindowWaitingUnclickable mWaitingWindow = null;
+
+    private static final int MSG_INIT_HOUSE_LIST = 0;
+    private static final int MSG_DELAY_HIDE_WAITING_WINDOW = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fangyuanliebiao);
+
+        mRoot = (LinearLayout)findViewById(R.id.root_container);
+        mTextViewTotalHouse = (TextView)findViewById(R.id.textViewTotalHouse);
 
         SearchView searchView = (SearchView)findViewById(R.id.search_view);
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
@@ -51,7 +81,7 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
         searchView.onActionViewCollapsed();
 
         mListView = (ListView)findViewById(R.id.listViewSearchResult);
-        mAdapter = new AdapterFangyuanliebiao(this);
+        mAdapter = new AdapterSearchResultList(this);
         mAdapter.setDisplayType(mDisplay);
         mListView.setAdapter(mAdapter);
 
@@ -64,6 +94,8 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
         kjsLogUtil.i("property id: " + mPropertyId);
 
         mViewPropertyName = (TextView)findViewById(R.id.textViewPropertyName);
+
+        myHandler.sendEmptyMessageDelayed(MSG_INIT_HOUSE_LIST, 500);
     }
 
     public void onResume() {
@@ -185,5 +217,75 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity {
             }
             break;
         }
+    }
+
+    Handler myHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_INIT_HOUSE_LIST:
+                    loadMore(true);
+                    break;
+
+                case MSG_DELAY_HIDE_WAITING_WINDOW:
+                    showWaiting(false);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private void loadMore(boolean clean) {
+        if(clean) {
+            mAdapter.reset();
+            mTotalCount = 0;
+        }
+
+        int countInList = mAdapter.getCount();
+        if(countInList >= mTotalCount && mTotalCount != 0) {
+            return;
+        }
+
+        showWaiting(true);
+
+        GetHouseListTask task = new GetHouseListTask(this, new GetHouseListTask.TaskFinished() {
+            @Override
+            public void onTaskFinished(final ArrayList<ClassDefine.HouseDigest> houseList, final int totalCount) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTotalCount = totalCount;
+                        mAdapter.addData(houseList, totalCount);
+                        mTextViewTotalHouse.setText("共" + mTotalCount + "套");
+                        myHandler.sendEmptyMessageDelayed(MSG_DELAY_HIDE_WAITING_WINDOW, 1000);
+                    }
+                });
+            }
+        });
+
+        task.addFilterPropertyId(mPropertyId);
+        task.execute(GetHouseListTask.TYPE_ALL, countInList, 10);
+    }
+
+    private void showWaiting(boolean show) {
+        if(mWaitingWindow == null) {
+            mWaitingWindow = new PopupWindowWaitingUnclickable(this, mActScreenWidth, mActScreenHeight);
+        }
+        if(show) {
+            mWaitingWindow.show(mRoot);
+        } else {
+            mWaitingWindow.hide();
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(scrollState == SCROLL_STATE_IDLE && mLastItemInList == mAdapter.getCount()) {
+            loadMore(false);
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        mLastItemInList = firstVisibleItem + visibleItemCount;
     }
 }

@@ -86,6 +86,10 @@ public class GetHouseListTask extends SKBaseAsyncTask {
         mFilter.mBedroom.FilterIn(list);
     }
 
+    public void addFilterPropertyId(int id) {
+        mFilter.mProperty.FilterEq(id);
+    }
+
     public void addFilterTag() {
 
     }
