@@ -32,6 +32,11 @@ import org.w3c.dom.ls.LSInput;
 
 import java.util.ArrayList;
 
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_APPOINT_DESC;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_DEFAULT;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_PUBLIC_TIME_DESC;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_RENTAL;
+import static com.kjs.skywalk.app_android.Server.GetHouseListTask.SORT_TYPE_RENTAL_DESC;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
 
@@ -63,6 +68,7 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
     private PopupWindowWaitingUnclickable mWaitingWindow = null;
 
     private ArrayList<Integer> mRoomList = new ArrayList<>();
+    private int mSortType = SORT_TYPE_DEFAULT;
 
     private static final int MSG_INIT_HOUSE_LIST = 0;
     private static final int MSG_DELAY_HIDE_WAITING_WINDOW = 1;
@@ -153,12 +159,48 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
             case R.id.textTotalHighToLow:
             case R.id.textTotalLowToHigh:
             case R.id.textSmart:
+            case R.id.textRentalHighToLow:
+            case R.id.textRentalLowToHigh:
             case R.id.textBook:{
-                cleanSortItemSelection();
-                selectItem(v);
+                doSortItemClicked(v);
                 break;
             }
         }
+    }
+
+    private void doSortItemClicked(View v) {
+        cleanSortItemSelection();
+        selectItem(v);
+
+        switch (v.getId()) {
+            case R.id.textDistribution:
+                mSortType = SORT_TYPE_PUBLIC_TIME_DESC;
+                break;
+            case R.id.textHighToLow:
+                break;
+            case R.id.textLowToHigh:
+                break;
+            case R.id.textTotalHighToLow:
+                break;
+            case R.id.textTotalLowToHigh:
+                break;
+            case R.id.textSmart:
+                mSortType = SORT_TYPE_DEFAULT;
+                break;
+            case R.id.textBook:
+                mSortType = SORT_TYPE_APPOINT_DESC;
+                break;
+            case R.id.textRentalLowToHigh:
+                mSortType = SORT_TYPE_RENTAL;
+                break;
+            case R.id.textRentalHighToLow:
+                mSortType = SORT_TYPE_RENTAL_DESC;
+                break;
+        }
+
+        mPopSort.dismiss();
+
+        loadMore(true);
     }
 
     private void processFilterOk() {
@@ -214,6 +256,8 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
         View v4 = (View)view.findViewById(R.id.textTotalHighToLow);
         View v5 = (View)view.findViewById(R.id.textTotalLowToHigh);
         View v6 = (View)view.findViewById(R.id.textBook);
+        View v7 = (View)view.findViewById(R.id.textRentalHighToLow);
+        View v8 = (View)view.findViewById(R.id.textRentalLowToHigh);
 
         unselectItem(v0);
         unselectItem(v1);
@@ -222,6 +266,8 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
         unselectItem(v4);
         unselectItem(v5);
         unselectItem(v6);
+        unselectItem(v7);
+        unselectItem(v8);
     }
 
     public void onViewClick(View v) {
@@ -279,6 +325,7 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
 
         task.addFilterPropertyId(mPropertyId);
         task.addFilterBedRoom(mRoomList);
+        task.setSort(mSortType);
         task.execute(GetHouseListTask.TYPE_ALL, countInList, 10);
     }
 
