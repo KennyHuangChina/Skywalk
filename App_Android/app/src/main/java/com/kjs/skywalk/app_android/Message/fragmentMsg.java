@@ -1,6 +1,8 @@
 package com.kjs.skywalk.app_android.Message;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -112,11 +114,14 @@ public class fragmentMsg extends Fragment {
     };
 
     private void updateMsgList(final ArrayList<Object> list) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mAdapterMsg.updateList(list);
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapterMsg.updateList(list);
+                }
+            });
+        }
     }
 }
