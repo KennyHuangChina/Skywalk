@@ -95,16 +95,6 @@ class AdapterMessage extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (position % 2 == 0)
-                    mContext.startActivity(new Intent(mContext, Activity_Message_fangyuanshenhe.class));
-                else
-                    mContext.startActivity(new Intent(mContext, Activity_Message_yuyuekanfang.class));
-            }
-        });
-
         // IApiResults.ISysMsgInfo
         IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
         holder.tv_msg_time.setText(msgInfo.CreateTime());
@@ -114,10 +104,22 @@ class AdapterMessage extends BaseAdapter {
             // 1 - House Certification
             holder.iv_msg_icon.setImageResource(R.drawable.cert_house_icon);
             holder.tv_msg_title.setText("房源审核");
+            holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                mContext.startActivity(new Intent(mContext, Activity_Message_fangyuanshenhe.class));
+                }
+            });
         } else if (msgType == 2) {
             // 2 - Planed House Watch
             holder.iv_msg_icon.setImageResource(R.drawable.see_house_icon);
             holder.tv_msg_title.setText("预约看房");
+            holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                mContext.startActivity(new Intent(mContext, Activity_Message_yuyuekanfang.class));
+                }
+            });
         } else {
             // undefined
         }
