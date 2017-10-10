@@ -24,7 +24,7 @@ public class IApiResults {
         String  Name();     // agency name
         String  Phone();    // agency phone number
         String  Portrait(); // agency head portrait picture URL
-        int     Sex();      // agency sex. 0 - male / 1 - female
+        int     Sex();      // agency sex. USER_SEX_XXX
         String  IdNo();     // agency ID card
         int     RankProf(); // professional rank. 0 ~ 50 (0.0 ~ 5.0)
         int     RankAtti(); // attitude rank. 0 ~50 (0.0 ~ 5.0)
@@ -118,14 +118,14 @@ public class IApiResults {
         Date    SubmitTime();   // house submit time
         boolean ForSale();      // is house for sale
         boolean ForRent();      // is house for rent
-        int     RentStat();     // 1: wait for rent, 2: rented, 3: Due, open for ordering
+        int     RentStat();     // rent state. HOUSE_RENT_xxx
         String  DecorateDesc();
         String  BuyDate();
         String  ModifyDate();
     }
 
     public interface IHouseCertDigestInfo {
-        int     CertStat();     // certification stat. 1: wait for certification; 2: Certitication passed; 3: Certification failed
+        int     CertStat();     // certification stat. HOUSE_CERT_STAT_XXX
         Date    CertTime();
         String  CertDesc();
     }
@@ -136,7 +136,7 @@ public class IApiResults {
         String  UserName();
         String  UserPhone();
         Date    CertTime();
-        int     CertStat();     // certification stat. 1: wait for certification; 2: Certitication passed; 3: Certification failed
+        int     CertStat();     // certification stat. HOUSE_CERT_STAT_XXX
         String  CertDesc();
     }
 
@@ -235,6 +235,11 @@ public class IApiResults {
         String  GetDescription();
     }
 
+    /* Two cases:
+            1. BuildingNo & HouseNo return empty or null, mean current login user have no permission to read this privacy info
+                property + bedrooms + livingrooms + bathrooms. for example, 蝶湖湾 3室2厅2卫
+            2. BuildingNo & HouseNo return real info. property + building no + house no. for example, 蝶湖湾 171栋 1501室
+    */
     interface IHouseTitleInfo {
         String  Property();     // property name
         String  BuildingNo();   // the building number the house belong to
@@ -247,8 +252,9 @@ public class IApiResults {
     // command: CMD_GET_MSG_INFO, CmdGetHouseEventList
     public interface ISysMsgInfo extends IHouseTitleInfo {
         int     MsgId();        // message id
-        int     MsgType();      // message type. 1 - House Certification. 2 - Planed House Watch
-        int     MsgPriority();  // message priority. 0 - info. 1 - Warning. 2 - Error
+        int     MsgType();      // message type. SYS_MSG_TYPE_XXX
+        int     RefId();        // reference id, depend on what the msg_typs is
+        int     MsgPriority();  // message priority. SYS_MSG_PRIORITY_xxx
         String  Receiver();     // people who the event send to
         String  CreateTime();   // exact time when the event created
         String  ReadTime();     // exact time when the event get readed
@@ -286,4 +292,27 @@ public class IApiResults {
         Date    PeriodEnd();
         String  Comment();
     }
+
+    // System Message Type
+    public static final int SYS_MSG_TYPE_HOUSE_CERTIFICATION        = 1,    // house certification
+                            SYS_MSG_TYPE_APPOINTMENT_HOUSE_SEEING   = 2;    // appointment for house seeing
+
+    //System Message Priority
+    public static final int SYS_MSG_PRIORITY_INFO       = 0,
+                            SYS_MSG_PRIORITY_WARNING    = 1,
+                            SYS_MSG_PRIORITY_ERROR      = 2;
+
+    // certification stat. 1: wait for certification; 2: Certification passed; 3: Certification failed
+    public static final int HOUSE_CERT_STAT_WAIT    = 1,
+                            HOUSE_CERT_STAT_PASSED  = 2,
+                            HOUSE_CERT_STAT_FAILED  = 3;
+
+    // user sex. 0 - male / 1 - female
+    public static final int USER_SEX_MALE   = 0,
+                            USER_SEX_FEMALE = 1;
+
+    // Rent stat: 1: wait for rent, 2: rented, 3: Due, open for ordering
+    public static final int HOUSE_RENT_WAIT     = 1,    // wait for rent
+                            HOUSE_RENT_RENTED   = 2,    // rented
+                            HOUSE_RENT_DUE      = 3;    // Due, open for ordering
 }

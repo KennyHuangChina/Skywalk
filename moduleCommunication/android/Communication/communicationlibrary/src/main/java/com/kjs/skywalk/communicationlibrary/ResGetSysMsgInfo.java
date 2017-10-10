@@ -56,6 +56,14 @@ class ResGetSysMsgInfo extends ResBase implements IApiResults.ISysMsgInfo {
     }
 
     @Override
+    public int RefId() {
+        if (null != mSysMsgInfo) {
+            return mSysMsgInfo.RefId();
+        }
+        return 0;
+    }
+
+    @Override
     public int MsgPriority() {
         if (null != mSysMsgInfo) {
             return mSysMsgInfo.MsgPriority();
@@ -148,6 +156,7 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
     protected int      mMsgId       = 0;    // message id
     protected int      mMsgType     = -1;   // message type
     protected int      mMsgPriority = 0;    // message priority
+    protected int      mMsgRefId    = 0;    // reference id, depend on what the message type is
     protected String   mProperty    = "";   // property name
     protected String   mBuilding    = "";    // bulding number
     protected String   mHouseNo     = "";   // house number
@@ -163,6 +172,7 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
         try {
             mMsgId          = jMsg.getInt("Id");
             mMsgType        = jMsg.getInt("Type");
+            mMsgRefId       = jMsg.getInt("RefId");
             mReceiver       = jMsg.getString("Receiver");
             mMsgPriority    = jMsg.getInt("Priority");
             mCreateTime     = jMsg.getString("CreateTime");
@@ -186,7 +196,7 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
 
     public String DebugString() {
         String dbString = "";
-        dbString += "  id: " + MsgId() + ", type:" + MsgType() + "\n";
+        dbString += "  id: " + MsgId() + ", type:" + MsgType() + ", ref to:" + RefId() + "\n";
         dbString += "  Priority: " + MsgPriority() + "\n";
         dbString += "  Property: " + Property() + "\n";
         dbString += "  " + BuildingNo() + "栋 " + HouseNo() + "室\n";
@@ -207,6 +217,11 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
     @Override
     public int MsgType() {
         return mMsgType;
+    }
+
+    @Override
+    public int RefId() {
+        return mMsgRefId;
     }
 
     @Override
