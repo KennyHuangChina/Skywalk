@@ -362,7 +362,8 @@ type MsgHouse struct {
 
 type SysMessage struct {
 	Id         int64
-	Type       int // MSG_XXX
+	Type       int   // MSG_XXX
+	RefId      int64 // reference id
 	Receiver   int64
 	Priority   int // MSG_PRIORITY_xxx
 	Msg        string

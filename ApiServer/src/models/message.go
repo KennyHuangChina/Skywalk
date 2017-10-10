@@ -128,6 +128,7 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 	// message info
 	msg.Id = m.Id
 	msg.Type = m.Type
+	msg.RefId = m.RefId
 	msg.Receiver = m.Receiver
 	msg.Priority = m.Priority
 	msg.Msg = m.Msg
