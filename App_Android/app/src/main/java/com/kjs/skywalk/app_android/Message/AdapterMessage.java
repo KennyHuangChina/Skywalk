@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -96,7 +97,7 @@ class AdapterMessage extends BaseAdapter {
         }
 
         // IApiResults.ISysMsgInfo
-        IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
+        final IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
         holder.tv_msg_time.setText(msgInfo.CreateTime());
 
         int msgType = msgInfo.MsgType();
@@ -117,7 +118,9 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                mContext.startActivity(new Intent(mContext, Activity_Message_yuyuekanfang.class));
+                    Intent intent = new Intent(mContext, Activity_Message_yuyuekanfang.class);
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_APID, msgInfo.RefId());
+                    mContext.startActivity(intent);
                 }
             });
         } else {

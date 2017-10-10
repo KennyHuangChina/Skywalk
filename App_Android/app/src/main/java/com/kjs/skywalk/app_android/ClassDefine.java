@@ -225,6 +225,7 @@ public class ClassDefine {
         public static String KEY_USER_PHONE = "phone_no";
         public static String KEY_LOGIN_RESULT = "login_result";
         public static String KEY_ERROR_CODE = "error_code";
+        public static String KEY_APID = "apid";
     }
 
     public static class ActivityResultValue {

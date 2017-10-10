@@ -49,6 +49,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -56,6 +57,22 @@ import java.util.List;
  */
 
 public class commonFun {
+    public static final HashMap<String, String> MAP_AP_BUTTON = new  HashMap<>();
+    public static final HashMap<String, String> MAP_HOUSE_CERT_BUTTON = new  HashMap<>();
+    static {
+        // MAP_AP_BUTTON
+        MAP_AP_BUTTON.put("1", "取消");
+        MAP_AP_BUTTON.put("2", "改期");
+        MAP_AP_BUTTON.put("4", "确认");
+        MAP_AP_BUTTON.put("8", "完成");
+        MAP_AP_BUTTON.put("16", "指派经纪人");
+
+        // MAP_HOUSE_CERT_BUTTON
+        MAP_HOUSE_CERT_BUTTON.put("1", "审核");
+        MAP_HOUSE_CERT_BUTTON.put("2", "重新提交");
+        MAP_HOUSE_CERT_BUTTON.put("4", "撤销审核");
+    }
+
     public static Bitmap getBitmapFromLocal(String path) {
         Bitmap bmp = null;
 
