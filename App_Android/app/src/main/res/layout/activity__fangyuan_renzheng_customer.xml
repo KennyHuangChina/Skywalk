@@ -110,7 +110,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ren" />
+                        android:src="@drawable/no_picture" />
 
                     <ImageView
                         android:id="@+id/imageZhengjian2"
@@ -124,7 +124,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ren" />
+                        android:src="@drawable/no_picture" />
                 </LinearLayout>
 
 
@@ -178,7 +178,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ren" />
+                        android:src="@drawable/no_picture" />
 
                     <ImageView
                         android:id="@+id/imageIdCard2"
@@ -192,7 +192,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ren" />
+                        android:src="@drawable/no_picture" />
                 </LinearLayout>
 
                 <include
