@@ -87,7 +87,7 @@ public class MainActivityFragment extends Fragment
 
     private void doTestAddApi() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);     // new CommandManager(this.getContext(), this, this);
-//        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
+        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
 //        CmdMgr.AddDeliverable(mEditText.getText().toString());
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
 //                                    Integer.parseInt(mEditText1.getText().toString()),
@@ -112,12 +112,12 @@ public class MainActivityFragment extends Fragment
 //                                            "2017-06-23 9:00", "2017-06-23 10:30", mEditText2.getText().toString());
 
 //        CmdMgr.MakeAppointmentAction(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), "2017-09-22 8:00", "2017-09-22 9:00", mEditText2.getText().toString());
-        CmdMgr.RecommitHouseCertification(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
+//        CmdMgr.RecommitHouseCertification(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString());
     }
 
     private void doTestGetApi() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
-//        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
@@ -125,7 +125,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetNewMsgCount();
 //        CmdMgr.GetHouseNewEvent();
-        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
