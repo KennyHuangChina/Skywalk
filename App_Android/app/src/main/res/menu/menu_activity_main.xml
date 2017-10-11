@@ -38,6 +38,12 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/action_setting6"
+        android:orderInCategory="100"
+        android:title="消息-预约看房"
+        app:showAsAction="never"/>
+
+    <item
     android:id="@+id/action_setting100"
     android:orderInCategory="100"
     android:title="出租进度-交房-抄表"

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.Apartment.fragmentApartment;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
+import com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
@@ -475,6 +476,15 @@ public class MainActivity extends SKBaseActivity {
                         Intent intent = new Intent(MainActivity.this, Activity_fangyuan_guanli.class);
                         intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, 2);
                         intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, "世茂蝶湖湾17栋1208室");
+                        startActivity(intent);
+                    }
+                    break;
+
+                    case R.id.action_setting6:
+                    {
+                        // 消息-预约看房
+                        Intent intent = new Intent(MainActivity.this, Activity_Message_yuyuekanfang.class);
+                        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_APID, "16");
                         startActivity(intent);
                     }
                     break;

@@ -15,6 +15,8 @@ import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.util.ArrayList;
+
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_APPOINTMENT_INFO;
 
 public class Activity_Message_yuyuekanfang extends SKBaseActivity {
@@ -31,8 +33,10 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
             }
         });
 
-        mApId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_APID, 0);
+        mApId = Integer.valueOf(getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_APID));
         getAppointmentInfo();
+
+        updateButtonGroup(16);
     }
 
     private AlertDialog mDateModifyDlg;
@@ -84,21 +88,32 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         }, this).GetAppointmentInfo(mApId);
     }
 
-    private void updateButtonGroup(int apId) {
-        if ((int)(apId & 0x1) > 0) {
+    private void updateButtonGroup(int operations) {
+        ArrayList<String> buttons = new ArrayList<>();
+        if ((int)(operations & 0x1) > 0) {
             // 取消
+            buttons.add("1");
         }
-        if ((int)(apId & 0x2) > 0) {
+        if ((int)(operations & 0x2) > 0) {
             // 改期
+            buttons.add("2");
         }
-        if ((int)(apId & 0x4) > 0) {
+        if ((int)(operations & 0x4) > 0) {
             // 确认
+            buttons.add("4");
         }
-        if ((int)(apId & 0x8) > 0) {
+        if ((int)(operations & 0x8) > 0) {
             // 完成
+            buttons.add("8");
         }
-        if ((int)(apId & 0x10) > 0) {
+        if ((int)(operations & 0x10) > 0) {
             // 指派经纪人
+            buttons.add("10");
+        }
+
+        if (buttons.size() == 0) {
+            kjsLogUtil.e("result is null");
+            return;
         }
     }
 
