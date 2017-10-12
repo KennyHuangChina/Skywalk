@@ -278,16 +278,16 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
+        android:padding="15dp"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:background="#FFFFFF"
         android:orientation="horizontal" >
         <TextView
-            android:id="@+id/tv_change_date"
+            android:id="@+id/tv_button1"
             android:onClick="onClickResponse"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="45dp"
             android:textColor="#ffffff"
             android:textSize="15sp"
@@ -295,19 +295,37 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_marginRight="5dp"
-            android:text="请求改期"/>
+            android:visibility="gone"
+            android:text="button1"/>
 
         <TextView
-            android:id="@+id/tv_confirm"
+            android:id="@+id/tv_button2"
             android:onClick="onClickResponse"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:background="@drawable/rounded_rect_background_green"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:visibility="gone"
+            android:text="button2"/>
+
+        <TextView
+            android:id="@+id/tv_button3"
+            android:onClick="onClickResponse"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="45dp"
             android:textColor="#ffffff"
             android:textSize="15sp"
             android:background="@drawable/rounded_rect_background_green"
             android:gravity="center"
             android:layout_marginLeft="5dp"
-            android:text="确认预约"/>
+            android:visibility="gone"
+            android:text="button3"/>
     </LinearLayout>
 
     <ImageView

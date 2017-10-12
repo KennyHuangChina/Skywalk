@@ -4,6 +4,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
@@ -17,16 +18,32 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 
+import static com.kjs.skywalk.app_android.commonFun.MAP_AP_BUTTON;
+import static com.kjs.skywalk.app_android.commonFun.MAP_HOUSE_CERT_BUTTON;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_APPOINTMENT_INFO;
 
 public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     private int mApId = 0;  // 16
+
+    private TextView mTvButton1;
+    private TextView mTvButton2;
+    private TextView mTvButton3;
+
+    private ArrayList<TextView> mBtns = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__message_yuyuekanfang);
 
-        findViewById(R.id.tv_change_date).setOnClickListener(new View.OnClickListener() {
+        mTvButton1 = (TextView) findViewById(R.id.tv_button1);
+        mTvButton2 = (TextView) findViewById(R.id.tv_button2);
+        mTvButton3 = (TextView) findViewById(R.id.tv_button3);
+
+        mBtns.add(mTvButton1);
+        mBtns.add(mTvButton2);
+        mBtns.add(mTvButton3);
+
+        mTvButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialog_appointment_date_modify();
@@ -36,7 +53,7 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         mApId = Integer.valueOf(getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_APID));
         getAppointmentInfo();
 
-        updateButtonGroup(16);
+        updateButtonGroup(7);
     }
 
     private AlertDialog mDateModifyDlg;
@@ -108,12 +125,24 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         }
         if ((int)(operations & 0x10) > 0) {
             // 指派经纪人
-            buttons.add("10");
+            buttons.add("16");
         }
 
         if (buttons.size() == 0) {
             kjsLogUtil.e("result is null");
             return;
+        }
+
+        int index = 0;
+        for (String button : buttons) {
+            String btn_name = MAP_AP_BUTTON.get(button);
+            kjsLogUtil.i("button: " + btn_name);
+
+            TextView btn = mBtns.get(index);
+            btn.setText(btn_name);
+            btn.setVisibility(View.VISIBLE);
+
+            index++;
         }
     }
 
