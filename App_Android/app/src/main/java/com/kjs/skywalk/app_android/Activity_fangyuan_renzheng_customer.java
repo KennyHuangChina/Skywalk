@@ -24,6 +24,7 @@ import me.iwf.photopicker.PhotoPicker;
 
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_House;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_User;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
@@ -38,8 +39,13 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private RelativeLayout mContainer = null;
     private int mLandlordId = 0;
 
+    private ArrayList<Integer> mCertPictureIdList = new ArrayList<>();
+    private ArrayList<Integer> mIdCardPictureIdList = new ArrayList<>();
+
     private final int MSG_UPLOAD_ALL_DONE = 0;
     private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
+    private final int MSG_GET_CERT_PICTURES_ID_DONE = 2;
+    private final int MSG_GET_IDCARD_PICTURES_ID_DONE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,9 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         mContainer = (RelativeLayout)findViewById(R.id.activity_container);
 
         getHouseInfo();
+
+        getCertPicturesId();
+        getIdCardPicturesId();
     }
 
     @Override
@@ -66,7 +75,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
     public void onClickResponse(View v) {
         switch (v.getId()) {
-            case R.id.tv_info_title: {
+            case R.id.textViewBack: {
                 finish();
                 break;
             }
@@ -179,6 +188,82 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         }
     }
 
+    private int getIdCardPicturesId() {
+        mIdCardPictureIdList.clear();
+
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败" + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_HOUSE_PIC_LIST) {
+                    IApiResults.IResultList res = (IApiResults.IResultList)iResult;
+                    ArrayList<Object> list = res.GetList();
+                    for(Object obj : list) {
+                        IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
+                        mIdCardPictureIdList.add(info.GetId());
+                    }
+                    mHandler.sendEmptyMessageDelayed(MSG_GET_IDCARD_PICTURES_ID_DONE, 0);
+                }
+            }
+        };
+
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
+        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert);
+        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
+            return -1;
+        }
+
+        return 0;
+    }
+
+    private int getCertPicturesId() {
+        mCertPictureIdList.clear();
+
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败" + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_HOUSE_PIC_LIST) {
+                    IApiResults.IResultList res = (IApiResults.IResultList)iResult;
+                    ArrayList<Object> list = res.GetList();
+                    for(Object obj : list) {
+                        IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
+                        mCertPictureIdList.add(info.GetId());
+                    }
+
+                    mHandler.sendEmptyMessageDelayed(MSG_GET_CERT_PICTURES_ID_DONE, 0);
+                }
+            }
+        };
+
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
+        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert);
+        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
+            return -1;
+        }
+
+        return 0;
+    }
 
     private int getHouseInfo() {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
@@ -217,6 +302,10 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
             switch (msg.what) {
                 case MSG_UPLOAD_ALL_DONE:
                     showWaiting(false);
+                    break;
+                case MSG_GET_CERT_PICTURES_ID_DONE:
+                    break;
+                case MSG_GET_IDCARD_PICTURES_ID_DONE:
                     break;
             }
 
