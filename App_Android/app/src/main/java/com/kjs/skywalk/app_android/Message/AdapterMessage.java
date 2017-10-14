@@ -108,7 +108,9 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                mContext.startActivity(new Intent(mContext, Activity_Message_fangyuanshenhe.class));
+                Intent intent = new Intent(mContext, Activity_Message_fangyuanshenhe.class);
+                intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.RefId());
+                mContext.startActivity(intent);
                 }
             });
         } else if (msgType == 2) {
@@ -119,7 +121,7 @@ class AdapterMessage extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, Activity_Message_yuyuekanfang.class);
-                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_APID, msgInfo.RefId());
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.RefId());
                     mContext.startActivity(intent);
                 }
             });
