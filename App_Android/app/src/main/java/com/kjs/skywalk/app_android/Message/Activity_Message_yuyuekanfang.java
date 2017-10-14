@@ -50,10 +50,8 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
             }
         });
 
-        mApId = Integer.valueOf(getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_APID));
+        mApId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
         getAppointmentInfo();
-
-        updateButtonGroup(7);
     }
 
     private AlertDialog mDateModifyDlg;
@@ -96,54 +94,63 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
                 }
 
                 if (command == CMD_GET_APPOINTMENT_INFO) {
-//                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-//                    int nFetch = resultList.GetFetchedNumber();
-//                    if (nFetch == -1) {
-//                    }
+//                    Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
+
+                    IApiResults.IAppointmentInfo appointmentInfo = (IApiResults.IAppointmentInfo) iResult;
+                    int operations = appointmentInfo.Operations();
+                    updateButtonGroup(operations);
+
                 }
             }
         }, this).GetAppointmentInfo(mApId);
     }
 
-    private void updateButtonGroup(int operations) {
-        ArrayList<String> buttons = new ArrayList<>();
-        if ((int)(operations & 0x1) > 0) {
-            // 取消
-            buttons.add("1");
-        }
-        if ((int)(operations & 0x2) > 0) {
-            // 改期
-            buttons.add("2");
-        }
-        if ((int)(operations & 0x4) > 0) {
-            // 确认
-            buttons.add("4");
-        }
-        if ((int)(operations & 0x8) > 0) {
-            // 完成
-            buttons.add("8");
-        }
-        if ((int)(operations & 0x10) > 0) {
-            // 指派经纪人
-            buttons.add("16");
-        }
+    private void updateButtonGroup(final int operations) {
+        kjsLogUtil.i("[updateButtonGroup] operations: " + operations);
 
-        if (buttons.size() == 0) {
-            kjsLogUtil.e("result is null");
-            return;
-        }
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<String> buttons = new ArrayList<>();
+                if ((int)(operations & 0x1) > 0) {
+                    // 取消
+                    buttons.add("1");
+                }
+                if ((int)(operations & 0x2) > 0) {
+                    // 改期
+                    buttons.add("2");
+                }
+                if ((int)(operations & 0x4) > 0) {
+                    // 确认
+                    buttons.add("4");
+                }
+                if ((int)(operations & 0x8) > 0) {
+                    // 完成
+                    buttons.add("8");
+                }
+                if ((int)(operations & 0x10) > 0) {
+                    // 指派经纪人
+                    buttons.add("16");
+                }
 
-        int index = 0;
-        for (String button : buttons) {
-            String btn_name = MAP_AP_BUTTON.get(button);
-            kjsLogUtil.i("button: " + btn_name);
+                if (buttons.size() == 0) {
+                    kjsLogUtil.e("result is null");
+                    return;
+                }
 
-            TextView btn = mBtns.get(index);
-            btn.setText(btn_name);
-            btn.setVisibility(View.VISIBLE);
+                int index = 0;
+                for (String button : buttons) {
+                    String btn_name = MAP_AP_BUTTON.get(button);
+                    kjsLogUtil.i("button: " + btn_name);
 
-            index++;
-        }
+                    TextView btn = mBtns.get(index);
+                    btn.setText(btn_name);
+                    btn.setVisibility(View.VISIBLE);
+
+                    index++;
+                }
+            }
+        });
     }
 
 }

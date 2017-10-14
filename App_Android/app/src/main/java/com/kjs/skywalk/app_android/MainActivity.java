@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.Apartment.fragmentApartment;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
+import com.kjs.skywalk.app_android.Message.Activity_Message_fangyuanshenhe;
 import com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
@@ -482,10 +483,15 @@ public class MainActivity extends SKBaseActivity {
 
                     case R.id.action_setting6:
                     {
-                        // 消息-预约看房
-                        Intent intent = new Intent(MainActivity.this, Activity_Message_yuyuekanfang.class);
-                        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_APID, "16");
-                        startActivity(intent);
+//                        // 消息-预约看房
+//                        Intent intent = new Intent(MainActivity.this, Activity_Message_yuyuekanfang.class);
+//                        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 16);
+//                        startActivity(intent);
+
+                        // 消息-房源审核
+                        Intent intent = new Intent(MainActivity.this, Activity_Message_fangyuanshenhe.class);
+                        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 10);
+                        MainActivity.this.startActivity(intent);
                     }
                     break;
 

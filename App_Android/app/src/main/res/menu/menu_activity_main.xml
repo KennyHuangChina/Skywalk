@@ -40,7 +40,7 @@
     <item
         android:id="@+id/action_setting6"
         android:orderInCategory="100"
-        android:title="消息-预约看房"
+        android:title="消息-房源审核"
         app:showAsAction="never"/>
 
     <item
