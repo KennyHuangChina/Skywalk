@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Server.ImageDelete;
 import com.kjs.skywalk.app_android.Server.ImageUpload;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
@@ -23,9 +24,11 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import me.iwf.photopicker.PhotoPicker;
 
+import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_INTERRUPT;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
@@ -34,7 +37,8 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
-public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ImageUpload.UploadFinished
+public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ImageUpload.UploadFinished,
+        ImageDelete.DeleteFinished
 {
     private int mPhotoPickerHostId;
     private ArrayList<String> mCertList = new ArrayList<>();
@@ -49,8 +53,15 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
     private final int MSG_UPLOAD_ALL_DONE = 0;
     private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
-    private final int MSG_GET_CERT_PICTURES_ID_DONE = 2;
-    private final int MSG_GET_IDCARD_PICTURES_ID_DONE = 3;
+    private final int MSG_GET_CERT_PICTURES_ID_DONE = 0x100;
+    private final int MSG_GET_IDCARD_PICTURES_ID_DONE = 0x101;
+    private final int MSG_DELETE_ALL_DONE = 0x200;
+    private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
+
+    class ImageInfo {
+        public int id = 0;
+        public String url = "";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +171,51 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
             upload.setVisibility(View.VISIBLE);
             delete.setVisibility(View.GONE);
+        }
+    }
+
+    private void delete() {
+        ImageDelete imageDelete = new ImageDelete(this, this);
+        ArrayList<Integer> list = new ArrayList<>();
+        CheckBox box;
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid1);
+        if(box.isChecked()) {
+            ImageInfo info = (ImageInfo)box.getTag();
+            if(info != null) {
+                list.add(info.id);
+            }
+        }
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid2);
+        if(box.isChecked()) {
+            ImageInfo info = (ImageInfo)box.getTag();
+            if(info != null) {
+                list.add(info.id);
+            }
+        }
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id1);
+        if(box.isChecked()) {
+            ImageInfo info = (ImageInfo)box.getTag();
+            if(info != null) {
+                list.add(info.id);
+            }
+        }
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id2);
+        if(box.isChecked()) {
+            ImageInfo info = (ImageInfo)box.getTag();
+            if(info != null) {
+                list.add(info.id);
+            }
+        }
+
+        if(list.size() == 0) {
+            commonFun.showToast_info(this, mContainer, "没有选中的图片");
+            return;
+        }
+
+        if(imageDelete.delete(list) != 0) {
+            commonFun.showToast_info(this, mContainer, "删除失败");
+        } else {
+            showWaiting(true);
         }
     }
 
@@ -378,6 +434,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_UPLOAD_ALL_DONE:
+                case MSG_DELETE_ALL_DONE:
                     showWaiting(false);
                     break;
                 case MSG_GET_CERT_PICTURES_ID_DONE:
@@ -400,6 +457,58 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     mWaitingWindow.show(mContainer);
                 } else {
                     mWaitingWindow.hide();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDeleteStarted() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "开始删除，请稍候...";
+                    mWaitingWindow.updateProgressText(text);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDeleteProgress(final int current, final int total, int id, int result) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "正在删除照片 ... " + current + "/" + total;
+                    mWaitingWindow.updateProgressText(text);
+                }
+            }
+        });
+        if(result == DELETE_RESULT_INTERRUPT) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(mWaitingWindow != null) {
+                        String text = "删除失败, 请重新删除";
+                        mWaitingWindow.updateProgressText(text);
+                    }
+                }
+            });
+            mHandler.sendEmptyMessageDelayed(MSG_DELETE_FINISHED_WITH_ERROR, 1000);
+        }
+    }
+
+    @Override
+    public void onDeleteEnd() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "删除完成";
+                    mWaitingWindow.updateProgressText(text);
+                    mHandler.sendEmptyMessageDelayed(MSG_DELETE_ALL_DONE, 1000);
                 }
             }
         });
