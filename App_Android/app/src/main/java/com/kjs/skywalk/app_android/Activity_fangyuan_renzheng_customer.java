@@ -7,14 +7,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ArrayRes;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Server.ImageUpload;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +42,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private PopupWindowWaitingUnclickable mWaitingWindow = null;
     private RelativeLayout mContainer = null;
     private int mLandlordId = 0;
+    private boolean isSelectMode = false;
 
     private ArrayList<Integer> mCertPictureIdList = new ArrayList<>();
     private ArrayList<Integer> mIdCardPictureIdList = new ArrayList<>();
@@ -83,6 +88,78 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 upload();
                 break;
             }
+            case R.id.textViewSelect: {
+                isSelectMode = !isSelectMode;
+                TextView button = (TextView) v;
+                if(isSelectMode) {
+                    button.setText("取消");
+                } else {
+                    button.setText("选择");
+                }
+
+                processButtonSelect();
+                break;
+            }
+            case R.id.rl_pic_checkflag_hid1: {
+                CheckBox box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid1);
+                box.setChecked(!box.isChecked());
+                break;
+            }
+            case R.id.rl_pic_checkflag_hid2: {
+                CheckBox box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid2);
+                box.setChecked(!box.isChecked());
+                break;
+            }
+            case R.id.rl_pic_checkflag_id1: {
+                CheckBox box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id1);
+                box.setChecked(!box.isChecked());
+                break;
+            }
+            case R.id.rl_pic_checkflag_id2: {
+                CheckBox box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id2);
+                box.setChecked(!box.isChecked());
+                break;
+            }
+        }
+    }
+
+    private void cleanCheckBoxSelection() {
+        CheckBox box;
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid1);
+        box.setChecked(false);
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid2);
+        box.setChecked(false);
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id1);
+        box.setChecked(false);
+        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id2);
+        box.setChecked(false);
+    }
+
+    private void processButtonSelect() {
+        RelativeLayout hid1 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_hid1);
+        RelativeLayout hid2 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_hid2);
+        RelativeLayout id1 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_id1);
+        RelativeLayout id2 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_id2);
+        TextView upload = (TextView)findViewById(R.id.tv_upload_pic);
+        TextView delete = (TextView)findViewById(R.id.tv_delete_pic);
+        if(isSelectMode) {
+            hid1.setVisibility(View.VISIBLE);
+            hid2.setVisibility(View.VISIBLE);
+            id1.setVisibility(View.VISIBLE);
+            id2.setVisibility(View.VISIBLE);
+
+            upload.setVisibility(View.GONE);
+            delete.setVisibility(View.VISIBLE);
+
+            cleanCheckBoxSelection();
+        } else {
+            hid1.setVisibility(View.INVISIBLE);
+            hid2.setVisibility(View.INVISIBLE);
+            id1.setVisibility(View.INVISIBLE);
+            id2.setVisibility(View.INVISIBLE);
+
+            upload.setVisibility(View.VISIBLE);
+            delete.setVisibility(View.GONE);
         }
     }
 

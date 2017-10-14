@@ -40,8 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_delete_pic"
@@ -53,7 +52,8 @@
                 android:textSize="15sp"
                 android:gravity="center"
                 android:background="@drawable/rounded_rect_background_green"
-                android:text="删除认证照片"/>
+                android:text="删除认证照片"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -168,10 +168,12 @@
                             android:scaleType="fitXY"
                             android:src="@drawable/no_picture" />
                         <RelativeLayout
+                            android:onClick="onClickResponse"
                             android:id="@+id/rl_pic_checkflag_hid1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#50FFFFFF">
+                            android:background="#50FFFFFF"
+                            android:visibility="invisible">
                             <CheckBox
                                 android:id="@+id/cb_pic_checkflag_hid1"
                                 android:layout_width="wrap_content"
@@ -198,12 +200,12 @@
                             android:scaleType="fitXY"
                             android:src="@drawable/no_picture" />
                         <RelativeLayout
+                            android:onClick="onClickResponse"
                             android:id="@+id/rl_pic_checkflag_hid2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="#50FFFFFF"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentStart="true">
+                            android:visibility="invisible">
                             <CheckBox
                                 android:id="@+id/cb_pic_checkflag_hid2"
                                 android:layout_width="wrap_content"
@@ -270,10 +272,12 @@
                             android:scaleType="fitXY"
                             android:src="@drawable/no_picture" />
                         <RelativeLayout
+                            android:onClick="onClickResponse"
                             android:id="@+id/rl_pic_checkflag_id1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#50FFFFFF">
+                            android:background="#50FFFFFF"
+                            android:visibility="invisible">
                             <CheckBox
                                 android:id="@+id/cb_pic_checkflag_id1"
                                 android:layout_width="wrap_content"
@@ -300,10 +304,12 @@
                             android:scaleType="fitXY"
                             android:src="@drawable/no_picture" />
                         <RelativeLayout
+                            android:onClick="onClickResponse"
                             android:id="@+id/rl_pic_checkflag_id2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#50FFFFFF">
+                            android:background="#50FFFFFF"
+                            android:visibility="invisible">
                             <CheckBox
                                 android:id="@+id/cb_pic_checkflag_id2"
                                 android:layout_width="wrap_content"
