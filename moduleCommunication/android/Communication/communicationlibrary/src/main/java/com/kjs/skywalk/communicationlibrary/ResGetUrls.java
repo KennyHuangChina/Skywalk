@@ -21,9 +21,9 @@ class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
     public String DebugString() {
         super.DebugString();
 
-        mString += "  Small picture: " + mUrlSmall + "\n";
-        mString += "  Middle picture: " + mUrlMiddle + "\n";
-        mString += "  Large picture: " + mUrlLarge + "\n";
+        mString += "  Small picture: " + GetSmallPicture() + "\n";
+        mString += "  Middle picture: " + GetMiddlePicture() + "\n";
+        mString += "  Large picture: " + GetLargePicture() + "\n";
 
         return mString;
     }
@@ -43,18 +43,25 @@ class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
 
     @Override
     public String GetSmallPicture() {
-        return mUrlSmall;
+        if (null == mUrlSmall || mUrlSmall.isEmpty()) {
+            return null;
+        }
+        return CUtilities.PicFullUrl(mUrlSmall);
     }
 
     @Override
     public String GetMiddlePicture() {
-        return mUrlMiddle;
+        if (null == mUrlMiddle || mUrlMiddle.isEmpty()) {
+            return null;
+        }
+        return CUtilities.PicFullUrl(mUrlMiddle);
     }
 
     @Override
     public String GetLargePicture() {
-        return mUrlLarge;
+        if (null == mUrlLarge || mUrlLarge.isEmpty()) {
+            return null;
+        }
+        return CUtilities.PicFullUrl(mUrlLarge);
     }
-
-
 }

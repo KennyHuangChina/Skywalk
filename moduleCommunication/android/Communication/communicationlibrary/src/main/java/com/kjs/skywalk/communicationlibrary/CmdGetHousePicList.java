@@ -14,18 +14,30 @@ import java.util.HashMap;
 class CmdGetHousePicList extends CommunicationBase {
     private int mHouse = 0;
     private int mType = -1;
+    private int mSize = -1;
 
-    CmdGetHousePicList(Context context, int house, int type) {
+    CmdGetHousePicList(Context context, int house, int type, int size) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST);
         mHouse = house;
         mType = type;
+        mSize = size;
     }
 
     @Override
     public String getRequestURL() {
         mCommandURL = "/v1/pic/house/" + mHouse;
+        String sArg = "";
         if (mType > 0) {
-            mCommandURL += "?st=" + mType;
+            sArg = "st=" + mType;
+        }
+        if (mSize >= 0) {
+            if (!sArg.isEmpty()) {
+                sArg += "&";
+            }
+            sArg += "sz=" + mSize;
+        }
+        if (sArg.length() > 0) {
+            mCommandURL += "?" + sArg;
         }
         return mCommandURL;
     }
@@ -44,6 +56,10 @@ class CmdGetHousePicList extends CommunicationBase {
         }
         if (mType < 0 || mType > 4) {
             Log.e(TAG, "type:" + mType);
+            return false;
+        }
+        if (mSize < CommunicationInterface.PIC_SIZE_ALL || mSize > CommunicationInterface.PIC_SIZE_Large) {
+            Log.e(TAG, "mType:" + mType);
             return false;
         }
 

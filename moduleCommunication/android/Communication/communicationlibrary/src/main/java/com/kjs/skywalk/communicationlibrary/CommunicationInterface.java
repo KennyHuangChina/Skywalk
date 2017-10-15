@@ -228,9 +228,10 @@ public class CommunicationInterface {
         *   CMD: CMD_GET_HOUSE_PIC_LIST
         *       - house : house id
         *       - type  : house picture sub-type. PIC_TYPE_SUB_xxx
-        *   Result: IApiResults.IResultList(IApiResults.IHousePicInfo)
-         */
-        int GetHousePics(int house, int type);
+        *       - size  : picture size. PIC_SIZE_xxx
+        *   Result: IApiResults.IResultList(IApiResults.IHousePicInfo, IApiResults.IPicUrls)
+        */
+        int GetHousePics(int house, int type, int size);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -544,6 +545,7 @@ public class CommunicationInterface {
                         PIC_TYPE_SUB_HOUSE_FURNITURE        = 2,    // house furnitures
                         PIC_TYPE_SUB_HOUSE_APPLIANCE        = 3,    // house appliances
                         PIC_TYPE_SUB_HOUSE_OwnershipCert    = 4;    // owernship certification
+    // picture size
     static public int   PIC_SIZE_ALL                        = 0,
                         PIC_SIZE_Small                      = 2,
                         PIC_SIZE_Moderate                   = 3,
