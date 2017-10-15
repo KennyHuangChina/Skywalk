@@ -8,9 +8,10 @@ import org.json.JSONObject;
  */
 
 class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
-    private String mUrlSmall = "";
-    private String mUrlMiddle = "";
-    private String mUrlLarge = "";
+    private int    mPicId       = 0;
+    private String mUrlSmall    = "";
+    private String mUrlMiddle   = "";
+    private String mUrlLarge    = "";
 
     ResGetUrls(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -21,6 +22,7 @@ class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
     public String DebugString() {
         super.DebugString();
 
+        mString += "picture: " + GetPicId() + "\n";
         mString += "  Small picture: " + GetSmallPicture() + "\n";
         mString += "  Middle picture: " + GetMiddlePicture() + "\n";
         mString += "  Large picture: " + GetLargePicture() + "\n";
@@ -30,15 +32,22 @@ class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
 
     protected int parseResult(JSONObject obj) {
         try {
-            mUrlSmall = obj.getString("Url_s");
-            mUrlMiddle  = obj.getString("Url_m");
-            mUrlLarge = obj.getString("Url_l");
+            mPicId = obj.getInt("Id");
+            JSONObject joUrl = obj.getJSONObject("Urls");
+            mUrlSmall   = joUrl.getString("Url_s");
+            mUrlMiddle  = joUrl.getString("Url_m");
+            mUrlLarge   = joUrl.getString("Url_l");
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
         }
 
         return 0;
+    }
+
+    @Override
+    public int GetPicId() {
+        return mPicId;
     }
 
     @Override

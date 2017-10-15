@@ -150,6 +150,11 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
             }
 
             @Override
+            public int GetPicId() {
+                return GetId();
+            }
+
+            @Override
             public String GetSmallPicture() {
                 if (null == mUrlSmall || mUrlSmall.isEmpty()) {
                     return null;
