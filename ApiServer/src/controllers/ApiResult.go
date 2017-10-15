@@ -142,9 +142,8 @@ type ResGetPropInfo struct {
 // result of API get picture url
 type ResGetPicUrl struct {
 	ResCommon
-	Url_s string
-	Url_m string
-	Url_l string
+	Id   int64
+	Urls commdef.PicUrlSet
 }
 
 // result of API get new system message count

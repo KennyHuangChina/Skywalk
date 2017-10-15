@@ -119,9 +119,10 @@ func (this *PictureController) GetPicUrl() {
 	 */
 	err, url_s, url_m, url_l := models.GetPicUrl(pid, uid, size)
 	if nil == err {
-		result.Url_s = url_s
-		result.Url_m = url_m
-		result.Url_l = url_l
+		result.Id = pid
+		result.Urls.Url_s = url_s
+		result.Urls.Url_m = url_m
+		result.Urls.Url_l = url_l
 		// beego.Warn(FN, fmt.Sprintf("%+v", result))
 	}
 }
