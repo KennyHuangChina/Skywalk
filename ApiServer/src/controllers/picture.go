@@ -63,13 +63,14 @@ func (this *PictureController) GetHousePicList() {
 	// }
 	hid, _ := this.GetInt64(":id")
 	subtype, _ := this.GetInt("st")
+	size, _ := this.GetInt("sz")
 
 	// beego.Debug(FN, "house:", hid, ", subtype:", subtype)
 
 	/*
 	 *	Processing
 	 */
-	err, picLst := models.GetHousePicList(hid, uid, subtype)
+	err, picLst := models.GetHousePicList(hid, uid, subtype, size)
 	if nil == err {
 		result.Total = len(picLst)
 		result.Pics = picLst

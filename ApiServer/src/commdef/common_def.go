@@ -464,9 +464,16 @@ const (
 	// PIC_SIZE_HEAD_PORTRAINT = 5 // head portraint, typically used for user picture
 )
 
+type PicUrlSet struct {
+	Url_s string
+	Url_m string
+	Url_l string
+}
+
 type HousePicture struct {
 	Id       int64  // house picture id
 	Desc     string // house picture description
 	SubType  int    // house picture sub-type
 	Checksum string // house picture checksum, md5
+	Urls     PicUrlSet
 }

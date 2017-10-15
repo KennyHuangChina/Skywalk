@@ -114,7 +114,7 @@ func AddPicture(hid, uid, XId int64, pt int, desc, md5, pfn, pbd string) (err er
 *		err 	- error info
 *		picList	- picture list
 **/
-func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.HousePicture) {
+func GetHousePicList(hid, uid int64, subType, size int) (err error, picList []commdef.HousePicture) {
 	FN := "[GetHousePicList] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid, ", sub type:", subType)
 
@@ -156,6 +156,12 @@ func GetHousePicList(hid, uid int64, subType int) (err error, picList []commdef.
 
 	for _, v := range pl {
 		np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMinor, Checksum: v.Md5}
+		err1, u_s, u_m, u_l := GetPicUrl(v.Id, uid, size)
+		if nil == err1 {
+			np.Urls.Url_s = u_s
+			np.Urls.Url_m = u_m
+			np.Urls.Url_l = u_l
+		}
 		picList = append(picList, np)
 	}
 
@@ -250,7 +256,7 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 		}
 	}
 
-	// beego.Debug(FN, "s:", url_s, ", m:", url_m, ", l:", url_l)
+	beego.Debug(FN, "s:", url_s, ", m:", url_m, ", l:", url_l)
 	return
 }
 
