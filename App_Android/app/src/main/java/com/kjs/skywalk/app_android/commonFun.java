@@ -535,4 +535,16 @@ public class commonFun {
 
         return error;
     }
+
+    public static String getDBPath(Context context) {
+        String path = context.getFilesDir().getAbsolutePath() + "/";
+        kjsLogUtil.i("Image DB dir: " + path);
+        return path;
+    }
+
+    public static String getImageCachePath(Context context) {
+        String path = context.getCacheDir().getAbsolutePath() + "/image/";
+        kjsLogUtil.i("Image cache dir: " + path);
+        return path;
+    }
 }

@@ -71,6 +71,8 @@ public class MainActivity extends SKBaseActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        createImageCacheFolder();
+
         mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
 
         // copy file from "asset/testPics/" to "cache" dir
@@ -540,5 +542,20 @@ public class MainActivity extends SKBaseActivity {
             }
         });
         popupMenu.show();
+    }
+
+    void createImageCacheFolder() {
+        String path = commonFun.getImageCachePath(this);
+        File file = new File(path);
+        if(file.exists() && file.isDirectory()) {
+            kjsLogUtil.i("Image cache folder exists");
+            return;
+        }
+
+        if(!file.mkdir()) {
+            kjsLogUtil.i("Create image cache folder failed!");
+        } else {
+            kjsLogUtil.i("Create image cache folder succeed.");
+        }
     }
 }
