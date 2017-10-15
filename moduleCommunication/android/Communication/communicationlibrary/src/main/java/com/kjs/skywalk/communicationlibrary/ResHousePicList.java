@@ -92,11 +92,14 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
 
         /////////////////////////////////////////////////////////////////////////////////////////
         //
-        class HousePicInfo implements IApiResults.IHousePicInfo, InternalDefines.IListItemInfoInner {
+        class HousePicInfo implements IApiResults.IHousePicInfo, IApiResults.IPicUrls, InternalDefines.IListItemInfoInner {
             private int     mId         = 0;
             private String  mDesc       = "";
             private int     mType       = -1;
             private String  mChecksum   = "";
+            private String  mUrlSmall   = null;
+            private String  mUrlMiddle  = null;
+            private String  mUrlLarge   = null;
 
             HousePicInfo(JSONObject obj) {
                 try {
@@ -104,6 +107,11 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
                     mDesc       = obj.getString("Desc");
                     mType       = obj.getInt("SubType");
                     mChecksum   = obj.getString("Checksum");
+
+                    JSONObject jsUrl = obj.getJSONObject("Urls");
+                    mUrlSmall = jsUrl.getString("Url_s");
+                    mUrlMiddle  = jsUrl.getString("Url_m");
+                    mUrlLarge = jsUrl.getString("Url_l");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -131,7 +139,43 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
 
             @Override
             public String ListItemInfo2String() {
-                return " id: " + mId + ", desc: " + mDesc + ", type: " + mType + ", checksum:" + mChecksum;
+                String strInfo = "";
+                strInfo += String.format("id:%d, desc: %s, type:%s, checksum: %s\n",
+                                        GetId(), GetDesc(), GetType(), GetChecksum());
+                strInfo += "URLs\n";
+                strInfo += "    small:    " + GetSmallPicture() + "\n";
+                strInfo += "    moderate: " + GetMiddlePicture() + "\n";
+                strInfo += "    Large:    " + GetLargePicture() + "\n";
+                return strInfo;
+            }
+
+            @Override
+            public int GetPicId() {
+                return GetId();
+            }
+
+            @Override
+            public String GetSmallPicture() {
+                if (null == mUrlSmall || mUrlSmall.isEmpty()) {
+                    return null;
+                }
+                return CUtilities.PicFullUrl(mUrlSmall);
+            }
+
+            @Override
+            public String GetMiddlePicture() {
+                if (null == mUrlMiddle || mUrlMiddle.isEmpty()) {
+                    return null;
+                }
+                return CUtilities.PicFullUrl(mUrlMiddle);
+            }
+
+            @Override
+            public String GetLargePicture() {
+                if (null == mUrlLarge || mUrlLarge.isEmpty()) {
+                    return null;
+                }
+                return CUtilities.PicFullUrl(mUrlLarge);
             }
         }
     }

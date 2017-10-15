@@ -205,9 +205,10 @@ public class IApiResults {
 
     // command: CmdGetPictureUrls
     public interface IPicUrls {
-        String GetSmallPicture();
-        String GetMiddlePicture();
-        String GetLargePicture();
+        int     GetPicId();
+        String  GetSmallPicture();
+        String  GetMiddlePicture();
+        String  GetLargePicture();
     }
 
     // command: GetHousePicList

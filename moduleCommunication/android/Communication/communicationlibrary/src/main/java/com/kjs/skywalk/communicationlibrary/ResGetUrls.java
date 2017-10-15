@@ -8,9 +8,10 @@ import org.json.JSONObject;
  */
 
 class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
-    private String mUrlSmall = "";
-    private String mUrlMiddle = "";
-    private String mUrlLarge = "";
+    private int    mPicId       = 0;
+    private String mUrlSmall    = "";
+    private String mUrlMiddle   = "";
+    private String mUrlLarge    = "";
 
     ResGetUrls(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -21,18 +22,21 @@ class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
     public String DebugString() {
         super.DebugString();
 
-        mString += "  Small picture: " + mUrlSmall + "\n";
-        mString += "  Middle picture: " + mUrlMiddle + "\n";
-        mString += "  Large picture: " + mUrlLarge + "\n";
+        mString += "picture: " + GetPicId() + "\n";
+        mString += "  Small picture: " + GetSmallPicture() + "\n";
+        mString += "  Middle picture: " + GetMiddlePicture() + "\n";
+        mString += "  Large picture: " + GetLargePicture() + "\n";
 
         return mString;
     }
 
     protected int parseResult(JSONObject obj) {
         try {
-            mUrlSmall = obj.getString("Url_s");
-            mUrlMiddle  = obj.getString("Url_m");
-            mUrlLarge = obj.getString("Url_l");
+            mPicId = obj.getInt("Id");
+            JSONObject joUrl = obj.getJSONObject("Urls");
+            mUrlSmall   = joUrl.getString("Url_s");
+            mUrlMiddle  = joUrl.getString("Url_m");
+            mUrlLarge   = joUrl.getString("Url_l");
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
@@ -42,19 +46,31 @@ class ResGetUrls extends ResBase implements IApiResults.IPicUrls {
     }
 
     @Override
+    public int GetPicId() {
+        return mPicId;
+    }
+
+    @Override
     public String GetSmallPicture() {
-        return mUrlSmall;
+        if (null == mUrlSmall || mUrlSmall.isEmpty()) {
+            return null;
+        }
+        return CUtilities.PicFullUrl(mUrlSmall);
     }
 
     @Override
     public String GetMiddlePicture() {
-        return mUrlMiddle;
+        if (null == mUrlMiddle || mUrlMiddle.isEmpty()) {
+            return null;
+        }
+        return CUtilities.PicFullUrl(mUrlMiddle);
     }
 
     @Override
     public String GetLargePicture() {
-        return mUrlLarge;
+        if (null == mUrlLarge || mUrlLarge.isEmpty()) {
+            return null;
+        }
+        return CUtilities.PicFullUrl(mUrlLarge);
     }
-
-
 }
