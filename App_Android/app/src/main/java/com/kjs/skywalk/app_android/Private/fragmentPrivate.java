@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Activity_PasswordReset;
 import com.kjs.skywalk.app_android.ClassDefine;
+import com.kjs.skywalk.app_android.MainActivity;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
@@ -391,7 +392,15 @@ public class fragmentPrivate extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.action_settings_password_reset:
                     {
+                        // 重置密码
                         showPasswordResetActivity();
+                    }
+                    break;
+
+                    case R.id.action_settings_loginout:
+                    {
+                        // 注销
+                        loginout();
                     }
                     break;
                 }
@@ -452,4 +461,59 @@ public class fragmentPrivate extends Fragment {
         }
     };
 
+    private void loginout() {
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+            }
+        }, mProgreessListener).Logout();
+
+        // check login status
+        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+        mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+        updateLayout(mIsLogin);
+
+        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_GET_LOGIN_USER_INFO) {
+                    // IApiResults.IGetUserInfo
+//            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
+                    if (CommunicationError.CE_ERROR_NO_ERROR == iResult.GetErrCode()) {
+                        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, true);
+                        kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+                                kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
+                                updateLayout(mIsLogin);
+                            }
+                        });
+                    }
+                }
+
+            }
+        }, mProgreessListener).GetLoginUserInfo();
+    }
 }

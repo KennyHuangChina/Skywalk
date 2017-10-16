@@ -5,4 +5,10 @@
         android:orderInCategory="100"
         android:title="重置密码"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_settings_loginout"
+        android:orderInCategory="101"
+        android:title="注销"
+        app:showAsAction="never"/>
 </menu>
