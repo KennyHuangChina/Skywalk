@@ -32,6 +32,7 @@ import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_INTER
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_House;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_User;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
@@ -350,7 +351,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         };
 
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert);
+        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
         if(result != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
             return -1;
@@ -389,7 +390,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         };
 
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert);
+        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
         if(result != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
             return -1;

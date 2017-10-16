@@ -27,6 +27,7 @@ import me.iwf.photopicker.PhotoPreview;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PIC_URL;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
 
 public class Activity_fangyuan_zhaopian extends SKBaseActivity {
     ViewPager mVPHuXing;
@@ -163,7 +164,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
                     }
                 }
             }
-        }, this).GetHousePics(mHouseId, type);
+        }, this).GetHousePics(mHouseId, type, PIC_SIZE_ALL);
     }
 
     private void getPicUrlById(int type, final int picId) {
