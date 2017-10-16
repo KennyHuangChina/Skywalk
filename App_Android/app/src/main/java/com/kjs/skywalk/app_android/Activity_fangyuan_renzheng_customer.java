@@ -30,6 +30,7 @@ import me.iwf.photopicker.PhotoPicker;
 
 import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_INTERRUPT;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_OK;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
@@ -344,7 +345,13 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     for(Object obj : list) {
                         IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
                         mIdCardPictureIdList.add(info.GetId());
+                        kjsLogUtil.i("ID: " + info.GetId());
+                        IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
+                        kjsLogUtil.i("Large Pic: " + urls.GetLargePicture());
+                        kjsLogUtil.i("Middle Pic: " + urls.GetMiddlePicture());
+                        kjsLogUtil.i("Small Pic: " + urls.GetSmallPicture());
                     }
+
                     mHandler.sendEmptyMessageDelayed(MSG_GET_IDCARD_PICTURES_ID_DONE, 0);
                 }
             }
@@ -382,6 +389,11 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     for(Object obj : list) {
                         IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
                         mCertPictureIdList.add(info.GetId());
+                        kjsLogUtil.i("ID: " + info.GetId());
+                        IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
+                        kjsLogUtil.i("Large Pic: " + urls.GetLargePicture());
+                        kjsLogUtil.i("Middle Pic: " + urls.GetMiddlePicture());
+                        kjsLogUtil.i("Small Pic: " + urls.GetSmallPicture());
                     }
 
                     mHandler.sendEmptyMessageDelayed(MSG_GET_CERT_PICTURES_ID_DONE, 0);
@@ -529,7 +541,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     }
 
     @Override
-    public void onUploadProgress(final int current, final int total, String image, int result) {
+    public void onUploadProgress(final int current, final int total, String image, ImageUpload.UploadResult result) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -539,7 +551,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 }
             }
         });
-        if(result == UPLOAD_RESULT_INTERRUPT) {
+        if(result.mResult == UPLOAD_RESULT_INTERRUPT) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -550,6 +562,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 }
             });
             mHandler.sendEmptyMessageDelayed(MSG_UPLOAD_FINISHED_WITH_ERROR, 1000);
+        } else if(result.mResult == UPLOAD_RESULT_OK) {
+            //上传成功需要记录id和md5到数据库
         }
     }
 

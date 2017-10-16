@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android.Server;
 
 import android.content.Context;
+import android.text.style.UpdateLayout;
 
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.kjsLogUtil;
@@ -39,9 +40,15 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
     public static final int UPLOAD_RESULT_INTERRUPT = 2;
     public static final int UPLOAD_RESULT_UPLOAD_START = 3;
 
+    public class UploadResult {
+        public int mResult = -1;
+        public int mId = 0;
+        public String mMD5 = "";
+    }
+
     public interface UploadFinished {
         void onUploadStarted();
-        void onUploadProgress(final int current, final int total, String image, int result);
+        void onUploadProgress(final int current, final int total, String image, UploadResult result);
         void onUploadEnd();
     }
 
@@ -125,21 +132,26 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
                         continue;
                     }
 
-                    mListener.onUploadProgress(index, imageList.size(), info.image, UPLOAD_RESULT_UPLOAD_START);
+                    UploadResult uploadResult = new UploadResult();
+                    uploadResult.mResult = UPLOAD_RESULT_UPLOAD_START;
+                    mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
 
                     if(!waitResult(mTimeout)) {
                         if(mFailed) {
                             kjsLogUtil.e("upload failed, try next.");
-                            mListener.onUploadProgress(index, imageList.size(), info.image, UPLOAD_RESULT_FAIL);
+                            uploadResult.mResult = UPLOAD_RESULT_FAIL;
+                            mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
                             continue;
                         }
 
                         kjsLogUtil.e("network is bad.");
-                        mListener.onUploadProgress(index, imageList.size(), info.image, UPLOAD_RESULT_INTERRUPT);
+                        uploadResult.mResult = UPLOAD_RESULT_INTERRUPT;
+                        mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
                         break;
                     }
 
-                    mListener.onUploadProgress(index, imageList.size(), info.image, UPLOAD_RESULT_OK);
+                    uploadResult.mResult = UPLOAD_RESULT_OK;
+                    mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
                 }
 
                 mListener.onUploadEnd();
