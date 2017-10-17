@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
+import com.kjs.skywalk.control.BadgeView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +77,7 @@ class AdapterMessage extends BaseAdapter {
         TextView tv_msg_title;
         TextView tv_msg_result;
         TextView tv_msg_description;
+        BadgeView bv_msg_new;
     }
 
     @Override
@@ -91,6 +94,12 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result = ((TextView)convertView.findViewById(R.id.tv_msg_result));
             holder.tv_msg_description = ((TextView)convertView.findViewById(R.id.tv_msg_description));
 
+            holder.bv_msg_new = new BadgeView(mContext, holder.tv_msg_title);
+            holder.bv_msg_new.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//            holder.bv_msg_new.setText(Integer.toString(0));
+            holder.bv_msg_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
+            holder.bv_msg_new.setBackgroundResource(R.drawable.new_msg_icon);
+//            holder.bv_msg_new.show(true);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -141,6 +150,10 @@ class AdapterMessage extends BaseAdapter {
                        )
         );
         holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
+
+        if(msgInfo.ReadTime().isEmpty()) {
+            holder.bv_msg_new.show(true);
+        }
 
         return convertView;
     }
