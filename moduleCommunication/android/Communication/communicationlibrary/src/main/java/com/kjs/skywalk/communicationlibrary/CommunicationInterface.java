@@ -205,7 +205,7 @@ public class CommunicationInterface {
         *       - refId : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
         *       - desc  : picture description
         *       - file  : picture file in local
-        *   Result  : IApiResults.IAddRes
+        *   Result  : IApiResults.IAddPic
          */
         int AddPicture(int house, int type, int refId, String desc, String file);
 
