@@ -234,6 +234,12 @@ type ResGetHouseFacilities struct {
 	Facilities []commdef.HouseFacility
 }
 
+// result of API add picture
+type ResAddPic struct {
+	ResAddResource
+	Checksum string // picture checksum, md5
+}
+
 // result of API get house picture list
 type ResGetHousePicList struct {
 	ResCommon

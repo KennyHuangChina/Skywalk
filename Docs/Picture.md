@@ -29,6 +29,7 @@
 	[Response]
 		* SUCCESS:200 
 			* Id			string 		// new picture id
+			* Checksum		string		// picture checksum, md5
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description

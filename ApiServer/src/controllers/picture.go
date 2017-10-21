@@ -136,7 +136,7 @@ func (this *PictureController) AddPic() {
 	FN := "[AddPic] "
 	beego.Warn("[--- API: AddPic ---]")
 
-	var result ResAddResource
+	var result ResAddPic
 	var err error
 
 	defer func() {
@@ -204,6 +204,7 @@ func (this *PictureController) AddPic() {
 	err, id := models.AddPicture(hid, uid, xID, picType, desc, picMd5, picFileName, picBaseDir)
 	if nil == err {
 		result.Id = id
+		result.Checksum = picMd5
 	} else {
 		models.DelImageFile(picBaseDir + picFileName)
 	}
