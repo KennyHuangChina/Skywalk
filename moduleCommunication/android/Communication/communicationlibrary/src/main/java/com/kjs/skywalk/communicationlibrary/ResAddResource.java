@@ -15,6 +15,10 @@ class ResAddResource extends ResBase implements IApiResults.IAddRes {
         parse(jObject);
     }
 
+    ResAddResource(int nErrCode) {
+        super(nErrCode);
+    }
+
     @Override
     public String DebugString() {
         super.DebugString();

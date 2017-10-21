@@ -203,6 +203,11 @@ public class IApiResults {
         String GetDesc();
     }
 
+    // command: CMD_ADD_PICTURE
+    public interface IAddPic extends IAddRes {
+        String GetPicChecksum();    // get the checksum of picture uploaded
+    }
+
     // command: CmdGetPictureUrls
     public interface IPicUrls {
         int     GetPicId();
