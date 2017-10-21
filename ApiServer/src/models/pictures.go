@@ -214,6 +214,8 @@ func GetPicUrl(pid, uid int64, size int) (err error, url_s, url_m, url_l string)
 	sql := fmt.Sprintf("SELECT size, url FROM tbl_pic_set WHERE pic_id='%d'", pid)
 	if size != commdef.PIC_SIZE_ALL {
 		sql = sql + fmt.Sprintf(" AND size=%d", size)
+	} else {
+		sql = sql + fmt.Sprintf(" AND size>%d", commdef.PIC_SIZE_ORIGINAL)
 	}
 	beego.Debug(FN, "sql:", sql)
 
