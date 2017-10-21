@@ -88,7 +88,7 @@ class CmdAddPicture extends CommunicationBase {
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
-        ResAddResource result = new ResAddResource(nErrCode, jObject);
+        ResAddPic result = new ResAddPic(nErrCode, jObject);
         return result;
     }
 }
