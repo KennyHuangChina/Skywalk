@@ -36,10 +36,18 @@
                 android:id="@+id/tv_msg_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingRight="30dp"
                 android:layout_toRightOf="@+id/iv_msg_icon"
                 android:layout_centerVertical="true"
                 android:textSize="15sp"
                 android:textColor="#000000"/>
+
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_toRightOf="@+id/tv_msg_title"-->
+                <!--android:layout_alignTop="@+id/iv_msg_icon"-->
+                <!--android:src="@drawable/new_msg_icon"/>-->
 
             <TextView
                 android:id="@+id/tv_msg_result"

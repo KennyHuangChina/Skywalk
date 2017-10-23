@@ -336,8 +336,8 @@ public class BadgeView extends TextView {
     }
 
     private void applyLayoutParams() {
-//		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(40, 40);
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(40, 40);
 
         switch (badgePosition) {
             case POSITION_TOP_LEFT:

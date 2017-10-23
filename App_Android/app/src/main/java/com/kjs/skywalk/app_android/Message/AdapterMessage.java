@@ -118,7 +118,7 @@ class AdapterMessage extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                 Intent intent = new Intent(mContext, Activity_Message_fangyuanshenhe.class);
-                intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.RefId());
+                intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.HouseId());
                 mContext.startActivity(intent);
                 }
             });

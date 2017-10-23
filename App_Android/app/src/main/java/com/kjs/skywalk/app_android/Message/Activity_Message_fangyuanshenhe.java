@@ -23,7 +23,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_RECOMMIT_HOUSE_CERTIFICATON;
 
 public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
-    private int mRefId = 0;  // house_id
+    private int mHouse_id = 0;  // house_id
     private ArrayList<TextView> mBtns = new ArrayList<>();
     private TextView mTvButton1;
     private TextView mTvButton2;
@@ -42,9 +42,9 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
         mBtns.add(mTvButton2);
         mBtns.add(mTvButton3);
 
-        mRefId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
-        kjsLogUtil.i("mRefId: " + mRefId);
-        getHouseCertification(mRefId);
+        mHouse_id = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
+        kjsLogUtil.i("mHouse_id: " + mHouse_id);
+        getHouseCertification(mHouse_id);
 
 //        updateButtonGroup(3);
 
