@@ -18,13 +18,13 @@ class ResHouseTitleInfo implements IApiResults.IHouseTitleInfo {
     private int     mBathrooms      = 0;
 
     public String DebugString() {
-        return String.format("House: %s %s栋 %s室, %d室 %d厅 %d卫",
-                            Property(), BuildingNo(), HouseNo(), Bedrooms(), Livingrooms(), Bathrooms());
+        return String.format("House: %d %s %s栋 %s室, %d室 %d厅 %d卫",
+                            HouseId(), Property(), BuildingNo(), HouseNo(), Bedrooms(), Livingrooms(), Bathrooms());
     }
 
     public int parse(JSONObject obj) {
         try {
-//            mHouseId        = obj.getInt("HouseId");
+            mHouseId        = obj.getInt("HouseId");
             mProperty       = obj.getString("Property");
             mBuildingNo     = obj.getString("BuildingNo");
             mHouseNo        = obj.getString("HouseNo");
@@ -36,6 +36,11 @@ class ResHouseTitleInfo implements IApiResults.IHouseTitleInfo {
             return -1;
         }
         return 0;
+    }
+
+    @Override
+    public int HouseId() {
+        return mHouseId;
     }
 
     @Override

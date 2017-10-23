@@ -72,6 +72,14 @@ class ResGetSysMsgInfo extends ResBase implements IApiResults.ISysMsgInfo {
     }
 
     @Override
+    public int HouseId() {
+        if (null != mSysMsgInfo) {
+            return mSysMsgInfo.HouseId();
+        }
+        return 0;
+    }
+
+    @Override
     public String Property() {
         if (null != mSysMsgInfo) {
             return mSysMsgInfo.Property();
@@ -152,17 +160,11 @@ class ResGetSysMsgInfo extends ResBase implements IApiResults.ISysMsgInfo {
     }
 }
 
-class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemInfoInner {
+class SysMsgInfo extends ResHouseTitleInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemInfoInner {
     protected int      mMsgId       = 0;    // message id
     protected int      mMsgType     = -1;   // message type
     protected int      mMsgPriority = 0;    // message priority
     protected int      mMsgRefId    = 0;    // reference id, depend on what the message type is
-    protected String   mProperty    = "";   // property name
-    protected String   mBuilding    = "";    // bulding number
-    protected String   mHouseNo     = "";   // house number
-    protected int      mLivingrooms = 0;
-    protected int      mBedrooms    = 0;
-    protected int      mBathrooms   = 0;
     protected String   mReceiver    = "";   // message Receiver
     protected String   mCreateTime  = "";   // message create time
     protected String   mReadTime    = "";   // message read time
@@ -180,13 +182,7 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
             mMsgTxt         = jMsg.getString("Msg");
 
             JSONObject jHouse = jMsg.getJSONObject("House");
-
-            mProperty       = jHouse.getString("Property");
-            mBuilding       = jHouse.getString("BuildingNo");
-            mHouseNo        = jHouse.getString("HouseNo");
-            mLivingrooms    = jHouse.getInt("Livingrooms");
-            mBedrooms       = jHouse.getInt("Bedrooms");
-            mBathrooms      = jHouse.getInt("Bathrooms");
+            parse(jHouse);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -198,9 +194,7 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
         String dbString = "";
         dbString += "  id: " + MsgId() + ", type:" + MsgType() + ", ref to:" + RefId() + "\n";
         dbString += "  Priority: " + MsgPriority() + "\n";
-        dbString += "  Property: " + Property() + "\n";
-        dbString += "  " + BuildingNo() + "栋 " + HouseNo() + "室\n";
-        dbString += "  " + Bedrooms() + "房 " + Livingrooms() + "厅 " + Bathrooms() + "卫\n";
+        dbString += "  " + super.DebugString() + "\n";
         dbString += "  Receiver:" + Receiver() + "\n";
         dbString += "  Create: " + CreateTime() + "\n";
         dbString += "  Read: " + ReadTime() + "\n";
@@ -227,36 +221,6 @@ class SysMsgInfo implements IApiResults.ISysMsgInfo, InternalDefines.IListItemIn
     @Override
     public int MsgPriority() {
         return mMsgPriority;
-    }
-
-    @Override
-    public String Property() {
-        return mProperty;
-    }
-
-    @Override
-    public String BuildingNo() {
-        return mBuilding;
-    }
-
-    @Override
-    public String HouseNo() {
-        return mHouseNo;
-    }
-
-    @Override
-    public int Livingrooms() {
-        return mLivingrooms;
-    }
-
-    @Override
-    public int Bedrooms() {
-        return mBedrooms;
-    }
-
-    @Override
-    public int Bathrooms() {
-        return mBathrooms;
     }
 
     @Override

@@ -247,6 +247,7 @@ public class IApiResults {
             2. BuildingNo & HouseNo return real info. property + building no + house no. for example, 蝶湖湾 171栋 1501室
     */
     interface IHouseTitleInfo {
+        int     HouseId();      // house id
         String  Property();     // property name
         String  BuildingNo();   // the building number the house belong to
         String  HouseNo();      // exact house number. like house 1305#
