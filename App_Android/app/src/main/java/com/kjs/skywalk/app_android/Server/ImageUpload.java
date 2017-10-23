@@ -32,6 +32,8 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
     private boolean mResultGot = false;
     private boolean mFailed = false;
 
+    private UploadResult mUploadResult = null;
+
     public static final int UPLOAD_TYPE_IDCARD = PIC_TYPE_MAJOR_User + PIC_TYPE_SUB_USER_IDCard;
     public static final int UPLOAD_TYPE_OWNER_CERT = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_OwnershipCert;
 
@@ -109,6 +111,8 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
                     mResultGot = false;
                     index ++;
 
+                    mUploadResult = new UploadResult();
+
                     CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
 
                         @Override
@@ -118,6 +122,9 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
                                     mFailed = true;
                                     kjsLogUtil.e("Add picture failed with error: " + iCommon.GetErrDesc());
                                 } else {
+                                    IApiResults.IAddPic iAddResult = (IApiResults.IAddPic)iCommon;
+                                    mUploadResult.mId = iAddResult.GetId();
+                                    mUploadResult.mMD5 = iAddResult.GetPicChecksum();
                                     mResultGot = true;
                                 }
                             }
@@ -132,26 +139,25 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
                         continue;
                     }
 
-                    UploadResult uploadResult = new UploadResult();
-                    uploadResult.mResult = UPLOAD_RESULT_UPLOAD_START;
-                    mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
+                    mUploadResult.mResult = UPLOAD_RESULT_UPLOAD_START;
+                    mListener.onUploadProgress(index, imageList.size(), info.image, mUploadResult);
 
                     if(!waitResult(mTimeout)) {
                         if(mFailed) {
                             kjsLogUtil.e("upload failed, try next.");
-                            uploadResult.mResult = UPLOAD_RESULT_FAIL;
-                            mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
+                            mUploadResult.mResult = UPLOAD_RESULT_FAIL;
+                            mListener.onUploadProgress(index, imageList.size(), info.image, mUploadResult);
                             continue;
                         }
 
                         kjsLogUtil.e("network is bad.");
-                        uploadResult.mResult = UPLOAD_RESULT_INTERRUPT;
-                        mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
+                        mUploadResult.mResult = UPLOAD_RESULT_INTERRUPT;
+                        mListener.onUploadProgress(index, imageList.size(), info.image, mUploadResult);
                         break;
                     }
 
-                    uploadResult.mResult = UPLOAD_RESULT_OK;
-                    mListener.onUploadProgress(index, imageList.size(), info.image, uploadResult);
+                    mUploadResult.mResult = UPLOAD_RESULT_OK;
+                    mListener.onUploadProgress(index, imageList.size(), info.image, mUploadResult);
                 }
 
                 mListener.onUploadEnd();

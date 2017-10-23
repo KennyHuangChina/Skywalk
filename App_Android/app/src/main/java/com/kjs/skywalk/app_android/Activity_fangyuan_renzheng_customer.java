@@ -564,6 +564,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
             mHandler.sendEmptyMessageDelayed(MSG_UPLOAD_FINISHED_WITH_ERROR, 1000);
         } else if(result.mResult == UPLOAD_RESULT_OK) {
             //上传成功需要记录id和md5到数据库
+            String str = String.format("Photo %d ->  id: %d md5:%s", current, result.mId, result.mMD5);
+            kjsLogUtil.i(str);
         }
     }
 
