@@ -291,7 +291,7 @@ type AppointmentAct struct {
 }
 
 type AppointmentInfo1 struct {
-	House             MsgHouse
+	House             HouseTitle
 	Date              string
 	TimeBegin         string
 	TimeEnd           string
@@ -351,7 +351,7 @@ const (
 	MSG_PRIORITY_End = 2
 )
 
-type MsgHouse struct {
+type HouseTitle struct {
 	HouseId     int64
 	Property    string
 	BuildingNo  string
@@ -370,7 +370,7 @@ type SysMessage struct {
 	Msg        string
 	CreateTime string
 	ReadTime   string
-	House      MsgHouse
+	House      HouseTitle
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
