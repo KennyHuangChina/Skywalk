@@ -499,4 +499,18 @@ public class ClassDefine {
         }
     }
 
+    public static class PictureInfo {
+        public static int mId = 0;
+        public static String largePicUrl = "";
+        public static String middlePicUrl = "";
+        public static String smallPicUrl = "";
+
+        public void print() {
+            kjsLogUtil.i("ID: " + mId);
+            kjsLogUtil.i("Large Pic: " + largePicUrl);
+            kjsLogUtil.i("Middle Pic: " + middlePicUrl);
+            kjsLogUtil.i("Small Pic: " + smallPicUrl);
+        }
+    }
 }
+
