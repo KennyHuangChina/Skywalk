@@ -72,6 +72,14 @@ class ResGetSysMsgInfo extends ResBase implements IApiResults.ISysMsgInfo {
     }
 
     @Override
+    public int HouseId() {
+        if (null != mSysMsgInfo) {
+            return mSysMsgInfo.HouseId();
+        }
+        return 0;
+    }
+
+    @Override
     public String Property() {
         if (null != mSysMsgInfo) {
             return mSysMsgInfo.Property();

@@ -116,6 +116,14 @@ class ResGetAppointmentInfo extends ResBase implements IApiResults.IAppointmentI
     }
 
     @Override
+    public int HouseId() {
+        if (null == mHouseTitle) {
+            return 0;
+        }
+        return mHouseTitle.HouseId();
+    }
+
+    @Override
     public String Property() {
         if (null == mHouseTitle) {
             return null;
