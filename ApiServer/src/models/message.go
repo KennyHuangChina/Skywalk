@@ -172,6 +172,7 @@ func GetSysMsg(uid, mid int64) (err error, msg commdef.SysMessage) {
 	if nil != err {
 		return
 	}
+	msg.House.HouseId = hid
 	msg.House.Property = pif.PropName
 	if errT := canAccessHouse(uid, hid); nil == errT {
 		msg.House.BuildingNo = h.BuildingNo

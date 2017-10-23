@@ -352,6 +352,7 @@ const (
 )
 
 type MsgHouse struct {
+	HouseId     int64
 	Property    string
 	BuildingNo  string
 	HouseNo     string
