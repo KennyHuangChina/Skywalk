@@ -50,8 +50,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private int mLandlordId = 0;
     private boolean isSelectMode = false;
 
-    private ArrayList<Integer> mCertPictureIdList = new ArrayList<>();
-    private ArrayList<Integer> mIdCardPictureIdList = new ArrayList<>();
+    private ArrayList<ClassDefine.PictureInfo> mCertPictureIdList = new ArrayList<>();
+    private ArrayList<ClassDefine.PictureInfo> mIdCardPictureIdList = new ArrayList<>();
 
     private final int MSG_UPLOAD_ALL_DONE = 0;
     private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
@@ -344,12 +344,14 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     ArrayList<Object> list = res.GetList();
                     for(Object obj : list) {
                         IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
-                        mIdCardPictureIdList.add(info.GetId());
-                        kjsLogUtil.i("ID: " + info.GetId());
+                        ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
+                        picInfo.mId = info.GetId();
                         IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
-                        kjsLogUtil.i("Large Pic: " + urls.GetLargePicture());
-                        kjsLogUtil.i("Middle Pic: " + urls.GetMiddlePicture());
-                        kjsLogUtil.i("Small Pic: " + urls.GetSmallPicture());
+                        picInfo.largePicUrl = urls.GetLargePicture();
+                        picInfo.middlePicUrl = urls.GetMiddlePicture();
+                        picInfo.smallPicUrl = urls.GetSmallPicture();
+                        mIdCardPictureIdList.add(picInfo);
+                        picInfo.print();
                     }
 
                     mHandler.sendEmptyMessageDelayed(MSG_GET_IDCARD_PICTURES_ID_DONE, 0);
@@ -388,12 +390,14 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     ArrayList<Object> list = res.GetList();
                     for(Object obj : list) {
                         IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
-                        mCertPictureIdList.add(info.GetId());
-                        kjsLogUtil.i("ID: " + info.GetId());
+                        ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
+                        picInfo.mId = info.GetId();
                         IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
-                        kjsLogUtil.i("Large Pic: " + urls.GetLargePicture());
-                        kjsLogUtil.i("Middle Pic: " + urls.GetMiddlePicture());
-                        kjsLogUtil.i("Small Pic: " + urls.GetSmallPicture());
+                        picInfo.largePicUrl = urls.GetLargePicture();
+                        picInfo.middlePicUrl = urls.GetMiddlePicture();
+                        picInfo.smallPicUrl = urls.GetSmallPicture();
+                        mCertPictureIdList.add(picInfo);
+                        picInfo.print();
                     }
 
                     mHandler.sendEmptyMessageDelayed(MSG_GET_CERT_PICTURES_ID_DONE, 0);
@@ -564,6 +568,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
             mHandler.sendEmptyMessageDelayed(MSG_UPLOAD_FINISHED_WITH_ERROR, 1000);
         } else if(result.mResult == UPLOAD_RESULT_OK) {
             //上传成功需要记录id和md5到数据库
+            String str = String.format("Photo %d ->  id: %d md5:%s", current, result.mId, result.mMD5);
+            kjsLogUtil.i(str);
         }
     }
 
