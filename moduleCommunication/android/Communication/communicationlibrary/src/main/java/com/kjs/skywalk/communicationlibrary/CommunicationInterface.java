@@ -125,7 +125,7 @@ public class CommunicationInterface {
         int CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
 
         /*
-        *   CMD: CMD_RECOMMIT_HOUSE_CERTIFICATON
+        *   CMD: CMD_GET_HOUSE_CERTIFY_HIST
         *       - house_id : house id
         *   Result: IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
          */
