@@ -139,6 +139,7 @@ func GetAppointmentInfo(uid, aid int64) (err error, apt_info commdef.Appointment
 	if nil != err {
 		return
 	}
+	apt_info.House.HouseId = apmt.House
 	apt_info.House.Property = pif.PropName // h.Property.Name
 	apt_info.House.Bedrooms = h.Bedrooms
 	apt_info.House.Livingrooms = h.Livingrooms
