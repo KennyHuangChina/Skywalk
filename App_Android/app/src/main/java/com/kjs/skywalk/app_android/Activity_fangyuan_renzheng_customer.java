@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ArrayRes;
+import android.support.v4.content.res.ConfigurationHelper;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -50,6 +51,17 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private int mLandlordId = 0;
     private boolean isSelectMode = false;
 
+    private ImageView mCertImage1 = null;
+    private ImageView mCertImage2 = null;
+    private ImageView mIdCardImage1 = null;
+    private ImageView mIdCardImage2 = null;
+
+    private CheckBox mBoxCert1 = null;
+    private CheckBox mBoxCert2 = null;
+    private CheckBox mBoxIdCard1 = null;
+    private CheckBox mBoxIdCard2 = null;
+
+
     private ArrayList<ClassDefine.PictureInfo> mCertPictureIdList = new ArrayList<>();
     private ArrayList<ClassDefine.PictureInfo> mIdCardPictureIdList = new ArrayList<>();
 
@@ -69,6 +81,17 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__fangyuan_renzheng_customer);
+
+        mCertImage1 = (ImageView)findViewById(R.id.imageZhengjian1);
+        mCertImage2 = (ImageView)findViewById(R.id.imageZhengjian2);
+        mBoxCert1 = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid1);
+        mBoxCert2 = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid2);
+
+        mIdCardImage1 = (ImageView)findViewById(R.id.imageIdCard1);
+        mIdCardImage2 = (ImageView)findViewById(R.id.imageIdCard2);
+        mBoxIdCard1 = (CheckBox)findViewById(R.id.cb_pic_checkflag_id1);
+        mBoxIdCard2 = (CheckBox)findViewById(R.id.cb_pic_checkflag_id2);
+
 
         mContainer = (RelativeLayout)findViewById(R.id.activity_container);
 
@@ -99,6 +122,10 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
             }
             case R.id.tv_upload_pic: {
                 upload();
+                break;
+            }
+            case R.id.tv_delete_pic: {
+                delete();
                 break;
             }
             case R.id.textViewSelect: {
@@ -179,33 +206,27 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private void delete() {
         ImageDelete imageDelete = new ImageDelete(this, this);
         ArrayList<Integer> list = new ArrayList<>();
-        CheckBox box;
-        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid1);
-        if(box.isChecked()) {
-            ImageInfo info = (ImageInfo)box.getTag();
-            if(info != null) {
-                list.add(info.id);
+        if(mBoxCert1.isChecked()) {
+            if(mBoxCert1.getTag() != null) {
+                list.add((int)mBoxCert1.getTag());
             }
         }
-        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_hid2);
-        if(box.isChecked()) {
-            ImageInfo info = (ImageInfo)box.getTag();
-            if(info != null) {
-                list.add(info.id);
+
+        if(mBoxCert2.isChecked()) {
+            if(mBoxCert2.getTag() != null) {
+                list.add((int)mBoxCert2.getTag());
             }
         }
-        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id1);
-        if(box.isChecked()) {
-            ImageInfo info = (ImageInfo)box.getTag();
-            if(info != null) {
-                list.add(info.id);
+
+        if(mBoxIdCard1.isChecked()) {
+            if(mBoxIdCard1.getTag() != null) {
+                list.add((int)mBoxIdCard1.getTag());
             }
         }
-        box = (CheckBox)findViewById(R.id.cb_pic_checkflag_id2);
-        if(box.isChecked()) {
-            ImageInfo info = (ImageInfo)box.getTag();
-            if(info != null) {
-                list.add(info.id);
+
+        if(mBoxIdCard2.isChecked()) {
+            if(mBoxIdCard2.getTag() != null) {
+                list.add((int)mBoxIdCard2.getTag());
             }
         }
 
@@ -269,24 +290,54 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         PhotoPicker.builder().setPhotoCount(2).start(Activity_fangyuan_renzheng_customer.this);
     }
 
+    private void showCertImages() {
+        int index = 0;
+        for(ClassDefine.PictureInfo info : mCertPictureIdList) {
+            if(index ++  == 0) {
+                commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
+                mCertImage1.setTag(info.mId);
+                mBoxCert1.setTag(info.mId);
+            }
+            if(index ++ == 1) {
+                commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
+                mCertImage2.setTag(info.mId);
+                mBoxCert2.setTag(info.mId);
+            }
+        }
+    }
+
+    private void showIdCardImages() {
+        int index = 0;
+        for(ClassDefine.PictureInfo info : mIdCardPictureIdList) {
+            if(index ++  == 0) {
+                commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
+                mIdCardImage1.setTag(info.mId);
+                mBoxIdCard1.setTag(info.mId);
+            }
+            if(index ++ == 1) {
+                commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
+                mBoxIdCard2.setTag(info.mId);
+            }
+        }
+    }
+
+
     private void onPhotoPickerReturn(List<String> photos) {
         switch (mPhotoPickerHostId) {
             case R.id.iv_photopicker_hpc:
             {
-                ImageView ivZhengjian1 = (ImageView)findViewById(R.id.imageZhengjian1);
-                ImageView ivZhengjian2 = (ImageView)findViewById(R.id.imageZhengjian2);
-                ivZhengjian1.setVisibility(View.INVISIBLE);
-                ivZhengjian2.setVisibility(View.INVISIBLE);
+                mCertImage1.setVisibility(View.INVISIBLE);
+                mCertImage2.setVisibility(View.INVISIBLE);
 
                 int index = 0;
                 for (String path : photos) {
                     if (index == 0) {
-                        ivZhengjian1.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        ivZhengjian1.setVisibility(View.VISIBLE);
+                        mCertImage1.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
+                        mCertImage1.setVisibility(View.VISIBLE);
                     }
                     if (index == 1) {
-                        ivZhengjian2.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        ivZhengjian2.setVisibility(View.VISIBLE);
+                        mCertImage2.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
+                        mCertImage2.setVisibility(View.VISIBLE);
                     }
                     index++;
 
@@ -298,20 +349,18 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
             case R.id.iv_photopicker_idcard:
             {
-                ImageView ivIdCard1 = (ImageView)findViewById(R.id.imageIdCard1);
-                ImageView ivIdCard2 = (ImageView)findViewById(R.id.imageIdCard2);
-                ivIdCard1.setVisibility(View.INVISIBLE);
-                ivIdCard2.setVisibility(View.INVISIBLE);
+                mIdCardImage1.setVisibility(View.INVISIBLE);
+                mIdCardImage2.setVisibility(View.INVISIBLE);
 
                 int index = 0;
                 for (String path : photos) {
                     if (index == 0) {
-                        ivIdCard1.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        ivIdCard1.setVisibility(View.VISIBLE);
+                        mIdCardImage1.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
+                        mIdCardImage1.setVisibility(View.VISIBLE);
                     }
                     if (index == 1) {
-                        ivIdCard2.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        ivIdCard2.setVisibility(View.VISIBLE);
+                        mIdCardImage2.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
+                        mIdCardImage2.setVisibility(View.VISIBLE);
                     }
                     index++;
 
@@ -360,7 +409,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         };
 
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
         if(result != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
             return -1;
@@ -446,6 +495,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         return 0;
     }
 
+
+
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -453,10 +504,14 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 case MSG_UPLOAD_ALL_DONE:
                 case MSG_DELETE_ALL_DONE:
                     showWaiting(false);
+                    showCertImages();
+                    showIdCardImages();
                     break;
                 case MSG_GET_CERT_PICTURES_ID_DONE:
+                    showCertImages();
                     break;
                 case MSG_GET_IDCARD_PICTURES_ID_DONE:
+                    showIdCardImages();
                     break;
             }
 
