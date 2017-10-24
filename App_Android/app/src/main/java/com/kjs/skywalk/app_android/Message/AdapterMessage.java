@@ -77,6 +77,7 @@ class AdapterMessage extends BaseAdapter {
         TextView tv_msg_title;
         TextView tv_msg_result;
         TextView tv_msg_description;
+        ImageView iv_msg_new;
         BadgeView bv_msg_new;
     }
 
@@ -94,12 +95,12 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result = ((TextView)convertView.findViewById(R.id.tv_msg_result));
             holder.tv_msg_description = ((TextView)convertView.findViewById(R.id.tv_msg_description));
 
-            holder.bv_msg_new = new BadgeView(mContext, holder.tv_msg_title);
-            holder.bv_msg_new.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-//            holder.bv_msg_new.setText(Integer.toString(0));
-            holder.bv_msg_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
-            holder.bv_msg_new.setBackgroundResource(R.drawable.new_msg_icon);
-//            holder.bv_msg_new.show(true);
+            holder.iv_msg_new = (ImageView) convertView.findViewById(R.id.iv_new_icon);
+//            holder.bv_msg_new = new BadgeView(mContext, holder.tv_msg_title);
+//            holder.bv_msg_new.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//            holder.bv_msg_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
+//            holder.bv_msg_new.setBackgroundResource(R.drawable.new_msg_icon);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -152,7 +153,10 @@ class AdapterMessage extends BaseAdapter {
         holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
 
         if(msgInfo.ReadTime().isEmpty()) {
-            holder.bv_msg_new.show(true);
+//            holder.bv_msg_new.show(true);
+            holder.iv_msg_new.setVisibility(View.VISIBLE);
+        } else {
+            holder.iv_msg_new.setVisibility(View.INVISIBLE);
         }
 
         return convertView;
