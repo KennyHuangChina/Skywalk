@@ -110,6 +110,20 @@ class AdapterMessage extends BaseAdapter {
         final IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
         holder.tv_msg_time.setText(msgInfo.CreateTime());
 
+        holder.tv_msg_result.setText(msgInfo.MsgBody());
+
+        final List<commonFun.TextDefine> houseInfo = new ArrayList<commonFun.TextDefine>(
+                Arrays.asList(
+                        new commonFun.TextDefine("房源：" + msgInfo.Property(), 39, Color.parseColor("#000000")),
+                        new commonFun.TextDefine( msgInfo.BuildingNo(), 36,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine( "栋", 36,  Color.parseColor("#000000")),
+                        new commonFun.TextDefine( msgInfo.HouseNo(), 36,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine( "室", 36,  Color.parseColor("#000000"))
+                       )
+        );
+        holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
+
+        final String location =  commonFun.getSpannableString(houseInfo).toString();
         int msgType = msgInfo.MsgType();
         if (msgType == 1) {
             // 1 - House Certification
@@ -118,9 +132,10 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                Intent intent = new Intent(mContext, Activity_Message_fangyuanshenhe.class);
-                intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.HouseId());
-                mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext, Activity_Message_fangyuanshenhe.class);
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, msgInfo.HouseId());
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
+                    mContext.startActivity(intent);
                 }
             });
         } else if (msgType == 2) {
@@ -138,19 +153,6 @@ class AdapterMessage extends BaseAdapter {
         } else {
             // undefined
         }
-
-        holder.tv_msg_result.setText(msgInfo.MsgBody());
-
-        List<commonFun.TextDefine> houseInfo = new ArrayList<commonFun.TextDefine>(
-                Arrays.asList(
-                        new commonFun.TextDefine("房源：" + msgInfo.Property(), 39, Color.parseColor("#000000")),
-                        new commonFun.TextDefine( msgInfo.BuildingNo(), 36,  Color.parseColor("#FF6600")),
-                        new commonFun.TextDefine( "栋", 36,  Color.parseColor("#000000")),
-                        new commonFun.TextDefine( msgInfo.HouseNo(), 36,  Color.parseColor("#FF6600")),
-                        new commonFun.TextDefine( "室", 36,  Color.parseColor("#000000"))
-                       )
-        );
-        holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
 
         if(msgInfo.ReadTime().isEmpty()) {
 //            holder.bv_msg_new.show(true);

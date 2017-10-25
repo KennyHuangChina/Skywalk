@@ -24,6 +24,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 
 public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
     private int mHouse_id = 0;  // house_id
+    private String mHouseLocation;
     private ArrayList<TextView> mBtns = new ArrayList<>();
     private TextView mTvButton1;
     private TextView mTvButton2;
@@ -42,9 +43,14 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
         mBtns.add(mTvButton2);
         mBtns.add(mTvButton3);
 
-        mHouse_id = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
+        mHouse_id = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, 0);
+        mHouseLocation = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION);
+
         kjsLogUtil.i("mHouse_id: " + mHouse_id);
+        kjsLogUtil.i("mHouseLocation: " + mHouseLocation);
         getHouseCertification(mHouse_id);
+
+        ((TextView) findViewById(R.id.tv_house_location)).setText(mHouseLocation);
 
 //        updateButtonGroup(3);
 
@@ -71,6 +77,7 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
                     int operations = houseCertHist.Operations();
                     updateButtonGroup(operations);
 
+                    updateCertHistInfo((IApiResults.IResultList)iResult);
                 }
             }
         }, this).GetHouseCertHist(house_id);
@@ -111,6 +118,26 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
                     btn.setVisibility(View.VISIBLE);
 
                     index++;
+                }
+            }
+        });
+    }
+
+    // IApiResults.IHouseCertInfo
+    private void updateCertHistInfo(final IApiResults.IResultList list) {
+        if (list == null)
+            return;
+
+        if (list.GetList().isEmpty())
+            return;
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Object item : list.GetList()) {
+                    IApiResults.IHouseCertInfo houseCertInfo = (IApiResults.IHouseCertInfo) item;
+                    ((TextView) findViewById(R.id.tv_user_name)).setText(houseCertInfo.UserName());
+                    ((TextView) findViewById(R.id.tv_user_phone)).setText(houseCertInfo.UserPhone());
                 }
             }
         });
