@@ -2,10 +2,12 @@ package com.kjs.skywalk.app_android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ArrayRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ConfigurationHelper;
 import android.view.View;
 import android.widget.CheckBox;
@@ -292,13 +294,15 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
     private void showCertImages() {
         int index = 0;
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.no_picture);
+        mCertImage1.setImageDrawable(drawable);
+        mCertImage2.setImageDrawable(drawable);
         for(ClassDefine.PictureInfo info : mCertPictureIdList) {
             if(index ++  == 0) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
                 mCertImage1.setTag(info.mId);
                 mBoxCert1.setTag(info.mId);
-            }
-            if(index ++ == 1) {
+            } else if(index ++ == 1) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
                 mCertImage2.setTag(info.mId);
                 mBoxCert2.setTag(info.mId);
@@ -308,13 +312,15 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
     private void showIdCardImages() {
         int index = 0;
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.no_picture);
+        mIdCardImage1.setImageDrawable(drawable);
+        mIdCardImage2.setImageDrawable(drawable);
         for(ClassDefine.PictureInfo info : mIdCardPictureIdList) {
             if(index ++  == 0) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
                 mIdCardImage1.setTag(info.mId);
                 mBoxIdCard1.setTag(info.mId);
-            }
-            if(index ++ == 1) {
+            } else if(index ++ == 1) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
                 mBoxIdCard2.setTag(info.mId);
             }
@@ -504,6 +510,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 case MSG_UPLOAD_ALL_DONE:
                 case MSG_DELETE_ALL_DONE:
                     showWaiting(false);
+
                     showCertImages();
                     showIdCardImages();
                     break;
