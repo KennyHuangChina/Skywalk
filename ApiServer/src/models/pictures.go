@@ -105,7 +105,75 @@ func AddPicture(hid, uid, XId int64, pt int, desc, md5, pfn, pbd string) (err er
 }
 
 /**
-*	Get picture url
+*	Get user picture list
+*	Arguments:
+*		uid 	- id of user to check
+*		luid 	- login user id
+*		size	- picture size: PIC_SIZE_ALL, PIC_SIZE_SMALL, PIC_SIZE_MODERATE, PIC_SIZE_LARGE,
+*	Returns
+*		err 	- error info
+*		picList	- picture list
+**/
+func GetUserPicList(uid, luid int64, subType, size int) (err error, picList []commdef.PictureInfo) {
+	FN := "[GetHousePicList] "
+	beego.Info(FN, "user to check:", uid, ", login user:", luid, ", sub type:", subType)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argument Checking */
+	err, _ = GetUser(uid)
+	if nil != err {
+		return
+	}
+	err, _ = GetUser(luid)
+	if nil != err {
+		return
+	}
+
+	if subType < 0 || subType > commdef.PIC_USER_END {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("subType:%d", subType)}
+		return
+	}
+
+	/* Permission checking */
+	sts := getUserPicSubtypes(subType, uid, luid)
+	if 0 == len(sts) {
+		return
+	}
+
+	/* Processing */
+	o := orm.NewOrm()
+	qs := o.QueryTable("tbl_pictures").Filter("TypeMajor", commdef.PIC_TYPE_USER).Filter("TypeMinor__in", sts)
+	qs = qs.Filter("RefId", uid)
+
+	var pl []TblPictures
+	numb, errT := qs.OrderBy("TypeMinor", "RefId").All(&pl)
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT)}
+		return
+	}
+	beego.Debug(FN, "", numb, "pictures")
+
+	for _, v := range pl {
+		np := commdef.PictureInfo{Id: v.Id, Desc: v.Desc, SubType: v.TypeMinor, Checksum: v.Md5}
+		err1, u_s, u_m, u_l := GetPicUrl(v.Id, uid, size)
+		if nil == err1 {
+			np.Urls.Url_s = u_s
+			np.Urls.Url_m = u_m
+			np.Urls.Url_l = u_l
+		}
+		picList = append(picList, np)
+	}
+
+	return
+}
+
+/**
+*	Get house picture list
 *	Arguments:
 *		hid 	- house id
 *		uid 	- login user id
@@ -114,7 +182,7 @@ func AddPicture(hid, uid, XId int64, pt int, desc, md5, pfn, pbd string) (err er
 *		err 	- error info
 *		picList	- picture list
 **/
-func GetHousePicList(hid, uid int64, subType, size int) (err error, picList []commdef.HousePicture) {
+func GetHousePicList(hid, uid int64, subType, size int) (err error, picList []commdef.PictureInfo) {
 	FN := "[GetHousePicList] "
 	beego.Trace(FN, "house:", hid, ", login user:", uid, ", sub type:", subType)
 
@@ -155,7 +223,7 @@ func GetHousePicList(hid, uid int64, subType, size int) (err error, picList []co
 	beego.Debug(FN, "", numb, "pictures")
 
 	for _, v := range pl {
-		np := commdef.HousePicture{Id: v.Id, Desc: v.Desc, SubType: v.TypeMinor, Checksum: v.Md5}
+		np := commdef.PictureInfo{Id: v.Id, Desc: v.Desc, SubType: v.TypeMinor, Checksum: v.Md5}
 		err1, u_s, u_m, u_l := GetPicUrl(v.Id, uid, size)
 		if nil == err1 {
 			np.Urls.Url_s = u_s
@@ -878,6 +946,30 @@ func checkPicturePermission(pic *TblPictures, uid int64) (err error) {
 	/* some pictures are private, like landlord id card */
 	beego.Warn("TODO: Check piture permission here by picture type")
 
+	return
+}
+
+func getUserPicSubtypes(subType int, uid, luid int64) (stl []int) {
+	Fn := "[getUserPicSubtypes] "
+
+	if 0 == subType || commdef.PIC_OWNER_IDCard == subType {
+		bAccess := false
+		if uid == luid { // login user himself
+			bAccess = true
+		} else if _, bAdmin := isAdministrator(luid); bAdmin { // administrator
+			bAccess = true
+		} else if isOwnerAgency(uid, luid) { // house agency
+			bAccess = true
+		}
+		if bAccess {
+			stl = append(stl, commdef.PIC_OWNER_IDCard)
+		}
+	}
+	if 0 == subType || commdef.PIC_USER_HEAD_PORTRAIT == subType {
+		stl = append(stl, commdef.PIC_USER_HEAD_PORTRAIT)
+	}
+
+	beego.Debug(Fn, "sub-type list:", stl)
 	return
 }
 

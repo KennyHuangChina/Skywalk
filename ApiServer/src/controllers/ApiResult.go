@@ -240,11 +240,11 @@ type ResAddPic struct {
 	Checksum string // picture checksum, md5
 }
 
-// result of API get house picture list
-type ResGetHousePicList struct {
+// result of API get house picture list & get user picture list
+type ResGetPicList struct {
 	ResCommon
 	Total int
-	Pics  []commdef.HousePicture
+	Pics  []commdef.PictureInfo
 }
 
 // result of API get house certification history

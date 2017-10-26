@@ -67,3 +67,26 @@
 		* ERR: 4XX,5XX
 	  		* ErrCode		int			// error code
 	  		* ErrDesc		string		// error description
+
+##
+### 5. Get User Picture list
+	[Security]	based on the picture type, some kind of pictures are pulbic, but some pictures are private
+	[Request]
+  		* GET /v1/pic/user/:id?st=
+	  		* st			int 		// type: 0 means all subtype, > 0 means a certain subtype
+	  		* sz			int			// pic size: 2 small, 3 moderate, 4 large
+	[Response]
+		* SUCCESS:200 
+			* total			int 		// picture count
+			* PicList
+				* Id 		int			// picture id
+				* Desc		string		// picture description
+				* SubType	int			// picture sub-type
+				* Checksum	string		// picture checksum, md5
+				* Urls      
+					* Url_s			string 		// small picture path url
+					* Url_m			string		// moderate picture path url
+					* Url_l			string		// large picture path url
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description

@@ -442,6 +442,7 @@ const (
 const (
 	PIC_OWNER_IDCard       = 1 // house owern's ID card, including ID card and passport. only house owner and house agent could access
 	PIC_USER_HEAD_PORTRAIT = 2 // user's head portrait, anyone could access it
+	PIC_USER_END           = 2
 )
 
 // for PIC_TYPE_HOUSE
@@ -471,7 +472,7 @@ type PicUrlSet struct {
 	Url_l string
 }
 
-type HousePicture struct {
+type PictureInfo struct {
 	Id       int64  // house picture id
 	Desc     string // house picture description
 	SubType  int    // house picture sub-type
