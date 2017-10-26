@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="#FFFFFF">
+    <ImageView
+        android:id="@+id/iv_touxiang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="21dp"
+        android:src="@drawable/touxiang"/>
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_touxiang"
+        android:layout_marginStart="13dp"
+        android:layout_centerVertical="true"
+        android:textSize="13sp"
+        android:textColor="#4C4C4C"
+        android:text="客人： 张先生"/>
+
+    <ImageView
+        android:id="@+id/iv_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="196dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/tel_n"/>
+
+    <TextView
+        android:id="@+id/tv_user_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/iv_tel"
+        android:layout_marginStart="5dp"
+        android:layout_centerVertical="true"
+        android:text="15822203313"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        android:textColor="#B3B3B3"
+        android:textSize="9sp"
+        android:text="2017-9-3  14:22"/>
+</RelativeLayout>

@@ -3,6 +3,7 @@ package com.kjs.skywalk.app_android.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
@@ -16,11 +17,8 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 
-import static com.kjs.skywalk.app_android.commonFun.MAP_AP_BUTTON;
 import static com.kjs.skywalk.app_android.commonFun.MAP_HOUSE_CERT_BUTTON;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_APPOINTMENT_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_CERTIFY_HIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_RECOMMIT_HOUSE_CERTIFICATON;
 
 public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
     private int mHouse_id = 0;  // house_id
@@ -29,6 +27,7 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
     private TextView mTvButton1;
     private TextView mTvButton2;
     private TextView mTvButton3;
+    private AdapterShenHeXiaoXiHistory mAdapterHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,9 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
         getHouseCertification(mHouse_id);
 
         ((TextView) findViewById(R.id.tv_house_location)).setText(mHouseLocation);
+
+        mAdapterHistory = new AdapterShenHeXiaoXiHistory(this);
+        ((ListView)findViewById(R.id.lv_history)).setAdapter(mAdapterHistory);
 
 //        updateButtonGroup(3);
 
@@ -134,11 +136,7 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for (Object item : list.GetList()) {
-                    IApiResults.IHouseCertInfo houseCertInfo = (IApiResults.IHouseCertInfo) item;
-                    ((TextView) findViewById(R.id.tv_user_name)).setText(houseCertInfo.UserName());
-                    ((TextView) findViewById(R.id.tv_user_phone)).setText(houseCertInfo.UserPhone());
-                }
+                mAdapterHistory.updateHistoryList(list.GetList());
             }
         });
     }
