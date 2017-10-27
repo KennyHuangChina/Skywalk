@@ -500,10 +500,10 @@ public class ClassDefine {
     }
 
     public static class PictureInfo {
-        public static int mId = 0;
-        public static String largePicUrl = "";
-        public static String middlePicUrl = "";
-        public static String smallPicUrl = "";
+        public int mId = 0;
+        public String largePicUrl = "";
+        public String middlePicUrl = "";
+        public String smallPicUrl = "";
 
         public void print() {
             kjsLogUtil.i("ID: " + mId);

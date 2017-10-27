@@ -100,7 +100,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         getHouseInfo();
 
         getCertPicturesId();
-        getIdCardPicturesId();
+//        getIdCardPicturesId();
     }
 
     @Override
@@ -298,6 +298,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         mCertImage1.setImageDrawable(drawable);
         mCertImage2.setImageDrawable(drawable);
         for(ClassDefine.PictureInfo info : mCertPictureIdList) {
+            kjsLogUtil.i("picture url_s: " + info.smallPicUrl);
             if(index  == 0) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
                 mCertImage1.setTag(info.mId);
