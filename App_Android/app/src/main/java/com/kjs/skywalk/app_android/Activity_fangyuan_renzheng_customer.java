@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Server.ImageDelete;
+import com.kjs.skywalk.app_android.Server.ImageFetchForHouse;
 import com.kjs.skywalk.app_android.Server.ImageUpload;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
@@ -32,6 +33,7 @@ import java.util.Objects;
 import me.iwf.photopicker.PhotoPicker;
 
 import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_INTERRUPT;
+import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_OK;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_OK;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
@@ -43,7 +45,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
 public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ImageUpload.UploadFinished,
-        ImageDelete.DeleteFinished
+        ImageDelete.DeleteFinished, ImageFetchForHouse.FetchFinished
 {
     private int mPhotoPickerHostId;
     private ArrayList<String> mCertList = new ArrayList<>();
@@ -63,21 +65,16 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private CheckBox mBoxIdCard1 = null;
     private CheckBox mBoxIdCard2 = null;
 
+    private boolean mGetIDPicturesOk = false;
+    private boolean mGetPOCPicturesOk = false;
 
-    private ArrayList<ClassDefine.PictureInfo> mCertPictureIdList = new ArrayList<>();
-    private ArrayList<ClassDefine.PictureInfo> mIdCardPictureIdList = new ArrayList<>();
+    private ArrayList<ClassDefine.PictureInfo> mPictureList = new ArrayList<>();
 
     private final int MSG_UPLOAD_ALL_DONE = 0;
     private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
-    private final int MSG_GET_CERT_PICTURES_ID_DONE = 0x100;
-    private final int MSG_GET_IDCARD_PICTURES_ID_DONE = 0x101;
+    private final int MSG_GET_PICTURES_DONE = 0x100;
     private final int MSG_DELETE_ALL_DONE = 0x200;
     private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
-
-    class ImageInfo {
-        public int id = 0;
-        public String url = "";
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +96,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
         getHouseInfo();
 
-        getCertPicturesId();
-//        getIdCardPicturesId();
+        getPictures();
     }
 
     @Override
@@ -292,48 +288,48 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         PhotoPicker.builder().setPhotoCount(2).start(Activity_fangyuan_renzheng_customer.this);
     }
 
-    private void showCertImages() {
-        int index = 0;
+    private void showPictures() {
+        int indexPOC = 0;
+        int indexID = 0;
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.no_picture);
         mCertImage1.setImageDrawable(drawable);
+        mCertImage1.setTag(null);
         mCertImage2.setImageDrawable(drawable);
-        for(ClassDefine.PictureInfo info : mCertPictureIdList) {
-            kjsLogUtil.i("picture url_s: " + info.smallPicUrl);
-            if(index  == 0) {
-                commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
-                mCertImage1.setTag(info.mId);
-                mBoxCert1.setTag(info.mId);
-                index ++;
-            } else if(index == 1) {
-                commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
-                mCertImage2.setTag(info.mId);
-                mBoxCert2.setTag(info.mId);
-                index = 0x9999;
-            }
-        }
-    }
-
-    private void showIdCardImages() {
-        int index = 0;
-        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.no_picture);
+        mCertImage2.setTag(null);
         mIdCardImage1.setImageDrawable(drawable);
+        mIdCardImage1.setTag(null);
         mIdCardImage2.setImageDrawable(drawable);
-        for(ClassDefine.PictureInfo info : mIdCardPictureIdList) {
-            if(index == 0) {
-                commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
-                mIdCardImage1.setTag(info.mId);
-                mBoxIdCard1.setTag(info.mId);
-                index ++;
-            }
-            if(index == 1) {
-                commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
-                mIdCardImage1.setTag(info.mId);
-                mBoxIdCard2.setTag(info.mId);
-                index = 0x9999;
+        mIdCardImage2.setTag(null);
+
+        for(ClassDefine.PictureInfo info : mPictureList) {
+            if(info.mType == PIC_TYPE_SUB_HOUSE_OwnershipCert) {
+                if (indexPOC == 0) {
+                    commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
+                    mCertImage1.setTag(info.mId);
+                    mBoxCert1.setTag(info.mId);
+                    indexPOC++;
+                } else if (indexPOC == 1) {
+                    commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
+                    mCertImage2.setTag(info.mId);
+                    mBoxCert2.setTag(info.mId);
+                    indexPOC = 0x9999;
+                }
+            } else if(info.mType == PIC_TYPE_SUB_USER_IDCard) {
+                if(indexID == 0) {
+                    commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
+                    mIdCardImage1.setTag(info.mId);
+                    mBoxIdCard1.setTag(info.mId);
+                    indexID ++;
+                }
+                if(indexID == 1) {
+                    commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
+                    mIdCardImage1.setTag(info.mId);
+                    mBoxIdCard2.setTag(info.mId);
+                    indexID = 0x9999;
+                }
             }
         }
     }
-
 
     private void onPhotoPickerReturn(List<String> photos) {
         switch (mPhotoPickerHostId) {
@@ -385,96 +381,11 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         }
     }
 
-    private int getIdCardPicturesId() {
-        mIdCardPictureIdList.clear();
+    private void getPictures() {
+        mPictureList.clear();
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败" + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_PIC_LIST) {
-                    IApiResults.IResultList res = (IApiResults.IResultList)iResult;
-                    ArrayList<Object> list = res.GetList();
-                    for(Object obj : list) {
-                        IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
-                        ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
-                        picInfo.mId = info.GetId();
-                        IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
-                        picInfo.largePicUrl = urls.GetLargePicture();
-                        picInfo.middlePicUrl = urls.GetMiddlePicture();
-                        picInfo.smallPicUrl = urls.GetSmallPicture();
-                        mIdCardPictureIdList.add(picInfo);
-                        picInfo.print();
-                    }
-
-                    mHandler.sendEmptyMessageDelayed(MSG_GET_IDCARD_PICTURES_ID_DONE, 0);
-                }
-            }
-        };
-
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
-            commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
-            return -1;
-        }
-
-        return 0;
-    }
-
-    private int getCertPicturesId() {
-        mCertPictureIdList.clear();
-
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败" + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_PIC_LIST) {
-                    IApiResults.IResultList res = (IApiResults.IResultList)iResult;
-                    ArrayList<Object> list = res.GetList();
-                    for(Object obj : list) {
-                        IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
-                        ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
-                        picInfo.mId = info.GetId();
-                        IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
-                        picInfo.largePicUrl = urls.GetLargePicture();
-                        picInfo.middlePicUrl = urls.GetMiddlePicture();
-                        picInfo.smallPicUrl = urls.GetSmallPicture();
-                        mCertPictureIdList.add(picInfo);
-                        picInfo.print();
-                    }
-
-                    mHandler.sendEmptyMessageDelayed(MSG_GET_CERT_PICTURES_ID_DONE, 0);
-                }
-            }
-        };
-
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHousePics(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
-            commonFun.showToast_info(getApplicationContext(), mContainer, "获取图片失败");
-            return -1;
-        }
-
-        return 0;
+        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, this);
+        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
     }
 
     private int getHouseInfo() {
@@ -508,7 +419,14 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         return 0;
     }
 
-
+    private void removePictureFromList(int id) {
+        for(ClassDefine.PictureInfo info : mPictureList) {
+            if(info.mId == id) {
+                mPictureList.remove(info);
+                break;
+            }
+        }
+    }
 
     Handler mHandler = new Handler(){
         @Override
@@ -517,18 +435,12 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 case MSG_UPLOAD_ALL_DONE:
                 case MSG_DELETE_ALL_DONE:
                     showWaiting(false);
-
-                    showCertImages();
-                    showIdCardImages();
+                    getPictures();
                     break;
-                case MSG_GET_CERT_PICTURES_ID_DONE:
-                    showCertImages();
-                    break;
-                case MSG_GET_IDCARD_PICTURES_ID_DONE:
-                    showIdCardImages();
+                case MSG_GET_PICTURES_DONE:
+                    showPictures();
                     break;
             }
-
         }
     };
 
@@ -562,7 +474,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     }
 
     @Override
-    public void onDeleteProgress(final int current, final int total, int id, int result) {
+    public void onDeleteProgress(final int current, final int total, final int id, int result) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -583,6 +495,9 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 }
             });
             mHandler.sendEmptyMessageDelayed(MSG_DELETE_FINISHED_WITH_ERROR, 1000);
+        }
+        if(result == DELETE_RESULT_OK) {
+            removePictureFromList(id);
         }
     }
 
@@ -654,5 +569,13 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 }
             }
         });
+    }
+
+    @Override
+    public void onImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+        for(ClassDefine.PictureInfo info : list) {
+            mPictureList.add(info);
+            mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 500);
+        }
     }
 }

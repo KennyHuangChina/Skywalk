@@ -328,7 +328,7 @@ public class commonFun {
     }
 
     public static void displayImageByURL(Context context, String URL, ImageView view) {
-        displayImageByURL(context, URL, view, R.drawable.touxiang, R.drawable.touxiang);
+        displayImageByURL(context, URL, view, R.drawable.touxiang, R.drawable.no_picture);
     }
 
     public static void displayImageWithMask(Context context, ImageView view, int srcImageResId, int maskImageResId) {
