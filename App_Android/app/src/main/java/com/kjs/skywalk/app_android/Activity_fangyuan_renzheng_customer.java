@@ -298,14 +298,16 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         mCertImage1.setImageDrawable(drawable);
         mCertImage2.setImageDrawable(drawable);
         for(ClassDefine.PictureInfo info : mCertPictureIdList) {
-            if(index ++  == 0) {
+            if(index  == 0) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
                 mCertImage1.setTag(info.mId);
                 mBoxCert1.setTag(info.mId);
-            } else if(index ++ == 1) {
+                index ++;
+            } else if(index == 1) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
                 mCertImage2.setTag(info.mId);
                 mBoxCert2.setTag(info.mId);
+                index = 0x9999;
             }
         }
     }
@@ -316,13 +318,17 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         mIdCardImage1.setImageDrawable(drawable);
         mIdCardImage2.setImageDrawable(drawable);
         for(ClassDefine.PictureInfo info : mIdCardPictureIdList) {
-            if(index ++  == 0) {
+            if(index == 0) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
                 mIdCardImage1.setTag(info.mId);
                 mBoxIdCard1.setTag(info.mId);
-            } else if(index ++ == 1) {
+                index ++;
+            }
+            if(index == 1) {
                 commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
+                mIdCardImage1.setTag(info.mId);
                 mBoxIdCard2.setTag(info.mId);
+                index = 0x9999;
             }
         }
     }
