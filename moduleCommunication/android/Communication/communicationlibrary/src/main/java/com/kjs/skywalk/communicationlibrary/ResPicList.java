@@ -10,12 +10,12 @@ import java.util.ArrayList;
  * Created by kenny on 2017/5/14.
  */
 
-class ResHousePicList extends ResBase implements IApiResults.IResultList {
-    private HousePicList mList = null;
+class ResPicList extends ResBase implements IApiResults.IResultList {
+    private PicInfoList mList = null;
 
-    ResHousePicList(int nErrCode, JSONObject jObject) {
+    ResPicList(int nErrCode, JSONObject jObject) {
         super(nErrCode);
-        mList = new HousePicList();
+        mList = new PicInfoList();
         parse(jObject);
     }
 
@@ -63,8 +63,8 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class HousePicList extends ResList {
-        HousePicList() {
+    class PicInfoList extends ResList {
+        PicInfoList() {
             mForceGetList = true;   // list without properties: total & fetched
         }
         @Override
@@ -75,7 +75,7 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
                     return -1;
                 }
                 for (int n = 0; n < array.length(); n++) {
-                    HousePicInfo newItem = new HousePicInfo(array.getJSONObject(n));
+                    PicInfo newItem = new PicInfo(array.getJSONObject(n));
                     if (null == newItem) {
                         return -2;
                     }
@@ -92,7 +92,7 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
 
         /////////////////////////////////////////////////////////////////////////////////////////
         //
-        class HousePicInfo implements IApiResults.IHousePicInfo, IApiResults.IPicUrls, InternalDefines.IListItemInfoInner {
+        class PicInfo implements IApiResults.IPicInfo, IApiResults.IPicUrls, InternalDefines.IListItemInfoInner {
             private int     mId         = 0;
             private String  mDesc       = "";
             private int     mType       = -1;
@@ -101,7 +101,7 @@ class ResHousePicList extends ResBase implements IApiResults.IResultList {
             private String  mUrlMiddle  = null;
             private String  mUrlLarge   = null;
 
-            HousePicInfo(JSONObject obj) {
+            PicInfo(JSONObject obj) {
                 try {
                     mId         = obj.getInt("Id");
                     mDesc       = obj.getString("Desc");

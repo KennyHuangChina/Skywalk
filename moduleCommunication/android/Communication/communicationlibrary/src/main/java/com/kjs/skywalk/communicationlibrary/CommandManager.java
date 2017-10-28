@@ -670,6 +670,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
+    public int GetUserPics(int user, int type, int size) {
+        CommunicationBase op = new CmdGetUserPicList(mContext, user, type, size);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
+    @Override
     public int GetHouseNewEvent() {
         CommunicationBase op = new CmdGetHouseNewEvent(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();

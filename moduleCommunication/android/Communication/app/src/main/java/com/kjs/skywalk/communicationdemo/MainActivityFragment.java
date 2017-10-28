@@ -121,7 +121,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
-//        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
+        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), 0);
 //        CmdMgr.GetNewMsgCount();
 //        CmdMgr.GetHouseNewEvent();
@@ -131,7 +131,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetAgencyList(0, 10);
 //        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseShowtime(Integer.parseInt(mEditText.getText().toString()));
-        CmdMgr.GetAppointmentInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetAppointmentInfo(Integer.parseInt(mEditText.getText().toString()));
     }
     private void doTestGetList() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
@@ -150,7 +150,10 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAgencyList(0, mListTotal);
 //        CmdMgr.GetHouseSeeAppointmentList(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
-        CmdMgr.GetHouseCertHist(Integer.parseInt(String.valueOf(mEditText.getText())));
+//        CmdMgr.GetHouseCertHist(Integer.parseInt(String.valueOf(mEditText.getText())));
+        CmdMgr.GetUserPics(Integer.parseInt(String.valueOf(mEditText.getText())),
+                            Integer.parseInt(String.valueOf(mEditText1.getText())),
+                            Integer.parseInt(String.valueOf(mEditText2.getText())));
     }
 
     private void GetHouseDigestList() {

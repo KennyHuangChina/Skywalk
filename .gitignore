@@ -9,3 +9,9 @@ status
 
 .idea
 PhotoPicker
+
+#Android Studio project files
+gradle/
+gradlew
+gradlew.bat
+local.properties

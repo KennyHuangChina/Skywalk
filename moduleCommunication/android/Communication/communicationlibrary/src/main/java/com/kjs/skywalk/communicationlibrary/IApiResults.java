@@ -216,8 +216,8 @@ public class IApiResults {
         String  GetLargePicture();
     }
 
-    // command: GetHousePicList
-    public interface IHousePicInfo {
+    // command: GetHousePicList, GetUserPicList
+    public interface IPicInfo {
         int     GetId();
         String  GetDesc();
         int     GetType();
