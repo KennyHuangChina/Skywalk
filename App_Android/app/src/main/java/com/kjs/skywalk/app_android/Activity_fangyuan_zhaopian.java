@@ -159,7 +159,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
                 if (command == CMD_GET_HOUSE_PIC_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     for (Object item : resultList.GetList()) {
-                        IApiResults.IHousePicInfo picInfo = (IApiResults.IHousePicInfo) item;
+                        IApiResults.IPicInfo picInfo = (IApiResults.IPicInfo) item;
                         getPicUrlById(type, picInfo.GetId());
                     }
                 }

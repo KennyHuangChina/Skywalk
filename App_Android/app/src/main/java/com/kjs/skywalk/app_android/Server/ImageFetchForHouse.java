@@ -84,7 +84,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
                     IApiResults.IResultList res = (IApiResults.IResultList)iResult;
                     ArrayList<Object> list = res.GetList();
                     for(Object obj : list) {
-                        IApiResults.IHousePicInfo info = (IApiResults.IHousePicInfo)obj;
+                        IApiResults.IPicInfo info = (IApiResults.IPicInfo)obj;
                         ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
                         picInfo.mId = info.GetId();
                         IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;

@@ -128,12 +128,6 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
             }
             case R.id.textViewSelect: {
                 isSelectMode = !isSelectMode;
-                TextView button = (TextView) v;
-                if(isSelectMode) {
-                    button.setText("取消");
-                } else {
-                    button.setText("选择");
-                }
 
                 processButtonSelect();
                 break;
@@ -174,6 +168,13 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     }
 
     private void processButtonSelect() {
+        TextView button = (TextView)findViewById(R.id.textViewSelect);
+        if(isSelectMode) {
+            button.setText("取消");
+        } else {
+            button.setText("选择");
+        }
+
         RelativeLayout hid1 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_hid1);
         RelativeLayout hid2 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_hid2);
         RelativeLayout id1 = (RelativeLayout)findViewById(R.id.rl_pic_checkflag_id1);
@@ -433,7 +434,12 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_UPLOAD_ALL_DONE:
+                    showWaiting(false);
+                    getPictures();
+                    break;
                 case MSG_DELETE_ALL_DONE:
+                    isSelectMode = false;
+                    processButtonSelect();
                     showWaiting(false);
                     getPictures();
                     break;
@@ -575,7 +581,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     public void onImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
         for(ClassDefine.PictureInfo info : list) {
             mPictureList.add(info);
-            mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 500);
         }
+        mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 500);
     }
 }
