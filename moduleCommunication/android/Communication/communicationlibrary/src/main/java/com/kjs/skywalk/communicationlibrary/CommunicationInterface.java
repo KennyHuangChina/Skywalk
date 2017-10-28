@@ -227,11 +227,20 @@ public class CommunicationInterface {
         /*
         *   CMD: CMD_GET_HOUSE_PIC_LIST
         *       - house : house id
-        *       - type  : house picture sub-type. PIC_TYPE_SUB_xxx
+        *       - type  : house picture sub-type. PIC_TYPE_SUB_HOUSE_xxx
         *       - size  : picture size. PIC_SIZE_xxx
-        *   Result: IApiResults.IResultList(IApiResults.IHousePicInfo, IApiResults.IPicUrls)
+        *   Result: IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)
         */
         int GetHousePics(int house, int type, int size);
+
+        /*
+        *   CMD: CMD_GET_USER_PIC_LIST
+        *       - user  : user id
+        *       - type  : user picture sub-type. PIC_TYPE_SUB_USER__xxx
+        *       - size  : picture size. PIC_SIZE_xxx
+        *   Result: IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)
+        */
+        int GetUserPics(int user, int type, int size);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -408,7 +417,8 @@ public class CommunicationInterface {
         final public static int CMD_ADD_PICTURE            = 0x6001,
                                 CMD_DEL_PICTURE            = 0x6002,
                                 CMD_GET_PIC_URL            = 0x6003,
-                                CMD_GET_HOUSE_PIC_LIST     = 0x6004;
+                                CMD_GET_HOUSE_PIC_LIST     = 0x6004,
+                                CMD_GET_USER_PIC_LIST      = 0x6005;
 
         // Event. TODO: to be removed, replaced by system message
         final public static int CMD_GET_HOUSE_NEW_EVENTS      = 0x7002,
@@ -494,6 +504,7 @@ public class CommunicationInterface {
             cmdMap.put(CMD_DEL_PICTURE,         "CMD_DEL_PICTURE");
             cmdMap.put(CMD_GET_PIC_URL,         "CMD_GET_PIC_URL");
             cmdMap.put(CMD_GET_HOUSE_PIC_LIST,  "CMD_GET_HOUSE_PIC_LIST");
+            cmdMap.put(CMD_GET_USER_PIC_LIST,   "CMD_GET_USER_PIC_LIST");
 
             // Event
             cmdMap.put(CMD_GET_HOUSE_NEW_EVENTS,    "CMD_GET_HOUSE_NEW_EVENTS");
