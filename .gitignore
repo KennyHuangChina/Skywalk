@@ -8,3 +8,9 @@ Thumbs.db
 status
 
 .idea
+
+#Android studio project files
+gradle/
+gradlew
+gradlew.bat
+local.properties
