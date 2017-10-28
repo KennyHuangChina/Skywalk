@@ -51,6 +51,7 @@ class AdapterShenHeXiaoXiHistory extends BaseAdapter {
         TextView tv_user_name;
         TextView tv_user_phone;
         TextView tv_time;
+        TextView tv_description;
     }
 
     @Override
@@ -65,6 +66,7 @@ class AdapterShenHeXiaoXiHistory extends BaseAdapter {
             holder.tv_user_name = ((TextView)convertView.findViewById(R.id.tv_user_name));
             holder.tv_user_phone = ((TextView)convertView.findViewById(R.id.tv_user_phone));
             holder.tv_time = ((TextView)convertView.findViewById(R.id.tv_time));
+            holder.tv_description = ((TextView)convertView.findViewById(R.id.tv_description));
 
             convertView.setTag(holder);
         } else {
@@ -75,6 +77,7 @@ class AdapterShenHeXiaoXiHistory extends BaseAdapter {
         holder.tv_user_name.setText(houseCertInfo.UserName());
         holder.tv_user_phone.setText(houseCertInfo.UserPhone());
         holder.tv_time.setText(houseCertInfo.CertTime().toString());
+        holder.tv_description.setText(houseCertInfo.CertDesc());
 
         return convertView;
     }
