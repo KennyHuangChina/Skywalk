@@ -45,7 +45,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
 public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ImageUpload.UploadFinished,
-        ImageDelete.DeleteFinished, ImageFetchForHouse.FetchFinished
+        ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished
 {
     private int mPhotoPickerHostId;
     private ArrayList<String> mCertList = new ArrayList<>();
@@ -578,7 +578,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     }
 
     @Override
-    public void onImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+    public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
         for(ClassDefine.PictureInfo info : list) {
             mPictureList.add(info);
         }

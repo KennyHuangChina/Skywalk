@@ -27,18 +27,18 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 public class ImageFetchForHouse implements CommunicationInterface.CIProgressListener{
 
     private Context mContext = null;
-    private FetchFinished mListener = null;
+    private HouseFetchFinished mListener = null;
     private int mTimeout = 10000;
     private boolean mResultGot = false;
     private boolean mFailed = false;
 
     ArrayList<ClassDefine.PictureInfo> mList = new ArrayList<>();
 
-    public interface FetchFinished {
-        void onImageFetched(ArrayList<ClassDefine.PictureInfo> list);
+    public interface HouseFetchFinished {
+        void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list);
     }
 
-    public ImageFetchForHouse(Context context, FetchFinished listener) {
+    public ImageFetchForHouse(Context context, HouseFetchFinished listener) {
         mContext = context;
         mListener = listener;
     }
@@ -71,12 +71,12 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
             @Override
             public void onCommandFinished(int command, IApiResults.ICommon iResult) {
                 if (null == iResult) {
-                    mListener.onImageFetched(mList);
+                    mListener.onHouseImageFetched(mList);
                     return;
                 }
 
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    mListener.onImageFetched(mList);
+                    mListener.onHouseImageFetched(mList);
                     return;
                 }
 
@@ -96,7 +96,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
                         picInfo.print();
                     }
 
-                    mListener.onImageFetched(mList);
+                    mListener.onHouseImageFetched(mList);
                 }
             }
         };
