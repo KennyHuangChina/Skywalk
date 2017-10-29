@@ -58,20 +58,20 @@ func (this *PictureController) GetUserPics() {
 	/*
 	 *	Extract agreements
 	 */
-	luid, _ /*err*/ := getLoginUser(this.Controller) // some kind of pictures are public, some kind of picures are private,
-	// if nil != err {
-	// 	return
-	// }
-	uid, _ := this.GetInt64(":id")
+	luid, _ /*err*/ := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+	tuid, _ := this.GetInt64(":id") // target user to check
 	subtype, _ := this.GetInt("st")
 	size, _ := this.GetInt("sz")
 
-	// beego.Debug(FN, "house:", uid, ", subtype:", subtype)
+	// beego.Debug(FN, "house:", tuid, ", subtype:", subtype)
 
 	/*
 	 *	Processing
 	 */
-	err, picLst := models.GetUserPicList(uid, luid, subtype, size)
+	err, picLst := models.GetUserPicList(tuid, luid, subtype, size)
 	if nil == err {
 		result.Total = len(picLst)
 		result.Pics = picLst

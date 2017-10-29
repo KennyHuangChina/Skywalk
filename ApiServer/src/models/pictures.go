@@ -199,14 +199,21 @@ func GetHousePicList(hid, uid int64, subType, size int) (err error, picList []co
 		return
 	}
 
-	if subType < 0 || subType > commdef.PIC_HOUSE_END {
+	// Some house pictures are public, anyone could see them
+	// if err, _ = GetUser(uid); nil != err {
+	// 	return
+	// }
+
+	if subType < commdef.PIC_HOUSE_ALL || subType > commdef.PIC_HOUSE_END {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("subType:%d", subType)}
 		return
 	}
 
+	/* Permission checking */
 	// checkPicturePermission(pic, uid)
 	sts := getHousePicSubtypes(h, uid, subType)
 	if 0 == len(sts) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
 		return
 	}
 
@@ -998,8 +1005,10 @@ func getHousePicSubtypes(h TblHouse, uid int64, subType int) (stl []int) {
 		// Private picture, only the landlord, house agency and administrator could access
 		bAccess := false
 		if isHouseOwner(h, uid) || isHouseAgency(h, uid) {
+			// beego.Debug(FN, "landlord or agency")
 			bAccess = true
 		} else if _, bAdmin := isAdministrator(uid); bAdmin {
+			// beego.Debug(FN, "administrator")
 			bAccess = true
 		}
 		if bAccess {

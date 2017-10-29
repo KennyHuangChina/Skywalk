@@ -484,197 +484,107 @@ func Test_GetHousePicList(t *testing.T) {
 	t.Log("Test GetHousePicList")
 	seq := 0
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house < 0")
-	if e, _ := GetHousePicList(-1, -1, 0, 0); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// house
+	x1 := []int64{-1, 0, 100000000}
+	s1 := []string{"< 0", " = 0", "does not exist"}
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: house(%d) %s", seq, v, s1[k]))
+		if e, _ := GetHousePicList(v, -1, 0, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house = 0")
-	if e, _ := GetHousePicList(0, -1, 0, 0); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// type
+	x1 = []int64{commdef.PIC_HOUSE_ALL - 1, commdef.PIC_HOUSE_END + 1}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: type(%d) <%d ~ %d>", seq, v, commdef.PIC_HOUSE_ALL, commdef.PIC_HOUSE_END))
+		if e, _ := GetHousePicList(3, 4, int(v), 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house does not exist")
-	if e, _ := GetHousePicList(100000000, -1, 0, 0); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// Permission:
+	// // user
+	// s1 = []string{"not login", "is SYSTEM", "does not exist"}
+	// for k, v := range x1 {
+	// 	seq++
+	// 	t.Log(fmt.Sprintf("<Case %d> Invalid Argument: login user(%d) %s", seq, v, s1[k]))
+	// 	if e, _ := GetHousePicList(3, v, 0, 0); e == nil {
+	// 		t.Error("Failed, err: ", e)
+	// 		return
+	// 	}
+	// }
+
+	// public house pictures
+	x1 = []int64{commdef.PIC_HOUSE_ALL, commdef.PIC_HOUSE_FLOOR_PLAN, commdef.PIC_HOUSE_FURNITURE, commdef.PIC_HOUSE_APPLIANCE}
+	x2 := []int64{1, 2, 4, 5, 6, 9, 10, 11}
+	s1 = []string{"is a regular user", "is a regular user", "is an admin", "is an admin", "is an agency", "is a regular user", "is a regular user", "is a agency"}
+	for k1, _ := range x1 {
+		for k2, _ := range x2 {
+			seq++
+			t.Log(fmt.Sprintf("<Case %d> Permission: type(%d) user(%d) %s", seq, x1[k1], x2[k2], s1[k2]))
+			e, _ /*picLst*/ := GetHousePicList(3, x2[k2], int(x1[k1]), 0)
+			if e != nil {
+				t.Error("Failed, err: ", e)
+				return
+			}
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: type < 0")
-	if e, _ := GetHousePicList(3, -1, -1, 0); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// private house pictures
+	x1 = []int64{commdef.PIC_HOUSE_OwnershipCert}
+	s1 = []string{"is a regular user", "is a regular user", "is an admin", "is an admin", "is an agency, but not behalf this house", "is a regular user", "is landlord", "is a agency"}
+	x3 := []int64{0, 0, 4, 5, 0, 0, 10, 0} // landlord:10, agency:4
+	for k1, _ := range x1 {
+		for k2, _ := range x2 {
+			seq++
+			t.Log(fmt.Sprintf("<Case %d> Permission: type(%d) user(%d) %s, expect result(%d)", seq, x1[k1], x2[k2], s1[k2], x3[k2]))
+			e, _ /*picLst*/ := GetHousePicList(3, x2[k2], int(x1[k1]), 0)
+			if 0 == x3[k2] {
+				if e == nil {
+					t.Error("Failed, err: ", e)
+					return
+				}
+			} else {
+				if e != nil {
+					t.Error("Failed, err: ", e)
+					return
+				}
+			}
+		}
 	}
 
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: type > commdef.PIC_HOUSE_END")
-	if e, _ := GetHousePicList(3, -1, commdef.PIC_HOUSE_END+1, 0); e == nil {
-		t.Error("Failed, err: ", e)
-		return
+	// picture count
+	x1 = []int64{commdef.PIC_HOUSE_ALL, commdef.PIC_HOUSE_FLOOR_PLAN, commdef.PIC_HOUSE_FURNITURE, commdef.PIC_HOUSE_APPLIANCE, commdef.PIC_HOUSE_OwnershipCert}
+	x2 = []int64{5, -1}
+	x4 := [][]int64{{17, 16}, {1, 1}, {3, 3}, {12, 12}, {1, -1}}
+	s1 = []string{"admin login", "user not login"}
+	for k1, _ := range x1 {
+		for k2, _ := range x2 {
+			seq++
+			t.Log(fmt.Sprintf("<Case %d> type(%d), %s, expect pic count(%d)", seq, x1[k1], s1[k2], x4[k1][k2]))
+			e, picLst := GetHousePicList(3, x2[k2], int(x1[k1]), 0)
+			if x4[k1][k2] < 0 {
+				if e == nil {
+					t.Error("Failed, err: ", e)
+					return
+				}
+			} else {
+				if e != nil {
+					t.Error("Failed, err: ", e)
+					return
+				}
+				if x4[k1][k2] != int64(len(picLst)) {
+					t.Error("Failed, len:", len(picLst))
+					return
+				}
+			}
+		}
 	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
-	e, picLst := GetHousePicList(3, -1, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 0 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
-	e, picLst = GetHousePicList(3, 100000000, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 0 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
-	e, picLst = GetHousePicList(3, 9, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 0 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not behalf with this house")
-	e, picLst = GetHousePicList(3, 6, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 0 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency who behalf of this house")
-	e, picLst = GetHousePicList(3, 4, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 1 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is landlord")
-	e, picLst = GetHousePicList(3, 10, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 1 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an administrator")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 1 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "type = 0, user not login, pic count should be 16")
-	e, picLst = GetHousePicList(3, -1, 0, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 16 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "type = 0, administrator login, pic count should be 17")
-	e, picLst = GetHousePicList(3, 5, 0, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 17 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_FLOOR_PLAN, administrator login, pic count should be 1")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_FLOOR_PLAN, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 1 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_FURNITURE, administrator login, pic count should be 3")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_FURNITURE, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 3 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_APPLIANCE, administrator login, pic count should be 12")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_APPLIANCE, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 12 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
-	seq++
-	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_OwnershipCert, administrator login, pic count should be 1")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_OwnershipCert, 0)
-	if e != nil {
-		t.Error("Failed, err: ", e)
-		return
-	}
-	if 1 != len(picLst) {
-		t.Error("Failed, len:", len(picLst))
-		return
-	}
-
 	beego.Warn("TODO: Add code here to test other kind of house picture")
 
 	return

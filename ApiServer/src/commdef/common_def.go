@@ -448,7 +448,7 @@ const (
 
 // for PIC_TYPE_HOUSE
 const (
-	PIC_HOUSE_BEGIN = 1
+	PIC_HOUSE_ALL = 0
 
 	PIC_HOUSE_FLOOR_PLAN    = 1 // house plan, anyone could access
 	PIC_HOUSE_FURNITURE     = 2 // house furnitures, anyone could access
