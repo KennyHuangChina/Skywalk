@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Server.ImageDelete;
 import com.kjs.skywalk.app_android.Server.ImageFetchForHouse;
+import com.kjs.skywalk.app_android.Server.ImageFetchForUser;
 import com.kjs.skywalk.app_android.Server.ImageUpload;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
@@ -45,7 +46,8 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
 public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ImageUpload.UploadFinished,
-        ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished
+        ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished,
+        ImageFetchForUser.UserFetchFinished
 {
     private int mPhotoPickerHostId;
     private ArrayList<String> mCertList = new ArrayList<>();
@@ -75,6 +77,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private final int MSG_GET_PICTURES_DONE = 0x100;
     private final int MSG_DELETE_ALL_DONE = 0x200;
     private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
+    private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,6 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         mContainer = (RelativeLayout)findViewById(R.id.activity_container);
 
         getHouseInfo();
-
-        getPictures();
     }
 
     @Override
@@ -267,87 +268,120 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         }
     }
 
+    private int getPictureCount(int type) {
+        int count = 0;
+        for(ClassDefine.PictureInfo info : mPictureList) {
+            if(info.mType == type) {
+                count ++;
+            }
+        }
+
+        return count;
+    }
+
     public void onPhotoPickerClicked(View v) {
+        //限制上传照片数量为2张
+        mPhotoPickerHostId = v.getId();
         switch (v.getId()) {
             case R.id.iv_photopicker_hpc: {
+                int count = getPictureCount(PIC_TYPE_SUB_HOUSE_OwnershipCert);
+                if(count >= 2) {
+                    commonFun.showToast_info(this, mContainer, "请先删除已存在照片， 然后上传新照片");
+                    return;
+                }
+
+                int upload = 2 - count;
+                PhotoPicker.builder().setPhotoCount(upload).start(Activity_fangyuan_renzheng_customer.this);
                 mCertList.clear();
                 break;
             }
             case R.id.iv_photopicker_idcard: {
+                int count = getPictureCount(PIC_TYPE_SUB_USER_IDCard);
+                if(count >= 2) {
+                    commonFun.showToast_info(this, mContainer, "请先删除已存在照片， 然后上传新照片");
+                    return;
+                }
+
+                int upload = 2 - count;
+                PhotoPicker.builder().setPhotoCount(upload).start(Activity_fangyuan_renzheng_customer.this);
                 mIdList.clear();
                 break;
             }
             default:
                 return;
         }
-
-        startPhotoPickerActivity(v);
     }
 
-    private void startPhotoPickerActivity(View host_view) {
-        mPhotoPickerHostId = host_view.getId();
-        PhotoPicker.builder().setPhotoCount(2).start(Activity_fangyuan_renzheng_customer.this);
-    }
-
-    private void showPictures() {
-        int indexPOC = 0;
-        int indexID = 0;
+    private void refreshPicturesByType(int type) {
+        int index = 0;
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.no_picture);
-        mCertImage1.setImageDrawable(drawable);
-        mCertImage1.setTag(null);
-        mCertImage2.setImageDrawable(drawable);
-        mCertImage2.setTag(null);
-        mIdCardImage1.setImageDrawable(drawable);
-        mIdCardImage1.setTag(null);
-        mIdCardImage2.setImageDrawable(drawable);
-        mIdCardImage2.setTag(null);
+        if(type == PIC_TYPE_SUB_HOUSE_OwnershipCert) {
+            mCertImage1.setImageDrawable(drawable);
+            mCertImage1.setTag(null);
+            mCertImage2.setImageDrawable(drawable);
+            mCertImage2.setTag(null);
 
-        for(ClassDefine.PictureInfo info : mPictureList) {
-            if(info.mType == PIC_TYPE_SUB_HOUSE_OwnershipCert) {
-                if (indexPOC == 0) {
-                    commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
-                    mCertImage1.setTag(info.mId);
-                    mBoxCert1.setTag(info.mId);
-                    indexPOC++;
-                } else if (indexPOC == 1) {
-                    commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
-                    mCertImage2.setTag(info.mId);
-                    mBoxCert2.setTag(info.mId);
-                    indexPOC = 0x9999;
+            for(ClassDefine.PictureInfo info : mPictureList) {
+                if (info.mType == type) {
+                    if (index == 0) {
+                        commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage1);
+                        mCertImage1.setTag(info.mId);
+                        mBoxCert1.setTag(info.mId);
+                        index++;
+                    } else if (index == 1) {
+                        commonFun.displayImageByURL(this, info.smallPicUrl, mCertImage2);
+                        mCertImage2.setTag(info.mId);
+                        mBoxCert2.setTag(info.mId);
+                        index = 0x9999;
+                    }
                 }
-            } else if(info.mType == PIC_TYPE_SUB_USER_IDCard) {
-                if(indexID == 0) {
-                    commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
-                    mIdCardImage1.setTag(info.mId);
-                    mBoxIdCard1.setTag(info.mId);
-                    indexID ++;
-                }
-                if(indexID == 1) {
-                    commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
-                    mIdCardImage1.setTag(info.mId);
-                    mBoxIdCard2.setTag(info.mId);
-                    indexID = 0x9999;
+            }
+        } else if(type == PIC_TYPE_SUB_USER_IDCard) {
+            mIdCardImage1.setImageDrawable(drawable);
+            mIdCardImage1.setTag(null);
+            mIdCardImage2.setImageDrawable(drawable);
+            mIdCardImage2.setTag(null);
+
+            for(ClassDefine.PictureInfo info : mPictureList) {
+                if (info.mType == type) {
+                    if (index == 0) {
+                        commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage1);
+                        mIdCardImage1.setTag(info.mId);
+                        mBoxIdCard1.setTag(info.mId);
+                        index++;
+                    } else if (index == 1) {
+                        commonFun.displayImageByURL(this, info.smallPicUrl, mIdCardImage2);
+                        mIdCardImage2.setTag(info.mId);
+                        mBoxIdCard2.setTag(info.mId);
+                        index = 0x9999;
+                    }
                 }
             }
         }
+    }
+
+    private void showPictures() {
+        refreshPicturesByType(PIC_TYPE_SUB_HOUSE_OwnershipCert);
+        refreshPicturesByType(PIC_TYPE_SUB_USER_IDCard);
     }
 
     private void onPhotoPickerReturn(List<String> photos) {
         switch (mPhotoPickerHostId) {
             case R.id.iv_photopicker_hpc:
             {
-                mCertImage1.setVisibility(View.INVISIBLE);
-                mCertImage2.setVisibility(View.INVISIBLE);
+                refreshPicturesByType(PIC_TYPE_SUB_HOUSE_OwnershipCert);
+                int count = getPictureCount(PIC_TYPE_SUB_HOUSE_OwnershipCert);
+                if(count >= 2) {
+                    return;
+                }
 
-                int index = 0;
+                int index = count;
                 for (String path : photos) {
                     if (index == 0) {
                         mCertImage1.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        mCertImage1.setVisibility(View.VISIBLE);
                     }
                     if (index == 1) {
                         mCertImage2.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        mCertImage2.setVisibility(View.VISIBLE);
                     }
                     index++;
 
@@ -359,18 +393,19 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
             case R.id.iv_photopicker_idcard:
             {
-                mIdCardImage1.setVisibility(View.INVISIBLE);
-                mIdCardImage2.setVisibility(View.INVISIBLE);
+                refreshPicturesByType(PIC_TYPE_SUB_USER_IDCard);
+                int count = getPictureCount(PIC_TYPE_SUB_USER_IDCard);
+                if(count >= 2) {
+                    return;
+                }
 
-                int index = 0;
+                int index = count;
                 for (String path : photos) {
                     if (index == 0) {
                         mIdCardImage1.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        mIdCardImage1.setVisibility(View.VISIBLE);
                     }
                     if (index == 1) {
                         mIdCardImage2.setImageBitmap(commonFun.getScaleBitmapFromLocal(path, 320, 240));
-                        mIdCardImage2.setVisibility(View.VISIBLE);
                     }
                     index++;
 
@@ -387,6 +422,9 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
         ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, this);
         fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+
+        ImageFetchForUser fetchForUser = new ImageFetchForUser(this, this);
+        fetchForUser.fetch(mLandlordId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
     }
 
     private int getHouseInfo() {
@@ -406,6 +444,10 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                 if (command == CMD_GET_HOUSE_INFO) {
                     IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
                     mLandlordId = info.Landlord();
+                    kjsLogUtil.i("User Id: " + mLandlordId);
+                    if(mLandlordId != 0) { //取得landlord id以后才可以取身份证图片
+                        mHandler.sendEmptyMessageDelayed(MSG_GET_HOUSE_INFO_DONE, 10);
+                    }
                 }
             }
         };
@@ -445,6 +487,9 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     break;
                 case MSG_GET_PICTURES_DONE:
                     showPictures();
+                    break;
+                case MSG_GET_HOUSE_INFO_DONE:
+                    getPictures();
                     break;
             }
         }
@@ -582,6 +627,14 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         for(ClassDefine.PictureInfo info : list) {
             mPictureList.add(info);
         }
-        mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 500);
+        mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 10);
+    }
+
+    @Override
+    public void onUserImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+        for(ClassDefine.PictureInfo info : list) {
+            mPictureList.add(info);
+        }
+        mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 10);
     }
 }
