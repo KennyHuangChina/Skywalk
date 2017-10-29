@@ -116,7 +116,7 @@ func AddPicture(hid, uid, XId int64, pt int, desc, md5, pfn, pbd string) (err er
 **/
 func GetUserPicList(uid, luid int64, subType, size int) (err error, picList []commdef.PictureInfo) {
 	FN := "[GetHousePicList] "
-	beego.Info(FN, "user to check:", uid, ", login user:", luid, ", sub type:", subType)
+	beego.Info(FN, "user to check:", uid, ", login user:", luid, ", sub type:", subType, ", size:", size)
 
 	defer func() {
 		if nil != err {
@@ -134,7 +134,7 @@ func GetUserPicList(uid, luid int64, subType, size int) (err error, picList []co
 		return
 	}
 
-	if subType < 0 || subType > commdef.PIC_USER_END {
+	if subType < commdef.PIC_USER_ALL || subType > commdef.PIC_USER_END {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("subType:%d", subType)}
 		return
 	}
@@ -142,6 +142,7 @@ func GetUserPicList(uid, luid int64, subType, size int) (err error, picList []co
 	/* Permission checking */
 	sts := getUserPicSubtypes(subType, uid, luid)
 	if 0 == len(sts) {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
 		return
 	}
 
@@ -958,7 +959,8 @@ func getUserPicSubtypes(subType int, uid, luid int64) (stl []int) {
 			bAccess = true
 		} else if _, bAdmin := isAdministrator(luid); bAdmin { // administrator
 			bAccess = true
-		} else if isOwnerAgency(uid, luid) { // house agency
+		} else if _, bAgency := isAgency(luid); bAgency { // agency
+			// } else if isOwnerAgency(uid, luid) { // owner agency
 			bAccess = true
 		}
 		if bAccess {

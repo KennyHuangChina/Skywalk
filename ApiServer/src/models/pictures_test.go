@@ -486,42 +486,42 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house < 0")
-	if e, _ := GetHousePicList(-1, -1, 0); e == nil {
+	if e, _ := GetHousePicList(-1, -1, 0, 0); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house = 0")
-	if e, _ := GetHousePicList(0, -1, 0); e == nil {
+	if e, _ := GetHousePicList(0, -1, 0, 0); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: house does not exist")
-	if e, _ := GetHousePicList(100000000, -1, 0); e == nil {
+	if e, _ := GetHousePicList(100000000, -1, 0, 0); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: type < 0")
-	if e, _ := GetHousePicList(3, -1, -1); e == nil {
+	if e, _ := GetHousePicList(3, -1, -1, 0); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Invalid Argument: type > commdef.PIC_HOUSE_END")
-	if e, _ := GetHousePicList(3, -1, commdef.PIC_HOUSE_END+1); e == nil {
+	if e, _ := GetHousePicList(3, -1, commdef.PIC_HOUSE_END+1, 0); e == nil {
 		t.Error("Failed, err: ", e)
 		return
 	}
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user not login")
-	e, picLst := GetHousePicList(3, -1, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst := GetHousePicList(3, -1, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -533,7 +533,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user does not exist")
-	e, picLst = GetHousePicList(3, 100000000, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 100000000, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -545,7 +545,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is a regular user")
-	e, picLst = GetHousePicList(3, 9, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 9, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -557,7 +557,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency, but not behalf with this house")
-	e, picLst = GetHousePicList(3, 6, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 6, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -569,7 +569,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an agency who behalf of this house")
-	e, picLst = GetHousePicList(3, 4, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 4, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -581,7 +581,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is landlord")
-	e, picLst = GetHousePicList(3, 10, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 10, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -593,7 +593,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "Permission: user is an administrator")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -605,7 +605,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "type = 0, user not login, pic count should be 16")
-	e, picLst = GetHousePicList(3, -1, 0)
+	e, picLst = GetHousePicList(3, -1, 0, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -617,7 +617,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "type = 0, administrator login, pic count should be 17")
-	e, picLst = GetHousePicList(3, 5, 0)
+	e, picLst = GetHousePicList(3, 5, 0, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -629,7 +629,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_FLOOR_PLAN, administrator login, pic count should be 1")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_FLOOR_PLAN)
+	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_FLOOR_PLAN, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -641,7 +641,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_FURNITURE, administrator login, pic count should be 3")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_FURNITURE)
+	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_FURNITURE, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -653,7 +653,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_APPLIANCE, administrator login, pic count should be 12")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_APPLIANCE)
+	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_APPLIANCE, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -665,7 +665,7 @@ func Test_GetHousePicList(t *testing.T) {
 
 	seq++
 	t.Log(fmt.Sprintf("<Case %d>", seq), "type = PIC_HOUSE_OwnershipCert, administrator login, pic count should be 1")
-	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_OwnershipCert)
+	e, picLst = GetHousePicList(3, 5, commdef.PIC_HOUSE_OwnershipCert, 0)
 	if e != nil {
 		t.Error("Failed, err: ", e)
 		return
@@ -678,4 +678,91 @@ func Test_GetHousePicList(t *testing.T) {
 	beego.Warn("TODO: Add code here to test other kind of house picture")
 
 	return
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- GetUserPicList --
+//
+func Test_GetUserPicList(t *testing.T) {
+	t.Log("Test GetUserPicList")
+	seq := 0
+
+	x1 := []int64{-1, 0, 100000000}
+	s1 := []string{"<0", "== 0", "does not exist"}
+
+	// target user
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: target user(%d) %s", seq, v, s1[k]))
+		if e, _ := GetUserPicList(v, -1, 0, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// login user
+	for k, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: login user(%d) %s", seq, v, s1[k]))
+		if e, _ := GetUserPicList(11, v, 0, 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// sub type
+	x1 = []int64{commdef.PIC_USER_ALL - 1, commdef.PIC_USER_END + 1}
+	for _, v := range x1 {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid Argument: sub type(%d) <%d ~ %d>", seq, v, commdef.PIC_USER_ALL, commdef.PIC_USER_END))
+		if e, _ := GetUserPicList(11, 4, int(v), 0); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// Permission: user portrait
+	x1 = []int64{0, commdef.PIC_USER_HEAD_PORTRAIT} // picture sub type
+	x2 := []int64{4, 6, 9, 11}                      // target user to check
+	x3 := []int64{1, 2, 4, 5, 6, 9, 10, 11}         // login user
+	for k1, _ := range x1 {
+		for k2, _ := range x2 {
+			for k3, _ := range x3 {
+				seq++
+				t.Log(fmt.Sprintf("<Case %d> Permission: type(%d), target user(%d), login user(%d)", seq, x1[k1], x2[k2], x3[k3]))
+				if e, _ := GetUserPicList(x2[k2], x3[k3], int(x1[k1]), 0); e != nil {
+					t.Error("Failed, err: ", e)
+					return
+				}
+			}
+		}
+	}
+
+	// Permission: user ID card or passport
+	x1 = []int64{commdef.PIC_OWNER_IDCard} // picture sub type
+	x2 = []int64{1, 2, 4, 6, 9, 11}        // target user to check
+	x3 = []int64{1, 2, 4, 5, 6, 9, 10, 11} // login user
+	x4 := [][]int{{1, 0, 1, 1, 1, 0, 0, 1}, {0, 1, 1, 1, 1, 0, 0, 1}, {0, 0, 1, 1, 1, 0, 0, 1}, {0, 0, 1, 1, 1, 0, 0, 1}, {0, 0, 1, 1, 1, 1, 0, 1}, {0, 0, 1, 1, 1, 0, 0, 1}}
+	for k1, _ := range x1 {
+		for k2, _ := range x2 {
+			for k3, _ := range x3 {
+				seq++
+				t.Log(fmt.Sprintf("<Case %d> Permission: type(%d), target user(%d), login user(%d), expect result(%d)",
+					seq, x1[k1], x2[k2], x3[k3], x4[k2][k3]))
+				e, _ := GetUserPicList(x2[k2], x3[k3], int(x1[k1]), 0)
+				if 0 == x4[k2][k3] {
+					if e == nil {
+						t.Error("Failed, err: ", e)
+						return
+					}
+				} else {
+					if e != nil {
+						t.Error("Failed, err: ", e)
+						return
+					}
+				}
+			}
+		}
+	}
 }
