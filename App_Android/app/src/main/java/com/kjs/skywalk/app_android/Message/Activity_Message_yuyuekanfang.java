@@ -97,12 +97,24 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
 //                    Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
 
                     IApiResults.IAppointmentInfo appointmentInfo = (IApiResults.IAppointmentInfo) iResult;
-                    int operations = appointmentInfo.Operations();
-                    updateButtonGroup(operations);
-
+                    updateMessageInfo(appointmentInfo);
                 }
             }
         }, this).GetAppointmentInfo(mApId);
+    }
+
+    private void updateMessageInfo(final IApiResults.IAppointmentInfo appointmentInfo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView)findViewById(R.id.tv_subscriber_name)).setText(appointmentInfo.Subscriber());
+                ((TextView)findViewById(R.id.tv_subscriber_phone)).setText(appointmentInfo.SubscriberPhone());
+                ((TextView)findViewById(R.id.tv_receptionist_name)).setText(appointmentInfo.Receptionist());
+                ((TextView)findViewById(R.id.tv_receptionist_phone)).setText(appointmentInfo.ReceptionistPhone());
+
+                updateButtonGroup(appointmentInfo.Operations());
+            }
+        });
     }
 
     private void updateButtonGroup(final int operations) {

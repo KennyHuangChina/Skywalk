@@ -27,6 +27,7 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
         android:background="#FFFFFF">
 
         <TextView
+            android:id="@+id/tv_house_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -106,14 +107,17 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
             android:gravity="right|center_vertical"
             android:text="客 人"/>
         <TextView
-            android:layout_width="60dp"
+            android:id="@+id/tv_subscriber_name"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="right|center_vertical"
             android:text="张先生"/>
 
         <TextView
-            android:layout_width="160dp"
+            android:id="@+id/tv_subscriber_phone"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="right|center_vertical"
             android:text="15822203313"/>
 
@@ -122,6 +126,7 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="7dp"
+            android:layout_marginEnd="20dp"
             android:layout_centerVertical="true"
             android:src="@drawable/tel_n"/>
     </LinearLayout>
@@ -145,14 +150,17 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
             android:gravity="right|center_vertical"
             android:text="经纪人"/>
         <TextView
-            android:layout_width="60dp"
+            android:id="@+id/tv_receptionist_name"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="right|center_vertical"
             android:text="刘经济"/>
 
         <TextView
-            android:layout_width="160dp"
+            android:id="@+id/tv_receptionist_phone"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="right|center_vertical"
             android:text="15822203313"/>
 
@@ -161,6 +169,7 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="7dp"
+            android:layout_marginEnd="20dp"
             android:layout_centerVertical="true"
             android:src="@drawable/tel_n"/>
     </LinearLayout>
