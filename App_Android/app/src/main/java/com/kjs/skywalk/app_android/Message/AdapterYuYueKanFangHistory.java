@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,9 +50,8 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
     class ViewHolder {
         ImageView iv_touxiang;
         TextView tv_user_name;
-        TextView tv_user_phone;
         TextView tv_time;
-        TextView tv_description;
+        EditText et_description;
     }
 
     @Override
@@ -64,20 +64,18 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
 
             holder.iv_touxiang = ((ImageView)convertView.findViewById(R.id.iv_touxiang));
             holder.tv_user_name = ((TextView)convertView.findViewById(R.id.tv_user_name));
-            holder.tv_user_phone = ((TextView)convertView.findViewById(R.id.tv_user_phone));
             holder.tv_time = ((TextView)convertView.findViewById(R.id.tv_time));
-            holder.tv_description = ((TextView)convertView.findViewById(R.id.tv_description));
+            holder.et_description = ((EditText)convertView.findViewById(R.id.et_description));
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        IApiResults.IHouseCertInfo houseCertInfo = (IApiResults.IHouseCertInfo) mList.get(position);
-        holder.tv_user_name.setText(houseCertInfo.UserName());
-        holder.tv_user_phone.setText(houseCertInfo.UserPhone());
-        holder.tv_time.setText(houseCertInfo.CertTime().toString());
-        holder.tv_description.setText(houseCertInfo.CertDesc());
+        IApiResults.IAppointmentAct appointmentAct = (IApiResults.IAppointmentAct) mList.get(position);
+        holder.tv_user_name.setText(appointmentAct.Who());
+        holder.tv_time.setText(appointmentAct.When().toString());
+        holder.et_description.setText(appointmentAct.Comment());
 
         return convertView;
     }

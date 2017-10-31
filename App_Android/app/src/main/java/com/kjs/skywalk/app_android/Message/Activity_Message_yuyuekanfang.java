@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
@@ -28,6 +29,7 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     private TextView mTvButton1;
     private TextView mTvButton2;
     private TextView mTvButton3;
+    private AdapterYuYueKanFangHistory mAdapterYuYueKanFang;
 
     private ArrayList<TextView> mBtns = new ArrayList<>();
     @Override
@@ -51,6 +53,10 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         });
 
         mApId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
+
+        mAdapterYuYueKanFang = new AdapterYuYueKanFangHistory(this);
+        ((ListView)findViewById(R.id.lv_history)).setAdapter(mAdapterYuYueKanFang);
+
         getAppointmentInfo();
     }
 
@@ -95,6 +101,8 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
 
                 if (command == CMD_GET_APPOINTMENT_INFO) {
 //                    Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
+
+                    updateCertHistInfo((IApiResults.IResultList)iResult);
 
                     IApiResults.IAppointmentInfo appointmentInfo = (IApiResults.IAppointmentInfo) iResult;
                     updateMessageInfo(appointmentInfo);
@@ -161,6 +169,22 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
 
                     index++;
                 }
+            }
+        });
+    }
+
+    // IApiResults.IAppointmentAct
+    private void updateCertHistInfo(final IApiResults.IResultList list) {
+        if (list == null)
+            return;
+
+        if (list.GetList().isEmpty())
+            return;
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapterYuYueKanFang.updateHistoryList(list.GetList());
             }
         });
     }
