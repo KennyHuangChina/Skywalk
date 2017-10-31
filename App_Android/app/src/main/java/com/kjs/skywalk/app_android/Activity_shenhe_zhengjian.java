@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
@@ -38,6 +40,9 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
     private ImageView mCertImage2 = null;
     private ImageView mIdCardImage1 = null;
     private ImageView mIdCardImage2 = null;
+
+    private ClassDefine.ConfirmDialog mConfirmDialog = null;
+    private boolean mPassed = false;
 
     private final int MSG_VERIFICATION_DONE = 0;
     private final int MSG_GET_PICTURES_DONE = 0x100;
@@ -82,13 +87,60 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
             return;
         }
 
-        if(bPass) {
+        commonFun.hideSoftKeyboard(this, mContainer);
 
-        } else {
-
+        if(mConfirmDialog == null) {
+            mConfirmDialog = new ClassDefine.ConfirmDialog(this);
         }
 
-        mHandler.sendEmptyMessageDelayed(MSG_VERIFICATION_DONE, 1000);
+        mPassed = bPass;
+
+        DialogInterface.OnDismissListener listener = new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(mConfirmDialog.getConfirmed()) {
+                    doCertificateConfirm();
+                }
+            }
+        };
+        if(!bPass) {
+            mConfirmDialog.setConfirmString("是否确认未通过审核？");
+        } else {
+            mConfirmDialog.setConfirmString("是否确认通过审核？");
+        }
+        mConfirmDialog.setDismissListener(listener);
+        mConfirmDialog.showDialog(true);
+    }
+
+    private void doCertificateConfirm() {
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+
+                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证失败:" + iResult.GetErrDesc());
+                    return;
+                }
+
+                if (command == CMD_CERTIFY_HOUSE) {
+                    mHandler.sendEmptyMessageDelayed(MSG_VERIFICATION_DONE, 1000);
+                }
+            }
+        };
+
+        EditText etAdvise = (EditText)findViewById(R.id.editTextAdvise);
+        String textAdvise = etAdvise.getText().toString();
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
+        int result = CmdMgr.CertificateHouse(mHouseId, mPassed, textAdvise);
+        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+            commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证失败");
+        }
+
+        commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证成功");
     }
 
     private void refreshPicturesByType(int type) {
