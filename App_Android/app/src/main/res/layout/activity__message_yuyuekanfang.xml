@@ -66,6 +66,7 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
                 android:gravity="right|center_vertical"
                 android:text="时 间"/>
             <TextView
+                android:id="@+id/tv_subscribe_date"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
@@ -74,11 +75,13 @@ tools:context="com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang
                 android:text="2017-09-03"/>
 
             <TextView
+                android:id="@+id/tv_subscribe_am_pm"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
                 android:text="上午"/>
             <TextView
+                android:id="@+id/tv_subscribe_time"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"

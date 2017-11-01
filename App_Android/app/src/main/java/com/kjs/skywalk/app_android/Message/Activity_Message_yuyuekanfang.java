@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android.Message;
 
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,13 +12,18 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import static com.kjs.skywalk.app_android.commonFun.MAP_AP_BUTTON;
 import static com.kjs.skywalk.app_android.commonFun.MAP_HOUSE_CERT_BUTTON;
@@ -119,6 +125,39 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
                 ((TextView)findViewById(R.id.tv_subscriber_phone)).setText(appointmentInfo.SubscriberPhone());
                 ((TextView)findViewById(R.id.tv_receptionist_name)).setText(appointmentInfo.Receptionist());
                 ((TextView)findViewById(R.id.tv_receptionist_phone)).setText(appointmentInfo.ReceptionistPhone());
+
+//                kjsLogUtil.i("appointmentInfo.ScheduleBeginTime(): " + appointmentInfo.ScheduleBeginTime().toString());
+//                kjsLogUtil.i("appointmentInfo.ScheduleEndTime(): " + appointmentInfo.ScheduleEndTime().toString());
+//                kjsLogUtil.i("appointmentInfo.ScheduleDate(): " + appointmentInfo.ScheduleDate().toString());
+
+                String beginDate = new SimpleDateFormat("yyyy-MM-dd").format(appointmentInfo.ScheduleBeginTime());
+                String beginTime = new SimpleDateFormat("hh:mm").format(appointmentInfo.ScheduleBeginTime());
+                String endTime = new SimpleDateFormat("hh:mm").format(appointmentInfo.ScheduleEndTime());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(appointmentInfo.ScheduleBeginTime());
+                int am_pm = cal.get(Calendar.AM_PM);    // 0 -- am 1 -- pm
+                String strAmPm = "上午";
+                if (am_pm == 1)
+                    strAmPm = "下午";
+
+                kjsLogUtil.i("beginDate: " + beginDate);
+                kjsLogUtil.i("beginTime: " + beginTime);
+                kjsLogUtil.i("endTime: " + endTime);
+
+                ((TextView)findViewById(R.id.tv_subscribe_date)).setText(beginDate);
+                ((TextView)findViewById(R.id.tv_subscribe_am_pm)).setText(strAmPm);
+                ((TextView)findViewById(R.id.tv_subscribe_time)).setText(beginTime + " - " + endTime);
+
+                final List<commonFun.TextDefine> location = new ArrayList<commonFun.TextDefine>(
+                        Arrays.asList(
+                                new commonFun.TextDefine( appointmentInfo.Property(), 39, Color.parseColor("#000000")),
+                                new commonFun.TextDefine( appointmentInfo.BuildingNo(), 36,  Color.parseColor("#FF6600")),
+                                new commonFun.TextDefine( "栋", 36,  Color.parseColor("#000000")),
+                                new commonFun.TextDefine( appointmentInfo.HouseNo(), 36,  Color.parseColor("#FF6600")),
+                                new commonFun.TextDefine( "室", 36,  Color.parseColor("#000000"))
+                        )
+                );
+                ((TextView)findViewById(R.id.tv_house_location)).setText(commonFun.getSpannableString(location));
 
                 updateButtonGroup(appointmentInfo.Operations());
             }
