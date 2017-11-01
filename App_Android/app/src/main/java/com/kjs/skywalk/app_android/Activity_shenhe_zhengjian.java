@@ -23,6 +23,8 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
 
+import me.iwf.photopicker.PhotoPreview;
+
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
@@ -43,6 +45,8 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
 
     private ClassDefine.ConfirmDialog mConfirmDialog = null;
     private boolean mPassed = false;
+
+    private int mCurrentPreviewIndex = 0;
 
     private final int MSG_VERIFICATION_DONE = 0;
     private final int MSG_GET_PICTURES_DONE = 0x100;
@@ -73,10 +77,29 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
                 doPass(false);
                 break;
             }
-            case R.id.tv_pass:
+            case R.id.tv_pass: {
                 doPass(true);
                 break;
+            }
+            case R.id.imageZhengjian1:
+            case R.id.imageZhengjian2:
+            case R.id.imageIdCard1:
+            case R.id.imageIdCard2:
+                imagePreview(0);
+                break;
         }
+    }
+
+    private void imagePreview(int current) {
+        ArrayList<String> images = new ArrayList<>();
+        for(ClassDefine.PictureInfo info : mPictureList) {
+            images.add(info.smallPicUrl);
+        }
+
+        PhotoPreview.builder()
+                .setPhotos(images)
+                .setCurrentItem(0)
+                .start(this);
     }
 
     private void doPass(boolean bPass) {
