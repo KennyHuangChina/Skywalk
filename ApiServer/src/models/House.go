@@ -432,6 +432,21 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 	hd = dig
 	hd.Tags = tgs
 
+	// house certification
+	hc := TblHouseCert{}
+	if hc, err = getHouseNewestCert(hid); nil != err {
+		return
+	}
+	if commdef.HOUSE_CERT_STAT_Unknown == hc.CertStatu {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
+		return
+	}
+	hd.CertStat = hc.CertStatu // HOUSE_CERT_STAT_FAILED or HOUSE_CERT_STAT_WAIT
+	if commdef.HOUSE_CERT_STAT_FAILED == hc.CertStatu {
+		hd.CertTime = fmt.Sprintf("%s", hc.When.Local())
+		hd.CertDesc = hc.Comment
+	}
+
 	return
 }
 

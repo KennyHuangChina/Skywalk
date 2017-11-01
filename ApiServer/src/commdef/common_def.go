@@ -67,6 +67,12 @@ type HouseTags struct {
 	TagDesc string
 }
 
+type HouseCertDigest struct {
+	CertStat int    // House certification status. HOUSE_CERT_STAT_XXX
+	CertTime string // house certification time
+	CertDesc string // house certification description
+}
+
 type HouseDigest struct {
 	Id           int64
 	Property     string
@@ -82,6 +88,7 @@ type HouseDigest struct {
 	CovImgUrlS   string //cover image url for small size
 	CovImgUrlM   string // cover image url for moderate size
 	Tags         []HouseTags
+	HouseCertDigest
 }
 
 type HouseInfo struct {
@@ -104,9 +111,7 @@ type HouseInfo struct {
 	Landlord    int64  // house landlord id
 	Agency      int64  // house agency id
 	SubmitTime  string // landlord submit time
-	CertStat    int    // House certification status. HOUSE_CERT_STAT_XXX
-	CertTime    string // house certification time
-	CertDesc    string // house certification description
+	HouseCertDigest
 }
 
 const (

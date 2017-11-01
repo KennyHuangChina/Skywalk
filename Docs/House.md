@@ -52,6 +52,9 @@
 			* CoverImg		int		// cover image id
 			* CovImgUrlS	string	// cover image url for small size
 			* CovImgUrlM	string	// cover image url for modrate size
+			* CertStat		int 	// house certification
+			* CertDesc		String	// house certification description
+			* CertTime		string	// house certification time
 			* Tags			array	// house tags
 				* TagId		int 	// tag id
 				* TagDesc	string	// tag description string
