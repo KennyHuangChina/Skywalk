@@ -310,9 +310,9 @@ public class IApiResults {
                             SYS_MSG_PRIORITY_ERROR      = 2;
 
     // certification stat. 1: wait for certification; 2: Certification passed; 3: Certification failed
-    public static final int HOUSE_CERT_STAT_WAIT    = 1,
-                            HOUSE_CERT_STAT_PASSED  = 2,
-                            HOUSE_CERT_STAT_FAILED  = 3;
+    public static final int HOUSE_CERT_STAT_WAIT    = 1,    // wait for certification
+                            HOUSE_CERT_STAT_PASSED  = 2,    // certification passed
+                            HOUSE_CERT_STAT_FAILED  = 3;    // certification failed
 
     // user sex. 0 - male / 1 - female
     public static final int USER_SEX_MALE   = 0,
@@ -322,4 +322,5 @@ public class IApiResults {
     public static final int HOUSE_RENT_WAIT     = 1,    // wait for rent
                             HOUSE_RENT_RENTED   = 2,    // rented
                             HOUSE_RENT_DUE      = 3;    // Due, open for ordering
+
 }

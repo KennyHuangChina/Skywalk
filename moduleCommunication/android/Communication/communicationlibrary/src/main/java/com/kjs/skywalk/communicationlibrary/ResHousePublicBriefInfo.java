@@ -7,13 +7,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by kenny on 2017/2/23.
  */
 
-class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IResultList {
-    private HouseDigestInfo mDigestInfo = null;
+class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IHouseCertDigestInfo, IApiResults.IResultList {
+    private HouseDigestInfo mDigestInfo     = null;
+    private HouseCertStatus mHouseCertStat  = null;
 
     ResHousePublicBriefInfo(int nErrCode, JSONObject obj) {
         super(nErrCode/*, obj*/);
@@ -25,6 +27,7 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         try {
             objDigest = obj.getJSONObject("HouseDigest");
             mDigestInfo = new HouseDigestInfo(objDigest);
+            mHouseCertStat = new HouseCertStatus(obj);
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
@@ -81,11 +84,40 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         if (null != mDigestInfo) {
             mString += mDigestInfo.DebugString();
         }
+        if (null != mHouseCertStat) {
+            mString += mHouseCertStat.DebugString();
+        }
 
         return mString;
     }
+
+    @Override
+    public int CertStat() {
+        if (null != mHouseCertStat) {
+            return 0;
+        }
+        return mHouseCertStat.CertStat();
+    }
+
+    @Override
+    public Date CertTime() {
+        if (null != mHouseCertStat) {
+            return null;
+        }
+        return mHouseCertStat.CertTime();
+    }
+
+    @Override
+    public String CertDesc() {
+        if (null != mHouseCertStat) {
+            return null;
+        }
+        return mHouseCertStat.CertDesc();
+    }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultList, InternalDefines.IListItemInfoInner {
     private int     mHouseId        = 0;
     private String  mPropertyName   = "";

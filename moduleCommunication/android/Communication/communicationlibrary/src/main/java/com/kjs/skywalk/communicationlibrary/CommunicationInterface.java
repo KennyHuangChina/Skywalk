@@ -105,7 +105,12 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House
-        int GetBriefPublicHouseInfo(int houseId);                               // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+        /*
+        *   CMD: CMD_GET_BRIEF_PUBLIC_HOUSE_INFO,
+        *       - houseid   : house id
+        *   Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+         */
+        int GetBriefPublicHouseInfo(int houseId);
 
         /*
         *   CMD: CMD_GET_HOUSE_INFO,
