@@ -10,9 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by admin on 2017/2/8.
@@ -52,6 +55,9 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
         TextView tv_user_name;
         TextView tv_time;
         EditText et_description;
+        TextView tv_subscribe_date;
+        TextView tv_subscribe_am_pm;
+        TextView tv_subscribe_time;
     }
 
     @Override
@@ -66,6 +72,9 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
             holder.tv_user_name = ((TextView)convertView.findViewById(R.id.tv_user_name));
             holder.tv_time = ((TextView)convertView.findViewById(R.id.tv_time));
             holder.et_description = ((EditText)convertView.findViewById(R.id.et_description));
+            holder.tv_subscribe_date = ((TextView)convertView.findViewById(R.id.tv_subscribe_date));
+            holder.tv_subscribe_am_pm = ((TextView)convertView.findViewById(R.id.tv_subscribe_am_pm));
+            holder.tv_subscribe_time = ((TextView)convertView.findViewById(R.id.tv_subscribe_time));
 
             convertView.setTag(holder);
         } else {
@@ -74,8 +83,28 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
 
         IApiResults.IAppointmentAct appointmentAct = (IApiResults.IAppointmentAct) mList.get(position);
         holder.tv_user_name.setText(appointmentAct.Who());
-        holder.tv_time.setText(appointmentAct.When().toString());
+        holder.tv_time.setText(commonFun.dateToStringFormat(appointmentAct.When()));
         holder.et_description.setText(appointmentAct.Comment());
+
+        if (appointmentAct.PeriodBegin() != null && appointmentAct.PeriodEnd() != null){
+            String beginDate = new SimpleDateFormat("yyyy-MM-dd").format(appointmentAct.PeriodBegin());
+            String beginTime = new SimpleDateFormat("hh:mm").format(appointmentAct.PeriodBegin());
+            String endTime = new SimpleDateFormat("hh:mm").format(appointmentAct.PeriodEnd());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(appointmentAct.PeriodBegin());
+            int am_pm = cal.get(Calendar.AM_PM);    // 0 -- am 1 -- pm
+            String strAmPm = "上午";
+            if (am_pm == 1)
+                strAmPm = "下午";
+
+            holder.tv_subscribe_date.setText(beginDate);
+            holder.tv_subscribe_am_pm.setText(strAmPm);
+            holder.tv_subscribe_time.setText(beginTime + " - " + endTime);
+        } else {
+            holder.tv_subscribe_date.setText("");
+            holder.tv_subscribe_am_pm.setText("");
+            holder.tv_subscribe_time.setText("");
+        }
 
         return convertView;
     }
