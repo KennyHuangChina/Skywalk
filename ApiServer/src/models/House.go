@@ -433,19 +433,27 @@ func GetHouseDigestInfo(hid, uid int64) (err error, hd commdef.HouseDigest) {
 	hd.Tags = tgs
 
 	// house certification
-	hc := TblHouseCert{}
-	if hc, err = getHouseNewestCert(hid); nil != err {
+	err, h := getHouse(hid)
+	if nil != err {
 		return
 	}
-	if commdef.HOUSE_CERT_STAT_Unknown == hc.CertStatu {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
-		return
-	}
-	hd.CertStat = hc.CertStatu // HOUSE_CERT_STAT_FAILED or HOUSE_CERT_STAT_WAIT
-	if commdef.HOUSE_CERT_STAT_FAILED == hc.CertStatu {
+	if nilTime != h.PublishTime {
+		hd.CertStat = commdef.HOUSE_CERT_STAT_PASSED
+		hd.CertTime = fmt.Sprintf("%s", h.PublishTime.Local())
+	} else { // house not been published
+		hc := TblHouseCert{}
+		if hc, err = getHouseNewestCert(hid); nil != err {
+			return
+		}
+		if commdef.HOUSE_CERT_STAT_Unknown == hc.CertStatu {
+			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("incorrect status:%d", hc.CertStatu)}
+			return
+		}
+		hd.CertStat = hc.CertStatu // HOUSE_CERT_STAT_FAILED or HOUSE_CERT_STAT_WAIT
 		hd.CertTime = fmt.Sprintf("%s", hc.When.Local())
 		hd.CertDesc = hc.Comment
 	}
+	// beego.Debug(FN, "house digist:", fmt.Sprintf("%+v", hd))
 
 	return
 }
@@ -519,8 +527,7 @@ func GetHouseInfo(hid, uid int64, be bool) (err error, hif commdef.HouseInfo) {
 		hif.Landlord = house.Owner.Id
 		hif.SubmitTime = house.SubmitTime.Local().String()[:19]
 
-		nullTime := time.Time{}
-		if nullTime != house.PublishTime {
+		if nilTime != house.PublishTime {
 			hif.CertStat = commdef.HOUSE_CERT_STAT_PASSED
 			hif.CertTime = fmt.Sprintf("%s", house.PublishTime.Local())
 		} else { // house not been published

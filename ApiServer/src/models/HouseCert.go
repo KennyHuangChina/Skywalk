@@ -427,7 +427,24 @@ func getHouseNewestCert(hid int64) (hc TblHouseCert, err error) {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		} else {
 			// no certificate record found
-			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house:", hid)}
+			// err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house:%d", hid)}
+			// backward compatibility
+			beego.Debug(Fn, fmt.Sprintf("No certification record for house(%d), insert one", hid))
+			h := TblHouse{}
+			if err, h = getHouse(hid); nil != err {
+				return
+			}
+			comment := "业主提交新房源"
+			if err, _ = addHouseCertRec(hid, h.Owner.Id, commdef.HOUSE_CERT_STAT_WAIT, comment, o); nil != err {
+				return
+			}
+			// fetch again
+			if errT := qs.One(&hc); nil != errT {
+				if orm.ErrNoRows == errT || orm.ErrMissPK == errT {
+					// no certificate record found
+					err = commdef.SwError{ErrCode: commdef.ERR_COMMON_RES_NOTFOUND, ErrInfo: fmt.Sprintf("house:%d", hid)}
+				}
+			}
 		}
 		return
 	}
