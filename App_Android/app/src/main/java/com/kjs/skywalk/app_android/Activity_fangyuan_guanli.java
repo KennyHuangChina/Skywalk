@@ -22,6 +22,9 @@ import java.util.List;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.IApiResults.HOUSE_CERT_STAT_FAILED;
+import static com.kjs.skywalk.communicationlibrary.IApiResults.HOUSE_CERT_STAT_PASSED;
+import static com.kjs.skywalk.communicationlibrary.IApiResults.HOUSE_CERT_STAT_WAIT;
 
 public class Activity_fangyuan_guanli extends SKBaseActivity {
 
@@ -31,52 +34,22 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     int mTestCount = 0;
 //    int mHouseId = 2;
     private CommandManager mCmdMgr = null;
-    private String mInfo2 = ""; // "2房2厅1卫 | 105㎡ | 10/11F"
+    private String mInfo2 = "";
+    IApiResults.IHouseCertDigestInfo mCertDigestInfo = null;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_fangyuan_guanli);
+        setContentView(R.layout.activity_fangyuan_guanli);
 
-            mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
+        mFragInfo1 = new fragmentFangYuanGuanLiInfo1();
+        mFragInfo2 = new fragmentFangYuanGuanLiInfo2();
+        mFragInfo3 = new fragmentFangYuanGuanLiInfo3();
+
+        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
         mCmdMgr.GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
-
         mCmdMgr.GetBriefPublicHouseInfo(mHouseId);
-
-        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
-        mFragInfo1 = new fragmentFangYuanGuanLiInfo1();
-        fragTransaction.replace(R.id.info_container, mFragInfo1);
-        fragTransaction.commit();
-
-        // for test
-        findViewById(R.id.info_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
-
-                mTestCount++;
-                if(mTestCount % 3 == 0) {
-                    if(mFragInfo1 == null) {
-                        mFragInfo1 = new fragmentFangYuanGuanLiInfo1();
-                    }
-                    fragTransaction.replace(R.id.info_container, mFragInfo1);
-                } else if(mTestCount % 3 == 1) {
-                    if(mFragInfo2 == null) {
-                        mFragInfo2 = new fragmentFangYuanGuanLiInfo2();
-                    }
-                    fragTransaction.replace(R.id.info_container, mFragInfo2);
-                } else if(mTestCount % 3 == 2) {
-                    if(mFragInfo3 == null) {
-                        mFragInfo3 = new fragmentFangYuanGuanLiInfo3();
-                    }
-                    fragTransaction.replace(R.id.info_container, mFragInfo3);
-                }
-
-                fragTransaction.commit();
-
-            }
-        });
     }
 
     public void onViewClick(View v) {
@@ -158,6 +131,10 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
         if (command == CMD_GET_HOUSE_INFO) {
             updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
         }
+        if(command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
+            mCertDigestInfo = (IApiResults.IHouseCertDigestInfo)iResult;
+            updateFragmentInfo(mCertDigestInfo);
+        }
 
     }
 
@@ -172,7 +149,6 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
                 mInfo2 += " | ";
                 mInfo2 += String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal());
 
-                updateFragmentInfo();
 
 //                // 1: wait for rent, 2: rented, 3: Due, open for ordering
 //                IHouseInfo.RentStat();
@@ -187,9 +163,18 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
         });
     }
 
-    private void updateFragmentInfo() {
+    private void updateFragmentInfo(IApiResults.IHouseCertDigestInfo info) {
+
+        switch (info.CertStat()) {
+            case HOUSE_CERT_STAT_WAIT:
+                break;
+            case HOUSE_CERT_STAT_PASSED:
+                break;
+            case HOUSE_CERT_STAT_FAILED:
+                break;
+        }
         if (mFragInfo1 != null)
-            mFragInfo1.updateInfo(mHouseLocation, mInfo2);
+//            mFragInfo1.updateInfo(mHouseLocation, mInfo2);
     }
 
 }
