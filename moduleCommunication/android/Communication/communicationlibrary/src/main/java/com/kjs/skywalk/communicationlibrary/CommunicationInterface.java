@@ -108,7 +108,7 @@ public class CommunicationInterface {
         /*
         *   CMD: CMD_GET_BRIEF_PUBLIC_HOUSE_INFO,
         *       - houseid   : house id
-        *   Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+        *   Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo
          */
         int GetBriefPublicHouseInfo(int houseId);
 
