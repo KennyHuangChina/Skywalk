@@ -36,6 +36,23 @@ class HouseCertStatus implements IApiResults.IHouseCertDigestInfo {
                     return -2;
                 }
             }
+
+            if (mCertDesc.isEmpty()) {
+                switch (mCertStat) {
+                case IApiResults.HOUSE_CERT_STAT_WAIT:
+                    mCertDesc = "等待审核";
+                    break;
+                case IApiResults.HOUSE_CERT_STAT_PASSED:
+                    mCertDesc = "审核通过";
+                    break;
+                case IApiResults.HOUSE_CERT_STAT_FAILED:
+                    mCertDesc = "审核失败";
+                    break;
+                default:
+                    mCertDesc = "未知状态";
+                    break;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;

@@ -15,7 +15,6 @@ import java.util.Date;
 
 class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IHouseCertDigestInfo, IApiResults.IResultList {
     private HouseDigestInfo mDigestInfo     = null;
-    private HouseCertStatus mHouseCertStat  = null;
 
     ResHousePublicBriefInfo(int nErrCode, JSONObject obj) {
         super(nErrCode/*, obj*/);
@@ -27,7 +26,6 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         try {
             objDigest = obj.getJSONObject("HouseDigest");
             mDigestInfo = new HouseDigestInfo(objDigest);
-            mHouseCertStat = new HouseCertStatus(obj);
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
@@ -84,41 +82,38 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
         if (null != mDigestInfo) {
             mString += mDigestInfo.DebugString();
         }
-        if (null != mHouseCertStat) {
-            mString += mHouseCertStat.DebugString();
-        }
 
         return mString;
     }
 
     @Override
     public int CertStat() {
-        if (null != mHouseCertStat) {
+        if (null != mDigestInfo) {
             return 0;
         }
-        return mHouseCertStat.CertStat();
+        return mDigestInfo.CertStat();
     }
 
     @Override
     public Date CertTime() {
-        if (null != mHouseCertStat) {
+        if (null != mDigestInfo) {
             return null;
         }
-        return mHouseCertStat.CertTime();
+        return mDigestInfo.CertTime();
     }
 
     @Override
     public String CertDesc() {
-        if (null != mHouseCertStat) {
+        if (null != mDigestInfo) {
             return null;
         }
-        return mHouseCertStat.CertDesc();
+        return mDigestInfo.CertDesc();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultList, InternalDefines.IListItemInfoInner {
+class HouseDigestInfo extends HouseCertStatus implements IApiResults.IHouseDigest, IApiResults.IResultList, InternalDefines.IListItemInfoInner {
     private int     mHouseId        = 0;
     private String  mPropertyName   = "";
     private String  mPropertyAddr   = "";
@@ -135,6 +130,7 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
     private TagList mTagList        = null;
 
     HouseDigestInfo(JSONObject objDigest) {
+        super(objDigest);
         mTagList = new TagList();
         parse(objDigest);
     }
@@ -198,6 +194,8 @@ class HouseDigestInfo implements IApiResults.IHouseDigest, IApiResults.IResultLi
         if (null != mTagList) {
             sDebugString += mTagList.DebugList();
         }
+
+        sDebugString += super.DebugString();
 
         return sDebugString;
     }
