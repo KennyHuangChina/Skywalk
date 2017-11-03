@@ -49,11 +49,10 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/seperator_horizontal"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -69,6 +68,7 @@
                     android:layout_height="45dp"
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
+
                     <TextView
                         android:id="@+id/tv_name_picgroup1"
                         android:layout_width="wrap_content"
@@ -76,29 +76,30 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
+                        android:text="户型图"
                         android:textColor="@color/colorTextNormal"
-                        android:textSize="13sp"
-                        android:text="户型图"/>
+                        android:textSize="13sp" />
+
                     <TextView
                         android:id="@+id/tv_status_picgroup1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
                         android:layout_toRightOf="@+id/tv_name_picgroup1"
-                        android:text="(6)"/>
+                        android:gravity="center"
+                        android:text="(6)" />
 
                     <ImageView
                         android:id="@+id/iv_photopicker_picgroup1"
-                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/camera2_n"/>
+                        android:onClick="onPhotoPickerClicked"
+                        android:src="@drawable/camera2_n" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vp_huxing"
@@ -108,9 +109,10 @@
                 </android.support.v4.view.ViewPager>
             </LinearLayout>
 
-            <include layout="@layout/seperator_horizontal"
+            <include
+                layout="@layout/seperator_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="5dp"/>
+                android:layout_height="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -122,6 +124,7 @@
                     android:layout_height="45dp"
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
+
                     <TextView
                         android:id="@+id/tv_name_picgroup2"
                         android:layout_width="wrap_content"
@@ -129,28 +132,30 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
+                        android:text="房间结构"
                         android:textColor="@color/colorTextNormal"
-                        android:textSize="13sp"
-                        android:text="房间结构"/>
+                        android:textSize="13sp" />
+
                     <TextView
                         android:id="@+id/tv_status_picgroup2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
                         android:layout_toRightOf="@+id/tv_name_picgroup2"
-                        android:text="(6)"/>
+                        android:gravity="center"
+                        android:text="(6)" />
+
                     <ImageView
                         android:id="@+id/iv_photopicker_picgroup2"
-                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/camera2_n"/>
+                        android:onClick="onPhotoPickerClicked"
+                        android:src="@drawable/camera2_n" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vp_fangjianjiegou"
@@ -160,9 +165,10 @@
                 </android.support.v4.view.ViewPager>
             </LinearLayout>
 
-            <include layout="@layout/seperator_horizontal"
+            <include
+                layout="@layout/seperator_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="5dp"/>
+                android:layout_height="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -174,6 +180,7 @@
                     android:layout_height="45dp"
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
+
                     <TextView
                         android:id="@+id/tv_name_picgroup3"
                         android:layout_width="wrap_content"
@@ -181,28 +188,30 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
+                        android:text="家居用品"
                         android:textColor="@color/colorTextNormal"
-                        android:textSize="13sp"
-                        android:text="家居用品"/>
+                        android:textSize="13sp" />
+
                     <TextView
                         android:id="@+id/tv_status_picgroup3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
                         android:layout_toRightOf="@+id/tv_name_picgroup3"
-                        android:text="(6)"/>
+                        android:gravity="center"
+                        android:text="(6)" />
+
                     <ImageView
                         android:id="@+id/iv_photopicker_picgroup3"
-                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/camera2_n"/>
+                        android:onClick="onPhotoPickerClicked"
+                        android:src="@drawable/camera2_n" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vp_jiajuyongpin"
@@ -212,9 +221,10 @@
                 </android.support.v4.view.ViewPager>
             </LinearLayout>
 
-            <include layout="@layout/seperator_horizontal"
+            <include
+                layout="@layout/seperator_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="5dp"/>
+                android:layout_height="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -226,6 +236,7 @@
                     android:layout_height="45dp"
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_left_margin">
+
                     <TextView
                         android:id="@+id/tv_name_picgroup4"
                         android:layout_width="wrap_content"
@@ -233,28 +244,30 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
+                        android:text="电器"
                         android:textColor="@color/colorTextNormal"
-                        android:textSize="13sp"
-                        android:text="电器"/>
+                        android:textSize="13sp" />
+
                     <TextView
                         android:id="@+id/tv_status_picgroup4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
                         android:layout_toRightOf="@+id/tv_name_picgroup4"
-                        android:text="(6)"/>
+                        android:gravity="center"
+                        android:text="(6)" />
+
                     <ImageView
                         android:id="@+id/iv_photopicker_picgroup4"
-                        android:onClick="onPhotoPickerClicked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/camera2_n"/>
+                        android:onClick="onPhotoPickerClicked"
+                        android:src="@drawable/camera2_n" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vp_dianqi"
@@ -271,27 +284,28 @@
 
                 <TextView
                     android:id="@+id/tv_upload"
+                    style="@style/btnstyle_major"
                     android:layout_width="330dp"
                     android:layout_height="45dp"
-                    android:onClick="onViewClick"
                     android:layout_centerInParent="true"
-                    style="@style/btnstyle_major"
-                    android:text="上传房源照片">
-                </TextView>
+                    android:onClick="onViewClick"
+                    android:text="上传房源照片"></TextView>
+
                 <TextView
                     android:id="@+id/tv_delete"
+                    style="@style/btnstyle_major"
                     android:layout_width="330dp"
                     android:layout_height="45dp"
-                    android:onClick="onViewClick"
                     android:layout_centerInParent="true"
-                    style="@style/btnstyle_major"
-                    android:text="删除选中照片"
                     android:enabled="false"
-                    android:visibility="gone">
-                </TextView>
+                    android:onClick="onViewClick"
+                    android:text="删除选中照片"
+                    android:visibility="gone"></TextView>
             </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>
+
+    <include layout="@layout/seperator_horizontal"/>
 
 </LinearLayout>

@@ -48,7 +48,9 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -546,5 +548,10 @@ public class commonFun {
         String path = context.getCacheDir().getAbsolutePath() + "/image/";
         kjsLogUtil.i("Image cache dir: " + path);
         return path;
+    }
+
+    public static String dateToStringFormat(Date date) {
+        String formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(date);
+        return formatTime;
     }
 }
