@@ -131,19 +131,19 @@ class ResGetHouseInfo extends ResBase implements IApiResults.IGetHouseInfo, IApi
             }
 
             switch (mDecorate) {
-                case 0:
+                case IApiResults.HOUSE_DECORATE_Workblank:
                     mDecoration = "毛坯";
                     break;
-                case 1:
+                case IApiResults.HOUSE_DECORATE_Simple:
                     mDecoration = "简装";
                     break;
-                case 2:
+                case IApiResults.HOUSE_DECORATE_Medium:
                     mDecoration = "中档装修";
                     break;
-                case 3:
+                case IApiResults.HOUSE_DECORATE_Fine:
                     mDecoration = "精装修";
                     break;
-                case 4:
+                case IApiResults.HOUSE_DECORATE_Luxury:
                     mDecoration = "豪华装修";
                     break;
             }

@@ -112,7 +112,7 @@ public class IApiResults {
         int     Livingrooms();  // how many living rooms within house
         int     Bathrooms();    // how many bathrooms within house
         int     Acreage();      // house acreage, 100x than real value. for example 11537 mean 115.37 M^2
-        int     Decorate();     // decoration
+        int     Decorate();     // decoration. ref to HOUSE_DECORATE_XXXX
         int     Agency();       // house agency id
         int     Landlord();     // house landlord id
         Date    SubmitTime();   // house submit time
@@ -292,7 +292,7 @@ public class IApiResults {
 
     public interface IAppointmentAct {
         int     Id();
-        int     Act();
+        int     Act();      // Ref to HOUSESEE_APPOINTMENT_ACT_xxx
         String  Who();
         Date    When();
         Date    PeriodBegin();
@@ -323,4 +323,18 @@ public class IApiResults {
                             HOUSE_RENT_RENTED   = 2,    // rented
                             HOUSE_RENT_DUE      = 3;    // Due, open for ordering
 
+    //  House decoration
+    public static final int HOUSE_DECORATE_Workblank= 0,
+                            HOUSE_DECORATE_Simple   = 1,
+                            HOUSE_DECORATE_Medium   = 2,
+                            HOUSE_DECORATE_Fine     = 3,
+                            HOUSE_DECORATE_Luxury   = 4;
+
+    // House seeing appointment actions
+    public static final int HOUSESEE_APPOINTMENT_ACT_Submit         = 1,    // submit new appointment
+                            HOUSESEE_APPOINTMENT_ACT_Confirm        = 2,    // confirm the schedule
+                            HOUSESEE_APPOINTMENT_ACT_Reschedule     = 3,    // reschedule
+                            HOUSESEE_APPOINTMENT_ACT_Done           = 4,    // appointment finished
+                            HOUSESEE_APPOINTMENT_ACT_Cancel         = 5,    // appointment canceled
+                            HOUSESEE_APPOINTMENT_ACT_AssignAgency   = 6;    // assign agency to handle the appointment
 }
