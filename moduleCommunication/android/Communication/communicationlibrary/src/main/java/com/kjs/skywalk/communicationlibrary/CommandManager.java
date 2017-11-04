@@ -472,6 +472,27 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return execute(op, pMap);
     }
 
+    @Override
+    public String GetLandlordHouseSubmitConfirmUrl(int property, String building_no, String house_no) {
+        String Fn = "[GetLandlordHouseSubmitConfirmUrl] ";
+        if (property <= 0) {
+            Log.e(TAG, Fn + String.format("property: %d", property));
+            return null;
+        }
+        if (null == building_no || building_no.isEmpty()) {
+            Log.e(TAG, Fn + String.format("building_no: %d", building_no));
+            return null;
+        }
+        if (null == house_no || house_no.isEmpty()) {
+            Log.e(TAG, Fn + String.format("house_no: %d", house_no));
+            return null;
+        }
+
+        String Url = ServerURL.mServerUri +
+                        String.format("/v1/house/LandlordSubmitHouseContract?ett=%d&bn=%s&hn=%s", property, building_no, house_no);
+        return Url;
+    }
+
 
     @Override
     public int GetPropertyListByName(String sName, int nBegin, int nCount) {
