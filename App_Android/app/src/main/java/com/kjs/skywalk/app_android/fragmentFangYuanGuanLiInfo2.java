@@ -17,6 +17,7 @@ public class fragmentFangYuanGuanLiInfo2 extends Fragment {
     private View mView = null;
     private String mLocation = "";
     private String mHouseInfo = "";
+    private String mReason = "";
 
     @Nullable
     @Override
@@ -40,11 +41,17 @@ public class fragmentFangYuanGuanLiInfo2 extends Fragment {
         mHouseInfo = info;
     }
 
+    public void setReason(String reason) {
+        mReason = reason;
+    }
+
     private void updateInfo() {
         TextView textView1 = (TextView)mView.findViewById(R.id.tv_apartment_info1);
         TextView textView2 = (TextView)mView.findViewById(R.id.tv_apartment_info2);
+        TextView textViewReason = (TextView)mView.findViewById(R.id.textViewReason);
 
         textView1.setText(mLocation);
         textView2.setText(mHouseInfo);
+        textViewReason.setText("审核未通过：" + mReason);
     }
 }

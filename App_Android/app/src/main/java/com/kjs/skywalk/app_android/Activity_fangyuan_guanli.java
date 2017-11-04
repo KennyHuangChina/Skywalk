@@ -172,6 +172,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     }
 
     private void updateFragment(IApiResults.IHouseCertDigestInfo info) {
+        kjsLogUtil.i(info.CertDesc());
         FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
         switch (info.CertStat()) {
             case HOUSE_CERT_STAT_WAIT:
@@ -192,6 +193,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             case HOUSE_CERT_STAT_FAILED:
                 mFragInfo2.setHouseInfo(mInfo2);
                 mFragInfo2.setHouseLocation(mHouseLocation);
+                mFragInfo2.setReason(info.CertDesc());
                 fragTransaction.replace(R.id.info_container, mFragInfo2);
                 break;
         }
