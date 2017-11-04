@@ -168,6 +168,14 @@ public class CommunicationInterface {
         int GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
         int SetHouseShowtime(int house_id, int pw, int pv, String pd);          // CMD_SET_HOUSE_SHOWTIME,          IApiResults.ICommon
 
+        /*
+        *   CMD: NONE
+        *       - property      : property id
+        *       - building_no   : building no for new house
+        *       - house_no      : house no for new house
+        */
+        String GetLandlordHouseSubmitConfirmUrl(int property, String building_no, String house_no);
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Property, Community

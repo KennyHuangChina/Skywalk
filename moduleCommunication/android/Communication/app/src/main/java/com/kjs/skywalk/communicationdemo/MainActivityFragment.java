@@ -120,7 +120,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
-        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), 0);
 //        CmdMgr.GetNewMsgCount();
@@ -132,6 +132,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseShowtime(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAppointmentInfo(Integer.parseInt(mEditText.getText().toString()));
+        String strUrl = CmdMgr.GetLandlordHouseSubmitConfirmUrl(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString(), mEditText2.getText().toString());
+        Log.d("[doTestGetApi] ", "strUrl:" + strUrl);
     }
     private void doTestGetList() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
