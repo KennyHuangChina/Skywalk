@@ -64,11 +64,10 @@ func (this *HouseController) LandlordSubmitHouseConfirm() {
 	/*
 	 *	Extract agreements
 	 */
-	uid := int64(4)
-	// uid, err := getLoginUser(this.Controller)
-	// if nil != err {
-	// 	return
-	// }
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
 	eid, _ := this.GetInt64("ett")
 	build_no := this.GetString("bn")
 	house_no := this.GetString("hn")
