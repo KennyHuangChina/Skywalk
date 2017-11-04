@@ -6,7 +6,12 @@ import (
 	"ApiServer/models"
 	"encoding/base64"
 	"fmt"
+	"html/template"
+	// "text/template"
+	// "crypto/rand"
+	// "encoding/hex"
 	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/cache"
 	"strconv"
 	"strings"
 )
@@ -36,6 +41,61 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("SetHouseAgency", h.SetHouseAgency)
 	h.Mapping("RecommendHouse", h.RecommendHouse)
 	h.Mapping("GetBehalfList", h.GetBehalfList)
+
+	h.Mapping("LandlordSubmitHouseConfirm", h.LandlordSubmitHouseConfirm)
+}
+
+type LandlordNewHouse struct {
+	Landlord   string
+	Estate     string
+	BuildingNo string
+	HouseNo    string
+}
+
+// @Title LandlordSubmitHouseConfirm
+// @Description get the house showing time
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /LandlordSubmitHouseContract [get]
+func (this *HouseController) LandlordSubmitHouseConfirm() {
+	FN := "[LandlordSubmitHouseConfirm] "
+	beego.Warn("[--- API: LandlordSubmitHouseConfirm ---]")
+
+	/*
+	 *	Extract agreements
+	 */
+	uid := int64(4)
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
+	eid, _ := this.GetInt64("ett")
+	build_no := this.GetString("bn")
+	house_no := this.GetString("hn")
+
+	err, est := models.GetPropertyInfo(eid)
+	if nil != err {
+		return
+	}
+	err, u := models.GetUser(uid)
+	if nil != err {
+		return
+	}
+
+	tplFile := "views/LandlordSubmitHouseContract.html"
+	info := LandlordNewHouse{u.Name, est.PropName, build_no, house_no}
+	beego.Debug(FN, "info:", info)
+
+	tmpl, err := template.ParseFiles(tplFile)
+	if nil != err {
+		beego.Error(FN, "err:", err)
+		this.Data["json"] = fmt.Sprintf("Error: %s", err)
+		this.ServeJSON()
+		return
+	}
+	tmpl.Execute(this.Controller.Ctx.ResponseWriter, info)
+
+	return
 }
 
 // @Title GetHouseShowTime
