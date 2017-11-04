@@ -121,10 +121,9 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         });
 
         // Get Server root
-        // TODO: to Jackie, please correct the following inofrmations
-        mPropertyId = 1;
-        mBuildingNo = "179";
-        mRoomNo = "2306";
+        mPropertyId = ClassDefine.HouseInfoForCommit.propertyId;
+        mBuildingNo = ClassDefine.HouseInfoForCommit.buildingNo;
+        mRoomNo = ClassDefine.HouseInfoForCommit.roomNo;
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, null, null);
         mURL = CmdMgr.GetLandlordHouseSubmitConfirmUrl(mPropertyId, mBuildingNo, mRoomNo);
     }
