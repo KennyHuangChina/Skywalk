@@ -31,15 +31,15 @@ public class SKBaseActivity extends AppCompatActivity
         implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
     private PopupWindowWaiting mWaitingWindow = null;
 
-    protected int mHouseId = 0;
-    protected String mHouseLocation = "";
-    protected String mPropertyName= "";
-    protected int mPropertyId = 0;
-    protected String mBuildingNo = "";
-    protected String mRoomNo = "";
-    protected int mUserId = 0;
-    protected String mUserName = "";
-    protected String mUserPhone = "";
+    protected int       mHouseId        = 0;
+    protected String    mHouseLocation  = "";
+    protected String    mPropertyName   = "";
+    protected int       mPropertyId     = 0;
+    protected String    mBuildingNo     = "";
+    protected String    mRoomNo         = "";
+    protected int       mUserId         = 0;
+    protected String    mUserName       = "";
+    protected String    mUserPhone      = "";
 
     public int mActScreenWidth = 0;
     public int mActScreenHeight = 0;

@@ -31,21 +31,47 @@ import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
  */
 
 public class Activity_Weituoqueren extends SKBaseActivity implements CommunicationInterface.CIProgressListener{
-    private final String TAG = "Weiguoqueren";
-    private WebView mWebView = null;
-    private ProgressBar mProgress = null;
-    private RelativeLayout mProgressContainer = null;
-    //private String mURL = "http://www.baidu.com/";
-    private String mURL = "file:////sdcard/test.html";
-    private String mErrorPage = "file:////sdcard/error.html";
-    private final int MSG_HIDE_PROGRESS_BAR = 0;
-    private final int MSG_HOUSE_INFO_COMMIT_DONE = 1;
-    private final int MSG_HOUSE_PRICE_COMMIT_DONE = 2;
-    private final int MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR = 3;
-    private int mHouseId = 0;
-    private boolean mHouseInfoCommitted = false;
-    private boolean mPriceInfoCommitted = false;
-    private int mErrorCode = 0;
+    private final String    TAG                 = getClass().getSimpleName();   //  "Weiguoqueren";
+    private WebView         mWebView            = null;
+    private ProgressBar     mProgress           = null;
+    private RelativeLayout  mProgressContainer  = null;
+    private String        mURL                = "http://www.baidu.com/";
+    private String          mErrorPage          = "file:////sdcard/error.html";
+
+    private boolean         mHouseInfoCommitted = false;
+    private boolean         mPriceInfoCommitted = false;
+    private int             mErrorCode          = 0;
+
+    private final int       MSG_HIDE_PROGRESS_BAR                   = 0,
+                            MSG_HOUSE_INFO_COMMIT_DONE              = 1,
+                            MSG_HOUSE_PRICE_COMMIT_DONE             = 2,
+                            MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR   = 3;
+
+    private String strTest = "\n" +
+            "<!DOCTYPE html>\n" +
+            "\n" +
+            "<html>\n" +
+            "<style type=\"text/css\">\n" +
+            "    p.detail { color:#242224;font-size:80% }\n" +
+            "    span.name { color:#ff8040;font-size:120% }\n" +
+            "    </style>\n" +
+            "<head>\n" +
+            "<meta charset=\"UTF-8\">\n" +
+            "<title>HTML5的标题</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "<h1 style=\"color:#242224;font-size:80%\">尊敬的业主：黄凯.Kenny</h1>\n" +
+            "<p class=\"detail\">您挂牌的房屋为<span class=\"name\">世茂.蝶湖湾</span>，<span class=\"name\">199</span>号楼<span class=\"name\">2305</span>室</p>\n" +
+            "<p class=\"detail\">本确认书适用于业主在我平台上自发展示、出租出售房屋时，对所挂房源真实性的承诺</p>\n" +
+            "<p class=\"detail\">条款：</p>\n" +
+            "<p class=\"detail\">（一）本人自发在平台上展示以及出租和出售房屋</p>\n" +
+            "<p class=\"detail\">（二）本人对所挂牌的房屋拥有合法、完整的处分权</p>\n" +
+            "<p class=\"detail\">（三）上述挂牌房屋信息真实、准确、完整，并满足房屋出租、出售的相关条件</p>\n" +
+            "<p class=\"detail\">（四）本人自发在平台上展示以及出租和出售房屋</p>\n" +
+            "<p class=\"detail\">（五）本人对所挂牌的房屋拥有合法、完整的处分权</p>\n" +
+            "<p class=\"detail\">（六）上述挂牌房屋信息真实、准确、完整，并满足房屋出租、出售的相关条件</p>\n" +
+            "</body>\n" +
+            "</html>";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +119,14 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
 //            public void onReceivedError(WebView viewWeb, WebResourceRequest request, WebResourceError error) {
 //            }
         });
+
+        // Get Server root
+        // TODO: to Jackie, please correct the following inofrmations
+        mPropertyId = 1;
+        mBuildingNo = "179";
+        mRoomNo = "2306";
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, null, null);
+        mURL = CmdMgr.GetLandlordHouseSubmitConfirmUrl(mPropertyId, mBuildingNo, mRoomNo);
     }
 
     CommunicationInterface.CICommandListener mListener = new CommunicationInterface.CICommandListener() {
@@ -215,6 +249,8 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         super.onResume();
         mWebView.removeAllViews();
         mWebView.loadUrl(mURL);
+//        Log.d(TAG, "strTest:" + strTest);
+//        mWebView.loadDataWithBaseURL(null, strTest, "text/html", "utf-8", null);
     }
 
     private void showErrorFinishedActivity() {
