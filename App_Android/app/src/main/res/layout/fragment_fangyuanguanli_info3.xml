@@ -24,7 +24,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextNormal"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:text=""/>
 
             <!--android:text="2房2厅1卫 | 105㎡ | 10/11F"-->
             <TextView
@@ -34,13 +35,14 @@
                 android:layout_marginTop="5dp"
                 android:textColor="@color/colorTextTint"
                 android:textSize="13sp"
-                />
+                android:text=""/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="#00AE63"
                 android:textSize="13sp"
+                android:id="@+id/textViewTime"
                 android:text="审核通过：2016-12-12"/>
 
             <include layout="@layout/layout_fangyuanguanli_progress1"/>

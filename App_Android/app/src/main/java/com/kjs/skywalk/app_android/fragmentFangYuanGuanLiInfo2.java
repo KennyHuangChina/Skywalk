@@ -13,14 +13,45 @@ import android.widget.TextView;
  */
 
 public class fragmentFangYuanGuanLiInfo2 extends Fragment {
+
+    private View mView = null;
+    private String mLocation = "";
+    private String mHouseInfo = "";
+    private String mReason = "";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_fangyuanguanli_info2, container, false);
+        mView = inflater.inflate(R.layout.fragment_fangyuanguanli_info2, container, false);
+
+        return mView;
     }
 
-    public void updateInfo(String info1, String info2) {
-        ((TextView)getActivity().findViewById(R.id.tv_apartment_info1)).setText(info1);
-        ((TextView)getActivity().findViewById(R.id.tv_apartment_info2)).setText(info2);
+    public void onResume() {
+        super.onResume();
+
+        updateInfo();
+    }
+
+    public void setHouseLocation(String location) {
+        mLocation = location;
+    }
+
+    public void setHouseInfo(String info) {
+        mHouseInfo = info;
+    }
+
+    public void setReason(String reason) {
+        mReason = reason;
+    }
+
+    private void updateInfo() {
+        TextView textView1 = (TextView)mView.findViewById(R.id.tv_apartment_info1);
+        TextView textView2 = (TextView)mView.findViewById(R.id.tv_apartment_info2);
+        TextView textViewReason = (TextView)mView.findViewById(R.id.textViewReason);
+
+        textView1.setText(mLocation);
+        textView2.setText(mHouseInfo);
+        textViewReason.setText("审核未通过：" + mReason);
     }
 }
