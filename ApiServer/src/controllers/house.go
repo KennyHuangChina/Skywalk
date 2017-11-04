@@ -64,10 +64,12 @@ func (this *HouseController) LandlordSubmitHouseConfirm() {
 	/*
 	 *	Extract agreements
 	 */
-	uid, err := getLoginUser(this.Controller)
-	if nil != err {
-		return
-	}
+	uid := int64(4)
+	// uid, err := getLoginUser(this.Controller)
+	// if nil != err {
+	// 	return
+	// }
+	beego.Warn(FN, "TODO: Android will assess this API by webview, but no cookie attached. try to fix")
 	eid, _ := this.GetInt64("ett")
 	build_no := this.GetString("bn")
 	house_no := this.GetString("hn")
