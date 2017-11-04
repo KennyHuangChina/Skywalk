@@ -6,7 +6,7 @@ import (
 	"ApiServer/models"
 	"encoding/base64"
 	"fmt"
-	"html/template"
+	// "html/template"
 	// "text/template"
 	// "crypto/rand"
 	// "encoding/hex"
@@ -45,12 +45,12 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("LandlordSubmitHouseConfirm", h.LandlordSubmitHouseConfirm)
 }
 
-type LandlordNewHouse struct {
-	Landlord   string
-	Estate     string
-	BuildingNo string
-	HouseNo    string
-}
+// type LandlordNewHouse struct {
+// 	Landlord   string
+// 	Estate     string
+// 	BuildingNo string
+// 	HouseNo    string
+// }
 
 // @Title LandlordSubmitHouseConfirm
 // @Description get the house showing time
@@ -82,18 +82,31 @@ func (this *HouseController) LandlordSubmitHouseConfirm() {
 		return
 	}
 
-	tplFile := "views/LandlordSubmitHouseContract.html"
-	info := LandlordNewHouse{u.Name, est.PropName, build_no, house_no}
-	beego.Debug(FN, "info:", info)
+	this.TplName = "LandlordSubmitHouseContract.html"
+	this.Data["Landlord"] = u.Name
+	this.Data["Estate"] = est.PropName
+	this.Data["BuildingNo"] = build_no
+	this.Data["HouseNo"] = house_no
+	// beego.Debug(FN, fmt.Sprintf("Landlord: %s, Estate: %s, building No: %s, house no.",
+	// 	this.Data["Landlord"], this.Data["Estate"], this.Data["BuildingNo"], this.Data["HouseNo"]))
+	beego.Debug(FN, fmt.Sprintf("data: %+v", this.Data))
 
-	tmpl, err := template.ParseFiles(tplFile)
-	if nil != err {
-		beego.Error(FN, "err:", err)
-		this.Data["json"] = fmt.Sprintf("Error: %s", err)
-		this.ServeJSON()
-		return
-	}
-	tmpl.Execute(this.Controller.Ctx.ResponseWriter, info)
+	// this.TplName = "views/LandlordSubmitHouseContract.html"
+	// tmpl, err := template.ParseFiles(this.TplName)
+	// if nil != err {
+	// 	beego.Error(FN, "err:", err)
+	// 	this.Data["json"] = fmt.Sprintf("Error: %s", err)
+	// 	this.ServeJSON()
+	// 	return
+	// }
+	// info := LandlordNewHouse{u.Name, est.PropName, build_no, house_no}
+	// beego.Debug(FN, "info:", info)
+	// tmpl.Execute(this.Controller.Ctx.ResponseWriter, info)
+	// tmpl.ExecuteTemplate(this.Controller.Ctx.ResponseWriter, "LandlordSubmitHouseContract.html", info)
+	// this.Controller.Ctx.Output.Header("Content-Type", "text/html; charset=utf-8")
+	// this.Controller.Render()
+	// this.Controller.RenderBytes()
+	// this.Render()
 
 	return
 }
