@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -35,7 +37,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     private WebView         mWebView            = null;
     private ProgressBar     mProgress           = null;
     private RelativeLayout  mProgressContainer  = null;
-    private String        mURL                = "http://www.baidu.com/";
+    private String          mURL                = "http://www.baidu.com/";
     private String          mErrorPage          = "file:////sdcard/error.html";
 
     private boolean         mHouseInfoCommitted = false;
@@ -75,6 +77,8 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String Fn = "[onCreate] ";
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tijiaoweituo);
         TextView titleText = (TextView)findViewById(R.id.textViewActivityTitle);
@@ -126,6 +130,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mRoomNo = ClassDefine.HouseInfoForCommit.roomNo;
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, null, null);
         mURL = CmdMgr.GetLandlordHouseSubmitConfirmUrl(mPropertyId, mBuildingNo, mRoomNo);
+        Log.d(TAG, Fn + "mURL: " + mURL);
     }
 
     CommunicationInterface.CICommandListener mListener = new CommunicationInterface.CICommandListener() {
@@ -245,8 +250,26 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     }
 
     protected void onResume() {
+        String Fn = "[onResume] ";
         super.onResume();
         mWebView.removeAllViews();
+
+        // set cookie for webview
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, null, null);
+        String cookie = CmdMgr.GetCookie(mURL);
+        Log.d(TAG, Fn + "cookie: " + cookie);
+
+        // Kenny: sample code use the CookieSyncManager, but it is deprecated
+        //  by testing, the cookie could be sent to server as well without CookieSyncManager
+        //  we just keep it for a while
+//        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+//        cookieManager.removeSessionCookie();    //移除
+        cookieManager.setCookie(mURL, cookie);
+//        CookieSyncManager.getInstance().sync();
+
+        // load page
         mWebView.loadUrl(mURL);
 //        Log.d(TAG, "strTest:" + strTest);
 //        mWebView.loadDataWithBaseURL(null, strTest, "text/html", "utf-8", null);
