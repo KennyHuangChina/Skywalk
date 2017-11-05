@@ -199,7 +199,7 @@ class HttpConnector {
             String cookie = mCookieManager.getCookie(mConnection.getURL().toString());
             Log.i(TAG, "Send Cookie: " + cookie);
             if (cookie != null && !cookie.isEmpty()) {
-                mConnection.setRequestProperty("Cookie", cookie);
+//                mConnection.setRequestProperty("Cookie", cookie);
             }
         }
 
@@ -298,7 +298,8 @@ class HttpConnector {
             if (mReadCookie) {
                 Map<String, List<String>> map = mConnection.getHeaderFields();
                 String cookieFromServer = mConnection.getHeaderField("Set-Cookie");
-                mCookieManager.setCookie(mConnection.getURL().toString(), cookieFromServer);
+                Log.d(TAG, "cookieFromServer:" + cookieFromServer);
+//                mCookieManager.setCookie(mConnection.getURL().toString(), cookieFromServer);
             }
 
             InputStream in = new BufferedInputStream(mConnection.getInputStream());
