@@ -102,6 +102,12 @@ public class CommunicationInterface {
         int GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
         int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon
 
+        /*
+        *   CMD: NONE
+        *       - url: url for cookie
+         */
+        String GetCookie(String url);
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House

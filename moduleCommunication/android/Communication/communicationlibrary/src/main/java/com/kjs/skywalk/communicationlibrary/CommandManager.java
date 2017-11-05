@@ -346,6 +346,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
+    public String GetCookie(String url) {
+        SKCookieManager mCookieManager = SKCookieManager.getManager(mContext);
+        return mCookieManager.getCookie(url);
+    }
+
+    @Override
     public int Relogin(String userName) {
         if (null != userName && !userName.isEmpty()) {
             mLoginUser = userName;
