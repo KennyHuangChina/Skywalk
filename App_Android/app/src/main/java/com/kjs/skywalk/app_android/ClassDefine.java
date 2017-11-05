@@ -346,15 +346,15 @@ public class ClassDefine {
     }
 
     public static class HouseTypeSelector {
-        private static Context mContext = null;
-        private static AlertDialog mDialog = null;
-        private static int mRooms = 0;
-        private static int mBaths = 0;
-        private static int mLounges = 0;
-        public static int mRoomIndex = 0;
-        public static int mBathIndex = 0;
-        public static int mLoungeIndex = 0;
-        public static boolean mDirty = false;
+        private Context mContext = null;
+        private AlertDialog mDialog = null;
+        private int mRooms = 0;
+        private int mBaths = 0;
+        private int mLounges = 0;
+        public int mRoomIndex = 0;
+        public int mBathIndex = 0;
+        public int mLoungeIndex = 0;
+        public boolean mDirty = false;
 
         private static final String[] arrShi = {"1室", "2室", "3室", "4室", "5室"};
         private static final String[] arrTing = {"1厅", "2厅", "3厅", "4厅", "5厅"};
@@ -364,7 +364,7 @@ public class ClassDefine {
             mContext= context;
         }
 
-        public static void setHouseType(int rooms, int lounges, int bathRooms) {
+        public void setHouseType(int rooms, int lounges, int bathRooms) {
             mRooms = rooms;
             mBaths = bathRooms;
             mLounges = lounges;
@@ -373,7 +373,7 @@ public class ClassDefine {
             mLoungeIndex = lounges - 1;
         }
 
-        public static void show(DialogInterface.OnDismissListener listener) {
+        public void show(DialogInterface.OnDismissListener listener) {
             if (mDialog == null) {
                 mDialog = new AlertDialog.Builder(mContext).create();
             }
