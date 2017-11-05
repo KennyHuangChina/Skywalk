@@ -125,15 +125,15 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), 0);
 //        CmdMgr.GetNewMsgCount();
 //        CmdMgr.GetHouseNewEvent();
-//        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
+        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
 //        CmdMgr.GetHousePrice(Integer.parseInt(mEditText.getText().toString()), 0, Integer.parseInt(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseShowtime(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetAppointmentInfo(Integer.parseInt(mEditText.getText().toString()));
-        String strUrl = CmdMgr.GetLandlordHouseSubmitConfirmUrl(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString(), mEditText2.getText().toString());
-        Log.d("[doTestGetApi] ", "strUrl:" + strUrl);
+//        String strUrl = CmdMgr.GetLandlordHouseSubmitConfirmUrl(Integer.parseInt(mEditText.getText().toString()), mEditText1.getText().toString(), mEditText2.getText().toString());
+//        Log.d("[doTestGetApi] ", "strUrl:" + strUrl);
     }
     private void doTestGetList() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);

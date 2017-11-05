@@ -30,7 +30,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                                 AGENT_STATUS_Logining   = 2,
                                 AGENT_STATUS_Logined    = 3;
     private int     mAgentStatus    = AGENT_STATUS_Unknow;
-    private String  mLoginUser      = "15306261804";
+    private String  mLoginUser      = "15306261804";        // TODO: please check and fix this hardcode
 
     private CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         mContext = context;
@@ -51,10 +51,21 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     private synchronized boolean queueCommand(CommunicationBase cmd) {
+        String Fn = "[queueCommand] ";
+
         if (null == mCmdQueue) {
             mCmdQueue = new ArrayList<CommunicationBase>();
         }
-        // TODO: check if the command already exist in queue
+        // Check if the command already exist in queue
+        // This is a rough way, just check the command id
+        int nNewCmd = cmd.mAPI;
+        for (CommunicationBase cmd_in_queue : mCmdQueue) {
+            if (cmd_in_queue.mAPI == nNewCmd) {
+                Log.d(TAG, Fn + "new command already exist");
+                return true;
+            }
+        }
+
         return mCmdQueue.add(cmd);
     }
 
@@ -142,6 +153,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                                     ResBase res = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
                                     mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, res);
                                 }
+                                // Keep the command in queue, once user get logined, the commands will be processed automatically, one by one
                             } else {
                                 Log.e(TAG, String.format("other error(0x%x), remove the command from queue", ret));
                                 removeCmd(cmd.mAPI/*, ""*/);
