@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Parcel;
@@ -374,6 +375,9 @@ public class ClassDefine {
         }
 
         public void show(DialogInterface.OnDismissListener listener) {
+            if(((Activity)mContext).isFinishing()) {
+                return;
+            }
             if (mDialog == null) {
                 mDialog = new AlertDialog.Builder(mContext).create();
             }
