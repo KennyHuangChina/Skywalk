@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.R;
@@ -55,6 +56,7 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
         TextView tv_user_name;
         TextView tv_time;
         EditText et_description;
+        LinearLayout ll_time;
         TextView tv_subscribe_date;
         TextView tv_subscribe_am_pm;
         TextView tv_subscribe_time;
@@ -72,6 +74,7 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
             holder.tv_user_name = ((TextView)convertView.findViewById(R.id.tv_user_name));
             holder.tv_time = ((TextView)convertView.findViewById(R.id.tv_time));
             holder.et_description = ((EditText)convertView.findViewById(R.id.et_description));
+            holder.ll_time = (LinearLayout) convertView.findViewById(R.id.ll_time);
             holder.tv_subscribe_date = ((TextView)convertView.findViewById(R.id.tv_subscribe_date));
             holder.tv_subscribe_am_pm = ((TextView)convertView.findViewById(R.id.tv_subscribe_am_pm));
             holder.tv_subscribe_time = ((TextView)convertView.findViewById(R.id.tv_subscribe_time));
@@ -87,6 +90,7 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
         holder.et_description.setText(appointmentAct.Comment());
 
         if (appointmentAct.PeriodBegin() != null && appointmentAct.PeriodEnd() != null){
+            holder.ll_time.setVisibility(View.VISIBLE);
             String beginDate = new SimpleDateFormat("yyyy-MM-dd").format(appointmentAct.PeriodBegin());
             String beginTime = new SimpleDateFormat("hh:mm").format(appointmentAct.PeriodBegin());
             String endTime = new SimpleDateFormat("hh:mm").format(appointmentAct.PeriodEnd());
@@ -101,6 +105,7 @@ class AdapterYuYueKanFangHistory extends BaseAdapter {
             holder.tv_subscribe_am_pm.setText(strAmPm);
             holder.tv_subscribe_time.setText(beginTime + " - " + endTime);
         } else {
+            holder.ll_time.setVisibility(View.GONE);
             holder.tv_subscribe_date.setText("");
             holder.tv_subscribe_am_pm.setText("");
             holder.tv_subscribe_time.setText("");
