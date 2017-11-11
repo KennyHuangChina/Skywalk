@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
+import com.kjs.skywalk.app_android.database.ProfileDBOperator;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
@@ -119,6 +120,7 @@ public class fragmentMsg extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+//                    ProfileDBOperator.getOperator(getActivity(), "test_user").update(list);
                     mAdapterMsg.updateList(list);
                 }
             });
