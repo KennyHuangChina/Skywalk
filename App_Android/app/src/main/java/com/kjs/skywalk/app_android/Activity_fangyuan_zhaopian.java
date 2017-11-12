@@ -13,6 +13,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Server.ImageDelete;
+import com.kjs.skywalk.app_android.Server.ImageFetchForHouse;
+import com.kjs.skywalk.app_android.Server.ImageFetchForUser;
+import com.kjs.skywalk.app_android.Server.ImageUpload;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -29,7 +33,9 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PIC_URL;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
 
-public class Activity_fangyuan_zhaopian extends SKBaseActivity {
+public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageUpload.UploadFinished,
+        ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished
+{
     ViewPager mVPHuXing;
     ViewPager mVpFangJianJieGou;
     ViewPager mVpJiaJuYongPin;
@@ -504,5 +510,40 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity {
         mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
 
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+
+    }
+
+    @Override
+    public void onDeleteStarted() {
+
+    }
+
+    @Override
+    public void onDeleteProgress(int current, int total, int id, int result) {
+
+    }
+
+    @Override
+    public void onDeleteEnd() {
+
+    }
+
+    @Override
+    public void onUploadStarted() {
+
+    }
+
+    @Override
+    public void onUploadProgress(int current, int total, String image, ImageUpload.UploadResult result) {
+
+    }
+
+    @Override
+    public void onUploadEnd() {
+
     }
 }
