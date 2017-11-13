@@ -51,6 +51,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     ArrayList<ClassDefine.PicList> mJiaJuYongPinPicLst;
     ArrayList<ClassDefine.PicList> mDianQiPicLst;
 
+    private ArrayList<String> mHuXingList = new ArrayList<>();
+    private ArrayList<String> mFangJianJieGouList = new ArrayList<>();
+    private ArrayList<String> mJiaJuYongPinList = new ArrayList<>();
+    private ArrayList<String> mDianQiList = new ArrayList<>();
+
     boolean mIsPicSelectMode = false;
     int mPhotoPickerHostId;
 
@@ -85,12 +90,12 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mJiaJuYongPinPicLst = new ArrayList<> ();
         mDianQiPicLst = new ArrayList<> ();
 
-        for (String photoPath : photosLst) {
-            testCount++;
-            mHuXingPicLst.add(new ClassDefine.PicList("户型图" + testCount, photoPath, 0, false));
-        mFangJianJieGouPicLst.add(new ClassDefine.PicList("房间结构图" + testCount, photoPath, 0, false));
-        mJiaJuYongPinPicLst.add(new ClassDefine.PicList("家居用品图" + testCount, photoPath, 0, false));
-    }
+//        for (String photoPath : photosLst) {
+//            testCount++;
+//            mHuXingPicLst.add(new ClassDefine.PicList("户型图" + testCount, photoPath, 0, false));
+//        mFangJianJieGouPicLst.add(new ClassDefine.PicList("房间结构图" + testCount, photoPath, 0, false));
+//        mJiaJuYongPinPicLst.add(new ClassDefine.PicList("家居用品图" + testCount, photoPath, 0, false));
+//    }
 
     // 户型图
         ((TextView) findViewById(R.id.tv_name_picgroup1)).setText("户型图");
@@ -458,6 +463,46 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mPhotoPickerHostId = host_view.getId();
         PhotoPicker.builder()
                 .start(Activity_fangyuan_zhaopian.this);
+    }
+
+    private void addPictureToHuxingList(String picture) {
+        for(String picPath : mHuXingList) {
+            if(picPath.equals(picture)) {
+                return;
+            }
+        }
+
+        mHuXingList.add(picture);
+    }
+
+    private void addPictureToFangJianJieGouList(String picture) {
+        for(String picPath : mFangJianJieGouList) {
+            if(picPath.equals(picture)) {
+                return;
+            }
+        }
+
+        mFangJianJieGouList.add(picture);
+    }
+
+    private void addPictureToJiaJuYongPinList(String picture) {
+        for(String picPath : mJiaJuYongPinList) {
+            if(picPath.equals(picture)) {
+                return;
+            }
+        }
+
+        mJiaJuYongPinList.add(picture);
+    }
+
+    private void addPictureToDianQiList(String picture) {
+        for(String picPath : mDianQiList) {
+            if(picPath.equals(picture)) {
+                return;
+            }
+        }
+
+        mDianQiList.add(picture);
     }
 
     private void onPhotoPickerReturn(List<String> photos) {
