@@ -21,8 +21,8 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
     }
 
     public ProfileDBHelper(Context context, String user) {
-        super(context, "/sdcard/" + user + "_profile.db", null, VERSION);
-        mTableName = user + "_profile.db";
+        super(context, "/sdcard/profile.db", null, VERSION);
+        mTableName = user + "_profile";
         Log.i(TAG, "ProfileDBHelper(Context), mTableName: " + mTableName);
 
     }
@@ -41,10 +41,15 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
     }
 
     private void createTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE IF NOT EXISTS " +
+//        String sql = "CREATE TABLE IF NOT EXISTS " +
+//                mTableName +
+//                "(" +
+//                "id integer, create_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16) house_no varchar(16)" +
+//                ")";
+        String sql = "CREATE TABLE " +
                 mTableName +
                 "(" +
-                "id integer, create_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16) house_no varchar(16)" +
+                "id integer, create_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16), house_no varchar(16)" +
                 ")";
         db.execSQL(sql);
     }
