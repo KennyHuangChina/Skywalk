@@ -1,6 +1,7 @@
 package com.kjs.skywalk.app_android.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -33,11 +34,18 @@ public class ProfileDBOperator {
     public void update(ArrayList<Object> list) {
         for (Object object : list) {
             IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) object;
-            String sql_add = "insert into " + mProfileDBHelper.getClass() + " (id, create_time, type, body, property, building_no, house_no)values (?,?,?,?,?,?,?)";
+            String sql_add = "insert into " + mProfileDBHelper.getTableName() + " (id, create_time, type, body, property, building_no, house_no)values (?,?,?,?,?,?,?)";
             SQLiteDatabase db = mProfileDBHelper.getWritableDatabase();
             db.execSQL(sql_add, new Object[] { msgInfo.MsgId(), msgInfo.CreateTime(), msgInfo.MsgType(), msgInfo.MsgBody(), msgInfo.Property(), msgInfo.BuildingNo(), msgInfo.HouseNo()});
             db.close();
         }
+    }
 
+    public int getMessageCount() {
+        SQLiteDatabase db = mProfileDBHelper.getReadableDatabase();
+        Cursor cursor = db.query("test_user_profile", null, null, null, null, null, null);
+        int count = cursor.getCount();
+
+        return count;
     }
 }

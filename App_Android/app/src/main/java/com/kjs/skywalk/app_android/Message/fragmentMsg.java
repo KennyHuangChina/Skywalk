@@ -49,6 +49,10 @@ public class fragmentMsg extends Fragment {
         mAdapterMsg = new AdapterMessage(getActivity());
         mLvMessage.setAdapter(mAdapterMsg);
 
+        // get message count in db
+        ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
+        //
+
         getMessageInfo();
 
         // test
@@ -120,7 +124,7 @@ public class fragmentMsg extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    ProfileDBOperator.getOperator(getActivity(), "test_user").update(list);
+                    ProfileDBOperator.getOperator(getActivity(), "test_user").update(list);
                     mAdapterMsg.updateList(list);
                 }
             });
