@@ -16,6 +16,9 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_N
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_ADD_PICTURE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_House;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_User;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_APPLIANCE;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FURNITURE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
@@ -36,6 +39,10 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
 
     public static final int UPLOAD_TYPE_IDCARD = PIC_TYPE_MAJOR_User + PIC_TYPE_SUB_USER_IDCard;
     public static final int UPLOAD_TYPE_OWNER_CERT = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_OwnershipCert;
+    public static final int UPLOAD_TYPE_HUXING = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
+    public static final int UPLOAD_TYPE_FANGJIAN = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
+    public static final int UPLOAD_TYPE_JIAJU = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FURNITURE;
+    public static final int UPLOAD_TYPE_DIANQI = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_APPLIANCE;
 
     public static final int UPLOAD_RESULT_OK = 0;
     public static final int UPLOAD_RESULT_FAIL = 1;

@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Server.ImageDelete;
@@ -22,6 +23,7 @@ import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +38,8 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SI
 public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageUpload.UploadFinished,
         ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished
 {
+    private LinearLayout mContainer = null;
+    private PopupWindowWaitingUnclickable mWaitingWindow = null;
     ViewPager mVPHuXing;
     ViewPager mVpFangJianJieGou;
     ViewPager mVpJiaJuYongPin;
@@ -76,6 +80,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fangyuan_zhaopian);
+
+        mContainer = (LinearLayout)findViewById(R.id.root_container);
 
         mTvUpload = (TextView) findViewById(R.id.tv_upload);
         mTvDelete = (TextView) findViewById(R.id.tv_delete);
@@ -205,6 +211,64 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         });
     }
 
+    private void upload() {
+        ImageUpload imageUpload = new ImageUpload(this, this);
+        ArrayList<ImageUpload.UploadImageInfo> list = new ArrayList<>();
+        for(String path : mHuXingList) {
+            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+            info.type = ImageUpload.UPLOAD_TYPE_HUXING;
+            info.image = path;
+            info.houseId = mHouseId;
+            list.add(info);
+        }
+
+        for(String path : mFangJianJieGouList) {
+            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+            info.type = ImageUpload.UPLOAD_TYPE_FANGJIAN;
+            info.image = path;
+            info.houseId = mHouseId;
+            list.add(info);
+        }
+
+        for(String path : mJiaJuYongPinList) {
+            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+            info.type = ImageUpload.UPLOAD_TYPE_JIAJU;
+            info.image = path;
+            info.houseId = mHouseId;
+            list.add(info);
+        }
+
+        for(String path : mDianQiList) {
+            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+            info.type = ImageUpload.UPLOAD_TYPE_DIANQI;
+            info.image = path;
+            info.houseId = mHouseId;
+            list.add(info);
+        }
+
+        if(imageUpload.upload(list) != 0) {
+            commonFun.showToast_info(this, mContainer, "上传失败");
+        } else {
+            showWaiting(true);
+        }
+    }
+
+    private void showWaiting(final boolean show) {
+        if (mWaitingWindow == null) {
+            mWaitingWindow = new PopupWindowWaitingUnclickable(this, mActScreenWidth, mActScreenHeight);
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (show) {
+                    mWaitingWindow.show(mContainer);
+                } else {
+                    mWaitingWindow.hide();
+                }
+            }
+        });
+    }
+
     public void onViewClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
@@ -230,6 +294,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             }
             case R.id.tv_upload:
             {
+                upload();
                 break;
             }
             case R.id.tv_delete:
@@ -465,77 +530,59 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 .start(Activity_fangyuan_zhaopian.this);
     }
 
-    private void addPictureToHuxingList(String picture) {
-        for(String picPath : mHuXingList) {
-            if(picPath.equals(picture)) {
-                return;
+    private void mergeList(List<String> source, ArrayList<String> dest) {
+        for(String sourcePic : source) {
+            boolean exists = false;
+            for(String destPic : dest) {
+                if(destPic.equals(sourcePic)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if(!exists) {
+                dest.add(sourcePic);
             }
         }
-
-        mHuXingList.add(picture);
-    }
-
-    private void addPictureToFangJianJieGouList(String picture) {
-        for(String picPath : mFangJianJieGouList) {
-            if(picPath.equals(picture)) {
-                return;
-            }
-        }
-
-        mFangJianJieGouList.add(picture);
-    }
-
-    private void addPictureToJiaJuYongPinList(String picture) {
-        for(String picPath : mJiaJuYongPinList) {
-            if(picPath.equals(picture)) {
-                return;
-            }
-        }
-
-        mJiaJuYongPinList.add(picture);
-    }
-
-    private void addPictureToDianQiList(String picture) {
-        for(String picPath : mDianQiList) {
-            if(picPath.equals(picture)) {
-                return;
-            }
-        }
-
-        mDianQiList.add(picture);
     }
 
     private void onPhotoPickerReturn(List<String> photos) {
         ArrayList<ClassDefine.PicList> picList;
         PicFragStatePageAdapter adapter;
+        ArrayList<String> list;
         switch (mPhotoPickerHostId) {
             case R.id.iv_photopicker_picgroup1:
             {
                 picList = mHuXingPicLst;
                 adapter = ((PicFragStatePageAdapter) mVPHuXing.getAdapter());
+                list = mHuXingList;
                 break;
             }
             case R.id.iv_photopicker_picgroup2:
             {
                 picList = mFangJianJieGouPicLst;
                 adapter = ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter());
+                list = mFangJianJieGouList;
                 break;
             }
             case R.id.iv_photopicker_picgroup3:
             {
                 picList = mJiaJuYongPinPicLst;
                 adapter = ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter());
+                list = mJiaJuYongPinList;
                 break;
             }
             case R.id.iv_photopicker_picgroup4:
             {
                 picList = mDianQiPicLst;
                 adapter = ((PicFragStatePageAdapter) mVpDianQi.getAdapter());
+                list =  mDianQiList;
                 break;
             }
             default:
                 return;
         }
+
+        mergeList(photos, list);
 
         for (String path : photos) {
             ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false);
