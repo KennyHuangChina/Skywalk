@@ -100,6 +100,14 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
             return info.userId;
         } else if(info.type == UPLOAD_TYPE_OWNER_CERT) {
             return info.houseId;
+        } else if(info.type == UPLOAD_TYPE_HUXING) {
+            return info.houseId;
+        } else if(info.type == UPLOAD_TYPE_FANGJIAN) {
+            return info.houseId;
+        } else if(info.type == UPLOAD_TYPE_JIAJU) {
+            return info.houseId;
+        } else if(info.type == UPLOAD_TYPE_DIANQI) {
+            return info.houseId;
         }
 
         return 0;

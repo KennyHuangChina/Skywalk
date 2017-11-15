@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Picture;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -31,12 +34,19 @@ import java.util.List;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
 
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_OK;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PIC_URL;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_APPLIANCE;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FURNITURE;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
 public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageUpload.UploadFinished,
-        ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished
+        ImageDelete.DeleteFinished
 {
     private LinearLayout mContainer = null;
     private PopupWindowWaitingUnclickable mWaitingWindow = null;
@@ -63,6 +73,18 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     boolean mIsPicSelectMode = false;
     int mPhotoPickerHostId;
 
+    private ArrayList<ClassDefine.PictureInfo> mPictureListHuXing = new ArrayList<>();
+    private ArrayList<ClassDefine.PictureInfo> mPictureListFangJianJieGou = new ArrayList<>();
+    private ArrayList<ClassDefine.PictureInfo> mPictureListJiaJuYongPin = new ArrayList<>();
+    private ArrayList<ClassDefine.PictureInfo> mPictureListDianQi = new ArrayList<>();
+
+    private final int MSG_UPLOAD_ALL_DONE = 0;
+    private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
+    private final int MSG_GET_PICTURES_DONE = 0x100;
+    private final int MSG_DELETE_ALL_DONE = 0x200;
+    private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
+    private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -86,7 +108,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mTvUpload = (TextView) findViewById(R.id.tv_upload);
         mTvDelete = (TextView) findViewById(R.id.tv_delete);
 
-        getHousePictures(0);
+
 
         // test pics
         ArrayList<String> photosLst = commonFun.getTestPicList(this);
@@ -156,59 +178,78 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 //        );
         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
+        getPictures();
     }
 
-    private void getHousePictures(final int type) {
-        CommandManager.getCmdMgrInstance(this,  new CommunicationInterface.CICommandListener() {
+    private void getHuXingPictures() {
+        mPictureListHuXing.clear();
 
+        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
+            public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+                if(list.size() == 0) {
                     return;
                 }
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    return;
-                }
-                // CMD_GET_HOUSE_PIC_LIST,  IApiResults.IResultList(IApiResults.IHousePicInfo)
-                if (command == CMD_GET_HOUSE_PIC_LIST) {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    for (Object item : resultList.GetList()) {
-                        IApiResults.IPicInfo picInfo = (IApiResults.IPicInfo) item;
-                        getPicUrlById(type, picInfo.GetId());
-                    }
-                }
-            }
-        }, this).GetHousePics(mHouseId, type, PIC_SIZE_ALL);
-    }
-
-    private void getPicUrlById(int type, final int picId) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                CommandManager.getCmdMgrInstance(Activity_fangyuan_zhaopian.this,  new CommunicationInterface.CICommandListener() {
-
+                mPictureListHuXing = list;
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                        if (null == iResult) {
-                            kjsLogUtil.w("result is null");
-                            return;
+                    public void run() {
+                        int i = 0;
+                        for(ClassDefine.PictureInfo info : mPictureListHuXing) {
+                            ClassDefine.PicList pic = new ClassDefine.PicList("户型图" + i, info.smallPicUrl, 0, false);
+                            mHuXingPicLst.add(pic);
                         }
-                        kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                            return;
-                        }
-                        // CMD_GET_PIC_URL,         IApiResults.IPicUrls
-                        if (command == CMD_GET_PIC_URL) {
-                            IApiResults.IPicUrls picUrls = (IApiResults.IPicUrls) iResult;
-                        }
+
+                        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
                     }
-                }, Activity_fangyuan_zhaopian.this).GetPicUrls(picId, 1);
+                });
             }
-        });
+        };
+
+        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
+        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FLOOR_PLAN, PIC_SIZE_ALL);
+    }
+
+    private void getDianQiPictures() {
+        mPictureListDianQi.clear();
+
+        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
+            @Override
+            public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+
+            }
+        };
+
+        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
+        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_APPLIANCE, PIC_SIZE_ALL);
+    }
+
+    private void getJiaJuYongPinPictures() {
+        mPictureListJiaJuYongPin.clear();
+
+        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
+            @Override
+            public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+
+            }
+        };
+
+        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
+        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FURNITURE, PIC_SIZE_ALL);
+    }
+
+    private void getFangJianJieGouPictures() {
+        mPictureListFangJianJieGou.clear();
+
+//        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, this);
+//        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+    }
+
+    private void getPictures() {
+        getHuXingPictures();
+        getFangJianJieGouPictures();
+        getJiaJuYongPinPictures();
+        getDianQiPictures();
     }
 
     private void upload() {
@@ -244,6 +285,10 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             info.image = path;
             info.houseId = mHouseId;
             list.add(info);
+        }
+
+        if(list.size() == 0) {
+            return;
         }
 
         if(imageUpload.upload(list) != 0) {
@@ -604,10 +649,26 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
-
-    }
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_UPLOAD_ALL_DONE:
+                    showWaiting(false);
+                    getPictures();
+                    break;
+                case MSG_DELETE_ALL_DONE:
+                    showWaiting(false);
+                    getPictures();
+                    break;
+                case MSG_GET_PICTURES_DONE:
+                    break;
+                case MSG_GET_HOUSE_INFO_DONE:
+                    getPictures();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onDeleteStarted() {
@@ -626,16 +687,57 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     @Override
     public void onUploadStarted() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "开始上传，请稍候...";
+                    mWaitingWindow.updateProgressText(text);
+                }
+            }
+        });
     }
 
     @Override
-    public void onUploadProgress(int current, int total, String image, ImageUpload.UploadResult result) {
-
+    public void onUploadProgress(final int current, final int total, String image, ImageUpload.UploadResult result) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "正在上传照片 ... " + current + "/" + total;
+                    mWaitingWindow.updateProgressText(text);
+                }
+            }
+        });
+        if(result.mResult == UPLOAD_RESULT_INTERRUPT) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(mWaitingWindow != null) {
+                        String text = "上传失败, 请重新上传";
+                        mWaitingWindow.updateProgressText(text);
+                    }
+                }
+            });
+            mHandler.sendEmptyMessageDelayed(MSG_UPLOAD_FINISHED_WITH_ERROR, 1000);
+        } else if(result.mResult == UPLOAD_RESULT_OK) {
+            //上传成功需要记录id和md5到数据库
+            String str = String.format("Photo %d ->  id: %d md5:%s", current, result.mId, result.mMD5);
+            kjsLogUtil.i(str);
+        }
     }
 
     @Override
     public void onUploadEnd() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "上传完成";
+                    mWaitingWindow.updateProgressText(text);
+                    mHandler.sendEmptyMessageDelayed(MSG_UPLOAD_ALL_DONE, 1000);
+                }
+            }
+        });
     }
 }
