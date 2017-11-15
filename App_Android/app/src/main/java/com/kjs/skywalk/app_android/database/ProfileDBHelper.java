@@ -46,10 +46,10 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
 //                "(" +
 //                "id integer, create_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16) house_no varchar(16)" +
 //                ")";
-        String sql = "CREATE TABLE " +
+        String sql = "CREATE TABLE IF NOT EXISTS " +
                 mTableName +
                 "(" +
-                "id integer, create_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16), house_no varchar(16)" +
+                "id integer primary key, create_time varchar(16), read_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16), house_no varchar(16)" +
                 ")";
         db.execSQL(sql);
     }
