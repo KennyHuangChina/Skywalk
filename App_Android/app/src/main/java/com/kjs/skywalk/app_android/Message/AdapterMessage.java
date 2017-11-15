@@ -32,6 +32,17 @@ class AdapterMessage extends BaseAdapter {
 //        public void onItemChanged(int pos, Deliverable deliverable);
     }
 
+    public static class messageInfo {
+        private int id;
+        private String create_time;
+        private String read_time;
+        private String type;
+        private String body;
+        private String property;
+        private String building_no;
+        private String house_no;
+    }
+
     private Context mContext = null;
     private ArrayList<Object> mList = new ArrayList<>();
 

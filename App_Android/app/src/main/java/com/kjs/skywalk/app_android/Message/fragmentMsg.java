@@ -50,7 +50,8 @@ public class fragmentMsg extends Fragment {
         mLvMessage.setAdapter(mAdapterMsg);
 
         // get message count in db
-        ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
+        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
+        kjsLogUtil.i("msgCount: " + msgCount);
         //
 
         getMessageInfo();
