@@ -518,5 +518,27 @@ public class ClassDefine {
             kjsLogUtil.i("Small Pic: " + smallPicUrl);
         }
     }
+
+    public static class MessageInfo {
+        private int mId;
+        private String mCreate_time;
+        private String mRead_time;
+        private String mType;
+        private String mBody;
+        private String mProperty;
+        private String mBuilding_no;
+        private String mHouse_no;
+
+        public void MessageInfo(int id, String create_time, String read_time, String type, String body, String property, String building_no, String house_no) {
+            mId = id;
+            mCreate_time = create_time;
+            mRead_time = read_time;
+            mType = type;
+            mBody = body;
+            mProperty = property;
+            mBuilding_no = building_no;
+            mHouse_no = house_no;
+        }
+    }
 }
 

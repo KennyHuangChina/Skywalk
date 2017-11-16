@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
+import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.BadgeView;
 
@@ -26,21 +29,10 @@ import java.util.List;
  * Created by admin on 2017/2/8.
  */
 
-class AdapterMessage extends BaseAdapter {
+public class AdapterMessage extends BaseAdapter {
 
     public static interface AdapterDeliverablesListener {
 //        public void onItemChanged(int pos, Deliverable deliverable);
-    }
-
-    public static class messageInfo {
-        private int id;
-        private String create_time;
-        private String read_time;
-        private String type;
-        private String body;
-        private String property;
-        private String building_no;
-        private String house_no;
     }
 
     private Context mContext = null;
@@ -143,6 +135,7 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    markMessageRead(msgInfo.MsgId());
                     Intent intent = new Intent(mContext, Activity_Message_fangyuanshenhe.class);
                     intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, msgInfo.HouseId());
                     intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
@@ -156,6 +149,7 @@ class AdapterMessage extends BaseAdapter {
             holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    markMessageRead(msgInfo.MsgId());
                     Intent intent = new Intent(mContext, Activity_Message_yuyuekanfang.class);
                     intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.RefId());
                     mContext.startActivity(intent);
@@ -173,5 +167,15 @@ class AdapterMessage extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    private void markMessageRead(int msgId) {
+        CommandManager.getCmdMgrInstance(mContext, new CommunicationInterface.CICommandListener() {
+
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+            }
+        }, null).ReadNewMsg(msgId);
     }
 }

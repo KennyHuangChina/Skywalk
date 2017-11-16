@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.kjs.skywalk.app_android.ClassDefine;
+import com.kjs.skywalk.app_android.Message.AdapterMessage;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
@@ -48,5 +50,14 @@ public class ProfileDBOperator {
         int count = cursor.getCount();
 
         return count;
+    }
+
+    public ArrayList<ClassDefine.MessageInfo> getMessageListFromDB() {
+        SQLiteDatabase db = mProfileDBHelper.getReadableDatabase();
+        Cursor cursor = db.query(mProfileDBHelper.getTableName(), null, null, null, null, null, null);
+
+        ArrayList<ClassDefine.MessageInfo> list = new ArrayList<>();
+        
+        return list;
     }
 }

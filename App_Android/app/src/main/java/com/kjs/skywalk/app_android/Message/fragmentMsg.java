@@ -131,4 +131,8 @@ public class fragmentMsg extends Fragment {
             });
         }
     }
+
+    private void loadMessageList() {
+
+    }
 }
