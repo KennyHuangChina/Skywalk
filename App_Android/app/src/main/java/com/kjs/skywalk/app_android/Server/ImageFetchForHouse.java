@@ -71,11 +71,13 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
             @Override
             public void onCommandFinished(int command, IApiResults.ICommon iResult) {
                 if (null == iResult) {
+                    kjsLogUtil.i("result is null");
                     mListener.onHouseImageFetched(mList);
                     return;
                 }
 
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                    kjsLogUtil.i("Error occurred during fetch picture from server");
                     mListener.onHouseImageFetched(mList);
                     return;
                 }

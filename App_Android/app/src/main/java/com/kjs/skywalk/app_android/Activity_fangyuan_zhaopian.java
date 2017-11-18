@@ -188,6 +188,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
                 if(list.size() == 0) {
+                    kjsLogUtil.i("no picture got");
                     return;
                 }
                 mPictureListHuXing = list;
