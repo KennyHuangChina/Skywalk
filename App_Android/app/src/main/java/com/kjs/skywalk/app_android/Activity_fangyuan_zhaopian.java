@@ -43,6 +43,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TY
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FURNITURE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_RealMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
 
 public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageUpload.UploadFinished,
@@ -108,75 +109,26 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mTvUpload = (TextView) findViewById(R.id.tv_upload);
         mTvDelete = (TextView) findViewById(R.id.tv_delete);
 
-
-
-        // test pics
-        ArrayList<String> photosLst = commonFun.getTestPicList(this);
-        int testCount = 0;
         mHuXingPicLst = new ArrayList<> ();
         mFangJianJieGouPicLst = new ArrayList<> ();
         mJiaJuYongPinPicLst = new ArrayList<> ();
         mDianQiPicLst = new ArrayList<> ();
 
-//        for (String photoPath : photosLst) {
-//            testCount++;
-//            mHuXingPicLst.add(new ClassDefine.PicList("户型图" + testCount, photoPath, 0, false));
-//        mFangJianJieGouPicLst.add(new ClassDefine.PicList("房间结构图" + testCount, photoPath, 0, false));
-//        mJiaJuYongPinPicLst.add(new ClassDefine.PicList("家居用品图" + testCount, photoPath, 0, false));
-//    }
-
-    // 户型图
         ((TextView) findViewById(R.id.tv_name_picgroup1)).setText("户型图");
-    mTvStatus1 = (TextView) findViewById(R.id.tv_status_picgroup1);
-    mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
-//        mHuXingPicLst = new ArrayList<> (
-//                Arrays.asList(
-//                        new ClassDefine.PicList("户型图一", "", R.drawable.huxingtu1, false),
-//                        new ClassDefine.PicList("户型图二", "", R.drawable.huxingtu2, false),
-//                        new ClassDefine.PicList("户型图三", "", R.drawable.huxingtu2, false),
-//                        new ClassDefine.PicList("户型图四", "", R.drawable.huxingtu2, false),
-//                        new ClassDefine.PicList("户型图五", "", R.drawable.huxingtu2, false),
-//                        new ClassDefine.PicList("户型图六", "", R.drawable.huxingtu2, false)
-//             )
-//        );
+        mTvStatus1 = (TextView) findViewById(R.id.tv_status_picgroup1);
+        mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
 
-    fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
-
-    //        // 房间结构
         ((TextView) findViewById(R.id.tv_name_picgroup2)).setText("房间结构");
         mTvStatus2 = (TextView) findViewById(R.id.tv_status_picgroup2);
         mVpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
-//        mFangJianJieGouPicLst = new ArrayList<> (
-//                Arrays.asList(
-//                        new ClassDefine.PicList("房间结构图一", "", R.drawable.huxingtu1, false),
-//                        new ClassDefine.PicList("房间结构图二", "", R.drawable.huxingtu2, false)
-//                )
-//        );
-        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
 
-        //        // 家居用品
         ((TextView) findViewById(R.id.tv_name_picgroup3)).setText("家居用品");
         mTvStatus3 = (TextView) findViewById(R.id.tv_status_picgroup3);
         mVpJiaJuYongPin = (ViewPager) findViewById(R.id.vp_jiajuyongpin);
-//        mJiaJuYongPinPicLst = new ArrayList<> (
-//                Arrays.asList(
-//                        new ClassDefine.PicList("家居用品图一", "", R.drawable.huxingtu1, false),
-//                        new ClassDefine.PicList("家居用品图二", "", R.drawable.huxingtu2, false)
-//                )
-//        );
-        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
 
-        //        // 电器
         ((TextView) findViewById(R.id.tv_name_picgroup4)).setText("电器");
         mTvStatus4 = (TextView) findViewById(R.id.tv_status_picgroup4);
         mVpDianQi = (ViewPager) findViewById(R.id.vp_dianqi);
-//        mDianQiPicLst = new ArrayList<> ();
-//                Arrays.asList(
-//                        new ClassDefine.PicList("电器图一", "", R.drawable.huxingtu1, false),
-//                        new ClassDefine.PicList("电器图二", "", R.drawable.huxingtu2, false)
-//                )
-//        );
-        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
         getPictures();
     }
@@ -217,7 +169,23 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+                if(list.size() == 0) {
+                    kjsLogUtil.i("no picture got");
+                    return;
+                }
+                mPictureListDianQi = list;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i = 0;
+                        for(ClassDefine.PictureInfo info : mPictureListDianQi) {
+                            ClassDefine.PicList pic = new ClassDefine.PicList("电器" + i, info.smallPicUrl, 0, false, false);
+                            mDianQiPicLst.add(pic);
+                        }
 
+                        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+                    }
+                });
             }
         };
 
@@ -231,7 +199,23 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+                if(list.size() == 0) {
+                    kjsLogUtil.i("no picture got");
+                    return;
+                }
+                mPictureListJiaJuYongPin = list;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i = 0;
+                        for(ClassDefine.PictureInfo info : mPictureListJiaJuYongPin) {
+                            ClassDefine.PicList pic = new ClassDefine.PicList("家居用品" + i, info.smallPicUrl, 0, false, false);
+                            mJiaJuYongPinPicLst.add(pic);
+                        }
 
+                        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+                    }
+                });
             }
         };
 
@@ -241,9 +225,31 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getFangJianJieGouPictures() {
         mPictureListFangJianJieGou.clear();
+        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
+            @Override
+            public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
+                if(list.size() == 0) {
+                    kjsLogUtil.i("no picture got");
+                    return;
+                }
+                mPictureListFangJianJieGou = list;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i = 0;
+                        for(ClassDefine.PictureInfo info : mPictureListJiaJuYongPin) {
+                            ClassDefine.PicList pic = new ClassDefine.PicList("房间结构" + i, info.smallPicUrl, 0, false, false);
+                            mFangJianJieGouPicLst.add(pic);
+                        }
 
-//        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, this);
-//        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+                        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+                    }
+                });
+            }
+        };
+
+        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
+        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_RealMap, PIC_SIZE_ALL);
     }
 
     private void getPictures() {
