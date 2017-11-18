@@ -507,6 +507,8 @@ func checkPictureType(picType int) (err error, majorType, minorType int) {
 		switch typeMinor {
 		case commdef.PIC_HOUSE_FLOOR_PLAN:
 			fallthrough
+		case commdef.PIC_HOUSE_REAL_MAP:
+			fallthrough
 		case commdef.PIC_HOUSE_FURNITURE:
 			fallthrough
 		case commdef.PIC_HOUSE_APPLIANCE:
@@ -948,6 +950,7 @@ func checkPicturePermission(pic *TblPictures, uid int64) (err error) {
 		}
 	case commdef.PIC_TYPE_USER:
 	case commdef.PIC_TYPE_RENTAL:
+		// TODO: NOT IMPLEMENT
 	default:
 	}
 
@@ -989,6 +992,10 @@ func getHousePicSubtypes(h TblHouse, uid int64, subType int) (stl []int) {
 	if 0 == subType || subType == commdef.PIC_HOUSE_FLOOR_PLAN {
 		// Public picture, all user could access
 		stl = append(stl, commdef.PIC_HOUSE_FLOOR_PLAN)
+	}
+	if 0 == subType || subType == commdef.PIC_HOUSE_REAL_MAP {
+		// Public picture, all user could access
+		stl = append(stl, commdef.PIC_HOUSE_REAL_MAP)
 	}
 
 	if 0 == subType || subType == commdef.PIC_HOUSE_FURNITURE {
