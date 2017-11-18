@@ -33,12 +33,14 @@ public class ClassDefine {
         String mPath;
         int    mDrawable;
         boolean mIsChecked;
+        boolean mIsLocal;
 
-        public PicList(String desc, String path, int drawable, boolean isChecked) {
+        public PicList(String desc, String path, int drawable, boolean isChecked, boolean isLocal) {
             mDesc = desc;
             mPath = path;
             mDrawable = drawable;
             mIsChecked = isChecked;
+            mIsLocal = false;
         }
     }
 

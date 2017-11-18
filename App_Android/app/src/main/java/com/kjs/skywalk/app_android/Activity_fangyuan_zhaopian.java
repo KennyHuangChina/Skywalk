@@ -196,7 +196,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                     public void run() {
                         int i = 0;
                         for(ClassDefine.PictureInfo info : mPictureListHuXing) {
-                            ClassDefine.PicList pic = new ClassDefine.PicList("户型图" + i, info.smallPicUrl, 0, false);
+                            ClassDefine.PicList pic = new ClassDefine.PicList("户型图" + i, info.smallPicUrl, 0, false, false);
                             mHuXingPicLst.add(pic);
                         }
 
@@ -502,7 +502,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         int lstCnt = picLst.size() % 2 == 0 ? picLst.size() / 2 : picLst.size() / 2 + 1;
         for (int i = 0; i <lstCnt; i++) {
             fragmentFangYuanZhaoPianGroup fragment = fragmentFangYuanZhaoPianGroup.newInstance(viewPager.getId());
-            fragment.setZhaoPianGroupCallback(mPicGroupCallback);
+            fragment.setZhaoPianGroupCallback(mPicGroupCallback, this);
             ArrayList<ClassDefine.PicList> list = new ArrayList();
 
             if (i * 2 < picLst.size())
@@ -630,7 +630,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mergeList(photos, list);
 
         for (String path : photos) {
-            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false);
+            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false, true);
             picList.add(item);
         }
 

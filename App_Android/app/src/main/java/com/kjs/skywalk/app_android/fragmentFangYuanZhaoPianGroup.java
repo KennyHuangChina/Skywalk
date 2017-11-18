@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -31,13 +32,15 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
     CheckBox mCbPic1CheckFlag;
     boolean mIsSelectMode = false;
     ZhaoPianGroupCallback mCallback = null;
+    private Context mContext = null;
 
     public interface ZhaoPianGroupCallback {
         void onPicSelectChanged();
         void onPicClicked(int hostId, int pos, String picPath);
     }
-    public void setZhaoPianGroupCallback(ZhaoPianGroupCallback callback) {
+    public void setZhaoPianGroupCallback(ZhaoPianGroupCallback callback, Context context) {
         this.mCallback = callback;
+        mContext = context;
     }
 
     public void setPicList(ArrayList<ClassDefine.PicList> picLst) {
@@ -66,7 +69,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
         ImageView ivPic = (ImageView) view.findViewById(R.id.iv_pic);
         TextView tvPicDes = (TextView) view.findViewById(R.id.tv_pic_desc);
         if (!mPicList.get(0).mPath.isEmpty()) {
-            ivPic.setImageBitmap(commonFun.getScaleBitmapFromLocal(mPicList.get(0).mPath, 320, 240));
+            if(mPicList.get(0).mIsLocal) {
+                ivPic.setImageBitmap(commonFun.getScaleBitmapFromLocal(mPicList.get(0).mPath, 320, 240));
+            }
+            else {
+                commonFun.displayImageByURL(mContext, mPicList.get(0).mPath, ivPic);
+            }
         } else {
             ivPic.setImageResource(mPicList.get(0).mDrawable);
         }
@@ -91,7 +99,12 @@ public class fragmentFangYuanZhaoPianGroup extends Fragment {
             ImageView ivPic1 = (ImageView) view.findViewById(R.id.iv_pic1);
             TextView tvPicDes1 = (TextView) view.findViewById(R.id.tv_pic_desc1);
             if (!mPicList.get(1).mPath.isEmpty()) {
-                ivPic1.setImageBitmap(commonFun.getScaleBitmapFromLocal(mPicList.get(1).mPath, 320, 240));
+                if(mPicList.get(1).mIsLocal) {
+                    ivPic1.setImageBitmap(commonFun.getScaleBitmapFromLocal(mPicList.get(1).mPath, 320, 240));
+                }
+                else {
+                    commonFun.displayImageByURL(mContext, mPicList.get(1).mPath, ivPic1);
+                }
             } else {
                 ivPic1.setImageResource(mPicList.get(1).mDrawable);
             }
