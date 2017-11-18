@@ -54,10 +54,17 @@ public class ProfileDBOperator {
 
     public ArrayList<ClassDefine.MessageInfo> getMessageListFromDB() {
         SQLiteDatabase db = mProfileDBHelper.getReadableDatabase();
-        Cursor cursor = db.query(mProfileDBHelper.getTableName(), null, null, null, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * From " + mProfileDBHelper.getTableName(), null);
 
         ArrayList<ClassDefine.MessageInfo> list = new ArrayList<>();
-        
+        if (cursor.moveToFirst()) {
+            do {
+                ClassDefine.MessageInfo info = new ClassDefine.MessageInfo(Integer.parseInt(cursor.getString(0))
+                , cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
+                list.add(info);
+            } while (cursor.moveToNext());
+        }
+
         return list;
     }
 }

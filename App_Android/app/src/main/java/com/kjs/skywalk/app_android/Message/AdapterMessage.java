@@ -170,12 +170,15 @@ public class AdapterMessage extends BaseAdapter {
     }
 
     private void markMessageRead(int msgId) {
-        CommandManager.getCmdMgrInstance(mContext, new CommunicationInterface.CICommandListener() {
+        int ret = CommandManager.getCmdMgrInstance(mContext, new CommunicationInterface.CICommandListener() {
 
             @Override
             public void onCommandFinished(int command, IApiResults.ICommon iResult) {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
             }
         }, null).ReadNewMsg(msgId);
+
+        kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, ret --- %#x", msgId, ret));
+
     }
 }
