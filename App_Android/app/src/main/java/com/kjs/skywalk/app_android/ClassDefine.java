@@ -531,7 +531,7 @@ public class ClassDefine {
         private String mBuilding_no;
         private String mHouse_no;
 
-        public void MessageInfo(int id, String create_time, String read_time, String type, String body, String property, String building_no, String house_no) {
+        public MessageInfo(int id, String create_time, String read_time, String type, String body, String property, String building_no, String house_no) {
             mId = id;
             mCreate_time = create_time;
             mRead_time = read_time;

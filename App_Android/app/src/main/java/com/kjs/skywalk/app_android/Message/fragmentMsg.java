@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
@@ -52,6 +53,7 @@ public class fragmentMsg extends Fragment {
         // get message count in db
         int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
         kjsLogUtil.i("msgCount: " + msgCount);
+        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
         //
 
         getMessageInfo();
