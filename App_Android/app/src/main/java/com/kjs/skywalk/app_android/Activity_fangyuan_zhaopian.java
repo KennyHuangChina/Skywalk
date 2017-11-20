@@ -117,18 +117,22 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ((TextView) findViewById(R.id.tv_name_picgroup1)).setText("户型图");
         mTvStatus1 = (TextView) findViewById(R.id.tv_status_picgroup1);
         mVPHuXing = (ViewPager) findViewById(R.id.vp_huxing);
+        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
 
         ((TextView) findViewById(R.id.tv_name_picgroup2)).setText("房间结构");
         mTvStatus2 = (TextView) findViewById(R.id.tv_status_picgroup2);
         mVpFangJianJieGou = (ViewPager) findViewById(R.id.vp_fangjianjiegou);
+        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
 
         ((TextView) findViewById(R.id.tv_name_picgroup3)).setText("家居用品");
         mTvStatus3 = (TextView) findViewById(R.id.tv_status_picgroup3);
         mVpJiaJuYongPin = (ViewPager) findViewById(R.id.vp_jiajuyongpin);
+        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
 
         ((TextView) findViewById(R.id.tv_name_picgroup4)).setText("电器");
         mTvStatus4 = (TextView) findViewById(R.id.tv_status_picgroup4);
         mVpDianQi = (ViewPager) findViewById(R.id.vp_dianqi);
+        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
         getPictures();
     }
