@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,7 +38,8 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
  * Created by sailor.zhou on 2017/1/11.
  */
 
-public class fragmentMsg extends Fragment {
+// https://www.cnblogs.com/liushilin/p/5620072.html
+public class fragmentMsg extends Fragment implements AbsListView.OnScrollListener {
     @Nullable
     private ListView mLvMessage;
     private AdapterMessage mAdapterMsg;
@@ -49,6 +51,7 @@ public class fragmentMsg extends Fragment {
         mLvMessage = (ListView) view.findViewById(R.id.lv_message);
         mAdapterMsg = new AdapterMessage(getActivity());
         mLvMessage.setAdapter(mAdapterMsg);
+        mLvMessage.setOnScrollListener(this);
 
         // get message count in db
         int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
@@ -136,5 +139,18 @@ public class fragmentMsg extends Fragment {
 
     private void loadMessageList() {
 
+    }
+
+    private int mLastVisibleIndex = 0;
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+        if (mAdapterMsg.getCount() == mLastVisibleIndex && scrollState == SCROLL_STATE_IDLE) {
+
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        mLastVisibleIndex = firstVisibleItem + visibleItemCount - 1;
     }
 }
