@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 // https://www.cnblogs.com/liushilin/p/5620072.html
 public class fragmentMsg extends Fragment implements AbsListView.OnScrollListener {
     @Nullable
+    private SwipeRefreshLayout mSrl_message_list;
     private ListView mLvMessage;
     private AdapterMessage mAdapterMsg;
 
@@ -53,10 +55,22 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         mLvMessage.setAdapter(mAdapterMsg);
         mLvMessage.setOnScrollListener(this);
 
+        mSrl_message_list = (SwipeRefreshLayout) view.findViewById(R.id.srl_message_list);
+        mSrl_message_list.setProgressBackgroundColorSchemeResource(android.R.color.white);
+        mSrl_message_list.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
+        mSrl_message_list.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                kjsLogUtil.i("onRefresh");
+                setRefreshing(true);
+                new ThreadLoadMessage().start();
+            }
+        });
+
         // get message count in db
         int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
         kjsLogUtil.i("msgCount: " + msgCount);
-        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
+//        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
         //
 
         getMessageInfo();
@@ -130,7 +144,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ProfileDBOperator.getOperator(getActivity(), "test_user").update(list);
+//                    ProfileDBOperator.getOperator(getActivity(), "test_user").update(list);
                     mAdapterMsg.updateList(list);
                 }
             });
@@ -144,6 +158,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
     private int mLastVisibleIndex = 0;
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+        kjsLogUtil.i("onScrollStateChanged --- scrollState: " + scrollState);
         if (mAdapterMsg.getCount() == mLastVisibleIndex && scrollState == SCROLL_STATE_IDLE) {
 
         }
@@ -151,6 +166,29 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
 
     @Override
     public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        kjsLogUtil.i(String.format("onScroll --- firstVisibleItem: %d visibleItemCount:%d", firstVisibleItem, visibleItemCount));
         mLastVisibleIndex = firstVisibleItem + visibleItemCount - 1;
+    }
+
+    class ThreadLoadMessage extends Thread {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            setRefreshing(false);
+        }
+    }
+
+    public void setRefreshing(final boolean isRefresh) {
+        this.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSrl_message_list.setRefreshing(isRefresh);
+            }
+        });
     }
 }
