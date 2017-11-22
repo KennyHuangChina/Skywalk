@@ -1,5 +1,8 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.nfc.Tag;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
  */
 
 class ResPicList extends ResBase implements IApiResults.IResultList {
+    String TAG = getClass().getSimpleName();
     private PicInfoList mList = null;
 
     ResPicList(int nErrCode, JSONObject jObject) {
@@ -69,10 +73,12 @@ class ResPicList extends ResBase implements IApiResults.IResultList {
         }
         @Override
         public int parseListItems(JSONObject obj) {
+            String Fn = "[PicInfoList.parseListItems] ";
             try {
                 JSONArray array = obj.getJSONArray("Pics");
                 if (null == array) {
-                    return -1;
+                    Log.d(TAG, Fn + "No picture attached");
+                    return 0;
                 }
                 for (int n = 0; n < array.length(); n++) {
                     PicInfo newItem = new PicInfo(array.getJSONObject(n));
@@ -83,6 +89,12 @@ class ResPicList extends ResBase implements IApiResults.IResultList {
                 }
                 mTotal = array.length();
             } catch (JSONException e) {
+                Throwable t = e.getCause();
+                String s = e.getMessage();
+                if (s.indexOf("Value null at Pics") >= 0) {
+                    Log.d(TAG, Fn + "No picture attached");
+                    return 0;
+                }
                 e.printStackTrace();
                 return -3;
             }
