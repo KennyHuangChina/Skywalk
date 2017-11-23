@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,6 +27,7 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
+import com.kjs.skywalk.control.SwipeLoadMoreView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +44,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 // https://www.cnblogs.com/liushilin/p/5620072.html
 public class fragmentMsg extends Fragment implements AbsListView.OnScrollListener {
     @Nullable
-    private SwipeRefreshLayout mSrl_message_list;
+    private SwipeLoadMoreView mSrl_message_list;
     private ListView mLvMessage;
     private AdapterMessage mAdapterMsg;
 
@@ -55,7 +57,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         mLvMessage.setAdapter(mAdapterMsg);
         mLvMessage.setOnScrollListener(this);
 
-        mSrl_message_list = (SwipeRefreshLayout) view.findViewById(R.id.srl_message_list);
+        mSrl_message_list = (SwipeLoadMoreView) view.findViewById(R.id.srl_message_list);
         mSrl_message_list.setProgressBackgroundColorSchemeResource(android.R.color.white);
         mSrl_message_list.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
         mSrl_message_list.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -64,6 +66,17 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                 kjsLogUtil.i("onRefresh");
                 setRefreshing(true);
                 new ThreadLoadMessage().start();
+            }
+        });
+
+        mSrl_message_list.setmItemCount(3);
+        mSrl_message_list.measure(0, 0);
+//        mSrl_message_list.setRefreshing(true);
+        mSrl_message_list.setOnLoadMoreListener(new SwipeLoadMoreView.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+//                new ThreadLoadMessage().start();
+                loadMoreData();
             }
         });
 
@@ -190,5 +203,15 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                 mSrl_message_list.setRefreshing(isRefresh);
             }
         });
+    }
+
+    private void loadMoreData() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                kjsLogUtil.i("see if main thread");
+                mSrl_message_list.setLoadingStatue(false);
+            }
+        }, 2000);
     }
 }
