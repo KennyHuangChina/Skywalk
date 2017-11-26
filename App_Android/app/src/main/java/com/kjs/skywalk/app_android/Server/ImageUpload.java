@@ -67,6 +67,7 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
         public int type = 0;
         public int houseId = 0;
         public int userId = 0;
+        public String description = "无";
     }
 
     public ImageUpload(Context context, UploadFinished listener) {
@@ -150,7 +151,7 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
                     CommandManager manager = CommandManager.getCmdMgrInstance(mContext, listener, ImageUpload.this);
                     int refId = getRefId(info);
                     if(refId > 0) {
-                        manager.AddPicture(info.houseId, info.type, refId, "无", info.image);
+                        manager.AddPicture(info.houseId, info.type, refId, info.description, info.image);
                     } else {
                         continue;
                     }

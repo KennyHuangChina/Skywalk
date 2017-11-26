@@ -98,6 +98,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
                         picInfo.print();
                     }
 
+                    kjsLogUtil.i("###### Picture list size: " + list.size() + " type: " + fetchType);
                     mListener.onHouseImageFetched(mList);
                 }
             }

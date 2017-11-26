@@ -34,6 +34,8 @@ import java.util.List;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
 
+import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_INTERRUPT;
+import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_OK;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_OK;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
@@ -66,10 +68,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     ArrayList<ClassDefine.PicList> mJiaJuYongPinPicLst;
     ArrayList<ClassDefine.PicList> mDianQiPicLst;
 
-    private ArrayList<String> mHuXingList = new ArrayList<>();
-    private ArrayList<String> mFangJianJieGouList = new ArrayList<>();
-    private ArrayList<String> mJiaJuYongPinList = new ArrayList<>();
-    private ArrayList<String> mDianQiList = new ArrayList<>();
+    private ArrayList<String> mNewPictureList = new ArrayList<>();
 
     boolean mIsPicSelectMode = false;
     int mPhotoPickerHostId;
@@ -85,6 +84,12 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     private final int MSG_DELETE_ALL_DONE = 0x200;
     private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
     private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
+    private final int MSG_NEW_PICTURE_SELECTED = 0x400;
+
+    private final int PIC_ADD_TYPE_HUXING = 0;
+    private final int PIC_ADD_TYPE_FANGJIAN = 1;
+    private final int PIC_ADD_TYPE_JIAJU = 2;
+    private final int PIC_ADD_TYPE_DIANQI = 3;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -263,36 +268,28 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         getDianQiPictures();
     }
 
-    private void upload() {
-        ImageUpload imageUpload = new ImageUpload(this, this);
+    private void upload(int type) {
+        int uploadType = -1;
+        switch (type) {
+            case PIC_ADD_TYPE_DIANQI:
+                uploadType = ImageUpload.UPLOAD_TYPE_DIANQI;
+                break;
+            case PIC_ADD_TYPE_FANGJIAN:
+                uploadType = ImageUpload.UPLOAD_TYPE_FANGJIAN;
+                break;
+            case PIC_ADD_TYPE_HUXING:
+                uploadType = ImageUpload.UPLOAD_TYPE_HUXING;
+                break;
+            case PIC_ADD_TYPE_JIAJU:
+                uploadType = ImageUpload.UPLOAD_TYPE_JIAJU;
+                break;
+            default:
+                return;
+        }
         ArrayList<ImageUpload.UploadImageInfo> list = new ArrayList<>();
-        for(String path : mHuXingList) {
+        for(String path : mNewPictureList) {
             ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
-            info.type = ImageUpload.UPLOAD_TYPE_HUXING;
-            info.image = path;
-            info.houseId = mHouseId;
-            list.add(info);
-        }
-
-        for(String path : mFangJianJieGouList) {
-            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
-            info.type = ImageUpload.UPLOAD_TYPE_FANGJIAN;
-            info.image = path;
-            info.houseId = mHouseId;
-            list.add(info);
-        }
-
-        for(String path : mJiaJuYongPinList) {
-            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
-            info.type = ImageUpload.UPLOAD_TYPE_JIAJU;
-            info.image = path;
-            info.houseId = mHouseId;
-            list.add(info);
-        }
-
-        for(String path : mDianQiList) {
-            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
-            info.type = ImageUpload.UPLOAD_TYPE_DIANQI;
+            info.type = uploadType;
             info.image = path;
             info.houseId = mHouseId;
             list.add(info);
@@ -302,6 +299,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             return;
         }
 
+        ImageUpload imageUpload = new ImageUpload(this, this);
         if(imageUpload.upload(list) != 0) {
             commonFun.showToast_info(this, mContainer, "上传失败");
         } else {
@@ -341,7 +339,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                     mTvDelete.setVisibility(View.VISIBLE);
                 } else {
                     ((TextView)v).setText("选择");
-                    mTvUpload.setVisibility(View.VISIBLE);
+                    mTvUpload.setVisibility(View.GONE);
                     mTvDelete.setVisibility(View.GONE);
                 }
                 updateViewrPagerSelectMode(mIsPicSelectMode);
@@ -350,7 +348,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             }
             case R.id.tv_upload:
             {
-                upload();
                 break;
             }
             case R.id.tv_delete:
@@ -602,98 +599,162 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     }
 
     private void onPhotoPickerReturn(List<String> photos) {
+        if(photos.size() == 0) {
+            return;
+        }
+        mNewPictureList.clear();
         ArrayList<ClassDefine.PicList> picList;
         PicFragStatePageAdapter adapter;
         ArrayList<String> list;
+        Message msg = new Message();
+        msg.what = MSG_NEW_PICTURE_SELECTED;
+        for(String path : photos) {
+            mNewPictureList.add(path);
+        }
+
         switch (mPhotoPickerHostId) {
             case R.id.iv_photopicker_picgroup1:
             {
-                picList = mHuXingPicLst;
-                adapter = ((PicFragStatePageAdapter) mVPHuXing.getAdapter());
-                list = mHuXingList;
+//                picList = mHuXingPicLst;
+//                adapter = ((PicFragStatePageAdapter) mVPHuXing.getAdapter());
+//                list = mHuXingList;
+
+                msg.arg1 = PIC_ADD_TYPE_HUXING;
                 break;
             }
             case R.id.iv_photopicker_picgroup2:
             {
-                picList = mFangJianJieGouPicLst;
-                adapter = ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter());
-                list = mFangJianJieGouList;
+//                picList = mFangJianJieGouPicLst;
+//                adapter = ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter());
+//                list = mFangJianJieGouList;
+                msg.arg1 = PIC_ADD_TYPE_FANGJIAN;
                 break;
             }
             case R.id.iv_photopicker_picgroup3:
             {
-                picList = mJiaJuYongPinPicLst;
-                adapter = ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter());
-                list = mJiaJuYongPinList;
+//                picList = mJiaJuYongPinPicLst;
+//                adapter = ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter());
+//                list = mJiaJuYongPinList;
+                msg.arg1 = PIC_ADD_TYPE_JIAJU;
                 break;
             }
             case R.id.iv_photopicker_picgroup4:
             {
-                picList = mDianQiPicLst;
-                adapter = ((PicFragStatePageAdapter) mVpDianQi.getAdapter());
-                list =  mDianQiList;
+//                picList = mDianQiPicLst;
+//                adapter = ((PicFragStatePageAdapter) mVpDianQi.getAdapter());
+//                list =  mDianQiList;
+                msg.arg1 = PIC_ADD_TYPE_DIANQI;
                 break;
             }
             default:
                 return;
         }
+//
+//        mergeList(photos, list);
+//
+//        for (String path : photos) {
+//            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false, true);
+//            picList.add(item);
+//        }
 
-        mergeList(photos, list);
-
-        for (String path : photos) {
-            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false, true);
-            picList.add(item);
-        }
-
-        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
-        mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
-
-        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
-        mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
-
-        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
-        mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
-
-        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
-        mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
-
-        adapter.notifyDataSetChanged();
+        mHandler.sendMessageDelayed(msg, 100);
+//        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+//        mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
+//
+//        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+//        mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
+//
+//        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+//        mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
+//
+//        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+//        mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
+//
+//        adapter.notifyDataSetChanged();
     }
 
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_UPLOAD_ALL_DONE:
-                    showWaiting(false);
-                    getPictures();
-                    break;
-                case MSG_DELETE_ALL_DONE:
-                    showWaiting(false);
-                    getPictures();
-                    break;
-                case MSG_GET_PICTURES_DONE:
-                    break;
-                case MSG_GET_HOUSE_INFO_DONE:
-                    getPictures();
-                    break;
+        switch (msg.what) {
+            case MSG_UPLOAD_ALL_DONE:
+                showWaiting(false);
+                getPictures();
+                break;
+            case MSG_DELETE_ALL_DONE:
+                showWaiting(false);
+                getPictures();
+                break;
+            case MSG_GET_PICTURES_DONE:
+                break;
+            case MSG_GET_HOUSE_INFO_DONE:
+                getPictures();
+                break;
+            case MSG_NEW_PICTURE_SELECTED: {
+                upload(msg.arg1);
+                break;
             }
+        }
         }
     };
 
-    @Override
-    public void onDeleteStarted() {
+    private void removePictureFromList(int id) {
 
     }
 
     @Override
-    public void onDeleteProgress(int current, int total, int id, int result) {
+    public void onDeleteStarted() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "开始删除，请稍候...";
+                    mWaitingWindow.updateProgressText(text);
+                }
+            }
+        });
+    }
 
+    @Override
+    public void onDeleteProgress(final int current, final int total, int id, int result) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "正在删除照片 ... " + current + "/" + total;
+                    mWaitingWindow.updateProgressText(text);
+                }
+            }
+        });
+        if(result == DELETE_RESULT_INTERRUPT) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(mWaitingWindow != null) {
+                        String text = "删除失败, 请重新删除";
+                        mWaitingWindow.updateProgressText(text);
+                    }
+                }
+            });
+            mHandler.sendEmptyMessageDelayed(MSG_DELETE_FINISHED_WITH_ERROR, 1000);
+        }
+        if(result == DELETE_RESULT_OK) {
+            removePictureFromList(id);
+        }
     }
 
     @Override
     public void onDeleteEnd() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mWaitingWindow != null) {
+                    String text = "删除完成";
+                    mWaitingWindow.updateProgressText(text);
+                    mHandler.sendEmptyMessageDelayed(MSG_DELETE_ALL_DONE, 1000);
+                }
+            }
+        });
     }
 
     @Override
