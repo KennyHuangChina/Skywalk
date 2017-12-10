@@ -120,7 +120,7 @@ func (this *PictureController) GetHousePicList() {
 	 */
 	err, picLst := models.GetHousePicList(hid, uid, subtype, size)
 	result.PicType = commdef.PIC_TYPE_HOUSE
-	result.subType = subtype
+	result.SubType = subtype
 	if nil == err {
 		result.Total = len(picLst)
 		result.Pics = picLst

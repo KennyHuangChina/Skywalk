@@ -244,7 +244,7 @@ type ResAddPic struct {
 type ResGetPicList struct {
 	ResCommon
 	PicType int // ref to PIC_TYPE_xxxx
-	subType int // ref to PIC_USER_xxx, PIC_HOUSE_ ...
+	SubType int // ref to PIC_USER_xxx, PIC_HOUSE_ ...
 	Total   int
 	Pics    []commdef.PictureInfo
 }
