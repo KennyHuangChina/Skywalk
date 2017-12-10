@@ -21,4 +21,9 @@ class CmdGetHousePicList extends CmdGetXPicList {
     protected String getBaseURL() {
         return "/v1/pic/house/" + mXId;
     }
+
+    @Override
+    protected boolean checkPicType(ResPicList res) {
+        return (res.mPicType == CommunicationInterface.PIC_TYPE_MAJOR_House) ? true : false;
+    }
 }

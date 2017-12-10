@@ -75,4 +75,29 @@ class CmdGetXPicList extends CommunicationBase {
         ResPicList result = new ResPicList(nErrCode, jObject);
         return result;
     }
+
+    @Override
+    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
+        CmdGetXPicList cmdChk = (CmdGetXPicList)cmd2Chk;
+        if (mXId == cmdChk.mXId && mType == cmdChk.mType && mSize == cmdChk.mSize) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean checkPicType(ResPicList res) {
+        return false;
+    }
+
+    @Override
+    protected boolean checkCmdRes(IApiResults.ICommon res) {
+        ResPicList resPicLst = (ResPicList)res;
+        if (!checkPicType(resPicLst)) {
+            return false;
+        }
+        if (mType != resPicLst.mPicSubType) {
+            return false;
+        }
+        return true;
+    }
 }

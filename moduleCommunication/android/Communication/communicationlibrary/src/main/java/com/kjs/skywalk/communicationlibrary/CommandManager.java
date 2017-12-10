@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static android.os.SystemClock.sleep;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 
 /**
@@ -58,9 +60,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         }
         // Check if the command already exist in queue
         // This is a rough way, just check the command id
-        int nNewCmd = cmd.mAPI;
+//        int nNewCmd = cmd.mAPI;
         for (CommunicationBase cmd_in_queue : mCmdQueue) {
-            if (cmd_in_queue.mAPI == nNewCmd) {
+//            if (cmd_in_queue.mAPI == nNewCmd) {
+            if (cmd_in_queue.isSameCmd(cmd)) {
                 Log.d(TAG, Fn + "new command already exist");
                 return true;
             }
@@ -69,7 +72,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return mCmdQueue.add(cmd);
     }
 
-    private synchronized CommunicationBase removeCmd(int cmd) {
+    private synchronized CommunicationBase removeCmd(int cmd, IApiResults.ICommon res) {
         String FN = "[removeCmd] ";
 
         if (cmd <= 0 && null == mCmdQueue) {
@@ -79,11 +82,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         CommunicationBase cmd2Remov = null;
         for (int i = 0; i < mCmdQueue.size(); i++) {
             CommunicationBase cmdThis = mCmdQueue.get(i);
-            if (cmdThis.mAPI != cmd) {
-                continue;
+            if (cmdThis.isCmdRes(cmd, res)) {
+                cmd2Remov = mCmdQueue.remove(i);     // (cmdThis);
+                break;
             }
-            cmd2Remov = mCmdQueue.remove(i);     // (cmdThis);
-            break;
         }
 
         return cmd2Remov;
@@ -156,7 +158,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                                 // Keep the command in queue, once user get logined, the commands will be processed automatically, one by one
                             } else {
                                 Log.e(TAG, String.format("other error(0x%x), remove the command from queue", ret));
-                                removeCmd(cmd.mAPI/*, ""*/);
+                                removeCmd(cmd.mAPI, null);
                             }
                             return 0;   // ret;
                         }
@@ -171,7 +173,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     ret  = cmd.doOperation(this, this);
             }
             if (CommunicationError.CE_ERROR_NO_ERROR != ret) {  // remove the command already cached
-                removeCmd(cmd.mAPI/*, ""*/);
+                removeCmd(cmd.mAPI, null);
             }
         } else {    // commands that do not need to login
             ret = cmd.doOperation(mCmdListener, mProgListener);
@@ -196,6 +198,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     for (int n = 0; n < mCmdQueue.size(); n++) {
                         CommunicationBase cmd = mCmdQueue.get(n);
                         cmd.doOperation(this, this);    // mCmdListener, mProgListener);
+                        sleep(100);
                     }
                 } else {
                     Log.e(TAG, String.format("silent login failed(0x%x), notify user to login", res.GetErrCode()));
@@ -240,7 +243,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             Log.e(TAG, String.format("command processing failed(0x%x), notify user", nCmdRes));
                         }
                         // remove it from command queue
-                        CommunicationBase cmd           = removeCmd(command);
+                        CommunicationBase cmd           = removeCmd(command, res);
                         CICommandListener cmdListener   = null;
                         if (null != cmd &&
                             null != (cmdListener = cmd.GetBackupCommandListener())) {
