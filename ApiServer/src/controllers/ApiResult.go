@@ -243,8 +243,10 @@ type ResAddPic struct {
 // result of API get house picture list & get user picture list
 type ResGetPicList struct {
 	ResCommon
-	Total int
-	Pics  []commdef.PictureInfo
+	PicType int // ref to PIC_TYPE_xxxx
+	subType int // ref to PIC_USER_xxx, PIC_HOUSE_ ...
+	Total   int
+	Pics    []commdef.PictureInfo
 }
 
 // result of API get house certification history
