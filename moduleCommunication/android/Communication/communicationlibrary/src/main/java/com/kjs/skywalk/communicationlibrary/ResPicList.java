@@ -11,7 +11,9 @@ import java.util.ArrayList;
  */
 
 class ResPicList extends ResBase implements IApiResults.IResultList {
-    private PicInfoList mList = null;
+    private     PicInfoList mList       = null;
+    protected   int         mPicType    = -1;
+    protected   int         mPicSubType = -1;
 
     ResPicList(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -30,6 +32,14 @@ class ResPicList extends ResBase implements IApiResults.IResultList {
 
     @Override
     protected int parseResult(JSONObject obj) {
+        //
+        try {
+            mPicType    = obj.getInt("PicType");
+            mPicSubType = obj.getInt("SubType");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         // parse picture list
         if (null != mList) {
             return mList.parseList(obj);

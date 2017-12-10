@@ -187,6 +187,32 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     public boolean isNeedLogin() { return mNeedLogin; }
 
+    protected boolean isSameCmd(CommunicationBase cmd2Chk) {
+        if (cmd2Chk.mAPI != mAPI) {
+            return false;
+        }
+        return isCmdEqual(cmd2Chk);
+    }
+
+    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
+        return true;
+    }
+
+    protected boolean isCmdRes(int nAPI, IApiResults.ICommon res) {
+        if (nAPI != mAPI) {
+            return false;
+        }
+        if (null == res) {
+            return true;
+        }
+        return checkCmdRes(res);
+    }
+
+    protected boolean checkCmdRes(IApiResults.ICommon res) {
+        Log.w(TAG, "[checkCmdRes] please override this function to do further checking");
+        return true;
+    }
+
     protected String generateRandom() {
         String strRand = "";
         Random rdm = new Random(System.currentTimeMillis());
