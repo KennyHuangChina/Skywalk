@@ -144,7 +144,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
                 if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got");
+                    kjsLogUtil.i("no picture got for Floor Plan");
                     return;
                 }
                 mPictureListHuXing = list;
@@ -174,7 +174,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
                 if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got");
+                    kjsLogUtil.i("no picture got for Appliance");
                     return;
                 }
                 mPictureListDianQi = list;
@@ -204,7 +204,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
                 if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got");
+                    kjsLogUtil.i("no picture got for Furniture");
                     return;
                 }
                 mPictureListJiaJuYongPin = list;
@@ -233,7 +233,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
                 if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got");
+                    kjsLogUtil.i("no picture got for Real Map");
                     return;
                 }
                 mPictureListFangJianJieGou = list;
