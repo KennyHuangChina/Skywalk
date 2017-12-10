@@ -23,7 +23,7 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <com.kjs.skywalk.control.SwipeLoadMoreView
             android:id="@+id/srl_message_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -34,7 +34,7 @@
                 android:divider="@null">
 
             </ListView>
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.kjs.skywalk.control.SwipeLoadMoreView>
 
         <!--<TextView-->
             <!--android:text="@string/tab_menu_msg"-->

@@ -290,6 +290,7 @@
                     android:layout_height="45dp"
                     android:layout_centerInParent="true"
                     android:onClick="onViewClick"
+                    android:visibility="gone"
                     android:text="上传房源照片"></TextView>
 
                 <TextView
