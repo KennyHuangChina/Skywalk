@@ -122,10 +122,11 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetBriefPublicHouseInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetPicUrls(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()));
-//        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()), Integer.parseInt(mEditText1.getText().toString()), 0);
+        CmdMgr.GetHousePics(Integer.parseInt(mEditText.getText().toString()),
+                Integer.parseInt(mEditText1.getText().toString()),0 );
 //        CmdMgr.GetNewMsgCount();
 //        CmdMgr.GetHouseNewEvent();
-        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
+//        CmdMgr.GetSysMsgInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventProcList(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseEventList(Integer.parseInt(mEditText.getText().toString()), 0, 0, 0, 10, Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetAgencyList(0, 10);
