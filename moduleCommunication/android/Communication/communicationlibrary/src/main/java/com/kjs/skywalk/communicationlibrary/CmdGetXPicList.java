@@ -29,6 +29,7 @@ class CmdGetXPicList extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
+        String Fn = "[getRequestURL] ";
         mCommandURL = getBaseURL();
         String sArg = "";
         if (mType > 0) {
@@ -43,6 +44,7 @@ class CmdGetXPicList extends CommunicationBase {
         if (sArg.length() > 0) {
             mCommandURL += "?" + sArg;
         }
+        Log.d(TAG, Fn + "mCommandURL:" + mCommandURL);
         return mCommandURL;
     }
 
@@ -58,7 +60,7 @@ class CmdGetXPicList extends CommunicationBase {
             Log.e(TAG, "xid:" + mXId);
             return false;
         }
-        if (mType < 0 || mType > 4) {
+        if (mType < CommunicationInterface.PIC_TYPE_SUB_HOUSE_BEGIN || mType > CommunicationInterface.PIC_TYPE_SUB_HOUSE_END) {
             Log.e(TAG, "type:" + mType);
             return false;
         }
