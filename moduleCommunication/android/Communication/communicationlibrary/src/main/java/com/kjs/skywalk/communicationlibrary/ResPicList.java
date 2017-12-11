@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 class ResPicList extends ResBase implements IApiResults.IResultList {
     String TAG = getClass().getSimpleName();
-    private PicInfoList mList = null;
     private     PicInfoList mList       = null;
     protected   int         mPicType    = -1;
     protected   int         mPicSubType = -1;
