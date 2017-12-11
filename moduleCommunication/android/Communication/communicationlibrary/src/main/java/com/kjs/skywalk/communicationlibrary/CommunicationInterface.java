@@ -573,11 +573,13 @@ public class CommunicationInterface {
     static public int   PIC_TYPE_SUB_USER_IDCard            = 1,    // User's ID card
                         PIC_TYPE_SUB_USER_Headportrait      = 2;    // user's head-portrait
 
-    static public int   PIC_TYPE_SUB_HOUSE_FLOOR_PLAN       = 1,    // house plan
+    static public int   PIC_TYPE_SUB_HOUSE_BEGIN            = 0,    // all type
+                        PIC_TYPE_SUB_HOUSE_FLOOR_PLAN       = 1,    // house plan
                         PIC_TYPE_SUB_HOUSE_FURNITURE        = 2,    // house furnitures
                         PIC_TYPE_SUB_HOUSE_APPLIANCE        = 3,    // house appliances
                         PIC_TYPE_SUB_HOUSE_OwnershipCert    = 4,    // owernship certification
-                        PIC_TYPE_SUB_HOUSE_RealMap          = 5;    // house real map
+                        PIC_TYPE_SUB_HOUSE_RealMap          = 5,    // house real map
+                        PIC_TYPE_SUB_HOUSE_END              = PIC_TYPE_SUB_HOUSE_RealMap;
 
     // picture size
     static public int   PIC_SIZE_ALL                        = 0,
