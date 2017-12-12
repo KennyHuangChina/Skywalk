@@ -34,8 +34,10 @@ public class ClassDefine {
         int    mDrawable;
         boolean mIsChecked;
         boolean mIsLocal;
+        int mId;
 
-        public PicList(String desc, String path, int drawable, boolean isChecked, boolean isLocal) {
+        public PicList(String desc, String path, int drawable, boolean isChecked, boolean isLocal, int id) {
+            mId = id;
             mDesc = desc;
             mPath = path;
             mDrawable = drawable;
