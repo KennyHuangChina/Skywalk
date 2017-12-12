@@ -144,6 +144,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getHuXingPictures() {
         mPictureListHuXing.clear();
+        mHuXingPicLst.clear();
 
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
@@ -156,10 +157,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
+                        int i = 1;
                         for(ClassDefine.PictureInfo info : mPictureListHuXing) {
                             ClassDefine.PicList pic = new ClassDefine.PicList("户型图" + i, info.smallPicUrl, 0, false, false);
                             mHuXingPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
@@ -174,6 +176,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getDianQiPictures() {
         mPictureListDianQi.clear();
+        mDianQiPicLst.clear();
 
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
@@ -186,10 +189,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
+                        int i = 1;
                         for(ClassDefine.PictureInfo info : mPictureListDianQi) {
                             ClassDefine.PicList pic = new ClassDefine.PicList("电器" + i, info.smallPicUrl, 0, false, false);
                             mDianQiPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
@@ -204,6 +208,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getJiaJuYongPinPictures() {
         mPictureListJiaJuYongPin.clear();
+        mJiaJuYongPinPicLst.clear();
 
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
@@ -216,10 +221,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
+                        int i = 1;
                         for(ClassDefine.PictureInfo info : mPictureListJiaJuYongPin) {
                             ClassDefine.PicList pic = new ClassDefine.PicList("家居用品" + i, info.smallPicUrl, 0, false, false);
                             mJiaJuYongPinPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
@@ -234,6 +240,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getFangJianJieGouPictures() {
         mPictureListFangJianJieGou.clear();
+        mFangJianJieGouPicLst.clear();
+
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
@@ -245,10 +253,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
-                        for(ClassDefine.PictureInfo info : mPictureListJiaJuYongPin) {
+                        int i = 1;
+                        for(ClassDefine.PictureInfo info : mPictureListFangJianJieGou) {
                             ClassDefine.PicList pic = new ClassDefine.PicList("房间结构" + i, info.smallPicUrl, 0, false, false);
                             mFangJianJieGouPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
@@ -521,6 +530,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             fragment.setPicList(list);
             fragLst.add(fragment);
         }
+        viewPager.removeAllViews();
         viewPager.setAdapter(new PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
         viewPager.setCurrentItem(0);
     }
