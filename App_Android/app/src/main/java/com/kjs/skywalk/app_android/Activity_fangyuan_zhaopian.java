@@ -68,6 +68,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     ArrayList<ClassDefine.PicList> mJiaJuYongPinPicLst;
     ArrayList<ClassDefine.PicList> mDianQiPicLst;
 
+    ArrayList<Integer> mDeleteList = new ArrayList<>();
+
     private ArrayList<String> mNewPictureList = new ArrayList<>();
 
     boolean mIsPicSelectMode = false;
@@ -144,6 +146,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getHuXingPictures() {
         mPictureListHuXing.clear();
+        mHuXingPicLst.clear();
 
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
@@ -156,10 +159,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
+                        int i = 1;
                         for(ClassDefine.PictureInfo info : mPictureListHuXing) {
-                            ClassDefine.PicList pic = new ClassDefine.PicList("户型图" + i, info.smallPicUrl, 0, false, false);
+                            ClassDefine.PicList pic = new ClassDefine.PicList("户型图" + i, info.smallPicUrl, 0, false, false, info.mId);
                             mHuXingPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
@@ -174,6 +178,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getDianQiPictures() {
         mPictureListDianQi.clear();
+        mDianQiPicLst.clear();
 
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
@@ -186,10 +191,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
+                        int i = 1;
                         for(ClassDefine.PictureInfo info : mPictureListDianQi) {
-                            ClassDefine.PicList pic = new ClassDefine.PicList("电器" + i, info.smallPicUrl, 0, false, false);
+                            ClassDefine.PicList pic = new ClassDefine.PicList("电器" + i, info.smallPicUrl, 0, false, false, info.mId);
                             mDianQiPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
@@ -204,6 +210,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getJiaJuYongPinPictures() {
         mPictureListJiaJuYongPin.clear();
+        mJiaJuYongPinPicLst.clear();
 
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
@@ -216,10 +223,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
+                        int i = 1;
                         for(ClassDefine.PictureInfo info : mPictureListJiaJuYongPin) {
-                            ClassDefine.PicList pic = new ClassDefine.PicList("家居用品" + i, info.smallPicUrl, 0, false, false);
+                            ClassDefine.PicList pic = new ClassDefine.PicList("家居用品" + i, info.smallPicUrl, 0, false, false, info.mId);
                             mJiaJuYongPinPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
@@ -234,6 +242,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getFangJianJieGouPictures() {
         mPictureListFangJianJieGou.clear();
+        mFangJianJieGouPicLst.clear();
+
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
@@ -245,10 +255,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i = 0;
-                        for(ClassDefine.PictureInfo info : mPictureListJiaJuYongPin) {
-                            ClassDefine.PicList pic = new ClassDefine.PicList("房间结构" + i, info.smallPicUrl, 0, false, false);
+                        int i = 1;
+                        for(ClassDefine.PictureInfo info : mPictureListFangJianJieGou) {
+                            ClassDefine.PicList pic = new ClassDefine.PicList("房间结构" + i, info.smallPicUrl, 0, false, false, info.mId);
                             mFangJianJieGouPicLst.add(pic);
+                            i ++;
                         }
 
                         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
@@ -359,21 +370,18 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
 
+                                mDeleteList.clear();
+
                                 deleteSelectItem(mHuXingPicLst);
-                                fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
-
                                 deleteSelectItem(mFangJianJieGouPicLst);
-                                fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
-
                                 deleteSelectItem(mJiaJuYongPinPicLst);
-                                fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
-
                                 deleteSelectItem(mDianQiPicLst);
-                                fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
+                                mIsPicSelectMode = false;
                                 updateViewrPagerSelectMode(mIsPicSelectMode);
                                 updateStatus();
 
+                                delete();
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -441,6 +449,13 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             mTvDelete.setEnabled(true);
         } else {
             mTvDelete.setEnabled(false);
+        }
+
+        TextView selectButton = (TextView)findViewById(R.id.tv_select);
+        if(mIsPicSelectMode) {
+            selectButton.setText("取消");
+        } else {
+            selectButton.setText("选择");
         }
     }
 
@@ -521,8 +536,24 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             fragment.setPicList(list);
             fragLst.add(fragment);
         }
+        viewPager.removeAllViews();
         viewPager.setAdapter(new PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
         viewPager.setCurrentItem(0);
+    }
+
+    private void delete() {
+        ImageDelete imageDelete = new ImageDelete(this, this);
+
+        if(mDeleteList.size() == 0) {
+            commonFun.showToast_info(this, mContainer, "没有选中的图片");
+            return;
+        }
+
+        if(imageDelete.delete(mDeleteList) != 0) {
+            commonFun.showToast_info(this, mContainer, "删除失败");
+        } else {
+            showWaiting(true);
+        }
     }
 
     private void deleteSelectItem(ArrayList<ClassDefine.PicList> picLst) {
@@ -530,6 +561,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         while (iter.hasNext()) {
             ClassDefine.PicList item = (ClassDefine.PicList) iter.next();
             if(item.mIsChecked) {
+                mDeleteList.add(item.mId);
                 iter.remove();
             }
         }
