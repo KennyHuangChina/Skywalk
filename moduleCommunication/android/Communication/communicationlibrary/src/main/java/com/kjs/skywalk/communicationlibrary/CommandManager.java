@@ -1,6 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -32,16 +33,20 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                                 AGENT_STATUS_Logining   = 2,
                                 AGENT_STATUS_Logined    = 3;
     private int     mAgentStatus    = AGENT_STATUS_Unknow;
-    private String  mLoginUser      = "15306261804";        // TODO: please check and fix this hardcode
+    private String  mLoginUser      = null; // "15306261804";
 
     private CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
-        mContext = context;
-        mCmdListener  = CmdListener;
-        mProgListener = ProgListener;
+        mContext        = context;
+        mCmdListener    = CmdListener;
+        mProgListener   = ProgListener;
 
         mUtils= new MyUtils(context);
 //        mCookieManager = SKCookieManager.getManager(context);
+
+        // Get login user
+        loadLoginUser();
     }
+
     public static synchronized CommandManager getCmdMgrInstance(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         if (null == mCmdMgr) {
             mCmdMgr = new CommandManager(context, CmdListener, ProgListener);
@@ -50,6 +55,27 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         mCmdMgr.mProgListener = ProgListener;
 
         return mCmdMgr;
+    }
+
+    /**
+     *  load login user from shared preference
+     *  @return String, user login name
+     */
+    private String loadLoginUser() {
+        SharedPreferences sp = mContext.getSharedPreferences("AppSetting", Context.MODE_PRIVATE);
+        mLoginUser = sp.getString("login-user", "");
+        Log.d(TAG, "[loadLoginUser] mLoginUser: " + mLoginUser);
+        return mLoginUser;
+    }
+
+    /**
+     *  Store the login user into shared preference
+     */
+    private void storeLoginUser() {
+        SharedPreferences sp = mContext.getSharedPreferences("AppSetting", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("login-user", mLoginUser);
+        editor.commit();
     }
 
     private synchronized boolean queueCommand(CommunicationBase cmd) {
@@ -101,13 +127,15 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         String FN = "[sendReloginCmd] ";
         Log.d(TAG, "mLoginUser:" + mLoginUser);
         if (null == mLoginUser || mLoginUser.isEmpty()) {
-            return -1;
+            Log.e(TAG, FN + "mLoginUser not set");
+            return CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN;
         }
 
         CommunicationBase cmdRelogin = new CmdRelogin(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, mLoginUser);
         if (!cmdRelogin.checkParameter(pMap)) {
+            Log.e(TAG, FN + "fail to check parameters for relogin");
             return -2;
         }
         cmdRelogin.SetBackupListener(mProgListener, mCmdListener);
@@ -296,6 +324,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     public int LoginByPassword(String user, String pass, String rand, String salt) {
         if (null != user && !user.isEmpty()) {
             mLoginUser = user;
+            storeLoginUser();
         }
 
         CommunicationBase op = new CmdLoginByPassword(mContext);
@@ -311,6 +340,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     public int LoginBySms(String user, String smsCode) {
         if (null != user && !user.isEmpty()) {
             mLoginUser = user;
+            storeLoginUser();
         }
 
         CommunicationBase op = new CmdLoginBySms(mContext);
@@ -358,6 +388,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     public int Relogin(String userName) {
         if (null != userName && !userName.isEmpty()) {
             mLoginUser = userName;
+            storeLoginUser();
         }
 
         CommunicationBase op = new CmdRelogin(mContext);
