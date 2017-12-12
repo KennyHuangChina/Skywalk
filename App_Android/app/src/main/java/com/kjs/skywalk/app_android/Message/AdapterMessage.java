@@ -23,6 +23,7 @@ import com.kjs.skywalk.control.BadgeView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -176,9 +177,15 @@ public class AdapterMessage extends BaseAdapter {
             public void onCommandFinished(int command, IApiResults.ICommon iResult) {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
             }
-        }, null).ReadNewMsg(msgId);
+        }, mProgreessListener).ReadNewMsg(msgId);
 
         kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, ret --- %#x", msgId, ret));
 
     }
+
+    CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
+        @Override
+        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+        }
+    };
 }
