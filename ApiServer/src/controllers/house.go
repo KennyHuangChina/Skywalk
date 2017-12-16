@@ -26,6 +26,7 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetHouseDigestList", h.GetHouseDigestList)
 	h.Mapping("CommitHouseByOwner", h.CommitHouseByOwner)
 	h.Mapping("ModifyHouse", h.ModifyHouse)
+	h.Mapping("AssignAgency", h.AssignAgency)
 
 	h.Mapping("SetHouseShowTime", h.SetHouseShowTime)
 	h.Mapping("GetHouseShowTime", h.GetHouseShowTime)
@@ -43,6 +44,49 @@ func (h *HouseController) URLMapping() {
 	h.Mapping("GetBehalfList", h.GetBehalfList)
 
 	h.Mapping("LandlordSubmitHouseConfirm", h.LandlordSubmitHouseConfirm)
+}
+
+// @Title AssignAgency
+// @Description assign house agency
+// @Success 200 {string}
+// @Failure 403 body is empty
+// @router /:id/assignagency [put]
+func (this *HouseController) AssignAgency() {
+	FN := "[AssignAgency] "
+	beego.Warn("[--- API: AssignAgency ---]")
+
+	var result ResCommon
+	var err error
+
+	defer func() {
+		err = api_result(err, this.Controller, &result)
+		if nil != err {
+			beego.Error(FN, err.Error())
+		}
+
+		// export result
+		this.Data["json"] = result
+		this.ServeJSON()
+	}()
+
+	/*
+	 *	Extract agreements
+	 */
+	uid, err := getLoginUser(this.Controller)
+	if nil != err {
+		return
+	}
+
+	house, _ := this.GetInt64(":id")
+	agent, _ := this.GetInt64("aid")
+
+	/*
+	 *	Processing
+	 */
+	err = models.AssignAgency(uid, house, agent)
+	if nil == err {
+		// result.Id = id
+	}
 }
 
 // type LandlordNewHouse struct {

@@ -10,6 +10,87 @@ import (
 	"time"
 )
 
+/*
+*	Assign new agency for house
+*	Arguments:
+*		uid		: login user
+*		hid		: house id
+*		agent	: new agent id
+ */
+func AssignAgency(uid, hid, agent int64) (err error) {
+	FN := "[AssignAgency] "
+	beego.Trace(FN, "login user:", uid, ", house:", hid, ", agent:", agent)
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, err)
+		}
+	}()
+
+	/* Argeuments checking */
+	err, h := getHouse(hid)
+	if nil != err {
+		return
+	}
+	if agent <= 0 {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "agent <= 0"}
+		return
+	}
+	beego.Debug(FN, "current agency:", h.Agency.Id)
+	if h.Agency.Id == agent {
+		beego.Debug(FN, fmt.Sprintf("House Agent(%d) not change", h.Agency.Id))
+		return
+	}
+
+	/* Permission checking */
+	// Administrator could assign the agent
+	// Landlord could assign the agent?
+	err, bAdmin := isAdministrator(uid)
+	if nil != err {
+		return
+	}
+	if !bAdmin {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "login user is not an administrator"}
+		return
+	}
+	err, bAgent := isAgency(agent)
+	if nil != err {
+		return
+	}
+	if !bAgent {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("user(%d) is not an agent", agent)}
+		return
+	}
+
+	/* Processing*/
+	o := orm.NewOrm()
+	o.Begin()
+	defer func() {
+		if nil == err {
+			o.Commit()
+		} else {
+			o.Rollback()
+		}
+	}()
+
+	// TblHouse
+	h.Agency.Id = agent
+	numb, errT := o.Update(&h, "Agency")
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to update house agency, err:%s", errT.Error())}
+		return
+	}
+	if 1 != numb {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("numb:%d", numb)}
+		return
+	}
+
+	// message for house certification
+	beego.Warn("TODO: send message to new agency for house certification")
+
+	return
+}
+
 /**
 *	Get house showing time
 *	Arguments:

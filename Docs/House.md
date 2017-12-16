@@ -309,3 +309,15 @@
 	  		* ErrCode		int			// error code
 		  		* Id 		int 		// new house certification id
 	  		* ErrDesc		string		// error description
+
+### 16. Assign House Agency
+	[Security]	private, Administrator, Landlord?
+	[Request]
+  		* PUT /v1/house/:id/assignagency
+	  		* aid			int			// agent id
+	[Response]
+		* SUCCESS:200 
+		* ERR: 4XX,5XX
+	  		* ErrCode		int			// error code
+	  		* ErrDesc		string		// error description
+	
