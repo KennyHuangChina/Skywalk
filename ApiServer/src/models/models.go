@@ -168,8 +168,8 @@ type TblAppointmentAction struct {
 	Action  int   // APPOINT_ACTION_xxx
 	Who     int64
 	When    time.Time `orm:"auto_now_add;type(datetime);default(now)"`
-	TimeBgn time.Time `orm:"type(datetime);null"`
-	TimeEnd time.Time `orm:"type(datetime);null"`
+	TimeBgn time.Time `orm:"type(datetime);null"` // appointment begin time
+	TimeEnd time.Time `orm:"type(datetime);null"` // appointment end time
 	Comment string    `orm:"size(200)"`
 }
 

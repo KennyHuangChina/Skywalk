@@ -181,7 +181,7 @@ func RecommitHouseCert(hid, uid int64, comment string) (err error, hcid int64) {
 	if h.Agency.Id > 0 { // agency assinged
 		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, h.Agency.Id, comment, o)
 	} else { // no agency assigned
-		err, _ = sendMsg2Admin(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, comment, o)
+		err, _ = sendMsg2Admin(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Warning, hcid, comment, o)
 	}
 	if nil != err {
 		return
@@ -269,6 +269,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 		return
 	}
 
+	// Update TblHouse
 	sql := ""
 	if pass {
 		// Update & publish
@@ -287,7 +288,7 @@ func CertHouse(hid, uid int64, pass bool, comment string) (err error) {
 	numb, _ := res.RowsAffected()
 	beego.Debug(FN, "affect", numb, "records")
 
-	// create a system message to notify the landlord
+	// Send a system message to info the landlord
 	pri := commdef.MSG_PRIORITY_Info
 	msg := "审核通过"
 	if !pass {

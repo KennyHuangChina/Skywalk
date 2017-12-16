@@ -1024,10 +1024,13 @@ func CommitHouseByOwner(hif *commdef.HouseInfo, oid, aid int64) (err error, id i
 	}
 
 	// generate a system message to notify the agency or administrator if no agency assigned
-	if aid > 0 { // agency assinged
+	if aid > 0 {
+		// agency assinged
 		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, aid, comment, o)
-	} else { // no agency assigned
-		err, _ = sendMsg2Admin(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hcid, comment, o)
+	} else {
+		// no agency assigned, send message to administrator to assign a agency
+		comment = comment + "，请指派代理经纪人。"
+		err, _ = sendMsg2Admin(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Warning, hcid, comment, o)
 	}
 	if nil != err {
 		return
@@ -1725,6 +1728,14 @@ func getHousePublished(hid int64) (err error, h TblHouse) {
 }
 
 func getHouse(hid int64) (err error, h TblHouse) {
+	FN := "[getHouse] "
+
+	defer func() {
+		if nil != err {
+			beego.Error(FN, "err:", err)
+		}
+	}()
+
 	if hid <= 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: fmt.Sprintf("hid:%d", hid)}
 		return

@@ -13,14 +13,14 @@ import (
 *	Assign receptionist to specified appointment
 *	Arguments:
 *		uid 	- login user
-*		aid		- appointment id
+*		aptid	- appointment id
 *		rectp	- appoint receptionist
 *	Returns
 *		err 	- error info
  */
-func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
+func AssignAppointmentRectptionist(uid, aptid, recpt int64) (err error) {
 	FN := "[GetAppointmentInfo] "
-	beego.Info(FN, "login user:", uid, ", appointment:", aid, ", recpt:", recpt)
+	beego.Info(FN, "login user:", uid, ", appointment:", aptid, ", recpt:", recpt)
 
 	defer func() {
 		if nil != err {
@@ -30,18 +30,26 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 
 	/* Argeuments checking */
 	// GetUser(uid)		// isAdministrator will call GetUser either, so skip it here
-	if err, _ = getAppointment(aid); nil != err {
+	err, apmt := getAppointment(aptid)
+	if nil != err {
 		return
 	}
+	if apmt.Receptionist == recpt {
+		// receptionist not change
+		beego.Debug(FN, fmt.Sprintf("apmt.Receptionist(%d) == recpt(%d)", apmt.Receptionist, recpt))
+		return
+	}
+
 	// user receptionist
 	if _, bAgency := isAgency(recpt); !bAgency { // isAgency will check GetUser inside
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_BAD_ARGUMENT, ErrInfo: "receptionist is not a agency"}
 		return
 	}
+
 	_, ur := GetUser(recpt)
 
 	/* Permission checking */
-	// Only the administrator could assign the receptionist for appointment
+	// Only administrator could assign the receptionist for appointment
 	if _, bAdmin := isAdministrator(uid); !bAdmin {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION}
 		return
@@ -50,17 +58,7 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 	/* Processing */
 	o := orm.NewOrm()
 
-	apmt := TblAppointment{Id: aid}
-	if errT := o.Read(&apmt); nil != errT {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
-		return
-	}
-
-	if apmt.Receptionist == recpt {
-		beego.Debug(FN, fmt.Sprintf("apmt.Receptionist(%d) == recpt(%d)", apmt.Receptionist, recpt))
-		return
-	}
-
+	o.Begin()
 	defer func() {
 		if nil == err {
 			o.Commit()
@@ -69,7 +67,7 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 		}
 	}()
 
-	// recrptionist in appointment table
+	// update recrptionist in appointment table
 	apmt.Receptionist = recpt
 	_, errT := o.Update(&apmt, "Receptionist")
 	if nil != errT {
@@ -81,6 +79,17 @@ func AssignAppointmentRectptionist(uid, aid, recpt int64) (err error) {
 	comments := fmt.Sprintf("指派[%s]处理客人预约", ur.Name)
 	err, act_id := addAppointmentAction(uid, &apmt, commdef.APPOINT_ACTION_SetRectptionist, "", "", comments, o)
 	beego.Debug(FN, "new action:", act_id)
+
+	// Assign the agency for house if it not set
+	beego.Debug(FN, "house of appointment:", apmt.House)
+	if apmt.House > 0 {
+		// check whether the house agency set or not
+		err1, h := getHouse(apmt.House)
+		beego.Debug(FN, "err1:", err1, fmt.Sprintf("house agency: %+v", h.Agency.Id))
+		if nil == err1 && 0 == h.Agency.Id {
+			SetHouseAgency(apmt.House, recpt, uid)
+		}
+	}
 
 	return
 }
@@ -702,6 +711,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 
 	tBgn, tEnd := nilTime, nilTime // time.Time{}, time.Time{}
 	if commdef.APPOINT_ACTION_Reschedule == act || commdef.APPOINT_ACTION_Submit == act {
+		// check schedule time period
 		err, tBgn, tEnd = getScheduleTime(time_begin, time_end)
 		if nil != err {
 			return
@@ -760,10 +770,9 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 	}
 
 	// update schedule time in appointment table
-	if tBgn != nilTime {
+	if tBgn != nilTime && tEnd != nilTime {
 		a := TblAppointment{Id: aid, ApomtTimeBgn: tBgn, ApomtTimeEnd: tEnd}
-		_, errT = o.Update(&a, "ApomtTimeBgn", "ApomtTimeEnd")
-		if nil != errT {
+		if _, errT = o.Update(&a, "ApomtTimeBgn", "ApomtTimeEnd"); nil != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
 			return
 		}
@@ -773,7 +782,7 @@ func addAppointmentAction(uid int64, apmt *TblAppointment, act int, time_begin, 
 	msgType := commdef.MSG_Unknown
 	msgTxt := ""
 	if 0 == apmt.Receptionist { // action must be commdef.APPOINT_ACTION_Submit
-		// appointment receptionist not assigned, send message to admin for assigning
+		// appointment receptionist not assigned, send message to admin to assign an agent to deal with the appointment
 		if err, msgType = appointType2MessageType(apmt.OrderType); nil != err {
 			return
 		}
@@ -859,7 +868,7 @@ func getMsgParameters(order_type, act int, role string) (err error, msg string, 
 func checkAppointmentNewAction(uid int64, apmt *TblAppointment, act int) bool {
 	Fn := "[checkAppointmentNewAction] "
 	beego.Info(Fn, fmt.Sprintf("login user: %d, act: %d", uid, act))
-	beego.Info(Fn, fmt.Sprintf("appointment: %+v", apmt))
+	// beego.Info(Fn, fmt.Sprintf("appointment: %+v", apmt))
 
 	o := orm.NewOrm()
 
