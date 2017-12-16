@@ -545,6 +545,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return Url;
     }
 
+    @Override
+    public int AssignHouseAgency(int house, int agent) {
+        CommunicationBase op = new AssignHouseAgency(mContext, house, agent);
+        HashMap<String, String> pMap = new HashMap<String, String>();
+        return execute(op, pMap);
+    }
+
 
     @Override
     public int GetPropertyListByName(String sName, int nBegin, int nCount) {

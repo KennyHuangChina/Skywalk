@@ -182,6 +182,15 @@ public class CommunicationInterface {
         */
         String GetLandlordHouseSubmitConfirmUrl(int property, String building_no, String house_no);
 
+        /**
+         *  Assign house agency (CMD: CMD_ASSIGN_HOUSE_AGENT)
+         *  @param house : house id
+         *  @param agent : agent id
+         *  @return
+         *  Result: IApiResults.ICommon
+         */
+        int AssignHouseAgency(int house, int agent);
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Property, Community
@@ -406,7 +415,8 @@ public class CommunicationInterface {
                                 CMD_GET_HOUSE_SHOWTIME            = 0x200C,
                                 CMD_SET_HOUSE_SHOWTIME            = 0x200D,
                                 CMD_GET_HOUSE_CERTIFY_HIST        = 0x200E,
-                                CMD_RECOMMIT_HOUSE_CERTIFICATON   = 0x200F;
+                                CMD_RECOMMIT_HOUSE_CERTIFICATON   = 0x200F,
+                                CMD_ASSIGN_HOUSE_AGENT            = 0x2010;
 
         // Property
         final public static int CMD_GET_PROPERTY_LIST     = 0x3001,
@@ -493,6 +503,7 @@ public class CommunicationInterface {
             cmdMap.put(CMD_SET_HOUSE_SHOWTIME,          "CMD_SET_HOUSE_SHOWTIME");
             cmdMap.put(CMD_GET_HOUSE_CERTIFY_HIST,      "CMD_GET_HOUSE_CERTIFY_HIST");
             cmdMap.put(CMD_RECOMMIT_HOUSE_CERTIFICATON, "CMD_RECOMMIT_HOUSE_CERTIFICATON");
+            cmdMap.put(CMD_ASSIGN_HOUSE_AGENT,          "CMD_ASSIGN_HOUSE_AGENT");
 
             // Property
             cmdMap.put(CMD_GET_PROPERTY_LIST,   "CMD_GET_PROPERTY_LIST");
