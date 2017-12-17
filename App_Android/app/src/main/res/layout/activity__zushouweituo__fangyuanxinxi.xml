@@ -31,354 +31,380 @@
         <ScrollView
             android:id="@+id/scrollViewContainer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"  >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="小区名称"/>
+                        android:text="小区名称"
+                        android:textColor="@color/colorTextNormal" />
+
                     <TextView
                         android:id="@+id/textViewSelectBlock"
                         style="@style/textStyle_page_blockValue"
-                        android:textColorHint="@color/colorEditTextTint"
                         android:background="#FFFFFFFF"
-                        android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
-                        android:onClick="onClickResponse"
+                        android:drawableRight="@drawable/right_n"
                         android:hint="选择小区"
-                        android:textColor="@color/colorTextNormal"/>
+                        android:onClick="onClickResponse"
+                        android:textColor="@color/colorTextNormal"
+                        android:textColorHint="@color/colorEditTextTint" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="楼栋号"/>
+                        android:text="楼栋号"
+                        android:textColor="@color/colorTextNormal" />
+
                     <EditText
                         android:id="@+id/editTextPropertyNumber"
                         style="@style/textStyle_page_blockEdit"
-                        android:textColorHint="@color/colorEditTextTint"
                         android:layout_toLeftOf="@+id/tv_loudong_unit"
                         android:ellipsize="end"
                         android:gravity="right"
+                        android:hint="输入楼栋号"
                         android:inputType="text"
                         android:nextFocusDown="@+id/editTextFloor"
-                        android:hint="输入楼栋号"
-                        android:textColor="@color/colorTextNormal"/>
+                        android:textColor="@color/colorTextNormal"
+                        android:textColorHint="@color/colorEditTextTint" />
+
                     <TextView
                         android:id="@+id/tv_loudong_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginLeft="5dp"
-                        android:text="栋"/>
+                        android:text="栋" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal">
+
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="center_vertical"
                         android:paddingLeft="@dimen/page_left_margin"
-                        android:paddingRight="@dimen/page_right_margin"
-                        android:gravity="center_vertical" >
+                        android:paddingRight="@dimen/page_right_margin">
+
                         <TextView
                             style="@style/textStyle_page_blockKey"
-                            android:textColor="@color/colorTextNormal"
-                            android:text="楼层"/>
+                            android:text="楼层"
+                            android:textColor="@color/colorTextNormal" />
+
                         <EditText
                             android:id="@+id/editTextFloor"
                             style="@style/textStyle_page_blockEdit"
-                            android:textColorHint="@color/colorEditTextTint"
-                            android:hint="输入楼层"
-                            android:inputType="number"
-                            android:gravity="right"
-                            android:nextFocusDown="@+id/editTextTotalFloor"
                             android:layout_alignBaseline="@+id/tv_louceng_unit"
                             android:layout_alignBottom="@+id/tv_louceng_unit"
-                            android:layout_toStartOf="@+id/tv_louceng_unit" />
+                            android:layout_toStartOf="@+id/tv_louceng_unit"
+                            android:gravity="right"
+                            android:hint="输入楼层"
+                            android:inputType="number"
+                            android:nextFocusDown="@+id/editTextTotalFloor"
+                            android:textColorHint="@color/colorEditTextTint" />
+
                         <TextView
                             android:id="@+id/tv_louceng_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="5dp"
-                            android:text="层"/>
+                            android:text="层" />
                     </RelativeLayout>
+
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="center_vertical"
                         android:paddingLeft="@dimen/page_left_margin"
-                        android:paddingRight="@dimen/page_right_margin"
-                        android:gravity="center_vertical" >
+                        android:paddingRight="@dimen/page_right_margin">
+
                         <TextView
                             style="@style/textStyle_page_blockKey"
-                            android:textColor="@color/colorTextNormal"
-                            android:text="共"/>
+                            android:text="共"
+                            android:textColor="@color/colorTextNormal" />
+
                         <EditText
-                            style="@style/textStyle_page_blockEdit"
-                            android:textColorHint="@color/colorEditTextTint"
-                            android:layout_toLeftOf="@+id/tv_loucengs_unit"
-                            android:inputType="number"
                             android:id="@+id/editTextTotalFloor"
+                            style="@style/textStyle_page_blockEdit"
+                            android:layout_toLeftOf="@+id/tv_loucengs_unit"
                             android:gravity="right"
-                            android:hint="输入总层数"/>
+                            android:hint="输入总层数"
+                            android:inputType="number"
+                            android:textColorHint="@color/colorEditTextTint" />
+
                         <TextView
                             android:id="@+id/tv_loucengs_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="5dp"
-                            android:text="层"/>
+                            android:text="层" />
                     </RelativeLayout>
                 </LinearLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="门牌号"/>
+                        android:text="门牌号"
+                        android:textColor="@color/colorTextNormal" />
+
                     <EditText
                         android:id="@+id/editTextRoomNumber"
                         style="@style/textStyle_page_blockValue"
-                        android:textColorHint="@color/colorEditTextTint"
                         android:background="#FFFFFFFF"
                         android:gravity="right"
+                        android:hint="输入房号"
                         android:inputType="text"
                         android:textColor="@color/colorTextNormal"
-                        android:hint="输入房号"/>
+                        android:textColorHint="@color/colorEditTextTint" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="产证面积"/>
+                        android:text="产证面积"
+                        android:textColor="@color/colorTextNormal" />
+
                     <EditText
                         android:id="@+id/editTextArea"
                         style="@style/textStyle_page_blockEdit"
-                        android:textColorHint="@color/colorEditTextTint"
                         android:layout_toLeftOf="@+id/tv_chanzheng_unit"
                         android:gravity="right"
+                        android:hint="输入产证面积"
                         android:inputType="number|numberDecimal"
                         android:textColor="@color/colorTextNormal"
-                        android:hint="输入产证面积"/>
+                        android:textColorHint="@color/colorEditTextTint" />
+
                     <TextView
                         android:id="@+id/tv_chanzheng_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginLeft="5dp"
-                        android:text="㎡"/>
+                        android:text="㎡" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="户型"/>
+                        android:text="户型"
+                        android:textColor="@color/colorTextNormal" />
 
                     <TextView
                         android:id="@+id/tv_huxing_selector"
                         style="@style/textStyle_page_blockValue"
-                        android:textColorHint="@color/colorEditTextTint"
-                        android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
-                        android:textColor="@color/colorTextNormal"
+                        android:drawableRight="@drawable/right_n"
+                        android:hint="请选择"
                         android:onClick="onClickResponse"
-                        android:hint="请选择"/>
+                        android:textColor="@color/colorTextNormal"
+                        android:textColorHint="@color/colorEditTextTint" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="装修"/>
+                        android:text="装修"
+                        android:textColor="@color/colorTextNormal" />
+
                     <TextView
                         android:id="@+id/tv_zhuangxiu_selector"
                         style="@style/textStyle_page_blockValue"
-                        android:textColorHint="@color/colorEditTextTint"
                         android:background="#FFFFFFFF"
-                        android:drawableRight="@drawable/right_n"
                         android:drawablePadding="5dp"
-                        android:textColor="@color/colorTextNormal"
-                        android:onClick="onClickResponse"
+                        android:drawableRight="@drawable/right_n"
                         android:gravity="right"
-                        android:hint="请选择"/>
+                        android:hint="请选择"
+                        android:onClick="onClickResponse"
+                        android:textColor="@color/colorTextNormal"
+                        android:textColorHint="@color/colorEditTextTint" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin"
-                    android:gravity="center_vertical" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
-                        android:text="购买日期"/>
+                        android:text="购买日期"
+                        android:textColor="@color/colorTextNormal" />
+
                     <TextView
                         android:id="@+id/tv_date_selector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onClickResponse"
+                        android:layout_alignParentRight="true"
                         android:layout_gravity="center_vertical"
                         android:drawablePadding="10dp"
                         android:drawableRight="@drawable/date_n"
-                        android:layout_alignParentRight="true"
-                        android:textSize="14sp"
-                        android:textColor="@color/colorTextNormal"
                         android:hint="请选择"
-                        android:textColorHint="@color/colorEditTextTint"/>
+                        android:onClick="onClickResponse"
+                        android:textColor="@color/colorTextNormal"
+                        android:textColorHint="@color/colorEditTextTint"
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin" >
+                    android:paddingRight="@dimen/page_right_margin">
+
                     <TextView
                         style="@style/textStyle_page_blockKey"
-                        android:textColor="@color/colorTextNormal"
                         android:layout_centerVertical="true"
-                        android:text="有无房贷"/>
+                        android:text="有无房贷"
+                        android:textColor="@color/colorTextNormal" />
+
                     <ToggleButton
                         android:id="@+id/toggleButtonLoan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minWidth="10dp"
-                        android:minHeight="10dp"
+                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/toggle_selector"
-                        android:textOn=""
-                        android:textOff=""
                         android:checked="true"
-                        android:layout_alignParentRight="true"/>
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
+                        android:textOff=""
+                        android:textOn="" />
                 </RelativeLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:orientation="vertical"
                     android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:paddingLeft="@dimen/page_left_margin"
                     android:paddingRight="@dimen/page_right_margin">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             style="@style/textStyle_page_blockKey"
-                            android:textColor="@color/colorTextNormal"
                             android:layout_centerVertical="true"
-                            android:text="是否唯一"/>
+                            android:text="是否唯一"
+                            android:textColor="@color/colorTextNormal" />
+
                         <ToggleButton
                             android:id="@+id/toggleButtonUnique"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minWidth="10dp"
-                            android:minHeight="10dp"
+                            android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:background="@drawable/toggle_selector"
-                            android:textOn=""
-                            android:textOff=""
                             android:checked="false"
-                            android:layout_alignParentRight="true" />
+                            android:minHeight="10dp"
+                            android:minWidth="10dp"
+                            android:textOff=""
+                            android:textOn="" />
                     </RelativeLayout>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:textColor="@color/colorTextTint"
-                        android:textSize="12sp"
                         android:layout_centerVertical="true"
-                        android:text="该房源是否是您唯一的房屋，与是否有贷款无关"/>
+                        android:layout_marginTop="5dp"
+                        android:text="该房源是否是您唯一的房屋，与是否有贷款无关"
+                        android:textColor="@color/colorTextTint"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
-                <include layout="@layout/seperator_horizontal"/>
+                <include layout="@layout/seperator_horizontal" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorBackgroundCommon">
+
+                    <TextView
+                        android:id="@+id/tv_next"
+                        style="@style/btnstyle_major"
+                        android:layout_width="330dp"
+                        android:layout_height="45dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="25dp"
+                        android:onClick="onClickResponse"
+                        android:text="下一步" />
+                </RelativeLayout>
             </LinearLayout>
 
         </ScrollView>
 
-
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorBackgroundCommon">
-
-        <TextView
-            android:id="@+id/tv_next"
-            android:onClick="onClickResponse"
-            android:layout_width="330dp"
-            android:layout_height="45dp"
-            style="@style/btnstyle_major"
-            android:layout_marginBottom="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:text="下一步"/>
-    </RelativeLayout>
 
 
 </RelativeLayout>
