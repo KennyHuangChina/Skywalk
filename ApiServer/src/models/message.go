@@ -328,17 +328,20 @@ func sendMsg2Admin(mt, pri int, refId int64, msg string, o orm.Ormer) (err error
 	// var o orm.Ormer
 	// o = orm.NewOrm()
 
-	var aus []TblUserGroupMember // admin users
-	numb, errT := o.QueryTable("tbl_user_group_member").Filter("Group__Admin", true).All(&aus)
+	var admins []TblUser
+	numb, errT := o.Raw(`SELECT * FROM v_user_admin`).QueryRows(&admins)
 	if nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
 		return
 	}
 	beego.Debug(Fn, fmt.Sprintf("%d administrators found", numb))
-	for _, v := range aus { // send system message to each administrator
-		err, _ = addMessage(mt, pri, refId, v.User.Id, msg, o)
-		if nil != err {
-			return
+	for _, v := range admins {
+		if v.Enable {
+			err, _ = addMessage(mt, pri, refId, v.Id, msg, o)
+			if nil != err {
+				return
+			}
+			beego.Debug(Fn, fmt.Sprintf("send message to %s(%d)", v.Name, v.Id))
 		}
 	}
 

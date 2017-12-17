@@ -643,9 +643,9 @@ func init() {
 	// Create view for published house
 	// _, errT := o.Raw(`SHOW TABLES LIKE 'v_house_published'`).Exec()	// doesn't work
 	_, errT := o.Raw(`SELECT id FROM v_house_published LIMIT 0, 1`).Exec()
-	// beego.Debug("err:", errT)
+	// beego.Debug("warn:", errT)
 	if nil != errT {
-		beego.Warn("err:", errT.Error(), ", Create now")
+		beego.Warn("warn:", errT.Error(), ", Create now")
 		if strings.Contains(errT.Error(), "Error 1146") {
 			// beego.Warn("View does not exist")
 			o.Raw(`CREATE VIEW v_house_published AS SELECT * FROM tbl_house WHERE publish_time IS NOT NULL`).Exec()
@@ -655,7 +655,7 @@ func init() {
 	// Create view for unpublished house
 	_, errT = o.Raw(`SELECT id FROM v_house_unpublished LIMIT 0, 1`).Exec()
 	if nil != errT {
-		beego.Warn("err:", errT.Error(), ", Create now")
+		beego.Warn("warn:", errT.Error(), ", Create now")
 		if strings.Contains(errT.Error(), "Error 1146") {
 			// beego.Warn("View does not exist")
 			o.Raw(`CREATE VIEW v_house_unpublished AS SELECT * FROM tbl_house WHERE publish_time IS NULL`).Exec()
@@ -665,13 +665,37 @@ func init() {
 	// Create view for user's headportrait
 	_, errT = o.Raw(`SELECT id FROM v_pic_user_portrait LIMIT 0, 1`).Exec()
 	if nil != errT {
-		beego.Warn("err:", errT.Error(), ", Create now")
+		beego.Warn("warn:", errT.Error(), ", Create now")
 		if strings.Contains(errT.Error(), "Error 1146") {
 			// beego.Warn("View does not exist")
 			sql := fmt.Sprintf(`CREATE VIEW v_pic_user_portrait AS 
 									SELECT * FROM tbl_pictures WHERE type_major=%d AND type_minor=%d`,
 				commdef.PIC_TYPE_USER, commdef.PIC_USER_HEAD_PORTRAIT)
 			o.Raw(sql).Exec()
+		}
+	}
+
+	// Create view for agency
+	_, errT = o.Raw(`SELECT id FROM v_user_agent LIMIT 0, 1`).Exec()
+	if nil != errT {
+		beego.Warn("warn:", errT.Error(), ", Create now")
+		if strings.Contains(errT.Error(), "Error 1146") {
+			// beego.Warn("View does not exist")
+			o.Raw(`CREATE VIEW v_user_agent AS 
+					SELECT u.* FROM tbl_user AS u, tbl_user_group AS ug, tbl_user_group_member AS ugm 
+						WHERE ugm.group_id=ug.id AND !ug.admin AND ugm.user_id=u.id`).Exec()
+		}
+	}
+
+	// Create view for administrator
+	_, errT = o.Raw(`SELECT id FROM v_user_admin LIMIT 0, 1`).Exec()
+	if nil != errT {
+		beego.Warn("warn:", errT.Error(), ", Create now")
+		if strings.Contains(errT.Error(), "Error 1146") {
+			// beego.Warn("View does not exist")
+			o.Raw(`CREATE VIEW v_user_admin AS 
+					SELECT u.* FROM tbl_user AS u, tbl_user_group AS ug, tbl_user_group_member AS ugm 
+						WHERE ugm.group_id=ug.id AND ug.admin AND ugm.user_id=u.id`).Exec()
 		}
 	}
 }

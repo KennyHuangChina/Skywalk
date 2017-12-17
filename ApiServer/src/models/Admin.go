@@ -234,9 +234,7 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 	/* Processing */
 	// calculate the count
 	o := orm.NewOrm()
-	sql := `SELECT COUNT(*) AS count
-				FROM tbl_user_group_member AS gm, tbl_user AS u, tbl_user_group AS g 
-				WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND !g.admin`
+	sql := `SELECT COUNT(*) AS count FROM v_user_agent WHERE enable`
 	var Count int64
 	errT := o.Raw(sql).QueryRow(&Count)
 	if nil != errT {
@@ -257,10 +255,9 @@ func GetAgencyList(begin, cnt int) (err error, total int64, agencys []commdef.Ag
 	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET) // "未设置"
 
 	// get real records
-	sql_usr := fmt.Sprintf(`SELECT u.id, IF (LENGTH(u.name) > 0, u.name, '%s') AS name, 
-									IF (LENGTH(u.id_no) > 0, u.id_no, '%s') AS id_no, u.phone 
-								FROM tbl_user_group_member AS gm, tbl_user_group AS g, tbl_user AS u 
-								WHERE u.Enable AND u.id = gm.user_id AND gm.group_id = g.id AND !g.admin`, nameUnset, nameUnset)
+	sql_usr := fmt.Sprintf(`SELECT id, IF (LENGTH(name) > 0, name, '%s') AS name, 
+									IF (LENGTH(id_no) > 0, id_no, '%s') AS id_no, phone 
+								FROM v_user_agent WHERE enable `, nameUnset, nameUnset)
 	sql_pic := fmt.Sprintf(`SELECT p.ref_id, ps.url 
 								FROM v_pic_user_portrait AS p, tbl_pic_set AS ps 
 								WHERE p.id=ps.pic_id AND ps.size=%d`, commdef.PIC_SIZE_SMALL)
@@ -966,7 +963,7 @@ func isAgency(uid int64) (err error, agency bool) {
 	}
 
 	// check if the user in agency group
-	sql := fmt.Sprintf("SELECT COUNT(*) FROM tbl_user_group AS g, tbl_user_group_member AS m WHERE m.group_id=g.id AND admin=false AND user_id=%d", uid)
+	sql := fmt.Sprintf("SELECT COUNT(*) FROM v_user_agent WHERE id=%d", uid)
 	nCnt := int64(0)
 
 	o := orm.NewOrm()
@@ -1002,7 +999,7 @@ func isAdministrator(uid int64) (err error, admin bool) {
 	}
 
 	// check if the user in agency group
-	sql := fmt.Sprintf("SELECT COUNT(*) FROM tbl_user_group AS g, tbl_user_group_member AS m WHERE m.group_id=g.id AND admin=true AND user_id=%d", uid)
+	sql := fmt.Sprintf("SELECT COUNT(*) FROM v_user_admin WHERE id=%d", uid)
 	nCnt := int64(0)
 
 	o := orm.NewOrm()
