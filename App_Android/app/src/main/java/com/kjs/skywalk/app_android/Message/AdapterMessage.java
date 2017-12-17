@@ -23,6 +23,7 @@ import com.kjs.skywalk.control.BadgeView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -132,7 +133,7 @@ public class AdapterMessage extends BaseAdapter {
             // 1 - House Certification
             holder.iv_msg_icon.setImageResource(R.drawable.cert_house_icon);
             holder.tv_msg_title.setText("房源审核");
-            holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     markMessageRead(msgInfo.MsgId());
@@ -146,7 +147,7 @@ public class AdapterMessage extends BaseAdapter {
             // 2 - Planed House Watch
             holder.iv_msg_icon.setImageResource(R.drawable.see_house_icon);
             holder.tv_msg_title.setText("预约看房");
-            holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     markMessageRead(msgInfo.MsgId());
@@ -176,9 +177,15 @@ public class AdapterMessage extends BaseAdapter {
             public void onCommandFinished(int command, IApiResults.ICommon iResult) {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
             }
-        }, null).ReadNewMsg(msgId);
+        }, mProgreessListener).ReadNewMsg(msgId);
 
         kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, ret --- %#x", msgId, ret));
 
     }
+
+    CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
+        @Override
+        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+        }
+    };
 }
