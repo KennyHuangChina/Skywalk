@@ -50,7 +50,7 @@ func AssignAgency(uid, hid, agent int64) (err error) {
 		return
 	}
 	if !bAdmin {
-		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: "login user is not an administrator"}
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_PERMISSION, ErrInfo: fmt.Sprintf("login user(%d) is not an administrator", uid)}
 		return
 	}
 	err, bAgent := isAgency(agent)

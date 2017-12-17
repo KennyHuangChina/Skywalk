@@ -1267,3 +1267,62 @@ func Test_GetHouseShowTime(t *testing.T) {
 	// 		return
 	// 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	-- AssignAgency --
+//
+func Test_AssignAgency(t *testing.T) {
+	seq := 0
+	// House
+	xid := []int64{-1, 0, 100000000}
+	desc := []string{"is incorrect", "is a SYSTEM", "does not exit"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: House(%d) %s", seq, v, desc[k]))
+		if e := AssignAgency(-1, v, -1); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	// Agent
+	xid = []int64{-1, 0, 100000000}
+	desc = []string{"< 0", " = 0", "does not exit"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: agent(%d) %s", seq, v, desc[k]))
+		if e := AssignAgency(4, 17, v); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Invalid arguments: agent(6) not change", seq))
+	if e := AssignAgency(4, 17, 6); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	xid = []int64{1, 2, 6, 9, 10, 11}
+	desc = []string{"regular user", "regular user", "agent", "regular user", "regular user", "agent"}
+	for k, v := range xid {
+		seq++
+		t.Log(fmt.Sprintf("<Case %d> Invalid arguments: login user(%d) is %s, not an administrator", seq, v, desc[k]))
+		if e := AssignAgency(v, 17, 100); e == nil {
+			t.Error("Failed, err: ", e)
+			return
+		}
+	}
+
+	seq++
+	t.Log(fmt.Sprintf("<Case %d> Test: assign user(11) as new agency", seq))
+	if e := AssignAgency(4, 17, 11); e != nil {
+		t.Error("Failed, err: ", e)
+		return
+	}
+
+	t.Log(fmt.Sprintf("restore agency to 6"))
+	AssignAgency(4, 17, 6)
+}
