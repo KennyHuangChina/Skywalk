@@ -88,7 +88,7 @@ public class MainActivityFragment extends Fragment
 
     private void doTestAddApi() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);     // new CommandManager(this.getContext(), this, this);
-        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
+//        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
 //        CmdMgr.AddDeliverable(mEditText.getText().toString());
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
 //                                    Integer.parseInt(mEditText1.getText().toString()),
@@ -97,8 +97,8 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.AddFacility(Integer.parseInt(String.valueOf(mEditText.getText())), mEditText1.getText().toString(), null/*"/sdcard/tv_n.png"*/);
 //
 
-//        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "178X", "1305", 35, 23, 4, 3, 2, 157678, false, true, 3, "2017-06-07");
-//        CmdMgr.CommitHouseByOwner(houseInfo, 0);
+        CommunicationInterface.HouseInfo houseInfo = new CommunicationInterface.HouseInfo(0, 1, "210X", "305", 35, 3, 4, 3, 2, 157678, false, true, 3, "2017-12-17");
+        CmdMgr.CommitHouseByOwner(houseInfo, 0);
 
         // test AddHouse
 //        ArrayList<CommunicationInterface.FacilityItem> list = new ArrayList<CommunicationInterface.FacilityItem>();
@@ -152,12 +152,12 @@ public class MainActivityFragment extends Fragment
 //                            Boolean.parseBoolean(mEditText.getText().toString()),
 //                            Boolean.parseBoolean(mEditText1.getText().toString()));
 //        CmdMgr.GetHouseFacilityList(Integer.parseInt(mEditText.getText().toString()));
-//        CmdMgr.GetAgencyList(0, mListTotal);
+        CmdMgr.GetAgencyList(0, mListTotal);
 //        CmdMgr.GetHouseSeeAppointmentList(Integer.parseInt(String.valueOf(mEditText.getText())), 0, mListTotal);
 //        CmdMgr.GetHouseCertHist(Integer.parseInt(String.valueOf(mEditText.getText())));
-        CmdMgr.GetUserPics(Integer.parseInt(String.valueOf(mEditText.getText())),
-                            Integer.parseInt(String.valueOf(mEditText1.getText())),
-                            Integer.parseInt(String.valueOf(mEditText2.getText())));
+//        CmdMgr.GetUserPics(Integer.parseInt(String.valueOf(mEditText.getText())),
+//                            Integer.parseInt(String.valueOf(mEditText1.getText())),
+//                            Integer.parseInt(String.valueOf(mEditText2.getText())));
     }
 
     private void GetHouseDigestList() {
