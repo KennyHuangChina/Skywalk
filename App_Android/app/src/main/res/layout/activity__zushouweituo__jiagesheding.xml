@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_above="@+id/ll_bottom"
         android:id="@+id/linearLayout">
 
         <include layout="@layout/layout_title_bar_with_close_button" />
@@ -277,52 +276,54 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorBackgroundCommon"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="13dp"
+                        android:layout_marginTop="20dp">
+
+                        <TextView
+                            android:id="@+id/tv_prev"
+                            android:onClick="onClickResponse"
+                            android:layout_width="111dp"
+                            android:layout_height="45dp"
+                            style="@style/btnstyle_minor"
+                            android:layout_marginRight="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
+                            android:text="上一步"/>
+
+                        <TextView
+                            android:id="@+id/tv_next"
+                            android:onClick="onClickResponse"
+                            android:layout_width="210dp"
+                            android:layout_height="45dp"
+                            style="@style/btnstyle_major"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
+                            android:text="下一步"/>
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorBackgroundCommon"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/page_left_margin"
-        android:paddingRight="@dimen/page_right_margin"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
 
-         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="13dp"
-            android:layout_marginTop="20dp">
-
-            <TextView
-                android:id="@+id/tv_prev"
-                android:onClick="onClickResponse"
-                android:layout_width="111dp"
-                android:layout_height="45dp"
-                style="@style/btnstyle_minor"
-                android:layout_marginRight="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:text="上一步"/>
-
-            <TextView
-                android:id="@+id/tv_next"
-                android:onClick="onClickResponse"
-                android:layout_width="210dp"
-                android:layout_height="45dp"
-                style="@style/btnstyle_major"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:text="下一步"/>
-        </LinearLayout>
-
-
-
-    </LinearLayout>
 
 </RelativeLayout>
