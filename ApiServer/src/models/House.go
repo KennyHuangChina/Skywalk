@@ -73,7 +73,7 @@ func AssignAgency(uid, hid, agent int64) (err error) {
 		}
 	}()
 
-	// TblHouse
+	// Update house agency in TblHouse
 	h.Agency.Id = agent
 	numb, errT := o.Update(&h, "Agency")
 	if nil != errT {
@@ -85,8 +85,15 @@ func AssignAgency(uid, hid, agent int64) (err error) {
 		return
 	}
 
-	// message for house certification
-	beego.Warn("TODO: send message to new agency for house certification")
+	if nilTime == h.PublishTime {
+		// send message to new agency for house certification
+		hc := TblHouseCert{}
+		if hc, err = getHouseNewestCert(hid); nil != err {
+			return
+		}
+		comment := hc.Comment
+		err, _ = addMessage(commdef.MSG_HouseCertification, commdef.MSG_PRIORITY_Info, hc.Id, agent, comment, o)
+	}
 
 	return
 }
