@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -137,6 +139,13 @@ public class fragmentApartment extends Fragment implements AbsListView.OnScrollL
         mListViewSearchResult = (ListView) view.findViewById(R.id.listViewSearchResult);
         mListViewSearchResult.setFocusable(false);
         mListViewSearchResult.setOnScrollListener(this);
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ClassDefine.HouseDigest item = (ClassDefine.HouseDigest)mAdapter.getItem(position);
+                commonFun.startActivityWithHouseId(getActivity(), Activity_ApartmentDetail.class, item.houseId);
+            }
+        });
 
         mAdapter = new AdapterSearchResultList(getActivity());
         mAdapter.setDisplayType(mDisplay);
