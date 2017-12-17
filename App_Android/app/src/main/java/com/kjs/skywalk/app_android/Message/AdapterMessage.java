@@ -133,7 +133,7 @@ public class AdapterMessage extends BaseAdapter {
             // 1 - House Certification
             holder.iv_msg_icon.setImageResource(R.drawable.cert_house_icon);
             holder.tv_msg_title.setText("房源审核");
-            holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     markMessageRead(msgInfo.MsgId());
@@ -147,7 +147,7 @@ public class AdapterMessage extends BaseAdapter {
             // 2 - Planed House Watch
             holder.iv_msg_icon.setImageResource(R.drawable.see_house_icon);
             holder.tv_msg_title.setText("预约看房");
-            holder.tv_msg_result.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     markMessageRead(msgInfo.MsgId());
