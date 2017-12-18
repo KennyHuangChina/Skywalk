@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.Apartment.AdapterSearchResultList;
 import com.kjs.skywalk.app_android.Server.GetHouseListTask;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -92,6 +94,13 @@ public class Activity_Search_Fangyuanliebiao extends SKBaseActivity implements A
         mAdapter = new AdapterSearchResultList(this);
         mAdapter.setDisplayType(mDisplay);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ClassDefine.HouseDigest item = (ClassDefine.HouseDigest)mAdapter.getItem(position);
+                commonFun.startActivityWithHouseId(Activity_Search_Fangyuanliebiao.this, Activity_ApartmentDetail.class, item.houseId);
+            }
+        });
 
         mDisplayType = (TextView)findViewById(R.id.textViewDisplayMode);
         mDisplayType.setOnClickListener(mClickListenerDisplayType);

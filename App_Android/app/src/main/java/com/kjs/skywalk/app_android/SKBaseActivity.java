@@ -22,6 +22,7 @@ import java.util.HashMap;
 import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_CONNECTION_ERROR;
 import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_NEED_LOGIN;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_RELOGIN;
 
 /**
  * Created by Jackie on 2017/5/27.
@@ -110,7 +111,7 @@ public class SKBaseActivity extends AppCompatActivity
 
     @Override
     public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-        kjsLogUtil.i("SKBaseActivity::onCommandFinished");
+        kjsLogUtil.i("[" + CommunicationInterface.CmdID.GetCmdDesc(command) + "]" + "SKBaseActivity::onCommandFinished");
         int errorCode = iResult.GetErrCode();
         if(errorCode == CE_ERROR_NO_ERROR) {
             return;
@@ -136,6 +137,17 @@ public class SKBaseActivity extends AppCompatActivity
             });
 
             return;
+        } else {
+            kjsLogUtil.i("error: " + iResult.GetErrDesc());
+            if(command == CMD_RELOGIN) {
+                kjsLogUtil.i("re-login failed: " + "show log in activity.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        processLogin();
+                    }
+                });
+            }
         }
     }
 
