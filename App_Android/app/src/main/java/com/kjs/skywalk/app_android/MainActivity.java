@@ -45,6 +45,7 @@ import me.iwf.photopicker.PhotoPreview;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
+import com.kjs.skywalk.service.UpdateIntentService;
 
 import static com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
@@ -97,6 +98,8 @@ public class MainActivity extends SKBaseActivity {
         if(mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
 //            showWaiting(mTvHomePage);
         }
+
+        startUpdateService();
     }
 
     @Override
@@ -557,5 +560,9 @@ public class MainActivity extends SKBaseActivity {
         } else {
             kjsLogUtil.i("Create image cache folder succeed.");
         }
+    }
+
+    void startUpdateService() {
+        UpdateIntentService.startActionMsgUpdate(this, "", "");
     }
 }

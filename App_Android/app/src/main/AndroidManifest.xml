@@ -100,9 +100,12 @@
         <activity android:name=".Activity_PasswordReset" />
         <activity android:name=".Activity_ApartmentList" />
         <activity android:name=".Message.Activity_Message_fangyuanshenhe" />
-        <activity android:name=".Message.Activity_Message_yuyuekanfang"></activity>
+        <activity android:name=".Message.Activity_Message_yuyuekanfang" />
         <activity android:name=".Activity_fangyuan_renzheng_customer" />
 
+        <service
+            android:name="com.kjs.skywalk.service.UpdateIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
