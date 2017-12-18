@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_AGENCY_LIST;
 
 /**
  * Created by admin on 2017/3/22.
@@ -79,6 +80,12 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
                 updateAgentListStatus(!checkBox.isChecked());
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         mHandler.sendEmptyMessageDelayed(MSG_GET_AGENT_LIST, 100);
     }
 
@@ -110,41 +117,46 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
     private void fetchAgentList(final int start, final int end) {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
-                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                    IApiResults.IResultList res = (IApiResults.IResultList) iCommon;
-                    mAgentCount = res.GetTotalNumber();
-                    int nFetched = res.GetFetchedNumber();
-                    if (nFetched > 0) {
-                        ArrayList<Object> array = res.GetList();
-                        for(Object obj : array) {
-                            IApiResults.IAgencyInfo info = (IApiResults.IAgencyInfo)obj;
-                            ClassDefine.Agent agent = new ClassDefine.Agent();
-                            double db = info.RankAtti() / 10.0;
-                            agent.mAttitude = String.format("%.1f", db);
-                            db = info.RankProf() / 10.0;
-                            agent.mProfessional = String.format("%.1f", db);
-                            agent.mIDCard = info.IdNo();
-                            agent.mID = String.valueOf(info.Id());
-                            agent.mName = info.Name();
-                            agent.mSex = String.valueOf(info.Sex());
-                            agent.mPortrait = info.Portrait();
-                            agent.mYears = "3年";
-                            if(agent.mPortrait == null || agent.mPortrait.isEmpty()) {
-                                agent.mPortrait = "not set";
-                            }
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if(command == CMD_GET_AGENCY_LIST) {
+                    if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
+                        IApiResults.IResultList res = (IApiResults.IResultList) iResult;
+                        mAgentCount = res.GetTotalNumber();
+                        int nFetched = res.GetFetchedNumber();
+                        if (nFetched > 0) {
+                            ArrayList<Object> array = res.GetList();
+                            for (Object obj : array) {
+                                IApiResults.IAgencyInfo info = (IApiResults.IAgencyInfo) obj;
+                                ClassDefine.Agent agent = new ClassDefine.Agent();
+                                double db = info.RankAtti() / 10.0;
+                                agent.mAttitude = String.format("%.1f", db);
+                                db = info.RankProf() / 10.0;
+                                agent.mProfessional = String.format("%.1f", db);
+                                agent.mIDCard = info.IdNo();
+                                agent.mID = String.valueOf(info.Id());
+                                agent.mName = info.Name();
+                                agent.mSex = String.valueOf(info.Sex());
+                                agent.mPortrait = info.Portrait();
+                                agent.mYears = "3年";
+                                if (agent.mPortrait == null || agent.mPortrait.isEmpty()) {
+                                    agent.mPortrait = "not set";
+                                }
 
-                            mAgentList.add(agent);
+                                mAgentList.add(agent);
+                            }
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateAgentList();
+                            }
+                        });
+                    } else {
+                        commonFun.showToast_info(getApplicationContext(), mListViewAgents, iResult.GetErrDesc());
+                        Activity_Zushouweituo_Xuanzedaili.super.onCommandFinished(command, iResult);
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateAgentList();
-                        }
-                    });
                 } else {
-                    commonFun.showToast_info(getApplicationContext(), mListViewAgents, iCommon.GetErrDesc());
+                    Activity_Zushouweituo_Xuanzedaili.super.onCommandFinished(command, iResult);
                 }
                 hideWaiting();
             }
