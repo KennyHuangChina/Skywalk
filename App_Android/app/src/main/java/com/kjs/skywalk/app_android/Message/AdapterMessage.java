@@ -118,11 +118,12 @@ public class AdapterMessage extends BaseAdapter {
 
         final List<commonFun.TextDefine> houseInfo = new ArrayList<commonFun.TextDefine>(
                 Arrays.asList(
-                        new commonFun.TextDefine("房源：" + msgInfo.Property(), 39, Color.parseColor("#000000")),
-                        new commonFun.TextDefine( msgInfo.BuildingNo(), 36,  Color.parseColor("#FF6600")),
-                        new commonFun.TextDefine( "栋", 36,  Color.parseColor("#000000")),
-                        new commonFun.TextDefine( msgInfo.HouseNo(), 36,  Color.parseColor("#FF6600")),
-                        new commonFun.TextDefine( "室", 36,  Color.parseColor("#000000"))
+                        new commonFun.TextDefine("房源：", 39, Color.parseColor("#808080")),
+                        new commonFun.TextDefine(msgInfo.Property(), 39, Color.parseColor("#000000")),
+                        new commonFun.TextDefine(msgInfo.BuildingNo(), 39,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine("栋", 39,  Color.parseColor("#000000")),
+                        new commonFun.TextDefine(msgInfo.HouseNo(), 39,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine("室", 39,  Color.parseColor("#000000"))
                        )
         );
         holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
