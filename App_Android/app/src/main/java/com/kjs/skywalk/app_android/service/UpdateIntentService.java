@@ -24,12 +24,16 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 public class UpdateIntentService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
+    public static final String  BROADACTION_NEW_MESSAGE_COUNT ="com.kjs.skywalk.broadcast.newMsgCount";
+
     private static final String ACTION_FOO = "com.kjs.skywalk.service.action.MsgUpdate";
     private static final String ACTION_BAZ = "com.kjs.skywalk.service.action.BAZ";
 
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "com.kjs.skywalk.service.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "com.kjs.skywalk.service.extra.PARAM2";
+
+    private int mMsgCount = 0;
 
     public UpdateIntentService() {
         super("UpdateIntentService");
@@ -92,6 +96,13 @@ public class UpdateIntentService extends IntentService {
             try {
                 int newMsgCount = getMessageCountSync(false, true);
                 kjsLogUtil.i("newMsgCount: " + newMsgCount);
+                if (newMsgCount != mMsgCount) {
+                    Intent intent = new Intent(BROADACTION_NEW_MESSAGE_COUNT);
+                    intent.putExtra("new_msg_count", newMsgCount);
+                    sendBroadcast(intent);
+                    kjsLogUtil.i("sendBroadcast --- newMsgCount: " + newMsgCount);
+                }
+                mMsgCount = newMsgCount;
 
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -111,7 +122,7 @@ public class UpdateIntentService extends IntentService {
     }
 
     boolean mIsCmdFinished = false;
-    int mMsgCount = 0;
+    int mTmpMsgCount = 0;
     private int getMessageCountSync(boolean ido, boolean nmo) {
         mIsCmdFinished = false;
         CommandManager.getCmdMgrInstance(getApplicationContext(), new CommunicationInterface.CICommandListener() {
@@ -134,7 +145,7 @@ public class UpdateIntentService extends IntentService {
                     int nFetch = resultList.GetFetchedNumber();
                     kjsLogUtil.i("nFetch: " + nFetch);
                     if (nFetch == -1) {
-                        mMsgCount = resultList.GetTotalNumber();
+                        mTmpMsgCount = resultList.GetTotalNumber();
                         mIsCmdFinished = true;
                         kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
                     }
@@ -151,8 +162,8 @@ public class UpdateIntentService extends IntentService {
             }
         }
 
-        kjsLogUtil.i("mMsgCount: " + mMsgCount);
-        return mMsgCount;
+        kjsLogUtil.i("mTmpMsgCount: " + mTmpMsgCount);
+        return mTmpMsgCount;
     }
 
     CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
