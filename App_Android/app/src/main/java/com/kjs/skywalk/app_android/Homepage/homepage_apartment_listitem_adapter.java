@@ -67,24 +67,25 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        TextView tvGroupTitle;
-        TextView tvGroupCount;
-        RelativeLayout rlApartment1;
-        ImageView ivApartment1_thumb;
-        ImageView ivApartment1_flag;
-        TextView tvApartment1_name;
-        TextView tvApartment1_desc;
-        LinearLayout llApartment1_tag;
-        TextView tvApartment1_tag1;
-        TextView tvApartment1_tag2;
-        RelativeLayout rlApartment2;
-        ImageView ivApartment2_thumb;
-        ImageView ivApartment2_flag;
-        TextView tvApartment2_name;
-        TextView tvApartment2_desc;
-        LinearLayout llApartment2_tag;
-        TextView tvApartment2_tag1;
-        TextView tvApartment2_tag2;
+        TextView        tvGroupTitle;
+        TextView        tvGroupCount;
+        RelativeLayout  rlApartment1;
+        ImageView       ivApartment1_thumb;
+        ImageView       ivApartment1_flag;
+        TextView        tvApartment1_name;
+        TextView        tvApartment1_desc;
+        LinearLayout    llApartment1_tag;
+        TextView        tvApartment1_tag1;
+        TextView        tvApartment1_tag2;
+        RelativeLayout  rlApartment2;
+        ImageView       ivApartment2_thumb;
+        ImageView       ivApartment2_flag;
+        TextView        tvApartment2_name;
+        TextView        tvApartment2_desc;
+        LinearLayout    llApartment2_tag;
+        TextView        tvApartment2_tag1;
+        TextView        tvApartment2_tag2;
+        RelativeLayout  rlNoHouse;
     }
 
     @Override
@@ -98,23 +99,25 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
             holder.tvGroupTitle = (TextView) view.findViewById(R.id.tv_group_title);
             holder.tvGroupCount = (TextView) view.findViewById(R.id.tv_group_count);
 
-            holder.rlApartment1 = (RelativeLayout) view.findViewById(R.id.rl_apartment1);
-            holder.ivApartment1_thumb = (ImageView) view.findViewById(R.id.iv_apartment1_thumb);
-            holder.ivApartment1_flag = (ImageView) view.findViewById(R.id.iv_apartment1_flag);
-            holder.tvApartment1_name = (TextView) view.findViewById(R.id.tv_apartment1_name);
-            holder.tvApartment1_desc = (TextView) view.findViewById(R.id.tv_apartment1_desc);
-            holder.llApartment1_tag = (LinearLayout) view.findViewById(R.id.ll_apartment1_tag);
-            holder.tvApartment1_tag1 = (TextView) view.findViewById(R.id.tv_apartment1_tag1);
-            holder.tvApartment1_tag2 = (TextView) view.findViewById(R.id.tv_apartment1_tag2);
+            holder.rlApartment1         = (RelativeLayout) view.findViewById(R.id.rl_apartment1);
+            holder.ivApartment1_thumb   = (ImageView) view.findViewById(R.id.iv_apartment1_thumb);
+            holder.ivApartment1_flag    = (ImageView) view.findViewById(R.id.iv_apartment1_flag);
+            holder.tvApartment1_name    = (TextView) view.findViewById(R.id.tv_apartment1_name);
+            holder.tvApartment1_desc    = (TextView) view.findViewById(R.id.tv_apartment1_desc);
+            holder.llApartment1_tag     = (LinearLayout) view.findViewById(R.id.ll_apartment1_tag);
+            holder.tvApartment1_tag1    = (TextView) view.findViewById(R.id.tv_apartment1_tag1);
+            holder.tvApartment1_tag2    = (TextView) view.findViewById(R.id.tv_apartment1_tag2);
 
-            holder.rlApartment2 = (RelativeLayout) view.findViewById(R.id.rl_apartment2);
-            holder.ivApartment2_thumb = (ImageView) view.findViewById(R.id.iv_apartment2_thumb);
-            holder.ivApartment2_flag = (ImageView) view.findViewById(R.id.iv_apartment2_flag);
-            holder.tvApartment2_name = (TextView) view.findViewById(R.id.tv_apartment2_name);
-            holder.tvApartment2_desc = (TextView) view.findViewById(R.id.tv_apartment2_desc);
-            holder.llApartment2_tag = (LinearLayout) view.findViewById(R.id.ll_apartment2_tag);
-            holder.tvApartment2_tag1 = (TextView) view.findViewById(R.id.tv_apartment2_tag1);
-            holder.tvApartment2_tag2 = (TextView) view.findViewById(R.id.tv_apartment2_tag2);
+            holder.rlApartment2         = (RelativeLayout) view.findViewById(R.id.rl_apartment2);
+            holder.ivApartment2_thumb   = (ImageView) view.findViewById(R.id.iv_apartment2_thumb);
+            holder.ivApartment2_flag    = (ImageView) view.findViewById(R.id.iv_apartment2_flag);
+            holder.tvApartment2_name    = (TextView) view.findViewById(R.id.tv_apartment2_name);
+            holder.tvApartment2_desc    = (TextView) view.findViewById(R.id.tv_apartment2_desc);
+            holder.llApartment2_tag     = (LinearLayout) view.findViewById(R.id.ll_apartment2_tag);
+            holder.tvApartment2_tag1    = (TextView) view.findViewById(R.id.tv_apartment2_tag1);
+            holder.tvApartment2_tag2    = (TextView) view.findViewById(R.id.tv_apartment2_tag2);
+
+            holder.rlNoHouse = (RelativeLayout)view.findViewById(R.id.rl_no_house);
 
             view.setTag(holder);
         } else {
@@ -125,9 +128,11 @@ public class homepage_apartment_listitem_adapter extends BaseAdapter {
         holder.tvGroupCount.setText(mTotalCount);
 
         if (mList != null && mList.size() == 0) {
-            holder.rlApartment1.setVisibility(View.INVISIBLE);
-            holder.rlApartment2.setVisibility(View.INVISIBLE);
+            holder.rlApartment1.setVisibility(View.GONE);
+            holder.rlApartment2.setVisibility(View.GONE);
+            holder.rlNoHouse.setVisibility(View.VISIBLE);
         } else {
+            holder.rlNoHouse.setVisibility(View.GONE);
             final ClassDefine.HouseDigest houseDigest1 = mList.get(0);
             holder.tvApartment1_name.setText(houseDigest1.property);
             commonFun.displayImageByURL(mContext, houseDigest1.CoverImageUrlS, holder.ivApartment1_thumb);

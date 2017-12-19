@@ -37,6 +37,7 @@
             android:id="@+id/rl_apartment1"
             android:layout_width="wrap_content"
             android:layout_height="228dp"
+            android:visibility="gone"
             android:layout_weight="1"
             android:layout_marginBottom="5dp" >
             <ImageView
@@ -113,6 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="228dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:layout_marginBottom="5dp" >
             <ImageView
                 android:id="@+id/iv_apartment2_thumb"
@@ -178,6 +180,35 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"/>
                 </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_no_house"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/no_house_icon"
+                    android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="暂时还没有房源哦"
+                    android:textSize="15sp"
+                    android:textColor="#999999"/>
+
             </LinearLayout>
         </RelativeLayout>
 
