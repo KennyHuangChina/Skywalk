@@ -3,8 +3,10 @@ package com.kjs.skywalk.app_android;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -95,17 +97,23 @@ public class MainActivity extends SKBaseActivity {
 
         // check login status
         SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-        if(mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
+        if (mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
 //            showWaiting(mTvHomePage);
         }
 
         startUpdateService();
+
+        // register broadcast
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UpdateIntentService.BROADACTION_NEW_MESSAGE_COUNT);
+        registerReceiver(mBReceiver, filter);
+
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            if(mFragApartment == null || !mFragApartment.isBusy()) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mFragApartment == null || !mFragApartment.isBusy()) {
                 finish();
             }
         }
@@ -161,7 +169,7 @@ public class MainActivity extends SKBaseActivity {
                     mFragHomePage = new fragmentHomePage();
                 }
                 fragTransaction.replace(R.id.fl_container, mFragHomePage);
-            break;
+                break;
 
             case R.id.tv_apartment:
                 if (mFragApartment == null) {
@@ -190,8 +198,7 @@ public class MainActivity extends SKBaseActivity {
     public void onFragmentPrivateClickResponse(View v) {
         commonFun.showToast_resEntryName(this, v);
         switch (v.getId()) {
-            case R.id.tv_clicktologin:
-            {
+            case R.id.tv_clicktologin: {
                 startActivity(new Intent(MainActivity.this, Activity_login.class));
             }
             break;
@@ -263,10 +270,10 @@ public class MainActivity extends SKBaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0) {
-            if(resultCode == ClassDefine.ActivityResultValue.RESULT_VALUE_LOGIN) {
+        if (requestCode == 0) {
+            if (resultCode == ClassDefine.ActivityResultValue.RESULT_VALUE_LOGIN) {
                 int loginResult = data.getIntExtra(KEY_LOGIN_RESULT, 0);
-                if(loginResult != 0) {
+                if (loginResult != 0) {
                     commonFun.showToast_info(getApplicationContext(), mTvHomePage, "登录成功");
                     startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
                 } else {
@@ -281,8 +288,7 @@ public class MainActivity extends SKBaseActivity {
         //commonFun.showToast_resEntryName(this, v);
 
         switch (v.getId()) {
-            case R.id.tv_rent:
-            {
+            case R.id.tv_rent: {
 //                if (mBvMsg != null) {
 //                    mBvMsg.hide();
 //                }
@@ -294,7 +300,7 @@ public class MainActivity extends SKBaseActivity {
 //                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
                 // need check login status
                 boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-                if(!logined) {
+                if (!logined) {
                     startActivityForResult(new Intent(MainActivity.this, Activity_login.class), 0);
                 } else {
                     startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));
@@ -302,8 +308,7 @@ public class MainActivity extends SKBaseActivity {
             }
             break;
 
-            case R.id.tv_apartment:
-            {
+            case R.id.tv_apartment: {
 //                Intent intent = new Intent(this, Activity_ApartmentDetail.class);
 //                startActivity(intent);
 
@@ -316,8 +321,7 @@ public class MainActivity extends SKBaseActivity {
             }
             break;
 
-            case R.id.iv_title:
-            {
+            case R.id.iv_title: {
 //                startActivity(new Intent(this, Activity_ImagePreview.class));
 
                 ArrayList<String> images = commonFun.getTestPicList(this);
@@ -328,14 +332,12 @@ public class MainActivity extends SKBaseActivity {
             }
             break;
 
-            case R.id.im_message:
-            {
+            case R.id.im_message: {
                 showTestMenu(v);
             }
             break;
 
-            case R.id.textViewAdvancedSearch:
-            {
+            case R.id.textViewAdvancedSearch: {
                 startActivity(new Intent(MainActivity.this, Activity_Search.class));
                 break;
             }
@@ -355,15 +357,17 @@ public class MainActivity extends SKBaseActivity {
     }
 
     private void setNewMessageCount(int count) {
-        if (mBvMsg == null) {
-            ImageView imMessage = (ImageView)findViewById(R.id.im_message);
-            mBvMsg = new BadgeView(this, imMessage);
-            mBvMsg.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-            mBvMsg.setText(Integer.toString(count));
-            mBvMsg.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
-//            mBvMsg.setBackgroundResource(R.drawable.red_circle);
-            mBvMsg.show(true);
-        }
+        kjsLogUtil.i("setNewMessageCount:" + count);
+
+//        if (mBvMsg == null) {
+//            ImageView imMessage = (ImageView) findViewById(R.id.im_message);
+//            mBvMsg = new BadgeView(this, imMessage);
+//            mBvMsg.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//            mBvMsg.setText(Integer.toString(count));
+//            mBvMsg.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
+////            mBvMsg.setBackgroundResource(R.drawable.red_circle);
+//            mBvMsg.show(true);
+//        }
 
         if (mBvMsgInTab == null) {
             TextView tvMsgInTab = (TextView) findViewById(R.id.tv_msg);
@@ -375,15 +379,7 @@ public class MainActivity extends SKBaseActivity {
         }
 
         // test notification
-        regNotification();
-//        Notification notifation= new Notification.Builder(this)
-//                .setContentTitle("通知标题")
-//                .setContentText("通知内容")
-//                .setSmallIcon(R.drawable.message)
-//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.message))
-//                .build();
-//        NotificationManager manger= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        manger.notify(0, notifation);
+//        regNotification();
     }
 
     private void regNotification() {
@@ -416,8 +412,7 @@ public class MainActivity extends SKBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_setting1:
-            {
+            case R.id.action_setting1: {
                 startActivity(new Intent(this, Activity_rentals_expiration.class));
             }
             break;
@@ -453,20 +448,17 @@ public class MainActivity extends SKBaseActivity {
 //                    }
 //                    break;
 
-                    case R.id.action_setting1:
-                    {
+                    case R.id.action_setting1: {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_expiration.class));
                     }
                     break;
 
-                    case R.id.action_setting2:
-                    {
+                    case R.id.action_setting2: {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_progress_yijia.class));
                     }
                     break;
 
-                    case R.id.action_setting3:
-                    {
+                    case R.id.action_setting3: {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_progress_contracted.class));
                     }
                     break;
@@ -477,8 +469,7 @@ public class MainActivity extends SKBaseActivity {
 //                    }
 //                    break;
 
-                    case R.id.action_setting5:
-                    {
+                    case R.id.action_setting5: {
                         Intent intent = new Intent(MainActivity.this, Activity_fangyuan_guanli.class);
                         intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, 14);
                         intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, "世茂蝶湖湾17栋1208室");
@@ -486,8 +477,7 @@ public class MainActivity extends SKBaseActivity {
                     }
                     break;
 
-                    case R.id.action_setting6:
-                    {
+                    case R.id.action_setting6: {
 //                        // 消息-预约看房
 //                        Intent intent = new Intent(MainActivity.this, Activity_Message_yuyuekanfang.class);
 //                        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 16);
@@ -500,8 +490,7 @@ public class MainActivity extends SKBaseActivity {
                     }
                     break;
 
-                    case R.id.action_setting100:
-                    {
+                    case R.id.action_setting100: {
                         startActivity(new Intent(MainActivity.this, Activity_rentals_jiaofang_chaobiao.class));
                         break;
                     }
@@ -550,12 +539,12 @@ public class MainActivity extends SKBaseActivity {
     void createImageCacheFolder() {
         String path = commonFun.getImageCachePath(this);
         File file = new File(path);
-        if(file.exists() && file.isDirectory()) {
+        if (file.exists() && file.isDirectory()) {
             kjsLogUtil.i("Image cache folder exists");
             return;
         }
 
-        if(!file.mkdir()) {
+        if (!file.mkdir()) {
             kjsLogUtil.i("Create image cache folder failed!");
         } else {
             kjsLogUtil.i("Create image cache folder succeed.");
@@ -565,4 +554,18 @@ public class MainActivity extends SKBaseActivity {
     void startUpdateService() {
         UpdateIntentService.startActionMsgUpdate(this, "", "");
     }
+
+    BroadcastReceiver mBReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            kjsLogUtil.i("receive broadcast:" + action);
+            if (action.equals(UpdateIntentService.BROADACTION_NEW_MESSAGE_COUNT)) {
+                int newMsgCount = intent.getIntExtra("new_msg_count", 0);
+                setNewMessageCount(newMsgCount);
+            }
+
+        }
+    };
 }
