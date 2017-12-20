@@ -1,4 +1,4 @@
-package com.kjs.skywalk.service;
+package com.kjs.skywalk.app_android.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -109,7 +109,6 @@ public class UpdateIntentService extends IntentService {
                 e.printStackTrace();
             }
         }
-//        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /**
