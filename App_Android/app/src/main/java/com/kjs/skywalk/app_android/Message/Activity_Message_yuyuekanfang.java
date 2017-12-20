@@ -1,5 +1,6 @@
 package com.kjs.skywalk.app_android.Message;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Activity_Search_House;
+import com.kjs.skywalk.app_android.Activity_Xuanzedaili;
+import com.kjs.skywalk.app_android.Activity_Zushouweituo_Fangyuanxinxi;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
@@ -54,7 +58,8 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         mTvButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog_appointment_date_modify();
+                //showDialog_appointment_date_modify();
+                selectAgent();
             }
         });
 
@@ -65,6 +70,24 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
 
         getAppointmentInfo();
     }
+
+    private void selectAgent() {
+        startActivityForResult(new Intent(Activity_Message_yuyuekanfang.this, Activity_Xuanzedaili.class), 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0) { //request from Activity_Xuanzedaili
+            if(resultCode != 0) {
+                if(data != null) {
+                    int agentId = data.getIntExtra("agentId", 0);
+                    kjsLogUtil.i("selected agent id: " + agentId);
+                }
+            }
+        }
+    }
+
 
     private AlertDialog mDateModifyDlg;
     private void showDialog_appointment_date_modify() {
