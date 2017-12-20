@@ -430,8 +430,6 @@
             <!--android:textSize="10sp"/>-->
     <!--</RelativeLayout>-->
 
-    <include layout="@layout/seperator_horizontal"/>
-
     <RelativeLayout
         android:id="@+id/rl_to_rent"
         android:onClick="onFragmentPrivateClickResponse"

@@ -105,7 +105,7 @@
         <activity android:name=".Activity_fangyuan_renzheng_customer" />
 
         <service
-            android:name="com.kjs.skywalk.service.UpdateIntentService"
+            android:name="com.kjs.skywalk.app_android.service.UpdateIntentService"
             android:exported="false"></service>
     </application>
 

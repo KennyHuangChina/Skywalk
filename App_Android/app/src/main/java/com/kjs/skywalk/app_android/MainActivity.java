@@ -32,6 +32,7 @@ import com.kjs.skywalk.app_android.Message.Activity_Message_fangyuanshenhe;
 import com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
+import com.kjs.skywalk.app_android.service.UpdateIntentService;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -47,7 +48,6 @@ import me.iwf.photopicker.PhotoPreview;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
-import com.kjs.skywalk.service.UpdateIntentService;
 
 import static com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
