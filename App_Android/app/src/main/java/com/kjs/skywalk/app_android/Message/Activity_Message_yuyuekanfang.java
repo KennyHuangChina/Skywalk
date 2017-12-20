@@ -71,6 +71,10 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         getAppointmentInfo();
     }
 
+    private void assignAgent(int aid, int agentId) {
+
+    }
+
     private void selectAgent() {
         startActivityForResult(new Intent(Activity_Message_yuyuekanfang.this, Activity_Xuanzedaili.class), 0);
     }
@@ -82,7 +86,7 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
             if(resultCode != 0) {
                 if(data != null) {
                     String agentId = data.getStringExtra("agentId");
-                    kjsLogUtil.i("selected agent id: " + agentId);
+                    assignAgent(mApId, Integer.valueOf(agentId));
                 }
             }
         }
