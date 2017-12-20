@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 
 class CmdGetBehalfHouses extends CommunicationBase {
-    protected   int mType       = 0;  // 0: all; 1: to rent; 2: rented; 3: to sale; 4: wait for approve
+    protected   int mType       = CommunicationInterface.AGENT_HOUSE_ALL;  // 0: all; 1: to rent; 2: rented; 3: to sale; 4: wait for approve. ref to AGENT_HOUSE_xxx
     private     int mBegin      = 0;
     private     int mFetchCnt   = 0;
 
@@ -40,7 +40,7 @@ class CmdGetBehalfHouses extends CommunicationBase {
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        if (mType < 0 || mType > 4) {
+        if (mType < CommunicationInterface.AGENT_HOUSE_ALL || mType > CommunicationInterface.AGENT_HOUSE_TO_APPROVE) {
             Log.e(TAG, "mType:" + mType);
             return false;
         }
@@ -62,5 +62,23 @@ class CmdGetBehalfHouses extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetHouseList result = new ResGetHouseList(nErrCode, jObject);
         return result;
+    }
+
+    @Override
+    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
+        CmdGetBehalfHouses cmdChk = (CmdGetBehalfHouses)cmd2Chk;
+        if (mType != cmdChk.mType || mBegin != cmdChk.mBegin || mFetchCnt != cmdChk.mFetchCnt) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean checkCmdRes(IApiResults.ICommon res) {
+        ResGetHouseList cmd = (ResGetHouseList)res;
+        if (mType != cmd.mType || mBegin != cmd.mBegin || mFetchCnt != cmd.mFetchCnt) {
+            return false;
+        }
+        return true;
     }
 }
