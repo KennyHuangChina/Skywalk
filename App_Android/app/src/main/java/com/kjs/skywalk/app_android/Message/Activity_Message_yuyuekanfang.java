@@ -81,7 +81,7 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         if(requestCode == 0) { //request from Activity_Xuanzedaili
             if(resultCode != 0) {
                 if(data != null) {
-                    int agentId = data.getIntExtra("agentId", 0);
+                    String agentId = data.getStringExtra("agentId");
                     kjsLogUtil.i("selected agent id: " + agentId);
                 }
             }
