@@ -763,19 +763,19 @@ func (this *HouseController) GetBehalfList() {
 		return
 	}
 
-	tp, _ := this.GetInt("type")
-	begin, _ := this.GetInt64("bgn")
-	count, _ := this.GetInt64("cnt")
+	result.Type, _ = this.GetInt("type")
+	result.Begin, _ = this.GetInt64("bgn")
+	result.FetchCnt, _ = this.GetInt64("cnt")
 
 	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
 
 	/*
 	 *	Processing
 	 */
-	err, total, fetched, ids := models.GetBehalfList(tp, begin, count, uid)
+	err, total, fetched, ids := models.GetBehalfList(result.Type, result.Begin, result.FetchCnt, uid)
 	if nil == err {
 		result.Total = total
-		if count > 0 {
+		if result.FetchCnt > 0 {
 			// result.Count = fetched
 			// result.IDs = ids
 			if fetched > 0 {

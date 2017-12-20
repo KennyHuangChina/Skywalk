@@ -98,6 +98,9 @@ type ResGetAppointmenLst_HouseSee struct {
 // result of API get house list
 type ResGetHouseDigestList struct {
 	ResCommon
+	Type         int
+	Begin        int64
+	FetchCnt     int64
 	Total        int64
 	Count        int64
 	HouseDigests []commdef.HouseDigest
