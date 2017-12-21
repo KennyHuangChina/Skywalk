@@ -105,6 +105,8 @@ func (this *HouseController) LandlordSubmitHouseConfirm() {
 	FN := "[LandlordSubmitHouseConfirm] "
 	beego.Warn("[--- API: LandlordSubmitHouseConfirm ---]")
 
+	this.TplName = "LandlordSubmitHouseContract-NotLogin.html"
+
 	/*
 	 *	Extract agreements
 	 */
@@ -113,7 +115,6 @@ func (this *HouseController) LandlordSubmitHouseConfirm() {
 	if nil != err {
 		return
 	}
-	beego.Warn(FN, "TODO: Android will assess this API by webview, but no cookie attached. try to fix")
 	eid, _ := this.GetInt64("ett")
 	build_no := this.GetString("bn")
 	house_no := this.GetString("hn")
