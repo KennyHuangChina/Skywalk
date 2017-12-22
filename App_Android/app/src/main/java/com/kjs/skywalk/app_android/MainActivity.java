@@ -32,6 +32,7 @@ import com.kjs.skywalk.app_android.Message.Activity_Message_fangyuanshenhe;
 import com.kjs.skywalk.app_android.Message.Activity_Message_yuyuekanfang;
 import com.kjs.skywalk.app_android.Message.fragmentMsg;
 import com.kjs.skywalk.app_android.Private.fragmentPrivate;
+import com.kjs.skywalk.app_android.service.UpdateIntentService;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -47,7 +48,6 @@ import me.iwf.photopicker.PhotoPreview;
 
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
-import com.kjs.skywalk.service.UpdateIntentService;
 
 import static com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
@@ -64,7 +64,6 @@ public class MainActivity extends SKBaseActivity {
     private TextView mTvPrivate;
     private BadgeView mBvMsg;
     private BadgeView mBvMsgInTab;
-    private CommandManager mCmdMgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +74,6 @@ public class MainActivity extends SKBaseActivity {
         setContentView(R.layout.activity_main);
 
         createImageCacheFolder();
-
-        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
 
         // copy file from "asset/testPics/" to "cache" dir
         commonFun.copyAssets(this, "testPics", getCacheDir().getAbsolutePath());
@@ -97,7 +94,7 @@ public class MainActivity extends SKBaseActivity {
 
         // check login status
         SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-        if (mCmdMgr.GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
+        if (CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
 //            showWaiting(mTvHomePage);
         }
 

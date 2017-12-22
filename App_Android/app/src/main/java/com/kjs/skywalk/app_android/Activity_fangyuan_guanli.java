@@ -38,7 +38,6 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     private fragmentFangYuanGuanLiInfo3 mFragInfo3 = null;
     int mTestCount = 0;
 //    int mHouseId = 2;
-    private CommandManager mCmdMgr = null;
     private String mInfo2 = "";
     IApiResults.IHouseCertDigestInfo mCertDigestInfo = null;
 

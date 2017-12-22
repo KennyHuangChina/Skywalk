@@ -140,19 +140,17 @@ public class GetHouseListTask extends SKBaseAsyncTask {
         mBegin = params[1].intValue();
         mCount = params[2].intValue();
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener);
-
         mResultGot = false;
         mHouseList.clear();
         mTotalCount = 0;
 
-        result = CmdMgr.GetHouseDigestList(mType, 0, 0, mFilter, mSort);
+        result = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener).GetHouseDigestList(mType, 0, 0, mFilter, mSort);
         if(!waitResult(3000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get count timeout"));
             return 0;
         }
 
-        result = CmdMgr.GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
+        result = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
         if(!waitResult(3000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get house list timeout"));
             return 0;

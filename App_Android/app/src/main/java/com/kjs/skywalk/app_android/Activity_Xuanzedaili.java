@@ -183,9 +183,6 @@ public class Activity_Xuanzedaili extends SKBaseActivity {
         if(!mAdapter.hasSelected()) {
             commonFun.showToast_info(this, mAgentListContainer, "请选择一个代理人");
             return false;
-        } else {
-            ClassDefine.HouseInfoForCommit.autoAgent = 0;
-            ClassDefine.HouseInfoForCommit.agentId = mCurrentAgentId;
         }
 
         return true;

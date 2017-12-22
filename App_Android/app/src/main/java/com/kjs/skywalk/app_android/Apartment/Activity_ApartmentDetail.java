@@ -62,7 +62,6 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     private String TAG = getClass().getSimpleName();
     private ArrayList<String> mImageLst;
 //    private int mHouseId = -1;
-    private CommandManager mCmdMgr = null;
 
     private TextView mTvApartmentName;
     private TextView mTvApartmentStatus;
@@ -143,93 +142,99 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 //        Bundle bundle = getIntent().getExtras();
 //        mHouseId = bundle.getInt("houseId");
 
-        mCmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
-        mCmdMgr.GetHouseInfo(mHouseId, false);
+        CommandManager.getCmdMgrInstance(this, this, this).GetHouseInfo(mHouseId, false);
         kjsLogUtil.i("GetHouseInfo: " + mHouseId);
 
         SKLocalSettings.browsing_history_insert(this, String.valueOf(mHouseId));
         kjsLogUtil.i("idLst:" + SKLocalSettings.browsing_history_read(this));
 
-        mCmdMgr.GetBriefPublicHouseInfo(mHouseId);
+        CommandManager.getCmdMgrInstance(this, this, this).GetBriefPublicHouseInfo(mHouseId);
 
 //        小区物业信息，GetPropertyInfo
-//        mCmdMgr.GetPropertyInfo(2);
+//        CommandManager.getCmdMgrInstance(this, this, this).GetPropertyInfo(2);
 
 //        代理员信息，GetUserInfo
-//        mCmdMgr.GetUserInfo(1);
+//        CommandManager.getCmdMgrInstance(this, this, this).GetUserInfo(1);
 
 //        房屋设施 -> GetHouseFacilityList
-        mCmdMgr.GetHouseFacilityList(mHouseId);
+        CommandManager.getCmdMgrInstance(this, this, this).GetHouseFacilityList(mHouseId);
 
 //        调用方式 GetHouseSeeAppointmentList(house_id, 0, 0)，返回的 total 就试预约人数
-        mCmdMgr.GetHouseSeeAppointmentList(mHouseId, 0, 0);
+        CommandManager.getCmdMgrInstance(this, this, this).GetHouseSeeAppointmentList(mHouseId, 0, 0);
 
      }
 
-        @Override
-        public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-            kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
-            if (null == iResult) {
-                kjsLogUtil.w("result is null");
-                return;
-            }
-            kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
-            if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                return;
-            }
-
-            if (command == CMD_GET_HOUSE_INFO) {
-                updateHouseInfo((IApiResults.IGetHouseInfo)iResult);
-            }
-
-            if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
-                // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
-                updateBriefHouseInfo((IApiResults.IHouseDigest)iResult);
-            }
-
-            if (command == CMD_GET_USER_INFO) {
-                // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
-                updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
-            }
-
-            if (command == CMD_APPOINT_HOUSE_SEE_LST) {
-                // IApiResults.IHouseOrdertable
-                updateHouseOrderTable(iResult);
-            }
-
-            if (command == CMD_GET_HOUSEFACILITY_LIST) {
-                // IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
-                updateHouseFacilityList(iResult);
-            }
-
+    @Override
+    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            return;
         }
 
-        private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mTvApartmentNo.setText("房屋编号： NO." + IHouseInfo.HouseId());
-                    mTvApartmentLastModifyDate.setText("最后更新： " + IHouseInfo.ModifyDate());
+        if (command == CMD_GET_HOUSE_INFO) {
+            updateHouseInfo((IApiResults.IGetHouseInfo)iResult);
+        }
+
+        if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
+            // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+            updateBriefHouseInfo((IApiResults.IHouseDigest)iResult);
+        }
+
+        if (command == CMD_GET_USER_INFO) {
+            // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
+            updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
+        }
+
+        if (command == CMD_APPOINT_HOUSE_SEE_LST) {
+            // IApiResults.IHouseOrdertable
+            updateHouseOrderTable(iResult);
+        }
+
+        if (command == CMD_GET_HOUSEFACILITY_LIST) {
+            // IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
+            updateHouseFacilityList(iResult);
+        }
+
+    }
+
+    private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTvApartmentNo.setText("房屋编号： NO." + IHouseInfo.HouseId());
+                mTvApartmentLastModifyDate.setText("最后更新： " + IHouseInfo.ModifyDate());
 //                    mTvApartmentHuXing.setText(String.format("%d室%d厅%d卫", IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
-                    mTvApartmentHuXing.setText(commonFun.getHouseTypeString(IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
-                    mTvApartmentAcreage.setText(String.format("%d 平米", IHouseInfo.Acreage() / 100));
-                    mTvApartmentYuYue.setText("");
-                    mTvApartmentStatus.setText(translateRentStatus(IHouseInfo.RentStat()));
+                mTvApartmentHuXing.setText(commonFun.getHouseTypeString(IHouseInfo.Bedrooms(), IHouseInfo.Livingrooms(), IHouseInfo.Bathrooms()));
+                mTvApartmentAcreage.setText(String.format("%d 平米", IHouseInfo.Acreage() / 100));
+                mTvApartmentYuYue.setText("");
+                mTvApartmentStatus.setText(translateRentStatus(IHouseInfo.RentStat()));
 
-                    mTvApartment_floor.setText(String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal()));
-                    mTvApartment_fangxing.setText(IHouseInfo.FloorDesc());
-                    mTvApartment_chanquan.setText("");
-                    mTvApartment_decoration.setText(IHouseInfo.DecorateDesc());
-                    mTvApartment_jungong.setText("");
-                    mTvApartment_buydate.setText(String.format("%s 年", IHouseInfo.BuyDate()));
+                mTvApartment_floor.setText(String.format("%d/%d F", IHouseInfo.Floorthis(), IHouseInfo.FloorTotal()));
+                mTvApartment_fangxing.setText(IHouseInfo.FloorDesc());
+                mTvApartment_chanquan.setText("");
+                mTvApartment_decoration.setText(IHouseInfo.DecorateDesc());
+                mTvApartment_jungong.setText("");
+                mTvApartment_buydate.setText(String.format("%s 年", IHouseInfo.BuyDate()));
 
-                    mCmdMgr.GetPropertyInfo(IHouseInfo.ProId());
-                    mCmdMgr.GetUserInfo(IHouseInfo.Agency());
+                getPropertyInfoFromServer(IHouseInfo.ProId());
+                getUserInfoFromServer(IHouseInfo.Agency());
+            }
+        });
+    }
 
-                }
-            });
-        }
+    private void getPropertyInfoFromServer(int nPropId) {
+        CommandManager.getCmdMgrInstance(this, this, this).GetPropertyInfo(nPropId);
+    }
+
+    private void getUserInfoFromServer(int uid) {
+        CommandManager.getCmdMgrInstance(this, this, this).GetUserInfo(uid);
+    }
 
     private void updateBriefHouseInfo(final IApiResults.IHouseDigest briefHouseInfo) {
             this.runOnUiThread(new Runnable() {

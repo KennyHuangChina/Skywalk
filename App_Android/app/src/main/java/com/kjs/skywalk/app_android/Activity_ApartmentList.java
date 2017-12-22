@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -413,6 +414,11 @@ public class Activity_ApartmentList extends SKBaseActivity {
         switch (mType) {
             case TYPE_TO_APPROVE: {
                 startApproveActivity(digest);
+                break;
+            }
+            default: {
+                commonFun.startActivityWithHouseId(this, Activity_ApartmentDetail.class, digest.houseId);
+                break;
             }
         }
     }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.Activity_Search_House;
 import com.kjs.skywalk.app_android.Activity_Xuanzedaili;
 import com.kjs.skywalk.app_android.Activity_Zushouweituo_Fangyuanxinxi;
+import com.kjs.skywalk.app_android.Activity_Zushouweituo_Xuanzedaili;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
@@ -31,6 +32,9 @@ import java.util.List;
 
 import static com.kjs.skywalk.app_android.commonFun.MAP_AP_BUTTON;
 import static com.kjs.skywalk.app_android.commonFun.MAP_HOUSE_CERT_BUTTON;
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_ASSIGN_APPOINTMENT_RECEPTIONIST;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_AGENCY_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_APPOINTMENT_INFO;
 
 public class Activity_Message_yuyuekanfang extends SKBaseActivity {
@@ -71,6 +75,30 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         getAppointmentInfo();
     }
 
+    private void assignAgent(int aid, int agentId) {
+        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if(command == CMD_ASSIGN_APPOINTMENT_RECEPTIONIST) {
+                    if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
+                        kjsLogUtil.i("assign appointment receptionist succeed");
+                        commonFun.showToast_info(getApplicationContext(), mTvButton1, "经纪人指派成功");
+                    } else {
+                        kjsLogUtil.i("assign appointment receptionist failure");
+                        Activity_Message_yuyuekanfang.super.onCommandFinished(command, iResult);
+                    }
+                }
+            }
+        };
+        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        int res = manager.AssignAppointmentReceptionist(aid, agentId);
+        if(res == CE_ERROR_NO_ERROR) {
+
+        } else {
+            commonFun.showToast_info(getApplicationContext(), mTvButton1, "指派经纪人失败");
+        }
+    }
+
     private void selectAgent() {
         startActivityForResult(new Intent(Activity_Message_yuyuekanfang.this, Activity_Xuanzedaili.class), 0);
     }
@@ -81,8 +109,8 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         if(requestCode == 0) { //request from Activity_Xuanzedaili
             if(resultCode != 0) {
                 if(data != null) {
-                    int agentId = data.getIntExtra("agentId", 0);
-                    kjsLogUtil.i("selected agent id: " + agentId);
+                    String agentId = data.getStringExtra("agentId");
+                    assignAgent(mApId, Integer.valueOf(agentId));
                 }
             }
         }
