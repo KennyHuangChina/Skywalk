@@ -80,14 +80,6 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
             }
         });
 
-        // get message count in db
-        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
-        kjsLogUtil.i("msgCount: " + msgCount);
-//        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
-        //
-
-        setRefreshing(true);
-        new ThreadLoadMessage().start();
         // test
 //        commonFun.TextDefine t = new commonFun.TextDefine("123", 12, R.color.colorFontNormal);
 //
@@ -118,6 +110,27 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
 //        kjsLogUtil.i("idLst:" + idLst);
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        kjsLogUtil.i("fragmentMsg --- onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        kjsLogUtil.i("fragmentMsg --- onResume");
+
+        // get message count in db
+        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
+        kjsLogUtil.i("msgCount: " + msgCount);
+//        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
+        //
+
+        setRefreshing(true);
+        new ThreadLoadMessage().start();
     }
 
     private void getMessageInfo() {
