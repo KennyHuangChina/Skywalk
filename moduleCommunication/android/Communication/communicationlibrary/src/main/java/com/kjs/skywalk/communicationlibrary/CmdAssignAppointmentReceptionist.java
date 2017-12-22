@@ -16,7 +16,7 @@ class CmdAssignAppointmentReceptionist extends CommunicationBase {
     private int mReceptionist   = 0;
 
     CmdAssignAppointmentReceptionist(Context context, int apid, int rectptionist) {
-        super(context, CommunicationInterface.CmdID.CMD_GET_APPOINTMENT_INFO);
+        super(context, CommunicationInterface.CmdID.CMD_ASSIGN_APPOINTMENT_RECEPTIONIST);
         mAppointment = apid;
         mReceptionist = rectptionist;
         mMethodType = "PUT";
