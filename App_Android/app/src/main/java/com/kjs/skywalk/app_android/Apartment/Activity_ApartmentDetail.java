@@ -52,11 +52,7 @@ import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
 
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_APPOINT_HOUSE_SEE_LST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 
 public class Activity_ApartmentDetail extends SKBaseActivity {
     private String TAG = getClass().getSimpleName();
@@ -174,33 +170,47 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
         if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
             kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-            return;
+            // Kenny: some commands need to process the return error
+//            return;
         }
 
-        if (command == CMD_GET_HOUSE_INFO) {
-            updateHouseInfo((IApiResults.IGetHouseInfo)iResult);
+        switch (command) {
+            case CmdID.CMD_GET_HOUSE_INFO: {
+                updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+                break;
+            }
+            case CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO: {
+                // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
+                updateBriefHouseInfo((IApiResults.IHouseDigest)iResult);
+                break;
+            }
+            case CmdID.CMD_GET_USER_INFO: {
+                // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
+                updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
+                break;
+            }
+            case CmdID.CMD_APPOINT_HOUSE_SEE_LST: {
+                // IApiResults.IHouseOrdertable
+                updateHouseOrderTable(iResult);
+                break;
+            }
+            case CmdID.CMD_GET_HOUSEFACILITY_LIST: {
+                // IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
+                updateHouseFacilityList(iResult);
+                break;
+            }
+            case CmdID.CMD_APPOINT_SEE_HOUSE: {
+                int nErr = iResult.GetErrCode();
+                if (IApiResults.ERROR_NONE == nErr) {
+                    commonFun.showToast_info(getApplicationContext(), mTvApartmentNo, "预约看房成功");
+                } else if (nErr == IApiResults.ERROR_ALREADY_EXIST) {
+                    commonFun.showToast_info(getApplicationContext(), mTvApartmentNo, "您已经预约看该房");
+                } else {
+                   commonFun.showToast_info(getApplicationContext(), mTvApartmentNo, String.format("预约看房失败(0x%x): %s", nErr, iResult.GetErrDesc()));
+                }
+                break;
+            }
         }
-
-        if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
-            // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
-            updateBriefHouseInfo((IApiResults.IHouseDigest)iResult);
-        }
-
-        if (command == CMD_GET_USER_INFO) {
-            // CMD_GET_USER_INFO,       IApiResults.IGetUserInfo
-            updateHouseUserInfo((IApiResults.IGetUserInfo)iResult);
-        }
-
-        if (command == CMD_APPOINT_HOUSE_SEE_LST) {
-            // IApiResults.IHouseOrdertable
-            updateHouseOrderTable(iResult);
-        }
-
-        if (command == CMD_GET_HOUSEFACILITY_LIST) {
-            // IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
-            updateHouseFacilityList(iResult);
-        }
-
     }
 
     private void updateHouseInfo(final IApiResults.IGetHouseInfo IHouseInfo) {
@@ -538,17 +548,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 // appoint description
                 String appointDesc = tvAppointDesc.getText().toString();
                 // make an appointment for house seeing
-                CommandManager.getCmdMgrInstance(Activity_ApartmentDetail.this,
-                    new CommunicationInterface.CICommandListener() {
-                        @Override
-                        public void onCommandFinished(int command, final IApiResults.ICommon iResult) {
-                            Log.i(TAG, "[MakeAppointment_SeeHouse] ");
-                        }
-                    }, new CommunicationInterface.CIProgressListener() {
-                        @Override
-                        public void onProgressChanged(final int command, final String percent, HashMap<String, String> map) {
-                        }
-                    }).MakeAppointment_SeeHouse(mHouseId, "", timeBegin, timeEnd, appointDesc);
+                CommandManager.getCmdMgrInstance(Activity_ApartmentDetail.this, Activity_ApartmentDetail.this,
+                        Activity_ApartmentDetail.this).MakeAppointment_SeeHouse(mHouseId, "", timeBegin, timeEnd, appointDesc);
                 mOrderDlg.dismiss();
             }
         });
