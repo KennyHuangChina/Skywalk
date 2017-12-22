@@ -507,7 +507,8 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	o := orm.NewOrm()
 
 	// check if the appointment already exist
-	qs := o.QueryTable("tbl_appointment").Filter("OrderType", apType).Filter("House", hid).Filter("Subscriber", uid).Filter("Phone", phone)
+	qs := o.QueryTable("tbl_appointment").Filter("OrderType", apType).Filter("House", hid).
+		Filter("Subscriber", uid).Filter("Phone", phone).Filter("CloseTime__isnull", true)
 	if qs.Exist() {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("appointment already exist")}
 		return
