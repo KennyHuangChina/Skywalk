@@ -19,7 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,8 +47,12 @@ import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.LinearLayout_AdaptiveText;
 import com.kjs.skywalk.control.SliderView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -450,6 +456,23 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         }
     }
 
+    /**
+     *  Get offset date based on today
+     *  @param  off_date > 0 : date after today, < 0 : date before today
+     *  @return
+     */
+    private String getOffDay(int off_date) {
+        String offDay = "";
+
+        Date today = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(today);
+        calendar.add(calendar.DATE, off_date);
+        Date date = calendar.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(date);
+    }
+
     private AlertDialog mOrderDlg;
     private void showOrderDlg() {
         if (mOrderDlg == null) {
@@ -459,39 +482,51 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         mOrderDlg.setContentView(R.layout.dialog_apartment_order);
 
         final TextView tvDateSelector = (TextView) mOrderDlg.findViewById(R.id.tv_date_selector);
-        tvDateSelector.setOnClickListener(new View.OnClickListener() {
+//        tvDateSelector.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showDateSelectorDlg();
+//            }
+//        });
+
+        final TextView tvOtherDate = (TextView) mOrderDlg.findViewById(R.id.rb_otherdays);
+        tvOtherDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDateSelectorDlg();
             }
         });
 
+        ((RadioButton)mOrderDlg.findViewById(R.id.rb_tomorrow)).setChecked(true);
+        tvDateSelector.setText(getOffDay(1));
         // set date selector check status
         Boolean isOtherDaysChecked = ((RadioButton)mOrderDlg.findViewById(R.id.rb_otherdays)).isChecked();
         tvDateSelector.setEnabled(isOtherDaysChecked);
 
-        RadioGroup radioGroup = (RadioGroup) mOrderDlg.findViewById(R.id.radioGroup);
+        final RadioGroup radioGroup = (RadioGroup) mOrderDlg.findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                 // log
                 if (radioGroup.findViewById(i) instanceof RadioButton) {
                     RadioButton radBtn = (RadioButton) radioGroup.findViewById(i);
-                    commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected : " + radBtn.getText());
+//                    commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected : " + radBtn.getText());
                 } else {
-                    commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected id: " + i);
+//                    commonFun.showToast_info(Activity_ApartmentDetail.this, radioGroup, "selected id: " + i);
                 }
-                //
 
                 switch (i) {
                     case R.id.rb_today:
                         tvDateSelector.setEnabled(false);
+                        tvDateSelector.setText(getOffDay(0));
                         break;
                     case R.id.rb_tomorrow:
                         tvDateSelector.setEnabled(false);
+                        tvDateSelector.setText(getOffDay(1));
                         break;
                     case R.id.rb_aftertomorrow:
                         tvDateSelector.setEnabled(false);
+                        tvDateSelector.setText(getOffDay(2));
                         break;
                     case R.id.rb_otherdays:
                         tvDateSelector.setEnabled(true);
@@ -501,14 +536,38 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         });
 
         // initialize Bandwidth spinner
-        Spinner spTimeSelector = (Spinner)mOrderDlg.findViewById(R.id.sp_timeselector);
         ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(this, R.layout.spinner_item);
-        adapterTime.add("8:30 - 9:00");
-        adapterTime.add("9:00 - 9:30");
-        adapterTime.add("9:30 - 10:00");
+        adapterTime.add("8:00 - 9:00");
+        adapterTime.add("9:00 - 10:00");
+        adapterTime.add("10:00 - 11:00");
+        adapterTime.add("11:00 - 12:00");
+        adapterTime.add("12:00 - 13:00");
+        adapterTime.add("13:00 - 14:00");
+        adapterTime.add("14:00 - 15:00");
+        adapterTime.add("15:00 - 16:00");
+        adapterTime.add("16:00 - 17:00");
+        adapterTime.add("17:00 - 18:00");
+        adapterTime.add("18:00 - 19:00");
+        adapterTime.add("19:00 - 20:00");
+        adapterTime.add("20:00 - 21:00");
         adapterTime.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+        final String[] timePeriod = {""};
+        final Spinner spTimeSelector = (Spinner)mOrderDlg.findViewById(R.id.sp_timeselector);
         spTimeSelector.setAdapter(adapterTime);
-        spTimeSelector.setSelection(1);
+        spTimeSelector.setSelection(2);
+        spTimeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                kjsLogUtil.i("position:" + position + ", id:" + id);
+                timePeriod[0] = parent.getItemAtPosition(position).toString();
+//                commonFun.showToast_info(Activity_ApartmentDetail.this, spTimeSelector, "selected: " + timePeriod[0]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         final EditText tvAppointDesc = (EditText) mOrderDlg.findViewById(R.id.appointDesc);
 
@@ -541,10 +600,12 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             @Override
             public void onClick(View v) {
                 String appointDate = (String) tvDateSelector.getText();
+
+                String[] times = timePeriod[0].split(" - ");
                 // appointment begin time
-                String timeBegin = appointDate + " 9:00";
+                String timeBegin = appointDate + " " + times[0];
                 // appointment end time
-                String timeEnd = appointDate + " 10:00";
+                String timeEnd = appointDate + " " + times[1];
                 // appoint description
                 String appointDesc = tvAppointDesc.getText().toString();
                 // make an appointment for house seeing
@@ -587,6 +648,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         }
         mDateSelectorDlg.show();
         mDateSelectorDlg.setContentView(R.layout.dialog_fangyuanxinxi_dateselector);
+        final DatePicker mDatePicker = (DatePicker)mDateSelectorDlg.findViewById(R.id.datePicker2);
 
         TextView tvBack = (TextView) mDateSelectorDlg.findViewById(R.id.tv_back);
         tvBack.setOnClickListener(new View.OnClickListener() {
@@ -600,6 +662,13 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String date = df.format(calendar.getTime());
+                TextView tmp = (TextView)mOrderDlg.findViewById(R.id.tv_date_selector);
+                tmp.setText(date);
+
                 mDateSelectorDlg.dismiss();
             }
         });

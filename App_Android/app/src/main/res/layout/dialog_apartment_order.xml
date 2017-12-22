@@ -104,13 +104,12 @@
                 <TextView
                     android:id="@+id/tv_date_selector"
                     android:enabled="false"
-                    android:layout_width="139dp"
+                    android:layout_width="130dp"
                     android:layout_height="45dp"
                     android:background="@drawable/rounded_rect_background_gray"
                     android:gravity="center"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="#000000"
-                    android:drawableRight="@drawable/down2_n"
                     android:paddingRight="15dp"
                     android:text="2017-03-03"/>
                 <ImageView
@@ -120,7 +119,7 @@
                     android:layout_weight="1"/>
                 <Spinner
                     android:id="@+id/sp_timeselector"
-                    android:layout_width="139dp"
+                    android:layout_width="140dp"
                     android:layout_height="45dp"
                     android:background="@drawable/rounded_rect_background_gray"
                     android:gravity="center"
