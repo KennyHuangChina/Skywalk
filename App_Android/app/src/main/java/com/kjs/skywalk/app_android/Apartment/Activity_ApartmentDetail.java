@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -38,6 +39,7 @@ import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.LinearLayout_AdaptiveText;
@@ -45,6 +47,7 @@ import com.kjs.skywalk.control.SliderView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPreview;
@@ -56,7 +59,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_INFO;
 
 public class Activity_ApartmentDetail extends SKBaseActivity {
-
+    private String TAG = getClass().getSimpleName();
     private ArrayList<String> mImageLst;
 //    private int mHouseId = -1;
     private CommandManager mCmdMgr = null;
@@ -465,25 +468,20 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 }
                 //
 
-                switch (i)
-                {
+                switch (i) {
                     case R.id.rb_today:
                         tvDateSelector.setEnabled(false);
                         break;
-
                     case R.id.rb_tomorrow:
                         tvDateSelector.setEnabled(false);
                         break;
-
                     case R.id.rb_aftertomorrow:
                         tvDateSelector.setEnabled(false);
                         break;
-
                     case R.id.rb_otherdays:
                         tvDateSelector.setEnabled(true);
                         break;
                 }
-
             }
         });
 
@@ -497,7 +495,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         spTimeSelector.setAdapter(adapterTime);
         spTimeSelector.setSelection(1);
 
-
+        final EditText tvAppointDesc = (EditText) mOrderDlg.findViewById(R.id.appointDesc);
 
 
 //        Window window = mOrderDlg.getWindow();
@@ -527,6 +525,25 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String appointDate = (String) tvDateSelector.getText();
+                // appointment begin time
+                String timeBegin = appointDate + " 9:00";
+                // appointment end time
+                String timeEnd = appointDate + " 10:00";
+                // appoint description
+                String appointDesc = tvAppointDesc.getText().toString();
+                // make an appointment for house seeing
+                CommandManager.getCmdMgrInstance(Activity_ApartmentDetail.this,
+                    new CommunicationInterface.CICommandListener() {
+                        @Override
+                        public void onCommandFinished(int command, final IApiResults.ICommon iResult) {
+                            Log.i(TAG, "[MakeAppointment_SeeHouse] ");
+                        }
+                    }, new CommunicationInterface.CIProgressListener() {
+                        @Override
+                        public void onProgressChanged(final int command, final String percent, HashMap<String, String> map) {
+                        }
+                    }).MakeAppointment_SeeHouse(mHouseId, "", timeBegin, timeEnd, appointDesc);
                 mOrderDlg.dismiss();
             }
         });

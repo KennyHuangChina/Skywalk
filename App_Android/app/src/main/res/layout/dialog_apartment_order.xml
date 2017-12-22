@@ -138,7 +138,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/et_password"
+        android:id="@+id/appointDesc"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginLeft="@dimen/page_left_margin"
