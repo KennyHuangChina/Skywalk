@@ -47,6 +47,10 @@ func GetSysMsgList(uid, bgn, cnt int64, nm bool) (err error, total int64, ids []
 	}
 
 	/* Processing */
+	if err = cleanUnusedMessage(); nil != err {
+		return
+	}
+
 	// calculate total number
 	err, tn := GetSysMsgCount(uid, nm)
 	if nil != err {
@@ -264,6 +268,12 @@ func GetSysMsgCount(uid int64, nm bool) (err error, nmc int64) {
 	}
 
 	/* Processing */
+	err = cleanUnusedMessage()
+	if nil != err {
+		return
+	}
+
+	// query
 	o := orm.NewOrm()
 	qs := o.QueryTable("tbl_message").Filter("Receiver", uid)
 	if nm {
@@ -285,8 +295,52 @@ func GetSysMsgCount(uid int64, nm bool) (err error, nmc int64) {
 //		-- Internal Functions --
 //
 /*
-	hcid: house cert id
-*/
+*	clearn up the unused messages
+ */
+func cleanUnusedMessage() (err error) {
+	Fn := "[cleanUnusedMessage] "
+
+	defer func() {
+		if nil != err {
+			beego.Error(Fn, err)
+		}
+	}()
+
+	o := orm.NewOrm()
+
+	// message for appointment house seeing
+	sql := `DELETE FROM tbl_message 
+					WHERE id IN (SELECT id FROM (SELECT msg.*, apt.id AS apt 
+									FROM tbl_message AS msg 
+									LEFT JOIN tbl_appointment AS apt 
+									ON msg.ref_id=apt.id 
+									WHERE msg.type=?) AS T0 WHERE T0.apt IS NULL)`
+
+	res, errT := o.Raw(sql, commdef.MSG_AppointSeeHouse).Exec()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	numb, _ := res.RowsAffected()
+	beego.Debug(Fn, fmt.Sprintf("Delete %d un-matched messages for house seeing appointment", numb))
+
+	// message for house certification
+	res, errT = o.Raw(sql, commdef.MSG_HouseCertification).Exec()
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: errT.Error()}
+		return
+	}
+	numb, _ = res.RowsAffected()
+	beego.Debug(Fn, fmt.Sprintf("Delete %d un-matched messages for house certification", numb))
+
+	beego.Warn("TODO: deal with other messages here")
+
+	return
+}
+
+/*
+*	hcid: house cert id
+ */
 func getMsgReference_HouseCert(hcid int64) (err error, hc TblHouseCert) {
 	Fn := "[getMsgReference_HouseCert] "
 	beego.Info(Fn, "house cert record:", hcid)
