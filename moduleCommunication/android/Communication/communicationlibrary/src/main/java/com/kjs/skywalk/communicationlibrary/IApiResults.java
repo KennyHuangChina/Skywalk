@@ -337,4 +337,9 @@ public class IApiResults {
                             HOUSESEE_APPOINTMENT_ACT_Done           = 4,    // appointment finished
                             HOUSESEE_APPOINTMENT_ACT_Cancel         = 5,    // appointment canceled
                             HOUSESEE_APPOINTMENT_ACT_AssignAgency   = 6;    // assign agency to handle the appointment
+
+    // return error code
+    public static final int ERROR_NONE                  = 0,        // No Error
+                            ERROR_ALREADY_EXIST         = 1105,     // already exist
+                            ERROR_ALREADY_PERMISSION    = 1106;     // permission
 }
