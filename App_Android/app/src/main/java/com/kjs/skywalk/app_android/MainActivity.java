@@ -180,6 +180,11 @@ public class MainActivity extends SKBaseActivity {
                     mFragMsg = new fragmentMsg();
                 }
                 fragTransaction.replace(R.id.fl_container, mFragMsg);
+
+                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+                if (!logined) {
+                    startActivity(new Intent(MainActivity.this, Activity_login.class));
+                }
                 break;
 
             case R.id.tv_private:
