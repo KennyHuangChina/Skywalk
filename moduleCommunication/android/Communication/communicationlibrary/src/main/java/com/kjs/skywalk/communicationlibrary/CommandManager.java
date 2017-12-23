@@ -376,6 +376,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public int Logout() {
+        mLoginUserInfo = null;
         CommunicationBase op = new CmdLogout(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
