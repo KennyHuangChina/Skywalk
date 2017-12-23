@@ -54,16 +54,16 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_N
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
 
 public class MainActivity extends SKBaseActivity {
-    private fragmentHomePage mFragHomePage = null;
-    private fragmentApartment mFragApartment = null;
-    private fragmentMsg mFragMsg = null;
-    private fragmentPrivate mFragPrivate = null;
-    private TextView mTvHomePage;
-    private TextView mTvApartment;
-    private TextView mTvMsg;
-    private TextView mTvPrivate;
-    private BadgeView mBvMsg;
-    private BadgeView mBvMsgInTab;
+    private fragmentHomePage    mFragHomePage   = null;
+    private fragmentApartment   mFragApartment  = null;
+    private fragmentMsg         mFragMsg        = null;
+    private fragmentPrivate     mFragPrivate    = null;
+    private TextView            mTvHomePage     = null;
+    private TextView            mTvApartment    = null;
+    private TextView            mTvMsg          = null;
+    private TextView            mTvPrivate      = null;
+    private BadgeView           mBvMsg          = null;
+    private BadgeView           mBvMsgInTab     = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +92,10 @@ public class MainActivity extends SKBaseActivity {
         fragTransaction.replace(R.id.fl_container, mFragHomePage);
         fragTransaction.commit();
 
-        // check login status
-        SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-        if (CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo() == CE_ERROR_NO_ERROR) {
-//            showWaiting(mTvHomePage);
-        }
+        // check login status   // TODO: to remove
+//        SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+//        IApiResults.IGetUserInfo loginUser = CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo();
+//        kjsLogUtil.d(String.format("Login status: %s", (null == loginUser) ? "Not Login" : "Logined (" + loginUser.GetName() + ")"));
 
         startUpdateService();
 
@@ -138,11 +137,11 @@ public class MainActivity extends SKBaseActivity {
 
         kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
 
-        if (command == CMD_GET_LOGIN_USER_INFO) {
+        if (command == CMD_GET_LOGIN_USER_INFO) { // TODO: to remove
             // IApiResults.IGetUserInfo
 //            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
             if (CommunicationError.CE_ERROR_NO_ERROR == result.GetErrCode()) {
-                SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
+//                SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
             }
         }
@@ -181,8 +180,8 @@ public class MainActivity extends SKBaseActivity {
                 }
                 fragTransaction.replace(R.id.fl_container, mFragMsg);
 
-                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-                if (!logined) {
+//                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+                if (!IsLogined()) {
                     startActivity(new Intent(MainActivity.this, Activity_login.class));
                 }
                 break;
@@ -301,8 +300,8 @@ public class MainActivity extends SKBaseActivity {
 
 //                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
                 // need check login status
-                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-                if (!logined) {
+//                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
+                if (!IsLogined()) {
                     startActivityForResult(new Intent(MainActivity.this, Activity_login.class), 0);
                 } else {
                     startActivity(new Intent(MainActivity.this, Activity_Zushouweituo_Fangyuanxinxi.class));

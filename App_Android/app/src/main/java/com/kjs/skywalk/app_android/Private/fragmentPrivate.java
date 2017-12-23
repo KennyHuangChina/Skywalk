@@ -44,64 +44,71 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
  * Created by sailor.zhou on 2017/1/11.
  */
 
-public class fragmentPrivate extends Fragment {
+public class fragmentPrivate    extends     Fragment
+                                implements  CommunicationInterface.CICommandListener,
+                                            CommunicationInterface.CIProgressListener {
 //    private CommandManager mCmdMgr;
-    private boolean mIsLogin = false;
-    private RelativeLayout mRlTitleBar;
-    private RelativeLayout mRlUserNotLogin;
-    private LinearLayout mLlUserLogin;
-    private ImageView mIv_head_portrait;
+    private boolean         mIsLogin = false;   // TODO: to remove
+    private RelativeLayout  mRlTitleBar;
+    private RelativeLayout  mRlUserNotLogin;
+    private LinearLayout    mLlUserLogin;
+    private ImageView       mIv_head_portrait;
 
-    private EditText mEt_user_name;
+    private EditText        mEt_user_name;
 
-    private LinearLayout mLlWatchListCount;         // 我的关注
-    private LinearLayout mLl_browsing_history;      // 浏览记录
-    private LinearLayout mLl_see_count;             // 看房记录
-    private LinearLayout mLlAppointmentCount;       // 我的预约
+    private LinearLayout    mLlWatchListCount;         // 我的关注
+    private LinearLayout    mLl_browsing_history;      // 浏览记录
+    private LinearLayout    mLl_see_count;             // 看房记录
+    private LinearLayout    mLlAppointmentCount;       // 我的预约
 
-    private TextView mTvWatchListCount;         // 我的关注
-    private TextView mTv_browsing_history;      // 浏览记录
-    private TextView mTv_see_count;             // 看房记录
-    private TextView mTvAppointmentCount;       // 我的预约
+    private TextView        mTvWatchListCount;         // 我的关注
+    private TextView        mTv_browsing_history;      // 浏览记录
+    private TextView        mTv_see_count;             // 看房记录
+    private TextView        mTvAppointmentCount;       // 我的预约
 
     // 我的交易
-    private RelativeLayout mRl_transaction;     // 我的交易
-    private RelativeLayout mRl_rent_out;        // 我已租出
-    private RelativeLayout mRl_house_rented;    // 我已租到
-    private RelativeLayout mRl_lease;           // 我的租约
+    private RelativeLayout  mRl_transaction;     // 我的交易
+    private RelativeLayout  mRl_rent_out;        // 我已租出
+    private RelativeLayout  mRl_house_rented;    // 我已租到
+    private RelativeLayout  mRl_lease;           // 我的租约
 
-    private TextView mTv_rental_sales;
+    private TextView        mTv_rental_sales;
 
-    private TextView mTv_transaction;
-    private TextView mTv_rent_out;
-    private TextView mTv_house_rented;
-    private TextView mTv_lease;
+    private TextView        mTv_transaction;
+    private TextView        mTv_rent_out;
+    private TextView        mTv_house_rented;
+    private TextView        mTv_lease;
 
     // 我代理的房源
-    private RelativeLayout mRl_to_rent;
-    private RelativeLayout mRl_rented;
-    private RelativeLayout mRl_to_sale;
-    private RelativeLayout mRl_month_turnoff;
-    private RelativeLayout mRl_to_approve;
+    private RelativeLayout  mRl_to_rent;
+    private RelativeLayout  mRl_rented;
+    private RelativeLayout  mRl_to_sale;
+    private RelativeLayout  mRl_month_turnoff;
+    private RelativeLayout  mRl_to_approve;
 
 
-    private TextView mTv_agency_houses;
-    private TextView mTvToRent;
-    private TextView mTvRented;
-    private TextView mTvToSale;
-    private TextView mTv_month_turnoff;
-    private TextView mTvToApprove;
+    private TextView        mTv_agency_houses;
+    private TextView        mTvToRent;
+    private TextView        mTvRented;
+    private TextView        mTvToSale;
+    private TextView        mTv_month_turnoff;
+    private TextView        mTvToApprove;
 
-    private String mUserName;
-    private String mUserTelephoneNum;
+//    private String          mUserName;
+//    private String          mUserTelephoneNum;
+    private IApiResults.IGetUserInfo mLoginUser = null;
 
     @Override
     public void onResume() {
         super.onResume();
 
-        mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-        kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
+//        mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+//        kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
+        mLoginUser = CommandManager.getCmdMgrInstance(this.getActivity(), this, this).GetLoginUserInfo();
+        mIsLogin = (null != mLoginUser);
+        kjsLogUtil.d(String.format("Login status: %s", !mIsLogin ? "Not Login" : "Logined (" + mLoginUser.GetName() + ")"));
         updateLayout(mIsLogin);
+        updateUserInfo(mLoginUser);
     }
 
     @Nullable
@@ -363,9 +370,11 @@ public class fragmentPrivate extends Fragment {
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mUserName = userInfo.GetName();
-                mUserTelephoneNum = userInfo.GetPhoneNo();
-                mEt_user_name.setText(mUserName);
+//                mUserName = userInfo.GetName();
+//                mUserTelephoneNum = userInfo.GetPhoneNo();
+                if (null != mLoginUser) {
+                    mEt_user_name.setText(mLoginUser.GetName());
+                }
             }
         });
     }
@@ -374,8 +383,8 @@ public class fragmentPrivate extends Fragment {
         Intent intent = new Intent(getActivity(), Activity_PasswordReset.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("islogin", mIsLogin);
-        bundle.putString("user_name", mUserName);
-        bundle.putString("user_telephone_num", mUserTelephoneNum);
+        bundle.putString("user_name", (null != mLoginUser) ? mLoginUser.GetName() : "");
+        bundle.putString("user_telephone_num", (null != mLoginUser) ? mLoginUser.GetPhoneNo() : "");
         intent.putExtras(bundle);
         getActivity().startActivity(intent);
 
@@ -479,8 +488,9 @@ public class fragmentPrivate extends Fragment {
         }, mProgreessListener).Logout();
 
         // check login status
-        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-        mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+        IApiResults.IGetUserInfo loginUser = CommandManager.getCmdMgrInstance(this.getActivity(), this, this).GetLoginUserInfo();
+//        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+        mIsLogin =  (null != loginUser); // SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
         updateLayout(mIsLogin);
 
         CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
@@ -496,17 +506,19 @@ public class fragmentPrivate extends Fragment {
                     return;
                 }
 
-                if (command == CMD_GET_LOGIN_USER_INFO) {
+                if (command == CMD_GET_LOGIN_USER_INFO) {   // TODO, to remove
                     // IApiResults.IGetUserInfo
 //            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
                     if (CommunicationError.CE_ERROR_NO_ERROR == iResult.GetErrCode()) {
-                        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, true);
-                        kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
+//                        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, true);
+//                        kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
                         getActivity().runOnUiThread(new Runnable() {
-                            @Override
+//                            @Override
                             public void run() {
-                                mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-                                kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
+//                                mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
+//                                kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
+//                                IApiResults.IGetUserInfo loginUser = CommandManager.getCmdMgrInstance(this.getActivity(), this, this).GetLoginUserInfo();
+//                                mIsLogin = (null != loginUser);
                                 updateLayout(mIsLogin);
                             }
                         });
@@ -515,5 +527,15 @@ public class fragmentPrivate extends Fragment {
 
             }
         }, mProgreessListener).GetLoginUserInfo();
+    }
+
+    @Override
+    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+
+    }
+
+    @Override
+    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
     }
 }
