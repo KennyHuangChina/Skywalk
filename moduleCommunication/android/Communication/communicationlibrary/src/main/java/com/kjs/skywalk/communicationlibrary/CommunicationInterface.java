@@ -46,9 +46,9 @@ public class CommunicationInterface {
 
         /*
         *   CMD     : CMD_GET_LOGIN_USER_INFO,
-        *   Result  : IApiResults.IGetUserInfo
+        *   Result  : IApiResults.IGetUserInfo(ResGetUserInfo)
         */
-        int GetLoginUserInfo();
+        IApiResults.IGetUserInfo GetLoginUserInfo();
 
         /*
         *   CMD: CMD_GET_USER_SALT,
