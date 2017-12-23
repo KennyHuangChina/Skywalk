@@ -698,4 +698,15 @@ func init() {
 						WHERE ugm.group_id=ug.id AND ug.admin AND ugm.user_id=u.id`).Exec()
 		}
 	}
+
+	// Create view for unclosed appointment
+	_, errT = o.Raw(`SELECT id FROM v_appointment_actived LIMIT 0, 1`).Exec()
+	if nil != errT {
+		beego.Warn("warn:", errT.Error(), ", Create now")
+		if strings.Contains(errT.Error(), "Error 1146") {
+			// beego.Warn("View does not exist")
+			o.Raw(`CREATE VIEW v_appointment_actived AS 
+					SELECT * FROM tbl_appointment WHERE close_time IS NULL`).Exec()
+		}
+	}
 }

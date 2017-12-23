@@ -309,11 +309,11 @@ func cleanUnusedMessage() (err error) {
 	o := orm.NewOrm()
 
 	// message for appointment house seeing
-	sql := `DELETE FROM tbl_message 
-					WHERE id IN (SELECT id FROM (SELECT msg.*, apt.id AS apt 
+	sql := `DELETE FROM tbl_message WHERE id IN 
+				(SELECT id FROM (SELECT msg.*, apt.id AS apt 
 									FROM tbl_message AS msg 
-									LEFT JOIN tbl_appointment AS apt 
-									ON msg.ref_id=apt.id 
+										LEFT JOIN tbl_appointment AS apt 
+										ON msg.ref_id=apt.id 
 									WHERE msg.type=?) AS T0 WHERE T0.apt IS NULL)`
 
 	res, errT := o.Raw(sql, commdef.MSG_AppointSeeHouse).Exec()

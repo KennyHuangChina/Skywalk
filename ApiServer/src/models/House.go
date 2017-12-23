@@ -2161,8 +2161,8 @@ func getHouseListFilterAndSort(filter HouseFilter, sorts []int) (strFilter, strS
 		isSortTypeExist(sorts, commdef.HOUSE_SORT_APPOINT_DESC) {
 
 		// appointment
-		sqlAppoint := fmt.Sprintf(`SELECT house, COUNT(*) AS appoints FROM tbl_appointment 
-										WHERE close_time IS NULL AND order_type=%d 
+		sqlAppoint := fmt.Sprintf(`SELECT house, COUNT(*) AS appoints FROM v_appointment_actived 
+										WHERE order_type=%d 
 										GROUP BY House`, commdef.ORDER_TYPE_SEE_HOUSE)
 		// rental
 		sqlRental := `SELECT id, house_id, rental_bid FROM tbl_rental as r GROUP BY id, house_id, rental_bid

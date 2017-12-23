@@ -261,8 +261,9 @@ func GetHouseList_AppointSee(begin, tofetch, uid int64) (err error, total, fetch
 	/* Processing */
 	o := orm.NewOrm()
 
-	sqlQuery := " FROM tbl_appointment WHERE subscriber=? OR phone=?"
+	sqlQuery := " FROM v_appointment_actived WHERE subscriber=? OR phone=?"
 	sql := "SELECT COUNT(*) AS count" + sqlQuery
+	// beego.Debug(FN, "sql:", sql)
 	count := int64(0)
 	if errT := o.Raw(sql, uid, u.LoginName).QueryRow(&count); nil != errT {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("error:%s", errT.Error())}
@@ -507,9 +508,17 @@ func MakeAppointment(hid, uid int64, apType int, phone, time_begin, time_end, de
 	o := orm.NewOrm()
 
 	// check if the appointment already exist
-	qs := o.QueryTable("tbl_appointment").Filter("OrderType", apType).Filter("House", hid).
-		Filter("Subscriber", uid).Filter("Phone", phone).Filter("CloseTime__isnull", true)
-	if qs.Exist() {
+	sql := "SELECT COUNT(*) AS count FROM v_appointment_actived WHERE order_type=? AND house=? AND subscriber=? AND phone=?"
+	Count := []int{}
+	_, errT := o.Raw(sql, apType, hid, uid, phone).QueryRows(&Count)
+	// qs := o.QueryTable("VAppointmentActived").Filter("OrderType", apType).Filter("House", hid).Filter("Subscriber", uid).Filter("Phone", phone)
+	// if qs.Exist() {
+	if nil != errT {
+		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("err:%s", errT.Error())}
+		return
+	}
+	beego.Debug(FN, "numb:", Count[0])
+	if Count[0] > 0 {
 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_DUPLICATE, ErrInfo: fmt.Sprintf("appointment already exist")}
 		return
 	}
@@ -576,18 +585,31 @@ func GetAppointList_SeeHouse(hid, uid int64, begin, fetchCnt int) (err error, to
 
 	/* Get total number */
 	o := orm.NewOrm()
-	qs := o.QueryTable("tbl_appointment").Filter("OrderType", commdef.ORDER_TYPE_SEE_HOUSE).Filter("House", hid).Filter("CloseTime__isnull", true)
-	cnt, errT := qs.Count()
+	sql := "SELECT COUNT(*) AS count FROM v_appointment_actived WHERE order_type=? AND house=?"
+	Count := []int64{}
+	_, errT := o.Raw(sql, commdef.ORDER_TYPE_SEE_HOUSE, hid).QueryRows(&Count)
 	if nil != errT {
 		if orm.ErrNoRows != errT {
 			err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house order table, err:%s", errT.Error())}
-			return
 		} else {
 			beego.Debug(FN, fmt.Sprintf("No order table for house(%d) found", hid))
-			return
 		}
+		return
 	}
-	total = cnt
+	total = Count[0]
+
+	// qs := o.QueryTable("v_appointment_actived").Filter("OrderType", commdef.ORDER_TYPE_SEE_HOUSE).Filter("House", hid)
+	// cnt, errT := qs.Count()
+	// if nil != errT {
+	// 	if orm.ErrNoRows != errT {
+	// 		err = commdef.SwError{ErrCode: commdef.ERR_COMMON_UNEXPECTED, ErrInfo: fmt.Sprintf("Fail to get house order table, err:%s", errT.Error())}
+	// 		return
+	// 	} else {
+	// 		beego.Debug(FN, fmt.Sprintf("No order table for house(%d) found", hid))
+	// 		return
+	// 	}
+	// }
+	// total = cnt
 	beego.Debug(FN, fmt.Sprintf("%d records found", total))
 
 	if 0 == fetchCnt { // user just want to get the total number
@@ -610,10 +632,10 @@ func GetAppointList_SeeHouse(hid, uid int64, begin, fetchCnt int) (err error, to
 	/* Get records */
 	tp_see_house := getSpecialString(KEY_APPOINTMENT_TYPE_SEE_HOUSE)
 	nameUnset := getSpecialString(KEY_USER_NAME_NOT_SET)
-	sql := `SELECT o.id, order_type AS apomt_type, IF(order_type = ? , ?, "Unknown") AS type_desc, 
+	sql = `SELECT o.id, order_type AS apomt_type, IF(order_type = ? , ?, "Unknown") AS type_desc, 
 					o.house, o.phone, IF(LENGTH(u.name) > 0, u.name, ?) AS subscriber, o.apomt_time_bgn, 
 					o.apomt_time_end, o.apomt_desc, subsc_time AS subscrib_time, close_time 
-				FROM tbl_appointment AS o LEFT JOIN tbl_user AS u ON o.subscriber=u.id 
+				FROM v_appointment_actived AS o LEFT JOIN tbl_user AS u ON o.subscriber=u.id 
 				WHERE close_time IS NULL AND house=?
 				LIMIT ?, ?`
 
