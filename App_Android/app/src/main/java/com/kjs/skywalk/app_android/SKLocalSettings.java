@@ -97,7 +97,6 @@ public class SKLocalSettings {
 
     // UI Settings
     public static final String UISettingsKey_LoginMode          = "login_mode";       // telephone account
-//    public static final String UISettingsKey_LoginStatus        = "login_status";       // telephone account
     public static final String UISettingsKey_BrowsingHistory    = "browsing_history";       // browsing_history
 
     public static void UISettings_set(Context context, String key, String value) {

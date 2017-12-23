@@ -51,7 +51,6 @@ import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
 import static com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
 
 public class MainActivity extends SKBaseActivity {
     private fragmentHomePage    mFragHomePage   = null;
@@ -92,11 +91,6 @@ public class MainActivity extends SKBaseActivity {
         fragTransaction.replace(R.id.fl_container, mFragHomePage);
         fragTransaction.commit();
 
-        // check login status   // TODO: to remove
-//        SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, false);
-//        IApiResults.IGetUserInfo loginUser = CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo();
-//        kjsLogUtil.d(String.format("Login status: %s", (null == loginUser) ? "Not Login" : "Logined (" + loginUser.GetName() + ")"));
-
         startUpdateService();
 
         // register broadcast
@@ -136,15 +130,6 @@ public class MainActivity extends SKBaseActivity {
         }
 
         kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
-
-        if (command == CMD_GET_LOGIN_USER_INFO) { // TODO: to remove
-            // IApiResults.IGetUserInfo
-//            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
-            if (CommunicationError.CE_ERROR_NO_ERROR == result.GetErrCode()) {
-//                SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
-                kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
-            }
-        }
     }
 
     private void setTabMenuSelected(View v) {
@@ -180,7 +165,6 @@ public class MainActivity extends SKBaseActivity {
                 }
                 fragTransaction.replace(R.id.fl_container, mFragMsg);
 
-//                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
                 if (!IsLogined()) {
                     startActivity(new Intent(MainActivity.this, Activity_login.class));
                 }
@@ -300,7 +284,6 @@ public class MainActivity extends SKBaseActivity {
 
 //                startActivity(new Intent(this, Activity_HouseholdDeliverables.class));
                 // need check login status
-//                boolean logined = SKLocalSettings.UISettings_get(this, SKLocalSettings.UISettingsKey_LoginStatus, false);
                 if (!IsLogined()) {
                     startActivityForResult(new Intent(MainActivity.this, Activity_login.class), 0);
                 } else {

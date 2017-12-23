@@ -28,27 +28,19 @@ import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_HOUSE_WATCH_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE;
 
 /**
  * Created by sailor.zhou on 2017/1/11.
  */
 
-public class fragmentPrivate    extends     Fragment
-                                implements  CommunicationInterface.CICommandListener,
-                                            CommunicationInterface.CIProgressListener {
+public class fragmentPrivate extends Fragment {
 //    private CommandManager mCmdMgr;
-    private boolean         mIsLogin = false;   // TODO: to remove
     private RelativeLayout  mRlTitleBar;
     private RelativeLayout  mRlUserNotLogin;
     private LinearLayout    mLlUserLogin;
@@ -102,13 +94,9 @@ public class fragmentPrivate    extends     Fragment
     public void onResume() {
         super.onResume();
 
-//        mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-//        kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
-        mLoginUser = CommandManager.getCmdMgrInstance(this.getActivity(), this, this).GetLoginUserInfo();
-        mIsLogin = (null != mLoginUser);
-        kjsLogUtil.d(String.format("Login status: %s", !mIsLogin ? "Not Login" : "Logined (" + mLoginUser.GetName() + ")"));
-        updateLayout(mIsLogin);
-        updateUserInfo(mLoginUser);
+        mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+        kjsLogUtil.d(String.format("Login status: %s", (null == mLoginUser) ? "Not Login" : mLoginUser.GetName()));
+        updateLayout(null != mLoginUser);
     }
 
     @Nullable
@@ -116,13 +104,11 @@ public class fragmentPrivate    extends     Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_private, container, false);
 
-        mRlTitleBar = (RelativeLayout) view.findViewById(R.id.rl_titlebar);
-        mRlUserNotLogin = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
-        mLlUserLogin = (LinearLayout) view.findViewById(R.id.ll_user_login);
-        mIv_head_portrait = (ImageView) view.findViewById(R.id.iv_head_portrait);
-
-        mEt_user_name = (EditText) view.findViewById(R.id.et_user_name);
-
+        mRlTitleBar         = (RelativeLayout) view.findViewById(R.id.rl_titlebar);
+        mRlUserNotLogin     = (RelativeLayout) view.findViewById(R.id.rl_user_not_login);
+        mLlUserLogin        = (LinearLayout) view.findViewById(R.id.ll_user_login);
+        mIv_head_portrait   = (ImageView) view.findViewById(R.id.iv_head_portrait);
+        mEt_user_name       = (EditText) view.findViewById(R.id.et_user_name);
 
         (view.findViewById(R.id.iv_setting)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,9 +158,6 @@ public class fragmentPrivate    extends     Fragment
 
         ((RelativeLayout)view.findViewById(R.id.rl_to_rent)).setEnabled(false);
 
-        // for emulator test
-//        SKLocalSettings.UISettings_set(this.getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-
         return view;
     }
 
@@ -213,7 +196,7 @@ public class fragmentPrivate    extends     Fragment
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CmdID.CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
@@ -237,7 +220,7 @@ public class fragmentPrivate    extends     Fragment
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CmdID.CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
@@ -261,7 +244,7 @@ public class fragmentPrivate    extends     Fragment
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CmdID.CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
@@ -285,7 +268,7 @@ public class fragmentPrivate    extends     Fragment
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CmdID.CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
@@ -309,7 +292,7 @@ public class fragmentPrivate    extends     Fragment
                     return;
                 }
 
-                if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+                if (command == CmdID.CMD_GET_BEHALF_HOUSE_LIST) {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
@@ -322,6 +305,11 @@ public class fragmentPrivate    extends     Fragment
 
     private void updateLayout(boolean isLogin) {
 
+//        mEt_user_name.setVisibility((null != mLoginUser) ? View.VISIBLE : View.GONE);
+        if (null != mLoginUser) {
+            mEt_user_name.setText(mLoginUser.GetName());
+        }
+
         // 浏览记录
         List<String> idLst = SKLocalSettings.browsing_history_read(getActivity());
         mTv_browsing_history.setText(String.valueOf(idLst.size()));
@@ -332,7 +320,6 @@ public class fragmentPrivate    extends     Fragment
             mRlUserNotLogin.setVisibility(View.GONE);
             mLlUserLogin.setVisibility(View.VISIBLE);
             commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
-
 
             CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetUserHouseWatchList(0, 0);
             CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetHouseList_AppointSee(0, 0);
@@ -366,23 +353,10 @@ public class fragmentPrivate    extends     Fragment
         mRl_to_approve.setEnabled(bEnabled);
     }
 
-    private void updateUserInfo(final IApiResults.IGetUserInfo userInfo) {
-        this.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-//                mUserName = userInfo.GetName();
-//                mUserTelephoneNum = userInfo.GetPhoneNo();
-                if (null != mLoginUser) {
-                    mEt_user_name.setText(mLoginUser.GetName());
-                }
-            }
-        });
-    }
-
     private void showPasswordResetActivity() {
         Intent intent = new Intent(getActivity(), Activity_PasswordReset.class);
         Bundle bundle = new Bundle();
-        bundle.putBoolean("islogin", mIsLogin);
+        bundle.putBoolean("islogin", (null != mLoginUser) ? true : false);
         bundle.putString("user_name", (null != mLoginUser) ? mLoginUser.GetName() : "");
         bundle.putString("user_telephone_num", (null != mLoginUser) ? mLoginUser.GetPhoneNo() : "");
         intent.putExtras(bundle);
@@ -434,7 +408,7 @@ public class fragmentPrivate    extends     Fragment
                 return;
             }
 
-            if (command == CMD_HOUSE_LST_APPOINT_SEE) {
+            if (command == CmdID.CMD_HOUSE_LST_APPOINT_SEE) {
                 IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                 int nFetch = resultList.GetFetchedNumber();
                 if (nFetch == -1) {
@@ -443,7 +417,7 @@ public class fragmentPrivate    extends     Fragment
                 }
             }
 
-            if (command == CMD_GET_USER_HOUSE_WATCH_LIST) {
+            if (command == CmdID.CMD_GET_USER_HOUSE_WATCH_LIST) {
                 IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                 int nFetch = resultList.GetFetchedNumber();
                 if (nFetch == -1) {
@@ -451,16 +425,6 @@ public class fragmentPrivate    extends     Fragment
                     updateCount(mTvWatchListCount, resultList.GetTotalNumber());
                 }
             }
-
-            if (command == CMD_GET_LOGIN_USER_INFO) {
-                // IApiResults.IGetUserInfo
-            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)iResult;
-                if (CommunicationError.CE_ERROR_NO_ERROR == iResult.GetErrCode()) {
-                    updateUserInfo(userInfo);
-//                    SKLocalSettings.UISettings_set(MainActivity.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
-                }
-            }
-
         }
     };
 
@@ -474,6 +438,15 @@ public class fragmentPrivate    extends     Fragment
         CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
             @Override
             public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                if (CmdID.CMD_LOG_OUT == command) {
+                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
+                        }
+                    });
+                }
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -483,59 +456,11 @@ public class fragmentPrivate    extends     Fragment
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
                     return;
                 }
-
             }
         }, mProgreessListener).Logout();
 
         // check login status
-        IApiResults.IGetUserInfo loginUser = CommandManager.getCmdMgrInstance(this.getActivity(), this, this).GetLoginUserInfo();
-//        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-        mIsLogin =  (null != loginUser); // SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-        updateLayout(mIsLogin);
-
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_GET_LOGIN_USER_INFO) {   // TODO, to remove
-                    // IApiResults.IGetUserInfo
-//            IApiResults.IGetUserInfo userInfo = (IApiResults.IGetUserInfo)result;
-                    if (CommunicationError.CE_ERROR_NO_ERROR == iResult.GetErrCode()) {
-//                        SKLocalSettings.UISettings_set(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, true);
-//                        kjsLogUtil.i(String.format("UISettingsKey_LoginStatus set to true"));
-                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-                            public void run() {
-//                                mIsLogin =  SKLocalSettings.UISettings_get(getActivity(), SKLocalSettings.UISettingsKey_LoginStatus, false);
-//                                kjsLogUtil.i(String.format("mIsLogin is %b", mIsLogin));
-//                                IApiResults.IGetUserInfo loginUser = CommandManager.getCmdMgrInstance(this.getActivity(), this, this).GetLoginUserInfo();
-//                                mIsLogin = (null != loginUser);
-                                updateLayout(mIsLogin);
-                            }
-                        });
-                    }
-                }
-
-            }
-        }, mProgreessListener).GetLoginUserInfo();
-    }
-
-    @Override
-    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
-
-    }
-
-    @Override
-    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-
+        mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+        updateLayout(null != mLoginUser);
     }
 }

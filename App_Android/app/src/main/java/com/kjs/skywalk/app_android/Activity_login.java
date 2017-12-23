@@ -53,12 +53,6 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_SMS_CODE;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_USER_SALT;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_PASSWORD;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_LOGIN_BY_SMS;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -462,14 +456,13 @@ public class Activity_login extends SKBaseActivity implements
         }
         kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), result.DebugString()));
 
-        if(command == CMD_LOGIN_BY_PASSWORD || command == CMD_LOGIN_BY_SMS) {
+        if(command == CmdID.CMD_LOGIN_BY_PASSWORD || command == CmdID.CMD_LOGIN_BY_SMS) {
 //            Log.i("Login Activity", "command finished: " + command);
 //            Log.i("Login Activity", "Result:  " + result.GetErrCode() + " Description: " + result.GetErrDesc());
             doShowProgress(false);
             hideWaitingWindow();
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
                 // login in success
-//                SKLocalSettings.UISettings_set(Activity_login.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 Intent data = new Intent();
                 data.putExtra(ClassDefine.IntentExtraKeyValue.KEY_LOGIN_RESULT, 1);
                 setResult(ClassDefine.ActivityResultValue.RESULT_VALUE_LOGIN, data);
@@ -479,7 +472,7 @@ public class Activity_login extends SKBaseActivity implements
                 showPasswordErrorDlg();
             }
 
-        } else if(command == CMD_GET_USER_SALT) {
+        } else if(command == CmdID.CMD_GET_USER_SALT) {
             IApiResults.IGetUserSalt userSalt = (IApiResults.IGetUserSalt) result;
             if(result.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
                 mSalt = userSalt.GetSalt();
@@ -491,7 +484,7 @@ public class Activity_login extends SKBaseActivity implements
                 doShowProgress(false);
                 hideWaitingWindow();
             }
-        } else if (command == CMD_GET_SMS_CODE) {
+        } else if (command == CmdID.CMD_GET_SMS_CODE) {
             IApiResults.IGetSmsCode smsCode = (IApiResults.IGetSmsCode)result;
             showSMSCodeForTest(smsCode);
         }
@@ -581,7 +574,6 @@ public class Activity_login extends SKBaseActivity implements
 
             if (success) {
                 // login in success
-//                SKLocalSettings.UISettings_set(Activity_login.this, SKLocalSettings.UISettingsKey_LoginStatus, true);
                 finish();
             } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));

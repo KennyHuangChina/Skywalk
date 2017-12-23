@@ -219,18 +219,18 @@ public class ClassDefine {
     }
 
     public static class IntentExtraKeyValue {
-        public static String KEY_HOUSE_ID = "house_id";
+        public static String KEY_HOUSE_ID       = "house_id";
         public static String KEY_HOUSE_LOCATION = "house_location";
-        public static String KEY_PROPERTY_NAME = "property_name";
-        public static String KEY_PROPERTY_ID = "property_id";
-        public static String KEY_BUILDING_NO = "building_no";
-        public static String KEY_ROOM_NO = "room_no";
-        public static String KEY_USER_ID = "user_id";
-        public static String KEY_USER_NAME = "user_name";
-        public static String KEY_USER_PHONE = "phone_no";
-        public static String KEY_LOGIN_RESULT = "login_result";
-        public static String KEY_ERROR_CODE = "error_code";
-        public static String KEY_REFID = "ref_id";
+        public static String KEY_PROPERTY_NAME  = "property_name";
+        public static String KEY_PROPERTY_ID    = "property_id";
+        public static String KEY_BUILDING_NO    = "building_no";
+        public static String KEY_ROOM_NO        = "room_no";
+        public static String KEY_USER_ID        = "user_id";
+        public static String KEY_USER_NAME      = "user_name";
+        public static String KEY_USER_PHONE     = "phone_no";
+        public static String KEY_LOGIN_RESULT   = "login_result";
+        public static String KEY_ERROR_CODE     = "error_code";
+        public static String KEY_REFID          = "ref_id";
     }
 
     public static class ActivityResultValue {

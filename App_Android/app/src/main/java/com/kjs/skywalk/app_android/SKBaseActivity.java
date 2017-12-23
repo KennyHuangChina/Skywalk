@@ -105,8 +105,7 @@ public class SKBaseActivity extends AppCompatActivity
         super.onResume();
 
         // update login user info
-        mLoginUserInfo = CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo();
-        kjsLogUtil.d(String.format("Login status: %s", (null == mLoginUserInfo) ? "Not Login" : mLoginUserInfo.GetName()));
+        IsLogined();
     }
 
     protected void processConnectionError() {
@@ -168,7 +167,8 @@ public class SKBaseActivity extends AppCompatActivity
     }
 
     protected boolean IsLogined() {
-        kjsLogUtil.d("Login status: " + ((null == mLoginUserInfo) ? "Not Login" : mLoginUserInfo.GetName()));
+        mLoginUserInfo = CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo();
+        kjsLogUtil.d(String.format("Login status: %s", (null == mLoginUserInfo) ? "Not Login" : mLoginUserInfo.GetName()));
         return null != mLoginUserInfo;
     }
 }
