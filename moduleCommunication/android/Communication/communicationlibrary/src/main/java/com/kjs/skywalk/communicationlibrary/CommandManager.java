@@ -28,12 +28,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     private ArrayList<CommunicationBase>    mCmdQueue       = new ArrayList<CommunicationBase>();
     private CommunicationBase               mCmdLogin       = null;
 
-    private static final int    AGENT_STATUS_Unknow     = 0,
-                                AGENT_STATUS_NotLogin   = 1,
-                                AGENT_STATUS_Logining   = 2,
-                                AGENT_STATUS_Logined    = 3;
-    private int     mAgentStatus    = AGENT_STATUS_Unknow;
-    private String  mLoginUser      = null; // "15306261804";
+    private static final int            AGENT_STATUS_Unknow     = 0,
+                                        AGENT_STATUS_NotLogin   = 1,
+                                        AGENT_STATUS_Logining   = 2,
+                                        AGENT_STATUS_Logined    = 3;
+    private int                         mAgentStatus            = AGENT_STATUS_Unknow;
+    private String                      mLoginUser              = null; // record the last login user
+    private IApiResults.IGetUserInfo    mLoginUserInfo          = null; // represent the current login user
 
     private CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         mContext        = context;
@@ -147,6 +148,19 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return ret;
     }
 
+    private int getLoginUserInfoFromServer() {
+        String Fn = "[getLoginUserInfoFromServer] ";
+        Log.i(TAG, Fn);
+
+        CommunicationBase cmdGetLoginUserInfo = new CmdGetLoginUserInfo(mContext);
+//        HashMap<String, String> pMap = new HashMap<String, String>();
+        int ret = cmdGetLoginUserInfo.doOperation(this, this);
+        if (CommunicationError.CE_ERROR_NO_ERROR == ret) {
+        }
+
+        return ret;
+    }
+
     private synchronized int execute(CommunicationBase cmd, HashMap<String, String> map) {
         if (null == cmd) {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
@@ -156,6 +170,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         }
         MyUtils.printContentInMap(map);
 
+        // Check parameters before processing this command
         if (!cmd.checkParameter(map)) {
             Log.w(TAG, "Fail to check parameters");
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
@@ -216,12 +231,16 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public void onCommandFinished(int command, IApiResults.ICommon res) {
+        String Fn = "[onCommandFinished] ";
         switch (command) {
             case CmdID.CMD_LOGIN_BY_SMS:
             case CmdID.CMD_LOGIN_BY_PASSWORD :
             case CmdID.CMD_RELOGIN: {
                 if (res.GetErrCode() == CmdRes.CMD_RES_NOERROR) {
-                    Log.d(TAG, String.format("Login success, try to resent all (%d) commands in queue", mCmdQueue.size()));
+                    // send a command automatically to get login user info from server
+                    getLoginUserInfoFromServer();
+
+                    Log.d(TAG, Fn + String.format("Login success, try to resent all (%d) commands in queue", mCmdQueue.size()));
                     mAgentStatus = AGENT_STATUS_Logined;
                     for (int n = 0; n < mCmdQueue.size(); n++) {
                         CommunicationBase cmd = mCmdQueue.get(n);
@@ -229,7 +248,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         sleep(100);
                     }
                 } else {
-                    Log.e(TAG, String.format("silent login failed(0x%x), notify user to login", res.GetErrCode()));
+                    Log.e(TAG, Fn + String.format("silent login failed(0x%x), notify user to login", res.GetErrCode()));
                     mAgentStatus = AGENT_STATUS_NotLogin;
                 }
 
@@ -245,6 +264,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             }
             case CmdID.CMD_LOG_OUT: {
                 mAgentStatus = AGENT_STATUS_NotLogin;
+                mLoginUserInfo = null;
+                break;
+            }
+            case CmdID.CMD_GET_LOGIN_USER_INFO: {
+                mLoginUserInfo = (ResGetUserInfo)res;
+                Log.d(TAG, Fn + "Login user info:" + ((IApiResults.ICommon)mLoginUserInfo).DebugString());
                 break;
             }
             default: { // all other commands
@@ -253,6 +278,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     case CmdRes.CMD_RES_NOT_LOGIN: {
                         Log.e(TAG, "Command need login, post a silent login command");
                         mAgentStatus = AGENT_STATUS_NotLogin;
+                        mLoginUserInfo = null;
                         if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
                             Log.e(TAG, "Fail to send relogin command, notify user to login");
                             if (null != mCmdListener) {
@@ -306,10 +332,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetLoginUserInfo() {
-        CommunicationBase op = new CmdGetLoginUserInfo(mContext);
-        HashMap<String, String> pMap = new HashMap<String, String>();
-        return execute(op, pMap);
+    public IApiResults.IGetUserInfo GetLoginUserInfo() {
+        return mLoginUserInfo;
     }
 
     @Override
