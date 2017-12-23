@@ -616,6 +616,14 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
                 String timeEnd = appointDate + " " + times[1];
                 // appoint description
                 String appointDesc = tvAppointDesc.getText().toString();
+
+                // check
+                if (appointDesc.isEmpty()) {
+                    tvAppointDesc.setHintTextColor(Color.rgb(255,0,0));
+                    tvAppointDesc.requestFocus();
+                    return;
+                }
+
                 // make an appointment for house seeing
                 CommandManager.getCmdMgrInstance(Activity_ApartmentDetail.this, Activity_ApartmentDetail.this,
                         Activity_ApartmentDetail.this).MakeAppointment_SeeHouse(mHouseId, "", timeBegin, timeEnd, appointDesc);
