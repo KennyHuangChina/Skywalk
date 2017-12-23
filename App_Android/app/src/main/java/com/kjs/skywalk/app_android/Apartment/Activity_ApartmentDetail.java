@@ -456,6 +456,14 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Disable the bottom tool bar if user not login in
+        findViewById(R.id.rl_bottom_tools).setVisibility(IsLogined() ? View.VISIBLE : View.GONE);
+    }
+
     /**
      *  Get offset date based on today
      *  @param  off_date > 0 : date after today, < 0 : date before today
