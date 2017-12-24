@@ -44,10 +44,10 @@ public class CommunicationInterface {
         */
         int GetUserInfo(int uid);
 
-        /*
-        *   CMD     : CMD_GET_LOGIN_USER_INFO,
-        *   Result  : IApiResults.IGetUserInfo(ResGetUserInfo)
-        */
+        /**
+         *  Get Login User Info(CMD_GET_LOGIN_USER_INFO)
+         *  @return : IApiResults.IGetUserInfo
+         */
         IApiResults.IGetUserInfo GetLoginUserInfo();
 
         /*
@@ -383,8 +383,9 @@ public class CommunicationInterface {
     }
 
     public static class CmdRes {
-        final public static int CMD_RES_NOERROR     = 0,
-                                CMD_RES_NOT_LOGIN   = 1104;
+        final public static int CMD_RES_NOERROR         = 0,
+                                CMD_RES_NOT_LOGIN       = 1104,
+                                CMD_RES_ALREADY_EXIST   = 1105;
     }
     public static class CmdID {
         // Admin
