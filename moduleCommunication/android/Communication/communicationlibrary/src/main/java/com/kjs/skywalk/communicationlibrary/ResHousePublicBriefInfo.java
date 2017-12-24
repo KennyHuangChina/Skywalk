@@ -2,6 +2,8 @@ package com.kjs.skywalk.communicationlibrary;
 
 //import ResList;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +16,7 @@ import java.util.Date;
  */
 
 class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDigest, IApiResults.IHouseCertDigestInfo, IApiResults.IResultList {
-    private HouseDigestInfo mDigestInfo     = null;
+    private HouseDigestInfo mDigestInfo = null;
 
     ResHousePublicBriefInfo(int nErrCode, JSONObject obj) {
         super(nErrCode/*, obj*/);
@@ -114,6 +116,7 @@ class ResHousePublicBriefInfo extends ResBase implements IApiResults.IHouseDiges
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 class HouseDigestInfo extends HouseCertStatus implements IApiResults.IHouseDigest, IApiResults.IResultList, InternalDefines.IListItemInfoInner {
+    private String  TAG             = getClass().getSimpleName();
     private int     mHouseId        = 0;
     private String  mPropertyName   = "";
     private String  mPropertyAddr   = "";
@@ -191,6 +194,7 @@ class HouseDigestInfo extends HouseCertStatus implements IApiResults.IHouseDiges
         sDebugString += (" Image URL(s): " + GetCoverImageUrlS() + "\n");
         sDebugString += (" Image URL(m): " + GetCoverImageUrlM() + "\n");
 
+        sDebugString += "Tags:" + "\n";
         if (null != mTagList) {
             sDebugString += mTagList.DebugList();
         }
@@ -256,6 +260,7 @@ class HouseDigestInfo extends HouseCertStatus implements IApiResults.IHouseDiges
 
         @Override
         public int parseListItems(JSONObject obj) {
+            String Fn = "[TagList.parseListItems] ";
             try {
                 JSONArray array = obj.getJSONArray("Tags");
                 if (null == array) {
@@ -269,6 +274,11 @@ class HouseDigestInfo extends HouseCertStatus implements IApiResults.IHouseDiges
                     mList.add(newProp);
                 }
             } catch (JSONException e) {
+                String msg = e.getMessage();
+                if (msg.contains("Value null at Tags of type")) {
+                    Log.w(TAG, Fn + "No Tags attached");
+                    return 0;
+                }
                 e.printStackTrace();
                 return -3;
             }

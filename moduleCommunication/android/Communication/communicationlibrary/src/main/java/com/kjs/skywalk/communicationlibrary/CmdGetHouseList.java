@@ -48,7 +48,7 @@ class CmdGetHouseList extends CommunicationBase {
             return false;
         }
 
-        if (mSort.size() > 0) {
+        if (null != mSort && mSort.size() > 0) {
             if (isSortTypeExist(SORT_PUBLISH_TIME) && isSortTypeExist(SORT_PUBLISH_TIME_DESC)) {
                 Log.e(TAG, "SORT_PUBLISH_TIME vs SORT_PUBLISH_TIME_DESC");
                 return false;
@@ -149,17 +149,19 @@ class CmdGetHouseList extends CommunicationBase {
         }
 
         String sort = "";
-        for (int n = 0; n < mSort.size(); n++) {
+        if (null != mSort) {
+            for (int n = 0; n < mSort.size(); n++) {
+                if (!sort.isEmpty()) {
+                    sort += ",";
+                }
+                sort += String.format("%d", mSort.get(n).intValue());
+            }
             if (!sort.isEmpty()) {
-                sort += ",";
+                if (!mRequestData.isEmpty()) {
+                    mRequestData += "&";
+                }
+                mRequestData += String.format("sort=%s", sort);
             }
-            sort += String.format("%d", mSort.get(n).intValue());
-        }
-        if (!sort.isEmpty()) {
-            if (!mRequestData.isEmpty()) {
-                mRequestData += "&";
-            }
-            mRequestData += String.format("sort=%s", sort);
         }
 
         Log.d(TAG, "mRequestData: " + mRequestData);

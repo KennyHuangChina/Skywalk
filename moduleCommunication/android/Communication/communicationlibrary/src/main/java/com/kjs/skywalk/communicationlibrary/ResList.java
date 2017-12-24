@@ -33,7 +33,7 @@ class ResList implements InternalDefines.IListInner {
         }
 
         for (int n = 0; n < mList.size(); n++) {
-            strList += ("  <" + n + "> " + getListItem2String(mList.get(n)) + "\n");
+            strList += ("  <" + n + "> " + getListItem2String(mList.get(n)));   //  + "\n");
         }
 
         return strList;
