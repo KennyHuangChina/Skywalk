@@ -9,13 +9,13 @@ import org.json.JSONObject;
 
 class ResGetUserInfo extends ResBase implements IApiResults.IGetUserInfo {
 
-    private int mId = 0;
-    private String mName = "";
-    private String mPhoneNo = "";
-    private String mIdNo = "";
-    private String mHeadPotrait = "";
-    private String mRole = "";
-    private String mRoleDesc = "";
+    private int     mId             = 0;
+    private String  mName           = "";
+    private String  mPhoneNo        = "";
+    private String  mIdNo           = "";
+    private String  mHeadPotrait    = "";
+    private boolean mbAgent         = false;
+    private boolean mbAdmin         = false;
 
     ResGetUserInfo(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -25,25 +25,26 @@ class ResGetUserInfo extends ResBase implements IApiResults.IGetUserInfo {
     @Override
     public String DebugString() {
         super.DebugString();
-        mString += "  user id: " + mId + "\n";
-        mString += "  user name: " + mName + "\n";
-        mString += "  phone: " + mPhoneNo + "\n";
-        mString += "  ID: " + mIdNo + "\n";
-        mString += "  header potrait: " + mHeadPotrait + "\n";
-        mString += "  role: " + mRole + " (" + mRoleDesc + ")\n";
+        mString += "  user id: " + GetUserId() + "\n";
+        mString += "  user name: " + GetName() + "\n";
+        mString += "  phone: " + GetPhoneNo() + "\n";
+        mString += "  ID: " + GetIdNo() + "\n";
+        mString += "  header potrait: " + GetHead() + "\n";
+        mString += "  Is Admin: " + IsAdmin() + "\n";
+        mString += "  Is Agentn: " + IsAgent() + "\n";
         return mString;
     }
 
     @Override
     protected int parseResult(JSONObject obj) {
         try {
-            mId = obj.getInt("Id");
-            mName = obj.getString("Name");
-            mPhoneNo = obj.getString("Phone");
-            mIdNo = obj.getString("IdNo");
-            mHeadPotrait = obj.getString("HeadPortrait");
-            mRole = obj.getString("Role");
-            mRoleDesc = obj.getString("RoleDesc");
+            mId             = obj.getInt("Id");
+            mName           = obj.getString("Name");
+            mPhoneNo        = obj.getString("Phone");
+            mIdNo           = obj.getString("IdNo");
+            mHeadPotrait    = obj.getString("HeadPortrait");
+            mbAdmin         = obj.getBoolean("Admin");
+            mbAgent         = obj.getBoolean("Agent");
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
@@ -78,12 +79,12 @@ class ResGetUserInfo extends ResBase implements IApiResults.IGetUserInfo {
     }
 
     @Override
-    public String GerRole() {
-        return mRole;
+    public Boolean IsAdmin() {
+        return mbAdmin;
     }
 
     @Override
-    public String GetRoleDesc() {
-        return mRoleDesc;
+    public Boolean IsAgent() {
+        return mbAgent;
     }
 }
