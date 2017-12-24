@@ -72,12 +72,12 @@ public class fragmentPrivate extends Fragment {
     private TextView        mTv_lease;
 
     // 我代理的房源
+    private LinearLayout    mLlAgentOpGroup;
     private RelativeLayout  mRl_to_rent;
     private RelativeLayout  mRl_rented;
     private RelativeLayout  mRl_to_sale;
     private RelativeLayout  mRl_month_turnoff;
     private RelativeLayout  mRl_to_approve;
-
 
     private TextView        mTv_agency_houses;
     private TextView        mTvToRent;
@@ -85,6 +85,9 @@ public class fragmentPrivate extends Fragment {
     private TextView        mTvToSale;
     private TextView        mTv_month_turnoff;
     private TextView        mTvToApprove;
+
+    // 系统管理
+    private LinearLayout    mLlAdminOpGroup;
 
 //    private String          mUserName;
 //    private String          mUserTelephoneNum;
@@ -143,20 +146,24 @@ public class fragmentPrivate extends Fragment {
         mTv_lease = (TextView) view.findViewById(R.id.tv_lease);
 
         // 我代理的房源
-        mRl_to_rent = (RelativeLayout) view.findViewById(R.id.rl_to_rent);
-        mRl_rented = (RelativeLayout) view.findViewById(R.id.rl_rented);
-        mRl_to_sale = (RelativeLayout) view.findViewById(R.id.rl_to_sale);
-        mRl_month_turnoff = (RelativeLayout) view.findViewById(R.id.rl_month_turnoff);
-        mRl_to_approve = (RelativeLayout) view.findViewById(R.id.rl_to_approve);
+        mLlAgentOpGroup     = (LinearLayout) view.findViewById(R.id.ll_agent_op_group);
+        mRl_to_rent         = (RelativeLayout) view.findViewById(R.id.rl_to_rent);
+        mRl_rented          = (RelativeLayout) view.findViewById(R.id.rl_rented);
+        mRl_to_sale         = (RelativeLayout) view.findViewById(R.id.rl_to_sale);
+        mRl_month_turnoff   = (RelativeLayout) view.findViewById(R.id.rl_month_turnoff);
+        mRl_to_approve      = (RelativeLayout) view.findViewById(R.id.rl_to_approve);
 
-        mTv_agency_houses = (TextView) view.findViewById(R.id.tv_agency_houses);
-        mTvToRent = (TextView) view.findViewById(R.id.tv_to_rent);
-        mTvRented = (TextView) view.findViewById(R.id.tv_rented);
-        mTvToSale = (TextView) view.findViewById(R.id.tv_to_sale);
-        mTv_month_turnoff = (TextView) view.findViewById(R.id.tv_month_turnoff);
-        mTvToApprove = (TextView) view.findViewById(R.id.tv_to_approve);
+        mTv_agency_houses   = (TextView) view.findViewById(R.id.tv_agency_houses);
+        mTvToRent           = (TextView) view.findViewById(R.id.tv_to_rent);
+        mTvRented           = (TextView) view.findViewById(R.id.tv_rented);
+        mTvToSale           = (TextView) view.findViewById(R.id.tv_to_sale);
+        mTv_month_turnoff   = (TextView) view.findViewById(R.id.tv_month_turnoff);
+        mTvToApprove        = (TextView) view.findViewById(R.id.tv_to_approve);
 
         ((RelativeLayout)view.findViewById(R.id.rl_to_rent)).setEnabled(false);
+
+        // 系统管理
+        mLlAdminOpGroup = (LinearLayout)view.findViewById(R.id.ll_admin_op_group);
 
         return view;
     }
@@ -305,6 +312,7 @@ public class fragmentPrivate extends Fragment {
 
     private void updateLayout(boolean isLogin) {
 
+        // Login user name
 //        mEt_user_name.setVisibility((null != mLoginUser) ? View.VISIBLE : View.GONE);
         if (null != mLoginUser) {
             mEt_user_name.setText(mLoginUser.GetName());
@@ -351,6 +359,9 @@ public class fragmentPrivate extends Fragment {
         mRl_to_sale.setEnabled(bEnabled);
         mRl_month_turnoff.setEnabled(bEnabled);
         mRl_to_approve.setEnabled(bEnabled);
+
+        mLlAgentOpGroup.setVisibility((null != mLoginUser && mLoginUser.IsAgent()) ? View.VISIBLE : View.GONE);
+        mLlAdminOpGroup.setVisibility((null != mLoginUser && mLoginUser.IsAdmin()) ? View.VISIBLE : View.GONE);
     }
 
     private void showPasswordResetActivity() {

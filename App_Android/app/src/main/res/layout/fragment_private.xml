@@ -376,35 +376,197 @@
         android:layout_width="match_parent"
         android:layout_height="7dp"/>
 
-    <RelativeLayout
-        android:id="@+id/rl_agency_houses"
-        android:onClick="onFragmentPrivateClickResponse"
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:gravity="center_vertical"
-            android:text="我代理的房源"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/tv_agency_houses"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="所有房源 ( 0 )"
-            android:drawableRight="@drawable/right3_n"
-            android:drawablePadding="8dp"
-            android:textColor="#666666"
-            android:textSize="12sp"/>
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_agent_op_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <RelativeLayout
+            android:id="@+id/rl_agency_houses"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:text="我代理的房源"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tv_agency_houses"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:text="所有房源 ( 0 )"
+                android:drawableRight="@drawable/right3_n"
+                android:drawablePadding="8dp"
+                android:textColor="#666666"
+                android:textSize="12sp"/>
+        </RelativeLayout>
 
-    <include layout="@layout/seperator_horizontal"/>
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_to_rent"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
+                android:text="待租中"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tv_to_rent"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:drawableRight="@drawable/right1_n"
+                android:drawablePadding="8dp"
+                android:textColor="@drawable/itemcount_text_selector"
+                android:textSize="10sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_rented"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
+                android:text="出租中"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tv_rented"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:drawableRight="@drawable/right1_n"
+                android:drawablePadding="8dp"
+                android:textColor="@drawable/itemcount_text_selector"
+                android:textSize="10sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_to_sale"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
+                android:text="待售中"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tv_to_sale"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:drawableRight="@drawable/right1_n"
+                android:drawablePadding="8dp"
+                android:textColor="@drawable/itemcount_text_selector"
+                android:textSize="10sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_month_turnoff"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
+                android:text="本月成交"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tv_month_turnoff"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:drawableRight="@drawable/right1_n"
+                android:drawablePadding="8dp"
+                android:textColor="@drawable/itemcount_text_selector"
+                android:textSize="10sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_to_approve"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
+                android:text="待审核"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tv_to_approve"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:drawableRight="@drawable/right1_n"
+                android:drawablePadding="8dp"
+                android:textColor="@drawable/itemcount_text_selector"
+                android:textSize="10sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"/>
+        <!-- 我代理的房源    end -->
+
+    </LinearLayout>
+
 
     <!--<RelativeLayout-->
         <!--android:layout_width="match_parent"-->
@@ -430,160 +592,65 @@
             <!--android:textSize="10sp"/>-->
     <!--</RelativeLayout>-->
 
-    <RelativeLayout
-        android:id="@+id/rl_to_rent"
-        android:onClick="onFragmentPrivateClickResponse"
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:gravity="center_vertical"
-            android:text="待租中"
-            android:textColor="#333333"
-            android:textSize="13sp"/>
-        <TextView
-            android:id="@+id/tv_to_rent"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:duplicateParentState="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:drawableRight="@drawable/right1_n"
-            android:drawablePadding="8dp"
-            android:textColor="@drawable/itemcount_text_selector"
-            android:textSize="10sp"/>
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_admin_op_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <RelativeLayout
+            android:id="@+id/rl_admin_group_captical"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:text="系统管理"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+        </RelativeLayout>
 
-    <include layout="@layout/seperator_horizontal"/>
+        <include layout="@layout/seperator_horizontal"/>
 
-    <RelativeLayout
-        android:id="@+id/rl_rented"
-        android:onClick="onFragmentPrivateClickResponse"
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:gravity="center_vertical"
-            android:text="出租中"
-            android:textColor="#333333"
-            android:textSize="13sp"/>
-        <TextView
-            android:id="@+id/tv_rented"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:duplicateParentState="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:drawableRight="@drawable/right1_n"
-            android:drawablePadding="8dp"
-            android:textColor="@drawable/itemcount_text_selector"
-            android:textSize="10sp"/>
-    </RelativeLayout>
+        <!-- 系统管理    start -->
+        <RelativeLayout
+            android:id="@+id/rl_user_admin"
+            android:onClick="onFragmentPrivateClickResponse"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
+                android:text="用户管理"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tv_user_admin"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="29dp"
+                android:gravity="center_vertical"
+                android:drawableRight="@drawable/right1_n"
+                android:drawablePadding="8dp"
+                android:textColor="@drawable/itemcount_text_selector"
+                android:textSize="10sp"/>
+        </RelativeLayout>
 
-    <include layout="@layout/seperator_horizontal"/>
+        <include layout="@layout/seperator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"/>
 
-    <RelativeLayout
-        android:id="@+id/rl_to_sale"
-        android:onClick="onFragmentPrivateClickResponse"
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:gravity="center_vertical"
-            android:text="待售中"
-            android:textColor="#333333"
-            android:textSize="13sp"/>
-        <TextView
-            android:id="@+id/tv_to_sale"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:duplicateParentState="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:drawableRight="@drawable/right1_n"
-            android:drawablePadding="8dp"
-            android:textColor="@drawable/itemcount_text_selector"
-            android:textSize="10sp"/>
-    </RelativeLayout>
-
-    <include layout="@layout/seperator_horizontal"/>
-
-    <RelativeLayout
-        android:id="@+id/rl_month_turnoff"
-        android:onClick="onFragmentPrivateClickResponse"
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:gravity="center_vertical"
-            android:text="本月成交"
-            android:textColor="#333333"
-            android:textSize="13sp"/>
-        <TextView
-            android:id="@+id/tv_month_turnoff"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:duplicateParentState="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:drawableRight="@drawable/right1_n"
-            android:drawablePadding="8dp"
-            android:textColor="@drawable/itemcount_text_selector"
-            android:textSize="10sp"/>
-    </RelativeLayout>
-
-    <include layout="@layout/seperator_horizontal"/>
-
-    <RelativeLayout
-        android:id="@+id/rl_to_approve"
-        android:onClick="onFragmentPrivateClickResponse"
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:gravity="center_vertical"
-            android:text="待审核"
-            android:textColor="#333333"
-            android:textSize="13sp"/>
-        <TextView
-            android:id="@+id/tv_to_approve"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:duplicateParentState="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="29dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:drawableRight="@drawable/right1_n"
-            android:drawablePadding="8dp"
-            android:textColor="@drawable/itemcount_text_selector"
-            android:textSize="10sp"/>
-    </RelativeLayout>
-    <!-- 我代理的房源    end -->
+    </LinearLayout>
 
     <!-- 产品服务    start -->
-    <include layout="@layout/seperator_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="7dp"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
