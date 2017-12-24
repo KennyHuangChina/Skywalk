@@ -328,6 +328,13 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 		bPrivacy = true
 	}
 
+	if _, bAdmin := isAdministrator(id); bAdmin {
+		uif.Admin = true
+	}
+	if _, bAgency := isAgency(id); bAgency {
+		uif.Agent = true
+	}
+
 	uif.Id = u.Id
 	uif.Name = u.Name
 	if 0 == len(uif.Name) {
@@ -335,7 +342,7 @@ func GetUserInfo(id, ln int64) (err error, uif commdef.UserInfo) {
 	}
 	uif.HeadPortrait = u.Head
 	// uif.Role = u.Role
-	uif.Role2Desc() // uif.RoleDesc
+	// uif.Role2Desc() // uif.RoleDesc
 
 	if bPrivacy {
 		beego.Debug(FN, "bPrivacy:", bPrivacy)

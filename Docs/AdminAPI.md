@@ -188,8 +188,8 @@
 			* Phone				string		// user phone number.
 			* IdNo				string		// user ID number or passport number
 			* HeadPortrait		string		// url of user head portrait picture
-			* Role				int 		// 0 - agent manager, 1 - agent, 10 - customer, including house owner and house tenant
-			* RoleDesc			string		// description of role
+			* Agent				bool		// is agent
+			* Admin				bool		// is administrator
 		* ERR: 4XX,5XX
 	  		* errCode		int			// error code
 	  		* errDesc		string		// error description

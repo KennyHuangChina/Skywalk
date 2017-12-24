@@ -8,22 +8,14 @@ const (
 //
 //		User
 //
-const (
-	USER_TYPE_Manger   = 0
-	USER_TYPE_Agent    = 1
-	USER_TYPE_Customer = 10
-)
-
-// TODO: user role type shoule be removed, use user group instead
-
 type UserInfo struct {
-	Id           int64
-	Name         string
-	IdNo         string
-	Phone        string
-	HeadPortrait string
-	Role         int
-	RoleDesc     string
+	Id           int64  // user id
+	Name         string // user real name
+	IdNo         string // user ID number
+	Phone        string // user phone
+	Agent        bool   // is agent?
+	Admin        bool   // is admin?
+	HeadPortrait string // headportait
 }
 
 type AgencyInfo struct {
@@ -35,19 +27,6 @@ type AgencyInfo struct {
 	Portrait     string
 	Attitude     int
 	Professional int
-}
-
-func (this *UserInfo) Role2Desc() {
-	switch this.Role {
-	case USER_TYPE_Manger:
-		this.RoleDesc = "Manager"
-	case USER_TYPE_Agent:
-		this.RoleDesc = "Agent"
-	case USER_TYPE_Customer:
-		this.RoleDesc = "Customer"
-	default:
-		this.RoleDesc = "Unknown"
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
