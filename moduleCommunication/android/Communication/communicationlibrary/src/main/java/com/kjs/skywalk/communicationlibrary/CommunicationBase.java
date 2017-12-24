@@ -255,7 +255,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     }
 
     public String GetApiName() {
-        return "" + mAPI;
+        return String.format("mAPI(0x%x): %s", mAPI, CmdID.GetCmdDesc(mAPI));
     }
 
 }

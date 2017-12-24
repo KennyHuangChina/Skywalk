@@ -8,7 +8,7 @@ import org.json.JSONObject;
  */
 
 class ResBase implements IApiResults.ICommon {
-    protected  int      mErrCode    = -1;   // Unknown. refer to ERROR_xxxx
+    protected  int      mErrCode    = -1;   // Unknown. refer to CE_COMMAND_ERROR_XXXX
     protected  String   mErrDesc    = "";
     protected  String   mString     = "";
 
