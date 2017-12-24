@@ -350,7 +350,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                     mTvDelete.setVisibility(View.VISIBLE);
                 } else {
                     ((TextView)v).setText("选择");
-                    mTvUpload.setVisibility(View.GONE);
+                    mTvUpload.setVisibility(View.VISIBLE);
                     mTvDelete.setVisibility(View.GONE);
                 }
                 updateViewrPagerSelectMode(mIsPicSelectMode);
