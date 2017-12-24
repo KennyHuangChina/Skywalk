@@ -87,13 +87,13 @@ public class IApiResults {
     }
 
     public interface IGetUserInfo {
-        int GetUserId();
-        String GetName();
-        String GetPhoneNo();
-        String GetIdNo();
-        String GetHead();
-        String GerRole();
-        String GetRoleDesc();
+        int     GetUserId();
+        String  GetName();
+        String  GetPhoneNo();
+        String  GetIdNo();
+        String  GetHead();
+        Boolean IsAdmin();
+        Boolean IsAgent();
     }
 
     public interface IResetPassword {
