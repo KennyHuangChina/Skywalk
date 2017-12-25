@@ -113,6 +113,7 @@ public class Activity_login extends SKBaseActivity implements
 
         List<String> arrAuto = new ArrayList<>();
         arrAuto.add("15306261804");
+        arrAuto.add("13888888888");
 
         // telephone login layout
         mActv_telephone_num = (AutoCompleteTextView) findViewById(R.id.actv_telephone_num);
