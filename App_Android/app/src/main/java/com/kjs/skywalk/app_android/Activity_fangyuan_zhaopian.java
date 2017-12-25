@@ -116,6 +116,9 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mTvUpload = (TextView) findViewById(R.id.tv_upload);
         mTvDelete = (TextView) findViewById(R.id.tv_delete);
 
+        mTvUpload.setVisibility(View.VISIBLE);
+        mTvDelete.setVisibility(View.GONE);
+
         mHuXingPicLst = new ArrayList<> ();
         mFangJianJieGouPicLst = new ArrayList<> ();
         mJiaJuYongPinPicLst = new ArrayList<> ();
@@ -637,7 +640,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mNewPictureList.clear();
         ArrayList<ClassDefine.PicList> picList;
         PicFragStatePageAdapter adapter;
-        ArrayList<String> list;
         Message msg = new Message();
         msg.what = MSG_NEW_PICTURE_SELECTED;
         for(String path : photos) {
@@ -647,62 +649,50 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         switch (mPhotoPickerHostId) {
             case R.id.iv_photopicker_picgroup1:
             {
-//                picList = mHuXingPicLst;
-//                adapter = ((PicFragStatePageAdapter) mVPHuXing.getAdapter());
-//                list = mHuXingList;
-
-                msg.arg1 = PIC_ADD_TYPE_HUXING;
+                picList = mHuXingPicLst;
+                adapter = ((PicFragStatePageAdapter) mVPHuXing.getAdapter());
                 break;
             }
             case R.id.iv_photopicker_picgroup2:
             {
-//                picList = mFangJianJieGouPicLst;
-//                adapter = ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter());
-//                list = mFangJianJieGouList;
-                msg.arg1 = PIC_ADD_TYPE_FANGJIAN;
+                picList = mFangJianJieGouPicLst;
+                adapter = ((PicFragStatePageAdapter) mVpFangJianJieGou.getAdapter());
                 break;
             }
             case R.id.iv_photopicker_picgroup3:
             {
-//                picList = mJiaJuYongPinPicLst;
-//                adapter = ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter());
-//                list = mJiaJuYongPinList;
-                msg.arg1 = PIC_ADD_TYPE_JIAJU;
+                picList = mJiaJuYongPinPicLst;
+                adapter = ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter());
                 break;
             }
             case R.id.iv_photopicker_picgroup4:
             {
-//                picList = mDianQiPicLst;
-//                adapter = ((PicFragStatePageAdapter) mVpDianQi.getAdapter());
-//                list =  mDianQiList;
-                msg.arg1 = PIC_ADD_TYPE_DIANQI;
+                picList = mDianQiPicLst;
+                adapter = ((PicFragStatePageAdapter) mVpDianQi.getAdapter());
                 break;
             }
             default:
                 return;
         }
-//
-//        mergeList(photos, list);
-//
-//        for (String path : photos) {
-//            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false, true);
-//            picList.add(item);
-//        }
 
-        mHandler.sendMessageDelayed(msg, 100);
-//        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
-//        mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
-//
-//        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
-//        mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
-//
-//        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
-//        mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
-//
-//        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
-//        mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
-//
-//        adapter.notifyDataSetChanged();
+        for (String path : photos) {
+            ClassDefine.PicList item = new ClassDefine.PicList("新增图", path, 0, false, true, -1);
+            picList.add(item);
+        }
+
+        fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+        mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
+
+        fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+        mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
+
+        fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+        mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
+
+        fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+        mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
+
+        adapter.notifyDataSetChanged();
     }
 
     Handler mHandler = new Handler(){
