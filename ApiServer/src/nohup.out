@@ -1,0 +1,277 @@
+[35m[1m______
+| ___ \
+| |_/ /  ___   ___
+| ___ \ / _ \ / _ \
+| |_/ /|  __/|  __/
+\____/  \___| \___| v1.6.2[0m
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0001 Using 'ApiServer' as 'appname'
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0002 Loading default configuration...
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0003 Initializing watcher...
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0004 [1mWatching: [21m/home/cidana/go_work/src/ApiServer/commdef
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0005 [1mWatching: [21m/home/cidana/go_work/src/ApiServer/controllers
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0006 [1mWatching: [21m/home/cidana/go_work/src/ApiServer
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0007 [1mWatching: [21m/home/cidana/go_work/src/ApiServer/models
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0008 [1mWatching: [21m/home/cidana/go_work/src/ApiServer/routers
+2017/12/25 10:49:16 [34m[1mINFO    [21m[0m ▶ 0009 [1mWatching: [21m/home/cidana/go_work/src/ApiServer/tests
+2017/12/25 10:49:17 [32m[1mSUCCESS [21m[0m ▶ 0010 Built Successfully!
+2017/12/25 10:49:17 [34m[1mINFO    [21m[0m ▶ 0011 Restarting 'ApiServer'...
+2017/12/25 10:49:17 [32m[1mSUCCESS [21m[0m ▶ 0012 './ApiServer' is running...
+[newBConfig] SessionOn: false
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+[ORM]2017/12/25 10:49:17 unsupport orm tag not null
+2017/12/25 10:49:17 [1;34m[D] [models.go:522] root:root@tcp(localhost:3306)/rtdb?charset=utf8 [0m
+2017/12/25 10:49:17 [1;34m[D] [models.go:534] models.init [0m
+table `tbl_user` already exists, skip
+table `tbl_user_group` already exists, skip
+table `tbl_user_group_member` already exists, skip
+table `tbl_agency` already exists, skip
+table `tbl_property` already exists, skip
+table `tbl_house` already exists, skip
+table `tbl_rental` already exists, skip
+table `tbl_tag` already exists, skip
+table `tbl_house_tag` already exists, skip
+table `tbl_house_recommend` already exists, skip
+table `tbl_deliverables` already exists, skip
+table `tbl_house_deliverable` already exists, skip
+table `tbl_house_cert` already exists, skip
+table `tbl_facility_type` already exists, skip
+table `tbl_facilitys` already exists, skip
+table `tbl_house_facility` already exists, skip
+table `tbl_house_show_time` already exists, skip
+table `tbl_appointment` already exists, skip
+table `tbl_appointment_action` already exists, skip
+table `tbl_message` already exists, skip
+table `tbl_pictures` already exists, skip
+table `tbl_pic_set` already exists, skip
+table `tbl_sms_code` already exists, skip
+table `tbl_strings` already exists, skip
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.8ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_UNKNOWN`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_USER_NAME_NOT_SET`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.5ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_LANDLORD_SUBMIT_NEW_HOUSE`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.6ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_HOUSE_CERTIFICATE_BEGIN`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.5ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_HOUSE_CERTIFICATE_PASS`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_USER_SYSTEM`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.1ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_HOUSE_CERTIFICATE_FAILED`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.1ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_HOUSE_EVENT_PROC_FOLLOW`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.0ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_HOUSE_EVENT_PROC_CLOSE`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.0ms] - [SELECT COUNT(*) FROM `tbl_strings` T0 WHERE T0.`key` = ? ] - `KEY_APPOINTMENT_TYPE_SEE_HOUSE`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.3ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `燃气卡`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.6ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `大门钥匙`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `门禁卡`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.0ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `水电卡/存折`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.4ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `有线电视用户证`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.8ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `信报箱钥匙`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.8ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `保险柜钥匙`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.6ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `水表箱钥匙`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT COUNT(*) FROM `tbl_deliverables` T0 WHERE T0.`name` = ? ] - `电表箱钥匙`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.3ms] - [SELECT COUNT(*) FROM `tbl_facility_type` T0 WHERE T0.`name` = ? ] - `厨房用品`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.5ms] - [SELECT COUNT(*) FROM `tbl_facility_type` T0 WHERE T0.`name` = ? ] - `其它`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.1ms] - [SELECT COUNT(*) FROM `tbl_facility_type` T0 WHERE T0.`name` = ? ] - `家用电器`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.2ms] - [SELECT COUNT(*) FROM `tbl_facility_type` T0 WHERE T0.`name` = ? ] - `家具`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.7ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `天然气`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `灶具`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `洗衣机`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.4ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `有线电视/机顶盒`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.5ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `宽带网络/路由器`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电熨斗`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `立式空调`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.5ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `书桌`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.0ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `油烟机`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.8ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电视机`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.6ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `取暖器`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.6ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `衣柜`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.5ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `鞋柜`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.0ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `床`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `书柜`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `消毒柜`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电脑`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.3ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电风扇`
+[ORM]2017/12/25 10:49:17  -[Queries/default] - [  OK / db.QueryRow /     1.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `沙发+茶几`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     1.4ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `酒水柜`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     0.6ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `液化石油气`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     3.1ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `洗碗机`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     2.8ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电视柜`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     2.0ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `微波炉`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电磁炉`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `烤箱`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     1.3ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `电冰箱`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     2.2ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `卫星电视`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     0.8ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `音响`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     0.9ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `壁挂空调`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK / db.QueryRow /     0.8ms] - [SELECT COUNT(*) FROM `tbl_facilitys` T0 WHERE T0.`name` = ? ] - `花架`
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK /     db.Exec /     0.5ms] - [SELECT id FROM v_house_published LIMIT 0, 1]
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK /     db.Exec /     0.3ms] - [SELECT id FROM v_house_unpublished LIMIT 0, 1]
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK /     db.Exec /     2.1ms] - [SELECT id FROM v_pic_user_portrait LIMIT 0, 1]
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK /     db.Exec /     2.0ms] - [SELECT id FROM v_user_agent LIMIT 0, 1]
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK /     db.Exec /     0.7ms] - [SELECT id FROM v_user_admin LIMIT 0, 1]
+[ORM]2017/12/25 10:49:18  -[Queries/default] - [  OK /     db.Exec /     0.5ms] - [SELECT id FROM v_appointment_actived LIMIT 0, 1]
+2017/12/25 10:49:18 [1;34m[D] [pictures.go:1056] CommonPicAll: map[moderate:{w:1080 h:1080 wm:false} large:{w:1920 h:1920 wm:true} small:{w:500 h:500 wm:false}] [0m
+2017/12/25 10:49:18 [1;34m[D] [pictures.go:1064] CommonPicSL: map[small:{w:500 h:500 wm:false} large:{w:1920 h:1920 wm:true}] [0m
+2017/12/25 10:49:18 [1;34m[D] [pictures.go:1070] UserPortrait: map[small:{w:160 h:160 wm:false}] [0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+2017/12/25 10:49:18 [1;34m[I] [router.go:229] /home/cidana/share/Skywalk/ApiServer/src/controllers no changed[0m
+[registerSession] SessionOn: true
+[registerSession] conf.CookieLifeTime:120
+[MemProvider.SessionGC]
+2017/12/25 10:49:18 [1;34m[I] [asm_amd64.s:2086] http server Running on http://:9099[0m
+[Manager.getSid] cookie: SKSession=69a52812935d9fecbac2b1f76803f0f5 , errs: <nil>
+[Manager.getSid] s: 69a52812935d9fecbac2b1f76803f0f5 , errs: <nil>
+[Manager.SessionStart] sid: 69a52812935d9fecbac2b1f76803f0f5
+[Manager.SessionStart] sid: f6082af365e771130510d5d36e2fa50f
+[Manager.SessionStart] manager.config.CookieLifeTime:120
+[Manager.SessionStart] cookie:SKSession=f6082af365e771130510d5d36e2fa50f; Path=/; Expires=Mon, 25 Dec 2017 02:51:23 GMT; Max-Age=120; HttpOnly
+[Manager.SessionStart] set cookie:SKSession=f6082af365e771130510d5d36e2fa50f; Path=/; Expires=Mon, 25 Dec 2017 02:51:23 GMT; Max-Age=120; HttpOnly
+[Manager.SessionStart] add cookie:SKSession=f6082af365e771130510d5d36e2fa50f; Path=/; Expires=Mon, 25 Dec 2017 02:51:23 GMT; Max-Age=120; HttpOnly
+2017/12/25 10:49:23 [1;33m[W] [house.go:808] [--- API: GetHouseDigestList ---] [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetHouseListByType]  type: 1 , begin: 0 , count: 0 , filter: {Rental:{Operator:0 Values:[]} Livingroom:{Operator:0 Values:[]} Bedroom:{Operator:0 Values:[]} Bathroom:{Operator:0 Values:[]} Acreage:{Operator:0 Values:[]} Property:{Operator:0 Values:[]}} , sort:  [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getRecommendHouseList]  begin: 0 , fetchCnt: 0 [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:2251] [getHouseListFilterAndSort]  strFilter:  FROM v_house_published AS h  WHERE 1 [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:2252] [getHouseListFilterAndSort]  strSort:  [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.9ms] - [SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, 
+								(SELECT h.id  FROM v_house_published AS h  WHERE 1) AS h1 WHERE r.house=h1.id]
+2017/12/25 10:49:23 [1;34m[D] [House.go:1564] [getRecommendHouseList]  total: 2 [0m
+2017/12/25 10:49:23 [1;34m[D] [house.go:843] [GetHouseDigestList]  ids: [] , fetched: 0 [0m
+2017/12/25 10:49:23 [1;34m[D] [server.go:2202] |   192.168.0.24|[42m 200 [0m|   1.737694ms|   match|[44m GET     [0m /v1/house/list   r:/v1/house/list[0m
+[Manager.getSid] cookie: SKSession=f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.getSid] s: f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.SessionStart] sid: f6082af365e771130510d5d36e2fa50f
+[MemProvider.SessionExist] exist
+[Manager.SessionStart] session exist, exit
+2017/12/25 10:49:23 [1;33m[W] [house.go:808] [--- API: GetHouseDigestList ---] [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetHouseListByType]  type: 1 , begin: 0 , count: 2 , filter: {Rental:{Operator:0 Values:[]} Livingroom:{Operator:0 Values:[]} Bedroom:{Operator:0 Values:[]} Bathroom:{Operator:0 Values:[]} Acreage:{Operator:0 Values:[]} Property:{Operator:0 Values:[]}} , sort:  [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getRecommendHouseList]  begin: 0 , fetchCnt: 2 [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:2251] [getHouseListFilterAndSort]  strFilter:  FROM v_house_published AS h  WHERE 1 [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:2252] [getHouseListFilterAndSort]  strSort:  [0m
+[MemProvider.SessionUpdate] element f6082af365e771130510d5d36e2fa50f
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.7ms] - [SELECT COUNT(*) AS count FROM tbl_house_recommend AS r, 
+								(SELECT h.id  FROM v_house_published AS h  WHERE 1) AS h1 WHERE r.house=h1.id]
+2017/12/25 10:49:23 [1;34m[D] [House.go:1564] [getRecommendHouseList]  total: 2 [0m
+2017/12/25 10:49:23 [1;33m[W] [House.go:1577] [getRecommendHouseList]  TODO: all() will be restricted by limit, and return max 1000 records [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     1.5ms] - [SELECT h1.id AS id FROM (SELECT h.id  FROM v_house_published AS h  WHERE 1 ) AS h1, tbl_house_recommend AS r1
+							WHERE h1.id=r1.house LIMIT ?, ? ] - `0`, `2`
+2017/12/25 10:49:23 [1;34m[D] [House.go:1586] [getRecommendHouseList]  idlst: [2 6] [0m
+2017/12/25 10:49:23 [1;34m[D] [house.go:843] [GetHouseDigestList]  ids: [2 6] , fetched: 2 [0m
+2017/12/25 10:49:23 [1;31m[E] [ApiResult.go:328] [getLoginUser]  uid: -1 , err: <Error> code: 1104,  [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetHouseDigestInfo]  house: 2 , login user: -1 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.6ms] - [SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, 
+								livingrooms, bathrooms, acreage, cover_img 
+							FROM v_house_published AS house, tbl_property AS prop 
+							WHERE house.property_id=prop.id AND house.id=2]
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetPicUrl]  picture: 31 , login user: 0 , size: 0 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK / db.QueryRow /     6.7ms] - [SELECT `id`, `type_major`, `type_minor`, `ref_id`, `desc`, `md5`, `submit` FROM `tbl_pictures` WHERE `id` = ? ] - `31`
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:486] [getPicture]  {Id:31 TypeMajor:200 TypeMinor:2 RefId:2 Desc:客厅 Md5: Submit:2017-02-12 02:04:24 +0000 UTC} [0m
+2017/12/25 10:49:23 [1;33m[W] [pictures.go:958] TODO: Check piture permission here by picture type [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:296] [GetPicUrl]  sql: SELECT size, url FROM tbl_pic_set WHERE pic_id='31' AND size>1 [0m
+[Manager.getSid] cookie: SKSession=f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.getSid] s: f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.SessionStart] sid: f6082af365e771130510d5d36e2fa50f
+[MemProvider.SessionExist] exist
+[Manager.SessionStart] session exist, exit
+2017/12/25 10:49:23 [1;33m[W] [house.go:808] [--- API: GetHouseDigestList ---] [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetHouseListByType]  type: 2 , begin: 0 , count: 0 , filter: {Rental:{Operator:0 Values:[]} Livingroom:{Operator:0 Values:[]} Bedroom:{Operator:0 Values:[]} Bathroom:{Operator:0 Values:[]} Acreage:{Operator:0 Values:[]} Property:{Operator:0 Values:[]}} , sort:  [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getDeductedHouseList]  begin: 0 , fetch_numb: 0 [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:2251] [getHouseListFilterAndSort]  strFilter:  FROM v_house_published AS h  WHERE 1 [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:2252] [getHouseListFilterAndSort]  strSort:  [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.8ms] - [SELECT size, url FROM tbl_pic_set WHERE pic_id='31' AND size>1]
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:308] [GetPicUrl]  numb: 2 [0m
+[MemProvider.SessionUpdate] element f6082af365e771130510d5d36e2fa50f
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:311] [GetPicUrl]  v: {0 0 2 201705/10232304406975_s.jpg} [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:311] [GetPicUrl]  v: {0 0 4 201705/10232304406975_l.jpg} [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:337] [GetPicUrl]  s: ./pics/201705/10232304406975_s.jpg , m:  , l: ./pics/201705/10232304406975_l.jpg [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getHouseRental]  hid: 2 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     2.7ms] - [SELECT T0.`id`, T0.`house_id`, T0.`rental_bid`, T0.`rental_bottom`, T0.`prop_fee`, T0.`who`, T0.`when`, T0.`active` FROM `tbl_rental` T0 WHERE T0.`house_id` = ? AND T0.`active` = ? ORDER BY T0.`id` ASC LIMIT 1000] - `2`, `true`
+2017/12/25 10:49:23 [1;34m[D] [House.go:1269] [getHouseRental]  rs: [{4 2 150000 140000 false 2 2017-01-22 13:49:10 +0000 UTC true} {5 2 140000 130000 false 2 2017-01-23 12:16:17 +0000 UTC true}] [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getHouseTags]  hid: 2 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     4.5ms] - [SELECT COUNT(*) AS count FROM (SELECT p0.id AS p0_id, p1.id AS p1_id, p0.house_id, p0.rental_bid AS p0_bid, p1.rental_bid AS p1_bid 
+							FROM (SELECT t0.id, house_id, rental_bid FROM (SELECT min(r.id) AS id FROM tbl_rental AS r, v_house_published AS h 
+					WHERE r.active=true AND r.house_id=h.id GROUP BY house_id) AS t0 LEFT JOIN tbl_rental AS r ON r.id=t0.id) AS p0, (SELECT t1.id, house_id, rental_bid FROM (SELECT max(r.id) AS id FROM tbl_rental AS r, v_house_published AS h 
+					WHERE r.active=true AND r.house_id=h.id GROUP BY house_id) AS t1 LEFT JOIN tbl_rental AS r ON r.id=t1.id) AS p1 
+							WHERE p0.house_id=p1.house_id
+							HAVING (p1_bid - p0_bid) < 0) AS r1, (SELECT h.id  FROM v_house_published AS h  WHERE 1) AS h1 WHERE r1.house_id=h1.id]
+2017/12/25 10:49:23 [1;34m[D] [House.go:1368] [getDeductedHouseList]  total: 1 [0m
+2017/12/25 10:49:23 [1;34m[D] [house.go:843] [GetHouseDigestList]  ids: [] , fetched: 0 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.7ms] - [SELECT htags.tag AS tag_id, tags.tag AS tag_desc
+							FROM tbl_house_tag AS htags, tbl_tag AS tags 
+							WHERE htags.tag=tags.id AND house=2]
+2017/12/25 10:49:23 [1;34m[D] [server.go:2202] |   192.168.0.24|[42m 200 [0m|   5.442127ms|   match|[44m GET     [0m /v1/house/list   r:/v1/house/list[0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:1308] [getHouseTags]  tags: [{1 满二唯一} {2 地铁房} {3 江景房}] [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK / db.QueryRow /     0.7ms] - [SELECT `id`, `building_no`, `floor_total`, `floor_this`, `house_no`, `bedrooms`, `livingrooms`, `bathrooms`, `acreage`, `cover_img`, `property_id`, `decoration`, `public`, `for_sale`, `for_rent`, `rent_stat`, `owner_id`, `agency_id`, `purchase_date`, `submit_time`, `publish_time`, `modify_time` FROM `tbl_house` WHERE `id` = ? ] - `2`
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetHouseDigestInfo]  house: 6 , login user: -1 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.4ms] - [SELECT house.id AS id, prop.name AS property, address AS property_addr, bedrooms, 
+								livingrooms, bathrooms, acreage, cover_img 
+							FROM v_house_published AS house, tbl_property AS prop 
+							WHERE house.property_id=prop.id AND house.id=6]
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [GetPicUrl]  picture: 30 , login user: 0 , size: 0 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK / db.QueryRow /     0.4ms] - [SELECT `id`, `type_major`, `type_minor`, `ref_id`, `desc`, `md5`, `submit` FROM `tbl_pictures` WHERE `id` = ? ] - `30`
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:486] [getPicture]  {Id:30 TypeMajor:200 TypeMinor:2 RefId:6 Desc:客厅 Md5: Submit:2017-02-12 02:04:07 +0000 UTC} [0m
+2017/12/25 10:49:23 [1;33m[W] [pictures.go:958] TODO: Check piture permission here by picture type [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:296] [GetPicUrl]  sql: SELECT size, url FROM tbl_pic_set WHERE pic_id='30' AND size>1 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.3ms] - [SELECT size, url FROM tbl_pic_set WHERE pic_id='30' AND size>1]
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:308] [GetPicUrl]  numb: 2 [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:311] [GetPicUrl]  v: {0 0 2 201705/10225250314874_s.jpg} [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:311] [GetPicUrl]  v: {0 0 4 201705/10225250314874_l.jpg} [0m
+2017/12/25 10:49:23 [1;34m[D] [pictures.go:337] [GetPicUrl]  s: ./pics/201705/10225250314874_s.jpg , m:  , l: ./pics/201705/10225250314874_l.jpg [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getHouseRental]  hid: 6 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.4ms] - [SELECT T0.`id`, T0.`house_id`, T0.`rental_bid`, T0.`rental_bottom`, T0.`prop_fee`, T0.`who`, T0.`when`, T0.`active` FROM `tbl_rental` T0 WHERE T0.`house_id` = ? AND T0.`active` = ? ORDER BY T0.`id` ASC LIMIT 1000] - `6`, `true`
+2017/12/25 10:49:23 [1;34m[D] [House.go:1269] [getHouseRental]  rs: [{6 6 180000 160000 true 4 2017-07-03 14:23:22 +0000 UTC true}] [0m
+2017/12/25 10:49:23 [1;34m[D] [log.go:106] [getHouseTags]  hid: 6 [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK /    db.Query /     0.7ms] - [SELECT htags.tag AS tag_id, tags.tag AS tag_desc
+							FROM tbl_house_tag AS htags, tbl_tag AS tags 
+							WHERE htags.tag=tags.id AND house=6]
+2017/12/25 10:49:23 [1;34m[D] [House.go:1304] [getHouseTags]  No tags found [0m
+2017/12/25 10:49:23 [1;34m[D] [House.go:1308] [getHouseTags]  tags: [] [0m
+[ORM]2017/12/25 10:49:23  -[Queries/default] - [  OK / db.QueryRow /     1.2ms] - [SELECT `id`, `building_no`, `floor_total`, `floor_this`, `house_no`, `bedrooms`, `livingrooms`, `bathrooms`, `acreage`, `cover_img`, `property_id`, `decoration`, `public`, `for_sale`, `for_rent`, `rent_stat`, `owner_id`, `agency_id`, `purchase_date`, `submit_time`, `publish_time`, `modify_time` FROM `tbl_house` WHERE `id` = ? ] - `6`
+2017/12/25 10:49:23 [1;34m[D] [server.go:2202] |   192.168.0.24|[42m 200 [0m|  35.102436ms|   match|[44m GET     [0m /v1/house/list   r:/v1/house/list[0m
+[Manager.getSid] cookie: SKSession=f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.getSid] s: f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.SessionStart] sid: f6082af365e771130510d5d36e2fa50f
+[MemProvider.SessionExist] exist
+[Manager.SessionStart] session exist, exit
+2017/12/25 10:49:26 [1;33m[W] [house.go:808] [--- API: GetHouseDigestList ---] [0m
+2017/12/25 10:49:26 [1;34m[D] [log.go:106] [GetHouseListByType]  type: 3 , begin: 0 , count: 0 , filter: {Rental:{Operator:0 Values:[]} Livingroom:{Operator:0 Values:[]} Bedroom:{Operator:0 Values:[]} Bathroom:{Operator:0 Values:[]} Acreage:{Operator:0 Values:[]} Property:{Operator:0 Values:[]}} , sort:  [0m
+2017/12/25 10:49:26 [1;34m[D] [log.go:106] [getNewHouseList]  begin: 0 , fetch_numb: 0 [0m
+2017/12/25 10:49:26 [1;34m[D] [House.go:1477] [getNewHouseList]  tNow: 2017-12-25 10:49:26.919151822 +0800 CST , UTC: 2017-12-25 02:49:26.919151822 +0000 UTC [0m
+2017/12/25 10:49:26 [1;34m[D] [House.go:1479] [getNewHouseList]  tBegin: 2017-12-18 02:49:26.919151822 +0000 UTC [0m
+2017/12/25 10:49:26 [1;34m[D] [House.go:1482] [getNewHouseList]  t0: 2017-12-18 00:00:00 +0000 UTC [0m
+2017/12/25 10:49:26 [1;33m[W] [House.go:1483] [getNewHouseList]  TODO: need to check the real submit_time, UTC or Local? [0m
+2017/12/25 10:49:26 [1;34m[D] [House.go:2251] [getHouseListFilterAndSort]  strFilter:  FROM v_house_published AS h  WHERE 1 [0m
+2017/12/25 10:49:26 [1;34m[D] [House.go:2252] [getHouseListFilterAndSort]  strSort:  [0m
+[MemProvider.SessionUpdate] element f6082af365e771130510d5d36e2fa50f
+[ORM]2017/12/25 10:49:26  -[Queries/default] - [  OK /    db.Query /     1.6ms] - [SELECT COUNT(*)  FROM v_house_published AS h  WHERE 1 AND publish_time>='2017-12-18 00:00:00 +0000 UTC']
+2017/12/25 10:49:26 [1;34m[D] [house.go:843] [GetHouseDigestList]  ids: [] , fetched: 0 [0m
+2017/12/25 10:49:26 [1;34m[D] [server.go:2202] |   192.168.0.24|[42m 200 [0m|   2.889176ms|   match|[44m GET     [0m /v1/house/list   r:/v1/house/list[0m
+[Manager.getSid] cookie: SKSession=f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.getSid] s: f6082af365e771130510d5d36e2fa50f , errs: <nil>
+[Manager.SessionStart] sid: f6082af365e771130510d5d36e2fa50f
+[MemProvider.SessionExist] exist
+[Manager.SessionStart] session exist, exit
+2017/12/25 10:49:27 [1;33m[W] [house.go:808] [--- API: GetHouseDigestList ---] [0m
+2017/12/25 10:49:27 [1;34m[D] [log.go:106] [GetHouseListByType]  type: 3 , begin: 0 , count: 2 , filter: {Rental:{Operator:0 Values:[]} Livingroom:{Operator:0 Values:[]} Bedroom:{Operator:0 Values:[]} Bathroom:{Operator:0 Values:[]} Acreage:{Operator:0 Values:[]} Property:{Operator:0 Values:[]}} , sort:  [0m
+2017/12/25 10:49:27 [1;34m[D] [log.go:106] [getNewHouseList]  begin: 0 , fetch_numb: 2 [0m
+2017/12/25 10:49:27 [1;34m[D] [House.go:1477] [getNewHouseList]  tNow: 2017-12-25 10:49:27.013914918 +0800 CST , UTC: 2017-12-25 02:49:27.013914918 +0000 UTC [0m
+2017/12/25 10:49:27 [1;34m[D] [House.go:1479] [getNewHouseList]  tBegin: 2017-12-18 02:49:27.013914918 +0000 UTC [0m
+2017/12/25 10:49:27 [1;34m[D] [House.go:1482] [getNewHouseList]  t0: 2017-12-18 00:00:00 +0000 UTC [0m
+2017/12/25 10:49:27 [1;33m[W] [House.go:1483] [getNewHouseList]  TODO: need to check the real submit_time, UTC or Local? [0m
+2017/12/25 10:49:27 [1;34m[D] [House.go:2251] [getHouseListFilterAndSort]  strFilter:  FROM v_house_published AS h  WHERE 1 [0m
+2017/12/25 10:49:27 [1;34m[D] [House.go:2252] [getHouseListFilterAndSort]  strSort:  [0m
+[MemProvider.SessionUpdate] element f6082af365e771130510d5d36e2fa50f
+[ORM]2017/12/25 10:49:27  -[Queries/default] - [  OK /    db.Query /     1.3ms] - [SELECT COUNT(*)  FROM v_house_published AS h  WHERE 1 AND publish_time>='2017-12-18 00:00:00 +0000 UTC']
+2017/12/25 10:49:27 [1;34m[D] [house.go:843] [GetHouseDigestList]  ids: [] , fetched: 0 [0m
+2017/12/25 10:49:27 [1;34m[D] [server.go:2202] |   192.168.0.24|[42m 200 [0m|   2.441601ms|   match|[44m GET     [0m /v1/house/list   r:/v1/house/list[0m

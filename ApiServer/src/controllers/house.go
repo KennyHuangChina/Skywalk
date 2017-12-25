@@ -824,14 +824,9 @@ func (this *HouseController) GetHouseDigestList() {
 	/*
 	 *	Extract agreements
 	 */
-	uid, err := getLoginUser(this.Controller)
-	if nil != err {
-		// return
-	}
-
-	tp, _ := this.GetInt("type")
-	begin, _ := this.GetInt64("bgn")
-	count, _ := this.GetInt64("cnt")
+	result.Type, _ = this.GetInt("type")
+	result.Begin, _ = this.GetInt64("bgn")
+	result.FetchCnt, _ = this.GetInt64("cnt")
 	// sid := this.GetString("sid")
 	err, filter := getHouseFilter(this)
 	sort := this.GetString("sort")
@@ -844,14 +839,18 @@ func (this *HouseController) GetHouseDigestList() {
 	/*
 	 *	Processing
 	 */
-	err, total, fetched, ids := models.GetHouseListByType(tp, begin, count, filter, sort)
+	err, total, fetched, ids := models.GetHouseListByType(result.Type, result.Begin, result.FetchCnt, filter, sort)
 	beego.Debug(FN, "ids:", ids, ", fetched:", fetched)
 	if nil == err {
 		result.Total = total
-		if 0 == count {
+		if 0 == result.FetchCnt {
 			result.Count = -1
 		} else {
 			if fetched > 0 {
+				uid, err := getLoginUser(this.Controller)
+				if nil != err {
+					// return
+				}
 				for _, v := range ids {
 					// beego.Debug(FN, "v:", fmt.Sprintf("%+v", v))
 					hdi := commdef.HouseDigest{}
