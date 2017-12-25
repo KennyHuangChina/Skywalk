@@ -121,16 +121,16 @@ public class MainActivity extends SKBaseActivity {
         super.onPause();
     }
 
-    @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
-//        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
-        if (null == result) {
-            kjsLogUtil.w("result is null");
-            return;
-        }
-
-        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
-    }
+//    @Override
+//    public void onCommandFinished(int command, IApiResults.ICommon result) {
+////        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+//        if (null == result) {
+//            kjsLogUtil.w("result is null");
+//            return;
+//        }
+//
+//        kjsLogUtil.i(String.format("[command: %d] --- %s", command, result.DebugString()));
+//    }
 
     private void setTabMenuSelected(View v) {
         mTvHomePage.setSelected(false);
