@@ -91,11 +91,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         for (CommunicationBase cmd_in_queue : mCmdQueue) {
 //            if (cmd_in_queue.mAPI == nNewCmd) {
             if (cmd_in_queue.isSameCmd(cmd)) {
-                Log.d(TAG, Fn + "new command already exist");
+                Log.d(TAG, Fn + String.format("new command(0x%x) already exist", cmd.mAPI));
                 return true;
             }
         }
 
+        Log.d(TAG, Fn + String.format("new command(0x%x) queued", cmd.mAPI));
         return mCmdQueue.add(cmd);
     }
 
@@ -178,16 +179,17 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
         }
 
+        // que the command into queue
+        cmd.SetBackupListener(mProgListener, mCmdListener);
+        if (!isLoginCmd(cmd)) {
+            queueCommand(cmd);
+        } else {
+            mCmdLogin = cmd;
+        }
+
         int ret = CommunicationError.CE_ERROR_NO_ERROR;
         if (cmd.isNeedLogin() || isLoginCmd(cmd)) {    // commands that need to login first
             Log.d(TAG, Fn + String.format("command(%d)[%s] need to be logined, current status:%d", cmd.mAPI, CmdID.GetCmdDesc(cmd.mAPI), mAgentStatus));
-            // que the command into queue
-            cmd.SetBackupListener(mProgListener, mCmdListener);
-            if (!isLoginCmd(cmd)) {
-                queueCommand(cmd);
-            } else {
-                mCmdLogin = cmd;
-            }
             switch (mAgentStatus) {
                 case AGENT_STATUS_Unknow:   // Check login status
                 case AGENT_STATUS_NotLogin: // Send relogin command
@@ -223,7 +225,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                 removeCmd(cmd.mAPI, null);
             }
         } else {    // commands that do not need to login, send to server directly
-            ret = cmd.doOperation(mCmdListener, mProgListener);
+            ret = cmd.doOperation(this, this);
             if (CommunicationError.CE_ERROR_NO_ERROR != ret) {  // remove the command already cached
                 removeCmd(cmd.mAPI, null);
             }
@@ -310,10 +312,11 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         // remove it from command queue
                         CommunicationBase cmd           = removeCmd(command, res);
                         CICommandListener cmdListener   = null;
-                    if (null != cmd && null != (cmdListener = cmd.GetBackupCommandListener())) {
+                        if (null != cmd && null != (cmdListener = cmd.GetBackupCommandListener())) {
                             // Notify UI
                             cmdListener.onCommandFinished(command, res);
                         }
+                        Log.d(TAG, Fn + "cmdListener:" + cmdListener);
                     }
                 }
             }
