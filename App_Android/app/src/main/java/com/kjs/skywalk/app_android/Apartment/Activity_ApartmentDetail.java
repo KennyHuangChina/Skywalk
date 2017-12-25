@@ -42,6 +42,7 @@ import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdRes;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.LinearLayout_AdaptiveText;
@@ -207,9 +208,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
             }
             case CmdID.CMD_APPOINT_SEE_HOUSE: {
                 int nErr = iResult.GetErrCode();
-                if (IApiResults.ERROR_NONE == nErr) {
+                if (CmdRes.CMD_RES_NOERROR == nErr) {
                     commonFun.showToast_info(getApplicationContext(), mTvApartmentNo, "预约看房成功");
-                } else if (nErr == IApiResults.ERROR_ALREADY_EXIST) {
+                } else if (CmdRes.CMD_RES_ALREADY_EXIST == nErr) {
                     commonFun.showToast_info(getApplicationContext(), mTvApartmentNo, "您已经预约看该房");
                 } else {
                    commonFun.showToast_info(getApplicationContext(), mTvApartmentNo, String.format("预约看房失败(0x%x): %s", nErr, iResult.GetErrDesc()));

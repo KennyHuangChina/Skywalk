@@ -27,6 +27,7 @@ import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdRes;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 
@@ -411,29 +412,46 @@ public class fragmentPrivate extends Fragment {
                 kjsLogUtil.w("result is null");
                 return;
             }
-
             kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
 
-            if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            int nErrCode = iResult.GetErrCode();
+            if (CmdRes.CMD_RES_NOERROR != nErrCode) {
+                kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+                if (CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
+                    kjsLogUtil.d("user not log in, reflash layout");
+                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+                    kjsLogUtil.d("mLoginUser:" + mLoginUser);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
+                        }
+                    });
+                }
                 return;
             }
 
-            if (command == CmdID.CMD_HOUSE_LST_APPOINT_SEE) {
-                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                int nFetch = resultList.GetFetchedNumber();
-                if (nFetch == -1) {
-                    // 我的预约
-                    updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
+            switch (command) {
+                case CmdID.CMD_HOUSE_LST_APPOINT_SEE:  {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        // 我的预约
+                        updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
+                    }
+                    break;
                 }
-            }
-
-            if (command == CmdID.CMD_GET_USER_HOUSE_WATCH_LIST) {
-                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                int nFetch = resultList.GetFetchedNumber();
-                if (nFetch == -1) {
-                    // 我的关注
-                    updateCount(mTvWatchListCount, resultList.GetTotalNumber());
+                case CmdID.CMD_GET_USER_HOUSE_WATCH_LIST: {
+                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                    int nFetch = resultList.GetFetchedNumber();
+                    if (nFetch == -1) {
+                        // 我的关注
+                        updateCount(mTvWatchListCount, resultList.GetTotalNumber());
+                    }
+                    break;
+                }
+                case CmdID.CMD_GET_LOGIN_USER_INFO: {
+                    break;
                 }
             }
         }
