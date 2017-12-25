@@ -167,6 +167,40 @@ class CmdGetHouseList extends CommunicationBase {
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
+    @Override
+    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
+        String Fn = "[isCmdEqual] ";
+        CmdGetHouseList cmdIn = (CmdGetHouseList)cmd2Chk;
+        if (cmdIn.mType != mType) {
+            return false;
+        }
+        if (cmdIn.mBeginPosi != mBeginPosi) {
+            return false;
+        }
+        if (cmdIn.mFetchCount != mFetchCount) {
+            return false;
+        }
+        Log.w(TAG, Fn + "TODO: do checking for filter and sort");
+        return true;
+    }
+
+    @Override
+    protected boolean checkCmdRes(IApiResults.ICommon res) {
+        String Fn = "[checkCmdRes] ";
+        ResGetHouseList resHouseList = (ResGetHouseList)res;
+        if (resHouseList.mType != mType) {
+            return false;
+        }
+        if (resHouseList.mBegin != mBeginPosi) {
+            return false;
+        }
+        if (resHouseList.mFetchCnt != mFetchCount) {
+            return false;
+        }
+        Log.w(TAG, Fn + "TODO: do checking for filter and sort");
+        return true;    // super.checkCmdRes(res);
+    }
+
     private boolean isSortTypeExist(int type) {
         for (int n = 0; n < mSort.size(); n++) {
             if (mSort.get(n).intValue() == type) {
