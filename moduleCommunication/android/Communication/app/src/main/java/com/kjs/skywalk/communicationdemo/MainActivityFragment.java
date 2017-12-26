@@ -1,8 +1,10 @@
 package com.kjs.skywalk.communicationdemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,13 +47,25 @@ public class MainActivityFragment extends Fragment
     public MainActivityFragment() {
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommandManager.getCmdMgrInstance(this.getContext()).Register(this, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommandManager.getCmdMgrInstance(this.getContext()).Unregister(this, this);
+    }
+
     private void doTestDeleApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.DelePicture(Integer.parseInt(mEditText.getText().toString()));
     }
 
     private void doTestModifyApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 //        CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
 //                                    mEditText1.getText().toString(),
 //                                    mEditText2.getText().toString());
@@ -87,7 +101,7 @@ public class MainActivityFragment extends Fragment
    }
 
     private void doTestAddApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);     // new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());     // new CommandManager(this.getContext());
 //        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
 //        CmdMgr.AddDeliverable(mEditText.getText().toString());
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
@@ -117,7 +131,7 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestGetApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
@@ -138,16 +152,16 @@ public class MainActivityFragment extends Fragment
 //        Log.d("[doTestGetApi] ", "strUrl:" + strUrl);
     }
     private void doTestGetList() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 //        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
 //        CmdMgr.GetDeliverableList();
 //        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
-        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+//        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
 //        CmdMgr.GetUserHouseWatchList(0, mListTotal);
-//        GetHouseDigestList();
+        GetHouseDigestList();
 //        CmdMgr.GetSysMsgList(0, mListTotal,
 //                            Boolean.parseBoolean(mEditText.getText().toString()),
 //                            Boolean.parseBoolean(mEditText1.getText().toString()));
@@ -161,7 +175,7 @@ public class MainActivityFragment extends Fragment
     }
 
     private void GetHouseDigestList() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 
         HouseFilterCondition filter = new HouseFilterCondition();
 //        filter.mRental.FilterBetween(115000, 180000);
@@ -186,7 +200,7 @@ public class MainActivityFragment extends Fragment
         sort.add(new Integer(HouseFilterCondition.SORT_RENTAL_DESC));
         sort.add(new Integer(HouseFilterCondition.SORT_APPOINT_NUMB_DESC));
 
-        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, filter, sort);
+        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, null, null); //filter, sort);
     }
 
     @Override

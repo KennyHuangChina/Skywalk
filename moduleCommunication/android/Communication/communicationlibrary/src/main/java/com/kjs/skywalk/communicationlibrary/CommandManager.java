@@ -23,8 +23,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 //    private SKCookieManager     mCookieManager  = null;
     private MyUtils             mUtils          = null;
 
-    private CICommandListener               mCmdListener    = null;
-    private CIProgressListener              mProgListener   = null;
+    private ArrayList<CICommandListener>    mCmdListeners   = null;
+    private ArrayList<CIProgressListener>   mProgListeners  = null;
     private ArrayList<CommunicationBase>    mCmdQueue       = new ArrayList<CommunicationBase>();
     private CommunicationBase               mCmdLogin       = null;
 
@@ -38,8 +38,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     private CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         mContext        = context;
-        mCmdListener    = CmdListener;
-        mProgListener   = ProgListener;
+        mCmdListeners   = new ArrayList<CICommandListener>();
+        mProgListeners  = new ArrayList<CIProgressListener>();
 
         mUtils= new MyUtils(context);
 //        mCookieManager = SKCookieManager.getManager(context);
@@ -48,14 +48,64 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         loadLoginUser();
     }
 
-    public static synchronized CommandManager getCmdMgrInstance(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
+    public static synchronized CommandManager getCmdMgrInstance(Context context) {
         if (null == mCmdMgr) {
-            mCmdMgr = new CommandManager(context, CmdListener, ProgListener);
+            mCmdMgr = new CommandManager(context, null, null);
         }
-        mCmdMgr.mCmdListener  = CmdListener;
-        mCmdMgr.mProgListener = ProgListener;
 
         return mCmdMgr;
+    }
+
+    public  int Register(CICommandListener cmdListener, CIProgressListener progListener) {
+        String Fn = "[Register] ";
+        if (null == cmdListener || null == progListener) {
+            Log.e(TAG, Fn + "Invalid input, cmdListener:" + cmdListener + ", progListener:" + progListener);
+            return -1;
+        }
+
+        synchronized(mCmdListeners) {
+            for (CICommandListener cl : mCmdListeners) {
+                if (cl == cmdListener) {
+                    Log.d(TAG, Fn + "cmdListener:" + cmdListener + " already registered");
+                    return 0;
+                }
+            }
+            mCmdListeners.add(cmdListener);
+            mProgListeners.add(progListener);
+            Log.d(TAG, Fn + "Register cmdListener:" + cmdListener + ", progListener:" + progListener);
+            Log.d(TAG, Fn + "Total listener:" + mCmdListeners.size());
+        }
+        return 0;
+    }
+
+    public int Unregister(CICommandListener cmdListener, CIProgressListener progListener) {
+        String Fn = "[Unregister] ";
+        if (null == cmdListener || null == progListener) {
+            Log.e(TAG, Fn + "Invalid input, cmdListener:" + cmdListener + ", progListener:" + progListener);
+            return -1;
+        }
+        synchronized (mCmdListeners) {
+            for (int n = 0; n < mCmdListeners.size(); n++) {
+                if (cmdListener == mCmdListeners.get(n)) {
+                    mCmdListeners.remove(n);
+                    mProgListeners.remove(n);
+                    Log.d(TAG, Fn + "Unregister cmdListener:" + cmdListener + ", progListener:" + progListener);
+                    Log.d(TAG, Fn + "Total listener:" + mCmdListeners.size());
+                    return 0;
+                }
+            }
+        }
+        Log.d(TAG, Fn + "cmdListener:" + cmdListener + ", progListener:" + progListener + " not exist");
+        return 1;
+    }
+
+    private int Notify(int cmd, IApiResults.ICommon res) {
+        synchronized (mCmdListeners) {
+            for (CICommandListener cl : mCmdListeners) {
+                cl.onCommandFinished(cmd, res);
+            }
+            return 0;
+        }
     }
 
     /**
@@ -140,7 +190,6 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             Log.e(TAG, FN + "fail to check parameters for relogin");
             return -2;
         }
-        cmdRelogin.SetBackupListener(mProgListener, mCmdListener);
         int ret = cmdRelogin.doOperation(this, this);
         if (CommunicationError.CE_ERROR_NO_ERROR == ret) {
             mCmdLogin = cmdRelogin;
@@ -167,9 +216,6 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         if (null == cmd) {
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
         }
-        if (null == mCmdListener || null == mProgListener) {
-            return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
-        }
         MyUtils.printContentInMap(map);
         Log.i(TAG, Fn + String.format("cmd: %d <%s>", cmd.mAPI, CmdID.GetCmdDesc(cmd.mAPI)));
 
@@ -180,7 +226,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         }
 
         // que the command into queue
-        cmd.SetBackupListener(mProgListener, mCmdListener);
+//        cmd.SetBackupListener(mProgListener, mCmdListener);
         if (!isLoginCmd(cmd)) {
             queueCommand(cmd);
         } else {
@@ -200,10 +246,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             if (CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN == ret) {
                                 mLoginUserInfo = null;
                                 Log.e(TAG, Fn + "user not login, notify user to login");
-                                if (null != mCmdListener) {
-                                    ResBase res = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
-                                    mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, res);
-                                }
+                                Notify(CmdID.CMD_RELOGIN, new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                                 // Keep the command in queue, once user get logined, the commands will be processed automatically, one by one
                             } else {
                                 Log.e(TAG, Fn + String.format("other error(0x%x), remove the command from queue", ret));
@@ -291,11 +334,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         mAgentStatus = AGENT_STATUS_NotLogin;
                         mLoginUserInfo = null;
                         if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
-                        Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
-                            if (null != mCmdListener) {
-                                ResBase resNotLogin = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
-                                mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, resNotLogin);
-                            }
+                            Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
+                            Notify(CmdID.CMD_RELOGIN, new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                             return;
                         }
                         mAgentStatus = AGENT_STATUS_Logining;
@@ -310,13 +350,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         }
                         }
                         // remove it from command queue
-                        CommunicationBase cmd           = removeCmd(command, res);
-                        CICommandListener cmdListener   = null;
-                        if (null != cmd && null != (cmdListener = cmd.GetBackupCommandListener())) {
-                            // Notify UI
-                            cmdListener.onCommandFinished(command, res);
+                        CommunicationBase cmd = removeCmd(command, res);
+                        if (null != cmd) {
+                            Notify(command, res);
                         }
-                        Log.d(TAG, Fn + "cmdListener:" + cmdListener);
                     }
                 }
             }

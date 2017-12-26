@@ -41,42 +41,42 @@ public class LogInOutFragment extends Fragment
     }
 
     private void doLogin() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.LoginByPassword(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mRand, mSalt);
     }
 
     private void doLoginSms() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.LoginBySms(mEditUserName.getText().toString(), mEditSms.getText().toString());
     }
 
     private void doRestPass() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.ResetLoginPass(mEditUserName.getText().toString(), mEditPassword.getText().toString(), mEditSms.getText().toString(), mSalt, mRand);
     }
 
     private void doLogout() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.Logout();
     }
 
     private void doTest() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.GetLoginUserInfo();
     }
 
     private void doGetUserSalt() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.GetUserSalt(mEditUserName.getText().toString());
     }
 
     private void doRelogin() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.Relogin(mEditUserName.getText().toString());
     }
 
     private void doGetSmsCode() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.GetSmsCode(mEditUserName.getText().toString());
     }
 
