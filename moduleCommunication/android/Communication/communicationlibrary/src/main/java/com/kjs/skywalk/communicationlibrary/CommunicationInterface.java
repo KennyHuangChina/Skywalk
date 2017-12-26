@@ -12,12 +12,14 @@ import java.util.HashMap;
 
 public class CommunicationInterface {
     public interface CICommandListener {
-        void onCommandFinished(final int command, final IApiResults.ICommon res);
+        void onCommandFinished(final int cmdId, final int cmdSeq, final IApiResults.ICommon res);
     }
 
     public interface CIProgressListener {
         void onProgressChanged(final int command, final String percent, HashMap<String, String> map);
     }
+
+    static public int COMMAND_SEQ_BASE = 0x90000000;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

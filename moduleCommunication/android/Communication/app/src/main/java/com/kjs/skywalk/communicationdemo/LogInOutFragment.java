@@ -228,21 +228,20 @@ public class LogInOutFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
+    public void onCommandFinished(int cmdId, int cmdSeq, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
         }
-        String cmd = CommunicationInterface.CmdID.GetCmdDesc(command);
-        mResultString = String.format("command(%d): %s \nResult: %s", command, cmd, result.DebugString());
+        mResultString = String.format("seq: %d, command(%d): %s \nResult: %s", cmdSeq, cmdId, CmdID.GetCmdDesc(cmdId), result.DebugString());
 
         if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
-            Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
+            Log.e(TAG, "Command:"+ cmdId + " finished with error: " + result.GetErrDesc());
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            Log.e(TAG, "Command:"+ command + " finished successes");
-            if (command == CmdID.CMD_GET_USER_SALT) {
+            Log.e(TAG, "Command:"+ cmdId + " finished successes");
+            if (cmdId == CmdID.CMD_GET_USER_SALT) {
                 IApiResults.IGetUserSalt slt = (IApiResults.IGetUserSalt)result;
                 mSalt = slt.GetSalt();
                 mRand = slt.GetRandom();

@@ -7,10 +7,11 @@ import java.util.HashMap;
  */
 
 public class CommunicationError {
-    public static final int CE_ERROR_NO_ERROR                       = 0x00000000;
-    public static final int CE_COMMAND_ERROR_INVALID_INPUT          = 0x80000001;
-    public static final int CE_COMMAND_ERROR_FATAL_ERROR            = 0x80000002;
-    public static final int CE_COMMAND_ERROR_NOT_LOGIN              = 0x80000003;
+    // return value of command excute result, not the command result
+    public static final int CE_ERROR_NO_ERROR                       = 0x00000000,
+                            CE_COMMAND_ERROR_INVALID_INPUT          = 0x80000001,
+                            CE_COMMAND_ERROR_FATAL_ERROR            = 0x80000002,
+                            CE_COMMAND_ERROR_NOT_LOGIN              = 0x80000003;
 
     //==Http Connection Error Code Defines==
     public static final int CE_ERROR_HTTP_BASE                      = 0x80001000,

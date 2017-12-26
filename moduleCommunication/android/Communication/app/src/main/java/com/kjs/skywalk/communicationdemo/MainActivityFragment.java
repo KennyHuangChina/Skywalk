@@ -200,7 +200,8 @@ public class MainActivityFragment extends Fragment
         sort.add(new Integer(HouseFilterCondition.SORT_RENTAL_DESC));
         sort.add(new Integer(HouseFilterCondition.SORT_APPOINT_NUMB_DESC));
 
-        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, null, null); //filter, sort);
+        int nRes = CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, null, null); //filter, sort);
+        Log.d(TAG, "nRes:" + nRes);
     }
 
     @Override
@@ -316,20 +317,19 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
+    public void onCommandFinished(int cmdId, int cmdSeq, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
         }
-        String cmd = CommunicationInterface.CmdID.GetCmdDesc(command);
-        mResultString = String.format("command(%d): %s \nResult: %s", command, cmd, result.DebugString());
+        mResultString = String.format("seq:%d, command(%d): %s \nResult: %s", cmdSeq, cmdId, CmdID.GetCmdDesc(cmdId), result.DebugString());
 
         if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
-            Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
+            Log.e(TAG, "Command:"+ cmdId + " finished with error: " + result.GetErrDesc());
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            if (CMD_APPOINT_HOUSE_SEE_LST == command || command == CMD_GET_SYSTEM_MSG_LST) {
+            if (CMD_APPOINT_HOUSE_SEE_LST == cmdId || cmdId == CMD_GET_SYSTEM_MSG_LST) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -337,7 +337,7 @@ public class MainActivityFragment extends Fragment
                 if (nFetched > 0) {
                     mListTotal = 0;
                 }
-            } else if (CMD_GET_PROPERTY_LIST == command) {
+            } else if (CMD_GET_PROPERTY_LIST == cmdId) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -348,7 +348,7 @@ public class MainActivityFragment extends Fragment
                     prop.GetName();
                     mListTotal = 0;
                 }
-            } else if (command == CMD_GET_AGENCY_LIST) {
+            } else if (cmdId == CMD_GET_AGENCY_LIST) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -359,8 +359,8 @@ public class MainActivityFragment extends Fragment
                     agency.Name();
                     mListTotal = 0;
                 }
-            } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST ||
-                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST ) {
+            } else if (cmdId == CMD_GET_HOUSE_DIGEST_LIST || cmdId == CMD_GET_BEHALF_HOUSE_LIST ||
+                    cmdId == CMD_HOUSE_LST_APPOINT_SEE || cmdId == CMD_GET_USER_HOUSE_WATCH_LIST ) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
@@ -380,7 +380,7 @@ public class MainActivityFragment extends Fragment
                             mListTotal = 0;
                         }
                     }
-            } else if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
+            } else if (cmdId == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
                 IApiResults.IHouseDigest res = (IApiResults.IHouseDigest) result;
                 res.GetHouseId();
 

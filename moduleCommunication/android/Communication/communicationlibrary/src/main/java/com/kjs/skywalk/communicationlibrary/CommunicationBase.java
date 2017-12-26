@@ -23,21 +23,22 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.BeforeConnect,
                                     InternalDefines.AfterConnect,
                                     InternalDefines.ConnectFailed {
-    protected String  TAG           = getClass().getSimpleName();
-    public    int     mAPI          = CmdID.CMD_TEST;
-    protected Context mContext      = null;
-    protected String  mMethodType   = "GET";
-    protected String  mServerURL    = "";
-    protected String  mCommandURL   = "";
-    protected String  mRequestData  = "";
-    protected String  mFile         = "";
+    protected   String  TAG           = getClass().getSimpleName();
+    public      int     mAPI          = CmdID.CMD_TEST;     // command id
+    protected   int     mCmdSeq       = 0;                  // command seq
+    protected   Context mContext      = null;
+    protected   String  mMethodType   = "GET";
+    protected   String  mServerURL    = "";
+    protected   String  mCommandURL   = "";
+    protected   String  mRequestData  = "";
+    protected   String  mFile         = "";
 
-    protected MyUtils               mUtils              = null;
-    protected CIProgressListener    mProgressListener   = null;
-    protected CICommandListener     mCommandListener    = null;
-    protected boolean               mNeedLogin          = true;
-    protected CIProgressListener    mProgListenerBak    = null;
-    protected CICommandListener     mCmdListenerBak     = null;
+    protected   MyUtils               mUtils              = null;
+    protected   CIProgressListener    mProgressListener   = null;
+    protected   CICommandListener     mCommandListener    = null;
+    protected   boolean               mNeedLogin          = true;
+    protected   CIProgressListener    mProgListenerBak    = null;     // TODO: remove
+    protected   CICommandListener     mCmdListenerBak     = null;     // TODO: remove
 
     // common header items
     protected String            mSessionID      = "";
@@ -55,6 +56,18 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
         mCookieManager = SKCookieManager.getManager(context);
     }
+
+    public int setCmdSeq(int cmdSeq) {
+        String Fn = "[setCmdId] ";
+        if (cmdSeq < COMMAND_SEQ_BASE) {
+            Log.e(TAG, Fn + "Invalid cmdId:" + cmdSeq);
+            return -1;
+        }
+        mCmdSeq = cmdSeq;
+        return mCmdSeq;
+    }
+
+    public int getCmdSeq() { return mCmdSeq; }
 
     public CIProgressListener GetBackupProgressListener() { return mProgListenerBak; }
     public CICommandListener GetBackupCommandListener() { return mCmdListenerBak; }
@@ -83,7 +96,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 ConnectionDetector cd = new ConnectionDetector(mContext);
                 if (!cd.isConnectingToInternet()) {
                     IApiResults.ICommon result = doParseResult(CommunicationError.CE_ERROR_NETWORK_NOTAVAILABLE, null);
-                    mCommandListener.onCommandFinished(mAPI, result);
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
                     return;
                 }
 
@@ -101,7 +114,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     String strError = CommunicationError.getErrorDescription(retValue);
                     Log.e(TAG, "Fail to connect to server. error: " +  strError);
                     returnCode = "" + retValue;
-                    mCommandListener.onCommandFinished(mAPI, null);
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, null);
                     doConnectFailed(http);
                     return;
                 }
@@ -117,7 +130,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     int nErrCode = http.getErrorCode();
                     JSONObject jObject = http.getJsonObject();
                     IApiResults.ICommon result = doParseResult(nErrCode, jObject);
-                    mCommandListener.onCommandFinished(mAPI, result);
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
                     doConnectFailed(http);
                     return;
                 }
@@ -126,7 +139,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 if (jObject == null) {
 //                    String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
 //                    returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
-                    mCommandListener.onCommandFinished(mAPI, null);
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, null);
                     doConnectFailed(http);
                     return;
                 }
@@ -135,7 +148,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
                 String strError = CommunicationError.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
-                mCommandListener.onCommandFinished(mAPI, result);
+                mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
 
                 doAfterConnect(http);
             } finally {

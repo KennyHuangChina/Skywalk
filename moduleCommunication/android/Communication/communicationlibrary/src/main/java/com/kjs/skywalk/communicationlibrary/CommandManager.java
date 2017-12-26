@@ -27,6 +27,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     private ArrayList<CIProgressListener>   mProgListeners  = null;
     private ArrayList<CommunicationBase>    mCmdQueue       = new ArrayList<CommunicationBase>();
     private CommunicationBase               mCmdLogin       = null;
+    private int                             mCmdSeq         = COMMAND_SEQ_BASE;
 
     private static final int            AGENT_STATUS_Unknow     = 0,
                                         AGENT_STATUS_NotLogin   = 1,
@@ -99,10 +100,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return 1;
     }
 
-    private int Notify(int cmd, IApiResults.ICommon res) {
+    private int onNotify(int cmdId, int cmdSeq, IApiResults.ICommon res) {
         synchronized (mCmdListeners) {
             for (CICommandListener cl : mCmdListeners) {
-                cl.onCommandFinished(cmd, res);
+                cl.onCommandFinished(cmdId, cmdSeq, res);
             }
             return 0;
         }
@@ -146,8 +147,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             }
         }
 
-        Log.d(TAG, Fn + String.format("new command(0x%x) queued", cmd.mAPI));
-        return mCmdQueue.add(cmd);
+        if (mCmdQueue.add(cmd)) {
+            cmd.setCmdSeq(getCommandSeq());
+            Log.d(TAG, Fn + String.format("new command(0x%x) queued, seq:", cmd.mAPI, cmd.getCmdSeq()));
+            return true;
+        }
+
+        Log.e(TAG, Fn + String.format("Fail to queue new command(0x%x)", cmd.mAPI));
+        return false;
     }
 
     private synchronized CommunicationBase removeCmd(int cmd, IApiResults.ICommon res) {
@@ -190,6 +197,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             Log.e(TAG, FN + "fail to check parameters for relogin");
             return -2;
         }
+        cmdRelogin.setCmdSeq(getCommandSeq());
         int ret = cmdRelogin.doOperation(this, this);
         if (CommunicationError.CE_ERROR_NO_ERROR == ret) {
             mCmdLogin = cmdRelogin;
@@ -211,6 +219,20 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return ret;
     }
 
+    int getCommandSeq() {
+        mCmdSeq ++;
+        return mCmdSeq;
+    }
+
+    /**
+     *  Execute the command
+     *  @param cmd : command to process
+     *  @param map : argument list
+     *  @return
+     *      0x00000000                  CE_ERROR_NO_ERROR
+     *      0x80000000 - 0x8fffffff     Error Codes
+     *      0x90000000 and above        Unique command id (COMMAND_ID_BASE)
+     */
     private synchronized int execute(CommunicationBase cmd, HashMap<String, String> map) {
         String Fn = "[execute] ";
         if (null == cmd) {
@@ -246,13 +268,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             if (CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN == ret) {
                                 mLoginUserInfo = null;
                                 Log.e(TAG, Fn + "user not login, notify user to login");
-                                Notify(CmdID.CMD_RELOGIN, new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
+                                onNotify(CmdID.CMD_RELOGIN, mCmdLogin.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                                 // Keep the command in queue, once user get logined, the commands will be processed automatically, one by one
                             } else {
                                 Log.e(TAG, Fn + String.format("other error(0x%x), remove the command from queue", ret));
                                 removeCmd(cmd.mAPI, null);
                             }
-                            return 0;   // ret;
+                            return cmd.getCmdSeq();   // ret;
                         }
                         mAgentStatus = AGENT_STATUS_Logining;
                     } else { // login commands
@@ -276,17 +298,18 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
         if (CommunicationError.CE_ERROR_NO_ERROR != ret) {
             Log.e(TAG, Fn + "failed to execute command: " + cmd.GetApiName() + ", ret:" + ret);
+            return ret;
         }
 
-        return ret;
+        return cmd.getCmdSeq();
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon res) {
+    public void onCommandFinished(final int cmdId, final int cmdSeq, IApiResults.ICommon res) {
         String Fn = "[onCommandFinished] ";
-        Log.i(TAG, Fn + String.format("cmd: %d <%s>", command, CmdID.GetCmdDesc(command)));
+        Log.i(TAG, Fn + String.format("cmd: %d <%s>", cmdId, CmdID.GetCmdDesc(cmdId)));
 
-        switch (command) {
+        switch (cmdId) {
             case CmdID.CMD_LOGIN_BY_SMS:
             case CmdID.CMD_LOGIN_BY_PASSWORD :
             case CmdID.CMD_RELOGIN: {
@@ -312,7 +335,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                 if (null != mCmdLogin &&
                     null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
                     // Notify UI
-                    cmdListener.onCommandFinished(command, res);
+                    cmdListener.onCommandFinished(cmdId, cmdSeq, res);
                 }
                 mCmdLogin = null;
                 break;
@@ -335,7 +358,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         mLoginUserInfo = null;
                         if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
                             Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
-                            Notify(CmdID.CMD_RELOGIN, new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
+                            onNotify(CmdID.CMD_RELOGIN, mCmdLogin.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                             return;
                         }
                         mAgentStatus = AGENT_STATUS_Logining;
@@ -350,9 +373,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         }
                         }
                         // remove it from command queue
-                        CommunicationBase cmd = removeCmd(command, res);
+                        CommunicationBase cmd = removeCmd(cmdId, res);
                         if (null != cmd) {
-                            Notify(command, res);
+                            onNotify(cmdId, cmdSeq, res);
                         }
                     }
                 }
