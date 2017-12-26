@@ -42,7 +42,7 @@ public class ClassDefine {
             mPath = path;
             mDrawable = drawable;
             mIsChecked = isChecked;
-            mIsLocal = false;
+            mIsLocal = isLocal;
         }
     }
 

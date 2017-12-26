@@ -38,6 +38,10 @@ import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_INTER
 import static com.kjs.skywalk.app_android.Server.ImageDelete.DELETE_RESULT_OK;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_INTERRUPT;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_RESULT_OK;
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_DIANQI;
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_FANGJIAN;
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_HUXING;
+import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_JIAJU;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PIC_URL;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
@@ -86,12 +90,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     private final int MSG_DELETE_ALL_DONE = 0x200;
     private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
     private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
-    private final int MSG_NEW_PICTURE_SELECTED = 0x400;
-
-    private final int PIC_ADD_TYPE_HUXING = 0;
-    private final int PIC_ADD_TYPE_FANGJIAN = 1;
-    private final int PIC_ADD_TYPE_JIAJU = 2;
-    private final int PIC_ADD_TYPE_DIANQI = 3;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,6 +143,66 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
 
         getPictures();
+    }
+
+    private void upload() {
+        ArrayList<ImageUpload.UploadImageInfo> list = new ArrayList<>();
+
+        for(ClassDefine.PicList pic : mHuXingPicLst) {
+            if(pic.mIsLocal) {
+                ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+                info.type = UPLOAD_TYPE_HUXING;
+                info.image = pic.mPath;
+                info.houseId = mHouseId;
+                list.add(info);
+            }
+        }
+
+        for(ClassDefine.PicList pic : mFangJianJieGouPicLst) {
+            if(pic.mIsLocal) {
+                ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+                info.type = UPLOAD_TYPE_FANGJIAN;
+                info.image = pic.mPath;
+                info.houseId = mHouseId;
+                list.add(info);
+            }
+        }
+
+        for(ClassDefine.PicList pic : mJiaJuYongPinPicLst) {
+            if(pic.mIsLocal) {
+                ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+                info.type = UPLOAD_TYPE_JIAJU;
+                info.image = pic.mPath;
+                info.houseId = mHouseId;
+                list.add(info);
+            }
+        }
+
+        for(ClassDefine.PicList pic : mDianQiPicLst) {
+            if(pic.mIsLocal) {
+                ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
+                info.type = UPLOAD_TYPE_DIANQI;
+                info.image = pic.mPath;
+                info.houseId = mHouseId;
+                list.add(info);
+            }
+        }
+
+        if(list.size() == 0) {
+            commonFun.showToast_info(this, mContainer, "没有可以上传的图片");
+            return;
+        }
+
+        for(ImageUpload.UploadImageInfo info : list) {
+            kjsLogUtil.i("upload: " + info.image);
+        }
+
+        ImageUpload imageUpload = new ImageUpload(this, this);
+        if(imageUpload.upload(list) != 0) {
+            commonFun.showToast_info(this, mContainer, "上传失败");
+        } else {
+            showWaiting(true);
+        }
     }
 
     private void getHuXingPictures() {
@@ -282,45 +340,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         getDianQiPictures();
     }
 
-    private void upload(int type) {
-        int uploadType = -1;
-        switch (type) {
-            case PIC_ADD_TYPE_DIANQI:
-                uploadType = ImageUpload.UPLOAD_TYPE_DIANQI;
-                break;
-            case PIC_ADD_TYPE_FANGJIAN:
-                uploadType = ImageUpload.UPLOAD_TYPE_FANGJIAN;
-                break;
-            case PIC_ADD_TYPE_HUXING:
-                uploadType = ImageUpload.UPLOAD_TYPE_HUXING;
-                break;
-            case PIC_ADD_TYPE_JIAJU:
-                uploadType = ImageUpload.UPLOAD_TYPE_JIAJU;
-                break;
-            default:
-                return;
-        }
-        ArrayList<ImageUpload.UploadImageInfo> list = new ArrayList<>();
-        for(String path : mNewPictureList) {
-            ImageUpload.UploadImageInfo info = new ImageUpload.UploadImageInfo();
-            info.type = uploadType;
-            info.image = path;
-            info.houseId = mHouseId;
-            list.add(info);
-        }
-
-        if(list.size() == 0) {
-            return;
-        }
-
-        ImageUpload imageUpload = new ImageUpload(this, this);
-        if(imageUpload.upload(list) != 0) {
-            commonFun.showToast_info(this, mContainer, "上传失败");
-        } else {
-            showWaiting(true);
-        }
-    }
-
     private void showWaiting(final boolean show) {
         if (mWaitingWindow == null) {
             mWaitingWindow = new PopupWindowWaitingUnclickable(this, mActScreenWidth, mActScreenHeight);
@@ -362,6 +381,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             }
             case R.id.tv_upload:
             {
+                upload();
                 break;
             }
             case R.id.tv_delete:
@@ -640,11 +660,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mNewPictureList.clear();
         ArrayList<ClassDefine.PicList> picList;
         PicFragStatePageAdapter adapter;
-        Message msg = new Message();
-        msg.what = MSG_NEW_PICTURE_SELECTED;
-        for(String path : photos) {
-            mNewPictureList.add(path);
-        }
 
         switch (mPhotoPickerHostId) {
             case R.id.iv_photopicker_picgroup1:
@@ -712,10 +727,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             case MSG_GET_HOUSE_INFO_DONE:
                 getPictures();
                 break;
-            case MSG_NEW_PICTURE_SELECTED: {
-                upload(msg.arg1);
-                break;
-            }
         }
         }
     };
