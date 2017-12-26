@@ -42,7 +42,7 @@ public class SKBaseActivity extends AppCompatActivity
     protected int                       mUserId         = 0;
     protected String                    mUserName       = "";
     protected String                    mUserPhone      = "";
-    protected IApiResults.IGetUserInfo  mLoginUserInfo  = null;
+    public IApiResults.IGetUserInfo  mLoginUserInfo  = null;
 
     public int mActScreenWidth = 0;
     public int mActScreenHeight = 0;

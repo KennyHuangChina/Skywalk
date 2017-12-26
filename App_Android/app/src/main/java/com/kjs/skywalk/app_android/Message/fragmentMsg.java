@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
+import com.kjs.skywalk.app_android.SKBaseActivity;
 import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.database.ProfileDBOperator;
@@ -81,6 +82,12 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         });
 
         // test
+        IApiResults.IGetUserInfo loginUserInfo = ((SKBaseActivity)getActivity()).mLoginUserInfo;
+        if (loginUserInfo != null) {
+            int user_id = loginUserInfo.GetUserId();
+            kjsLogUtil.i("user_id: " + user_id);
+        }
+
 //        commonFun.TextDefine t = new commonFun.TextDefine("123", 12, R.color.colorFontNormal);
 //
 //        List<commonFun.TextDefine> textDefines = new ArrayList<commonFun.TextDefine>(
