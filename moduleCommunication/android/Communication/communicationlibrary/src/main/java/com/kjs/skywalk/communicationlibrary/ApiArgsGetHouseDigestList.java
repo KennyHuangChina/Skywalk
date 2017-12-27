@@ -2,7 +2,6 @@ package com.kjs.skywalk.communicationlibrary;
 
 import android.util.Log;
 
-import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.*;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
@@ -93,8 +92,7 @@ class ApiArgsGetHouseDigestList extends ApiArgsBase implements IApiArgs.IArgsGet
     @Override
     public boolean isEqual(IArgsBase arg2) {
         String Fn = "[isEqual] ";
-        if (null == arg2) {
-            Log.e(TAG, Fn + "Input args is NULL");
+        if (!super.isEqual(arg2)) {
             return false;
         }
 

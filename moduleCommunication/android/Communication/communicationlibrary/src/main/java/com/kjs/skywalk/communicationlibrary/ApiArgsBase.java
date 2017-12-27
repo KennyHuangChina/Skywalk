@@ -17,7 +17,10 @@ public class ApiArgsBase implements IApiArgs.IArgsBase {
 
     @Override
     public boolean isEqual(IApiArgs.IArgsBase arg2) {
-        Log.w(TAG, "[checkArgs] please override this method to check if the arguments equal");
-        return false;
+//        Log.w(TAG, "[checkArgs] please override this method to check if the arguments equal");
+        if (null == arg2) {
+            return false;
+        }
+        return true;
     }
 }

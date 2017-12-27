@@ -204,14 +204,23 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     // TODO: do not override
     protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
-        return mArgs.isEqual(cmd2Chk.mArgs);
+        if (null != mArgs) {
+            return mArgs.isEqual(cmd2Chk.mArgs);
+        }
+        return true;    // this command has no arguments to check, so it should be equal
     }
 
+    /**
+     *  Check if the result belong to current command
+     *  @param nAPI
+     *  @param res
+     *  @return
+     */
     protected boolean isCmdRes(int nAPI, IApiResults.ICommon res) {
         if (nAPI != mAPI) {
             return false;
         }
-        if (null == res) {
+        if (null == res) {  // this command has no arguments to check, so it should be equal
             return true;
         }
         return checkCmdRes(res);
@@ -219,6 +228,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     // TODO: do not override
     protected boolean checkCmdRes(IApiResults.ICommon res) {
+        if (null == mArgs) {
+            return false;
+        }
         return mArgs.isEqual(res.GetArgs());
 //        Log.w(TAG, "[checkCmdRes] please override this function to do further checking");
 //        return true;
