@@ -15,7 +15,7 @@ class CmdGetBehalfHouses extends CommunicationBase {
 
     CmdGetBehalfHouses(Context context, int type, int bgn, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST);
-        mArgs = new ApiArgsGetHouseDigestList(type, bgn, cnt, null, null);
+        mArgs = new ApiArgsGetBehalfHouseList(type, bgn, cnt);
     }
 
     @Override

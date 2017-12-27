@@ -589,11 +589,6 @@ public class CommunicationInterface {
                         APPOINTMENT_ACTION_Cancel       = 5,
                         APPOINTMENT_ACTION_Max          = 5;
 
-    static public int   AGENT_HOUSE_ALL        = 0,     // all houses
-                        AGENT_HOUSE_TO_RENT    = 1,     // agent houses waiting for renting
-                        AGENT_HOUSE_RENTED     = 2,     // agent houses already rented
-                        AGENT_HOUSE_TO_SALE    = 3,     // agent houses waiting for selling
-                        AGENT_HOUSE_TO_APPROVE = 4;     // agent houses waiting for approving or certification
 
     // used in CommitHouse, AmendHouse
     static public class HouseInfo {
