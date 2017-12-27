@@ -208,15 +208,11 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         if (cmd2Chk.mAPI != mAPI) {
             return false;
         }
-        return isCmdEqual(cmd2Chk);
-    }
 
-    // TODO: do not override
-    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
-        if (null != mArgs) {
-            return mArgs.isEqual(cmd2Chk.mArgs);
+        if (null == mArgs) {
+            return true;    // this command has no arguments to check, so it should be equal
         }
-        return true;    // this command has no arguments to check, so it should be equal
+        return mArgs.isEqual(cmd2Chk.mArgs);
     }
 
     /**
