@@ -89,9 +89,6 @@
 									//  5: appointment		 6: appointment desc
 	[Response]
 		* SUCCESS:200 
-			* Type			int
-			* Begin			int
-			* FetchCnt		int
 			* Total    		int		// total number
 			* Count			int		// how many items fetched. -1 means just fetch the total number
 			* HouseDigests	array	// house public brief info list
@@ -198,9 +195,6 @@
 	  		* cnt			int		// how many item need to fetch. set to Zero to fetch total number
 	[Response]
 		* SUCCESS:200
-			* Type			int
-			* Begin			int
-			* FetchCnt		int
 			* Total    		int		// total number
 			* Count			int		// how many items fetched. -1 means just fetch the total number.
 			* HouseDigests	array	// house public brief info list

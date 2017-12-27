@@ -764,19 +764,19 @@ func (this *HouseController) GetBehalfList() {
 		return
 	}
 
-	result.Type, _ = this.GetInt("type")
-	result.Begin, _ = this.GetInt64("bgn")
-	result.FetchCnt, _ = this.GetInt64("cnt")
+	house_type, _ := this.GetInt("type")
+	fetch_begin, _ := this.GetInt64("bgn")
+	fetch_cnt, _ := this.GetInt64("cnt")
 
 	// beego.Debug(FN, "type:", tp, ", begin:", begin, ", count:", count, ", uid:", uid)
 
 	/*
 	 *	Processing
 	 */
-	err, total, fetched, ids := models.GetBehalfList(result.Type, result.Begin, result.FetchCnt, uid)
+	err, total, fetched, ids := models.GetBehalfList(house_type, fetch_begin, fetch_cnt, uid)
 	if nil == err {
 		result.Total = total
-		if result.FetchCnt > 0 {
+		if fetch_cnt > 0 {
 			// result.Count = fetched
 			// result.IDs = ids
 			if fetched > 0 {
@@ -824,9 +824,9 @@ func (this *HouseController) GetHouseDigestList() {
 	/*
 	 *	Extract agreements
 	 */
-	result.Type, _ = this.GetInt("type")
-	result.Begin, _ = this.GetInt64("bgn")
-	result.FetchCnt, _ = this.GetInt64("cnt")
+	house_type, _ := this.GetInt("type")
+	fetch_begin, _ := this.GetInt64("bgn")
+	fetch_cnt, _ := this.GetInt64("cnt")
 	// sid := this.GetString("sid")
 	err, filter := getHouseFilter(this)
 	sort := this.GetString("sort")
@@ -839,11 +839,11 @@ func (this *HouseController) GetHouseDigestList() {
 	/*
 	 *	Processing
 	 */
-	err, total, fetched, ids := models.GetHouseListByType(result.Type, result.Begin, result.FetchCnt, filter, sort)
+	err, total, fetched, ids := models.GetHouseListByType(house_type, fetch_begin, fetch_cnt, filter, sort)
 	beego.Debug(FN, "ids:", ids, ", fetched:", fetched)
 	if nil == err {
 		result.Total = total
-		if 0 == result.FetchCnt {
+		if 0 == fetch_cnt {
 			result.Count = -1
 		} else {
 			if fetched > 0 {
