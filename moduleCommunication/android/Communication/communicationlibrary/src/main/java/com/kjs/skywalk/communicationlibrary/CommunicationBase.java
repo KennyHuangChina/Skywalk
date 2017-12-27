@@ -88,6 +88,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 ConnectionDetector cd = new ConnectionDetector(mContext);
                 if (!cd.isConnectingToInternet()) {
                     IApiResults.ICommon result = doParseResult(CommunicationError.CE_ERROR_NETWORK_NOTAVAILABLE, null);
+                    if (null != result) {
+                        result.SetArgs(mArgs);
+                    }
                     mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
                     return;
                 }
@@ -122,6 +125,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     int nErrCode = http.getErrorCode();
                     JSONObject jObject = http.getJsonObject();
                     IApiResults.ICommon result = doParseResult(nErrCode, jObject);
+                    if (null != result) {
+                        result.SetArgs(mArgs);
+                    }
                     mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
                     doConnectFailed(http);
                     return;
@@ -137,6 +143,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 }
 
                 IApiResults.ICommon result = doParseResult(InternalDefines.ERROR_CODE_OK, jObject);
+                if (null != result) {
+                    result.SetArgs(mArgs);
+                }
 
                 String strError = CommunicationError.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
@@ -173,9 +182,6 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResBase result = new ResBase(nErrCode, jObject);
-        if (null != result) {
-            result.SetArgs(mArgs);
-        }
         return result;
     }
 
@@ -229,14 +235,11 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         return checkCmdRes(res);
     }
 
-    // TODO: do not override
     protected boolean checkCmdRes(IApiResults.ICommon res) {
         if (null == mArgs) {
             return false;
         }
         return mArgs.isEqual(res.GetArgs());
-//        Log.w(TAG, "[checkCmdRes] please override this function to do further checking");
-//        return true;
     }
 
     protected String generateRandom() {

@@ -13,6 +13,7 @@ public class IApiResults {
         String              GetErrDesc();
         String              DebugString();
         IApiArgs.IArgsBase  GetArgs();
+        void                SetArgs(IApiArgs.IArgsBase args);
     }
 
     public interface IGetUserSalt {

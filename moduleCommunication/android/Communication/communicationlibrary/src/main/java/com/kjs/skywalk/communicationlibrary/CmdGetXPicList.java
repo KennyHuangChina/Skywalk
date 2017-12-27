@@ -12,15 +12,10 @@ import java.util.HashMap;
  */
 
 class CmdGetXPicList extends CommunicationBase {
-    protected int mXId  = 0;
-    protected int mType = -1;
-    protected int mSize = -1;
 
     CmdGetXPicList(Context context, int Xid, int type, int size, int cmd) {
         super(context, cmd);
-        mXId    = Xid;
-        mType   = type;
-        mSize   = size;
+        mArgs = new ApiArgsGetXPiclst(Xid, type, size);
     }
 
     protected String getBaseURL() {
@@ -30,16 +25,17 @@ class CmdGetXPicList extends CommunicationBase {
     @Override
     public String getRequestURL() {
         String Fn = "[getRequestURL] ";
+        ApiArgsGetXPiclst args = (ApiArgsGetXPiclst)mArgs;
         mCommandURL = getBaseURL();
         String sArg = "";
-        if (mType > 0) {
-            sArg = "st=" + mType;
+        if (args.getSubType() > 0) {
+            sArg = "st=" + args.getSubType();
         }
-        if (mSize >= 0) {
+        if (args.getSize() >= 0) {
             if (!sArg.isEmpty()) {
                 sArg += "&";
             }
-            sArg += "sz=" + mSize;
+            sArg += "sz=" + args.getSize();
         }
         if (sArg.length() > 0) {
             mCommandURL += "?" + sArg;
@@ -49,42 +45,9 @@ class CmdGetXPicList extends CommunicationBase {
     }
 
     @Override
-    public void generateRequestData() {
-        super.generateRequestData();
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-//        return super.checkParameter(map);
-        if (mXId <= 0) {
-            Log.e(TAG, "xid:" + mXId);
-            return false;
-        }
-        if (mType < CommunicationInterface.PIC_TYPE_SUB_HOUSE_BEGIN || mType > CommunicationInterface.PIC_TYPE_SUB_HOUSE_END) {
-            Log.e(TAG, "type:" + mType);
-            return false;
-        }
-        if (mSize < CommunicationInterface.PIC_SIZE_ALL || mSize > CommunicationInterface.PIC_SIZE_Large) {
-            Log.e(TAG, "mType:" + mType);
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResPicList result = new ResPicList(nErrCode, jObject);
         return result;
-    }
-
-    @Override
-    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
-        CmdGetXPicList cmdChk = (CmdGetXPicList)cmd2Chk;
-        if (mXId == cmdChk.mXId && mType == cmdChk.mType && mSize == cmdChk.mSize) {
-            return true;
-        }
-        return false;
     }
 
     protected boolean checkPicType(ResPicList res) {
@@ -93,11 +56,15 @@ class CmdGetXPicList extends CommunicationBase {
 
     @Override
     protected boolean checkCmdRes(IApiResults.ICommon res) {
+        if (!super.checkCmdRes(res)) {
+            return false;
+        }
+
         ResPicList resPicLst = (ResPicList)res;
         if (!checkPicType(resPicLst)) {
             return false;
         }
-        if (mType != resPicLst.mPicSubType) {
+        if (((ApiArgsGetXPiclst)mArgs).getSubType() != resPicLst.mPicSubType) {
             return false;
         }
         return true;

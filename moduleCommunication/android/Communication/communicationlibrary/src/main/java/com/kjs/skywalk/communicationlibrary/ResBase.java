@@ -44,7 +44,8 @@ class ResBase implements IApiResults.ICommon {
         return mCmdArgs;
     }
 
-    protected void SetArgs(IApiArgs.IArgsBase args) {
+    @Override
+    public void SetArgs(IApiArgs.IArgsBase args) {
         mCmdArgs = args;
     }
 

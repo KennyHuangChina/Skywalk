@@ -580,26 +580,7 @@ public class CommunicationInterface {
     //
     //         -- API data definitions --
     //
-    static public int   PIC_TYPE_MAJOR_User             = 100,
-                        PIC_TYPE_MAJOR_House            = 200,
-                        PIC_TYPE_MAJOR_Rental           = 300;
 
-    static public int   PIC_TYPE_SUB_USER_IDCard            = 1,    // User's ID card
-                        PIC_TYPE_SUB_USER_Headportrait      = 2;    // user's head-portrait
-
-    static public int   PIC_TYPE_SUB_HOUSE_BEGIN            = 0,    // all type
-                        PIC_TYPE_SUB_HOUSE_FLOOR_PLAN       = 1,    // house plan
-                        PIC_TYPE_SUB_HOUSE_FURNITURE        = 2,    // house furnitures
-                        PIC_TYPE_SUB_HOUSE_APPLIANCE        = 3,    // house appliances
-                        PIC_TYPE_SUB_HOUSE_OwnershipCert    = 4,    // owernship certification
-                        PIC_TYPE_SUB_HOUSE_RealMap          = 5,    // house real map
-                        PIC_TYPE_SUB_HOUSE_END              = PIC_TYPE_SUB_HOUSE_RealMap;
-
-    // picture size
-    static public int   PIC_SIZE_ALL                        = 0,
-                        PIC_SIZE_Small                      = 2,
-                        PIC_SIZE_Moderate                   = 3,
-                        PIC_SIZE_Large                      = 4;
 
     static public int   APPOINTMENT_ACTION_Min          = 2,
                         APPOINTMENT_ACTION_Confirm      = 2,
