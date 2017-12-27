@@ -110,7 +110,7 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
 
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
                 if(i == CommunicationInterface.CmdID.CMD_SET_HOUSE_SHOWTIME) {
                     if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
                         commonFun.showToast_info(Activity_Zushouweituo_Kanfangshijian.this, mContainer, "保存成功");
@@ -122,8 +122,8 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
                 }
             }
         };
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        if(manager.SetHouseShowtime(mHouseID, mTimeWorkingDay, mTimeHoliday, mTime) == CE_ERROR_NO_ERROR) {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
+        if (manager.SetHouseShowtime(mHouseID, mTimeWorkingDay, mTimeHoliday, mTime).mError == CE_ERROR_NO_ERROR) {
             showWaiting(mContainer);
         } else {
             commonFun.showToast_info(this, mContainer, "接口调用失败");

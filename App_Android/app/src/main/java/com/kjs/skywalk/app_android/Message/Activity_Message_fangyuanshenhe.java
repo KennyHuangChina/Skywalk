@@ -59,9 +59,9 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
     }
 
     private void getHouseCertification(int house_id) {
-        CommandManager.getCmdMgrInstance(this, new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -82,7 +82,8 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
                     updateCertHistInfo((IApiResults.IResultList)iResult);
                 }
             }
-        }, this).GetHouseCertHist(house_id);
+        };
+        CommandManager.getCmdMgrInstance(this/*, cl, this*/).GetHouseCertHist(house_id);
     }
 
     private void updateButtonGroup(final int operations) {

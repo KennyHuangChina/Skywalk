@@ -16,6 +16,8 @@ import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -172,15 +174,15 @@ public class AdapterMessage extends BaseAdapter {
     }
 
     private void markMessageRead(int msgId) {
-        int ret = CommandManager.getCmdMgrInstance(mContext, new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
 
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
             }
-        }, mProgreessListener).ReadNewMsg(msgId);
-
-        kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, ret --- %#x", msgId, ret));
+        };
+        CmdExecRes ret = CommandManager.getCmdMgrInstance(mContext/*, cl, mProgreessListener*/).ReadNewMsg(msgId);
+        kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, ret --- %s", msgId, ret.toString()));
 
     }
 

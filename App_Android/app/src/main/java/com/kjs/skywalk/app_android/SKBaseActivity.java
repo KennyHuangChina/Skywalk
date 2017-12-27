@@ -120,7 +120,7 @@ public class SKBaseActivity extends AppCompatActivity
 
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
         kjsLogUtil.i("[" + CommunicationInterface.CmdID.GetCmdDesc(command) + "]" + "SKBaseActivity::onCommandFinished");
         int errorCode = iResult.GetErrCode();
         if(errorCode == CE_ERROR_NO_ERROR) {
@@ -167,7 +167,7 @@ public class SKBaseActivity extends AppCompatActivity
     }
 
     protected boolean IsLogined() {
-        mLoginUserInfo = CommandManager.getCmdMgrInstance(this, this, this).GetLoginUserInfo();
+        mLoginUserInfo = CommandManager.getCmdMgrInstance(this).GetLoginUserInfo();
         kjsLogUtil.d(String.format("Login status: %s", (null == mLoginUserInfo) ? "Not Login" : mLoginUserInfo.GetName()));
         return null != mLoginUserInfo;
     }

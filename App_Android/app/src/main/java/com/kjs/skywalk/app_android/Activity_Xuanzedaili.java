@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -99,7 +100,7 @@ public class Activity_Xuanzedaili extends SKBaseActivity {
     private void fetchAgentList(final int start, final int end) {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if(command == CMD_GET_AGENCY_LIST) {
                     if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
                         IApiResults.IResultList res = (IApiResults.IResultList) iResult;
@@ -135,17 +136,17 @@ public class Activity_Xuanzedaili extends SKBaseActivity {
                         });
                     } else {
                         commonFun.showToast_info(getApplicationContext(), mListViewAgents, iResult.GetErrDesc());
-                        Activity_Xuanzedaili.super.onCommandFinished(command, iResult);
+                        Activity_Xuanzedaili.super.onCommandFinished(command, cmdSeq, iResult);
                     }
                 } else {
-                    Activity_Xuanzedaili.super.onCommandFinished(command, iResult);
+                    Activity_Xuanzedaili.super.onCommandFinished(command, cmdSeq, iResult);
                 }
                 hideWaiting();
             }
         };
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        int res = manager.GetAgencyList(start, end);
-        if(res == CE_ERROR_NO_ERROR) {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this);
+        CmdExecRes res = manager.GetAgencyList(start, end);
+        if (res.mError == CE_ERROR_NO_ERROR) {
             showWaiting(mListViewAgents);
         } else {
             commonFun.showToast_info(getApplicationContext(), mListViewAgents, "失败");

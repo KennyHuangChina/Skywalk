@@ -42,15 +42,7 @@ import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_DIANQI;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_FANGJIAN;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_HUXING;
 import static com.kjs.skywalk.app_android.Server.ImageUpload.UPLOAD_TYPE_JIAJU;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_PIC_URL;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_APPLIANCE;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_FURNITURE;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_RealMap;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
 
 public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageUpload.UploadFinished,
         ImageDelete.DeleteFinished

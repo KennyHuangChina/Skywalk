@@ -14,12 +14,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_PUBLISH_TIME;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_PUBLISH_TIME_DESC;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_RENTAL;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.SORT_RENTAL_DESC;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.*;
 
 /**
  * Created by Jackie on 2017/7/6.
@@ -134,7 +131,7 @@ public class GetHouseListTask extends SKBaseAsyncTask {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-        int result = 0;
+//        int result = 0;
 
         mType = params[0].intValue();
         mBegin = params[1].intValue();
@@ -143,16 +140,17 @@ public class GetHouseListTask extends SKBaseAsyncTask {
         mHouseList.clear();
         mTotalCount = 0;
 
+        // TODO: delete the first operation of fetching the total number
         mResultGot = false;
-        result = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener).GetHouseDigestList(mType, 0, 0, mFilter, mSort);
-        if(!waitResult(3000)) {
+        CmdExecRes result = CommandManager.getCmdMgrInstance(mContext/*, mCmdListener, mProgressListener*/).GetHouseDigestList(mType, 0, 0, mFilter, mSort);
+        if (!waitResult(3000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get count timeout"));
             return 0;
         }
 
         mResultGot = false;
-        result = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
-        if(!waitResult(3000)) {
+        result = CommandManager.getCmdMgrInstance(mContext/*, mCmdListener, mProgressListener*/).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
+        if (!waitResult(3000)) {
             kjsLogUtil.i(String.format("[doInBackground] ------ get house list timeout"));
             return 0;
         }
@@ -162,7 +160,7 @@ public class GetHouseListTask extends SKBaseAsyncTask {
 
     CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
         @Override
-        public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
             if (null == iResult) {
                 kjsLogUtil.w("result is null");
                 mResultGot = true;

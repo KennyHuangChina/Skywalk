@@ -170,7 +170,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
     }
 
     private void getBrowingHistory() {
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, this, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this);
         List<String> idLst = SKLocalSettings.browsing_history_read(this);
         kjsLogUtil.i("idLst:" + idLst);
         for (String houseId : idLst) {
@@ -293,14 +293,14 @@ public class Activity_ApartmentList extends SKBaseActivity {
     private void getBehalfHousesList(final int type) {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
                 }
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_ApartmentList.super.onCommandFinished(command, iResult);
+                    Activity_ApartmentList.super.onCommandFinished(command, cmdSeq, iResult);
                     return;
                 }
 
@@ -322,7 +322,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this);
         switch (type) {
             case TYPE_TO_APPROVE:
             case TYPE_TO_SALE:
@@ -352,14 +352,14 @@ public class Activity_ApartmentList extends SKBaseActivity {
         }
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, final IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, final IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
                 }
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_ApartmentList.super.onCommandFinished(command, iResult);
+                    Activity_ApartmentList.super.onCommandFinished(command, cmdSeq, iResult);
                     return;
                 }
 
@@ -379,7 +379,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this);
         switch (type) {
             case TYPE_TO_APPROVE:
             case TYPE_TO_SALE:
@@ -424,7 +424,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
         kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
         if (null == iResult) {
             kjsLogUtil.w("result is null");

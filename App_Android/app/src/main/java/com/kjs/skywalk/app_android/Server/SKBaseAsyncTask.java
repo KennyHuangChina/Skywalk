@@ -57,7 +57,7 @@ public class SKBaseAsyncTask extends AsyncTask<Integer, Void, Integer> implement
     };
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon result) {
         int errorCode = result.GetErrCode();
         String description = result.GetErrDesc();
         kjsLogUtil.e("error code: " + errorCode + "-->" + description);

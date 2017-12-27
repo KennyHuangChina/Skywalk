@@ -20,6 +20,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -89,7 +90,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
 //        mGetDeliverablesTask = new GetDeliverablesTask();
 //        mGetDeliverablesTask.execute();
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
         CmdMgr.GetHouseDeliverables(mHouseId);
 
     }
@@ -267,7 +268,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
         if (null == iResult) {
             kjsLogUtil.w("result is null");
             return;
@@ -306,9 +307,9 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         ArrayList<AdapterDeliverables.Deliverable> mDeliverablesList;
         @Override
         protected Boolean doInBackground(Void... voids) {
-            CommandManager CmdMgr = CommandManager.getCmdMgrInstance(Activity_HouseholdDeliverables.this, mCmdListener, mProgreessListener);
-            int result = CmdMgr.GetHouseDeliverables(mHouseId);
-            if (result != CommunicationError.CE_ERROR_NO_ERROR) {
+            CommandManager CmdMgr = CommandManager.getCmdMgrInstance(Activity_HouseholdDeliverables.this); //, mCmdListener, mProgreessListener);
+            CmdExecRes result = CmdMgr.GetHouseDeliverables(mHouseId);
+            if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
                 kjsLogUtil.e("Error to call GetHouseDeliverables");
                 return false;
             }
@@ -350,7 +351,7 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
 
             @Override
-            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
                 kjsLogUtil.i(String.format("[command: %d] ErrCode:%d(%s)", i, iCommon.GetErrCode(), iCommon.GetErrDesc()));
                 if (iCommon.GetErrCode() != CommunicationError.CE_ERROR_NO_ERROR) {
                     showErrorMessage(iCommon.GetErrDesc());

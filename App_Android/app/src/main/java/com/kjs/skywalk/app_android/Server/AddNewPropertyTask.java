@@ -6,6 +6,8 @@ import android.util.Log;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -63,13 +65,13 @@ public class AddNewPropertyTask extends SKBaseAsyncTask {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-        int result = 0;
+//        int result = 0;
 
         mResultGot = false;
         mNewPropertyId = 0;
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, mCmdListener, mProgressListener);
-        result = CmdMgr.AddProperty(mPropertyName, mPropertyAddress, "");
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext); //, mCmdListener, mProgressListener);
+        CmdExecRes result = CmdMgr.AddProperty(mPropertyName, mPropertyAddress, "");
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             return -1;
         }
 
@@ -82,8 +84,8 @@ public class AddNewPropertyTask extends SKBaseAsyncTask {
 
     CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
         @Override
-        public void onCommandFinished(int command, IApiResults.ICommon iResult) {
-            AddNewPropertyTask.super.onCommandFinished(command, iResult);
+        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+            AddNewPropertyTask.super.onCommandFinished(command, cmdSeq, iResult);
             if (null == iResult) {
                 kjsLogUtil.w("result is null");
                 mResultGot = true;

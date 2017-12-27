@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Server.ImageFetchForHouse;
 import com.kjs.skywalk.app_android.Server.ImageFetchForUser;
+
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -27,9 +29,7 @@ import me.iwf.photopicker.PhotoPreview;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
 
 public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFetchForHouse.HouseFetchFinished,
         ImageFetchForUser.UserFetchFinished {
@@ -138,7 +138,7 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
     private void doCertificateConfirm() {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -157,9 +157,8 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
 
         EditText etAdvise = (EditText)findViewById(R.id.editTextAdvise);
         String textAdvise = etAdvise.getText().toString();
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.CertificateHouse(mHouseId, mPassed, textAdvise);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes result = CommandManager.getCmdMgrInstance(this/*, listener, this*/).CertificateHouse(mHouseId, mPassed, textAdvise);
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证失败");
         }
 
@@ -245,7 +244,7 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
     private int getHouseInfo() {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -267,9 +266,8 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
             }
         };
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHouseInfo(mHouseId, true);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes result = CommandManager.getCmdMgrInstance(this/*, listener, this*/).GetHouseInfo(mHouseId, true);
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败");
             return -1;
         }

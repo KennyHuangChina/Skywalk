@@ -18,10 +18,7 @@ import com.kjs.skywalk.control.kjsNumberPicker;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_House;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_User;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
 
 /**
  * Created by sailor.zhou on 2017/2/2.

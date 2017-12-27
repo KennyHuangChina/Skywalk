@@ -98,7 +98,7 @@ public class fragmentPrivate extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+        mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
         kjsLogUtil.d(String.format("Login status: %s", (null == mLoginUser) ? "Not Login" : mLoginUser.GetName()));
         updateLayout(null != mLoginUser);
     }
@@ -191,9 +191,10 @@ public class fragmentPrivate extends Fragment {
 //        1- 待租；2-已租； 3-待售； 4-待审核
 
         // all agency houses
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        // TODO:
+        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -212,12 +213,13 @@ public class fragmentPrivate extends Fragment {
                     }
                 }
             }
-        }, mProgreessListener).GetBehalfHouses(0, 0 , 0);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cl, mProgreessListener*/).GetBehalfHouses(0, 0 , 0);
 
         // to rent
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl_2rent = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -236,12 +238,13 @@ public class fragmentPrivate extends Fragment {
                     }
                 }
             }
-        }, mProgreessListener).GetBehalfHouses(1, 0 , 0);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cl_2rent, mProgreessListener*/).GetBehalfHouses(1, 0 , 0);
 
         // rented
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl_rented = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -260,12 +263,13 @@ public class fragmentPrivate extends Fragment {
                     }
                 }
             }
-        }, mProgreessListener).GetBehalfHouses(2, 0 , 0);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cl_rented, mProgreessListener*/).GetBehalfHouses(2, 0 , 0);
 
         // to sale
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl_2sale = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -284,12 +288,13 @@ public class fragmentPrivate extends Fragment {
                     }
                 }
             }
-        }, mProgreessListener).GetBehalfHouses(3, 0 , 0);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cl_2sale, mProgreessListener*/).GetBehalfHouses(3, 0 , 0);
 
         // to approve
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl_2approve = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -308,7 +313,8 @@ public class fragmentPrivate extends Fragment {
                     }
                 }
             }
-        }, mProgreessListener).GetBehalfHouses(4, 0 , 0);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cl_2approve, mProgreessListener*/).GetBehalfHouses(4, 0 , 0);
     }
 
     private void updateLayout(boolean isLogin) {
@@ -330,10 +336,10 @@ public class fragmentPrivate extends Fragment {
             mLlUserLogin.setVisibility(View.VISIBLE);
             commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
 
-            CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetUserHouseWatchList(0, 0);
-            CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetHouseList_AppointSee(0, 0);
+            CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetUserHouseWatchList(0, 0);
+            CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetHouseList_AppointSee(0, 0);
             updateBehalfHouseCount();
-            CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+            CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
 
             bEnabled = true;
 
@@ -407,7 +413,7 @@ public class fragmentPrivate extends Fragment {
 
     CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
         @Override
-        public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
             if (null == iResult) {
                 kjsLogUtil.w("result is null");
                 return;
@@ -419,7 +425,7 @@ public class fragmentPrivate extends Fragment {
                 kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
                 if (CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
                     kjsLogUtil.d("user not log in, reflash layout");
-                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
                     kjsLogUtil.d("mLoginUser:" + mLoginUser);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -464,11 +470,11 @@ public class fragmentPrivate extends Fragment {
     };
 
     private void loginout() {
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (CmdID.CMD_LOG_OUT == command) {
-                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -486,10 +492,11 @@ public class fragmentPrivate extends Fragment {
                     return;
                 }
             }
-        }, mProgreessListener).Logout();
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cl, mProgreessListener*/).Logout();
 
         // check login status
-        mLoginUser = CommandManager.getCmdMgrInstance(getActivity(), mCmdListener, mProgreessListener).GetLoginUserInfo();
+        mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
         updateLayout(null != mLoginUser);
     }
 }

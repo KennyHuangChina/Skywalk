@@ -63,7 +63,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     private void getHouseInfo() {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -80,7 +80,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
         manager.GetHouseInfo(mHouseId, true);
     }
 
@@ -148,7 +148,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
         kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
 
     }

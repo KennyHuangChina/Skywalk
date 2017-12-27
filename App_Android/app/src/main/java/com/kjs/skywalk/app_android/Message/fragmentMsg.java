@@ -141,9 +141,10 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
     }
 
     private void getMessageInfo() {
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        // TODO:
+        CommunicationInterface.CICommandListener cmdListener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -162,16 +163,18 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                     updateMsgList(resultList.GetList());
                 }
             }
-        }, mProgreessListener).GetSysMsgList(0, 100 , false, false);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cmdListener, mProgreessListener*/).GetSysMsgList(0, 100 , false, false);
     }
 
     boolean mIsCmdFinished = false;
     int mMsgCount = 0;
     private int getMessageCountSync() {
         mIsCmdFinished = false;
-        CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+        // TODO:
+        CommunicationInterface.CICommandListener cmdListener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     mIsCmdFinished = true;
@@ -195,7 +198,8 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                     }
                 }
             }
-        }, mProgreessListener).GetSysMsgList(0, 0 , false, false);
+        };
+        CommandManager.getCmdMgrInstance(getActivity()/*, cmdListener, mProgreessListener*/).GetSysMsgList(0, 0 , false, false);
 
         kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
         while (!mIsCmdFinished) {
@@ -257,9 +261,10 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
 
             mGetMsgFinished = false;
             kjsLogUtil.i(String.format("[ThreadLoadMessage] --- mGetMsgFinished: " + mGetMsgFinished));
-            CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
+            // TODO:
+            CommunicationInterface.CICommandListener cmdListener = new CommunicationInterface.CICommandListener() {
                 @Override
-                public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+                public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                     if (null == iResult) {
                         kjsLogUtil.w("result is null");
                         mGetMsgFinished = true;
@@ -281,7 +286,8 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                         mGetMsgFinished = true;
                     }
                 }
-            }, mProgreessListener).GetSysMsgList(0, 100 , false, false);
+            };
+            CommandManager.getCmdMgrInstance(getActivity()/*, cmdListener, mProgreessListener*/).GetSysMsgList(0, 100 , false, false);
 
             while (mGetMsgFinished == false) {
                 try {

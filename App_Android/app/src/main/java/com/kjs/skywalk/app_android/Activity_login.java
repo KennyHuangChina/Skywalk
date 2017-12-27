@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -198,7 +199,8 @@ public class Activity_login extends SKBaseActivity implements
             return;
         }
 
-        if(CommandManager.getCmdMgrInstance(this, this, this).LoginByPassword(mActv_account.getText().toString(), passowrd, mRand, mSalt) != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).LoginByPassword(mActv_account.getText().toString(), passowrd, mRand, mSalt);
+        if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
         }
     }
@@ -210,7 +212,7 @@ public class Activity_login extends SKBaseActivity implements
         String strUserSalt;
         strUserSalt = mActv_account.getText().toString();
 
-        return CommandManager.getCmdMgrInstance(this, this, this).GetUserSalt(strUserSalt);
+        return CommandManager.getCmdMgrInstance(this).GetUserSalt(strUserSalt).mError;
     }
 
     Handler mHandler = new Handler(){
@@ -300,7 +302,8 @@ public class Activity_login extends SKBaseActivity implements
                         return;
                     }
 
-                    if(CommandManager.getCmdMgrInstance(this, this, this).LoginBySms(mActv_telephone_num.getText().toString(), verficationg_code) != CommunicationError.CE_ERROR_NO_ERROR)
+                    CmdExecRes res = CommandManager.getCmdMgrInstance(this).LoginBySms(mActv_telephone_num.getText().toString(), verficationg_code);
+                    if (res.mError != CommunicationError.CE_ERROR_NO_ERROR)
                         mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
 
                 } else {
@@ -324,7 +327,7 @@ public class Activity_login extends SKBaseActivity implements
             }
 
             case R.id.tv_get_verfication_code: {
-                CommandManager.getCmdMgrInstance(this, this, this).GetSmsCode(mActv_telephone_num.getText().toString());
+                CommandManager.getCmdMgrInstance(this).GetSmsCode(mActv_telephone_num.getText().toString());
                 break;
             }
 
@@ -449,7 +452,7 @@ public class Activity_login extends SKBaseActivity implements
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon result) {
         kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
         if (null == result) {
             kjsLogUtil.w("result is null");

@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -69,9 +70,9 @@ public class Activity_HouseholdAppliances extends SKBaseActivity
         });
 
         // get
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, this, this);
-        int result = CmdMgr.GetHouseFacilityList(6);
-        if (result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
+        CmdExecRes result = CmdMgr.GetHouseFacilityList(6);
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             kjsLogUtil.e("Error to call GetHouseFacilityList");
         }
     }
@@ -171,7 +172,7 @@ public class Activity_HouseholdAppliances extends SKBaseActivity
     }
 
     @Override
-    public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+    public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
         kjsLogUtil.i(String.format("[command: %d] ErrCode:%d(%s) --- %s" , i, iCommon.GetErrCode(), iCommon.GetErrDesc(), iCommon.DebugString()));
 
         if (i == CMD_GET_HOUSEFACILITY_LIST && iCommon.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {

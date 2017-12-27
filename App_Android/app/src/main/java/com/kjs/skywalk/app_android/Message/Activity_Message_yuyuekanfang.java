@@ -19,6 +19,8 @@ import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -78,21 +80,21 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     private void assignAgent(int aid, int agentId) {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if(command == CMD_ASSIGN_APPOINTMENT_RECEPTIONIST) {
                     if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
                         kjsLogUtil.i("assign appointment receptionist succeed");
                         commonFun.showToast_info(getApplicationContext(), mTvButton1, "经纪人指派成功");
                     } else {
                         kjsLogUtil.i("assign appointment receptionist failure");
-                        Activity_Message_yuyuekanfang.super.onCommandFinished(command, iResult);
+                        Activity_Message_yuyuekanfang.super.onCommandFinished(command, cmdSeq, iResult);
                     }
                 }
             }
         };
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        int res = manager.AssignAppointmentReceptionist(aid, agentId);
-        if(res == CE_ERROR_NO_ERROR) {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
+        CmdExecRes res = manager.AssignAppointmentReceptionist(aid, agentId);
+        if (res.mError == CE_ERROR_NO_ERROR) {
 
         } else {
             commonFun.showToast_info(getApplicationContext(), mTvButton1, "指派经纪人失败");
@@ -143,9 +145,9 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     }
 
     private void getAppointmentInfo() {
-        CommandManager.getCmdMgrInstance(this, new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -165,7 +167,8 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
                     updateMessageInfo(appointmentInfo);
                 }
             }
-        }, this).GetAppointmentInfo(mApId);
+        };
+        CommandManager.getCmdMgrInstance(this/*, cl, this*/).GetAppointmentInfo(mApId);
     }
 
     private void updateMessageInfo(final IApiResults.IAppointmentInfo appointmentInfo) {

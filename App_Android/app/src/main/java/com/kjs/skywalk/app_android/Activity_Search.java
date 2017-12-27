@@ -185,7 +185,7 @@ public class Activity_Search extends SKBaseActivity {
 
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
                 if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
                     if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
                         IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
@@ -203,11 +203,11 @@ public class Activity_Search extends SKBaseActivity {
                     }
                 }
 
-                Activity_Search.super.onCommandFinished(i, iCommon);
+                Activity_Search.super.onCommandFinished(i, cmdSeq, iCommon);
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
         manager.GetPropertyListByName(keywords, 0, 0x7FFFFFF);
     }
 

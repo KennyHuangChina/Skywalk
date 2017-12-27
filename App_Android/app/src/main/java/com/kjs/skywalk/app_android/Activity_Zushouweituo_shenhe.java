@@ -18,6 +18,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -259,7 +260,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -268,7 +269,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
                     return;
                 }
 
@@ -287,8 +288,8 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        if(manager.GetUserInfo(mHouseInfo.landlordId) != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
+        if (manager.GetUserInfo(mHouseInfo.landlordId).mError != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房东信息失败");
         }
     }
@@ -299,7 +300,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -308,7 +309,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
                     return;
                 }
 
@@ -319,8 +320,8 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        if(manager.CertificateHouse(mHouseId, pass, string) != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
+        if (manager.CertificateHouse(mHouseId, pass, string).mError != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果失败");
         }
     }
@@ -375,10 +376,10 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
                     showWaiting(false);
                     return;
                 }
@@ -390,9 +391,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         };
 
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = manager.AmendHouse(houseInfo);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
+        CmdExecRes result = manager.AmendHouse(houseInfo);
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交房屋信息失败");
         } else {
             showWaiting(true);
@@ -417,7 +418,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     private int getHouseInfo() {
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     return;
@@ -426,7 +427,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                 kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
                 if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                     kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, iResult);
+                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
                     return;
                 }
 
@@ -462,9 +463,9 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             }
         };
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, listener, this);
-        int result = CmdMgr.GetHouseInfo(mHouseId, true);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this); //, listener, this);
+        CmdExecRes result = CmdMgr.GetHouseInfo(mHouseId, true);
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
             return -1;
         }

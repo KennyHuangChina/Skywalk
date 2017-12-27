@@ -124,9 +124,9 @@ public class UpdateIntentService extends IntentService {
     int mTmpMsgCount = 0;
     private int getMessageCountSync(boolean ido, boolean nmo) {
         mIsCmdFinished = false;
-        CommandManager.getCmdMgrInstance(getApplicationContext(), new CommunicationInterface.CICommandListener() {
+        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     kjsLogUtil.w("result is null");
                     mIsCmdFinished = true;
@@ -150,7 +150,8 @@ public class UpdateIntentService extends IntentService {
                     }
                 }
             }
-        }, mProgreessListener).GetSysMsgList(0, 0 , ido, nmo);
+        };
+        CommandManager.getCmdMgrInstance(getApplicationContext()/*, cl, mProgreessListener*/).GetSysMsgList(0, 0 , ido, nmo);
 
         kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
         while (!mIsCmdFinished) {

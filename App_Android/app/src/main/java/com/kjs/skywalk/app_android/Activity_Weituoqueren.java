@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -128,14 +129,14 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mPropertyId = ClassDefine.HouseInfoForCommit.propertyId;
         mBuildingNo = ClassDefine.HouseInfoForCommit.buildingNo;
         mRoomNo = ClassDefine.HouseInfoForCommit.roomNo;
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, null, null);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
         mURL = CmdMgr.GetLandlordHouseSubmitConfirmUrl(mPropertyId, mBuildingNo, mRoomNo);
         Log.d(TAG, Fn + "mURL: " + mURL);
     }
 
     CommunicationInterface.CICommandListener mListener = new CommunicationInterface.CICommandListener() {
         @Override
-        public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+        public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
             if(i == CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER) {
                 if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
                     mHouseId = ((IApiResults.IAddRes)iCommon).GetId();
@@ -151,7 +152,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
                     if(iCommon.GetErrCode() == 0x451) {
                         myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
                     } else {
-                        Activity_Weituoqueren.super.onCommandFinished(i, iCommon);
+                        Activity_Weituoqueren.super.onCommandFinished(i, cmdSeq, iCommon);
                         return;
                     }
                 }
@@ -174,17 +175,17 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
     };
 
     private void commitPriceInfo() {
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, mListener, this);
-        if(manager.SetHousePrice(mHouseId, ClassDefine.HouseInfoForCommit.rental, ClassDefine.HouseInfoForCommit.minRental,
-                ClassDefine.HouseInfoForCommit.includePropertyFee == 0 ? false : true,
-                ClassDefine.HouseInfoForCommit.price, ClassDefine.HouseInfoForCommit.minPrice) != CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).SetHousePrice(mHouseId, ClassDefine.HouseInfoForCommit.rental, ClassDefine.HouseInfoForCommit.minRental,
+                                                                                ClassDefine.HouseInfoForCommit.includePropertyFee == 0 ? false : true,
+                                                                                ClassDefine.HouseInfoForCommit.price, ClassDefine.HouseInfoForCommit.minPrice);
+        if (res.mError != CE_ERROR_NO_ERROR) {
             hideWaiting();
             commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
         }
     }
 
     private void commitHouseInfo() {
-        CommandManager manager = CommandManager.getCmdMgrInstance(this, mListener, this);
+        CommandManager manager = CommandManager.getCmdMgrInstance(this); // , mListener, this);
         boolean forSale = ClassDefine.HouseInfoForCommit.forSale();
         boolean forRent = ClassDefine.HouseInfoForCommit.forRental();
 
@@ -207,7 +208,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         );
 
         int agentId = Integer.valueOf(ClassDefine.HouseInfoForCommit.agentId);
-        if(manager.CommitHouseByOwner(house, agentId) == CE_ERROR_NO_ERROR) {
+        if (manager.CommitHouseByOwner(house, agentId).mError == CE_ERROR_NO_ERROR) {
             showWaiting(mWebView);
         } else {
             commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
@@ -255,7 +256,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mWebView.removeAllViews();
 
         // set cookie for webview
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this, null, null);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
         String cookie = CmdMgr.GetCookie(mURL);
         Log.d(TAG, Fn + "cookie: " + cookie);
 

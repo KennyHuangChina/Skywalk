@@ -13,10 +13,7 @@ import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_ADD_PICTURE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_DEL_PICTURE;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_House;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_MAJOR_User;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_HOUSE_OwnershipCert;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
 
 /**
  * Created by admin on 2017/9/30.
@@ -84,7 +81,7 @@ public class ImageDelete implements CommunicationInterface.CIProgressListener{
                     CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
 
                         @Override
-                        public void onCommandFinished(int i, IApiResults.ICommon iCommon) {
+                        public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
                             if(i == CMD_DEL_PICTURE) {
                                 if(iCommon.GetErrCode() != CE_ERROR_NO_ERROR) {
                                     mFailed = true;
@@ -96,7 +93,7 @@ public class ImageDelete implements CommunicationInterface.CIProgressListener{
                         }
                     };
 
-                    CommandManager manager = CommandManager.getCmdMgrInstance(mContext, listener, ImageDelete.this);
+                    CommandManager manager = CommandManager.getCmdMgrInstance(mContext); //, listener, ImageDelete.this);
                     manager.DelePicture(id);
 
                     mListener.onDeleteProgress(index, imageList.size(), id, DELETE_RESULT_DELETE_START);

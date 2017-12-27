@@ -3,6 +3,7 @@ package com.kjs.skywalk.app_android.Server;
 import android.content.Context;
 
 import com.kjs.skywalk.app_android.ClassDefine;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -63,7 +64,7 @@ public class ImageFetchForUser implements CommunicationInterface.CIProgressListe
         mList.clear();
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 if (null == iResult) {
                     mListener.onUserImageFetched(mList);
                     return;
@@ -95,9 +96,9 @@ public class ImageFetchForUser implements CommunicationInterface.CIProgressListe
             }
         };
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, listener, ImageFetchForUser.this);
-        int result = CmdMgr.GetUserPics(userId, fetchType, size);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext); //, listener, ImageFetchForUser.this);
+        CmdExecRes result = CmdMgr.GetUserPics(userId, fetchType, size);
+        if(result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             return -1;
         }
 

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -18,8 +19,8 @@ import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_DEL_PICTURE;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_SIZE_ALL;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.PIC_TYPE_SUB_USER_IDCard;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
+
 
 /**
  * Created by admin on 2017/9/30.
@@ -72,7 +73,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
         mList.clear();
         CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
             @Override
-            public void onCommandFinished(int command, IApiResults.ICommon iResult) {
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
                 String Fn = "onCommandFinished";
                 kjsLogUtil.i(TAG, Fn, "fetchType: " + fetchType + ", listener: " + this + ", command: " + command + ", iResult: " + iResult);
                 if (null == iResult) {
@@ -111,10 +112,10 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
         };
 
         kjsLogUtil.d(TAG, Fn, "listener: " + listener + ", ImageFetchForHouse.this: " + ImageFetchForHouse.this);
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext, listener, ImageFetchForHouse.this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext); //, listener, ImageFetchForHouse.this);
         kjsLogUtil.d(TAG, Fn, "houseId: " + houseId + ", fetchType: " + fetchType + ", size: " + size);
-        int result = CmdMgr.GetHousePics(houseId, fetchType, size);
-        if(result != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes result = CmdMgr.GetHousePics(houseId, fetchType, size);
+        if(result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             return -1;
         }
 
