@@ -524,20 +524,24 @@ public class ClassDefine {
     }
 
     public static class MessageInfo {
-        private int mId;
-        private String mCreate_time;
-        private String mRead_time;
-        private String mType;
-        private String mBody;
-        private String mProperty;
-        private String mBuilding_no;
-        private String mHouse_no;
+        public int mMsgId;
+        public int mHouseId;
+        public int mRefId;
+        public int mMsgType;
+        public String mCreate_time;
+        public String mRead_time;
+        public String mBody;
+        public String mProperty;
+        public String mBuilding_no;
+        public String mHouse_no;
 
-        public MessageInfo(int id, String create_time, String read_time, String type, String body, String property, String building_no, String house_no) {
-            mId = id;
+        public MessageInfo(int msgId, int houseId, int refId, int msgType, String create_time, String read_time, String body, String property, String building_no, String house_no) {
+            mMsgId = msgId;
+            mHouseId = houseId;
+            mMsgType = msgType;
+            mRefId = refId;
             mCreate_time = create_time;
             mRead_time = read_time;
-            mType = type;
             mBody = body;
             mProperty = property;
             mBuilding_no = building_no;

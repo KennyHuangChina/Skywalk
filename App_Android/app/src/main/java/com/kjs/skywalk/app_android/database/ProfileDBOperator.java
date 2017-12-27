@@ -21,7 +21,8 @@ public class ProfileDBOperator {
 
     private ProfileDBOperator(Context context, String user) {
         mContext = context;
-        mProfileDBHelper = new ProfileDBHelper(context, user);
+        String db_path = String.format("/sdcard/user_%s/profile.db", user);
+        mProfileDBHelper = new ProfileDBHelper(context, db_path);
     }
 
     public static ProfileDBOperator getOperator(Context context, String user) {
@@ -37,9 +38,9 @@ public class ProfileDBOperator {
     public void update(ArrayList<Object> list) {
         for (Object object : list) {
             IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) object;
-            String sql_add = "replace into " + mProfileDBHelper.getTableName() + " (id, create_time, read_time, type, body, property, building_no, house_no)values (?,?,?,?,?,?,?,?)";
+            String sql_add = "replace into " + mProfileDBHelper.getTableName() + " (msg_id, house_id, ref_id, type, create_time, read_time, body, property, building_no, house_no)values (?,?,?,?,?,?,?,?,?,?)";
             SQLiteDatabase db = mProfileDBHelper.getWritableDatabase();
-            db.execSQL(sql_add, new Object[] { msgInfo.MsgId(), msgInfo.CreateTime(), msgInfo.ReadTime(), msgInfo.MsgType(), msgInfo.MsgBody(), msgInfo.Property(), msgInfo.BuildingNo(), msgInfo.HouseNo()});
+            db.execSQL(sql_add, new Object[] { msgInfo.MsgId(), msgInfo.HouseId(), msgInfo.RefId(), msgInfo.MsgType(), msgInfo.CreateTime(), msgInfo.ReadTime(), msgInfo.MsgBody(), msgInfo.Property(), msgInfo.BuildingNo(), msgInfo.HouseNo()});
             db.close();
         }
     }
@@ -59,8 +60,8 @@ public class ProfileDBOperator {
         ArrayList<ClassDefine.MessageInfo> list = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                ClassDefine.MessageInfo info = new ClassDefine.MessageInfo(Integer.parseInt(cursor.getString(0))
-                , cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
+                ClassDefine.MessageInfo info = new ClassDefine.MessageInfo(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)),Integer.parseInt(cursor.getString(2))
+                        , Integer.parseInt(cursor.getString(3)), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9));
                 list.add(info);
             } while (cursor.moveToNext());
         }

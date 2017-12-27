@@ -131,8 +131,8 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         kjsLogUtil.i("fragmentMsg --- onResume");
 
         // get message count in db
-        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
-        kjsLogUtil.i("msgCount: " + msgCount);
+//        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
+//        kjsLogUtil.i("msgCount: " + msgCount);
 //        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
         //
 
@@ -167,7 +167,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
 
     boolean mIsCmdFinished = false;
     int mMsgCount = 0;
-    private int getMessageCountSync() {
+    private int getMessageCountSync(boolean ido, boolean nmo) {
         mIsCmdFinished = false;
         CommandManager.getCmdMgrInstance(getActivity(), new CommunicationInterface.CICommandListener() {
             @Override
@@ -195,7 +195,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                     }
                 }
             }
-        }, mProgreessListener).GetSysMsgList(0, 0 , false, false);
+        }, mProgreessListener).GetSysMsgList(0, 0 , ido, nmo);
 
         kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
         while (!mIsCmdFinished) {
@@ -219,11 +219,24 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
     private void updateMsgList(final ArrayList<Object> list) {
         Activity activity = getActivity();
         if (activity != null) {
+            IApiResults.IGetUserInfo loginUserInfo = ((SKBaseActivity)getActivity()).mLoginUserInfo;
+            if (loginUserInfo != null) {
+                int user_id = loginUserInfo.GetUserId();
+                kjsLogUtil.i("user_id: " + user_id);
+                ProfileDBOperator.getOperator(getActivity(), String.valueOf(user_id)).update(list);
+            }
+
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 //                    ProfileDBOperator.getOperator(getActivity(), "test_user").update(list);
-                    mAdapterMsg.updateList(list);
+                    IApiResults.IGetUserInfo loginUserInfo = ((SKBaseActivity)getActivity()).mLoginUserInfo;
+                    if (loginUserInfo != null) {
+                        int user_id = loginUserInfo.GetUserId();
+                        kjsLogUtil.i("user_id: " + user_id);
+                        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
+                        mAdapterMsg.updateList(msgList);
+                    }
                 }
             });
         }
@@ -253,7 +266,9 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         @Override
         public void run() {
             kjsLogUtil.i(String.format("[ThreadLoadMessage] --- start"));
-            getMessageCountSync();
+            boolean ido = false;
+            boolean nmo = true; // new message only
+            getMessageCountSync(ido, nmo);
 
             mGetMsgFinished = false;
             kjsLogUtil.i(String.format("[ThreadLoadMessage] --- mGetMsgFinished: " + mGetMsgFinished));
@@ -281,7 +296,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                         mGetMsgFinished = true;
                     }
                 }
-            }, mProgreessListener).GetSysMsgList(0, 100 , false, false);
+            }, mProgreessListener).GetSysMsgList(0, 100 , ido, nmo);
 
             while (mGetMsgFinished == false) {
                 try {
