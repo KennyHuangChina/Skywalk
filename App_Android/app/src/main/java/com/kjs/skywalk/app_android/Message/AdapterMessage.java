@@ -39,7 +39,7 @@ public class AdapterMessage extends BaseAdapter {
     }
 
     private Context mContext = null;
-    private ArrayList<Object> mList = new ArrayList<>();
+    private ArrayList<ClassDefine.MessageInfo> mList = new ArrayList<>();
 
 
     public AdapterMessage(Context context) {
@@ -57,7 +57,7 @@ public class AdapterMessage extends BaseAdapter {
 //        String  ReadTime();     // exact time when the event get readed
 //        String  MsgBody();      // message text
 //    }
-    public void updateList(ArrayList<Object> list) {
+    public void updateList(ArrayList<ClassDefine.MessageInfo> list) {
         mList = list;
         this.notifyDataSetChanged();
     }
@@ -113,25 +113,25 @@ public class AdapterMessage extends BaseAdapter {
         }
 
         // IApiResults.ISysMsgInfo
-        final IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) mList.get(position);
-        holder.tv_msg_time.setText(msgInfo.CreateTime());
+        final ClassDefine.MessageInfo msgInfo = mList.get(position);
+        holder.tv_msg_time.setText(msgInfo.mCreate_time);
 
-        holder.tv_msg_result.setText(msgInfo.MsgBody());
+        holder.tv_msg_result.setText(msgInfo.mBody);
 
         final List<commonFun.TextDefine> houseInfo = new ArrayList<commonFun.TextDefine>(
                 Arrays.asList(
                         new commonFun.TextDefine("房源：", 39, Color.parseColor("#808080")),
-                        new commonFun.TextDefine(msgInfo.Property(), 39, Color.parseColor("#000000")),
-                        new commonFun.TextDefine(msgInfo.BuildingNo(), 39,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine(msgInfo.mProperty, 39, Color.parseColor("#000000")),
+                        new commonFun.TextDefine(msgInfo.mBuilding_no, 39,  Color.parseColor("#FF6600")),
                         new commonFun.TextDefine("栋", 39,  Color.parseColor("#000000")),
-                        new commonFun.TextDefine(msgInfo.HouseNo(), 39,  Color.parseColor("#FF6600")),
+                        new commonFun.TextDefine(msgInfo.mHouse_no, 39,  Color.parseColor("#FF6600")),
                         new commonFun.TextDefine("室", 39,  Color.parseColor("#000000"))
                        )
         );
         holder.tv_msg_description.setText(commonFun.getSpannableString(houseInfo));
 
         final String location =  commonFun.getSpannableString(houseInfo).toString();
-        int msgType = msgInfo.MsgType();
+        int msgType = msgInfo.mMsgType;
         if (msgType == 1) {
             // 1 - House Certification
             holder.iv_msg_icon.setImageResource(R.drawable.cert_house_icon);
@@ -139,9 +139,9 @@ public class AdapterMessage extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    markMessageRead(msgInfo.MsgId());
+                    markMessageRead(msgInfo.mMsgId);
                     Intent intent = new Intent(mContext, Activity_Message_fangyuanshenhe.class);
-                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, msgInfo.HouseId());
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, msgInfo.mHouseId);
                     intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
                     mContext.startActivity(intent);
                 }
@@ -153,9 +153,9 @@ public class AdapterMessage extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    markMessageRead(msgInfo.MsgId());
+                    markMessageRead(msgInfo.mMsgId);
                     Intent intent = new Intent(mContext, Activity_Message_yuyuekanfang.class);
-                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.RefId());
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.mRefId);
                     mContext.startActivity(intent);
                 }
             });
@@ -163,7 +163,7 @@ public class AdapterMessage extends BaseAdapter {
             // undefined
         }
 
-        if(msgInfo.ReadTime().isEmpty()) {
+        if(msgInfo.mRead_time.isEmpty()) {
 //            holder.bv_msg_new.show(true);
             holder.iv_msg_new.setVisibility(View.VISIBLE);
         } else {

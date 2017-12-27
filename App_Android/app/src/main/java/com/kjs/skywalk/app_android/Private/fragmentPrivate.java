@@ -90,13 +90,13 @@ public class fragmentPrivate extends Fragment {
     // 系统管理
     private LinearLayout    mLlAdminOpGroup;
 
-//    private String          mUserName;
-//    private String          mUserTelephoneNum;
     private IApiResults.IGetUserInfo mLoginUser = null;
 
     @Override
     public void onResume() {
         super.onResume();
+
+        CommandManager.getCmdMgrInstance(getActivity()).Register(mCmdListener, mProgreessListener);
 
         mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
         kjsLogUtil.d(String.format("Login status: %s", (null == mLoginUser) ? "Not Login" : mLoginUser.GetName()));

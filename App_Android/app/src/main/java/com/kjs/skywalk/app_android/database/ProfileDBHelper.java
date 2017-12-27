@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.kjs.skywalk.app_android.kjsLogUtil;
+
 /**
  * Created by sailor.zhou on 2017/11/11.
  */
@@ -20,11 +22,10 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
         Log.i(TAG, "ProfileDBHelper(Context, String, CursorFactory)");
     }
 
-    public ProfileDBHelper(Context context, String user) {
-        super(context, "/sdcard/profile.db", null, VERSION);
-        mTableName = user + "_profile";
-        Log.i(TAG, "ProfileDBHelper(Context), mTableName: " + mTableName);
-
+    public ProfileDBHelper(Context context, String db_path) {
+        super(context, db_path, null, VERSION);
+        mTableName = "msg";
+        kjsLogUtil.i("db_path: " + db_path + "mTableName: " + mTableName);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE IF NOT EXISTS " +
                 mTableName +
                 "(" +
-                "id integer primary key, create_time varchar(16), read_time varchar(16), type varchar(16), body varchar(100), property varchar(100), building_no varchar(16), house_no varchar(16)" +
+                "msg_id integer primary key, house_id integer, ref_id integer, type integer, create_time varchar(16), read_time varchar(16), body varchar(100), property varchar(100), building_no varchar(16), house_no varchar(16)" +
                 ")";
         db.execSQL(sql);
     }
