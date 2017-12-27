@@ -23,10 +23,11 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 //    private SKCookieManager     mCookieManager  = null;
     private MyUtils             mUtils          = null;
 
-    private CICommandListener               mCmdListener    = null;
-    private CIProgressListener              mProgListener   = null;
+    private ArrayList<CICommandListener>    mCmdListeners   = null;
+    private ArrayList<CIProgressListener>   mProgListeners  = null;
     private ArrayList<CommunicationBase>    mCmdQueue       = new ArrayList<CommunicationBase>();
     private CommunicationBase               mCmdLogin       = null;
+    private int                             mCmdSeq         = COMMAND_SEQ_BASE;
 
     private static final int            AGENT_STATUS_Unknow     = 0,
                                         AGENT_STATUS_NotLogin   = 1,
@@ -38,8 +39,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     private CommandManager(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
         mContext        = context;
-        mCmdListener    = CmdListener;
-        mProgListener   = ProgListener;
+        mCmdListeners   = new ArrayList<CICommandListener>();
+        mProgListeners  = new ArrayList<CIProgressListener>();
 
         mUtils= new MyUtils(context);
 //        mCookieManager = SKCookieManager.getManager(context);
@@ -48,14 +49,64 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         loadLoginUser();
     }
 
-    public static synchronized CommandManager getCmdMgrInstance(Context context, CICommandListener CmdListener, CIProgressListener ProgListener) {
+    public static synchronized CommandManager getCmdMgrInstance(Context context) {
         if (null == mCmdMgr) {
-            mCmdMgr = new CommandManager(context, CmdListener, ProgListener);
+            mCmdMgr = new CommandManager(context, null, null);
         }
-        mCmdMgr.mCmdListener  = CmdListener;
-        mCmdMgr.mProgListener = ProgListener;
 
         return mCmdMgr;
+    }
+
+    public  int Register(CICommandListener cmdListener, CIProgressListener progListener) {
+        String Fn = "[Register] ";
+        if (null == cmdListener || null == progListener) {
+            Log.e(TAG, Fn + "Invalid input, cmdListener:" + cmdListener + ", progListener:" + progListener);
+            return -1;
+        }
+
+        synchronized(mCmdListeners) {
+            for (CICommandListener cl : mCmdListeners) {
+                if (cl == cmdListener) {
+                    Log.d(TAG, Fn + "cmdListener:" + cmdListener + " already registered");
+                    return 0;
+                }
+            }
+            mCmdListeners.add(cmdListener);
+            mProgListeners.add(progListener);
+            Log.d(TAG, Fn + "Register cmdListener:" + cmdListener + ", progListener:" + progListener);
+            Log.d(TAG, Fn + "Total listener:" + mCmdListeners.size());
+        }
+        return 0;
+    }
+
+    public int Unregister(CICommandListener cmdListener, CIProgressListener progListener) {
+        String Fn = "[Unregister] ";
+        if (null == cmdListener || null == progListener) {
+            Log.e(TAG, Fn + "Invalid input, cmdListener:" + cmdListener + ", progListener:" + progListener);
+            return -1;
+        }
+        synchronized (mCmdListeners) {
+            for (int n = 0; n < mCmdListeners.size(); n++) {
+                if (cmdListener == mCmdListeners.get(n)) {
+                    mCmdListeners.remove(n);
+                    mProgListeners.remove(n);
+                    Log.d(TAG, Fn + "Unregister cmdListener:" + cmdListener + ", progListener:" + progListener);
+                    Log.d(TAG, Fn + "Total listener:" + mCmdListeners.size());
+                    return 0;
+                }
+            }
+        }
+        Log.d(TAG, Fn + "cmdListener:" + cmdListener + ", progListener:" + progListener + " not exist");
+        return 1;
+    }
+
+    private int onNotify(int cmdId, int cmdSeq, IApiResults.ICommon res) {
+        synchronized (mCmdListeners) {
+            for (CICommandListener cl : mCmdListeners) {
+                cl.onCommandFinished(cmdId, cmdSeq, res);
+            }
+            return 0;
+        }
     }
 
     /**
@@ -96,8 +147,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             }
         }
 
-        Log.d(TAG, Fn + String.format("new command(0x%x) queued", cmd.mAPI));
-        return mCmdQueue.add(cmd);
+        if (mCmdQueue.add(cmd)) {
+            Log.d(TAG, Fn + String.format("new command(0x%x) queued, seq:", cmd.mAPI, cmd.getCmdSeq()));
+            return true;
+        }
+
+        Log.e(TAG, Fn + String.format("Fail to queue new command(0x%x)", cmd.mAPI));
+        return false;
     }
 
     private synchronized CommunicationBase removeCmd(int cmd, IApiResults.ICommon res) {
@@ -140,7 +196,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             Log.e(TAG, FN + "fail to check parameters for relogin");
             return -2;
         }
-        cmdRelogin.SetBackupListener(mProgListener, mCmdListener);
+        cmdRelogin.setCmdSeq(getCommandSeq());
         int ret = cmdRelogin.doOperation(this, this);
         if (CommunicationError.CE_ERROR_NO_ERROR == ret) {
             mCmdLogin = cmdRelogin;
@@ -162,13 +218,24 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return ret;
     }
 
-    private synchronized int execute(CommunicationBase cmd, HashMap<String, String> map) {
+    int getCommandSeq() {
+        mCmdSeq ++;
+        return mCmdSeq;
+    }
+
+    /**
+     *  Execute the command
+     *  @param cmd : command to process
+     *  @param map : argument list
+     *  @return
+     *      0x00000000                  CE_ERROR_NO_ERROR
+     *      0x80000000 - 0x8fffffff     Error Codes
+     *      0x90000000 and above        Unique command id (COMMAND_ID_BASE)
+     */
+    private synchronized CmdExecRes execute(CommunicationBase cmd, HashMap<String, String> map) {
         String Fn = "[execute] ";
         if (null == cmd) {
-            return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;
-        }
-        if (null == mCmdListener || null == mProgListener) {
-            return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
+            return new CmdExecRes(CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR, -1, null);
         }
         MyUtils.printContentInMap(map);
         Log.i(TAG, Fn + String.format("cmd: %d <%s>", cmd.mAPI, CmdID.GetCmdDesc(cmd.mAPI)));
@@ -176,11 +243,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         // Check parameters before processing this command
         if (!cmd.checkParameter(map)) {
             Log.w(TAG, Fn + "Fail to check parameters");
-            return CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT;
+            return new CmdExecRes(CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT, -1, null);
         }
+        cmd.setCmdSeq(getCommandSeq());
 
         // que the command into queue
-        cmd.SetBackupListener(mProgListener, mCmdListener);
+//        cmd.SetBackupListener(mProgListener, mCmdListener);
         if (!isLoginCmd(cmd)) {
             queueCommand(cmd);
         } else {
@@ -200,16 +268,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             if (CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN == ret) {
                                 mLoginUserInfo = null;
                                 Log.e(TAG, Fn + "user not login, notify user to login");
-                                if (null != mCmdListener) {
-                                    ResBase res = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
-                                    mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, res);
-                                }
+                                onNotify(CmdID.CMD_RELOGIN, cmd.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                                 // Keep the command in queue, once user get logined, the commands will be processed automatically, one by one
                             } else {
                                 Log.e(TAG, Fn + String.format("other error(0x%x), remove the command from queue", ret));
                                 removeCmd(cmd.mAPI, null);
                             }
-                            return 0;   // ret;
+                            return new CmdExecRes(CommunicationError.CE_ERROR_NO_ERROR, cmd.getCmdSeq(), cmd.mArgs);   // ret;
                         }
                         mAgentStatus = AGENT_STATUS_Logining;
                     } else { // login commands
@@ -233,17 +298,18 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
         if (CommunicationError.CE_ERROR_NO_ERROR != ret) {
             Log.e(TAG, Fn + "failed to execute command: " + cmd.GetApiName() + ", ret:" + ret);
+            return new CmdExecRes(ret, -1, null);
         }
 
-        return ret;
+        return new CmdExecRes(CommunicationError.CE_ERROR_NO_ERROR, cmd.getCmdSeq(), cmd.mArgs);
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon res) {
+    public void onCommandFinished(final int cmdId, final int cmdSeq, IApiResults.ICommon res) {
         String Fn = "[onCommandFinished] ";
-        Log.i(TAG, Fn + String.format("cmd: %d <%s>", command, CmdID.GetCmdDesc(command)));
+        Log.i(TAG, Fn + String.format("cmd: %d <%s>", cmdId, CmdID.GetCmdDesc(cmdId)));
 
-        switch (command) {
+        switch (cmdId) {
             case CmdID.CMD_LOGIN_BY_SMS:
             case CmdID.CMD_LOGIN_BY_PASSWORD :
             case CmdID.CMD_RELOGIN: {
@@ -266,11 +332,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
                 // notify UI no matter command succeeded or failed
                 CICommandListener cmdListener = null;
-                if (null != mCmdLogin &&
-                    null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
-                    // Notify UI
-                    cmdListener.onCommandFinished(command, res);
+                if (null != mCmdLogin) {
+                    onNotify(cmdId, cmdSeq, res);
                 }
+//                if (null != mCmdLogin &&
+//                    null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
+//                    // Notify UI
+//                    cmdListener.onCommandFinished(cmdId, cmdSeq, res);
+//                }
                 mCmdLogin = null;
                 break;
             }
@@ -291,11 +360,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         mAgentStatus = AGENT_STATUS_NotLogin;
                         mLoginUserInfo = null;
                         if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
-                        Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
-                            if (null != mCmdListener) {
-                                ResBase resNotLogin = new ResBase(CmdRes.CMD_RES_NOT_LOGIN);
-                                mCmdListener.onCommandFinished(CmdID.CMD_RELOGIN, resNotLogin);
-                            }
+                            Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
+                            onNotify(CmdID.CMD_RELOGIN, mCmdLogin.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                             return;
                         }
                         mAgentStatus = AGENT_STATUS_Logining;
@@ -310,13 +376,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                         }
                         }
                         // remove it from command queue
-                        CommunicationBase cmd           = removeCmd(command, res);
-                        CICommandListener cmdListener   = null;
-                        if (null != cmd && null != (cmdListener = cmd.GetBackupCommandListener())) {
-                            // Notify UI
-                            cmdListener.onCommandFinished(command, res);
+                        CommunicationBase cmd = removeCmd(cmdId, res);
+                        if (null != cmd) {
+                            onNotify(cmdId, cmdSeq, res);
                         }
-                        Log.d(TAG, Fn + "cmdListener:" + cmdListener);
                     }
                 }
             }
@@ -328,7 +391,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetSmsCode(String userName) {
+    public CmdExecRes GetSmsCode(String userName) {
         CommunicationBase op = new CmdGetSmsCode(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
@@ -336,7 +399,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetUserInfo(int uid) {
+    public CmdExecRes GetUserInfo(int uid) {
         CommunicationBase op = new CmdGetUserInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, "" + uid);
@@ -353,7 +416,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetUserSalt(String userName) {
+    public CmdExecRes GetUserSalt(String userName) {
         CommunicationBase op = new CmdGetUserSalt(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
@@ -361,7 +424,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int LoginByPassword(String user, String pass, String rand, String salt) {
+    public CmdExecRes LoginByPassword(String user, String pass, String rand, String salt) {
         if (null != user && !user.isEmpty()) {
             mLoginUser = user;
             storeLoginUser();
@@ -377,7 +440,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int LoginBySms(String user, String smsCode) {
+    public CmdExecRes LoginBySms(String user, String smsCode) {
         if (null != user && !user.isEmpty()) {
             mLoginUser = user;
             storeLoginUser();
@@ -391,7 +454,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int Logout() {
+    public CmdExecRes Logout() {
         mLoginUserInfo = null;
         CommunicationBase op = new CmdLogout(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
@@ -399,21 +462,21 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int ResetLoginPass(String user, String pass, String sms, String salt, String rand) {
+    public CmdExecRes ResetLoginPass(String user, String pass, String sms, String salt, String rand) {
         CommunicationBase op = new CmdResetLoginPassword(mContext, user, pass, sms, salt, rand);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetAgencyList(int begin, int cnt) {
+    public CmdExecRes GetAgencyList(int begin, int cnt) {
         CommunicationBase op = new CmdGetAgencyList(mContext, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year) {
+    public CmdExecRes MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year) {
         CommunicationBase op = new CmdModifyAgency(mContext, agency, rank_pro, rank_att, begin_year);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
@@ -426,7 +489,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int Relogin(String userName) {
+    public CmdExecRes Relogin(String userName) {
         if (null != userName && !userName.isEmpty()) {
             mLoginUser = userName;
             storeLoginUser();
@@ -439,42 +502,42 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int CommandTest() {
+    public CmdExecRes CommandTest() {
         CommunicationBase op = new CommandTest(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetBriefPublicHouseInfo(int houseId) {
+    public CmdExecRes GetBriefPublicHouseInfo(int houseId) {
         CommunicationBase op = new CmdGetBriefPublicHouseInfo(mContext, houseId);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHouseInfo(int houseId, boolean bBackend) {
+    public CmdExecRes GetHouseInfo(int houseId, boolean bBackend) {
         CommunicationBase op = new CmdGetHouseInfo(mContext, houseId, bBackend);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int CommitHouseByOwner(HouseInfo houseInfo, int agency) {
+    public CmdExecRes CommitHouseByOwner(HouseInfo houseInfo, int agency) {
         CommunicationBase op = new CmdCommitHouseByOwner(mContext, houseInfo, agency);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int AmendHouse(HouseInfo houseInfo) {
+    public CmdExecRes AmendHouse(HouseInfo houseInfo) {
         CommunicationBase op = new CmdAmendHouse(mContext, houseInfo);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int RecommendHouse(int house_id, int action) {
+    public CmdExecRes RecommendHouse(int house_id, int action) {
         CommunicationBase op = new CmdRecommendHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
@@ -483,7 +546,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int SetHouseCoverImg(int house_id, int img_id) {
+    public CmdExecRes SetHouseCoverImg(int house_id, int img_id) {
         CommunicationBase op = new CmdSetHouseCoverImg(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
@@ -492,7 +555,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee, int price_tag, int price_bottom) {
+    public CmdExecRes SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee, int price_tag, int price_bottom) {
         CommunicationBase op = new CmdSetHousePrice(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_RENTAL_TAG,     String.valueOf(rental_tag));
@@ -504,14 +567,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHousePrice(int house_id, int begin, int count) {
+    public CmdExecRes GetHousePrice(int house_id, int begin, int count) {
         CommunicationBase op = new CmdGetHousePrices(mContext, house_id, begin, count);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int CertificateHouse(int house_id, boolean bPass, String sCertComment) {
+    public CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment) {
         CommunicationBase op = new CmdCertificateHouse(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
@@ -521,28 +584,28 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHouseCertHist(int house_id) {
+    public CmdExecRes GetHouseCertHist(int house_id) {
         CommunicationBase op = new CmdGetHouseCertHist(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int RecommitHouseCertification(int house_id, String comments) {
+    public CmdExecRes RecommitHouseCertification(int house_id, String comments) {
         CommunicationBase op = new CmdRecommitHouseCertification(mContext, house_id, comments);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetBehalfHouses(int type, int begin, int cnt) {
+    public CmdExecRes GetBehalfHouses(int type, int begin, int cnt) {
         CommunicationBase op = new CmdGetBehalfHouses(mContext, type, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
+    public CmdExecRes GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
         CommunicationBase op = new CmdGetHouseList(mContext, type, begin, cnt, filter, sort);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
@@ -552,14 +615,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHouseShowtime(int house_id) {
+    public CmdExecRes GetHouseShowtime(int house_id) {
         CommunicationBase op = new CmdGetHouseShowTime(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int SetHouseShowtime(int house_id, int pw, int pv, String pd) {
+    public CmdExecRes SetHouseShowtime(int house_id, int pw, int pv, String pd) {
         CommunicationBase op = new CmdSetHouseShowtime(mContext, house_id, pw, pv, pd);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
@@ -587,7 +650,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int AssignHouseAgency(int house, int agent) {
+    public CmdExecRes AssignHouseAgency(int house, int agent) {
         CommunicationBase op = new AssignHouseAgency(mContext, house, agent);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
@@ -595,7 +658,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
 
     @Override
-    public int GetPropertyListByName(String sName, int nBegin, int nCount) {
+    public CmdExecRes GetPropertyListByName(String sName, int nBegin, int nCount) {
         CommunicationBase op = new CmdGetPropertyList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
@@ -605,7 +668,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int AddProperty(String sName, String sAddr, String sDesc) {
+    public CmdExecRes AddProperty(String sName, String sAddr, String sDesc) {
         CommunicationBase op = new CmdAddProperty(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
@@ -615,7 +678,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetPropertyInfo(int nPropId) {
+    public CmdExecRes GetPropertyInfo(int nPropId) {
         CommunicationBase op = new CmdGetPropertyInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(nPropId));
@@ -623,7 +686,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc) {
+    public CmdExecRes ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc) {
         CommunicationBase op = new CmdModifyPropertyInfo(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(nPropId));
@@ -634,7 +697,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int AddDeliverable(String sName) {
+    public CmdExecRes AddDeliverable(String sName) {
         CommunicationBase op = new CmdAddDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_NAME, sName);
@@ -642,14 +705,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetDeliverableList() {
+    public CmdExecRes GetDeliverableList() {
         CommunicationBase op = new CmdGetDeliverableList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int ModifyDeliverable(int dev_id, String sName) {
+    public CmdExecRes ModifyDeliverable(int dev_id, String sName) {
         CommunicationBase op = new CmdModifyDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(dev_id));
@@ -658,7 +721,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc) {
+    public CmdExecRes AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc) {
         CommunicationBase op = new CmdAddHouseDeliverable(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
@@ -669,7 +732,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHouseDeliverables(int house_id) {
+    public CmdExecRes GetHouseDeliverables(int house_id) {
         CommunicationBase op = new CmdGetHouseDeliverables(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id)); // "2");
@@ -677,7 +740,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int AddFacilityType(String sTypeName) {
+    public CmdExecRes AddFacilityType(String sTypeName) {
         CommunicationBase op = new CmdAddFacilityType(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_NAME, sTypeName);
@@ -685,7 +748,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int EditFacility(int id, int nType, String sName, String sIcon) {
+    public CmdExecRes EditFacility(int id, int nType, String sName, String sIcon) {
         CommunicationBase op = new CmdModifyFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(id));
@@ -698,7 +761,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int EditFacilityType(int typeId, String sTypeName) {
+    public CmdExecRes EditFacilityType(int typeId, String sTypeName) {
         CommunicationBase op = new CmdModifyFacilityType(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(typeId));
@@ -707,14 +770,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
    @Override
-    public int GetFacilityTypeList() {
+   public CmdExecRes GetFacilityTypeList() {
        CommunicationBase op = new CmdGetFacilityTypeList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int AddFacility(int nType, String sName, String sIcon) {
+    public CmdExecRes AddFacility(int nType, String sName, String sIcon) {
         CommunicationBase op = new CmdAddFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
@@ -726,7 +789,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetFacilityList(int nType) {
+    public CmdExecRes GetFacilityList(int nType) {
         CommunicationBase op = new CmdGetFacilityList(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
@@ -734,14 +797,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int AddHouseFacility(int house, ArrayList<FacilityItem> list) {
+    public CmdExecRes AddHouseFacility(int house, ArrayList<FacilityItem> list) {
         CommunicationBase op = new CmdAddHouseFacility(mContext, house, list);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int EditHouseFacility(int hfid, int fid, int qty, String desc) {
+    public CmdExecRes EditHouseFacility(int hfid, int fid, int qty, String desc) {
         CommunicationBase op = new CmdModifyHouseFacility(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(hfid));
@@ -752,14 +815,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetHouseFacilityList(int house) {
+    public CmdExecRes GetHouseFacilityList(int house) {
         CommunicationBase op = new CmdGetHouseFacilityList(mContext, house);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int AddPicture(int house, int type, int refId, String desc, String file) {
+    public CmdExecRes AddPicture(int house, int type, int refId, String desc, String file) {
         CommunicationBase op = new CmdAddPicture(mContext, house);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(refId));
@@ -770,56 +833,56 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int DelePicture(int pic) {
+    public CmdExecRes DelePicture(int pic) {
         CommunicationBase op = new CmdDelePicture(mContext, pic);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetPicUrls(int pic, int size) {
+    public CmdExecRes GetPicUrls(int pic, int size) {
         CommunicationBase op = new CmdGetPictureUrls(mContext, pic, size);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHousePics(int house, int type, int size) {
+    public CmdExecRes GetHousePics(int house, int type, int size) {
         CommunicationBase op = new CmdGetHousePicList(mContext, house, type, size);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetUserPics(int user, int type, int size) {
+    public CmdExecRes GetUserPics(int user, int type, int size) {
         CommunicationBase op = new CmdGetUserPicList(mContext, user, type, size);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHouseNewEvent() {
+    public CmdExecRes GetHouseNewEvent() {
         CommunicationBase op = new CmdGetHouseNewEvent(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHouseEventProcList(int event_id) {
+    public CmdExecRes GetHouseEventProcList(int event_id) {
         CommunicationBase op = new CmdGetHouseEventProcList(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo) {
+    public CmdExecRes GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo) {
         CommunicationBase op = new CmdGetSysMsgList(mContext, posi_bgn, fetch_cnt, ido, nmo);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int ModifyHouseEvent(int event_id, String desc) {
+    public CmdExecRes ModifyHouseEvent(int event_id, String desc) {
         CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_DESC, String.valueOf(desc));
@@ -827,70 +890,70 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public int GetNewMsgCount() {
+    public CmdExecRes GetNewMsgCount() {
         CommunicationBase op = new CmdGetNewMsgCount(mContext);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetSysMsgInfo(int msg_id) {
+    public CmdExecRes GetSysMsgInfo(int msg_id) {
         CommunicationBase op = new CmdGetSysMsgInfo(mContext, msg_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int ReadNewMsg(int msg_id) {
+    public CmdExecRes ReadNewMsg(int msg_id) {
         CommunicationBase op = new CmdNewMsgRead(mContext, msg_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int MakeAppointment_SeeHouse(int house, String phone, String time_begin, String time_end, String desc) {
+    public CmdExecRes MakeAppointment_SeeHouse(int house, String phone, String time_begin, String time_end, String desc) {
         CommunicationBase op = new CmdMakeAppointment_SeeHouse(mContext, house, phone, time_begin, time_end, desc);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHouseSeeAppointmentList(int house_id, int begin, int cnt) {
+    public CmdExecRes GetHouseSeeAppointmentList(int house_id, int begin, int cnt) {
         CommunicationBase op = new CmdGetAppointmentListHouseSee(mContext, house_id, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetHouseList_AppointSee(int begin, int cnt) {
+    public CmdExecRes GetHouseList_AppointSee(int begin, int cnt) {
         CommunicationBase op = new CmdGetHouseList_AppointSee(mContext, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments) {
+    public CmdExecRes MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments) {
         CommunicationBase op = new CmdMakeAppointmentAction(mContext, apid, act, time_begin, time_end, comments);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetAppointmentInfo(int apid) {
+    public CmdExecRes GetAppointmentInfo(int apid) {
         CommunicationBase op = new CmdGetAppointmentInfo(mContext, apid);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int AssignAppointmentReceptionist(int aid, int receptionist) {
+    public CmdExecRes AssignAppointmentReceptionist(int aid, int receptionist) {
         CommunicationBase op = new CmdAssignAppointmentReceptionist(mContext, aid, receptionist);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
     }
 
     @Override
-    public int GetUserHouseWatchList(int begin, int cnt) {
+    public CmdExecRes GetUserHouseWatchList(int begin, int cnt) {
         CommunicationBase op = new CmdGetUserHouseWatchList(mContext, begin, cnt);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);

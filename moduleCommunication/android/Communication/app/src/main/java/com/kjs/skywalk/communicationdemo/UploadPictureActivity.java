@@ -59,7 +59,7 @@ public class UploadPictureActivity extends Activity implements DialogConfirmCall
                 mResultString = "";
                 mTextViewResult.setText("");
 
-                CommandManager CmdMgr = CommandManager.getCmdMgrInstance(UploadPictureActivity.this, UploadPictureActivity.this, UploadPictureActivity.this);
+                CommandManager CmdMgr = CommandManager.getCmdMgrInstance(UploadPictureActivity.this);
 
                 String picType = mEdtPicType.getText().toString();
                 int nPos = picType.indexOf(":");
@@ -123,15 +123,15 @@ public class UploadPictureActivity extends Activity implements DialogConfirmCall
         return dialog;
     }
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
+    public void onCommandFinished(int cmdId, int cmdSeq, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
         }
-        mResultString = "Request: " + command + "\n" + result.DebugString();
+        mResultString = String.format("seqe: %d, command: %d\n%s", cmdSeq, cmdId, result.DebugString());
 
         if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
-            Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
+            Log.e(TAG, "Command:"+ cmdId + " finished with error: " + result.GetErrDesc());
 //            showError(command, returnCode, description);
 //            return;
         }

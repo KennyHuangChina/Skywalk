@@ -1,8 +1,10 @@
 package com.kjs.skywalk.communicationdemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -45,13 +48,25 @@ public class MainActivityFragment extends Fragment
     public MainActivityFragment() {
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommandManager.getCmdMgrInstance(this.getContext()).Register(this, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommandManager.getCmdMgrInstance(this.getContext()).Unregister(this, this);
+    }
+
     private void doTestDeleApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
         CmdMgr.DelePicture(Integer.parseInt(mEditText.getText().toString()));
     }
 
     private void doTestModifyApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 //        CmdMgr.ModifyPropertyInfo(7, mEditText.getText().toString(),
 //                                    mEditText1.getText().toString(),
 //                                    mEditText2.getText().toString());
@@ -87,7 +102,7 @@ public class MainActivityFragment extends Fragment
    }
 
     private void doTestAddApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);     // new CommandManager(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());     // new CommandManager(this.getContext());
 //        CmdMgr.AddProperty(mEditText.getText().toString(), mEditText1.getText().toString(), mEditText2.getText().toString());
 //        CmdMgr.AddDeliverable(mEditText.getText().toString());
 //        CmdMgr.AddHouseDeliverable(Integer.parseInt(mEditText.getText().toString()),
@@ -117,7 +132,7 @@ public class MainActivityFragment extends Fragment
     }
 
     private void doTestGetApi() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 //        CmdMgr.GetPropertyInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetUserInfo(Integer.parseInt(mEditText.getText().toString()));
 //        CmdMgr.GetHouseInfo(Integer.parseInt(mEditText.getText().toString()), Boolean.parseBoolean(mEditText1.getText().toString()));
@@ -138,16 +153,16 @@ public class MainActivityFragment extends Fragment
 //        Log.d("[doTestGetApi] ", "strUrl:" + strUrl);
     }
     private void doTestGetList() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 //        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
 //        CmdMgr.GetDeliverableList();
 //        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetFacilityTypeList();
 //        CmdMgr.GetFacilityList(Integer.parseInt(String.valueOf(mEditText.getText())));
-        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
+//        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
 //        CmdMgr.GetUserHouseWatchList(0, mListTotal);
-//        GetHouseDigestList();
+        GetHouseDigestList();
 //        CmdMgr.GetSysMsgList(0, mListTotal,
 //                            Boolean.parseBoolean(mEditText.getText().toString()),
 //                            Boolean.parseBoolean(mEditText1.getText().toString()));
@@ -161,7 +176,7 @@ public class MainActivityFragment extends Fragment
     }
 
     private void GetHouseDigestList() {
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext(), this, this);
+        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
 
         HouseFilterCondition filter = new HouseFilterCondition();
 //        filter.mRental.FilterBetween(115000, 180000);
@@ -186,7 +201,8 @@ public class MainActivityFragment extends Fragment
         sort.add(new Integer(HouseFilterCondition.SORT_RENTAL_DESC));
         sort.add(new Integer(HouseFilterCondition.SORT_APPOINT_NUMB_DESC));
 
-        CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, filter, sort);
+        CmdExecRes cmdRes = CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, null, null); //filter, sort);
+        Log.d(TAG, "cmdRes:" + cmdRes.toString());
     }
 
     @Override
@@ -302,20 +318,19 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void onCommandFinished(int command, IApiResults.ICommon result) {
+    public void onCommandFinished(int cmdId, int cmdSeq, IApiResults.ICommon result) {
         if (null == result) {
             Log.w(TAG, "result is null");
             return;
         }
-        String cmd = CommunicationInterface.CmdID.GetCmdDesc(command);
-        mResultString = String.format("command(%d): %s \nResult: %s", command, cmd, result.DebugString());
+        mResultString = String.format("seq:%d, command(%d): %s \nResult: %s", cmdSeq, cmdId, CmdID.GetCmdDesc(cmdId), result.DebugString());
 
         if (CommunicationError.CE_ERROR_NO_ERROR != result.GetErrCode()) {
-            Log.e(TAG, "Command:"+ command + " finished with error: " + result.GetErrDesc());
+            Log.e(TAG, "Command:"+ cmdId + " finished with error: " + result.GetErrDesc());
 //            showError(command, returnCode, description);
 //            return;
         } else {
-            if (CMD_APPOINT_HOUSE_SEE_LST == command || command == CMD_GET_SYSTEM_MSG_LST) {
+            if (CMD_APPOINT_HOUSE_SEE_LST == cmdId || cmdId == CMD_GET_SYSTEM_MSG_LST) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -323,7 +338,7 @@ public class MainActivityFragment extends Fragment
                 if (nFetched > 0) {
                     mListTotal = 0;
                 }
-            } else if (CMD_GET_PROPERTY_LIST == command) {
+            } else if (CMD_GET_PROPERTY_LIST == cmdId) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -334,7 +349,7 @@ public class MainActivityFragment extends Fragment
                     prop.GetName();
                     mListTotal = 0;
                 }
-            } else if (command == CMD_GET_AGENCY_LIST) {
+            } else if (cmdId == CMD_GET_AGENCY_LIST) {
                 IApiResults.IResultList res = (IApiResults.IResultList) result;
                 int nTotal = res.GetTotalNumber();
                 mListTotal = nTotal;
@@ -345,8 +360,8 @@ public class MainActivityFragment extends Fragment
                     agency.Name();
                     mListTotal = 0;
                 }
-            } else if (command == CMD_GET_HOUSE_DIGEST_LIST || command == CMD_GET_BEHALF_HOUSE_LIST ||
-                        command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST ) {
+            } else if (cmdId == CMD_GET_HOUSE_DIGEST_LIST || cmdId == CMD_GET_BEHALF_HOUSE_LIST ||
+                    cmdId == CMD_HOUSE_LST_APPOINT_SEE || cmdId == CMD_GET_USER_HOUSE_WATCH_LIST ) {
                     IApiResults.IResultList res = (IApiResults.IResultList) result;
                     int nTotal = res.GetTotalNumber();
                     mListTotal = nTotal;
@@ -366,7 +381,7 @@ public class MainActivityFragment extends Fragment
                             mListTotal = 0;
                         }
                     }
-            } else if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
+            } else if (cmdId == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
                 IApiResults.IHouseDigest res = (IApiResults.IHouseDigest) result;
                 res.GetHouseId();
 

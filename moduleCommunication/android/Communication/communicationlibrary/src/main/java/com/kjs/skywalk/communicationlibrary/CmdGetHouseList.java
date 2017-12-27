@@ -6,64 +6,19 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseFilterCondition.*;
 
 /**
  * Created by kenny on 2017/3/2.
  */
 
 class CmdGetHouseList extends CommunicationBase {
-    protected int mType       = 0;  // 0: all house; 1: recommend; 2: deducted; 3: new
-    protected int mBeginPosi  = 0;
-    protected int mFetchCount = 0;
-
-    protected HouseFilterCondition  mFilter = null;
-    protected ArrayList<Integer>    mSort   = null;
 
     CmdGetHouseList(Context context, int type, int bgn, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DIGEST_LIST);
         mNeedLogin  = false;
-        mType       = type;
-        mBeginPosi  = bgn;
-        mFetchCount = cnt;
-        mFilter     = filter;
-        mSort       = sort;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mType < 0 || mType > 3) {
-            Log.e(TAG, "mType:" + mType);
-            return false;
-        }
-        if (mBeginPosi < 0) {
-            Log.e(TAG, "mBeginPosi:" + mBeginPosi);
-            return false;
-        }
-        if (mFetchCount < 0) {
-            Log.e(TAG, "mFetchCount:" + mFetchCount);
-            return false;
-        }
-
-        if (null != mSort && mSort.size() > 0) {
-            if (isSortTypeExist(SORT_PUBLISH_TIME) && isSortTypeExist(SORT_PUBLISH_TIME_DESC)) {
-                Log.e(TAG, "SORT_PUBLISH_TIME vs SORT_PUBLISH_TIME_DESC");
-                return false;
-            }
-            if (isSortTypeExist(SORT_RENTAL) && isSortTypeExist(SORT_RENTAL_DESC)) {
-                Log.e(TAG, "SORT_RENTAL vs SORT_RENTAL_DESC");
-                return false;
-            }
-            if (isSortTypeExist(SORT_APPOINT_NUMB) && isSortTypeExist(SORT_APPOINT_NUMB_DESC)) {
-                Log.e(TAG, "SORT_APPOINT_NUMB vs SORT_APPOINT_NUMB_DESC");
-                return false;
-            }
-        }
-
-        return true;
+        mArgs       = new ApiArgsGetHouseDigestList(type, bgn, cnt, filter, sort);
     }
 
     @Override
@@ -80,81 +35,82 @@ class CmdGetHouseList extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("type=" + mType);
+        ApiArgsGetHouseDigestList args = (ApiArgsGetHouseDigestList)mArgs;
+        mRequestData = ("type=" + args.getType());
         mRequestData += "&";
-        mRequestData += ("bgn=" + mBeginPosi);
+        mRequestData += ("bgn=" + args.getBeginPosi());
         mRequestData += "&";
-        mRequestData += ("cnt=" + mFetchCount);
+        mRequestData += ("cnt=" + args.getFetchCnt());
 
-        if (null != mFilter) {
+        if (null != args.getFilters()) {
             // rental
-            int nOp = mFilter.mRental.GetOp();
+            int nOp = args.getFilters().mRental.GetOp();
             if (nOp > 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                String strVal = mFilter.mRental.GetValuesString();
+                String strVal = args.getFilters().mRental.GetValuesString();
                 mRequestData += String.format("rtop=%d&rt=%s", nOp, strVal);
             }
 
             // Livingroom
-            nOp = mFilter.mLivingroom.GetOp();
+            nOp = args.getFilters().mLivingroom.GetOp();
             if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                String strVal = mFilter.mLivingroom.GetValuesString();
+                String strVal = args.getFilters().mLivingroom.GetValuesString();
                 mRequestData += String.format("lvop=%d&lr=%s", nOp, strVal);
             }
 
             // Bedroom
-            nOp = mFilter.mBedroom.GetOp();
+            nOp = args.getFilters().mBedroom.GetOp();
             if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                String strVal = mFilter.mBedroom.GetValuesString();
+                String strVal = args.getFilters().mBedroom.GetValuesString();
                 mRequestData += String.format("berop=%d&ber=%s", nOp, strVal);
             }
 
             // Bathroom min
-            nOp = mFilter.mBathroom.GetOp();
+            nOp = args.getFilters().mBathroom.GetOp();
             if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                String strVal = mFilter.mBathroom.GetValuesString();
+                String strVal = args.getFilters().mBathroom.GetValuesString();
                 mRequestData += String.format("barop=%d&bar=%s", nOp, strVal);
             }
 
             // Acreage min
-            nOp = mFilter.mAcreage.GetOp();
+            nOp = args.getFilters().mAcreage.GetOp();
             if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                String strVal = mFilter.mAcreage.GetValuesString();
+                String strVal = args.getFilters().mAcreage.GetValuesString();
                 mRequestData += String.format("acop=%d&ac=%s", nOp, strVal);
             }
 
             // Property
-            nOp = mFilter.mProperty.GetOp();
+            nOp = args.getFilters().mProperty.GetOp();
             if (nOp >= 0) {
                 if (!mRequestData.isEmpty()) {
                     mRequestData += "&";
                 }
-                String strVal = mFilter.mProperty.GetValuesString();
+                String strVal = args.getFilters().mProperty.GetValuesString();
                 mRequestData += String.format("pop=%d&prop=%s", nOp, strVal);
             }
         }
 
         String sort = "";
-        if (null != mSort) {
-            for (int n = 0; n < mSort.size(); n++) {
+        if (null != args.getSorts()) {
+            for (int n = 0; n < args.getSorts().size(); n++) {
                 if (!sort.isEmpty()) {
                     sort += ",";
                 }
-                sort += String.format("%d", mSort.get(n).intValue());
+                sort += String.format("%d", args.getSorts().get(n).intValue());
             }
             if (!sort.isEmpty()) {
                 if (!mRequestData.isEmpty()) {
@@ -165,49 +121,5 @@ class CmdGetHouseList extends CommunicationBase {
         }
 
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
-        String Fn = "[isCmdEqual] ";
-        CmdGetHouseList cmdIn = (CmdGetHouseList)cmd2Chk;
-        if (cmdIn.mType != mType) {
-            return false;
-        }
-        if (cmdIn.mBeginPosi != mBeginPosi) {
-            return false;
-        }
-        if (cmdIn.mFetchCount != mFetchCount) {
-            return false;
-        }
-        Log.w(TAG, Fn + "TODO: do checking for filter and sort");
-        return true;
-    }
-
-    @Override
-    protected boolean checkCmdRes(IApiResults.ICommon res) {
-        String Fn = "[checkCmdRes] ";
-        ResGetHouseList resHouseList = (ResGetHouseList)res;
-        if (resHouseList.mType != mType) {
-            return false;
-        }
-        if (resHouseList.mBegin != mBeginPosi) {
-            return false;
-        }
-        if (resHouseList.mFetchCnt != mFetchCount) {
-            return false;
-        }
-        Log.w(TAG, Fn + "TODO: do checking for filter and sort");
-        return true;    // super.checkCmdRes(res);
-    }
-
-    private boolean isSortTypeExist(int type) {
-        for (int n = 0; n < mSort.size(); n++) {
-            if (mSort.get(n).intValue() == type) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -1,11 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
 import android.content.Context;
-import android.util.Log;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_MAJOR_House;
 
 /**
  * Created by kenny on 2017/5/14.
@@ -19,11 +15,11 @@ class CmdGetHousePicList extends CmdGetXPicList {
 
     @Override
     protected String getBaseURL() {
-        return "/v1/pic/house/" + mXId;
+        return "/v1/pic/house/" + ((ApiArgsGetXPiclst)mArgs).getXId();
     }
 
     @Override
     protected boolean checkPicType(ResPicList res) {
-        return (res.mPicType == CommunicationInterface.PIC_TYPE_MAJOR_House) ? true : false;
+        return (res.mPicType == PIC_TYPE_MAJOR_House) ? true : false;
     }
 }

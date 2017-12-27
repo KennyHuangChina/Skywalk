@@ -23,21 +23,21 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                                     InternalDefines.BeforeConnect,
                                     InternalDefines.AfterConnect,
                                     InternalDefines.ConnectFailed {
-    protected String  TAG           = getClass().getSimpleName();
-    public    int     mAPI          = CmdID.CMD_TEST;
-    protected Context mContext      = null;
-    protected String  mMethodType   = "GET";
-    protected String  mServerURL    = "";
-    protected String  mCommandURL   = "";
-    protected String  mRequestData  = "";
-    protected String  mFile         = "";
+    protected   String  TAG           = getClass().getSimpleName();
+    public      int     mAPI          = CmdID.CMD_TEST;     // command id
+    protected   int     mCmdSeq       = 0;                  // command seq
+    protected   Context mContext      = null;
+    protected   String  mMethodType   = "GET";
+    protected   String  mServerURL    = "";
+    protected   String  mCommandURL   = "";
+    protected   String  mRequestData  = "";
+    protected   String  mFile         = "";
+    protected   IApiArgs.IArgsBase      mArgs = null;
 
-    protected MyUtils               mUtils              = null;
-    protected CIProgressListener    mProgressListener   = null;
-    protected CICommandListener     mCommandListener    = null;
-    protected boolean               mNeedLogin          = true;
-    protected CIProgressListener    mProgListenerBak    = null;
-    protected CICommandListener     mCmdListenerBak     = null;
+    protected   MyUtils               mUtils              = null;
+    protected   CIProgressListener    mProgressListener   = null;
+    protected   CICommandListener     mCommandListener    = null;
+    protected   boolean               mNeedLogin          = true;   // if this command need to login first, default to "Yes"
 
     // common header items
     protected String            mSessionID      = "";
@@ -56,12 +56,17 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         mCookieManager = SKCookieManager.getManager(context);
     }
 
-    public CIProgressListener GetBackupProgressListener() { return mProgListenerBak; }
-    public CICommandListener GetBackupCommandListener() { return mCmdListenerBak; }
-    public void SetBackupListener(CIProgressListener p, CICommandListener c) {
-        mProgListenerBak = p;
-        mCmdListenerBak = c;
+    public int setCmdSeq(int cmdSeq) {
+        String Fn = "[setCmdId] ";
+        if (cmdSeq < COMMAND_SEQ_BASE) {
+            Log.e(TAG, Fn + "Invalid cmdId:" + cmdSeq);
+            return -1;
+        }
+        mCmdSeq = cmdSeq;
+        return mCmdSeq;
     }
+
+    public int getCmdSeq() { return mCmdSeq; }
 
     @Override
     public int doOperation(CICommandListener commandListener, CIProgressListener progressListener) {
@@ -83,7 +88,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 ConnectionDetector cd = new ConnectionDetector(mContext);
                 if (!cd.isConnectingToInternet()) {
                     IApiResults.ICommon result = doParseResult(CommunicationError.CE_ERROR_NETWORK_NOTAVAILABLE, null);
-                    mCommandListener.onCommandFinished(mAPI, result);
+                    if (null != result) {
+                        result.SetArgs(mArgs);
+                    }
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
                     return;
                 }
 
@@ -101,7 +109,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     String strError = CommunicationError.getErrorDescription(retValue);
                     Log.e(TAG, "Fail to connect to server. error: " +  strError);
                     returnCode = "" + retValue;
-                    mCommandListener.onCommandFinished(mAPI, null);
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, null);
                     doConnectFailed(http);
                     return;
                 }
@@ -117,7 +125,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                     int nErrCode = http.getErrorCode();
                     JSONObject jObject = http.getJsonObject();
                     IApiResults.ICommon result = doParseResult(nErrCode, jObject);
-                    mCommandListener.onCommandFinished(mAPI, result);
+                    if (null != result) {
+                        result.SetArgs(mArgs);
+                    }
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
                     doConnectFailed(http);
                     return;
                 }
@@ -126,16 +137,19 @@ class CommunicationBase implements  InternalDefines.DoOperation,
                 if (jObject == null) {
 //                    String strError = InternalDefines.getErrorDescription(InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED);
 //                    returnCode = "" + InternalDefines.ERROR_CODE_HTTP_REQUEST_FAILED;
-                    mCommandListener.onCommandFinished(mAPI, null);
+                    mCommandListener.onCommandFinished(mAPI, mCmdSeq, null);
                     doConnectFailed(http);
                     return;
                 }
 
                 IApiResults.ICommon result = doParseResult(InternalDefines.ERROR_CODE_OK, jObject);
+                if (null != result) {
+                    result.SetArgs(mArgs);
+                }
 
                 String strError = CommunicationError.getErrorDescription(InternalDefines.ERROR_CODE_OK);
                 returnCode = "" + InternalDefines.ERROR_CODE_OK;
-                mCommandListener.onCommandFinished(mAPI, result);
+                mCommandListener.onCommandFinished(mAPI, mCmdSeq, result);
 
                 doAfterConnect(http);
             } finally {
@@ -159,7 +173,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        return false;
+        if (!mArgs.checkArgs()) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -191,26 +208,34 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         if (cmd2Chk.mAPI != mAPI) {
             return false;
         }
-        return isCmdEqual(cmd2Chk);
+
+        if (null == mArgs) {
+            return true;    // this command has no arguments to check, so it should be equal
+        }
+        return mArgs.isEqual(cmd2Chk.mArgs);
     }
 
-    protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
-        return true;
-    }
-
+    /**
+     *  Check if the result belong to current command
+     *  @param nAPI
+     *  @param res
+     *  @return
+     */
     protected boolean isCmdRes(int nAPI, IApiResults.ICommon res) {
         if (nAPI != mAPI) {
             return false;
         }
-        if (null == res) {
+        if (null == res) {  // this command has no arguments to check, so it should be equal
             return true;
         }
         return checkCmdRes(res);
     }
 
     protected boolean checkCmdRes(IApiResults.ICommon res) {
-        Log.w(TAG, "[checkCmdRes] please override this function to do further checking");
-        return true;
+        if (null == mArgs) {
+            return false;
+        }
+        return mArgs.isEqual(res.GetArgs());
     }
 
     protected String generateRandom() {

@@ -9,9 +9,11 @@ import java.util.Date;
 
 public class IApiResults {
     public interface ICommon {
-        int     GetErrCode();
-        String  GetErrDesc();
-        String  DebugString();
+        int                 GetErrCode();
+        String              GetErrDesc();
+        String              DebugString();
+        IApiArgs.IArgsBase  GetArgs();
+        void                SetArgs(IApiArgs.IArgsBase args);
     }
 
     public interface IGetUserSalt {
