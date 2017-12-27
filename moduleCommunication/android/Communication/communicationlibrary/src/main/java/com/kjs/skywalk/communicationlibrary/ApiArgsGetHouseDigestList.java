@@ -110,6 +110,13 @@ class ApiArgsGetHouseDigestList extends ApiArgsBase implements IApiArgs.IArgsGet
         return true;
     }
 
+    @Override
+    public String toString() {
+//        return super.toString();
+        String str = "type:" + mType + ", begin:" + mBegin + ", to fetch:" + mFetchCnt + "\n";
+        return str;
+    }
+
     private boolean isSortTypeExist(int type) {
         for (Integer sort : mSort) {
             if (sort == type) {

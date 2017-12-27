@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -200,8 +201,8 @@ public class MainActivityFragment extends Fragment
         sort.add(new Integer(HouseFilterCondition.SORT_RENTAL_DESC));
         sort.add(new Integer(HouseFilterCondition.SORT_APPOINT_NUMB_DESC));
 
-        int nRes = CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, null, null); //filter, sort);
-        Log.d(TAG, "nRes:" + nRes);
+        CmdExecRes cmdRes = CmdMgr.GetHouseDigestList(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal, null, null); //filter, sort);
+        Log.d(TAG, "cmdRes:" + cmdRes.toString());
     }
 
     @Override
