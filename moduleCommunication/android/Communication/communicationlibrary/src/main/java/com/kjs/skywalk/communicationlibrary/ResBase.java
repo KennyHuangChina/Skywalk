@@ -8,9 +8,10 @@ import org.json.JSONObject;
  */
 
 class ResBase implements IApiResults.ICommon {
-    protected  int      mErrCode    = -1;   // Unknown. refer to CE_COMMAND_ERROR_XXXX
-    protected  String   mErrDesc    = "";
-    protected  String   mString     = "";
+    protected   int                 mErrCode    = -1;   // Unknown. refer to CE_COMMAND_ERROR_XXXX
+    protected   String              mErrDesc    = "";
+    protected   String              mString     = "";
+    private     IApiArgs.IArgsBase  mCmdArgs    = null;
 
     ResBase(int nErrCode) {
         mErrCode = nErrCode;
@@ -36,6 +37,15 @@ class ResBase implements IApiResults.ICommon {
         mString += ("mErrCode: " + mErrCode + "\n");
         mString += ("mErrDesc: " + mErrDesc + "\n");
         return mString;
+    }
+
+    @Override
+    public IApiArgs.IArgsBase GetArgs() {
+        return mCmdArgs;
+    }
+
+    protected void SetArgs(IApiArgs.IArgsBase args) {
+        mCmdArgs = args;
     }
 
     protected int parse(JSONObject obj) {

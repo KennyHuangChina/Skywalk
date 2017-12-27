@@ -268,7 +268,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                             if (CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN == ret) {
                                 mLoginUserInfo = null;
                                 Log.e(TAG, Fn + "user not login, notify user to login");
-                                onNotify(CmdID.CMD_RELOGIN, mCmdLogin.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
+                                onNotify(CmdID.CMD_RELOGIN, cmd.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
                                 // Keep the command in queue, once user get logined, the commands will be processed automatically, one by one
                             } else {
                                 Log.e(TAG, Fn + String.format("other error(0x%x), remove the command from queue", ret));
@@ -332,11 +332,14 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
                 // notify UI no matter command succeeded or failed
                 CICommandListener cmdListener = null;
-                if (null != mCmdLogin &&
-                    null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
-                    // Notify UI
-                    cmdListener.onCommandFinished(cmdId, cmdSeq, res);
+                if (null != mCmdLogin) {
+                    onNotify(cmdId, cmdSeq, res);
                 }
+//                if (null != mCmdLogin &&
+//                    null != (cmdListener = mCmdLogin.GetBackupCommandListener())) {
+//                    // Notify UI
+//                    cmdListener.onCommandFinished(cmdId, cmdSeq, res);
+//                }
                 mCmdLogin = null;
                 break;
             }

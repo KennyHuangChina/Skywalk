@@ -32,13 +32,12 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     protected   String  mCommandURL   = "";
     protected   String  mRequestData  = "";
     protected   String  mFile         = "";
+    protected   IApiArgs.IArgsBase      mArgs = null;
 
     protected   MyUtils               mUtils              = null;
     protected   CIProgressListener    mProgressListener   = null;
     protected   CICommandListener     mCommandListener    = null;
-    protected   boolean               mNeedLogin          = true;
-    protected   CIProgressListener    mProgListenerBak    = null;     // TODO: remove
-    protected   CICommandListener     mCmdListenerBak     = null;     // TODO: remove
+    protected   boolean               mNeedLogin          = true;   // if this command need to login first, default to "Yes"
 
     // common header items
     protected String            mSessionID      = "";
@@ -68,13 +67,6 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     }
 
     public int getCmdSeq() { return mCmdSeq; }
-
-    public CIProgressListener GetBackupProgressListener() { return mProgListenerBak; }
-    public CICommandListener GetBackupCommandListener() { return mCmdListenerBak; }
-    public void SetBackupListener(CIProgressListener p, CICommandListener c) {
-        mProgListenerBak = p;
-        mCmdListenerBak = c;
-    }
 
     @Override
     public int doOperation(CICommandListener commandListener, CIProgressListener progressListener) {
@@ -178,6 +170,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResBase result = new ResBase(nErrCode, jObject);
+        if (null != result) {
+            result.SetArgs(mArgs);
+        }
         return result;
     }
 
@@ -207,8 +202,9 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         return isCmdEqual(cmd2Chk);
     }
 
+    // TODO: do not override
     protected boolean isCmdEqual(CommunicationBase cmd2Chk) {
-        return true;
+        return mArgs.isEqual(cmd2Chk.mArgs);
     }
 
     protected boolean isCmdRes(int nAPI, IApiResults.ICommon res) {
@@ -221,9 +217,11 @@ class CommunicationBase implements  InternalDefines.DoOperation,
         return checkCmdRes(res);
     }
 
+    // TODO: do not override
     protected boolean checkCmdRes(IApiResults.ICommon res) {
-        Log.w(TAG, "[checkCmdRes] please override this function to do further checking");
-        return true;
+        return mArgs.isEqual(res.GetArgs());
+//        Log.w(TAG, "[checkCmdRes] please override this function to do further checking");
+//        return true;
     }
 
     protected String generateRandom() {

@@ -42,7 +42,7 @@ class InternalDefines {
         String ListItemInfo2String();
     }
 
-    //Log Tags defines
+    //Log Tags defines. TODO
     public static final String TAG_HTTPConnector                            = "HTTPConnector";
     public static final String TAG_COMMUNICATION_MANAGER                    = "CommunicationManager";
     public static final String TAG_COMMUNICATION_UTILS                      = "CommunicationUtils";
@@ -50,7 +50,7 @@ class InternalDefines {
     public static final String TAG_COMMUNICATION_COOKIE_MANAGER             = "SKCookieManager";
     public static final String TAG_COMMUNICATION_SESSION_STORE              = "SKSessionStore";
 
-    //Error Code Defines
+    //Error Code Defines. TODO
     public static final int     ERROR_CODE_OK                               = 0x0;
     public static final String  ERROR_DESCRIPTION_OK                        = "No Error";
 }
