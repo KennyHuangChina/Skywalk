@@ -22,14 +22,6 @@ class CmdGetHouseList extends CommunicationBase {
     }
 
     @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!mArgs.checkArgs()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetHouseList result = new ResGetHouseList(nErrCode, jObject);
         return result;

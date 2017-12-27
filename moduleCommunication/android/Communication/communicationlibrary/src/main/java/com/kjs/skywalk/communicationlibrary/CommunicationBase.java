@@ -164,7 +164,10 @@ class CommunicationBase implements  InternalDefines.DoOperation,
 
     @Override
     public boolean checkParameter(HashMap<String, String> map) {
-        return false;
+        if (!mArgs.checkArgs()) {
+            return false;
+        }
+        return true;
     }
 
     @Override

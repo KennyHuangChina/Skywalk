@@ -72,13 +72,4 @@ class CmdGetBehalfHouses extends CommunicationBase {
         }
         return true;
     }
-
-    @Override
-    protected boolean checkCmdRes(IApiResults.ICommon res) {
-        ResGetHouseList cmd = (ResGetHouseList)res;
-        if (mType != cmd.mType || mBegin != cmd.mBegin || mFetchCnt != cmd.mFetchCnt) {
-            return false;
-        }
-        return true;
-    }
 }

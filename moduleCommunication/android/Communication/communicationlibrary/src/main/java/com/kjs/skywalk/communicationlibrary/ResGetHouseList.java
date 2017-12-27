@@ -12,10 +12,7 @@ import java.util.ArrayList;
 
 class ResGetHouseList extends ResBase implements IApiResults.IResultList {
 
-    private     HouseDigestList mHouseDigestList    = null;
-    protected   int             mType               = -1;
-    protected   int             mBegin              = -1;
-    protected   int             mFetchCnt           = -1;
+    private HouseDigestList mHouseDigestList = null;
 
     ResGetHouseList(int nErrCode, JSONObject jObject) {
         super(nErrCode);
@@ -34,14 +31,6 @@ class ResGetHouseList extends ResBase implements IApiResults.IResultList {
 
     @Override
     protected int parseResult(JSONObject obj) {
-        try {
-            mType       = obj.getInt("Type");
-            mBegin      = obj.getInt("Begin");
-            mFetchCnt   = obj.getInt("FetchCnt");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return -1;
-        }
         // parse house list
         return mHouseDigestList.parseList(obj);
     }
