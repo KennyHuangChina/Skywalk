@@ -24,24 +24,25 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseF
 
 public class GetHouseListTask extends SKBaseAsyncTask {
 
-    public static int TYPE_ALL = 0;
-    public static int TYPE_RECOMMAND = 1;
-    public static int TYPE_DEDUCTED = 2;
-    public static int TYPE_NEW = 3;
+    public static int   TYPE_ALL        = 0,
+                        TYPE_RECOMMAND  = 1,
+                        TYPE_DEDUCTED   = 2,
+                        TYPE_NEW        = 3;
 
-    public static final int SORT_TYPE_DEFAULT = 0;
-    public static final int SORT_TYPE_PUBLIC_TIME = 0x01;
-    public static final int SORT_TYPE_PUBLIC_TIME_DESC = 0x02;
-    public static final int SORT_TYPE_RENTAL = 0x04;
-    public static final int SORT_TYPE_RENTAL_DESC = 0x08;
-    public static final int SORT_TYPE_APPOINT = 0x10;
-    public static final int SORT_TYPE_APPOINT_DESC = 0x20;
+    public static final int SORT_TYPE_DEFAULT           = 0,
+                            SORT_TYPE_PUBLIC_TIME       = 0x01,
+                            SORT_TYPE_PUBLIC_TIME_DESC  = 0x02,
+                            SORT_TYPE_RENTAL            = 0x04,
+                            SORT_TYPE_RENTAL_DESC       = 0x08,
+                            SORT_TYPE_APPOINT           = 0x10,
+                            SORT_TYPE_APPOINT_DESC      = 0x20;
 
-    private int mBegin = 0;
-    private int mCount = 0;
-    private int mType = 0;
-    private int mTotalCount = 0;
-    private TaskFinished mTaskFinished = null;
+    private int             mBegin          = 0;
+    private int             mCount          = 0;
+    private int             mType           = 0;
+    private int             mTotalCount     = 0;
+    private TaskFinished    mTaskFinished   = null;
+    private CmdExecRes      mCmdRes         = null;
 
     private ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
 
@@ -129,30 +130,37 @@ public class GetHouseListTask extends SKBaseAsyncTask {
         //???????some times this function does not called....Why
     }
 
+
     @Override
     protected Integer doInBackground(Integer... params) {
 //        int result = 0;
 
-        mType = params[0].intValue();
-        mBegin = params[1].intValue();
-        mCount = params[2].intValue();
+        mType   = params[0].intValue();
+        mBegin  = params[1].intValue();
+        mCount  = params[2].intValue();
 
         mHouseList.clear();
         mTotalCount = 0;
+        mResultGot  = false;
 
-        // TODO: delete the first operation of fetching the total number
-        mResultGot = false;
-        CmdExecRes result = CommandManager.getCmdMgrInstance(mContext/*, mCmdListener, mProgressListener*/).GetHouseDigestList(mType, 0, 0, mFilter, mSort);
-        if (!waitResult(3000)) {
-            kjsLogUtil.i(String.format("[doInBackground] ------ get count timeout"));
-            return 0;
-        }
+        // Register receiver
+        CommandManager.getCmdMgrInstance(mContext).Register(mCmdListener, mProgressListener);
 
-        mResultGot = false;
-        result = CommandManager.getCmdMgrInstance(mContext/*, mCmdListener, mProgressListener*/).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
-        if (!waitResult(3000)) {
-            kjsLogUtil.i(String.format("[doInBackground] ------ get house list timeout"));
-            return 0;
+        try {
+            mCmdRes = CommandManager.getCmdMgrInstance(mContext).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
+            if (mCmdRes.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+                kjsLogUtil.e("Fail to get house lsit for type:" + mType);
+                return 0;
+            }
+            if (!waitResult(3000)) {
+                kjsLogUtil.w(String.format("get house list timeout"));
+                return 0;
+            }
+        } finally {
+            mResultGot  = false;
+            mCmdRes     = null;
+            // Unregister receiver
+            CommandManager.getCmdMgrInstance(mContext).Unregister(mCmdListener, mProgressListener);
         }
 
         return mTotalCount;
@@ -166,7 +174,12 @@ public class GetHouseListTask extends SKBaseAsyncTask {
                 mResultGot = true;
                 return;
             }
-            kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+            if (null == mCmdRes || mCmdRes.mCmdSeq != cmdSeq) { // result is not we wanted
+                return;
+            }
+
+            kjsLogUtil.i(String.format("command:0x%x(%d), seq:%d --- %s" , command, command, cmdSeq, iResult.DebugString()));
+            kjsLogUtil.d("mCmdRes:" + mCmdRes.toString());
             if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
                 kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
                 mResultGot = true;
@@ -176,10 +189,9 @@ public class GetHouseListTask extends SKBaseAsyncTask {
 
             if (command == CMD_GET_HOUSE_DIGEST_LIST) {
                 IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                mTotalCount = resultList.GetTotalNumber();
                 int nFetch = resultList.GetFetchedNumber();
-                if (nFetch == -1) {
-                    mTotalCount = resultList.GetTotalNumber();
-                } else  {
+                if (nFetch >= -1) {
                     // IApiResults.IHouseDigest
                     ArrayList<Object> houseDigests = resultList.GetList();
                     for (Object houseDigestObj : houseDigests) {
@@ -209,10 +221,8 @@ public class GetHouseListTask extends SKBaseAsyncTask {
                             ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
                             houseDigest.houseTags.add(houseTag);
                         }
-
                         mHouseList.add(houseDigest);
                     }
-
                     mTaskFinished.onTaskFinished(mHouseList, mTotalCount);
                 }
             }
