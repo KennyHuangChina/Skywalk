@@ -38,6 +38,18 @@ class ApiArgsGetBehalfHouseList extends ApiArgsBase implements IApiArgs.IArgsGet
     }
 
     @Override
+    public boolean isEqual(IApiArgs.IArgsBase arg2) {
+        if (!super.isEqual(arg2)) {
+            return false;
+        }
+        ApiArgsGetBehalfHouseList arg2chk = (ApiArgsGetBehalfHouseList)arg2;
+        if (mType != arg2chk.mType || mBegin != arg2chk.mBegin || mFetchCnt != mFetchCnt) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public int getType() {
         return mType;
     }
