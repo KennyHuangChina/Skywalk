@@ -77,4 +77,13 @@ public class IApiArgs {
                         PIC_SIZE_Small      = 2,
                         PIC_SIZE_Moderate   = 3,
                         PIC_SIZE_Large      = 4;
+
+    /**
+     *
+     */
+    public interface IArgsGetSmsCode extends IArgsBase {
+        String getUserName();
+    }
+
+
 }

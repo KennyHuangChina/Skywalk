@@ -26,7 +26,7 @@ class CmdGetBehalfHouses extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        ApiArgsGetHouseDigestList args = (ApiArgsGetHouseDigestList)mArgs;
+        ApiArgsGetBehalfHouseList args = (ApiArgsGetBehalfHouseList)mArgs;
         mRequestData = ("type=" + args.getType());
         mRequestData += "&";
         mRequestData += ("bgn=" + args.getBeginPosi());

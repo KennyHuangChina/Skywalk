@@ -392,9 +392,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes GetSmsCode(String userName) {
-        CommunicationBase op = new CmdGetSmsCode(mContext);
+        CommunicationBase op = new CmdGetSmsCode(mContext, userName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
         return execute(op, pMap);
     }
 

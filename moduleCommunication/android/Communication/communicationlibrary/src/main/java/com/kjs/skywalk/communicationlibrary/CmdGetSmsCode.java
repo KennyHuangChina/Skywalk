@@ -14,26 +14,11 @@ import java.util.HashMap;
  */
 
 class CmdGetSmsCode extends CommunicationBase {
-    private String mSmsCode = "";
-    private String mUserName = "";
 
-    CmdGetSmsCode(Context context) {
+    CmdGetSmsCode(Context context, String user) {
         super(context, CommunicationInterface.CmdID.CMD_GET_SMS_CODE);
         mNeedLogin = false;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map)
-    {
-        if (!map.containsKey(CommunicationParameterKey.CPK_USER_NAME)) {
-            return false;
-        }
-
-        mUserName = map.get(CommunicationParameterKey.CPK_USER_NAME);
-        if (null == mUserName || mUserName.isEmpty()) {
-            return false;
-        }
-        return true;
+        mArgs = new ApiArgsGetSmsCode(user);
     }
 
     @Override
@@ -43,7 +28,7 @@ class CmdGetSmsCode extends CommunicationBase {
     }
     @Override
     public void generateRequestData() {
-        mRequestData = ("ln=" + mUserName);
+        mRequestData = ("ln=" + ((ApiArgsGetSmsCode)mArgs).getUserName());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
