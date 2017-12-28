@@ -13,11 +13,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupWindow;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.kjs.skywalk.app_android.ClassDefine.ServerError.SERVER_CONNECTION_ERROR;
@@ -42,10 +44,40 @@ public class SKBaseActivity extends AppCompatActivity
     protected int                       mUserId         = 0;
     protected String                    mUserName       = "";
     protected String                    mUserPhone      = "";
-    public IApiResults.IGetUserInfo  mLoginUserInfo  = null;
+    public IApiResults.IGetUserInfo     mLoginUserInfo  = null;
+    private ArrayList<CmdExecRes>       mCmdList        = null;
 
-    public int mActScreenWidth = 0;
+    public int mActScreenWidth  = 0;
     public int mActScreenHeight = 0;
+
+    public SKBaseActivity() {
+        mCmdList = new ArrayList<CmdExecRes>();
+    }
+
+    protected boolean StoreCommand(CmdExecRes res) {
+        synchronized (mCmdList) {
+            if (mCmdList.add(res)) {
+                kjsLogUtil.d("store command seq: " + res.mCmdSeq);
+                return true;
+            }
+        }
+        kjsLogUtil.e("Fail to store command seq: " + res.mCmdSeq);
+        return false;
+    }
+
+    protected CmdExecRes RetrieveCommand(int cmdSeq) {
+        synchronized (mCmdList) {
+            for (int n = 0; n< mCmdList.size(); n++) {
+                CmdExecRes res = mCmdList.get(n);
+                if (res.mCmdSeq == cmdSeq) {
+                    kjsLogUtil.d("Retrieve command seq: " + cmdSeq);
+                    return mCmdList.remove(n);
+                }
+            }
+        }
+        kjsLogUtil.w("command seq: " + cmdSeq + " not found");
+        return null;
+    }
 
     protected void showWaiting(final View v) {
         runOnUiThread(new Runnable() {

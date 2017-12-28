@@ -57,8 +57,9 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 /**
  * A login screen that offers login via email/password.
  */
-public class Activity_login extends SKBaseActivity implements
-        CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
+public class Activity_login extends     SKBaseActivity
+                            implements  CommunicationInterface.CICommandListener,
+                                        CommunicationInterface.CIProgressListener {
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -70,31 +71,31 @@ public class Activity_login extends SKBaseActivity implements
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private static final String LOGIN_MODE_TELEPHONE = "telephone";
-    private static final String LOGIN_MODE_ACCOUNT = "account";
+    private static final String LOGIN_MODE_TELEPHONE    = "telephone";
+    private static final String LOGIN_MODE_ACCOUNT      = "account";
 
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private AutoCompleteTextView    mEmailView;
+    private EditText                mPasswordView;
+    private View                    mProgressView;
+    private View                    mLoginFormView;
 
     // telephone login
-    private AutoCompleteTextView mActv_telephone_num;
-    private EditText mEt_verfication_code;
+    private AutoCompleteTextView    mActv_telephone_num;
+    private EditText                mEt_verfication_code;
 //    private TextView mTv_get_verfication_code;
 
     // account login
-    private AutoCompleteTextView mActv_account;
-    private EditText mEt_password;
-    private CheckBox mCb_password;
+    private AutoCompleteTextView    mActv_account;
+    private EditText                mEt_password;
+    private CheckBox                mCb_password;
 
-    private String mRand = "";
-    private String mSalt = "";
-    private final int MSG_LOGIN = 0;
-    private final int MSG_HIDE_WAITING_WINDOW = 1;
+    private String      mRand                   = "";
+    private String      mSalt                   = "";
+    private final int   MSG_LOGIN               = 0;
+    private final int   MSG_HIDE_WAITING_WINDOW = 1;
 
     PopupWindowWaiting mWaitingWindow = null;
     private LinearLayout mContainer = null;
@@ -188,6 +189,20 @@ public class Activity_login extends SKBaseActivity implements
             }
     };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // register listener
+        CommandManager.getCmdMgrInstance(this).Register(this, this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister listener
+        CommandManager.getCmdMgrInstance(this).Unregister(this, this);
+    }
+
     private void doLogin() {
         if (!mLoginMode.equalsIgnoreCase(LOGIN_MODE_ACCOUNT))
             return;
@@ -202,6 +217,8 @@ public class Activity_login extends SKBaseActivity implements
         CmdExecRes res = CommandManager.getCmdMgrInstance(this).LoginByPassword(mActv_account.getText().toString(), passowrd, mRand, mSalt);
         if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
             mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
+        } else {
+            StoreCommand(res);
         }
     }
 
@@ -212,7 +229,13 @@ public class Activity_login extends SKBaseActivity implements
         String strUserSalt;
         strUserSalt = mActv_account.getText().toString();
 
-        return CommandManager.getCmdMgrInstance(this).GetUserSalt(strUserSalt).mError;
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetUserSalt(strUserSalt);
+        if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e(String.format("Fail to send commnd to login, error: %d", res.mError));
+        } else {
+            StoreCommand(res);
+        }
+        return res.mError;
     }
 
     Handler mHandler = new Handler(){
@@ -282,7 +305,6 @@ public class Activity_login extends SKBaseActivity implements
                 });
             }
         });
-
     }
 
     public void onClickResponse(View v) {
@@ -291,9 +313,7 @@ public class Activity_login extends SKBaseActivity implements
                 finish();
                 break;
             }
-
             case R.id.tv_login: {
-
                 if (mLoginMode.equalsIgnoreCase(LOGIN_MODE_TELEPHONE)) {
                     String verficationg_code = mEt_verfication_code.getText().toString();
                     if (!commonFun.verifyPassword(verficationg_code)) {
@@ -303,9 +323,11 @@ public class Activity_login extends SKBaseActivity implements
                     }
 
                     CmdExecRes res = CommandManager.getCmdMgrInstance(this).LoginBySms(mActv_telephone_num.getText().toString(), verficationg_code);
-                    if (res.mError != CommunicationError.CE_ERROR_NO_ERROR)
+                    if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
                         mHandler.sendEmptyMessageDelayed(MSG_HIDE_WAITING_WINDOW, 1000);
-
+                    } else {
+                        StoreCommand(res);
+                    }
                 } else {
 //                showPasswordErrorDlg();
 
@@ -322,15 +344,17 @@ public class Activity_login extends SKBaseActivity implements
                     }
 
                 }
-
                 break;
             }
-
             case R.id.tv_get_verfication_code: {
-                CommandManager.getCmdMgrInstance(this).GetSmsCode(mActv_telephone_num.getText().toString());
+                CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetSmsCode(mActv_telephone_num.getText().toString());
+                if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to send commnd to fetch SMS code, error: %d", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
-
             case R.id.tv_forgot_pw: {
                 startActivity(new Intent(Activity_login.this, Activity_PasswordReset.class));
                 break;
@@ -453,9 +477,12 @@ public class Activity_login extends SKBaseActivity implements
 
     @Override
     public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon result) {
-        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
         if (null == result) {
             kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
             return;
         }
         kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), result.DebugString()));

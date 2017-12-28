@@ -169,12 +169,13 @@ public class GetHouseListTask extends SKBaseAsyncTask {
     CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
         @Override
         public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+            if (null == mCmdRes || mCmdRes.mCmdSeq != cmdSeq) { // result is not we wanted
+                return;
+            }
+
             if (null == iResult) {
                 kjsLogUtil.w("result is null");
                 mResultGot = true;
-                return;
-            }
-            if (null == mCmdRes || mCmdRes.mCmdSeq != cmdSeq) { // result is not we wanted
                 return;
             }
 

@@ -103,8 +103,8 @@ public class fragmentPrivate extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
 
         // Unregister listener
         CommandManager.getCmdMgrInstance(getActivity()).Unregister(mCmdListener, mProgreessListener);
@@ -377,6 +377,10 @@ public class fragmentPrivate extends Fragment {
                 kjsLogUtil.w("result is null");
                 return;
             }
+            CmdExecRes cmd = RetrieveCommand(cmdSeq);
+            if (null == cmd) {  // result is not we wanted
+                return;
+            }
             kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
 
             int nErrCode = iResult.GetErrCode();
@@ -430,20 +434,17 @@ public class fragmentPrivate extends Fragment {
                     IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                     int nFetch = resultList.GetFetchedNumber();
                     if (nFetch == -1) {
-                        CmdExecRes cmd = RetrieveCommand(cmdSeq);
-                        if (null != cmd) {
-                            IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList)cmd.mArgs;
-                            if (args.getType() == IApiArgs.AGENT_HOUSE_ALL) {
-                                updateCount(mTv_agency_houses, resultList.GetTotalNumber());
-                            } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_RENT) {
-                                updateCount(mTvToRent, resultList.GetTotalNumber());
-                            } else if (args.getType() == IApiArgs.AGENT_HOUSE_RENTED) {
-                                updateCount(mTvRented, resultList.GetTotalNumber());
-                            } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_SALE) {
-                                updateCount(mTvToSale, resultList.GetTotalNumber());
-                            } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_APPROVE) {
-                                updateCount(mTvToApprove, resultList.GetTotalNumber());
-                            }
+                        IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList)cmd.mArgs;
+                        if (args.getType() == IApiArgs.AGENT_HOUSE_ALL) {
+                            updateCount(mTv_agency_houses, resultList.GetTotalNumber());
+                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_RENT) {
+                            updateCount(mTvToRent, resultList.GetTotalNumber());
+                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_RENTED) {
+                            updateCount(mTvRented, resultList.GetTotalNumber());
+                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_SALE) {
+                            updateCount(mTvToSale, resultList.GetTotalNumber());
+                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_APPROVE) {
+                            updateCount(mTvToApprove, resultList.GetTotalNumber());
                         }
                     }
                     break;
