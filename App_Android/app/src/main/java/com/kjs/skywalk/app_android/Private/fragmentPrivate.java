@@ -237,7 +237,7 @@ public class fragmentPrivate extends Fragment {
 
         // all houses
         CmdExecRes result = CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_ALL, 0 , 0);
-        if (CE_ERROR_NO_ERROR == result.mError) {
+        if (CE_ERROR_NO_ERROR != result.mError) {
             kjsLogUtil.e(String.format("Fail to send commnd to fetch total number, error: %d", result.mError));
         } else {
             StoreCommand(result);
@@ -245,7 +245,7 @@ public class fragmentPrivate extends Fragment {
 
         // to rent
         result = CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_TO_RENT, 0 , 0);
-        if (CE_ERROR_NO_ERROR == result.mError) {
+        if (CE_ERROR_NO_ERROR != result.mError) {
             kjsLogUtil.e(String.format("Fail to send commnd to fetch house count to rent, error: %d", result.mError));
         } else {
             StoreCommand(result);
@@ -253,7 +253,7 @@ public class fragmentPrivate extends Fragment {
 
         // rented
         result = CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_RENTED, 0 , 0);
-        if (CE_ERROR_NO_ERROR == result.mError) {
+        if (CE_ERROR_NO_ERROR != result.mError) {
             kjsLogUtil.e(String.format("Fail to send commnd to fetch house count rented, error: %d", result.mError));
         } else {
             StoreCommand(result);
@@ -261,7 +261,7 @@ public class fragmentPrivate extends Fragment {
 
         // to sale
         result = CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_TO_SALE, 0 , 0);
-        if (CE_ERROR_NO_ERROR == result.mError) {
+        if (CE_ERROR_NO_ERROR != result.mError) {
             kjsLogUtil.e(String.format("Fail to send commnd to fetch house to sale, error: %d", result.mError));
         } else {
             StoreCommand(result);
@@ -269,7 +269,7 @@ public class fragmentPrivate extends Fragment {
 
         // to approve
         CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_TO_APPROVE, 0 , 0);
-        if (CE_ERROR_NO_ERROR == result.mError) {
+        if (CE_ERROR_NO_ERROR != result.mError) {
             kjsLogUtil.e(String.format("Fail to send commnd to fetch house to approve, error: %d", result.mError));
         } else {
             StoreCommand(result);
