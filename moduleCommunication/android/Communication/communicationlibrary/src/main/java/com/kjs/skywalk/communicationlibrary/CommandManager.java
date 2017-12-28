@@ -346,6 +346,11 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             case CmdID.CMD_LOG_OUT: {
                 mAgentStatus = AGENT_STATUS_NotLogin;
                 mLoginUserInfo = null;
+                // remove it from command queue
+                CommunicationBase cmd = removeCmd(cmdId, res);
+                if (null != cmd) {
+                    onNotify(cmdId, cmdSeq, res);
+                }
                 break;
             }
             case CmdID.CMD_GET_LOGIN_USER_INFO: {
