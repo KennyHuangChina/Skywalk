@@ -310,6 +310,7 @@ public class CommunicationInterface {
         *                       false - fetch whole message info
         *       - nmo       :   true  - only fetch new messages
         *                       false - fetch all messages
+        *   Arguments: IApiArgs.IArgsGetMsgList
         *   Result : IApiResults.IResultList(IApiResults.ISysMsgInfo)
          */
         CmdExecRes GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo);

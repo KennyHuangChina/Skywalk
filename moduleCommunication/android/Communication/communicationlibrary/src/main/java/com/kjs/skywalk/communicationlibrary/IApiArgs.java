@@ -86,10 +86,20 @@ public class IApiArgs {
     }
 
     /**
-     * 
+     *
      */
     public interface IArgsGetHouseInfo extends IArgsBase {
         int     getHouseId();
         boolean isBackendUse();
+    }
+
+    /**
+     *
+     */
+    public interface IArgsGetMsgList extends IArgsBase {
+        int     getBegin();
+        int     getFetchCnt();
+        boolean isIdOnly();
+        boolean isNewMsgOnly();
     }
 }
