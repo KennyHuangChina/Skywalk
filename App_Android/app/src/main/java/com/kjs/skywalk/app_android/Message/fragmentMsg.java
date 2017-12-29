@@ -24,9 +24,11 @@ import com.kjs.skywalk.app_android.SKLocalSettings;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.database.ProfileDBOperator;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.SwipeLoadMoreView;
 
@@ -35,6 +37,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_BEHALF_HOUSE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_SYSTEM_MSG_LST;
 
@@ -48,6 +51,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
     private SwipeLoadMoreView mSrl_message_list;
     private ListView mLvMessage;
     private AdapterMessage mAdapterMsg;
+    private ArrayList<CmdExecRes> mCmdList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,12 +127,17 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
     public void onPause() {
         super.onPause();
         kjsLogUtil.i("fragmentMsg --- onPause");
+        // Unregister listener
+//        CommandManager.getCmdMgrInstance(getActivity()).Unregister(mCmdListener, mProgreessListener);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         kjsLogUtil.i("fragmentMsg --- onResume");
+
+        // register listener
+//        CommandManager.getCmdMgrInstance(getActivity()).Register(mCmdListener, mProgreessListener);
 
         // get message count in db
 //        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
@@ -212,6 +221,47 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         return mMsgCount;
     }
 
+    CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
+        @Override
+        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+            if (null == iResult) {
+                kjsLogUtil.w("result is null");
+                return;
+            }
+            CmdExecRes cmd = commonFun.RetrieveCommand(mCmdList, cmdSeq);
+            if (null == cmd) {  // result is not we wanted
+                return;
+            }
+            kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+            int nErrCode = iResult.GetErrCode();
+            if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+                kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+                if (CommunicationInterface.CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
+                    kjsLogUtil.d("user not log in, reflash layout");
+//                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
+//                    kjsLogUtil.d("mLoginUser:" + mLoginUser);
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
+//                        }
+//                    });
+                }
+                return;
+            }
+
+            switch (command) {
+                case CommunicationInterface.CmdID.CMD_LOG_OUT: {
+                    break;
+                }
+                 case CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO: {
+                    break;
+                }
+            }
+        }
+    };
+
     CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
         @Override
         public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
@@ -265,41 +315,45 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
 
     class ThreadLoadMessage extends Thread {
         private boolean mGetMsgFinished = false;
+        private ArrayList<CmdExecRes> mCmdList = new ArrayList<>();
         @Override
         public void run() {
             kjsLogUtil.i(String.format("[ThreadLoadMessage] --- start"));
+            // register listener
+            CommandManager.getCmdMgrInstance(getActivity()).Register(mCmdListener, mProgreessListener);
+
             boolean ido = false;
             boolean nmo = true; // new message only
-            getMessageCountSync(ido, nmo);
+//            nmo = false; // test all message
+//            getMessageCountSync(ido, nmo);
 
+            // get msg count
             mGetMsgFinished = false;
-            kjsLogUtil.i(String.format("[ThreadLoadMessage] --- mGetMsgFinished: " + mGetMsgFinished));
-            CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
-                @Override
-                public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                    if (null == iResult) {
-                        kjsLogUtil.w("result is null");
-                        mGetMsgFinished = true;
-                        return;
-                    }
-                    kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                    if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                        kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                        mGetMsgFinished = true;
-                        return;
-                    }
-
-                    if (command == CMD_GET_SYSTEM_MSG_LST) {
-                        IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                        int nFetch = resultList.GetFetchedNumber();
-                        if (nFetch == -1) {
-                        }
-                        updateMsgList(resultList.GetList());
-                        mGetMsgFinished = true;
+            CmdExecRes result = CommandManager.getCmdMgrInstance(getActivity()).GetSysMsgList(0, 0 , ido, nmo);
+            if (CE_ERROR_NO_ERROR != result.mError) {
+                kjsLogUtil.e(String.format("Fail to send commnd to fetch total number, error: %d", result.mError));
+            } else {
+                commonFun.StoreCommand(mCmdList, result);
+                while (!mGetMsgFinished) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-            };
-            CommandManager.getCmdMgrInstance(getActivity()/*, cl, mProgreessListener*/).GetSysMsgList(0, 100 , ido, nmo);
+
+                kjsLogUtil.i("mMsgCount: " + mMsgCount);
+            }
+
+            // get msg list
+            mGetMsgFinished = false;
+            kjsLogUtil.i(String.format("[ThreadLoadMessage] --- mGetMsgFinished: " + mGetMsgFinished));
+            result = CommandManager.getCmdMgrInstance(getActivity()).GetSysMsgList(0, mMsgCount , ido, nmo);
+            if (CE_ERROR_NO_ERROR != result.mError) {
+                kjsLogUtil.e(String.format("Fail to send commnd to fetch total number, error: %d", result.mError));
+            } else {
+                commonFun.StoreCommand(mCmdList, result);
+            }
 
             while (mGetMsgFinished == false) {
                 try {
@@ -311,8 +365,70 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
 
             setRefreshing(false);
 
+            // Unregister listener
+            CommandManager.getCmdMgrInstance(getActivity()).Unregister(mCmdListener, mProgreessListener);
+
             kjsLogUtil.i(String.format("[ThreadLoadMessage] --- end"));
         }
+
+        CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
+            @Override
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                CmdExecRes cmd = commonFun.RetrieveCommand(mCmdList, cmdSeq);
+                if (null == cmd) {  // result is not we wanted
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+                int nErrCode = iResult.GetErrCode();
+                if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+                    if (CommunicationInterface.CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
+                        kjsLogUtil.d("user not log in, reflash layout");
+//                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
+//                    kjsLogUtil.d("mLoginUser:" + mLoginUser);
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
+//                        }
+//                    });
+                    }
+                    mGetMsgFinished = true;
+                    return;
+                }
+
+                switch (command) {
+                    case CommunicationInterface.CmdID.CMD_GET_SYSTEM_MSG_LST: {
+                        IApiArgs.IArgsGetMsgList args = (IApiArgs.IArgsGetMsgList)cmd.mArgs;
+                        kjsLogUtil.i(String.format("getBegin: %d, getFetchCnt:%d, isIdOnly:%b, isNewMsgOnly:%b", args.getBegin(), args.getFetchCnt(), args.isIdOnly(), args.isNewMsgOnly()));
+
+                        IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                        int nFetch = resultList.GetFetchedNumber();
+                        if (nFetch == -1) {
+                            mMsgCount = resultList.GetTotalNumber();
+                        }
+                        updateMsgList(resultList.GetList());
+                        mGetMsgFinished = true;
+
+                        break;
+                    }
+                    case CommunicationInterface.CmdID.CMD_GET_LOGIN_USER_INFO: {
+                        break;
+                    }
+                }
+            }
+        };
+
+        CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
+            @Override
+            public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+            }
+        };
     }
 
     public void setRefreshing(final boolean isRefresh) {
