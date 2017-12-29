@@ -12,14 +12,11 @@ import java.util.HashMap;
  */
 
 class CmdGetAgencyList extends CommunicationBase {
-    private int mBegin = 0;
-    private int mCnt = 0;
 
     CmdGetAgencyList(Context context, int begin, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_GET_AGENCY_LIST);
 //        mNeedLogin  = false;
-        mBegin      = begin;
-        mCnt        = cnt;
+        mArgs = new Args(begin, cnt);
     }
 
     @Override
@@ -30,29 +27,65 @@ class CmdGetAgencyList extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData += ("bgn=" + mBegin);
+        mRequestData += ("bgn=" + ((Args)mArgs).getBegin());
         mRequestData += "&";
-        mRequestData += ("cnt=" + mCnt);
+        mRequestData += ("cnt=" + ((Args)mArgs).getFetchCnt());
 
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mBegin < 0) {
-            Log.e(TAG, "mBegin:" + mBegin);
-            return false;
-        }
-        if (mCnt < 0) {
-            Log.e(TAG, "mCnt:" + mCnt);
-            return false;
-        }
-        return true;    // return super.checkParameter(map);
     }
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetAgencyList res = new ResGetAgencyList(nErrCode, jObject);
         return res;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsGetAgentList {
+        private int mBegin  = 0;
+        private int mCnt    = 0;
+
+        Args(int begin, int cnt) {
+            mBegin = begin;
+            mCnt = cnt;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (mBegin < 0) {
+                Log.e(TAG, "mBegin:" + mBegin);
+                return false;
+            }
+            if (mCnt < 0) {
+                Log.e(TAG, "mCnt:" + mCnt);
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            Args arg_chk = (Args)arg2;
+            if (mBegin != arg_chk.mBegin || mCnt != arg_chk.mCnt) {
+                return  false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int getBegin() {
+            return mBegin;
+        }
+
+        @Override
+        public int getFetchCnt() {
+            return mCnt;
+        }
     }
 }
