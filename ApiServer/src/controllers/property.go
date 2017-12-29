@@ -98,7 +98,11 @@ func (this *PropertyController) GetPropertyList() {
 	err, total, fetched, pl := models.GetPropertyList(name, begin, count)
 	if nil == err {
 		result.Total = total
-		result.Count = fetched
+		if 0 == count {
+			result.Count = -1
+		} else {
+			result.Count = fetched
+		}
 		result.Properties = pl
 	}
 }
