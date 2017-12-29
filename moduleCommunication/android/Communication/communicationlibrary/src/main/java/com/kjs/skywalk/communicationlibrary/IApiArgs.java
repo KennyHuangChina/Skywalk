@@ -85,5 +85,11 @@ public class IApiArgs {
         String getUserName();
     }
 
-
+    /**
+     * 
+     */
+    public interface IArgsGetHouseInfo extends IArgsBase {
+        int     getHouseId();
+        boolean isBackendUse();
+    }
 }
