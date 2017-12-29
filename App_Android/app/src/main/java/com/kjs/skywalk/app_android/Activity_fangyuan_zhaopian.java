@@ -76,12 +76,12 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     private ArrayList<ClassDefine.PictureInfo> mPictureListJiaJuYongPin = new ArrayList<>();
     private ArrayList<ClassDefine.PictureInfo> mPictureListDianQi = new ArrayList<>();
 
-    private final int MSG_UPLOAD_ALL_DONE = 0;
-    private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
-    private final int MSG_GET_PICTURES_DONE = 0x100;
-    private final int MSG_DELETE_ALL_DONE = 0x200;
-    private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
-    private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
+    private final int   MSG_UPLOAD_ALL_DONE             = 0,
+                        MSG_UPLOAD_FINISHED_WITH_ERROR  = 1,
+                        MSG_GET_PICTURES_DONE           = 0x100,
+                        MSG_DELETE_ALL_DONE             = 0x200,
+                        MSG_DELETE_FINISHED_WITH_ERROR  = 0x201,
+                        MSG_GET_HOUSE_INFO_DONE         = 0x300;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -552,6 +552,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             fragLst.add(fragment);
         }
         viewPager.removeAllViews();
+        // Kenny: 第二次打开会 crash
         viewPager.setAdapter(new PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
         viewPager.setCurrentItem(0);
     }

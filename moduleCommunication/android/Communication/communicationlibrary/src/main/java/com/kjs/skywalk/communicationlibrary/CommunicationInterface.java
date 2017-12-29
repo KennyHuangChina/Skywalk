@@ -35,6 +35,7 @@ public class CommunicationInterface {
         /*
         *   CMD: CMD_GET_SMS_CODE,
         *       - userName: login name (cell phone number)
+        *   Arguments: IApiArgs.IArgsGetSmsCode
         *   Result: IApiResults.IGetSmsCode
         */
         CmdExecRes GetSmsCode(String userName);
@@ -124,6 +125,7 @@ public class CommunicationInterface {
         *   CMD: CMD_GET_HOUSE_INFO,
         *       - houseid   : house id
         *       - bBackend  : is it for backend using
+        *   Arguments: IApiArgs.IArgsGetHouseInfo
         *   Result: IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo
          */
         CmdExecRes GetHouseInfo(int houseId, boolean bBackend);
@@ -157,8 +159,8 @@ public class CommunicationInterface {
         *       - type  : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
         *       - begin : fetch begin position
         *       - cnt   : fetch count. set to 0 mean just want to get the total number
+        *   Arguments: IApiArgs.IArgsGetBehalfList
         *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-        *
          */
         CmdExecRes GetBehalfHouses(int type, int begin, int cnt);
 
@@ -169,6 +171,7 @@ public class CommunicationInterface {
         *       - cnt   : fetch count. set to 0 mean just want to get the total number
         *       - filter: filter confitions. HouseFilterCondition
         *       - sort  : sort condition list
+        *   Arguments: IApiArgs.IArgsGetHouseDigestList
         *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         CmdExecRes GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort);
@@ -259,6 +262,7 @@ public class CommunicationInterface {
         *       - house : house id
         *       - type  : house picture sub-type. PIC_TYPE_SUB_HOUSE_xxx
         *       - size  : picture size. PIC_SIZE_xxx
+        *   Arguments: IApiArgs.IArgsGetXPicLst
         *   Result: IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)
         */
         CmdExecRes GetHousePics(int house, int type, int size);
@@ -268,6 +272,7 @@ public class CommunicationInterface {
         *       - user  : user id
         *       - type  : user picture sub-type. PIC_TYPE_SUB_USER__xxx
         *       - size  : picture size. PIC_SIZE_xxx
+        *   Arguments: IApiArgs.IArgsGetXPicLst
         *   Result: IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)
         */
         CmdExecRes GetUserPics(int user, int type, int size);
@@ -342,6 +347,7 @@ public class CommunicationInterface {
         *   CMD: CMD_HOUSE_LST_APPOINT_SEE
         *       - begin   : fetch begin position
         *       - cnt     : fetch count. set to 0 mean just want to get the total number
+        *   Arguments: IApiArgs.
         *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         CmdExecRes GetHouseList_AppointSee(int begin, int cnt);
