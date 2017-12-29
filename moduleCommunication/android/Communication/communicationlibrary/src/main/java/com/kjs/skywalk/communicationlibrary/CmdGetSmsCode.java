@@ -7,12 +7,13 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 /**
  * Created by kenny on 2017/2/27.
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
 class CmdGetSmsCode extends CommunicationBase {
 
     CmdGetSmsCode(Context context, String user) {
@@ -36,5 +37,41 @@ class CmdGetSmsCode extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetSmsCode result = new ResGetSmsCode(nErrCode, jObject);
         return result;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //
+    class ApiArgsGetSmsCode extends ApiArgsBase implements IApiArgs.IArgsGetSmsCode {
+        private String mUserName = "";
+
+        public ApiArgsGetSmsCode(String user) {
+            mUserName = user;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            ApiArgsGetSmsCode args2chk = (ApiArgsGetSmsCode)arg2;
+            if (null != mUserName && null != args2chk.mUserName && mUserName.equals(args2chk.mUserName)) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (null == mUserName || mUserName.isEmpty()) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getUserName() {
+            return mUserName;
+        }
     }
 }
