@@ -381,7 +381,7 @@ public class fragmentPrivate extends Fragment {
             if (null == cmd) {  // result is not we wanted
                 return;
             }
-            kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+            kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
 
             int nErrCode = iResult.GetErrCode();
             if (CmdRes.CMD_RES_NOERROR != nErrCode) {

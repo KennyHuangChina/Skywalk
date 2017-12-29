@@ -21,7 +21,9 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.lang.reflect.Field;
@@ -194,30 +196,12 @@ public class Activity_Search_House extends SKBaseActivity implements
         mListViewProperty.removeAllViewsInLayout();
         mPropertyList.clear();
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-                if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
-                    if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                        IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
-                        mPropertyCount = list.GetTotalNumber();
-                        int nFetchCount = list.GetFetchedNumber();
-                        if(nFetchCount == 0){
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    fetchPropertyList(keywords);
-                                }
-                            });
-                        }
-                    }
-                }
-
-                Activity_Search_House.super.onCommandFinished(i, cmdSeq, iCommon);
-            }
-        };
-
-        CommandManager.getCmdMgrInstance(this/*, listener, this*/).GetPropertyListByName(keywords, 0, 0);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetPropertyListByName(keywords, 0, 0);
+        if (res.mError != CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetPropertyListByName, err:" + res.mError);
+        } else {
+            StoreCommand(res);
+        }
     }
 
     private void updateAdapterHistory() {
@@ -278,43 +262,22 @@ public class Activity_Search_House extends SKBaseActivity implements
     }
 
     private void fetchPropertyList(String keywords) {
-        CommandManager.getCmdMgrInstance(this).GetPropertyListByName(keywords, 0, mPropertyCount);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetPropertyListByName(keywords, 0, mPropertyCount);
+        if (res.mError != CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetPropertyListByName, err:" + res.mError);
+        } else {
+            StoreCommand(res);
+        }
     }
 
     private void addProperty() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                    commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
-                    IApiResults.IAddRes res = (IApiResults.IAddRes)iCommon;
-                    mPropertyId = res.GetId();
-                    Log.i(TAG, "New Property ID: " + mPropertyId);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String text = commonFun.getTextOnSearchView(mSearchView);
-                            doSelected(text, mPropertyId);
-                            finish();
-                        }
-                    });
-                } else {
-                    commonFun.showToast_info(getApplicationContext(), mSearchView, iCommon.GetErrDesc());
-                }
-
-                hideWaiting();
-
-                Activity_Search_House.super.onCommandFinished(i, cmdSeq, iCommon);
-            }
-        };
-
-        int res = 0;
-        CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
         String text = commonFun.getTextOnSearchView(mSearchView);
-        CmdExecRes result = manager.AddProperty(text, "地址：未填写", "");
+        CmdExecRes result = CommandManager.getCmdMgrInstance(this).AddProperty(text, "地址：未填写", "");
         if (result.mError == CE_ERROR_NO_ERROR) {
+            StoreCommand(result);
             showWaiting(mSearchView);
         } else {
+            kjsLogUtil.e("Fail to send command AddProperty, err: " + result.mError);
             commonFun.showToast_info(getApplicationContext(), mSearchView, "失败");
         }
     }
@@ -335,15 +298,43 @@ public class Activity_Search_House extends SKBaseActivity implements
     };
 
     @Override
-    public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-        if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
-            if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
-                mPropertyCount = list.GetTotalNumber();
-                int nFetchCount = list.GetFetchedNumber();
-                if(nFetchCount > 0) {
-                    makePropertyList(list.GetList());
-                }
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
+
+        int nErrCode = iResult.GetErrCode();
+        if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if (command == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
+            } else if (command == CommunicationInterface.CmdID.CMD_ADD_PROPERTY) {
+                commonFun.showToast_info(getApplicationContext(), mSearchView, iResult.GetErrDesc());
+            }
+            return;
+        }
+
+        if (command == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
+            IApiResults.IResultList list = (IApiResults.IResultList) iResult;
+            mPropertyCount  = list.GetTotalNumber();
+            int nFetchCount = list.GetFetchedNumber();
+            if (nFetchCount < 0){   // -1
+                IApiArgs.IArgsGetPropertyList args = (IApiArgs.IArgsGetPropertyList)iResult.GetArgs();
+                final String keywords = args.getName();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        fetchPropertyList(keywords);
+                    }
+                });
+            } else {
+                makePropertyList(list.GetList());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -351,6 +342,19 @@ public class Activity_Search_House extends SKBaseActivity implements
                     }
                 });
             }
+        } else if (command == CommunicationInterface.CmdID.CMD_ADD_PROPERTY) {
+            commonFun.showToast_info(getApplicationContext(), mSearchView, "添加成功");
+            IApiResults.IAddRes res = (IApiResults.IAddRes)iResult;
+            mPropertyId = res.GetId();
+            Log.i(TAG, "New Property ID: " + mPropertyId);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String text = commonFun.getTextOnSearchView(mSearchView);
+                    doSelected(text, mPropertyId);
+                    finish();
+                }
+            });
         }
     }
 
