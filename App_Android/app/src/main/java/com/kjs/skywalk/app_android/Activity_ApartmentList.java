@@ -305,7 +305,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
             case TYPE_TO_RENT:
             case TYPE_RENTED:
             case TYPE_ALL_AGENCY_HOUSES: {
-                CmdExecRes res = manager.GetBehalfHouses(type, 0, 0);
+                CmdExecRes res = manager.GetBehalfHouses(type, 0, 0);   // CMD_GET_BEHALF_HOUSE_LIST
                 if (res.mError != CE_ERROR_NO_ERROR) {
                     kjsLogUtil.e(String.format("Fail to GetBehalfHouses, err:0x%x", res.mError));
                 } else {
@@ -314,7 +314,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 break;
             }
             case TYPE_WATCH_LIST: {
-                CmdExecRes res = manager.GetUserHouseWatchList(0, 0);
+                CmdExecRes res = manager.GetUserHouseWatchList(0, 0);   // CMD_GET_USER_HOUSE_WATCH_LIST
                 if (res.mError != CE_ERROR_NO_ERROR) {
                     kjsLogUtil.e(String.format("Fail to GetUserHouseWatchList, err:0x%x", res.mError));
                 } else {
@@ -323,9 +323,9 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 break;
             }
             case TYPE_APPOINTMENT: {
-                CmdExecRes res = manager.GetHouseList_AppointSee(0, 0);
+                CmdExecRes res = manager.GetHouseList_AppointSee(0, 0); // CMD_HOUSE_LST_APPOINT_SEE
                 if (res.mError != CE_ERROR_NO_ERROR) {
-                    kjsLogUtil.e(String.format("Fail to GetUserHouseWatchList, err:0x%x", res.mError));
+                    kjsLogUtil.e(String.format("Fail to GetHouseList_AppointSee, err:0x%x", res.mError));
                 } else {
                     StoreCommand(res);
                 }
@@ -410,24 +410,29 @@ public class Activity_ApartmentList extends SKBaseActivity {
 
         if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
             kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+            super.onCommandFinished(command, cmdSeq, iResult);
             return;
         }
 
         if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
             // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
             fillHouseInfo((IApiResults.IHouseDigest) iResult);
-        } else if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+        } else if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
             IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
             int nFetch = resultList.GetFetchedNumber();
             if (nFetch == -1) {
                 final int total = ((IApiResults.IResultList) iResult).GetTotalNumber();
                 if (total > 0) {
-                    IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList)iResult.GetArgs();
-                    final int type = args.getType();
+                    int type = 0;
+                    if (command == CMD_GET_BEHALF_HOUSE_LIST) { // GetBehalfHouses
+                        IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList) iResult.GetArgs();
+                        type = args.getType();
+                    }
+                    final int finalType = type;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            gettBehalfHousesListDetail(type, total);
+                            gettBehalfHousesListDetail(finalType, total);
                         }
                     });
                 }
@@ -440,33 +445,6 @@ public class Activity_ApartmentList extends SKBaseActivity {
                     }
                 });
             }
-            // TODO:
-//        } else if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
-//            IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-//            int nFetch = resultList.GetFetchedNumber();
-//            if (nFetch == -1) {
-//                final int total = ((IApiResults.IResultList) iResult).GetTotalNumber();
-//                if (total > 0) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            gettBehalfHousesListDetail(type, total);
-//                        }
-//                    });
-//                }
-//            }
-//        } else if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
-//            IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-//            int nFetch = resultList.GetFetchedNumber();
-//            if (nFetch != -1) {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
-//                        updateList();
-//                    }
-//                });
-//            }
         }
     }
 }

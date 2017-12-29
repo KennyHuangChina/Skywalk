@@ -163,7 +163,6 @@ public class SKBaseActivity extends AppCompatActivity
 
     @Override
     public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-        kjsLogUtil.i("[" + CommunicationInterface.CmdID.GetCmdDesc(command) + "]" + "SKBaseActivity::onCommandFinished");
         int errorCode = iResult.GetErrCode();
         if(errorCode == CE_ERROR_NO_ERROR) {
             return;
