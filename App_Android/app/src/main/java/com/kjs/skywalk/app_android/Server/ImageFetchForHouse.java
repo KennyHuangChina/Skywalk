@@ -10,6 +10,7 @@ import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.lang.reflect.Array;
@@ -26,24 +27,87 @@ import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
  * Created by admin on 2017/9/30.
  */
 
-public class ImageFetchForHouse implements CommunicationInterface.CIProgressListener{
+public class ImageFetchForHouse implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
     private String TAG = getClass().getSimpleName();
 
-    private Context mContext = null;
-    private HouseFetchFinished mListener = null;
-    private int mTimeout = 10000;
-    private boolean mResultGot = false;
-    private boolean mFailed = false;
+    private Context             mContext    = null;
+    private HouseFetchFinished  mListener   = null;
+    private int                 mTimeout    = 10000;
+    private boolean             mResultGot  = false;
+    private boolean             mFailed     = false;
+    private CmdExecRes          mCmd        = null;
 
     ArrayList<ClassDefine.PictureInfo> mList = new ArrayList<>();
 
-    public interface HouseFetchFinished {
-        void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list);
+    public ImageFetchForHouse(Context context, HouseFetchFinished listener) {
+        mContext    = context;
+        mListener   = listener;
+
+        // Register Listener
+        CommandManager.getCmdMgrInstance(mContext).Register(this, this);
     }
 
-    public ImageFetchForHouse(Context context, HouseFetchFinished listener) {
-        mContext = context;
-        mListener = listener;
+    @Override
+    protected void finalize() throws Throwable {
+        // TODO: Kenny, 这里不会立刻被调用到，要等到 GC 的时候才会被调用，因此 Listener 不会被立刻 Unregister
+        // Unregister Listener
+        CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
+        super.finalize();
+    }
+
+    @Override
+    public void onCommandFinished(final int command, final int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        // Filter out all other commands not send by us
+        synchronized (this) {
+            if (null == mCmd || mCmd.mCmdSeq == command) {  // result is not we wanted
+                return;
+            }
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
+
+        int nErrCode = iResult.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            kjsLogUtil.e("Error occurred during fetch picture from server");
+//            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+            if (CommunicationInterface.CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
+                kjsLogUtil.d("user not log in, reflash layout");
+            }
+            mListener.onHouseImageFetched(mList);
+            return;
+        }
+
+        if (command == CMD_GET_HOUSE_PIC_LIST) {
+            if (null != mCmd.mArgs && mCmd.mArgs.isEqual(iResult.GetArgs())) {
+                IApiArgs.IArgsGetXPicLst args = (IApiArgs.IArgsGetXPicLst)iResult.GetArgs();
+                IApiResults.IResultList  res  = (IApiResults.IResultList)iResult;
+
+                ArrayList<Object> list = res.GetList();
+                kjsLogUtil.d("###### Picture list size: " + list.size() + " type: " + args.getSubType());
+                for(Object obj : list) {
+                    IApiResults.IPicInfo info = (IApiResults.IPicInfo)obj;
+                    IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
+
+                    ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
+                    picInfo.mId             = info.GetId();
+                    picInfo.largePicUrl     = urls.GetLargePicture();
+                    picInfo.middlePicUrl    = urls.GetMiddlePicture();
+                    picInfo.smallPicUrl     = urls.GetSmallPicture();
+                    picInfo.mType           = args.getSubType(); // fetchType;
+
+                    mList.add(picInfo);
+                    picInfo.print();
+                }
+                mListener.onHouseImageFetched(mList);
+            }
+        }
+    }
+
+    public interface HouseFetchFinished {
+        void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list);
     }
 
     private boolean waitResult(int nTimeoutMs) {
@@ -71,54 +135,17 @@ public class ImageFetchForHouse implements CommunicationInterface.CIProgressList
     public int fetch(int houseId, final int fetchType, int size) {
         String Fn = "fetch";
         mList.clear();
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                String Fn = "onCommandFinished";
-                kjsLogUtil.i(TAG, Fn, "fetchType: " + fetchType + ", listener: " + this + ", command: " + command + ", iResult: " + iResult);
-                if (null == iResult) {
-                    kjsLogUtil.i(TAG, Fn, "result is null");
-                    mListener.onHouseImageFetched(mList);
-                    return;
-                }
 
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.i("Error occurred during fetch picture from server");
-                    mListener.onHouseImageFetched(mList);
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_PIC_LIST) {
-                    kjsLogUtil.d(TAG, Fn, "iResult: " + iResult.DebugString());
-                    IApiResults.IResultList res = (IApiResults.IResultList)iResult;
-                    ArrayList<Object> list = res.GetList();
-                    for(Object obj : list) {
-                        IApiResults.IPicInfo info = (IApiResults.IPicInfo)obj;
-                        ClassDefine.PictureInfo picInfo = new ClassDefine.PictureInfo();
-                        picInfo.mId = info.GetId();
-                        IApiResults.IPicUrls urls = (IApiResults.IPicUrls)obj;
-                        picInfo.largePicUrl = urls.GetLargePicture();
-                        picInfo.middlePicUrl = urls.GetMiddlePicture();
-                        picInfo.smallPicUrl = urls.GetSmallPicture();
-                        picInfo.mType = fetchType;
-                        mList.add(picInfo);
-                        picInfo.print();
-                    }
-
-                    kjsLogUtil.i("###### Picture list size: " + list.size() + " type: " + fetchType);
-                    mListener.onHouseImageFetched(mList);
-                }
-            }
-        };
-
-        kjsLogUtil.d(TAG, Fn, "listener: " + listener + ", ImageFetchForHouse.this: " + ImageFetchForHouse.this);
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext); //, listener, ImageFetchForHouse.this);
-        kjsLogUtil.d(TAG, Fn, "houseId: " + houseId + ", fetchType: " + fetchType + ", size: " + size);
-        CmdExecRes result = CmdMgr.GetHousePics(houseId, fetchType, size);
-        if(result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+        kjsLogUtil.d("houseId: " + houseId + ", fetchType: " + fetchType + ", size: " + size);
+        CmdExecRes result = CommandManager.getCmdMgrInstance(mContext).GetHousePics(houseId, fetchType, size);
+        if (CE_ERROR_NO_ERROR != result.mError) {
+            kjsLogUtil.e(String.format("Fail to send commnd GetHousePics, error: %d", result.mError));
             return -1;
         }
 
+        synchronized (this) {
+            mCmd = result;
+        }
         return 0;
     }
 
