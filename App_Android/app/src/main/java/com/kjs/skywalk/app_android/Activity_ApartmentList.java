@@ -167,7 +167,6 @@ public class Activity_ApartmentList extends SKBaseActivity {
     }
 
     private void updateList() {
-        // Kenny: it will be crashed here
         mAdapter.addData(mDataList, mDataList.size());
         mAdapter.notifyDataSetChanged();
     }
@@ -396,7 +395,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
     }
 
     @Override
-    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+    public void onCommandFinished(int command, final int cmdSeq, final IApiResults.ICommon iResult) {
         if (null == iResult) {
             kjsLogUtil.w("result is null");
             return;
@@ -433,8 +432,13 @@ public class Activity_ApartmentList extends SKBaseActivity {
                     });
                 }
             } else {
-                mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
-                updateList();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
+                        updateList();
+                    }
+                });
             }
             // TODO:
 //        } else if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
