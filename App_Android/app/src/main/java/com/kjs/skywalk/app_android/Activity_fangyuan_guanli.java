@@ -13,9 +13,11 @@ import android.widget.RelativeLayout;
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.Homepage.fragmentHomePage;
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.text.SimpleDateFormat;
@@ -61,27 +63,12 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     }
 
     private void getHouseInfo() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败:" + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_INFO) {
-                    updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
-                }
-            }
-        };
-
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        manager.GetHouseInfo(mHouseId, true);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetHouseInfo(mHouseId, true);
+        if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e(String.format("Fail to GetHouseInfo, err:0x%x", res.mError));
+        } else {
+            StoreCommand(res);
+        }
     }
 
     public void onViewClick(View v) {
@@ -149,8 +136,29 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
 
     @Override
     public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        // Filter all other commands
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
 
+        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+            commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败:" + iResult.GetErrDesc());
+            super.onCommandFinished(command, cmdSeq, iResult);
+            return;
+        }
+
+        if (command == CMD_GET_HOUSE_INFO) {
+            IApiArgs.IArgsGetHouseInfo args = (IApiArgs.IArgsGetHouseInfo)iResult.GetArgs();
+            if (args.getHouseId() == mHouseId) {
+                updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
+            }
+        }
     }
 
     private void updateHouseInfo(final IApiResults.IGetHouseInfo houseInfo) {
