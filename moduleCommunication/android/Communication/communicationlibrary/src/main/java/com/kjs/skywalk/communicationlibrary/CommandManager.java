@@ -130,7 +130,12 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         editor.commit();
     }
 
-    private synchronized boolean queueCommand(CommunicationBase cmd) {
+    /**
+     *  Put the command in queue
+     *  @param cmd - command to queue
+     *  @return command queued
+     */
+    private synchronized CommunicationBase queueCommand(CommunicationBase cmd) {
         String Fn = "[queueCommand] ";
 
         if (null == mCmdQueue) {
@@ -143,17 +148,17 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 //            if (cmd_in_queue.mAPI == nNewCmd) {
             if (cmd_in_queue.isSameCmd(cmd)) {
                 Log.d(TAG, Fn + String.format("new command(0x%x) already exist", cmd.mAPI));
-                return true;
+                return cmd_in_queue;    // give up the new command, use the command queued instead
             }
         }
 
         if (mCmdQueue.add(cmd)) {
             Log.d(TAG, Fn + String.format("new command(0x%x) queued, seq:", cmd.mAPI, cmd.getCmdSeq()));
-            return true;
+            return cmd;
         }
 
         Log.e(TAG, Fn + String.format("Fail to queue new command(0x%x)", cmd.mAPI));
-        return false;
+        return null;
     }
 
     private synchronized CommunicationBase removeCmd(int cmd, IApiResults.ICommon res) {
@@ -250,7 +255,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         // que the command into queue
 //        cmd.SetBackupListener(mProgListener, mCmdListener);
         if (!isLoginCmd(cmd)) {
-            queueCommand(cmd);
+            if (null == (cmd = queueCommand(cmd))) {
+                return new CmdExecRes(CommunicationError.CE_COMMAND_ERROR_INVALID_INPUT, -1, null);
+            }
         } else {
             mCmdLogin = cmd;
         }
@@ -362,39 +369,44 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                 int nCmdRes = res.GetErrCode();
                 if (CmdRes.CMD_RES_NOT_LOGIN == nCmdRes) {
                     Log.e(TAG, Fn + "Command need login, post a silent login command");
-                        mAgentStatus = AGENT_STATUS_NotLogin;
-                        mLoginUserInfo = null;
-                        if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
-                            Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
-                            onNotify(CmdID.CMD_RELOGIN, mCmdLogin.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
-                            return;
-                        }
-                        mAgentStatus = AGENT_STATUS_Logining;
+                    mAgentStatus = AGENT_STATUS_NotLogin;
+                    mLoginUserInfo = null;
+                    if (CommunicationError.CE_ERROR_NO_ERROR != sendReloginCmd()) {
+                        Log.e(TAG, Fn + "Fail to send relogin command, notify user to login");
+                        onNotify(CmdID.CMD_RELOGIN, mCmdLogin.getCmdSeq(), new ResBase(CmdRes.CMD_RES_NOT_LOGIN));
+                        return;
+                    }
+                    mAgentStatus = AGENT_STATUS_Logining;
                 } else { // command succeed or failed by other reasons
-                        if (CmdRes.CMD_RES_NOERROR == nCmdRes) {
-                        Log.d(TAG, Fn + "command processing succeeded, notify user");
-                        } else {
-                        Log.e(TAG, Fn + String.format("command processing failed(0x%x), notify user", nCmdRes));
-                        if (CommunicationError.IsNetworkError(nCmdRes)) {
-                            Log.e(TAG, Fn + String.format("Network error:0x%x, %s", nCmdRes, CommunicationError.getErrorDescription(nCmdRes)));
-                            mLoginUserInfo = null;
-                        }
-                        }
-                        // remove it from command queue
-                        CommunicationBase cmd = removeCmd(cmdId, res);
-                        if (null != cmd) {
-                            onNotify(cmdId, cmdSeq, res);
-                        }
+                    if (CmdRes.CMD_RES_NOERROR == nCmdRes) {
+                    Log.d(TAG, Fn + "command processing succeeded, notify user");
+                    } else {
+                    Log.e(TAG, Fn + String.format("command processing failed(0x%x), notify user", nCmdRes));
+                    if (CommunicationError.IsNetworkError(nCmdRes)) {
+                        Log.e(TAG, Fn + String.format("Network error:0x%x, %s", nCmdRes, CommunicationError.getErrorDescription(nCmdRes)));
+                        mLoginUserInfo = null;
+                    }
+                    }
+                    // remove it from command queue
+                    CommunicationBase cmd = removeCmd(cmdId, res);
+                    if (null != cmd) {
+                        onNotify(cmdId, cmdSeq, res);
                     }
                 }
             }
         }
+    }
 
     @Override
     public void onProgressChanged(int command, String percent, HashMap<String, String> map) {
 
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //      -- Command APIs --
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public CmdExecRes GetSmsCode(String userName) {
         CommunicationBase op = new CmdGetSmsCode(mContext, userName);
