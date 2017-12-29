@@ -672,14 +672,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         return execute(op, pMap);
     }
 
-
     @Override
     public CmdExecRes GetPropertyListByName(String sName, int nBegin, int nCount) {
-        CommunicationBase op = new CmdGetPropertyList(mContext);
+        CommunicationBase op = new CmdGetPropertyList(mContext, sName, nBegin, nCount);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
-        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, String.valueOf(nBegin));
-        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, String.valueOf(nCount));
         return execute(op, pMap);
     }
 

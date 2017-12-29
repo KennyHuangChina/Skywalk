@@ -154,7 +154,7 @@ public class MainActivityFragment extends Fragment
     }
     private void doTestGetList() {
         CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this.getContext());
-//        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
+        CmdMgr.GetPropertyListByName(mEditText.getText().toString(), 0, mListTotal);
 //        CmdMgr.GetDeliverableList();
 //        CmdMgr.GetHouseDeliverables(Integer.parseInt(String.valueOf(mEditText.getText())));
 //        CmdMgr.GetFacilityTypeList();
@@ -162,7 +162,7 @@ public class MainActivityFragment extends Fragment
 //        CmdMgr.GetBehalfHouses(Integer.parseInt(mEditText.getText().toString()), 0, mListTotal);
 //        CmdMgr.GetHouseList_AppointSee(0, mListTotal);
 //        CmdMgr.GetUserHouseWatchList(0, mListTotal);
-        GetHouseDigestList();
+//        GetHouseDigestList();
 //        CmdMgr.GetSysMsgList(0, mListTotal,
 //                            Boolean.parseBoolean(mEditText.getText().toString()),
 //                            Boolean.parseBoolean(mEditText1.getText().toString()));
