@@ -10,13 +10,10 @@ import java.util.HashMap;
 
 class CmdGetPropertyList extends CommunicationBase {
 
-    private String  mPropertyName   = "";
-    private int     mBeginPosi      = 0;
-    private int     mFetchCount     = 0;
-
-    CmdGetPropertyList(Context context) {
+    CmdGetPropertyList(Context context, String property, int begin, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST);
         mNeedLogin = false;
+        mArgs = new Args(property, begin, cnt);
     }
 
     @Override
@@ -26,41 +23,12 @@ class CmdGetPropertyList extends CommunicationBase {
     }
     @Override
     public void generateRequestData() {
-        mRequestData = ("name=" + mPropertyName);
+        mRequestData = ("name=" + ((Args)mArgs).getName());
         mRequestData += "&";
-        mRequestData += ("bgn=" + mBeginPosi);
+        mRequestData += ("bgn=" + ((Args)mArgs).getBegin());
         mRequestData += "&";
-        mRequestData += ("cnt=" + mFetchCount);
+        mRequestData += ("cnt=" + ((Args)mArgs).getFetchCnt());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-//        return super.checkParameter(map);
-        if (!map.containsKey(CommunicationParameterKey.CPK_PROPERTY_NAME)) {
-            return false;
-        }
-
-        mPropertyName = map.get(CommunicationParameterKey.CPK_PROPERTY_NAME);
-        if (null == mPropertyName /*|| mPropertyName.isEmpty()*/) {
-            return false;
-        }
-        String strBegin = map.get(CommunicationParameterKey.CPK_LIST_BEGIN);
-        if (null != strBegin) {
-            mBeginPosi = Integer.parseInt(strBegin);
-            if (mBeginPosi < 0) {
-                mBeginPosi = 0;
-            }
-        }
-        String strFetchCnt = map.get(CommunicationParameterKey.CPK_LIST_CNT);
-        if (null != strFetchCnt) {
-            mFetchCount = Integer.parseInt(strFetchCnt);
-            if (mFetchCount < 0) {
-                mFetchCount = 0;
-            }
-        }
-
-        return true;
     }
 
     @Override
@@ -69,18 +37,62 @@ class CmdGetPropertyList extends CommunicationBase {
         return result;
     }
 
-    @Override
-    public int doBeforeConnect(HttpConnector http) {
-        return super.doBeforeConnect(http);
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsGetPropertyList {
+        private String  mPropertyName   = "";
+        private int     mBeginPosi      = 0;
+        private int     mFetchCount     = 0;
 
-    @Override
-    public int doAfterConnect(HttpConnector http) {
-        return super.doAfterConnect(http);
-    }
+        Args(String property, int begin, int cnt) {
+            mPropertyName   = property;
+            mBeginPosi      = begin;
+            mFetchCount     = cnt;
+        }
 
-    @Override
-    public int doConnectFailed(HttpConnector http) {
-        return super.doConnectFailed(http);
+        @Override
+        public boolean checkArgs() {
+            if (null == mPropertyName || mPropertyName.isEmpty()) {
+                return false;
+            }
+            if (mBeginPosi < 0) {
+                return false;
+            }
+            if (mFetchCount < 0) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+
+            Args arg_chk = (Args)arg2;
+            if (null == mPropertyName || null == arg_chk.mPropertyName || !mPropertyName.equals(arg_chk.mPropertyName)) {
+                return false;
+            }
+            if (mBeginPosi != arg_chk.mBeginPosi || mFetchCount != arg_chk.mFetchCount) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getName() {
+            return mPropertyName;
+        }
+
+        @Override
+        public int getBegin() {
+            return mBeginPosi;
+        }
+
+        @Override
+        public int getFetchCnt() {
+            return mFetchCount;
+        }
     }
 }

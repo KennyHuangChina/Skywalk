@@ -199,7 +199,16 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Property, Community
-        CmdExecRes GetPropertyListByName(String sName, int nBegin, int nCount);                // CMD_GET_PROPERTY_LIST,   IApiResults.IResultList(IApiResults.IPropertyInfo)
+
+        /**
+         *  Get Propery List by Name. CMD_GET_PROPERTY_LIST,
+         *  @param      sName   : property name to search
+         *  @param      nBegin  : begin position
+         *  @param      nCount  : how many items to fetch
+         *  @Arguments  IApiArgs.IArgsGetPropertyList
+         *  @Result     IApiResults.IResultList(IApiResults.IPropertyInfo)
+         */
+        CmdExecRes GetPropertyListByName(String sName, int nBegin, int nCount);                //
         CmdExecRes AddProperty(String sName, String sAddr, String sDesc);                      // CMD_ADD_PROPERTY,        IApiResults.IAddRes
         CmdExecRes GetPropertyInfo(int nPropId);                                               // CMD_GET_PROPERTY_INFO,   IApiResults.IPropertyInfo
         CmdExecRes ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);  // CMD_MODIFY_PROPERTY,     IApiResults.ICommon

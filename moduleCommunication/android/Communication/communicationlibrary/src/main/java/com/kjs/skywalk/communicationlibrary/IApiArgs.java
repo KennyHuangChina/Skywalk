@@ -90,4 +90,11 @@ public class IApiArgs {
         boolean isIdOnly();
         boolean isNewMsgOnly();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetPropertyList extends IArgsBase {
+        String  getName();
+        int     getBegin();
+        int     getFetchCnt();
+    }
 }
