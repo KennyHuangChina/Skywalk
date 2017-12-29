@@ -9,9 +9,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
+import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
@@ -27,14 +29,14 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 
 public class Activity_ApartmentList extends SKBaseActivity {
 
-    public static final int TYPE_TO_APPROVE = 0;
-    public static final int TYPE_TO_SALE = 1;
-    public static final int TYPE_TO_RENT = 2;
-    public static final int TYPE_RENTED = 3;
-    public static final int TYPE_ALL_AGENCY_HOUSES = 4;
-    public static final int TYPE_WATCH_LIST = 5;
-    public static final int TYPE_APPOINTMENT = 6;
-    public static final int TYPE_BROWSING_HISTORY = 7;
+    public static final int TYPE_TO_APPROVE         = 0,
+                            TYPE_TO_SALE            = 1,
+                            TYPE_TO_RENT            = 2,
+                            TYPE_RENTED             = 3,
+                            TYPE_ALL_AGENCY_HOUSES  = 4,
+                            TYPE_WATCH_LIST         = 5,
+                            TYPE_APPOINTMENT        = 6,
+                            TYPE_BROWSING_HISTORY   = 7;
 
 
     private ListView mListView = null;
@@ -165,6 +167,7 @@ public class Activity_ApartmentList extends SKBaseActivity {
     }
 
     private void updateList() {
+        // Kenny: it will be crashed here
         mAdapter.addData(mDataList, mDataList.size());
         mAdapter.notifyDataSetChanged();
     }
@@ -174,7 +177,12 @@ public class Activity_ApartmentList extends SKBaseActivity {
         List<String> idLst = SKLocalSettings.browsing_history_read(this);
         kjsLogUtil.i("idLst:" + idLst);
         for (String houseId : idLst) {
-            manager.GetBriefPublicHouseInfo(Integer.valueOf(houseId));
+            CmdExecRes res = manager.GetBriefPublicHouseInfo(Integer.valueOf(houseId));
+            if (res.mError != CE_ERROR_NO_ERROR) {
+                kjsLogUtil.e(String.format("Fail to GetBriefPublicHouseInfo, err:0x%x", res.mError));
+            } else {
+                StoreCommand(res);
+            }
         }
     }
 
@@ -291,56 +299,37 @@ public class Activity_ApartmentList extends SKBaseActivity {
     }
 
     private void getBehalfHousesList(final int type) {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_ApartmentList.super.onCommandFinished(command, cmdSeq, iResult);
-                    return;
-                }
-
-                if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == -1) {
-                        final int total = ((IApiResults.IResultList) iResult).GetTotalNumber();
-                        if (total > 0) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    gettBehalfHousesListDetail(type, total);
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        };
-
         CommandManager manager = CommandManager.getCmdMgrInstance(this);
         switch (type) {
             case TYPE_TO_APPROVE:
             case TYPE_TO_SALE:
             case TYPE_TO_RENT:
             case TYPE_RENTED:
-            case TYPE_ALL_AGENCY_HOUSES:
-            {
-                manager.GetBehalfHouses(type, 0, 0);
+            case TYPE_ALL_AGENCY_HOUSES: {
+                CmdExecRes res = manager.GetBehalfHouses(type, 0, 0);
+                if (res.mError != CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to GetBehalfHouses, err:0x%x", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
-            case TYPE_WATCH_LIST:
-            {
-                manager.GetUserHouseWatchList(0, 0);
+            case TYPE_WATCH_LIST: {
+                CmdExecRes res = manager.GetUserHouseWatchList(0, 0);
+                if (res.mError != CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to GetUserHouseWatchList, err:0x%x", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
-            case TYPE_APPOINTMENT:
-            {
-                manager.GetHouseList_AppointSee(0, 0);
+            case TYPE_APPOINTMENT: {
+                CmdExecRes res = manager.GetHouseList_AppointSee(0, 0);
+                if (res.mError != CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to GetUserHouseWatchList, err:0x%x", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
         }
@@ -350,54 +339,37 @@ public class Activity_ApartmentList extends SKBaseActivity {
         if(total <= 0){
             return;
         }
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, final IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_ApartmentList.super.onCommandFinished(command, cmdSeq, iResult);
-                    return;
-                }
-
-                if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch != -1) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
-                                updateList();
-                            }
-                        });
-                    }
-                }
-            }
-        };
-
         CommandManager manager = CommandManager.getCmdMgrInstance(this);
         switch (type) {
             case TYPE_TO_APPROVE:
             case TYPE_TO_SALE:
             case TYPE_TO_RENT:
             case TYPE_RENTED:
-            case TYPE_ALL_AGENCY_HOUSES:
-            {
-                manager.GetBehalfHouses(type, 0, total);
+            case TYPE_ALL_AGENCY_HOUSES: {
+                CmdExecRes res = manager.GetBehalfHouses(type, 0, total);
+                if (res.mError != CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to GetBehalfHouses, err:0x%x", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
-            case TYPE_WATCH_LIST:
-            {
-                manager.GetUserHouseWatchList(0, total);
+            case TYPE_WATCH_LIST: {
+                CmdExecRes res = manager.GetUserHouseWatchList(0, total);
+                if (res.mError != CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to GetUserHouseWatchList, err:0x%x", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
-            case TYPE_APPOINTMENT:
-            {
-                manager.GetHouseList_AppointSee(0, total);
+            case TYPE_APPOINTMENT: {
+                CmdExecRes res = manager.GetHouseList_AppointSee(0, total);
+                if (res.mError != CE_ERROR_NO_ERROR) {
+                    kjsLogUtil.e(String.format("Fail to GetHouseList_AppointSee, err:0x%x", res.mError));
+                } else {
+                    StoreCommand(res);
+                }
                 break;
             }
         }
@@ -425,12 +397,18 @@ public class Activity_ApartmentList extends SKBaseActivity {
 
     @Override
     public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-        kjsLogUtil.i("Activity_ApartmentDetail::onCommandFinished");
         if (null == iResult) {
             kjsLogUtil.w("result is null");
             return;
         }
-        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
+
+        // Filter all other commands
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
         if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
             kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
             return;
@@ -439,6 +417,52 @@ public class Activity_ApartmentList extends SKBaseActivity {
         if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
             // CMD_GET_BRIEF_PUBLIC_HOUSE_INFO, IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag)
             fillHouseInfo((IApiResults.IHouseDigest) iResult);
+        } else if (command == CMD_GET_BEHALF_HOUSE_LIST) {
+            IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+            int nFetch = resultList.GetFetchedNumber();
+            if (nFetch == -1) {
+                final int total = ((IApiResults.IResultList) iResult).GetTotalNumber();
+                if (total > 0) {
+                    IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList)iResult.GetArgs();
+                    final int type = args.getType();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            gettBehalfHousesListDetail(type, total);
+                        }
+                    });
+                }
+            } else {
+                mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
+                updateList();
+            }
+            // TODO:
+//        } else if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
+//            IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+//            int nFetch = resultList.GetFetchedNumber();
+//            if (nFetch == -1) {
+//                final int total = ((IApiResults.IResultList) iResult).GetTotalNumber();
+//                if (total > 0) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            gettBehalfHousesListDetail(type, total);
+//                        }
+//                    });
+//                }
+//            }
+//        } else if (command == CMD_GET_BEHALF_HOUSE_LIST || command == CMD_HOUSE_LST_APPOINT_SEE || command == CMD_GET_USER_HOUSE_WATCH_LIST) {
+//            IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+//            int nFetch = resultList.GetFetchedNumber();
+//            if (nFetch != -1) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mDataList = ClassDefine.ListConvert.IHouseDigestListToHouseDigestList(((IApiResults.IResultList) iResult).GetList());
+//                        updateList();
+//                    }
+//                });
+//            }
         }
     }
 }

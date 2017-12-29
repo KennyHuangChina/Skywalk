@@ -133,9 +133,19 @@ public class SKBaseActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Unregister Listener
+        CommandManager.getCmdMgrInstance(this).Unregister(this, this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
+        // Register Listener
+        CommandManager.getCmdMgrInstance(this).Register(this, this);
         // update login user info
         IsLogined();
     }
