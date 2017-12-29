@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
@@ -108,6 +109,7 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_GET_AGENT_LIST: {
+                    kjsLogUtil.w("TODO: 需要先取经纪人数量");
                     fetchAgentList(0, 50);
                     break;
                 }
@@ -116,57 +118,12 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
     };
 
     private void fetchAgentList(final int start, final int end) {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if(command == CMD_GET_AGENCY_LIST) {
-                    if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
-                        IApiResults.IResultList res = (IApiResults.IResultList) iResult;
-                        mAgentCount = res.GetTotalNumber();
-                        int nFetched = res.GetFetchedNumber();
-                        if (nFetched > 0) {
-                            ArrayList<Object> array = res.GetList();
-                            for (Object obj : array) {
-                                IApiResults.IAgencyInfo info = (IApiResults.IAgencyInfo) obj;
-                                ClassDefine.Agent agent = new ClassDefine.Agent();
-                                double db = info.RankAtti() / 10.0;
-                                agent.mAttitude = String.format("%.1f", db);
-                                db = info.RankProf() / 10.0;
-                                agent.mProfessional = String.format("%.1f", db);
-                                agent.mIDCard = info.IdNo();
-                                agent.mID = String.valueOf(info.Id());
-                                agent.mName = info.Name();
-                                agent.mSex = String.valueOf(info.Sex());
-                                agent.mPortrait = info.Portrait();
-                                agent.mYears = "3年";
-                                if (agent.mPortrait == null || agent.mPortrait.isEmpty()) {
-                                    agent.mPortrait = "not set";
-                                }
-
-                                mAgentList.add(agent);
-                            }
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateAgentList();
-                            }
-                        });
-                    } else {
-                        commonFun.showToast_info(getApplicationContext(), mListViewAgents, iResult.GetErrDesc());
-                        Activity_Zushouweituo_Xuanzedaili.super.onCommandFinished(command, cmdSeq, iResult);
-                    }
-                } else {
-                    Activity_Zushouweituo_Xuanzedaili.super.onCommandFinished(command, cmdSeq, iResult);
-                }
-                hideWaiting();
-            }
-        };
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        CmdExecRes res = manager.GetAgencyList(start, end);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetAgencyList(start, end);
         if (res.mError == CE_ERROR_NO_ERROR) {
+            StoreCommand(res);
             showWaiting(mListViewAgents);
         } else {
+            kjsLogUtil.e("Fail to send command GetAgencyList, err:" + res.mError);
             commonFun.showToast_info(getApplicationContext(), mListViewAgents, "失败");
         }
     }
@@ -229,8 +186,65 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
     }
 
     @Override
-    public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
 
+        int nErrCode = iResult.GetErrCode();
+        if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if(command == CMD_GET_AGENCY_LIST) {
+                commonFun.showToast_info(getApplicationContext(), mListViewAgents, iResult.GetErrDesc());
+                super.onCommandFinished(command, cmdSeq, iResult);
+            }
+            return;
+        }
+
+        if (command == CMD_GET_AGENCY_LIST) {
+            if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
+                IApiResults.IResultList res = (IApiResults.IResultList) iResult;
+                mAgentCount  = res.GetTotalNumber();
+                int nFetched = res.GetFetchedNumber();
+                if (nFetched > 0) {
+                    ArrayList<Object> array = res.GetList();
+                    for (Object obj : array) {
+                        IApiResults.IAgencyInfo info = (IApiResults.IAgencyInfo) obj;
+                        ClassDefine.Agent agent = new ClassDefine.Agent();
+
+//                        double db = info.RankAtti() / 10.0;
+                        agent.mAttitude     = String.format("%.1f", info.RankAtti() / 10.0);
+//                        db = info.RankProf() / 10.0;
+                        agent.mProfessional = String.format("%.1f", info.RankProf() / 10.0);
+                        agent.mIDCard       = info.IdNo();
+                        agent.mID           = String.valueOf(info.Id());
+                        agent.mName         = info.Name();
+                        agent.mSex          = String.valueOf(info.Sex());
+                        agent.mPortrait     = info.Portrait();
+                        agent.mYears        = "3年";
+                        if (agent.mPortrait == null || agent.mPortrait.isEmpty()) {
+                            agent.mPortrait = "not set";
+                        }
+
+                        mAgentList.add(agent);
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateAgentList();
+                    }
+                });
+            }
+        }
+        hideWaiting();
     }
 
     @Override
