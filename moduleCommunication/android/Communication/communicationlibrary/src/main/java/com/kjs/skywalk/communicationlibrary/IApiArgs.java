@@ -14,9 +14,7 @@ public class IApiArgs {
         boolean isEqual(IArgsBase arg2);
     }
 
-    /**
-     *
-     */
+    /******************************************************************************************/
     public interface IArgsGetHouseDigestList extends IArgsBase {
         int                     getType();
         int                     getBeginPosi();
@@ -33,9 +31,7 @@ public class IApiArgs {
                         GET_HOUSE_DIG_LST_TYPE_NEW          = 3,
                         GET_HOUSE_DIG_LST_TYPE_END          = GET_HOUSE_DIG_LST_TYPE_NEW;
 
-    /**
-     *
-     */
+    /******************************************************************************************/
     public interface IArgsGetBehalfList extends IArgsBase {
         int                     getType();
         int                     getBeginPosi();
@@ -48,9 +44,7 @@ public class IApiArgs {
                         AGENT_HOUSE_TO_SALE     = 3,     // agent houses waiting for selling
                         AGENT_HOUSE_TO_APPROVE  = 4,     // agent houses waiting for approving or certification
                         AGENT_HOUSE_END         = AGENT_HOUSE_TO_APPROVE;
-    /**
-     *
-     */
+    /******************************************************************************************/
     public interface IArgsGetXPicLst extends IArgsBase {
         int getXId();
         int getSubType();   // picture sub-type, ref to PIC_TYPE_SUB_HOUSE_xxx
@@ -78,24 +72,18 @@ public class IApiArgs {
                         PIC_SIZE_Moderate   = 3,
                         PIC_SIZE_Large      = 4;
 
-    /**
-     *
-     */
+    /******************************************************************************************/
     public interface IArgsGetSmsCode extends IArgsBase {
         String getUserName();
     }
 
-    /**
-     *
-     */
+    /******************************************************************************************/
     public interface IArgsGetHouseInfo extends IArgsBase {
         int     getHouseId();
         boolean isBackendUse();
     }
 
-    /**
-     *
-     */
+    /******************************************************************************************/
     public interface IArgsGetMsgList extends IArgsBase {
         int     getBegin();
         int     getFetchCnt();
