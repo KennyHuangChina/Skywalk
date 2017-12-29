@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -553,5 +554,30 @@ public class commonFun {
     public static String dateToStringFormat(Date date) {
         String formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(date);
         return formatTime;
+    }
+
+    public static boolean StoreCommand(ArrayList<CmdExecRes> cmdList, CmdExecRes res) {
+        synchronized (cmdList) {
+            if (cmdList.add(res)) {
+                kjsLogUtil.d("store command seq: " + res.mCmdSeq);
+                return true;
+            }
+        }
+        kjsLogUtil.e("Fail to store command seq: " + res.mCmdSeq);
+        return false;
+    }
+
+    public static CmdExecRes RetrieveCommand(ArrayList<CmdExecRes> cmdList,int cmdSeq) {
+        synchronized (cmdList) {
+            for (int n = 0; n< cmdList.size(); n++) {
+                CmdExecRes res = cmdList.get(n);
+                if (res.mCmdSeq == cmdSeq) {
+                    kjsLogUtil.d("Retrieve command seq: " + cmdSeq);
+                    return cmdList.remove(n);
+                }
+            }
+        }
+        kjsLogUtil.w("command seq: " + cmdSeq + " not found");
+        return null;
     }
 }
