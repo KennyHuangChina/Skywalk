@@ -97,4 +97,26 @@ public class IApiArgs {
         int     getBegin();
         int     getFetchCnt();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetAgentList extends IArgsBase {
+        int     getBegin();
+        int     getFetchCnt();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsCommitNewHouseByLandlord extends IArgsBase {
+        HouseInfo   getHouseInfo();
+        int         getAgent();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsSetHousePrice extends IArgsBase {
+        int     getHouse();
+        int     getRentalTag();
+        int     getRentalMin();
+        boolean includePropertyFee();
+        int     getSellingPriceTag();
+        int     getSellingPriceMin();
+    }
 }

@@ -232,10 +232,14 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     }
 
     protected boolean checkCmdRes(IApiResults.ICommon res) {
-        if (null == mArgs) {
-            return false;
+        if (null == mArgs && null == res.GetArgs()) {
+            // command have no arguments
+            return true;
+        } else if (null != mArgs && null != res.GetArgs()) {
+            return mArgs.isEqual(res.GetArgs());
         }
-        return mArgs.isEqual(res.GetArgs());
+        // command arguments not match
+        return false;
     }
 
     protected String generateRandom() {

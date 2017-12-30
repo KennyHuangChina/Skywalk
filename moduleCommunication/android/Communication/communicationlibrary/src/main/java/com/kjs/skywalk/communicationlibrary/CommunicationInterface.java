@@ -125,17 +125,39 @@ public class CommunicationInterface {
         *   CMD: CMD_GET_HOUSE_INFO,
         *       - houseid   : house id
         *       - bBackend  : is it for backend using
-        *   Arguments: IApiArgs.IArgsGetHouseInfo
-        *   Result: IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo
+        *   Arguments:  IApiArgs.IArgsGetHouseInfo
+        *   Result:     IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo
          */
         CmdExecRes GetHouseInfo(int houseId, boolean bBackend);
 
-        CmdExecRes CommitHouseByOwner(HouseInfo houseInfo, int agency);                // CMD_COMMIT_HOUSE_BY_OWNER,       IApiResults.IAddRes
+        /**
+         *  Commit New House by Landlord. CMD_COMMIT_HOUSE_BY_OWNER
+         *  @param  houseInfo   : house info
+         *  @param  agency      : agency id
+         *  Arguments: IApiArgs.IArgsCommitNewHouseByLandlord
+         *  Result     IApiResults.IAddRes
+         */
+        CmdExecRes CommitHouseByOwner(HouseInfo houseInfo, int agency);
+
         CmdExecRes AmendHouse(HouseInfo houseInfo);                                    // CMD_AMEND_HOUSE,                 IApiResults.ICommon
         CmdExecRes RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
         CmdExecRes SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,   IApiResults.ICommon
+
+        /**
+         *  Set House New Price, CMD_SET_HOUSE_PRICE
+         *  @param house_id         : house id
+         *  @param rental_tag       : the tag rental, opened for everyone
+         *  @param rental_bottom    : the bottom tental, only valid for landlord and agent
+         *  @param bIncPropFee      : if the rental include property fee
+         *  @param price_tag        : the tag selling price, opened for everyone
+         *  @param price_bottom     : the bottom selling price, only valid for landlord and agent
+         *  @return
+         *  Result    : IApiResults.IAddRes
+         *  Arguments : IApiArgs.IArgsSetHousePrice
+         */
         CmdExecRes SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee,
-                                 int price_tag, int price_bottom);                     // CMD_SET_HOUSE_PRICE,             IApiResults.IAddRes
+                                 int price_tag, int price_bottom);
+
         CmdExecRes GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
         CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
 
@@ -692,6 +714,17 @@ public class CommunicationInterface {
                 return false;
             }
 
+            return true;
+        }
+
+        protected boolean IsHouseInfoEqual(HouseInfo obj) {
+            if (mHouseId != obj.mHouseId || mPropId != obj.mPropId || !mBuilding.equals(obj.mBuilding) ||
+                    !mHouseNo.equals(obj.mHouseNo) || mFloorTotal != obj.mFloorTotal || mFloorThis != obj.mFloorThis ||
+                    mLivingrooms != obj.mLivingrooms || mBedrooms != obj.mBedrooms || mBathrooms != obj.mBathrooms ||
+                    mAcreage != obj.mAcreage || mForSale != obj.mForSale || mForRent != obj.mForRent ||
+                    mDecorate != obj.mDecorate || !mBuyDate.equals(obj.mBuyDate)) {
+                return false;
+            }
             return true;
         }
     }
