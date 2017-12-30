@@ -31,9 +31,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 
 import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_AMEND_HOUSE;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_AGENCY_LIST;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
 
 public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
@@ -327,39 +325,12 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             return;
         }
 
-//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-//            @Override
-//            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-//                if (null == iResult) {
-//                    kjsLogUtil.w("result is null");
-//                    return;
-//                }
-//
-//                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-//                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-//                    return;
-//                }
-//
-//                if (command == CommunicationInterface.CmdID.CMD_GET_USER_INFO) {
-//                    IApiResults.IGetUserInfo info = (IApiResults.IGetUserInfo) iResult;
-//                    mPhoneNumber = info.GetPhoneNo();
-//                    mLandlordName = info.GetName();
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            updateUserInfo();
-//                        }
-//                    });
-//                }
-//            }
-//        };
-
-        CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
-        if (manager.GetUserInfo(mHouseInfo.landlordId).mError != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetUserInfo(mHouseInfo.landlordId);
+        if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetUserInfo, err: " + res.mError);
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房东信息失败");
+        } else {
+            StoreCommand(res);
         }
     }
 
@@ -367,31 +338,12 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         EditText textView = (EditText)findViewById(R.id.editTextShenheShuomin);
         String string = textView.getText().toString();
 
-//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-//            @Override
-//            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-//                if (null == iResult) {
-//                    kjsLogUtil.w("result is null");
-//                    return;
-//                }
-//
-//                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-//                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-//                    return;
-//                }
-//
-//                if (command == CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE) {
-//                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果成功");
-//                    showWaiting(false);
-//                }
-//            }
-//        };
-
-        CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
-        if (manager.CertificateHouse(mHouseId, pass, string).mError != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).CertificateHouse(mHouseId, pass, string);
+        if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command CertificateHouse, err:" + res.mError);
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果失败");
+        } else {
+            StoreCommand(res);
         }
     }
 
@@ -442,28 +394,12 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
                                                      mHouseInfo.decorate,
                                                      mBuyDate);
 
-//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-//            @Override
-//            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-//                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-//                    showWaiting(false);
-//                    return;
-//                }
-//
-//                if(command == CMD_AMEND_HOUSE) {
-//
-//                    showWaiting(false);
-//                }
-//            }
-//        };
-
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        CmdExecRes result = manager.AmendHouse(houseInfo);
-        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).AmendHouse(houseInfo);
+        if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command AmendHouse, err:" + res.mError);
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交房屋信息失败");
         } else {
+            StoreCommand(res);
             showWaiting(true);
         }
     }

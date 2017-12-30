@@ -140,4 +140,21 @@ public class IApiArgs {
     public interface IArgsDelePic extends IArgsBase {
         int getPicId();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetUserInfo extends IArgsBase {
+        int getUsrId();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsCertifyHouse extends IArgsBase {
+        int     getHouse();
+        boolean passed();
+        String  getComments();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAmendHouseInfo extends IArgsBase {
+        HouseInfo   getHouseInfo();
+    }
 }

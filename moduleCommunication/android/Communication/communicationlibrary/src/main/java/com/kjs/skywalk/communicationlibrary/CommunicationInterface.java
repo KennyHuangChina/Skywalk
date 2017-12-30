@@ -40,11 +40,13 @@ public class CommunicationInterface {
         */
         CmdExecRes GetSmsCode(String userName);
 
-        /*
-        *   CMD: CMD_GET_USER_INFO,
-        *       - uid: user id to fetch
-        *   Result: IApiResults.IGetUserInfo
-        */
+        /**
+         *  Get user info. CMD_GET_USER_INFO
+         *  @param uid : user id to fetch
+         *  @return
+         *  Arguments   : IApiArgs.IArgsGetUserInfo
+         *  Result      : IApiResults.IGetUserInfo
+         */
         CmdExecRes GetUserInfo(int uid);
 
         /**
@@ -139,7 +141,15 @@ public class CommunicationInterface {
          */
         CmdExecRes CommitHouseByOwner(HouseInfo houseInfo, int agency);
 
-        CmdExecRes AmendHouse(HouseInfo houseInfo);                                    // CMD_AMEND_HOUSE,                 IApiResults.ICommon
+        /**
+         *  Amend House Info. CMD_AMEND_HOUSE
+         *  @param houseInfo : new house info
+         *  @return
+         *  Result      : IApiResults.ICommon
+         *  Arguments   : IApiArgs.IArgsAmendHouseInfo
+         */
+        CmdExecRes AmendHouse(HouseInfo houseInfo);
+
         CmdExecRes RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
         CmdExecRes SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,   IApiResults.ICommon
 
@@ -159,7 +169,17 @@ public class CommunicationInterface {
                                  int price_tag, int price_bottom);
 
         CmdExecRes GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
-        CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
+
+        /**
+         *  Certificat New House.   CMD_CERTIFY_HOUSE
+         *  @param house_id
+         *  @param bPass
+         *  @param sCertComment
+         *  @return
+         *  Result   : IApiResults.ICommon
+         *  Arguments: IArgsCertifyHouse
+         */
+        CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment);
 
         /*
         *   CMD: CMD_GET_HOUSE_CERTIFY_HIST
