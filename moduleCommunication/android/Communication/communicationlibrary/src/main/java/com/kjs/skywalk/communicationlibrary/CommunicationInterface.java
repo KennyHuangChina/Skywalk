@@ -141,7 +141,15 @@ public class CommunicationInterface {
          */
         CmdExecRes CommitHouseByOwner(HouseInfo houseInfo, int agency);
 
-        CmdExecRes AmendHouse(HouseInfo houseInfo);                                    // CMD_AMEND_HOUSE,                 IApiResults.ICommon
+        /**
+         *  Amend House Info. CMD_AMEND_HOUSE
+         *  @param houseInfo : new house info
+         *  @return
+         *  Result      : IApiResults.ICommon
+         *  Arguments   : IApiArgs.IArgsAmendHouseInfo
+         */
+        CmdExecRes AmendHouse(HouseInfo houseInfo);
+
         CmdExecRes RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
         CmdExecRes SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,   IApiResults.ICommon
 

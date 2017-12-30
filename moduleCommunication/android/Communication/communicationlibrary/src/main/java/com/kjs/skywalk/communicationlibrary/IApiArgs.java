@@ -152,4 +152,9 @@ public class IApiArgs {
         boolean passed();
         String  getComments();
     }
+
+    /******************************************************************************************/
+    public interface IArgsAmendHouseInfo extends IArgsBase {
+        HouseInfo   getHouseInfo();
+    }
 }
