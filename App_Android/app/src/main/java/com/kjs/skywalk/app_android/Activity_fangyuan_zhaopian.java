@@ -340,9 +340,9 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getPictures() {
         getHuXingPictures();
-//        getFangJianJieGouPictures();
-//        getJiaJuYongPinPictures();
-//        getDianQiPictures();
+        getFangJianJieGouPictures();
+        getJiaJuYongPinPictures();
+        getDianQiPictures();
     }
 
     private void showWaiting(final boolean show) {
@@ -565,7 +565,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             fragLst.add(fragment);
         }
         viewPager.removeAllViews();
-        // Kenny: 第二次打开会 crash
         viewPager.setAdapter(new PicFragStatePageAdapter(getSupportFragmentManager(), fragLst));
         viewPager.setCurrentItem(0);
     }
