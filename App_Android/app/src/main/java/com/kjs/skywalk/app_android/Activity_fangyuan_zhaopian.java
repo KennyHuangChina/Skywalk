@@ -340,9 +340,9 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
     private void getPictures() {
         getHuXingPictures();
-//        getFangJianJieGouPictures();
-//        getJiaJuYongPinPictures();
-//        getDianQiPictures();
+        getFangJianJieGouPictures();
+        getJiaJuYongPinPictures();
+        getDianQiPictures();
     }
 
     private void showWaiting(final boolean show) {

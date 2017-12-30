@@ -3,8 +3,11 @@ package com.kjs.skywalk.app_android.Server;
 import android.content.Context;
 import android.text.style.UpdateLayout;
 
+import com.kjs.skywalk.app_android.Activity_Weituoqueren;
 import com.kjs.skywalk.app_android.ClassDefine;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
@@ -20,28 +23,30 @@ import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
  * Created by admin on 2017/9/30.
  */
 
-public class ImageUpload implements CommunicationInterface.CIProgressListener{
+public class ImageUpload implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
 
-    private Context mContext = null;
-    private int mUploadType = 0;
-    private UploadFinished mListener = null;
-    private int mTimeout = 60000;
-    private boolean mResultGot = false;
-    private boolean mFailed = false;
+    private Context         mContext    = null;
+    private int             mUploadType = 0;
+    private UploadFinished  mListener   = null;
+    private int             mTimeout    = 60000;
+    private boolean         mResultGot  = false;
+    private boolean         mFailed     = false;
 
-    private UploadResult mUploadResult = null;
+    private UploadResult    mUploadResult = null;
 
-    public static final int UPLOAD_TYPE_IDCARD = PIC_TYPE_MAJOR_User + PIC_TYPE_SUB_USER_IDCard;
-    public static final int UPLOAD_TYPE_OWNER_CERT = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_OwnershipCert;
-    public static final int UPLOAD_TYPE_HUXING = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
-    public static final int UPLOAD_TYPE_FANGJIAN = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_RealMap;
-    public static final int UPLOAD_TYPE_JIAJU = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FURNITURE;
-    public static final int UPLOAD_TYPE_DIANQI = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_APPLIANCE;
+    public static final int UPLOAD_TYPE_IDCARD      = PIC_TYPE_MAJOR_User + PIC_TYPE_SUB_USER_IDCard,
+                            UPLOAD_TYPE_OWNER_CERT  = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_OwnershipCert,
+                            UPLOAD_TYPE_HUXING      = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FLOOR_PLAN,
+                            UPLOAD_TYPE_FANGJIAN    = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_RealMap,
+                            UPLOAD_TYPE_JIAJU       = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_FURNITURE,
+                            UPLOAD_TYPE_DIANQI      = PIC_TYPE_MAJOR_House + PIC_TYPE_SUB_HOUSE_APPLIANCE;
 
-    public static final int UPLOAD_RESULT_OK = 0;
-    public static final int UPLOAD_RESULT_FAIL = 1;
-    public static final int UPLOAD_RESULT_INTERRUPT = 2;
-    public static final int UPLOAD_RESULT_UPLOAD_START = 3;
+    public static final int UPLOAD_RESULT_OK            = 0,
+                            UPLOAD_RESULT_FAIL          = 1,
+                            UPLOAD_RESULT_INTERRUPT     = 2,
+                            UPLOAD_RESULT_UPLOAD_START  = 3;
+
+    private ArrayList<CmdExecRes> mCmdList = new ArrayList<CmdExecRes>();
 
     public class UploadResult {
         public int mResult = -1;
@@ -123,28 +128,14 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
 
                     mUploadResult = new UploadResult();
 
-                    CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-
-                        @Override
-                        public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-                            if(i == CMD_ADD_PICTURE) {
-                                if(iCommon.GetErrCode() != CE_ERROR_NO_ERROR) {
-                                    mFailed = true;
-                                    kjsLogUtil.e("Add picture failed with error: " + iCommon.GetErrDesc());
-                                } else {
-                                    IApiResults.IAddPic iAddResult = (IApiResults.IAddPic)iCommon;
-                                    mUploadResult.mId = iAddResult.GetId();
-                                    mUploadResult.mMD5 = iAddResult.GetPicChecksum();
-                                    mResultGot = true;
-                                }
-                            }
-                        }
-                    };
-
-                    CommandManager manager = CommandManager.getCmdMgrInstance(mContext); //, listener, ImageUpload.this);
                     int refId = getRefId(info);
-                    if(refId > 0) {
-                        manager.AddPicture(info.houseId, info.type, refId, info.description, info.image);
+                    if (refId > 0) {
+                        CmdExecRes res = CommandManager.getCmdMgrInstance(mContext).AddPicture(info.houseId, info.type, refId, info.description, info.image);
+                        if (res.mError != CE_ERROR_NO_ERROR) {
+                            kjsLogUtil.e("Fail to send command AddPicture, error: " + res.mError);
+                        } else {
+                            commonFun.StoreCommand(mCmdList, res);
+                        }
                     } else {
                         continue;
                     }
@@ -175,6 +166,37 @@ public class ImageUpload implements CommunicationInterface.CIProgressListener{
         }.start();
 
         return 0;
+    }
+
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = commonFun.RetrieveCommand(mCmdList, cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
+
+        int nErrCode = iResult.GetErrCode();
+        if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+//            super.onCommandFinished(command, cmdSeq, iResult);
+            if (command == CMD_ADD_PICTURE) {
+                mFailed = true;
+                kjsLogUtil.e("Add picture failed with error: " + nErrCode);
+            }
+            return;
+        }
+
+        if (command == CMD_ADD_PICTURE) {
+            IApiResults.IAddPic iAddResult = (IApiResults.IAddPic)iResult;
+            mUploadResult.mId   = iAddResult.GetId();
+            mUploadResult.mMD5  = iAddResult.GetPicChecksum();
+            mResultGot = true;
+        }
     }
 
     @Override
