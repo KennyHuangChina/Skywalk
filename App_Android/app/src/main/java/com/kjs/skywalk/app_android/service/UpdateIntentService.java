@@ -4,14 +4,18 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_SYSTEM_MSG_LST;
 
 /**
@@ -34,6 +38,7 @@ public class UpdateIntentService extends IntentService {
     private static final String EXTRA_PARAM2 = "com.kjs.skywalk.service.extra.PARAM2";
 
     private int mMsgCount = 0;
+    private ArrayList<CmdExecRes> mCmdList = new ArrayList<>();
 
     public UpdateIntentService() {
         super("UpdateIntentService");
@@ -123,48 +128,59 @@ public class UpdateIntentService extends IntentService {
     boolean mIsCmdFinished = false;
     int mTmpMsgCount = 0;
     private int getMessageCountSync(boolean ido, boolean nmo) {
+        // register listener
+        CommandManager.getCmdMgrInstance(getApplicationContext()).Register(mCmdListener, mProgreessListener);
+
         mIsCmdFinished = false;
-        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    mIsCmdFinished = true;
-                    return;
+        CmdExecRes result = CommandManager.getCmdMgrInstance(getApplicationContext()/*, cl, mProgreessListener*/).GetSysMsgList(0, 0 , ido, nmo);
+        if (CE_ERROR_NO_ERROR != result.mError) {
+            kjsLogUtil.e(String.format("Fail to send commnd to fetch total number, error: %d", result.mError));
+        } else {
+            kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
+            commonFun.StoreCommand(mCmdList, result);
+            while (!mIsCmdFinished) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                kjsLogUtil.i(String.format("[command: %d(%s)] --- %s" , command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    mIsCmdFinished = true;
-                    return;
-                }
-
-                if (command == CMD_GET_SYSTEM_MSG_LST) {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    kjsLogUtil.i("nFetch: " + nFetch);
-                    if (nFetch == -1) {
-                        mTmpMsgCount = resultList.GetTotalNumber();
-                        mIsCmdFinished = true;
-                        kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
-                    }
-                }
-            }
-        };
-        CommandManager.getCmdMgrInstance(getApplicationContext()/*, cl, mProgreessListener*/).GetSysMsgList(0, 0 , ido, nmo);
-
-        kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
-        while (!mIsCmdFinished) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
 
         kjsLogUtil.i("mTmpMsgCount: " + mTmpMsgCount);
         return mTmpMsgCount;
     }
+
+    CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
+        @Override
+        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+            if (null == iResult) {
+                kjsLogUtil.w("result is null");
+                return;
+            }
+            CmdExecRes cmd = commonFun.RetrieveCommand(mCmdList, cmdSeq);
+            if (null == cmd) {  // result is not we wanted
+                return;
+            }
+            kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+            if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+                kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+                mIsCmdFinished = true;
+                return;
+            }
+
+            if (command == CMD_GET_SYSTEM_MSG_LST) {
+                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                int nFetch = resultList.GetFetchedNumber();
+                kjsLogUtil.i("nFetch: " + nFetch);
+                if (nFetch == -1) {
+                    mTmpMsgCount = resultList.GetTotalNumber();
+                    mIsCmdFinished = true;
+                    kjsLogUtil.i("mIsCmdFinished: " + mIsCmdFinished);
+                }
+            }
+        }
+    };
 
     CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
         @Override

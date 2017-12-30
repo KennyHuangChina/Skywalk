@@ -23,6 +23,9 @@
     <string name="fragment_search_sort_unit_price">租金</string>
     <string name="fragment_search_sort_total_price">预约人数</string>
 
+    <string name="activty_fangyuan_zhaopian_upload_button_text">上传房源照片</string>
+    <string name="activty_fangyuan_zhaopian_delete_button_text">删除选中照片</string>
+
     <string name="title_activity__apartment_detail">Activity_ApartmentDetail</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

@@ -105,7 +105,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                     picInfo.mType           = args.getSubType(); // fetchType;
 
                     mList.add(picInfo);
-                    picInfo.print();
+//                    picInfo.print();
                 }
                 if(mListener != null) {
                     mListener.onHouseImageFetched(mList);
