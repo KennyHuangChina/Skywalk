@@ -161,7 +161,17 @@ public class CommunicationInterface {
                                  int price_tag, int price_bottom);
 
         CmdExecRes GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
-        CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment); // CMD_CERTIFY_HOUSE,               IApiResults.ICommon
+
+        /**
+         *  Certificat New House.   CMD_CERTIFY_HOUSE
+         *  @param house_id
+         *  @param bPass
+         *  @param sCertComment
+         *  @return
+         *  Result   : IApiResults.ICommon
+         *  Arguments: IArgsCertifyHouse
+         */
+        CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment);
 
         /*
         *   CMD: CMD_GET_HOUSE_CERTIFY_HIST
