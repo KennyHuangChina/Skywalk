@@ -211,10 +211,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
-                if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got for Floor Plan");
-                    return;
-                }
                 mPictureListHuXing = list;
                 runOnUiThread(new Runnable() {
                     @Override
@@ -228,6 +224,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
                         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
                         imageFetchHuXing.close();
+                        updateUploadButtonText();
                     }
                 });
             }
@@ -245,10 +242,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
-                if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got for Appliance");
-                    return;
-                }
                 mPictureListDianQi = list;
                 runOnUiThread(new Runnable() {
                     @Override
@@ -262,6 +255,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
                         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
                         imageFetchDianQi.close();
+                        updateUploadButtonText();
                     }
                 });
             }
@@ -279,10 +273,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
-                if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got for Furniture");
-                    return;
-                }
                 mPictureListJiaJuYongPin = list;
                 runOnUiThread(new Runnable() {
                     @Override
@@ -296,6 +286,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
                         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
                         imageFetchJiaJuYongPin.close();
+
+                        updateUploadButtonText();
                     }
                 });
             }
@@ -313,10 +305,6 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
             @Override
             public void onHouseImageFetched(ArrayList<ClassDefine.PictureInfo> list) {
-                if(list.size() == 0) {
-                    kjsLogUtil.i("no picture got for Real Map");
-                    return;
-                }
                 mPictureListFangJianJieGou = list;
                 runOnUiThread(new Runnable() {
                     @Override
@@ -330,6 +318,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
 
                         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
                         imageFetchFangJianJieGou.close();
+                        updateUploadButtonText();
                     }
                 });
             }
@@ -411,12 +400,15 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                                 updateViewrPagerSelectMode(mIsPicSelectMode);
                                 updateStatus();
 
+                                updateUploadButtonText();
+
                                 delete();
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
+                                updateUploadButtonText();
                             }
                         })
                         .show();
@@ -435,6 +427,31 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         ((PicFragStatePageAdapter) mVpJiaJuYongPin.getAdapter()).updateSelectMode(isSelectMode);
         ((PicFragStatePageAdapter) mVpDianQi.getAdapter()).updateSelectMode(isSelectMode);
         updateStatus();
+    }
+
+    private int getLocalPicCount(ArrayList<ClassDefine.PicList> list) {
+        int count = 0;
+        for(ClassDefine.PicList info : list) {
+            if(info.mIsLocal) {
+                count ++;
+            }
+        }
+
+        return count;
+    }
+
+    private void updateUploadButtonText() {
+        int count = 0;
+        if(!mIsPicSelectMode) {
+            String text = getResources().getString(R.string.activty_fangyuan_zhaopian_upload_button_text);
+            count += getLocalPicCount(mHuXingPicLst);
+            count += getLocalPicCount(mFangJianJieGouPicLst);
+            count += getLocalPicCount(mJiaJuYongPinPicLst);
+            count += getLocalPicCount(mDianQiPicLst);
+
+            text = String.format("%s ( %d )", text, count);
+            mTvUpload.setText(text);
+        }
     }
 
     private void updateStatus() {
@@ -486,6 +503,12 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             selectButton.setText("取消");
         } else {
             selectButton.setText("选择");
+        }
+
+        if(mIsPicSelectMode) {
+            String text = getResources().getString(R.string.activty_fangyuan_zhaopian_delete_button_text);
+            text = String.format("%s ( %d )", text, total_select_count);
+            mTvDelete.setText(text);
         }
     }
 
@@ -715,6 +738,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
 
         adapter.notifyDataSetChanged();
+
+        updateUploadButtonText();
     }
 
     Handler mHandler = new Handler(){
@@ -794,6 +819,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                     mHandler.sendEmptyMessageDelayed(MSG_DELETE_ALL_DONE, 1000);
                 }
                 mImgDeleter.close();
+                updateUploadButtonText();
             }
         });
     }
@@ -852,6 +878,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 }
 
                 mImgUploader.close();
+                updateUploadButtonText();
             }
         });
     }
