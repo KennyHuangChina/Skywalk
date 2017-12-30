@@ -97,38 +97,38 @@ public class ClassDefine {
     }
 
     public static class HouseInfo {
-        public static String propertyName = "";
-        public static int propertyId = -1;
-        public static String buildingNo = "";
-        public static int floor = 0;
-        public static int totalFloor = 0;
-        public static String roomNo = "";
-        public static int area = 0;
-        public static int bedRooms = 0;
-        public static int livingRooms = 0;
-        public static int bathRooms = 0;
-        public static int decorate = 0;
-        public static String decorateDescription = "";
-        public static int buyYear = 0;
-        public static int buyMonth = 0;
-        public static int buyDay = 0;
-        public static int hasLoan = 0;
-        public static int unique = 0;
+        public static String    propertyName        = "";
+        public static int       propertyId          = -1;
+        public static String    buildingNo          = "";
+        public static int       floor               = 0;
+        public static int       totalFloor          = 0;
+        public static String    roomNo              = "";
+        public static int       area                = 0;
+        public static int       bedRooms            = 0;
+        public static int       livingRooms         = 0;
+        public static int       bathRooms           = 0;
+        public static int       decorate            = 0;
+        public static String    decorateDescription = "";
+        public static int       buyYear             = 0;
+        public static int       buyMonth            = 0;
+        public static int       buyDay              = 0;
+        public static int       hasLoan             = 0;
+        public static int       unique              = 0;
 
-        public static int rental = 0;
-        public static int minRental = 0;
-        public static int includePropertyFee = 0;
-        public static int propertyFee = 0;
-        public static int price = 0;
-        public static int minPrice = 0;
+        public static int       rental              = 0;
+        public static int       minRental           = 0;
+        public static int       includePropertyFee  = 0;
+        public static int       propertyFee         = 0;
+        public static int       price               = 0;
+        public static int       minPrice            = 0;
 
-        public static int autoAgent = 1;
-        public static String agentId = "0";
+        public static int       autoAgent           = 1;
+        public static String    agentId             = "0";
 
-        public static int service = -1;
+        public static int       service             = -1;
 
-        public static int landlordId = -1;
-        public static Date submitTime = null;
+        public static int       landlordId          = -1;
+        public static Date      submitTime          = null;
 
         public static boolean forSale() {
             return price > 0 ? true : false;

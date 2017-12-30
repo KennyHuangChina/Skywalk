@@ -417,9 +417,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes GetUserInfo(int uid) {
-        CommunicationBase op = new CmdGetUserInfo(mContext);
+        CommunicationBase op = new CmdGetUserInfo(mContext, uid);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, "" + uid);
         return execute(op, pMap);
     }
 
@@ -587,11 +586,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment) {
-        CommunicationBase op = new CmdCertificateHouse(mContext);
+        CommunicationBase op = new CmdCertificateHouse(mContext, house_id, bPass, sCertComment);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_COMMENT, sCertComment);
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_CERT_PASS, String.valueOf(bPass));
         return execute(op, pMap);
     }
 

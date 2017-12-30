@@ -83,7 +83,7 @@
                         android:ellipsize="end"
                         android:gravity="right"
                         android:hint="楼栋号，例如 178"
-                        android:inputType="text| numberDecimal"
+                        android:inputType="text|numberDecimal"
                         android:nextFocusDown="@+id/editTextFloor"
                         android:textColor="@color/colorTextNormal"
                         android:textColorHint="@color/colorEditTextTint" />
