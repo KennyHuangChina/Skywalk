@@ -55,10 +55,13 @@ public class IApiArgs {
                         PIC_TYPE_MAJOR_House    = 200,
                         PIC_TYPE_MAJOR_Rental   = 300;
 
-    static public int   PIC_TYPE_SUB_USER_IDCard        = 1,    // User's ID card
-                        PIC_TYPE_SUB_USER_Headportrait  = 2;    // user's head-portrait
+    // picture sub-type of user
+    static public int   PIC_TYPE_SUB_USER_Begin         = 1,
+                        PIC_TYPE_SUB_USER_IDCard        = 1,    // User's ID card
+                        PIC_TYPE_SUB_USER_Headportrait  = 2,    // user's head-portrait
+                        PIC_TYPE_SUB_USER_End           = PIC_TYPE_SUB_USER_Headportrait;
 
-    // picture sub-type
+    // picture sub-type of house
     static public int   PIC_TYPE_SUB_HOUSE_BEGIN        = 0,    // all type
                         PIC_TYPE_SUB_HOUSE_FLOOR_PLAN   = 1,    // house plan
                         PIC_TYPE_SUB_HOUSE_FURNITURE    = 2,    // house furnitures
@@ -66,6 +69,10 @@ public class IApiArgs {
                         PIC_TYPE_SUB_HOUSE_OwnershipCert= 4,    // owernship certification
                         PIC_TYPE_SUB_HOUSE_RealMap      = 5,    // house real map
                         PIC_TYPE_SUB_HOUSE_END          = PIC_TYPE_SUB_HOUSE_RealMap;
+
+    // picture sub-type of rental
+    static public int   PIC_TYPE_SUB_RENTAL_Begin   = 1,
+                        PIC_TYPE_SUB_RENTAL_End     = PIC_TYPE_SUB_RENTAL_Begin;
     // picture size
     static public int   PIC_SIZE_ALL        = 0,
                         PIC_SIZE_Small      = 2,
@@ -118,5 +125,14 @@ public class IApiArgs {
         boolean includePropertyFee();
         int     getSellingPriceTag();
         int     getSellingPriceMin();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddPic extends IArgsBase {
+        int         getHouse();
+        int         getType();      // PIC_TYPE_MAJOR_xxx + sub-type(PIC_TYPE_SUB_USER_xxx, PIC_TYPE_SUB_HOUSE_xxx)
+        int         getObjId();
+        String      getFile();
+        String      getDesc();
     }
 }
