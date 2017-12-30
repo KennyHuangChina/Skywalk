@@ -222,7 +222,7 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
             switch (msg.what) {
                 case MSG_GET_PICTURES_DONE:
                     showPictures();
-                    imageFetchHouse.unregisterListener();
+                    imageFetchHouse.close();
                     break;
                 case MSG_GET_HOUSE_INFO_DONE:
                     getPictures();

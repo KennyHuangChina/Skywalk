@@ -50,7 +50,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
         mListener = listener;
     }
 
-    public  void unregisterListener() {
+    public  void close() {
         mListener = null;
         CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
     }

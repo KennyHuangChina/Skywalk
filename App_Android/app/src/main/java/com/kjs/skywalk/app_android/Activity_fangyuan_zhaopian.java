@@ -76,10 +76,12 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     private ArrayList<ClassDefine.PictureInfo> mPictureListJiaJuYongPin = new ArrayList<>();
     private ArrayList<ClassDefine.PictureInfo> mPictureListDianQi = new ArrayList<>();
 
-    private ImageFetchForHouse imageFetchHuXing = null;
-    private ImageFetchForHouse imageFetchFangJianJieGou = null;
-    private ImageFetchForHouse imageFetchJiaJuYongPin = null;
-    private ImageFetchForHouse imageFetchDianQi = null;
+    private ImageFetchForHouse  imageFetchHuXing         = null;
+    private ImageFetchForHouse  imageFetchFangJianJieGou = null;
+    private ImageFetchForHouse  imageFetchJiaJuYongPin   = null;
+    private ImageFetchForHouse  imageFetchDianQi         = null;
+    private ImageUpload         mImgUploader             = null;
+    private ImageDelete         mImgDeleter              = null;
 
     private final int   MSG_UPLOAD_ALL_DONE             = 0,
                         MSG_UPLOAD_FINISHED_WITH_ERROR  = 1,
@@ -194,8 +196,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             kjsLogUtil.i("upload: " + info.image);
         }
 
-        ImageUpload imageUpload = new ImageUpload(this, this);
-        if(imageUpload.upload(list) != 0) {
+        mImgUploader = new ImageUpload(this, this);
+        if (mImgUploader.upload(list) != 0) {
             commonFun.showToast_info(this, mContainer, "上传失败");
         } else {
             showWaiting(true);
@@ -225,7 +227,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
-                        imageFetchHuXing.unregisterListener();
+                        imageFetchHuXing.close();
                     }
                 });
             }
@@ -259,7 +261,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
-                        imageFetchDianQi.unregisterListener();
+                        imageFetchDianQi.close();
                     }
                 });
             }
@@ -293,7 +295,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
-                        imageFetchJiaJuYongPin.unregisterListener();
+                        imageFetchJiaJuYongPin.close();
                     }
                 });
             }
@@ -327,7 +329,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
-                        imageFetchFangJianJieGou.unregisterListener();
+                        imageFetchFangJianJieGou.close();
                     }
                 });
             }
@@ -570,14 +572,14 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     }
 
     private void delete() {
-        ImageDelete imageDelete = new ImageDelete(this, this);
+        mImgDeleter = new ImageDelete(this, this);
 
-        if(mDeleteList.size() == 0) {
+        if (mDeleteList.size() == 0) {
             commonFun.showToast_info(this, mContainer, "没有选中的图片");
             return;
         }
 
-        if(imageDelete.delete(mDeleteList) != 0) {
+        if (mImgDeleter.delete(mDeleteList) != 0) {
             commonFun.showToast_info(this, mContainer, "删除失败");
         } else {
             showWaiting(true);
@@ -791,6 +793,7 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                     mWaitingWindow.updateProgressText(text);
                     mHandler.sendEmptyMessageDelayed(MSG_DELETE_ALL_DONE, 1000);
                 }
+                mImgDeleter.close();
             }
         });
     }
@@ -847,6 +850,8 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                     mWaitingWindow.updateProgressText(text);
                     mHandler.sendEmptyMessageDelayed(MSG_UPLOAD_ALL_DONE, 1000);
                 }
+
+                mImgUploader.close();
             }
         });
     }

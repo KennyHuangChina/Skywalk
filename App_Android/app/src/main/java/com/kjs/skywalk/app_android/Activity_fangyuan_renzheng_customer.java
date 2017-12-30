@@ -487,7 +487,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     break;
                 case MSG_GET_PICTURES_DONE:
                     showPictures();
-                    imageFetchHouse.unregisterListener();
+                    imageFetchHouse.close();
                     break;
                 case MSG_GET_HOUSE_INFO_DONE:
                     getPictures();

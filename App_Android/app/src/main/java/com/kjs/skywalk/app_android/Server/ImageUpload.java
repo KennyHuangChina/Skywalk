@@ -71,6 +71,14 @@ public class ImageUpload implements CommunicationInterface.CICommandListener, Co
     public ImageUpload(Context context, UploadFinished listener) {
         mContext = context;
         mListener = listener;
+
+        // Register the Listener of Server Agent Library
+        CommandManager.getCmdMgrInstance(mContext).Register(this, this);
+    }
+
+    public void close() {
+        // Unregister the Listener of Server Agent Library
+        CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
     }
 
     private boolean waitResult(int nTimeoutMs) {
@@ -183,7 +191,6 @@ public class ImageUpload implements CommunicationInterface.CICommandListener, Co
         int nErrCode = iResult.GetErrCode();
         if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
             kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
-//            super.onCommandFinished(command, cmdSeq, iResult);
             if (command == CMD_ADD_PICTURE) {
                 mFailed = true;
                 kjsLogUtil.e("Add picture failed with error: " + nErrCode);
