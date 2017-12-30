@@ -145,4 +145,11 @@ public class IApiArgs {
     public interface IArgsGetUserInfo extends IArgsBase {
         int getUsrId();
     }
+
+    /******************************************************************************************/
+    public interface IArgsCertifyHouse extends IArgsBase {
+        int     getHouse();
+        boolean passed();
+        String  getComments();
+    }
 }
