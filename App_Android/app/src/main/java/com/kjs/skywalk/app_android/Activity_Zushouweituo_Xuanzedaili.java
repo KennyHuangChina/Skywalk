@@ -203,7 +203,6 @@ public class Activity_Zushouweituo_Xuanzedaili extends SKBaseActivity
             super.onCommandFinished(command, cmdSeq, iResult);
             if(command == CMD_GET_AGENCY_LIST) {
                 commonFun.showToast_info(getApplicationContext(), mListViewAgents, iResult.GetErrDesc());
-                super.onCommandFinished(command, cmdSeq, iResult);
             }
             return;
         }

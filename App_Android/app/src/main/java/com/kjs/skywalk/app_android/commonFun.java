@@ -409,11 +409,11 @@ public class commonFun {
         }
 
         if (livingrooms != 0) {
-            houseType += "" + livingrooms + "厅";
+            houseType += " " + livingrooms + "厅";
         }
 
         if (bathrooms != 0) {
-            houseType += "" + bathrooms + "卫";
+            houseType += " " + bathrooms + "卫";
         }
         return houseType;
     }

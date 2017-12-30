@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 
 import static com.kjs.skywalk.app_android.commonFun.getHouseTypeString;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_AMEND_HOUSE;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_AGENCY_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
 public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
@@ -88,8 +89,7 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
         if(mHouseInfo.buildingNo != null && !mHouseInfo.buildingNo.isEmpty() &&
                 mHouseInfo.roomNo != null && !mHouseInfo.roomNo.isEmpty()) {
-            String strRoom = mHouseInfo.buildingNo + "栋" + mHouseInfo.roomNo + "室";
-            mTextViewRoom.setText(strRoom);
+            mTextViewRoom.setText(String.format("%s栋 %s室" , mHouseInfo.buildingNo, mHouseInfo.roomNo));
         } else {
             mTextViewRoom.setText("未知");
         }
@@ -117,6 +117,75 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         mTotalFloor = mHouseInfo.totalFloor;
 
         mArea = mHouseInfo.area;
+    }
+
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
+
+        int nErrCode = iResult.GetErrCode();
+        if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if(command == CMD_AMEND_HOUSE) {
+                showWaiting(false);
+            }
+            return;
+        }
+
+        if (command == CommunicationInterface.CmdID.CMD_GET_USER_INFO) {
+            IApiResults.IGetUserInfo info = (IApiResults.IGetUserInfo) iResult;
+            mPhoneNumber = info.GetPhoneNo();
+            mLandlordName = info.GetName();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateUserInfo();
+                }
+            });
+        } else if (command == CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE) {
+            commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果成功");
+            showWaiting(false);
+        } else if (command == CMD_AMEND_HOUSE) {
+            showWaiting(false);
+        } else if (command == CMD_GET_HOUSE_INFO) {     // GetHouseInfo
+            mHouseInfo = new ClassDefine.HouseInfo();
+            IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
+            mHouseInfo.floor        = info.Floorthis();
+            mHouseInfo.totalFloor   = info.FloorTotal();
+            mHouseInfo.bedRooms     = info.Bedrooms();
+            mHouseInfo.livingRooms  = info.Livingrooms();
+            mHouseInfo.bathRooms    = info.Bathrooms();
+            mHouseInfo.area         = info.Acreage();
+            mHouseInfo.landlordId   = info.Landlord();
+            mHouseInfo.submitTime   = info.SubmitTime();
+            mHouseInfo.buildingNo   = info.BuildingNo();
+            mHouseInfo.roomNo       = info.HouseNo();
+            mHouseInfo.decorate     = info.Decorate();
+
+            mPropertyId = info.ProId();
+            mBuyDate    = info.BuyDate();
+            mRooms      = info.Bedrooms();
+            mLounges    = info.Livingrooms();
+            mBaths      = info.Bathrooms();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    update();
+                    getLandlordInfo();
+                }
+            });
+        }
     }
 
     public void onClickResponse(View v) {
@@ -258,35 +327,35 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
             return;
         }
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-                    return;
-                }
-
-                if (command == CommunicationInterface.CmdID.CMD_GET_USER_INFO) {
-                    IApiResults.IGetUserInfo info = (IApiResults.IGetUserInfo) iResult;
-                    mPhoneNumber = info.GetPhoneNo();
-                    mLandlordName = info.GetName();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateUserInfo();
-                        }
-                    });
-                }
-            }
-        };
+//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+//            @Override
+//            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+//                if (null == iResult) {
+//                    kjsLogUtil.w("result is null");
+//                    return;
+//                }
+//
+//                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+//                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
+//                    return;
+//                }
+//
+//                if (command == CommunicationInterface.CmdID.CMD_GET_USER_INFO) {
+//                    IApiResults.IGetUserInfo info = (IApiResults.IGetUserInfo) iResult;
+//                    mPhoneNumber = info.GetPhoneNo();
+//                    mLandlordName = info.GetName();
+//
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            updateUserInfo();
+//                        }
+//                    });
+//                }
+//            }
+//        };
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
         if (manager.GetUserInfo(mHouseInfo.landlordId).mError != CommunicationError.CE_ERROR_NO_ERROR) {
@@ -298,27 +367,27 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
         EditText textView = (EditText)findViewById(R.id.editTextShenheShuomin);
         String string = textView.getText().toString();
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-                    return;
-                }
-
-                if (command == CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE) {
-                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果成功");
-                    showWaiting(false);
-                }
-            }
-        };
+//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+//            @Override
+//            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+//                if (null == iResult) {
+//                    kjsLogUtil.w("result is null");
+//                    return;
+//                }
+//
+//                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
+//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+//                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
+//                    return;
+//                }
+//
+//                if (command == CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE) {
+//                    commonFun.showToast_info(getApplicationContext(), mRootLayout, "提交认证审核结果成功");
+//                    showWaiting(false);
+//                }
+//            }
+//        };
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this/*, listener, this*/);
         if (manager.CertificateHouse(mHouseId, pass, string).mError != CommunicationError.CE_ERROR_NO_ERROR) {
@@ -358,38 +427,37 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
 
     private void commitModification() {
         CommunicationInterface.HouseInfo houseInfo =
-                new CommunicationInterface.HouseInfo(
-                        mHouseId,
-                        mPropertyId,
-                        mBuildingNo,
-                        mRoomNo,
-                        mTotalFloor,
-                        mCurrentFloor,
-                        mLounges,
-                        mRooms,
-                        mBaths,
-                        mArea,
-                        false,
-                        true,
-                        mHouseInfo.decorate,
-                        mBuyDate);
+                new CommunicationInterface.HouseInfo(mHouseId,
+                                                     mPropertyId,
+                                                     mBuildingNo,
+                                                     mRoomNo,
+                                                     mTotalFloor,
+                                                     mCurrentFloor,
+                                                     mLounges,
+                                                     mRooms,
+                                                     mBaths,
+                                                     mArea,
+                                                     false,
+                                                     true,
+                                                     mHouseInfo.decorate,
+                                                     mBuyDate);
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-                    showWaiting(false);
-                    return;
-                }
-
-                if(command == CMD_AMEND_HOUSE) {
-
-                    showWaiting(false);
-                }
-            }
-        };
+//        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
+//            @Override
+//            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+//                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
+//                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
+//                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
+//                    showWaiting(false);
+//                    return;
+//                }
+//
+//                if(command == CMD_AMEND_HOUSE) {
+//
+//                    showWaiting(false);
+//                }
+//            }
+//        };
 
         CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
         CmdExecRes result = manager.AmendHouse(houseInfo);
@@ -416,58 +484,13 @@ public class Activity_Zushouweituo_shenhe extends SKBaseActivity {
     }
 
     private int getHouseInfo() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    Activity_Zushouweituo_shenhe.super.onCommandFinished(command, cmdSeq, iResult);
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_INFO) {
-                    mHouseInfo = new ClassDefine.HouseInfo();
-                    IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
-                    mHouseInfo.floor = info.Floorthis();
-                    mHouseInfo.totalFloor = info.FloorTotal();
-                    mHouseInfo.bedRooms = info.Bedrooms();
-                    mHouseInfo.livingRooms = info.Livingrooms();
-                    mHouseInfo.bathRooms = info.Bathrooms();
-                    mHouseInfo.area = info.Acreage();
-                    mHouseInfo.landlordId = info.Landlord();
-                    mHouseInfo.submitTime = info.SubmitTime();
-                    mHouseInfo.buildingNo = info.BuildingNo();
-                    mHouseInfo.roomNo = info.HouseNo();
-                    mHouseInfo.decorate = info.Decorate();
-
-                    mPropertyId = info.ProId();
-                    mBuyDate = info.BuyDate();
-                    mRooms = info.Bedrooms();
-                    mLounges = info.Livingrooms();
-                    mBaths = info.Bathrooms();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            update();
-                            getLandlordInfo();
-                        }
-                    });
-                }
-            }
-        };
-
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        CmdExecRes result = CmdMgr.GetHouseInfo(mHouseId, true);
+        CmdExecRes result = CommandManager.getCmdMgrInstance(this).GetHouseInfo(mHouseId, true);
         if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetHouseInfo, err:" + result.mError);
             commonFun.showToast_info(getApplicationContext(), mRootLayout, "获取房屋信息失败");
             return -1;
+        } else {
+            StoreCommand(result);
         }
 
         return 0;
