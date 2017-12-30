@@ -76,6 +76,11 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
     private ArrayList<ClassDefine.PictureInfo> mPictureListJiaJuYongPin = new ArrayList<>();
     private ArrayList<ClassDefine.PictureInfo> mPictureListDianQi = new ArrayList<>();
 
+    private ImageFetchForHouse imageFetchHuXing = null;
+    private ImageFetchForHouse imageFetchFangJianJieGou = null;
+    private ImageFetchForHouse imageFetchJiaJuYongPin = null;
+    private ImageFetchForHouse imageFetchDianQi = null;
+
     private final int   MSG_UPLOAD_ALL_DONE             = 0,
                         MSG_UPLOAD_FINISHED_WITH_ERROR  = 1,
                         MSG_GET_PICTURES_DONE           = 0x100,
@@ -220,13 +225,15 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+                        imageFetchHuXing.unregisterListener();
                     }
                 });
             }
         };
 
-        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
-        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FLOOR_PLAN, PIC_SIZE_ALL);
+        imageFetchHuXing = new ImageFetchForHouse(this);
+        imageFetchHuXing.registerListener(listener);
+        imageFetchHuXing.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FLOOR_PLAN, PIC_SIZE_ALL);
     }
 
     private void getDianQiPictures() {
@@ -252,13 +259,15 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+                        imageFetchDianQi.unregisterListener();
                     }
                 });
             }
         };
 
-        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
-        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_APPLIANCE, PIC_SIZE_ALL);
+        imageFetchDianQi = new ImageFetchForHouse(this);
+        imageFetchDianQi.registerListener(listener);
+        imageFetchDianQi.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_APPLIANCE, PIC_SIZE_ALL);
     }
 
     private void getJiaJuYongPinPictures() {
@@ -284,13 +293,15 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+                        imageFetchJiaJuYongPin.unregisterListener();
                     }
                 });
             }
         };
 
-        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
-        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FURNITURE, PIC_SIZE_ALL);
+        imageFetchJiaJuYongPin = new ImageFetchForHouse(this);
+        imageFetchJiaJuYongPin.registerListener(listener);
+        imageFetchJiaJuYongPin.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FURNITURE, PIC_SIZE_ALL);
     }
 
     private void getFangJianJieGouPictures() {
@@ -316,20 +327,22 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                         }
 
                         fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+                        imageFetchFangJianJieGou.unregisterListener();
                     }
                 });
             }
         };
 
-        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, listener);
-        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_RealMap, PIC_SIZE_ALL);
+        imageFetchFangJianJieGou = new ImageFetchForHouse(this);
+        imageFetchFangJianJieGou.registerListener(listener);
+        imageFetchFangJianJieGou.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_RealMap, PIC_SIZE_ALL);
     }
 
     private void getPictures() {
         getHuXingPictures();
-        getFangJianJieGouPictures();
-        getJiaJuYongPinPictures();
-        getDianQiPictures();
+//        getFangJianJieGouPictures();
+//        getJiaJuYongPinPictures();
+//        getDianQiPictures();
     }
 
     private void showWaiting(final boolean show) {

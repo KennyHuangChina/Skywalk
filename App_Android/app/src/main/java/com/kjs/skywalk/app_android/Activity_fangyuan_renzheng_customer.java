@@ -69,6 +69,8 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
     private ArrayList<ClassDefine.PictureInfo> mPictureList = new ArrayList<>();
 
+    private ImageFetchForHouse imageFetchHouse = null;
+
     private final int MSG_UPLOAD_ALL_DONE = 0;
     private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
     private final int MSG_GET_PICTURES_DONE = 0x100;
@@ -417,8 +419,9 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private void getPictures() {
         mPictureList.clear();
 
-        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, this);
-        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+        imageFetchHouse = new ImageFetchForHouse(this);
+        imageFetchHouse.registerListener(this);
+        imageFetchHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
 
         ImageFetchForUser fetchForUser = new ImageFetchForUser(this, this);
         fetchForUser.fetch(mLandlordId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
@@ -484,6 +487,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     break;
                 case MSG_GET_PICTURES_DONE:
                     showPictures();
+                    imageFetchHouse.unregisterListener();
                     break;
                 case MSG_GET_HOUSE_INFO_DONE:
                     getPictures();

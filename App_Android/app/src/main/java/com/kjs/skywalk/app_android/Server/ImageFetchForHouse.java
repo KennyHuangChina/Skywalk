@@ -39,19 +39,27 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
     ArrayList<ClassDefine.PictureInfo> mList = new ArrayList<>();
 
-    public ImageFetchForHouse(Context context, HouseFetchFinished listener) {
+    public ImageFetchForHouse(Context context) {
         mContext    = context;
-        mListener   = listener;
 
         // Register Listener
         CommandManager.getCmdMgrInstance(mContext).Register(this, this);
+    }
+
+    public void registerListener(HouseFetchFinished listener) {
+        mListener = listener;
+    }
+
+    public  void unregisterListener() {
+        mListener = null;
+        CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
     }
 
     @Override
     protected void finalize() throws Throwable {
         // TODO: Kenny, 这里不会立刻被调用到，要等到 GC 的时候才会被调用，因此 Listener 不会被立刻 Unregister
         // Unregister Listener
-        CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
+        //CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
         super.finalize();
     }
 
@@ -101,7 +109,9 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                     mList.add(picInfo);
                     picInfo.print();
                 }
-                mListener.onHouseImageFetched(mList);
+                if(mListener != null) {
+                    mListener.onHouseImageFetched(mList);
+                }
             }
         }
     }

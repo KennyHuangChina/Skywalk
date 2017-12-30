@@ -48,6 +48,8 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
 
     private int mCurrentPreviewIndex = 0;
 
+    private ImageFetchForHouse imageFetchHouse = null;
+
     private final int MSG_VERIFICATION_DONE = 0;
     private final int MSG_GET_PICTURES_DONE = 0x100;
     private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
@@ -220,6 +222,7 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
             switch (msg.what) {
                 case MSG_GET_PICTURES_DONE:
                     showPictures();
+                    imageFetchHouse.unregisterListener();
                     break;
                 case MSG_GET_HOUSE_INFO_DONE:
                     getPictures();
@@ -234,8 +237,9 @@ public class Activity_shenhe_zhengjian extends SKBaseActivity implements ImageFe
     private void getPictures() {
         mPictureList.clear();
 
-        ImageFetchForHouse fetchForHouse = new ImageFetchForHouse(this, this);
-        fetchForHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+        imageFetchHouse = new ImageFetchForHouse(this);
+        imageFetchHouse.registerListener(this);
+        imageFetchHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
 
         ImageFetchForUser fetchForUser = new ImageFetchForUser(this, this);
         fetchForUser.fetch(mLandlordId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
