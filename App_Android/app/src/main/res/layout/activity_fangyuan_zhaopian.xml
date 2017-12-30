@@ -291,7 +291,7 @@
                     android:layout_centerInParent="true"
                     android:onClick="onViewClick"
                     android:visibility="gone"
-                    android:text="上传房源照片"></TextView>
+                    android:text="@string/activty_fangyuan_zhaopian_upload_button_text"></TextView>
 
                 <TextView
                     android:id="@+id/tv_delete"
@@ -301,7 +301,7 @@
                     android:layout_centerInParent="true"
                     android:enabled="false"
                     android:onClick="onViewClick"
-                    android:text="删除选中照片"
+                    android:text="@string/activty_fangyuan_zhaopian_delete_button_text"
                     android:visibility="gone"></TextView>
             </RelativeLayout>
 
