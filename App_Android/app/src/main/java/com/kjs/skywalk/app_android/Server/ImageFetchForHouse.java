@@ -35,9 +35,9 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
     private int                 mTimeout    = 10000;
     private boolean             mResultGot  = false;
     private boolean             mFailed     = false;
-    private CmdExecRes          mCmd        = null;
 
-    ArrayList<ClassDefine.PictureInfo> mList = new ArrayList<>();
+    ArrayList<ClassDefine.PictureInfo>  mList       = new ArrayList<>();
+    ArrayList<CmdExecRes>               mCmdList    = new ArrayList<CmdExecRes>();
 
     public ImageFetchForHouse(Context context) {
         mContext    = context;
@@ -70,10 +70,9 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
             return;
         }
         // Filter out all other commands not send by us
-        synchronized (this) {
-            if (null == mCmd || mCmd.mCmdSeq == command) {  // result is not we wanted
-                return;
-            }
+        CmdExecRes cmd = commonFun.RetrieveCommand(mCmdList, cmdSeq);
+        if (null == cmd) {
+            return;
         }
         kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
 
@@ -89,7 +88,6 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
         }
 
         if (command == CMD_GET_HOUSE_PIC_LIST) {
-            if (null != mCmd.mArgs && mCmd.mArgs.isEqual(iResult.GetArgs())) {
                 IApiArgs.IArgsGetXPicLst args = (IApiArgs.IArgsGetXPicLst)iResult.GetArgs();
                 IApiResults.IResultList  res  = (IApiResults.IResultList)iResult;
 
@@ -112,7 +110,6 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                 if(mListener != null) {
                     mListener.onHouseImageFetched(mList);
                 }
-            }
         }
     }
 
@@ -152,10 +149,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
             kjsLogUtil.e(String.format("Fail to send commnd GetHousePics, error: %d", result.mError));
             return -1;
         }
-
-        synchronized (this) {
-            mCmd = result;
-        }
+        commonFun.StoreCommand(mCmdList, result);
         return 0;
     }
 
