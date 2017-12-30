@@ -262,14 +262,16 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Pictures
-        /*
-        *   CMD : CMD_ADD_PICTURE
-        *       - house : house id
-        *       - type  : picture type. PIC_TYPE_MAJOR_xxx + PIC_TYPE_SUB_xxx
-        *       - refId : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
-        *       - desc  : picture description
-        *       - file  : picture file in local
-        *   Result  : IApiResults.IAddPic
+        /**
+         *  upload new picture to server
+         *  @param house    : house id
+         *  @param type     : picture type. PIC_TYPE_MAJOR_xxx + PIC_TYPE_SUB_xxx
+         *  @param refId    : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
+         *  @param desc     : picture description
+         *  @param file     : picture file in local
+         *  @return
+         *   Result      : IApiResults.IAddPic
+         *   Arguments   : IApiArgs.IArgsAddPic
          */
         CmdExecRes AddPicture(int house, int type, int refId, String desc, String file);
 
