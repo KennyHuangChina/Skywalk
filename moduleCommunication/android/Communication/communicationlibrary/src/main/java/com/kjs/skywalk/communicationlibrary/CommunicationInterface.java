@@ -40,11 +40,13 @@ public class CommunicationInterface {
         */
         CmdExecRes GetSmsCode(String userName);
 
-        /*
-        *   CMD: CMD_GET_USER_INFO,
-        *       - uid: user id to fetch
-        *   Result: IApiResults.IGetUserInfo
-        */
+        /**
+         *  Get user info. CMD_GET_USER_INFO
+         *  @param uid : user id to fetch
+         *  @return
+         *  Arguments   : IApiArgs.IArgsGetUserInfo
+         *  Result      : IApiResults.IGetUserInfo
+         */
         CmdExecRes GetUserInfo(int uid);
 
         /**

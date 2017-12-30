@@ -140,4 +140,9 @@ public class IApiArgs {
     public interface IArgsDelePic extends IArgsBase {
         int getPicId();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetUserInfo extends IArgsBase {
+        int getUsrId();
+    }
 }
