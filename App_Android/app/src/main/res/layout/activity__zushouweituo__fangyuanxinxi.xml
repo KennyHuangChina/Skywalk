@@ -82,8 +82,8 @@
                         android:layout_toLeftOf="@+id/tv_loudong_unit"
                         android:ellipsize="end"
                         android:gravity="right"
-                        android:hint="输入楼栋号"
-                        android:inputType="text"
+                        android:hint="楼栋号，例如 178"
+                        android:inputType="text| numberDecimal"
                         android:nextFocusDown="@+id/editTextFloor"
                         android:textColor="@color/colorTextNormal"
                         android:textColorHint="@color/colorEditTextTint" />
@@ -98,7 +98,39 @@
                 </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/page_left_margin"
+                    android:paddingRight="@dimen/page_right_margin">
 
+                    <TextView
+                        style="@style/textStyle_page_blockKey"
+                        android:text="门牌号"
+                        android:textColor="@color/colorTextNormal" />
+
+                    <EditText
+                        android:id="@+id/editTextRoomNumber"
+                        style="@style/textStyle_page_blockEdit"
+                        android:background="#FFFFFFFF"
+                        android:gravity="right"
+                        android:layout_toLeftOf="@+id/txt_house_number"
+                        android:hint="房屋的门牌号，例如 504"
+                        android:inputType="text|numberDecimal"
+                        android:textColor="@color/colorTextNormal"
+                        android:textColorHint="@color/colorEditTextTint" />
+
+                    <TextView
+                        android:id="@+id/txt_house_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:text="室" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperator_horizontal" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -124,7 +156,7 @@
                             android:layout_alignBottom="@+id/tv_louceng_unit"
                             android:layout_toStartOf="@+id/tv_louceng_unit"
                             android:gravity="right"
-                            android:hint="输入楼层"
+                            android:hint="房屋所在楼层"
                             android:inputType="number"
                             android:nextFocusDown="@+id/editTextTotalFloor"
                             android:textColorHint="@color/colorEditTextTint" />
@@ -156,7 +188,7 @@
                             style="@style/textStyle_page_blockEdit"
                             android:layout_toLeftOf="@+id/tv_loucengs_unit"
                             android:gravity="right"
-                            android:hint="输入总层数"
+                            android:hint="房屋的总层数"
                             android:inputType="number"
                             android:textColorHint="@color/colorEditTextTint" />
 
@@ -169,31 +201,6 @@
                             android:text="层" />
                     </RelativeLayout>
                 </LinearLayout>
-
-                <include layout="@layout/seperator_horizontal" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/page_left_margin"
-                    android:paddingRight="@dimen/page_right_margin">
-
-                    <TextView
-                        style="@style/textStyle_page_blockKey"
-                        android:text="门牌号"
-                        android:textColor="@color/colorTextNormal" />
-
-                    <EditText
-                        android:id="@+id/editTextRoomNumber"
-                        style="@style/textStyle_page_blockValue"
-                        android:background="#FFFFFFFF"
-                        android:gravity="right"
-                        android:hint="输入房号"
-                        android:inputType="text"
-                        android:textColor="@color/colorTextNormal"
-                        android:textColorHint="@color/colorEditTextTint" />
-                </RelativeLayout>
 
                 <include layout="@layout/seperator_horizontal" />
 
