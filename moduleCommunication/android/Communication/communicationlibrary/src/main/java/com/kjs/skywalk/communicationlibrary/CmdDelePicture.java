@@ -10,17 +10,16 @@ import java.util.HashMap;
  */
 
 class CmdDelePicture extends CommunicationBase {
-    private int mPicId = 0;
 
     CmdDelePicture(Context context, int picId) {
         super(context, CommunicationInterface.CmdID.CMD_DEL_PICTURE);
         mMethodType = "DELETE";
-        mPicId = picId;
+        mArgs = new Args(picId);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/pic/" + mPicId;
+        mCommandURL = "/v1/pic/" + ((Args)mArgs).getPicId();
         return mCommandURL;
     }
 
@@ -29,8 +28,34 @@ class CmdDelePicture extends CommunicationBase {
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        return true;
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsDelePic {
+        private int mPicId = 0;
+
+        Args(int pic) {
+            mPicId = pic;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            return true;    // super.checkArgs();
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (mPicId != ((Args)arg2).mPicId) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int getPicId() {
+            return mPicId;
+        }
     }
 }

@@ -135,4 +135,9 @@ public class IApiArgs {
         String      getFile();
         String      getDesc();
     }
+
+    /******************************************************************************************/
+    public interface IArgsDelePic extends IArgsBase {
+        int getPicId();
+    }
 }
