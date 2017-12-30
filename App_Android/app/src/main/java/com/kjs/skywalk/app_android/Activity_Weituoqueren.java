@@ -26,7 +26,10 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.HashMap;
 
-import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.*;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
+import com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdRes;
+
 import com.kjs.skywalk.app_android.ClassDefine.IntentExtraKeyValue;
 
 /**
@@ -129,50 +132,9 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mPropertyId = ClassDefine.HouseInfoForCommit.propertyId;
         mBuildingNo = ClassDefine.HouseInfoForCommit.buildingNo;
         mRoomNo = ClassDefine.HouseInfoForCommit.roomNo;
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
-        mURL = CmdMgr.GetLandlordHouseSubmitConfirmUrl(mPropertyId, mBuildingNo, mRoomNo);
+        mURL = CommandManager.getCmdMgrInstance(this).GetLandlordHouseSubmitConfirmUrl(mPropertyId, mBuildingNo, mRoomNo);
         Log.d(TAG, Fn + "mURL: " + mURL);
     }
-
-    CommunicationInterface.CICommandListener mListener = new CommunicationInterface.CICommandListener() {
-        @Override
-        public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-            if(i == CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER) {
-                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                    mHouseId = ((IApiResults.IAddRes)iCommon).GetId();
-                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE, 0);
-                    Log.i(TAG, "House Info Committed: " + mHouseId);
-                } else {
-                    Log.i(TAG, "Error Code: " + iCommon.GetErrCode() + " " + iCommon.GetErrDesc()) ;
-                    //commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
-                    hideWaiting();
-
-                    //0x451: duplicate
-                    mErrorCode = iCommon.GetErrCode();
-                    if(iCommon.GetErrCode() == 0x451) {
-                        myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
-                    } else {
-                        Activity_Weituoqueren.super.onCommandFinished(i, cmdSeq, iCommon);
-                        return;
-                    }
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-            } else if(i == CommunicationInterface.CmdID.CMD_SET_HOUSE_PRICE) {
-                if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_PRICE_COMMIT_DONE, 0);
-                } else {
-                    Log.i(TAG, iCommon.GetErrDesc()) ;
-                    commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
-                    hideWaiting();
-                }
-            }
-        }
-    };
 
     private void commitPriceInfo() {
         CmdExecRes res = CommandManager.getCmdMgrInstance(this).SetHousePrice(mHouseId, ClassDefine.HouseInfoForCommit.rental, ClassDefine.HouseInfoForCommit.minRental,
@@ -181,11 +143,62 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         if (res.mError != CE_ERROR_NO_ERROR) {
             hideWaiting();
             commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+        } else {
+            StoreCommand(res);
+        }
+    }
+
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
+
+        int nErrCode = iResult.GetErrCode();
+        if (CommunicationInterface.CmdRes.CMD_RES_NOERROR != nErrCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if (command == CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER) {
+                //commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+                hideWaiting();
+
+                //0x451: duplicate
+                mErrorCode = nErrCode;
+                if (nErrCode == CmdRes.CMD_RES_ALREADY_EXIST /*0x451*/) {
+                    myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE_WITH_ERROR, 0);
+                } else {
+                    Activity_Weituoqueren.super.onCommandFinished(command, cmdSeq, iResult);
+                    return;
+                }
+            } else if(command == CommunicationInterface.CmdID.CMD_SET_HOUSE_PRICE) {
+                commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
+                hideWaiting();
+            }
+            return;
+        }
+
+        if (command == CommunicationInterface.CmdID.CMD_COMMIT_HOUSE_BY_OWNER) {
+            mHouseId = ((IApiResults.IAddRes)iResult).GetId();
+            myHandler.sendEmptyMessageDelayed(MSG_HOUSE_INFO_COMMIT_DONE, 0);
+            Log.i(TAG, "House Info Committed: " + mHouseId);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+        } else if(command == CommunicationInterface.CmdID.CMD_SET_HOUSE_PRICE) {
+            myHandler.sendEmptyMessageDelayed(MSG_HOUSE_PRICE_COMMIT_DONE, 0);
         }
     }
 
     private void commitHouseInfo() {
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); // , mListener, this);
         boolean forSale = ClassDefine.HouseInfoForCommit.forSale();
         boolean forRent = ClassDefine.HouseInfoForCommit.forRental();
 
@@ -208,9 +221,12 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         );
 
         int agentId = Integer.valueOf(ClassDefine.HouseInfoForCommit.agentId);
-        if (manager.CommitHouseByOwner(house, agentId).mError == CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).CommitHouseByOwner(house, agentId);
+        if (res.mError == CE_ERROR_NO_ERROR) {
             showWaiting(mWebView);
+            StoreCommand(res);
         } else {
+            kjsLogUtil.e("Fail to send command CommitHouseByOwner, err:" + res.mError);
             commonFun.showToast_info(getApplicationContext(), mWebView, "提交失败");
         }
     }
@@ -256,8 +272,7 @@ public class Activity_Weituoqueren extends SKBaseActivity implements Communicati
         mWebView.removeAllViews();
 
         // set cookie for webview
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
-        String cookie = CmdMgr.GetCookie(mURL);
+        String cookie = CommandManager.getCmdMgrInstance(this).GetCookie(mURL);
         Log.d(TAG, Fn + "cookie: " + cookie);
 
         // Kenny: sample code use the CookieSyncManager, but it is deprecated
