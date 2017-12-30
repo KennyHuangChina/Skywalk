@@ -275,10 +275,12 @@ public class CommunicationInterface {
          */
         CmdExecRes AddPicture(int house, int type, int refId, String desc, String file);
 
-        /*
-        *   CMD: CMD_DEL_PICTURE
-        *       pic: picture id
-        *   Result: IApiResults.ICommon
+        /**
+         *  Delete Picture from server. CMD_DEL_PICTURE
+         *  @param pic: picture id to delete
+         *  @return
+         *  Result      : IApiResults.ICommon
+         *  Arguments   : IArgsDelePic
          */
         CmdExecRes DelePicture(int pic);
 

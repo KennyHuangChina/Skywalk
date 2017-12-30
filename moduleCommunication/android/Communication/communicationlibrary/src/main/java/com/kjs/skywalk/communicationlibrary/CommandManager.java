@@ -389,9 +389,10 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     }
                     // remove it from command queue
                     CommunicationBase cmd = removeCmd(cmdId, res);
-                    if (null != cmd) {
-                        onNotify(cmdId, cmdSeq, res);
+                    if (null == cmd) {
+                        Log.w(TAG, Fn + "not found command in queue");
                     }
+                    onNotify(cmdId, cmdSeq, res);
                 }
             }
         }
