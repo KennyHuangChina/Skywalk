@@ -9,11 +9,15 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_CERTIFY_HOUSE;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
 
 /**
  * Created by admin on 2017/3/22.
@@ -99,6 +103,35 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
         return true;
     }
 
+    @Override
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+        int errCode = iResult.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + errCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if (command == CommunicationInterface.CmdID.CMD_SET_HOUSE_SHOWTIME) {
+                commonFun.showToast_info(Activity_Zushouweituo_Kanfangshijian.this, mContainer, "保存失败: " + iResult.GetErrDesc());
+                hideWaiting();
+            }
+            return;
+        }
+
+        if (command == CommunicationInterface.CmdID.CMD_SET_HOUSE_SHOWTIME) {
+            commonFun.showToast_info(Activity_Zushouweituo_Kanfangshijian.this, mContainer, "保存成功");
+            hideWaiting();
+        }
+    }
+
     private void doSave() {
         if(!collectData()) {
             return;
@@ -108,24 +141,12 @@ public class Activity_Zushouweituo_Kanfangshijian extends SKBaseActivity {
             return;
         }
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-                if(i == CommunicationInterface.CmdID.CMD_SET_HOUSE_SHOWTIME) {
-                    if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                        commonFun.showToast_info(Activity_Zushouweituo_Kanfangshijian.this, mContainer, "保存成功");
-                    } else {
-                        commonFun.showToast_info(Activity_Zushouweituo_Kanfangshijian.this, mContainer, "保存失败: " + iCommon.GetErrDesc());
-                    }
-
-                    hideWaiting();
-                }
-            }
-        };
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        if (manager.SetHouseShowtime(mHouseID, mTimeWorkingDay, mTimeHoliday, mTime).mError == CE_ERROR_NO_ERROR) {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).SetHouseShowtime(mHouseID, mTimeWorkingDay, mTimeHoliday, mTime);
+        if (res.mError == CE_ERROR_NO_ERROR) {
+            StoreCommand(res);
             showWaiting(mContainer);
         } else {
+            kjsLogUtil.e("Fail to send command SetHouseShowtime, err:" + res.mError);
             commonFun.showToast_info(this, mContainer, "接口调用失败");
         }
     }
