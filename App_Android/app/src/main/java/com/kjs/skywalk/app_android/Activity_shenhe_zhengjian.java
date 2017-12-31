@@ -141,32 +141,15 @@ public class Activity_shenhe_zhengjian  extends     SKBaseActivity
     }
 
     private void doCertificateConfirm() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证失败:" + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_CERTIFY_HOUSE) {
-                    mHandler.sendEmptyMessageDelayed(MSG_VERIFICATION_DONE, 1000);
-                }
-            }
-        };
-
         EditText etAdvise = (EditText)findViewById(R.id.editTextAdvise);
         String textAdvise = etAdvise.getText().toString();
-        CmdExecRes result = CommandManager.getCmdMgrInstance(this/*, listener, this*/).CertificateHouse(mHouseId, mPassed, textAdvise);
+        CmdExecRes result = CommandManager.getCmdMgrInstance(this).CertificateHouse(mHouseId, mPassed, textAdvise);
         if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command CertificateHouse, err:" + result.mError);
             commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证失败");
         }
 
+        StoreCommand(result);
         commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证成功");
     }
 
@@ -285,17 +268,21 @@ public class Activity_shenhe_zhengjian  extends     SKBaseActivity
             super.onCommandFinished(command, cmdSeq, iResult);
             if (command == CMD_GET_HOUSE_INFO) {
                 commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败:" + errCode);
+            } else if (command == CMD_CERTIFY_HOUSE) {
+                commonFun.showToast_info(getApplicationContext(), mContainer, "提交房屋认证失败:" + iResult.GetErrDesc());
             }
             return;
         }
 
-        if (command == CMD_GET_HOUSE_INFO) {
+        if (command == CMD_GET_HOUSE_INFO) {    // GetHouseInfo
             IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
             mLandlordId = info.Landlord();
-            kjsLogUtil.i("Landlord: " + mLandlordId);
+            kjsLogUtil.d("Landlord: " + mLandlordId);
             if (mLandlordId != 0) { //取得landlord id以后才可以取身份证图片
                 mHandler.sendEmptyMessageDelayed(MSG_GET_HOUSE_INFO_DONE, 10);
             }
+        } else if (command == CMD_CERTIFY_HOUSE) {  // CertificateHouse
+            mHandler.sendEmptyMessageDelayed(MSG_VERIFICATION_DONE, 1000);
         }
     }
 
