@@ -42,9 +42,11 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_PIC_LIST;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.*;
 
-public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implements ImageUpload.UploadFinished,
-        ImageDelete.DeleteFinished, ImageFetchForHouse.HouseFetchFinished,
-        ImageFetchForUser.UserFetchFinished
+public class Activity_fangyuan_renzheng_customer    extends     SKBaseActivity
+                                                    implements  ImageUpload.UploadFinished,
+                                                                ImageDelete.DeleteFinished,
+                                                                ImageFetchForHouse.HouseFetchFinished,
+                                                                ImageFetchForUser.UserFetchFinished
 {
     private int mPhotoPickerHostId;
     private ArrayList<String> mCertList = new ArrayList<>();
@@ -69,14 +71,17 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
 
     private ArrayList<ClassDefine.PictureInfo> mPictureList = new ArrayList<>();
 
-    private ImageFetchForHouse imageFetchHouse = null;
+    private ImageFetchForHouse mImageFetchHouse = null;
 
-    private final int MSG_UPLOAD_ALL_DONE = 0;
-    private final int MSG_UPLOAD_FINISHED_WITH_ERROR = 1;
-    private final int MSG_GET_PICTURES_DONE = 0x100;
-    private final int MSG_DELETE_ALL_DONE = 0x200;
-    private final int MSG_DELETE_FINISHED_WITH_ERROR = 0x201;
-    private final int MSG_GET_HOUSE_INFO_DONE = 0x300;
+    private final int   MSG_UPLOAD_ALL_DONE             = 0,
+                        MSG_UPLOAD_FINISHED_WITH_ERROR  = 1,
+                        MSG_GET_HOUSE_PIC_DONE          = 0x100,
+                        MSG_GET_USER_PIC_DONE           = 0x101,
+                        MSG_DELETE_ALL_DONE             = 0x200,
+                        MSG_DELETE_FINISHED_WITH_ERROR  = 0x201,
+                        MSG_GET_HOUSE_INFO_DONE         = 0x300;
+
+    private ImageFetchForUser mFetchForUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -419,49 +424,58 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
     private void getPictures() {
         mPictureList.clear();
 
-        imageFetchHouse = new ImageFetchForHouse(this);
-        imageFetchHouse.registerListener(this);
-        imageFetchHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
+        mImageFetchHouse = new ImageFetchForHouse(this);
+        mImageFetchHouse.registerListener(this);
+        mImageFetchHouse.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_OwnershipCert, PIC_SIZE_ALL);
 
-        ImageFetchForUser fetchForUser = new ImageFetchForUser(this, this);
-        fetchForUser.fetch(mLandlordId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
+        mFetchForUser = new ImageFetchForUser(this, this);
+        mFetchForUser.fetch(mLandlordId, PIC_TYPE_SUB_USER_IDCard, PIC_SIZE_ALL);
     }
 
     private int getHouseInfo() {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败:" + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_GET_HOUSE_INFO) {
-                    IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
-                    mLandlordId = info.Landlord();
-                    kjsLogUtil.i("User Id: " + mLandlordId);
-                    if(mLandlordId != 0) { //取得landlord id以后才可以取身份证图片
-                        mHandler.sendEmptyMessageDelayed(MSG_GET_HOUSE_INFO_DONE, 10);
-                    }
-                }
-            }
-        };
-
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this); // , listener, this);
-        CmdExecRes result = CmdMgr.GetHouseInfo(mHouseId, true);
-        if(result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+        CommandManager.getCmdMgrInstance(this).Register(this, this);
+        CmdExecRes result = CommandManager.getCmdMgrInstance(this).GetHouseInfo(mHouseId, true);
+        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetHouseInfo, err:" + result.mError);
             commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败");
             return -1;
         }
 
+        kjsLogUtil.d(String.format("store command(%d) to queue", result.mCmdSeq));
+        StoreCommand(result);
         return 0;
     }
 
+    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+        int errCode = iResult.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + errCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if (command == CMD_GET_HOUSE_INFO) {
+                commonFun.showToast_info(getApplicationContext(), mContainer, "获取房屋信息失败:" + errCode);
+            }
+            return;
+        }
+
+        if (command == CMD_GET_HOUSE_INFO) {
+            IApiResults.IGetHouseInfo info = (IApiResults.IGetHouseInfo) iResult;
+            mLandlordId = info.Landlord();
+            kjsLogUtil.i("Landlord: " + mLandlordId);
+            if (mLandlordId != 0) { //取得landlord id以后才可以取身份证图片
+                mHandler.sendEmptyMessageDelayed(MSG_GET_HOUSE_INFO_DONE, 10);
+            }
+        }
+    }
     private void removePictureFromList(int id) {
         for(ClassDefine.PictureInfo info : mPictureList) {
             if(info.mId == id) {
@@ -485,9 +499,13 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
                     showWaiting(false);
                     getPictures();
                     break;
-                case MSG_GET_PICTURES_DONE:
+                case MSG_GET_HOUSE_PIC_DONE:
                     showPictures();
-                    imageFetchHouse.close();
+                    mImageFetchHouse.close();
+                    break;
+                case MSG_GET_USER_PIC_DONE:
+                    showPictures();
+                    mFetchForUser.close();
                     break;
                 case MSG_GET_HOUSE_INFO_DONE:
                     getPictures();
@@ -628,7 +646,7 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         for(ClassDefine.PictureInfo info : list) {
             mPictureList.add(info);
         }
-        mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 10);
+        mHandler.sendEmptyMessageDelayed(MSG_GET_HOUSE_PIC_DONE, 10);
     }
 
     @Override
@@ -636,6 +654,6 @@ public class Activity_fangyuan_renzheng_customer extends SKBaseActivity implemen
         for(ClassDefine.PictureInfo info : list) {
             mPictureList.add(info);
         }
-        mHandler.sendEmptyMessageDelayed(MSG_GET_PICTURES_DONE, 10);
+        mHandler.sendEmptyMessageDelayed(MSG_GET_USER_PIC_DONE, 10);
     }
 }

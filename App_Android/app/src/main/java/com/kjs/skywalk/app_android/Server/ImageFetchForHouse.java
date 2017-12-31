@@ -140,7 +140,6 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
     }
 
     public int fetch(int houseId, final int fetchType, int size) {
-        String Fn = "fetch";
         mList.clear();
 
         kjsLogUtil.d("houseId: " + houseId + ", fetchType: " + fetchType + ", size: " + size);
@@ -149,6 +148,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
             kjsLogUtil.e(String.format("Fail to send commnd GetHousePics, error: %d", result.mError));
             return -1;
         }
+        kjsLogUtil.d(String.format("store command seq: %d", result.mCmdSeq));
         commonFun.StoreCommand(mCmdList, result);
         return 0;
     }
