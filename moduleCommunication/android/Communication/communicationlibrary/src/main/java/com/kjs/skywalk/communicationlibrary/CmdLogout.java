@@ -39,6 +39,6 @@ class CmdLogout extends CommunicationBase {
         }
         sessStore.save("");
 
-        return null;
+        return new ResBase(nErrCode, jObject);
     }
 }
