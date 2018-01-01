@@ -44,7 +44,7 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationError.*;
  * Created by sailor.zhou on 2017/1/11.
  */
 
-public class fragmentPrivate extends Fragment {
+public class fragmentPrivate extends Fragment implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
 //    private CommandManager mCmdMgr;
     private RelativeLayout  mRlTitleBar;
     private RelativeLayout  mRlUserNotLogin;
@@ -107,7 +107,7 @@ public class fragmentPrivate extends Fragment {
         super.onPause();
 
         // Unregister listener
-        CommandManager.getCmdMgrInstance(getActivity()).Unregister(mCmdListener, mProgreessListener);
+        CommandManager.getCmdMgrInstance(getActivity()).Unregister(this, this);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class fragmentPrivate extends Fragment {
         super.onResume();
 
         // register listener
-        CommandManager.getCmdMgrInstance(getActivity()).Register(mCmdListener, mProgreessListener);
+        CommandManager.getCmdMgrInstance(getActivity()).Register(this, this);
 
         // Get login user info & update page layout
         mLoginUser = CommandManager.getCmdMgrInstance(getActivity()).GetLoginUserInfo();
@@ -268,7 +268,7 @@ public class fragmentPrivate extends Fragment {
         }
 
         // to approve
-        CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_TO_APPROVE, 0 , 0);
+        result = CommandManager.getCmdMgrInstance(getActivity()).GetBehalfHouses(IApiArgs.AGENT_HOUSE_TO_APPROVE, 0 , 0);
         if (CE_ERROR_NO_ERROR != result.mError) {
             kjsLogUtil.e(String.format("Fail to send commnd to fetch house to approve, error: %d", result.mError));
         } else {
@@ -295,10 +295,23 @@ public class fragmentPrivate extends Fragment {
             mLlUserLogin.setVisibility(View.VISIBLE);
             commonFun.displayImageWithMask(this.getActivity(), mIv_head_portrait, R.drawable.touxiang, R.drawable.head_portrait_mask);
 
-            CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetUserHouseWatchList(0, 0);
-            CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetHouseList_AppointSee(0, 0);
+            CmdExecRes res = CommandManager.getCmdMgrInstance(getActivity()).GetUserHouseWatchList(0, 0);
+            if (CE_ERROR_NO_ERROR != res.mError) {
+                kjsLogUtil.e(String.format("Fail to send commnd GetUserHouseWatchList, error: %d", res.mError));
+            } else {
+                StoreCommand(res);
+            }
+
+            res = CommandManager.getCmdMgrInstance(getActivity()).GetHouseList_AppointSee(0, 0);
+            if (CE_ERROR_NO_ERROR != res.mError) {
+                kjsLogUtil.e(String.format("Fail to send commnd GetHouseList_AppointSee, error: %d", res.mError));
+            } else {
+                StoreCommand(res);
+            }
             updateBehalfHouseCount();
-            CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
+            IApiResults.IGetUserInfo login_user = CommandManager.getCmdMgrInstance(getActivity()).GetLoginUserInfo();
+            if (null != login_user) {
+            }
 
             bEnabled = true;
 
@@ -370,103 +383,100 @@ public class fragmentPrivate extends Fragment {
         popupMenu.show();
     }
 
-    CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
-        @Override
-        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-            if (null == iResult) {
-                kjsLogUtil.w("result is null");
-                return;
-            }
-            CmdExecRes cmd = RetrieveCommand(cmdSeq);
-            if (null == cmd) {  // result is not we wanted
-                return;
-            }
-            kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
-
-            int nErrCode = iResult.GetErrCode();
-            if (CmdRes.CMD_RES_NOERROR != nErrCode) {
-                kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
-                if (CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
-                    kjsLogUtil.d("user not log in, reflash layout");
-                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity()/*, mCmdListener, mProgreessListener*/).GetLoginUserInfo();
-                    kjsLogUtil.d("mLoginUser:" + mLoginUser);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
-                        }
-                    });
-                }
-                return;
-            }
-
-            switch (command) {
-                case CmdID.CMD_LOG_OUT: {
-                    // switch the page layout to "Un loged"
-                    mLoginUser = CommandManager.getCmdMgrInstance(getActivity()).GetLoginUserInfo();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
-                        }
-                    });
-                    break;
-                }
-                case CmdID.CMD_HOUSE_LST_APPOINT_SEE:  {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == -1) {
-                        // 我的预约
-                        updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
-                    }
-                    break;
-                }
-                case CmdID.CMD_GET_USER_HOUSE_WATCH_LIST: {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == -1) {
-                        // 我的关注
-                        updateCount(mTvWatchListCount, resultList.GetTotalNumber());
-                    }
-                    break;
-                }
-                case CmdID.CMD_GET_BEHALF_HOUSE_LIST: {
-                    IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                    int nFetch = resultList.GetFetchedNumber();
-                    if (nFetch == -1) {
-                        IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList)cmd.mArgs;
-                        if (args.getType() == IApiArgs.AGENT_HOUSE_ALL) {
-                            updateCount(mTv_agency_houses, resultList.GetTotalNumber());
-                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_RENT) {
-                            updateCount(mTvToRent, resultList.GetTotalNumber());
-                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_RENTED) {
-                            updateCount(mTvRented, resultList.GetTotalNumber());
-                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_SALE) {
-                            updateCount(mTvToSale, resultList.GetTotalNumber());
-                        } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_APPROVE) {
-                            updateCount(mTvToApprove, resultList.GetTotalNumber());
-                        }
-                    }
-                    break;
-                }
-                case CmdID.CMD_GET_LOGIN_USER_INFO: {
-                    break;
-                }
-            }
-        }
-    };
-
-    CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
-        @Override
-        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
-        }
-    };
-
     private void loginout() {
         CommandManager.getCmdMgrInstance(getActivity()).Logout();
 
         // check login status
         mLoginUser = CommandManager.getCmdMgrInstance(getActivity()).GetLoginUserInfo();
         updateLayout(null != mLoginUser);
+    }
+
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("command: %d(%s), seq: %d %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), cmdSeq, iResult.DebugString()));
+
+        int nErrCode = iResult.GetErrCode();
+        if (CmdRes.CMD_RES_NOERROR != nErrCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + nErrCode);
+            if (CmdRes.CMD_RES_NOT_LOGIN == nErrCode || CommunicationError.IsNetworkError(nErrCode)) {
+                kjsLogUtil.d("user not log in, reflash layout");
+                mLoginUser = CommandManager.getCmdMgrInstance(getActivity()).GetLoginUserInfo();
+                kjsLogUtil.d("mLoginUser:" + mLoginUser);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
+                    }
+                });
+            }
+            return;
+        }
+
+        switch (command) {
+            case CmdID.CMD_LOG_OUT: {
+                // switch the page layout to "Un loged"
+                mLoginUser = CommandManager.getCmdMgrInstance(getActivity()).GetLoginUserInfo();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateLayout(null != mLoginUser && mLoginUser.GetUserId() > 0);
+                    }
+                });
+                break;
+            }
+            case CmdID.CMD_HOUSE_LST_APPOINT_SEE:  {    // GetHouseList_AppointSee
+                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                int nFetch = resultList.GetFetchedNumber();
+                if (nFetch == -1) {
+                    // 我的预约
+                    updateCount(mTvAppointmentCount, resultList.GetTotalNumber());
+                }
+                break;
+            }
+            case CmdID.CMD_GET_USER_HOUSE_WATCH_LIST: {     // GetUserHouseWatchList
+                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                int nFetch = resultList.GetFetchedNumber();
+                if (nFetch == -1) {
+                    // 我的关注
+                    updateCount(mTvWatchListCount, resultList.GetTotalNumber());
+                }
+                break;
+            }
+            case CmdID.CMD_GET_BEHALF_HOUSE_LIST: {
+                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
+                int nFetch = resultList.GetFetchedNumber();
+                if (nFetch == -1) {
+                    IApiArgs.IArgsGetBehalfList args = (IApiArgs.IArgsGetBehalfList)cmd.mArgs;
+                    if (args.getType() == IApiArgs.AGENT_HOUSE_ALL) {
+                        updateCount(mTv_agency_houses, resultList.GetTotalNumber());
+                    } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_RENT) {
+                        updateCount(mTvToRent, resultList.GetTotalNumber());
+                    } else if (args.getType() == IApiArgs.AGENT_HOUSE_RENTED) {
+                        updateCount(mTvRented, resultList.GetTotalNumber());
+                    } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_SALE) {
+                        updateCount(mTvToSale, resultList.GetTotalNumber());
+                    } else if (args.getType() == IApiArgs.AGENT_HOUSE_TO_APPROVE) {
+                        updateCount(mTvToApprove, resultList.GetTotalNumber());
+                    }
+                }
+                break;
+            }
+            case CmdID.CMD_GET_LOGIN_USER_INFO: {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+
     }
 }
