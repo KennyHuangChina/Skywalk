@@ -153,7 +153,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
         }
 
         if (mCmdQueue.add(cmd)) {
-            Log.d(TAG, Fn + String.format("new command(0x%x) queued, seq:", cmd.mAPI, cmd.getCmdSeq()));
+            Log.d(TAG, Fn + String.format("new command(0x%x) queued, seq:%d", cmd.mAPI, cmd.getCmdSeq()));
             return cmd;
         }
 
@@ -243,7 +243,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             return new CmdExecRes(CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR, -1, null);
         }
         MyUtils.printContentInMap(map);
-        Log.i(TAG, Fn + String.format("cmd: %d <%s>", cmd.mAPI, CmdID.GetCmdDesc(cmd.mAPI)));
+        Log.i(TAG, Fn + String.format("cmd:0x%x <%s>", cmd.mAPI, CmdID.GetCmdDesc(cmd.mAPI)));
 
         // Check parameters before processing this command
         if (!cmd.checkParameter(map)) {
@@ -314,7 +314,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     @Override
     public void onCommandFinished(final int cmdId, final int cmdSeq, IApiResults.ICommon res) {
         String Fn = "[onCommandFinished] ";
-        Log.i(TAG, Fn + String.format("cmd: %d <%s>", cmdId, CmdID.GetCmdDesc(cmdId)));
+        Log.i(TAG, Fn + String.format("cmd:0x%x <%s>, %d", cmdId, CmdID.GetCmdDesc(cmdId), cmdSeq));
 
         switch (cmdId) {
             case CmdID.CMD_LOGIN_BY_SMS:
@@ -379,18 +379,20 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
                     mAgentStatus = AGENT_STATUS_Logining;
                 } else { // command succeed or failed by other reasons
                     if (CmdRes.CMD_RES_NOERROR == nCmdRes) {
-                    Log.d(TAG, Fn + "command processing succeeded, notify user");
+                        Log.d(TAG, Fn + String.format("command(0x%x %s, %d) processing succeeded, notify user",
+                                                        cmdId, CmdID.GetCmdDesc(cmdId), cmdSeq));
                     } else {
-                    Log.e(TAG, Fn + String.format("command processing failed(0x%x), notify user", nCmdRes));
-                    if (CommunicationError.IsNetworkError(nCmdRes)) {
-                        Log.e(TAG, Fn + String.format("Network error:0x%x, %s", nCmdRes, CommunicationError.getErrorDescription(nCmdRes)));
-                        mLoginUserInfo = null;
-                    }
+                        Log.e(TAG, Fn + String.format("command(0x%x %s, %d) processing failed(0x%x), notify user",
+                                                        cmdId, CmdID.GetCmdDesc(cmdId), cmdSeq, nCmdRes));
+                        if (CommunicationError.IsNetworkError(nCmdRes)) {
+                            Log.e(TAG, Fn + String.format("Network error:0x%x, %s", nCmdRes, CommunicationError.getErrorDescription(nCmdRes)));
+                            mLoginUserInfo = null;
+                        }
                     }
                     // remove it from command queue
                     CommunicationBase cmd = removeCmd(cmdId, res);
                     if (null == cmd) {
-                        Log.w(TAG, Fn + "not found command in queue");
+                        Log.w(TAG, Fn + String.format("not found command(0x%x, seq:%d) in queue", cmdId, cmdSeq));
                     }
                     onNotify(cmdId, cmdSeq, res);
                 }
