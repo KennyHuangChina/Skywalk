@@ -19,6 +19,7 @@ import com.kjs.skywalk.app_android.kjsLogUtil;
 
 import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 import com.kjs.skywalk.control.BadgeView;
@@ -28,23 +29,35 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.*;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
+
 /**
  * Created by admin on 2017/2/8.
  */
 
-public class AdapterMessage extends BaseAdapter {
+public class AdapterMessage extends BaseAdapter implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
 
     public static interface AdapterDeliverablesListener {
 //        public void onItemChanged(int pos, Deliverable deliverable);
     }
 
-    private Context mContext = null;
-    private ArrayList<ClassDefine.MessageInfo> mList = new ArrayList<>();
+    private Context                             mContext    = null;
+    private ArrayList<ClassDefine.MessageInfo>  mList       = new ArrayList<>();
+    private ArrayList<CmdExecRes>               mCmdList    = new ArrayList<>();
 
 
     public AdapterMessage(Context context) {
         super();
         mContext = context;
+
+        // Register Listener of Server Agent Library
+        CommandManager.getCmdMgrInstance(mContext).Register(this, this);
+    }
+
+    public void close() {
+        // Unregister Listener of Server Agent Library
+        CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
     }
 
     // IApiResults.ISysMsgInfo
@@ -174,21 +187,40 @@ public class AdapterMessage extends BaseAdapter {
     }
 
     private void markMessageRead(int msgId) {
-        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
+        CmdExecRes res = CommandManager.getCmdMgrInstance(mContext).ReadNewMsg(msgId);
+        kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, res --- %s", msgId, res.toString()));
+        if (CE_ERROR_NO_ERROR != res.mError) {
+            kjsLogUtil.e("Fail to send command ReadNewMsg, err:" + res.mError);
+        } else {
+            commonFun.StoreCommand(mCmdList, res);
+        }
+    }
 
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-            }
-        };
-        CmdExecRes ret = CommandManager.getCmdMgrInstance(mContext/*, cl, mProgreessListener*/).ReadNewMsg(msgId);
-        kjsLogUtil.i(String.format("ReadNewMsg --- msgId:%d, ret --- %s", msgId, ret.toString()));
+    @Override
+    public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
 
     }
 
-    CommunicationInterface.CIProgressListener mProgreessListener = new CommunicationInterface.CIProgressListener() {
-        @Override
-        public void onProgressChanged(int i, String s, HashMap<String, String> hashMap) {
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
         }
-    };
+        CmdExecRes cmd = commonFun.RetrieveCommand(mCmdList, cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+        int errCode = iResult.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + errCode);
+            return;
+        }
+
+        if (CMD_READ_NEW_MSG == command) {
+
+        }
+    }
 }

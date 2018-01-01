@@ -13,8 +13,10 @@ import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.util.ArrayList;
+
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
-import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_INFO;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.*;
 
 /**
  * Created by Jackie on 2017/7/6.
@@ -22,15 +24,14 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 
 public class AddNewPropertyTask extends SKBaseAsyncTask {
 
-    private TaskFinished mTaskFinished = null;
-    private int mNewPropertyId = 0;
-    private String mPropertyName = "";
-    private String mPropertyAddress = "";
-    private String mPropertyDescription = "";
-
+    private TaskFinished    mTaskFinished           = null;
+    private int             mNewPropertyId          = 0;
+    private String          mPropertyName           = "";
+    private String          mPropertyAddress        = "";
+    private String          mPropertyDescription    = "";
 
     public AddNewPropertyTask(Context context, TaskFinished listener) {
-        mContext = context;
+        super(context);
         mTaskFinished = listener;
     }
 
@@ -48,11 +49,11 @@ public class AddNewPropertyTask extends SKBaseAsyncTask {
         }
 
         if(mNewPropertyId <= 0) {
-            kjsLogUtil.i("task failed: " + "Invalid New Property ID: " + mNewPropertyId);
+            kjsLogUtil.e("task failed: " + "Invalid New Property ID: " + mNewPropertyId);
             mTaskFinished.onTaskFinished(0);
         }
 
-        kjsLogUtil.i("task success: " + "New Property ID: " + mNewPropertyId);
+        kjsLogUtil.d("task success: " + "New Property ID: " + mNewPropertyId);
         mTaskFinished.onTaskFinished(mNewPropertyId);
     }
 
@@ -69,41 +70,34 @@ public class AddNewPropertyTask extends SKBaseAsyncTask {
 
         mResultGot = false;
         mNewPropertyId = 0;
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(mContext); //, mCmdListener, mProgressListener);
-        CmdExecRes result = CmdMgr.AddProperty(mPropertyName, mPropertyAddress, "");
-        if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
-            return -1;
-        }
 
-        if(!waitResult(1000)) {
-            return -1;
+        try {
+            CmdExecRes result = CommandManager.getCmdMgrInstance(mContext).AddProperty(mPropertyName, mPropertyAddress, "");
+            if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+                kjsLogUtil.e("Fail to send command AddProperty, error: " + result.mError);
+                return -1;
+            }
+            StoreCommand(result);
+
+            if (!waitResult(1000)) {
+                kjsLogUtil.w(String.format("Add Property timeout"));
+                return -1;
+            }
+        } finally {
+            mResultGot  = false;
+            close();
         }
 
         return 0;
     }
 
-    CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
-        @Override
-        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-            AddNewPropertyTask.super.onCommandFinished(command, cmdSeq, iResult);
-            if (null == iResult) {
-                kjsLogUtil.w("result is null");
-                mResultGot = true;
-                return;
-            }
-            kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-            if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                mResultGot = true;
-                return;
-            }
-
-            if(iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
-                IApiResults.IAddRes res = (IApiResults.IAddRes)iResult;
-                mNewPropertyId = res.GetId();
-                kjsLogUtil.i("New Property ID: " + mNewPropertyId);
-            }
-            mResultGot = true;
+    @Override
+    protected void onCommandSuccess(int command, IApiResults.ICommon result) {
+        if (command == CMD_ADD_PROPERTY) {  // AddProperty
+            IApiResults.IAddRes res = (IApiResults.IAddRes)result;
+            mNewPropertyId = res.GetId();
+            kjsLogUtil.i("New Property ID: " + mNewPropertyId);
         }
-    };
+        mResultGot = true;
+    }
 }

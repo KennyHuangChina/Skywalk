@@ -48,10 +48,10 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 // https://www.cnblogs.com/liushilin/p/5620072.html
 public class fragmentMsg extends Fragment implements AbsListView.OnScrollListener {
     @Nullable
-    private SwipeLoadMoreView mSrl_message_list;
-    private ListView mLvMessage;
-    private AdapterMessage mAdapterMsg;
-    private ArrayList<CmdExecRes> mCmdList = new ArrayList<>();
+    private SwipeLoadMoreView       mSrl_message_list;
+    private ListView                mLvMessage;
+    private AdapterMessage          mAdapterMsg;
+    private ArrayList<CmdExecRes>   mCmdList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,20 +124,24 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
     }
 
     @Override
+    public void onDestroyView() {
+        // Kenny: not test yet
+        if (null != mAdapterMsg) {
+            mAdapterMsg.close();
+        }
+        super.onDestroyView();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         kjsLogUtil.i("fragmentMsg --- onPause");
-        // Unregister listener
-//        CommandManager.getCmdMgrInstance(getActivity()).Unregister(mCmdListener, mProgreessListener);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         kjsLogUtil.i("fragmentMsg --- onResume");
-
-        // register listener
-//        CommandManager.getCmdMgrInstance(getActivity()).Register(mCmdListener, mProgreessListener);
 
         // get message count in db
 //        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();

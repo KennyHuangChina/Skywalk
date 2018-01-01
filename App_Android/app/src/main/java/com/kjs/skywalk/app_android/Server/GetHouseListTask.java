@@ -42,14 +42,13 @@ public class GetHouseListTask extends SKBaseAsyncTask {
     private int             mType           = 0;
     private int             mTotalCount     = 0;
     private TaskFinished    mTaskFinished   = null;
-    private CmdExecRes      mCmdRes         = null;
 
     private ArrayList<ClassDefine.HouseDigest> mHouseList = new ArrayList<>();
 
     private CommunicationInterface.HouseFilterCondition mFilter = new CommunicationInterface.HouseFilterCondition();
     private ArrayList<Integer> mSort = new ArrayList<Integer>();
     public GetHouseListTask(Context context, TaskFinished listener) {
-        mContext = context;
+        super(context);
         mTaskFinished = listener;
     }
 
@@ -143,123 +142,95 @@ public class GetHouseListTask extends SKBaseAsyncTask {
         mTotalCount = 0;
         mResultGot  = false;
 
-        // Register receiver
-        CommandManager.getCmdMgrInstance(mContext).Register(mCmdListener, mProgressListener);
-
         try {
-            mCmdRes = CommandManager.getCmdMgrInstance(mContext).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
-            if (mCmdRes.mError != CommunicationError.CE_ERROR_NO_ERROR) {
+            CmdExecRes res = CommandManager.getCmdMgrInstance(mContext).GetHouseDigestList(mType, mBegin, mCount, mFilter, mSort);
+            if (res.mError != CommunicationError.CE_ERROR_NO_ERROR) {
                 kjsLogUtil.e("Fail to get house lsit for type:" + mType);
                 return 0;
             }
+            StoreCommand(res);
+
             if (!waitResult(3000)) {
                 kjsLogUtil.w(String.format("get house list timeout"));
                 return 0;
             }
         } finally {
-            mResultGot  = false;
-            mCmdRes     = null;
-            // Unregister receiver
-            CommandManager.getCmdMgrInstance(mContext).Unregister(mCmdListener, mProgressListener);
+            mResultGot  = true;
+            close();
         }
 
         return mTotalCount;
     }
 
-    CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
-        @Override
-        public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-            if (null == mCmdRes || mCmdRes.mCmdSeq != cmdSeq) { // result is not we wanted
-                return;
-            }
+    @Override
+    protected void onCommandSuccess(int command, IApiResults.ICommon result) {
 
-            if (null == iResult) {
-                kjsLogUtil.w("result is null");
-                mResultGot = true;
-                return;
-            }
+        if (command == CMD_GET_HOUSE_DIGEST_LIST) {     // GetHouseDigestList
+            IApiResults.IResultList resultList = (IApiResults.IResultList)result;
+            mTotalCount = resultList.GetTotalNumber();
+            int nFetch = resultList.GetFetchedNumber();
+            if (nFetch >= -1) {
+                // IApiResults.IHouseDigest
+                ArrayList<Object> houseDigests = resultList.GetList();
+                for (Object houseDigestObj : houseDigests) {
+                    IApiResults.IHouseDigest    houseDigestRes  = (IApiResults.IHouseDigest) houseDigestObj;
+                    ClassDefine.HouseDigest     houseDigest     = new ClassDefine.HouseDigest();
 
-            kjsLogUtil.i(String.format("command:0x%x(%d), seq:%d --- %s" , command, command, cmdSeq, iResult.DebugString()));
-            kjsLogUtil.d("mCmdRes:" + mCmdRes.toString());
-            if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                mResultGot = true;
-                mTaskFinished.onTaskFinished(mHouseList, mTotalCount);
-                return;
-            }
+                    houseDigest.houseId             = houseDigestRes.GetHouseId();
+                    houseDigest.property            = houseDigestRes.GetProperty();
+                    houseDigest.addr                = houseDigestRes.GetPropertyAddr();
+                    houseDigest.Bedrooms            = houseDigestRes.GetBedrooms();
+                    houseDigest.Livingrooms         = houseDigestRes.GetLivingrooms();
+                    houseDigest.Bathrooms           = houseDigestRes.GetBathrooms();
+                    houseDigest.Acreage             = Double.valueOf(String.format("%.02f", (double)houseDigestRes.GetAcreage() / 100.0));
+                    houseDigest.Rental              = Double.valueOf(String.format("%.02f", (double)houseDigestRes.GetRental() / 100.0));
+                    houseDigest.Pricing             = Double.valueOf(String.format("%.02f", (double)houseDigestRes.GetPricing() / 100.0));
+                    houseDigest.CoverImage          = houseDigestRes.GetCoverImage();
+                    houseDigest.CoverImageUrlS      = houseDigestRes.GetCoverImageUrlS();
+                    houseDigest.CoverImageUrlM      = houseDigestRes.GetCoverImageUrlM();
+                    houseDigest.includePropertyFee  = houseDigestRes.IsRentalIncPropFee();
 
-            if (command == CMD_GET_HOUSE_DIGEST_LIST) {
-                IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
-                mTotalCount = resultList.GetTotalNumber();
-                int nFetch = resultList.GetFetchedNumber();
-                if (nFetch >= -1) {
-                    // IApiResults.IHouseDigest
-                    ArrayList<Object> houseDigests = resultList.GetList();
-                    for (Object houseDigestObj : houseDigests) {
-                        IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) houseDigestObj;
-                        ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
-                        houseDigest.houseId = houseDigestRes.GetHouseId();
-                        houseDigest.property = houseDigestRes.GetProperty();
-                        houseDigest.addr = houseDigestRes.GetPropertyAddr();
-                        houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
-                        houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
-                        houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                        double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
-                        houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
-                        double rental = (double)houseDigestRes.GetRental() / 100.0;
-                        houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
-                        double pricing = (double)houseDigestRes.GetPricing() / 100.0;
-                        houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
-                        houseDigest.CoverImage = houseDigestRes.GetCoverImage();
-                        houseDigest.CoverImageUrlS = houseDigestRes.GetCoverImageUrlS();
-                        houseDigest.CoverImageUrlM = houseDigestRes.GetCoverImageUrlM();
-                        houseDigest.includePropertyFee = houseDigestRes.IsRentalIncPropFee();
-
-                        ArrayList<Object> houseTags = ((IApiResults.IResultList) houseDigestRes).GetList();
-                        houseDigest.houseTags = new ArrayList<>();
-                        for (Object houseTagObj : houseTags) {
-                            IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
-                            ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
-                            houseDigest.houseTags.add(houseTag);
-                        }
-                        mHouseList.add(houseDigest);
-                    }
-                    mTaskFinished.onTaskFinished(mHouseList, mTotalCount);
-                }
-            }
-
-            if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {
-                IApiResults.IHouseDigest houseDigestRes = (IApiResults.IHouseDigest) iResult;
-                ClassDefine.HouseDigest houseDigest = new ClassDefine.HouseDigest();
-                houseDigest.houseId = houseDigestRes.GetHouseId();
-                houseDigest.property = houseDigestRes.GetProperty();
-                houseDigest.addr = houseDigestRes.GetPropertyAddr();
-                houseDigest.Bedrooms = houseDigestRes.GetBedrooms();
-                houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
-                houseDigest.Bathrooms = houseDigestRes.GetBathrooms();
-                double acreage = (double)houseDigestRes.GetAcreage() / 100.0;
-                houseDigest.Acreage = Double.valueOf(String.format("%.02f", acreage));
-                double rental = (double)houseDigestRes.GetRental() / 100.0;
-                houseDigest.Rental = Double.valueOf(String.format("%.02f", rental));
-                double pricing = (double)houseDigestRes.GetPricing() / 100.0;
-                houseDigest.Pricing = Double.valueOf(String.format("%.02f", pricing));
-                houseDigest.CoverImage = houseDigestRes.GetCoverImage();
-
-                IApiResults.IResultList lst = (IApiResults.IResultList) iResult;
-                if (lst.GetFetchedNumber() > 0) {
-                    ArrayList<Object> array = lst.GetList();
+                    ArrayList<Object> houseTags = ((IApiResults.IResultList) houseDigestRes).GetList();
                     houseDigest.houseTags = new ArrayList<>();
-                    for (Object obj : array) {
-                        IApiResults.IHouseTag tag = (IApiResults.IHouseTag)obj;
+                    for (Object houseTagObj : houseTags) {
+                        IApiResults.IHouseTag tag = (IApiResults.IHouseTag) houseTagObj;
                         ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
                         houseDigest.houseTags.add(houseTag);
                     }
+                    mHouseList.add(houseDigest);
                 }
-
-                mHouseList.add(houseDigest);
+                mTaskFinished.onTaskFinished(mHouseList, mTotalCount);
             }
-
-            mResultGot = true;
         }
-    };
+
+        if (command == CMD_GET_BRIEF_PUBLIC_HOUSE_INFO) {   // GetBriefPublicHouseInfo
+            IApiResults.IHouseDigest    houseDigestRes  = (IApiResults.IHouseDigest)result;
+            ClassDefine.HouseDigest     houseDigest     = new ClassDefine.HouseDigest();
+
+            houseDigest.houseId     = houseDigestRes.GetHouseId();
+            houseDigest.property    = houseDigestRes.GetProperty();
+            houseDigest.addr        = houseDigestRes.GetPropertyAddr();
+            houseDigest.Bedrooms    = houseDigestRes.GetBedrooms();
+            houseDigest.Livingrooms = houseDigestRes.GetLivingrooms();
+            houseDigest.Bathrooms   = houseDigestRes.GetBathrooms();
+            houseDigest.Acreage     = Double.valueOf(String.format("%.02f", (double)houseDigestRes.GetAcreage() / 100.0));
+            houseDigest.Rental      = Double.valueOf(String.format("%.02f", (double)houseDigestRes.GetRental() / 100.0));
+            houseDigest.Pricing     = Double.valueOf(String.format("%.02f", (double)houseDigestRes.GetPricing() / 100.0));
+            houseDigest.CoverImage  = houseDigestRes.GetCoverImage();
+
+            IApiResults.IResultList lst = (IApiResults.IResultList)result;
+            if (lst.GetFetchedNumber() > 0) {
+                ArrayList<Object> array = lst.GetList();
+                houseDigest.houseTags = new ArrayList<>();
+                for (Object obj : array) {
+                    IApiResults.IHouseTag tag = (IApiResults.IHouseTag)obj;
+                    ClassDefine.HouseTag houseTag = new ClassDefine.HouseTag(tag.GetTagId(), tag.GetName());
+                    houseDigest.houseTags.add(houseTag);
+                }
+            }
+            mHouseList.add(houseDigest);
+        }
+
+        mResultGot = true;
+    }
 }

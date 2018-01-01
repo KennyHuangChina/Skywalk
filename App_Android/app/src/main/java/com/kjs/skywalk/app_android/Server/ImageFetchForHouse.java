@@ -57,9 +57,8 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
     @Override
     protected void finalize() throws Throwable {
-        // TODO: Kenny, 这里不会立刻被调用到，要等到 GC 的时候才会被调用，因此 Listener 不会被立刻 Unregister
-        // Unregister Listener
-        //CommandManager.getCmdMgrInstance(mContext).Unregister(this, this);
+        // 这里不会立刻被调用到，要等到 GC 的时候才会被调用，因此 Listener 不会被立刻 Unregister
+        close();
         super.finalize();
     }
 
