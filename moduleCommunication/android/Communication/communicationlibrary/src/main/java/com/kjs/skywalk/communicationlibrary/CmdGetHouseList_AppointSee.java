@@ -20,27 +20,11 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.HouseF
  */
 
 class CmdGetHouseList_AppointSee extends CommunicationBase {
-    private int mBeginPosi  = 0;
-    private int mFetchCount = 0;
 
     CmdGetHouseList_AppointSee(Context context, int bgn, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_HOUSE_LST_APPOINT_SEE);
         mNeedLogin  = false;
-        mBeginPosi  = bgn;
-        mFetchCount = cnt;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mBeginPosi < 0) {
-            Log.e(TAG, "mBeginPosi: " + mBeginPosi);
-            return false;
-        }
-        if (mFetchCount < 0) {
-            Log.e(TAG, "mFetchCount: " + mFetchCount);
-            return false;
-        }
-        return true;
+        mArgs = new ApiArgFetchList(bgn, cnt);
     }
 
     @Override
@@ -57,9 +41,10 @@ class CmdGetHouseList_AppointSee extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("bgn=" + mBeginPosi);
+        mRequestData = ("bgn=" + ((ApiArgFetchList)mArgs).getBeginPosi());
         mRequestData += "&";
-        mRequestData += ("cnt=" + mFetchCount);
-       Log.d(TAG, "mRequestData: " + mRequestData);
+        mRequestData += ("cnt=" + ((ApiArgFetchList)mArgs).getFetchCnt());
+        Log.d(TAG, "mRequestData: " + mRequestData);
     }
+
 }

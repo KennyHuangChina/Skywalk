@@ -15,6 +15,12 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
+    public interface IArgsFetchList extends IArgsBase {
+        int     getBeginPosi();
+        int     getFetchCnt();
+    }
+
+    /******************************************************************************************/
     public interface IArgsGetHouseDigestList extends IArgsBase {
         int                     getType();
         int                     getBeginPosi();
