@@ -14,25 +14,10 @@ import org.json.JSONObject;
 
 class CmdGetUserSalt extends CommunicationBase {
 
-    private String mUserName = "";
-
-    CmdGetUserSalt(Context context) {
+    CmdGetUserSalt(Context context, String user) {
         super(context, CommunicationInterface.CmdID.CMD_GET_USER_SALT);
         mNeedLogin = false;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map)
-    {
-        if (!map.containsKey(CommunicationParameterKey.CPK_USER_NAME)) {
-            return false;
-        }
-
-        mUserName = map.get(CommunicationParameterKey.CPK_USER_NAME);
-        if (null == mUserName || mUserName.isEmpty()) {
-            return false;
-        }
-        return true;
+        mArgs = new Args(user);
     }
 
     @Override
@@ -42,7 +27,7 @@ class CmdGetUserSalt extends CommunicationBase {
     }
     @Override
     public void generateRequestData() {
-        mRequestData = ("un=" + mUserName);
+        mRequestData = ("un=" + ((Args)mArgs).getUserName());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
@@ -50,5 +35,39 @@ class CmdGetUserSalt extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetUserSalt result = new ResGetUserSalt(nErrCode, jObject);
         return result;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsGetUserSalt {
+        private String mUserName = "";
+
+        Args(String name) {
+            mUserName = name;
+        }
+
+        @Override
+        public String getUserName() {
+            return mUserName;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (null == mUserName || mUserName.isEmpty()) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (!mUserName.equals(((Args)arg2).mUserName)) {
+                return false;
+            }
+            return true;
+        }
     }
 }

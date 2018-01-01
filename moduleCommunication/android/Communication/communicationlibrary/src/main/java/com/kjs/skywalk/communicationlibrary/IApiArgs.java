@@ -182,4 +182,27 @@ public class IApiArgs {
     public interface IArgsReadMessage extends IArgsBase {
         int     getMsgId();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetUserSalt extends IArgsBase {
+        String  getUserName();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsLoginSms extends IArgsBase {
+        int     getClientType();
+        String  getUserName();
+        String  getSms();
+    }
+    public static int   CLIENT_WEB = 0,
+                        CLIENT_APP = 1;
+
+
+    /******************************************************************************************/
+    public interface IArgsLoginPass extends IArgsBase {
+        int     getClientType();
+        String  getSalt();
+        String  getUserName();
+        String  getPassword();
+    }
 }

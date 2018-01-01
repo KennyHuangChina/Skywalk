@@ -50,15 +50,17 @@ public class CommunicationInterface {
         CmdExecRes GetUserInfo(int uid);
 
         /**
-         *  Get Login User Info(CMD_GET_LOGIN_USER_INFO)
-         *  @return : IApiResults.IGetUserInfo
+         *  Get Login User Info.    CMD_GET_LOGIN_USER_INFO
+         *      @return
+         *  Result      : IApiResults.IGetUserInfo
          */
         IApiResults.IGetUserInfo GetLoginUserInfo();
 
         /*
         *   CMD: CMD_GET_USER_SALT,
         *       - userName: login name (cell phone number)
-        *   Result: IApiResults.IGetUserSalt
+        *   Result      : IApiResults.IGetUserSalt
+         *  Arguments   : IApiArgs.IArgsGetUserSalt
         */
         CmdExecRes GetUserSalt(String userName);
 
@@ -68,15 +70,17 @@ public class CommunicationInterface {
         *       - pass  : password
         *       - rand  : rand number
         *       - salt  : the session salt returned by GetUserSalt
-        *   Result: IApiResults.ILogin
+        *   Result    : IApiResults.ILogin
+        *   Arguments : IApiArgs.IArgsLoginPass
         */
-        CmdExecRes LoginByPassword(String user, String pass, String rand, String salt);// ,
+        CmdExecRes LoginByPassword(String user, String pass, String rand, String salt);
 
         /*
         *   CMD: CMD_LOGIN_BY_SMS,
         *       - user      : login name (cell phone number)
         *       - smsCode   : the sms code user received
-        *   Result: IApiResults.ILogin
+        *   Result    : IApiResults.ILogin
+        *   Arguments : IApiArgs.IArgsLoginSms
         */
         CmdExecRes LoginBySms(String user, String smsCode);
 
