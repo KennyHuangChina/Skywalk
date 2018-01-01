@@ -180,4 +180,9 @@ public class IApiArgs {
     public interface IArgsAssignAppointmentReceptionist extends IArgsGetAppointmentInfo {
         int     getReceptionist();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetHouseCertHist extends IArgsBase {
+        int     getHouse();
+    }
 }
