@@ -181,10 +181,12 @@ public class CommunicationInterface {
          */
         CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment);
 
-        /*
-        *   CMD: CMD_GET_HOUSE_CERTIFY_HIST
-        *       - house_id : house id
-        *   Result: IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
+        /**
+         *  Get House Certification History.    CMD_GET_HOUSE_CERTIFY_HIST
+         *  @param house_id : house id
+         *  @return
+         *  Result      : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
+         *  Arguments   : IApiArgs.IArgsGetHouseCertHist
          */
         CmdExecRes GetHouseCertHist(int house_id);
 
