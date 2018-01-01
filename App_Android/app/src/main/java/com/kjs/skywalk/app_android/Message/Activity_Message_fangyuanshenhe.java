@@ -10,6 +10,7 @@ import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
 import com.kjs.skywalk.app_android.kjsLogUtil;
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
 import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
@@ -18,6 +19,8 @@ import com.kjs.skywalk.communicationlibrary.IApiResults;
 import java.util.ArrayList;
 
 import static com.kjs.skywalk.app_android.commonFun.MAP_HOUSE_CERT_BUTTON;
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_ASSIGN_APPOINTMENT_RECEPTIONIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_CERTIFY_HIST;
 
 public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
@@ -59,31 +62,43 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
     }
 
     private void getHouseCertification(int house_id) {
-        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    return;
-                }
+        CommandManager.getCmdMgrInstance(this).Register(this, this);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetHouseCertHist(house_id);
+        if (res.mError != CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetHouseCertHist, err:" + res.mError);
+            return;
+        }
+        StoreCommand(res);
+    }
 
-                if (command == CMD_GET_HOUSE_CERTIFY_HIST) {
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+        int errCode = iResult.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + errCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            return;
+        }
+
+        if (command == CMD_GET_HOUSE_CERTIFY_HIST) {    // GetHouseCertHist
 //        *   Result: IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
 
-                    IApiResults.IHouseCertHist houseCertHist = (IApiResults.IHouseCertHist) iResult;
-                    int operations = houseCertHist.Operations();
-                    updateButtonGroup(operations);
+            IApiResults.IHouseCertHist houseCertHist = (IApiResults.IHouseCertHist) iResult;
+            int operations = houseCertHist.Operations();
+            updateButtonGroup(operations);
 
-                    updateCertHistInfo((IApiResults.IResultList)iResult);
-                }
-            }
-        };
-        CommandManager.getCmdMgrInstance(this/*, cl, this*/).GetHouseCertHist(house_id);
+            updateCertHistInfo((IApiResults.IResultList)iResult);
+        }
     }
 
     private void updateButtonGroup(final int operations) {
