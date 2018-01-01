@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.kjs.skywalk.app_android.Activity_Search_House;
 import com.kjs.skywalk.app_android.Activity_Xuanzedaili;
 import com.kjs.skywalk.app_android.Activity_Zushouweituo_Fangyuanxinxi;
+import com.kjs.skywalk.app_android.Activity_Zushouweituo_Kanfangshijian;
 import com.kjs.skywalk.app_android.Activity_Zushouweituo_Xuanzedaili;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
@@ -78,24 +79,9 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     }
 
     private void assignAgent(int aid, int agentId) {
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if(command == CMD_ASSIGN_APPOINTMENT_RECEPTIONIST) {
-                    if (iResult.GetErrCode() == CE_ERROR_NO_ERROR) {
-                        kjsLogUtil.i("assign appointment receptionist succeed");
-                        commonFun.showToast_info(getApplicationContext(), mTvButton1, "经纪人指派成功");
-                    } else {
-                        kjsLogUtil.i("assign appointment receptionist failure");
-                        Activity_Message_yuyuekanfang.super.onCommandFinished(command, cmdSeq, iResult);
-                    }
-                }
-            }
-        };
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        CmdExecRes res = manager.AssignAppointmentReceptionist(aid, agentId);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).AssignAppointmentReceptionist(aid, agentId);
         if (res.mError == CE_ERROR_NO_ERROR) {
-
+            StoreCommand(res);
         } else {
             commonFun.showToast_info(getApplicationContext(), mTvButton1, "指派经纪人失败");
         }
@@ -145,30 +131,13 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     }
 
     private void getAppointmentInfo() {
-        CommunicationInterface.CICommandListener cl = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-                if (null == iResult) {
-                    kjsLogUtil.w("result is null");
-                    return;
-                }
-                kjsLogUtil.i(String.format("[command: %d] --- %s" , command, iResult.DebugString()));
-                if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-                    kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-                    return;
-                }
-
-                if (command == CMD_GET_APPOINTMENT_INFO) {
-//                    Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
-
-                    updateCertHistInfo((IApiResults.IResultList)iResult);
-
-                    IApiResults.IAppointmentInfo appointmentInfo = (IApiResults.IAppointmentInfo) iResult;
-                    updateMessageInfo(appointmentInfo);
-                }
-            }
-        };
-        CommandManager.getCmdMgrInstance(this/*, cl, this*/).GetAppointmentInfo(mApId);
+        CommandManager.getCmdMgrInstance(this).Register(this, this);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetAppointmentInfo(mApId);
+        if (res.mError != CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetAppointmentInfo, err:" + res.mError);
+            return;
+        }
+        StoreCommand(res);
     }
 
     private void updateMessageInfo(final IApiResults.IAppointmentInfo appointmentInfo) {
@@ -282,4 +251,36 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         });
     }
 
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        if (null == iResult) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        CmdExecRes cmd = RetrieveCommand(cmdSeq);
+        if (null == cmd) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+        int errCode = iResult.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+            kjsLogUtil.e("Command:" + command + " finished with error: " + errCode);
+            super.onCommandFinished(command, cmdSeq, iResult);
+            if (command == CMD_ASSIGN_APPOINTMENT_RECEPTIONIST) {    // AssignAppointmentReceptionist
+                kjsLogUtil.i("assign appointment receptionist failure");
+            }
+            return;
+        }
+
+        if (command == CMD_ASSIGN_APPOINTMENT_RECEPTIONIST) {    // AssignAppointmentReceptionist
+            commonFun.showToast_info(getApplicationContext(), mTvButton1, "经纪人指派成功");
+        } else if (command == CMD_GET_APPOINTMENT_INFO) {  // GetAppointmentInfo
+//                    Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
+            updateCertHistInfo((IApiResults.IResultList)iResult);
+
+            IApiResults.IAppointmentInfo appointmentInfo = (IApiResults.IAppointmentInfo) iResult;
+            updateMessageInfo(appointmentInfo);
+        }
+    }
 }

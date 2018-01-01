@@ -31,10 +31,9 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
  * Created by Jackie on 2017/5/27.
  */
 
-public class SKBaseActivity extends AppCompatActivity
-        implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
-    private PopupWindowWaiting mWaitingWindow = null;
+public class SKBaseActivity extends AppCompatActivity implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener{
 
+    private PopupWindowWaiting          mWaitingWindow = null;
     protected int                       mHouseId        = 0;
     protected String                    mHouseLocation  = "";
     protected String                    mPropertyName   = "";
