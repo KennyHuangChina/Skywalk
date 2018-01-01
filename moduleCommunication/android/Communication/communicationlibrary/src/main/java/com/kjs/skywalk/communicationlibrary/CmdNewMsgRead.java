@@ -10,26 +10,52 @@ import java.util.HashMap;
  */
 
 class CmdNewMsgRead extends CommunicationBase {
-    private int mMsgId = 0;
 
     CmdNewMsgRead(Context context, int msgId) {
         super(context, CommunicationInterface.CmdID.CMD_READ_NEW_MSG);
         mMethodType = "PUT";
-        mMsgId = msgId;
+        mArgs = new Args(msgId);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/sysmsg/"+ mMsgId + "/read";
+        mCommandURL = String.format("/v1/sysmsg/%d/read", ((Args)mArgs).getMsgId());
         return mCommandURL;
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mMsgId <= 0) {
-            Log.e(TAG, "msg:" + mMsgId);
-            return false;
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsReadMessage {
+        private int mMsgId = 0;
+
+        Args(int msg) {
+            mMsgId = msg;
         }
-        return true;
+
+        @Override
+        public int getMsgId() {
+            return mMsgId;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (mMsgId <= 0) {
+                Log.e(TAG, "msg:" + mMsgId);
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+
+            if (mMsgId !=((Args)arg2).mMsgId) {
+                return false;
+            }
+            return true;
+        }
     }
 }
