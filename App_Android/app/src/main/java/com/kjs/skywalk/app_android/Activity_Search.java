@@ -19,7 +19,9 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
+import com.kjs.skywalk.communicationlibrary.CommunicationError;
 import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
@@ -28,21 +30,22 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
+import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_ASSIGN_APPOINTMENT_RECEPTIONIST;
 
 /**
  * Created by admin on 2017/3/22.
  */
 
 public class Activity_Search extends SKBaseActivity {
-    private final String TAG = "Search";
-    private ListView mListView = null;
-    private LinearLayout mContainer = null;
-    private LinearLayout mContainerEmpty = null;
-    private PropertySearchHistory mHistory = null;
-    private ArrayList<String> mGuess = new ArrayList<String>();
-    private int mActScreenWidth = 1080;
-    private Context mContext;
-    AdapterHouseSearchResult mAdapter = null;
+
+    private ListView                mListView       = null;
+    private LinearLayout            mContainer      = null;
+    private LinearLayout            mContainerEmpty = null;
+    private PropertySearchHistory   mHistory        = null;
+    private ArrayList<String>       mGuess          = new ArrayList<String>();
+    private int                     mActScreenWidth = 1080;
+    private Context                 mContext;
+    AdapterHouseSearchResult        mAdapter        = null;
 
     private ArrayList<IApiResults.IPropertyInfo> mPropertyList = new ArrayList<>();
     private int mPropertyCount = 0;
@@ -161,7 +164,7 @@ public class Activity_Search extends SKBaseActivity {
         for(Object obj : array) {
             IApiResults.IPropertyInfo info = (IApiResults.IPropertyInfo)obj;
             mPropertyList.add(info);
-            Log.i(TAG, "Property ++ " + info.GetName());
+            kjsLogUtil.d("Property ++ " + info.GetName());
         }
     }
 
@@ -183,32 +186,12 @@ public class Activity_Search extends SKBaseActivity {
         mListView.removeAllViewsInLayout();
         mPropertyList.clear();
 
-        CommunicationInterface.CICommandListener listener = new CommunicationInterface.CICommandListener() {
-            @Override
-            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-                if(i == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
-                    if(iCommon.GetErrCode() == CE_ERROR_NO_ERROR) {
-                        IApiResults.IResultList list = (IApiResults.IResultList) iCommon;
-                        mPropertyCount = list.GetTotalNumber();
-                        int nFetchCount = list.GetFetchedNumber();
-                        if(nFetchCount > 0) {
-                            makePropertyList(list.GetList());
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateAdapterProperty();
-                                }
-                            });
-                        }
-                    }
-                }
-
-                Activity_Search.super.onCommandFinished(i, cmdSeq, iCommon);
-            }
-        };
-
-        CommandManager manager = CommandManager.getCmdMgrInstance(this); //, listener, this);
-        manager.GetPropertyListByName(keywords, 0, 0x7FFFFFF);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetPropertyListByName(keywords, 0, 0x7FFFFFF);
+        if (res.mError != CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command GetPropertyListByName, err:" + res.mError);
+            return;
+        }
+        StoreCommand(res);
     }
 
     protected void onResume() {
@@ -349,4 +332,38 @@ public class Activity_Search extends SKBaseActivity {
         }
     }
 
+    @Override
+    public void onCommandFinished(int cmd, final int cmdSeq, IApiResults.ICommon result) {
+        if (null == result) {
+            kjsLogUtil.w("result is null");
+            return;
+        }
+        // Filter out all other commands
+        if (null == RetrieveCommand(cmdSeq)) {  // result is not we wanted
+            return;
+        }
+        kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", cmd, CommunicationInterface.CmdID.GetCmdDesc(cmd), result.DebugString()));
+
+        int errCode = result.GetErrCode();
+        if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+            kjsLogUtil.e("Command:" + cmd + " finished with error: " + errCode);
+            super.onCommandFinished(cmd, cmdSeq, result);
+            return;
+        }
+
+        if (cmd == CommunicationInterface.CmdID.CMD_GET_PROPERTY_LIST) {
+            IApiResults.IResultList list = (IApiResults.IResultList) result;
+            mPropertyCount = list.GetTotalNumber();
+            int nFetchCount = list.GetFetchedNumber();
+            if(nFetchCount > 0) {
+                makePropertyList(list.GetList());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateAdapterProperty();
+                    }
+                });
+            }
+        }
+    }
 }
