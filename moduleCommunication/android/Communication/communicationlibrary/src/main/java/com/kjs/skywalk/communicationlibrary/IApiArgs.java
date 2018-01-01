@@ -185,4 +185,9 @@ public class IApiArgs {
     public interface IArgsGetHouseCertHist extends IArgsBase {
         int     getHouse();
     }
+
+    /******************************************************************************************/
+    public interface IArgsReadMessage extends IArgsBase {
+        int     getMsgId();
+    }
 }

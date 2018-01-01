@@ -376,10 +376,12 @@ public class CommunicationInterface {
          */
         CmdExecRes GetSysMsgInfo(int msg_id);
 
-        /*
-        *   CMD : CMD_READ_NEW_MSG
-        *       - msg_id: message id
-        *   Result  : IApiResults.ICommon
+        /**
+         *  Mark a message readed.  CMD_READ_NEW_MSG
+         *  @param msg_id: message id
+         *  @return
+         *  Result      : IApiResults.ICommon
+         *  Arguments   : IApiArgs.IArgsReadMessage
          */
         CmdExecRes ReadNewMsg(int msg_id);
 
