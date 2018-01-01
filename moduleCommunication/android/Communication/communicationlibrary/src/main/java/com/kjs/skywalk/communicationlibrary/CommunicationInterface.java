@@ -219,7 +219,18 @@ public class CommunicationInterface {
         CmdExecRes GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort);
 
         CmdExecRes GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
-        CmdExecRes SetHouseShowtime(int house_id, int pw, int pv, String pd);          // CMD_SET_HOUSE_SHOWTIME,          IApiResults.ICommon
+
+        /**
+         *  Set House Show Time.  CMD_SET_HOUSE_SHOWTIME
+         *  @param house_id : house id
+         *  @param pw       : period of working-day
+         *  @param pv       : period of vacation, including weekend and vacation
+         *  @param pd       : period description
+         *  @return
+         *  Return      : IApiResults.ICommon
+         *  Arguments   : IApiArgs.IArgsSetHouseShowtime
+         */
+        CmdExecRes SetHouseShowtime(int house_id, int pw, int pv, String pd);          // ,
 
         /*
         *   CMD: NONE
@@ -262,7 +273,15 @@ public class CommunicationInterface {
         CmdExecRes GetDeliverableList();                                                           // CMD_GET_DELIVERABLE_LIST,    IApiResults.IResultList(IApiResults.IDeliverableItem)
         CmdExecRes ModifyDeliverable(int dev_id, String sName);                                    // CMD_EDIT_DELIVERABLE,        IApiResults.ICommon
         CmdExecRes AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);   // CMD_ADD_HOUSE_DELIVERABLE,   IApiResults.IAddRes
-        CmdExecRes GetHouseDeliverables(int house_id);                                             // CMD_GET_HOUSE_DELIVERABLES,  IApiResults.IResultList(IApiResults.IDeliverableInfo)
+
+        /**
+         *  Get House Deliverables. CMD_GET_HOUSE_DELIVERABLES
+         *  @param house_id
+         *  @return
+         *  Arguments : IApiArgs.IArgsGetHouseDeliverables
+         *  Return    : IApiResults.IResultList(IApiResults.IDeliverableInfo)
+         */
+        CmdExecRes GetHouseDeliverables(int house_id);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //

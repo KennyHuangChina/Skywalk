@@ -157,4 +157,17 @@ public class IApiArgs {
     public interface IArgsAmendHouseInfo extends IArgsBase {
         HouseInfo   getHouseInfo();
     }
+
+    /******************************************************************************************/
+    public interface IArgsSetHouseShowtime extends IArgsBase {
+        int     getHouse();
+        int     getPeriodOfWorkingDay();
+        int     getPeriodOfVacation();
+        String  getPeriodDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetHouseDeliverables extends IArgsBase {
+        int     getHouse();
+    }
 }

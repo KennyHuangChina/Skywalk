@@ -13,51 +13,99 @@ import java.util.HashMap;
  */
 
 class CmdSetHouseShowtime extends CommunicationBase {
-    private int     mHouse      = 0;    // house id
-    private int     mPeriodW    = -1;   // period for working day
-    private int     mPeriodV    = -1;   // period for weekend and vacation
-    private String  mPeriodDesc = null; // period description
 
     CmdSetHouseShowtime(Context context, int house_id, int pw, int pv, String pd) {
         super(context, CommunicationInterface.CmdID.CMD_SET_HOUSE_SHOWTIME);
         mMethodType = "PUT";
-        mHouse      = house_id;
-        mPeriodW    = pw;
-        mPeriodV    = pv;
-        mPeriodDesc = pd;
+        mArgs = new Args(house_id, pw, pv, pd);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/showtime", mHouse);
+        mCommandURL = String.format("/v1/house/%d/showtime", ((Args)mArgs).getHouse());
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("prdw=" + mPeriodW);
+        mRequestData = ("prdw=" + ((Args)mArgs).getPeriodOfWorkingDay());
         mRequestData += "&";
-        mRequestData += ("prdv=" + mPeriodV);
+        mRequestData += ("prdv=" + ((Args)mArgs).getPeriodOfVacation());
         mRequestData += "&";
-        mRequestData += ("desc=" + mPeriodDesc);
+        mRequestData += ("desc=" + ((Args)mArgs).getPeriodDesc());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mHouse <= 0) {
-            Log.e(TAG, "mHouse: " + mHouse);
-            return false;
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsSetHouseShowtime {
+        private int     mHouse      = 0;    // house id
+        private int     mPeriodW    = -1;   // period for working day
+        private int     mPeriodV    = -1;   // period for weekend and vacation
+        private String  mPeriodDesc = null; // period description
+
+        Args(int house, int pw, int pv, String desc) {
+            mHouse      = house;
+            mPeriodW    = pw;
+            mPeriodV    = pv;
+            mPeriodDesc = desc;
         }
-        if (mPeriodW < 0 || mPeriodW > 7) {
-            Log.e(TAG, "mPeriodW: " + mPeriodW);
-            return false;
+
+        @Override
+        public boolean checkArgs() {
+            if (mHouse <= 0) {
+                Log.e(TAG, "mHouse: " + mHouse);
+                return false;
+            }
+            if (mPeriodW < 0 || mPeriodW > 7) {
+                Log.e(TAG, "mPeriodW: " + mPeriodW);
+                return false;
+            }
+            if (mPeriodV < 0 || mPeriodV > 7) {
+                Log.e(TAG, "mPeriodV: " + mPeriodV);
+                return false;
+            }
+
+            return true;    // super.checkParameter(map);
         }
-        if (mPeriodV < 0 || mPeriodV > 7) {
-            Log.e(TAG, "mPeriodV: " + mPeriodV);
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+
+            Args ac = (Args)arg2;
+            if (mHouse != ac.mHouse || mPeriodW != ac.mPeriodW || mPeriodV != ac.mPeriodV) {
+                return false;
+            }
+            if (null == mPeriodDesc && null == ac.mPeriodDesc) {
+                return true;
+            }
+            if (null != mPeriodDesc && null != ac.mPeriodDesc && mPeriodDesc.equals(ac.mPeriodDesc)) {
+                return true;
+            }
             return false;
         }
 
-        return true;    // super.checkParameter(map);
+        @Override
+        public int getHouse() {
+            return mHouse;
+        }
+
+        @Override
+        public int getPeriodOfWorkingDay() {
+            return mPeriodW;
+        }
+
+        @Override
+        public int getPeriodOfVacation() {
+            return mPeriodV;
+        }
+
+        @Override
+        public String getPeriodDesc() {
+            return mPeriodDesc;
+        }
     }
 }
