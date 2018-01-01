@@ -618,9 +618,6 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     public CmdExecRes GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort) {
         CommunicationBase op = new CmdGetHouseList(mContext, type, begin, cnt, filter, sort);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_TYPE, "" + type);
-        pMap.put(CommunicationParameterKey.CPK_LIST_BEGIN, "" + begin);
-        pMap.put(CommunicationParameterKey.CPK_LIST_CNT, "" + cnt);
         return execute(op, pMap);
     }
 
