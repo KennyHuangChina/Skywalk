@@ -446,11 +446,13 @@ public class CommunicationInterface {
          */
         CmdExecRes GetAppointmentInfo(int apid);
 
-        /*
-        *   CMD : CMD_ASSIGN_APPOINTMENT_RECEPTIONIST
-        *       - aid           : appointment id
-        *       - receptionist  : new receptionist
-        *   Result : IApiResults.ICommon
+        /**
+         *  Assign receptionist to a appointment. CMD_ASSIGN_APPOINTMENT_RECEPTIONIST
+         *  @param aid          : appointment id
+         *  @param receptionist: the user id of new receptionist
+         *  @return
+         *  Result      : IApiResults.ICommon
+         *  Arguments   : IApiArgs.IArgsAssignAppointmentReceptionist
          */
         CmdExecRes AssignAppointmentReceptionist(int aid, int receptionist);
 
