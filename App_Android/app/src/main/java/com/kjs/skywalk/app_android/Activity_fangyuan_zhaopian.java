@@ -396,13 +396,33 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                                 deleteSelectItem(mJiaJuYongPinPicLst);
                                 deleteSelectItem(mDianQiPicLst);
 
+                                if(mDeleteList.size() == 0) {
+                                    fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+                                    mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
+                                    mVPHuXing.getAdapter().notifyDataSetChanged();
+
+                                    fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+                                    mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
+                                    mVpFangJianJieGou.getAdapter().notifyDataSetChanged();
+
+                                    fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+                                    mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
+                                    mVpJiaJuYongPin.getAdapter().notifyDataSetChanged();
+
+                                    fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+                                    mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
+                                    mVpDianQi.getAdapter().notifyDataSetChanged();
+                                }
+
                                 mIsPicSelectMode = false;
                                 updateViewrPagerSelectMode(mIsPicSelectMode);
                                 updateStatus();
 
                                 updateUploadButtonText();
 
-                                delete();
+                                if(mDeleteList.size() > 0) {
+                                    delete();
+                                }
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -496,6 +516,14 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
             mTvDelete.setEnabled(true);
         } else {
             mTvDelete.setEnabled(false);
+        }
+
+        if(mIsPicSelectMode) {
+            mTvDelete.setVisibility(View.VISIBLE);
+            mTvUpload.setVisibility(View.GONE);
+        } else {
+            mTvDelete.setVisibility(View.GONE);
+            mTvUpload.setVisibility(View.VISIBLE);
         }
 
         TextView selectButton = (TextView)findViewById(R.id.tv_select);
@@ -614,7 +642,9 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
         while (iter.hasNext()) {
             ClassDefine.PicList item = (ClassDefine.PicList) iter.next();
             if(item.mIsChecked) {
-                mDeleteList.add(item.mId);
+                if(!item.mIsLocal) {
+                    mDeleteList.add(item.mId);
+                }
                 iter.remove();
             }
         }
@@ -750,9 +780,24 @@ public class Activity_fangyuan_zhaopian extends SKBaseActivity implements ImageU
                 showWaiting(false);
                 getPictures();
                 break;
-            case MSG_DELETE_ALL_DONE:
-                showWaiting(false);
-                getPictures();
+            case MSG_DELETE_ALL_DONE: {
+                    fillPicGroupInfo(mTvStatus1, mVPHuXing, mHuXingPicLst);
+                    mVPHuXing.setCurrentItem(mVPHuXing.getAdapter().getCount());
+                    mVPHuXing.getAdapter().notifyDataSetChanged();
+
+                    fillPicGroupInfo(mTvStatus2, mVpFangJianJieGou, mFangJianJieGouPicLst);
+                    mVpFangJianJieGou.setCurrentItem(mVpFangJianJieGou.getAdapter().getCount());
+                    mVpFangJianJieGou.getAdapter().notifyDataSetChanged();
+
+                    fillPicGroupInfo(mTvStatus3, mVpJiaJuYongPin, mJiaJuYongPinPicLst);
+                    mVpJiaJuYongPin.setCurrentItem(mVpJiaJuYongPin.getAdapter().getCount());
+                    mVpJiaJuYongPin.getAdapter().notifyDataSetChanged();
+
+                    fillPicGroupInfo(mTvStatus4, mVpDianQi, mDianQiPicLst);
+                    mVpDianQi.setCurrentItem(mVpDianQi.getAdapter().getCount());
+                    mVpDianQi.getAdapter().notifyDataSetChanged();
+                    showWaiting(false);
+                }
                 break;
             case MSG_GET_PICTURES_DONE:
                 break;
