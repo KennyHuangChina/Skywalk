@@ -437,10 +437,12 @@ public class CommunicationInterface {
          */
         CmdExecRes MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments);
 
-        /*
-        *   CMD : CMD_GET_APPOINTMENT_INFO
-        *       - apid  : appointment id
-        *   Result : IApiResults.IAppointmentInfo, IApiResults.IResultList(IApiResults.IAppointmentAct)
+        /**
+         *  Get Appointment Info. CMD_GET_APPOINTMENT_INFO
+         *  @param apid: appointment id
+         *  @return
+         *  Result      : IApiResults.IAppointmentInfo & IApiResults.IResultList(IApiResults.IAppointmentAct)
+         *  Arguments   : IApiArgs.IArgsGetAppointmentInfo
          */
         CmdExecRes GetAppointmentInfo(int apid);
 
