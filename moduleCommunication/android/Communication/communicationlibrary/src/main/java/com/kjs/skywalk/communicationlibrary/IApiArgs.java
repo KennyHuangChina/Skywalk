@@ -21,10 +21,8 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsGetHouseDigestList extends IArgsBase {
+    public interface IArgsGetHouseDigestList extends IArgsFetchList {
         int                     getType();
-        int                     getBeginPosi();
-        int                     getFetchCnt();
         HouseFilterCondition    getFilters();
         ArrayList<Integer>      getSorts();
     }
@@ -38,10 +36,8 @@ public class IApiArgs {
                         GET_HOUSE_DIG_LST_TYPE_END          = GET_HOUSE_DIG_LST_TYPE_NEW;
 
     /******************************************************************************************/
-    public interface IArgsGetBehalfList extends IArgsBase {
-        int                     getType();
-        int                     getBeginPosi();
-        int                     getFetchCnt();
+    public interface IArgsGetBehalfList extends IArgsFetchList {
+        int getType();
     }
     // command: CmdGetBehalfHouses
     static public int   AGENT_HOUSE_ALL         = 0,     // all houses
@@ -97,24 +93,14 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsGetMsgList extends IArgsBase {
-        int     getBegin();
-        int     getFetchCnt();
+    public interface IArgsGetMsgList extends IArgsFetchList {
         boolean isIdOnly();
         boolean isNewMsgOnly();
     }
 
     /******************************************************************************************/
-    public interface IArgsGetPropertyList extends IArgsBase {
+    public interface IArgsGetPropertyList extends IArgsFetchList {
         String  getName();
-        int     getBegin();
-        int     getFetchCnt();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsGetAgentList extends IArgsBase {
-        int     getBegin();
-        int     getFetchCnt();
     }
 
     /******************************************************************************************/
@@ -195,10 +181,5 @@ public class IApiArgs {
     /******************************************************************************************/
     public interface IArgsReadMessage extends IArgsBase {
         int     getMsgId();
-    }
-    /******************************************************************************************/
-    public interface IArgsGetUserHouseWatchList extends IArgsBase {
-        int     getBegin();
-        int     getFetchCnt();
     }
 }
