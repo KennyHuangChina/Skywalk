@@ -170,4 +170,9 @@ public class IApiArgs {
     public interface IArgsGetHouseDeliverables extends IArgsBase {
         int     getHouse();
     }
+
+    /******************************************************************************************/
+    public interface IArgsGetAppointmentInfo extends IArgsBase {
+        int     getAppointment();
+    }
 }
