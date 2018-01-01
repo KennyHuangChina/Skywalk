@@ -463,12 +463,13 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House Watch APIs
-        /*
-        *   CMD: CMD_GET_USER_HOUSE_WATCH_LIST
-        *       - begin : fetch begin position
-        *       - cnt   : fetch count. set to 0 mean just want to get the total number
-        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-        *
+        /**
+         *  Get house watching list of current uset. CMD_GET_USER_HOUSE_WATCH_LIST
+         *  @param begin : fetch begin position
+         *  @param cnt   : fetch count, set to 0 means just want to get the totoal number
+         *  @return
+         *  Arguments: IApiArgs.IArgsGetUserHouseWatchList
+         *  Result   : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         CmdExecRes GetUserHouseWatchList(int begin, int cnt);
     }

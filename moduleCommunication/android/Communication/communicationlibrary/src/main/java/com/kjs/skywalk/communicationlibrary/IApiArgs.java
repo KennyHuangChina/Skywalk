@@ -190,4 +190,9 @@ public class IApiArgs {
     public interface IArgsReadMessage extends IArgsBase {
         int     getMsgId();
     }
+    /******************************************************************************************/
+    public interface IArgsGetUserHouseWatchList extends IArgsBase {
+        int     getBegin();
+        int     getFetchCnt();
+    }
 }
