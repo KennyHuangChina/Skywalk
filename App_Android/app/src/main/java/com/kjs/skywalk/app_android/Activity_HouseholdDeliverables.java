@@ -30,32 +30,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_DELIVERABLE_LIST;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES;
 
-public class Activity_HouseholdDeliverables extends SKBaseActivity
-        implements CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
+public class Activity_HouseholdDeliverables extends     SKBaseActivity
+                                            implements  CommunicationInterface.CICommandListener, CommunicationInterface.CIProgressListener {
     private AlertDialog mDeliverableEdtDlg;
-    private ListView mLvDeliverables;
-    private TextView mTvModifyFinish;
-    private Boolean mIsModifyMode;
+    private ListView    mLvDeliverables;
+    private TextView    mTvModifyFinish;
+    private Boolean     mIsModifyMode;
     private ImageButton mIbNew;
     AdapterDeliverables mDeliverablesAdapter;
     GetDeliverablesTask mGetDeliverablesTask;
     // test data
 
-
     private final static ArrayList<AdapterDeliverables.Deliverable> mHouseDeliverables = new ArrayList<AdapterDeliverables.Deliverable>(
             Arrays.asList(
-                    new AdapterDeliverables.Deliverable(R.drawable.door_n, "大门钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.card_n, "门禁卡", 2),
-                    new AdapterDeliverables.Deliverable(R.drawable.card1_n, "水电卡/存折", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.tv_n, "有线电视用户证", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.water1_n, "水表箱钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.power3_n, "电表箱钥匙", 3),
-                    new AdapterDeliverables.Deliverable(R.drawable.mail_box_n, "信报箱钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.coffer_n, "保险柜钥匙", 1),
-                    new AdapterDeliverables.Deliverable(R.drawable.gas_n, "燃气卡", 3)
+                new AdapterDeliverables.Deliverable(R.drawable.door_n,      "大门钥匙",      1),
+                new AdapterDeliverables.Deliverable(R.drawable.card_n,      "门禁卡",        2),
+                new AdapterDeliverables.Deliverable(R.drawable.card1_n,     "水电卡/存折",   1),
+                new AdapterDeliverables.Deliverable(R.drawable.tv_n,        "有线电视用户证",1),
+                new AdapterDeliverables.Deliverable(R.drawable.water1_n,    "水表箱钥匙",    1),
+                new AdapterDeliverables.Deliverable(R.drawable.power3_n,    "电表箱钥匙",    3),
+                new AdapterDeliverables.Deliverable(R.drawable.mail_box_n,  "信报箱钥匙",    1),
+                new AdapterDeliverables.Deliverable(R.drawable.coffer_n,    "保险柜钥匙",    1),
+                new AdapterDeliverables.Deliverable(R.drawable.gas_n,       "燃气卡",        3)
             )
     );
     //
@@ -85,14 +85,18 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
             }
         });
 
-
         // get deliverable list
 //        mGetDeliverablesTask = new GetDeliverablesTask();
 //        mGetDeliverablesTask.execute();
 
-        CommandManager CmdMgr = CommandManager.getCmdMgrInstance(this);
-        CmdMgr.GetHouseDeliverables(mHouseId);
-
+        // Register here or move the operation into onResume, cause the registeration was done on SKBaseActivity::onResume()
+        CommandManager.getCmdMgrInstance(this).Register(this, this);
+        CmdExecRes res = CommandManager.getCmdMgrInstance(this).GetHouseDeliverables(mHouseId);
+        if (res.mError != CE_ERROR_NO_ERROR) {
+            kjsLogUtil.e("Fail to send command SetHouseShowtime, err:" + res.mError);
+        } else {
+            StoreCommand(res);
+        }
     }
 
     // http://blog.csdn.net/gao_chun/article/details/46008651
@@ -103,7 +107,6 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         mDeliverablesAdapter = new AdapterDeliverables(this);
 //        mDeliverablesAdapter.updateDeliverablesList(mHouseDeliverables);
         mLvDeliverables.setAdapter(mDeliverablesAdapter);
-
 
 //        LinearLayout llDeliverables = (LinearLayout) findViewById(R.id.ll_deliverables);
 //
@@ -267,31 +270,6 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         }
     }
 
-    @Override
-    public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
-        if (null == iResult) {
-            kjsLogUtil.w("result is null");
-            return;
-        }
-        kjsLogUtil.i(String.format("[command: %d] --- %s", command, iResult.DebugString()));
-        if (CommunicationError.CE_ERROR_NO_ERROR != iResult.GetErrCode()) {
-            kjsLogUtil.e("Command:" + command + " finished with error: " + iResult.GetErrDesc());
-            return;
-        }
-
-        if (command == CMD_GET_HOUSE_DELIVERABLES) {
-            IApiResults.IResultList list = (IApiResults.IResultList)iResult;
-            ArrayList<AdapterDeliverables.Deliverable> deliverablesList = new ArrayList<AdapterDeliverables.Deliverable>();
-            for (Object item : list.GetList()) {
-                IApiResults.IDeliverableInfo info = (IApiResults.IDeliverableInfo)item;
-                AdapterDeliverables.Deliverable deliverable = new AdapterDeliverables.Deliverable(R.drawable.gas_n, info.GetName(), info.GetQty());
-                deliverablesList.add(deliverable);
-                kjsLogUtil.i(String.format("[Deliverable:%d] name:%s qty:%d desc:%s", info.GetId(), info.GetName(), info.GetQty(), info.GetDesc()));
-            }
-            updateDeliverableList(deliverablesList);
-        }
-    }
-
     private void showErrorMessage(final String msg) {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -301,17 +279,24 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         });
     }
 
+    @Override
+    public void onCommandFinished(int command, int cmdSeq, IApiResults.ICommon iResult) {
+        super.onCommandFinished(command, cmdSeq, iResult);
+    }
+
     public class GetDeliverablesTask extends AsyncTask<Void, Void, Boolean> {
-        ArrayList<Object> mIds = null;
-        boolean mGotHouseDeliverables = false;
-        ArrayList<AdapterDeliverables.Deliverable> mDeliverablesList;
+        ArrayList<Object>                           mIds                    = null;
+        boolean                                     mGotHouseDeliverables   = false;
+        ArrayList<AdapterDeliverables.Deliverable>  mDeliverablesList;
+
         @Override
         protected Boolean doInBackground(Void... voids) {
-            CommandManager CmdMgr = CommandManager.getCmdMgrInstance(Activity_HouseholdDeliverables.this); //, mCmdListener, mProgreessListener);
-            CmdExecRes result = CmdMgr.GetHouseDeliverables(mHouseId);
+            CmdExecRes result = CommandManager.getCmdMgrInstance(Activity_HouseholdDeliverables.this).GetHouseDeliverables(mHouseId);
             if (result.mError != CommunicationError.CE_ERROR_NO_ERROR) {
                 kjsLogUtil.e("Error to call GetHouseDeliverables");
                 return false;
+            } else {
+                StoreCommand(result);
             }
 
             int wait_count = 0;
@@ -351,21 +336,36 @@ public class Activity_HouseholdDeliverables extends SKBaseActivity
         CommunicationInterface.CICommandListener mCmdListener = new CommunicationInterface.CICommandListener() {
 
             @Override
-            public void onCommandFinished(int i, final int cmdSeq, IApiResults.ICommon iCommon) {
-                kjsLogUtil.i(String.format("[command: %d] ErrCode:%d(%s)", i, iCommon.GetErrCode(), iCommon.GetErrDesc()));
-                if (iCommon.GetErrCode() != CommunicationError.CE_ERROR_NO_ERROR) {
-                    showErrorMessage(iCommon.GetErrDesc());
+            public void onCommandFinished(int command, final int cmdSeq, IApiResults.ICommon iResult) {
+                if (null == iResult) {
+                    kjsLogUtil.w("result is null");
+                    return;
+                }
+                // Filter out all other commands
+                CmdExecRes cmd = RetrieveCommand(cmdSeq);
+                if (null == cmd) {  // result is not we wanted
+                    return;
+                }
+                kjsLogUtil.i(String.format("[command: %d(%s)] --- %s", command, CommunicationInterface.CmdID.GetCmdDesc(command), iResult.DebugString()));
+
+                int errCode = iResult.GetErrCode();
+                if (CommunicationError.CE_ERROR_NO_ERROR != errCode) {
+                    kjsLogUtil.e("Command:" + command + " finished with error: " + errCode);
+                    if (command == CMD_GET_HOUSE_DELIVERABLES) {
+                        showErrorMessage(iResult.GetErrDesc());
+                    }
                     return;
                 }
 
-                if (i == CMD_GET_HOUSE_DELIVERABLES && iCommon.GetErrCode() == CommunicationError.CE_ERROR_NO_ERROR) {
-                    IApiResults.IResultList list = (IApiResults.IResultList)iCommon;
+                // GetHouseDeliverables
+                if (errCode == CMD_GET_HOUSE_DELIVERABLES) {
+                    IApiResults.IResultList list = (IApiResults.IResultList)iResult;
                     mDeliverablesList = new ArrayList<AdapterDeliverables.Deliverable>();
                     for (Object item : list.GetList()) {
                         IApiResults.IDeliverableInfo info = (IApiResults.IDeliverableInfo)item;
                         AdapterDeliverables.Deliverable deliverable = new AdapterDeliverables.Deliverable(R.drawable.gas_n, info.GetName(), info.GetQty());
                         mDeliverablesList.add(deliverable);
-                        kjsLogUtil.i(String.format("[Deliverable:%d] name:%s qty:%d desc:%s", info.GetId(), info.GetName(), info.GetQty(), info.GetDesc()));
+                        kjsLogUtil.d(String.format("[Deliverable:%d] name:%s qty:%d desc:%s", info.GetId(), info.GetName(), info.GetQty(), info.GetDesc()));
                     }
                   mGotHouseDeliverables = true;
                 }
