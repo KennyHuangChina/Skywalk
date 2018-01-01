@@ -175,4 +175,9 @@ public class IApiArgs {
     public interface IArgsGetAppointmentInfo extends IArgsBase {
         int     getAppointment();
     }
+
+    /******************************************************************************************/
+    public interface IArgsAssignAppointmentReceptionist extends IArgsGetAppointmentInfo {
+        int     getReceptionist();
+    }
 }
