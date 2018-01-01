@@ -421,12 +421,13 @@ public class CommunicationInterface {
          */
         CmdExecRes GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
 
-        /*
-        *   CMD: CMD_HOUSE_LST_APPOINT_SEE
-        *       - begin   : fetch begin position
-        *       - cnt     : fetch count. set to 0 mean just want to get the total number
-        *   Arguments: IApiArgs.
-        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        /**
+         *  Get house list that be appointed house seeing.  CMD_HOUSE_LST_APPOINT_SEE
+         *      @param begin  : fetch begin position
+         *      @param cnt    : fetch count. set to 0 mean just want to get the total number
+         *      @return
+         *  Arguments   : IApiArgs.IArgsFetchList
+         *  Result      : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         CmdExecRes GetHouseList_AppointSee(int begin, int cnt);
 
