@@ -104,7 +104,16 @@ public class CommunicationInterface {
         */
         CmdExecRes ResetLoginPass(String user, String pass, String sms, String salt, String rand);
 
-        CmdExecRes GetAgencyList(int begin, int cnt);                                  // CMD_GET_AGENCY_LIST,     IApiResults.IResultList(IApiResults.IAgencyInfo)
+        /**
+         *  Get Agent List. CMD_GET_AGENCY_LIST
+         *      @param begin
+         *      @param cnt
+         *      @return
+         *  Arguments   : IApiArgs.IArgsFetchList
+         *  Result      : IApiResults.IResultList(IApiResults.IAgencyInfo)
+         */
+        CmdExecRes GetAgencyList(int begin, int cnt);
+
         CmdExecRes MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon
 
         /*
@@ -466,10 +475,10 @@ public class CommunicationInterface {
         //          House Watch APIs
         /**
          *  Get house watching list of current uset. CMD_GET_USER_HOUSE_WATCH_LIST
-         *  @param begin : fetch begin position
-         *  @param cnt   : fetch count, set to 0 means just want to get the totoal number
-         *  @return
-         *  Arguments: IApiArgs.IArgsGetUserHouseWatchList
+         *      @param begin : fetch begin position
+         *      @param cnt   : fetch count, set to 0 means just want to get the totoal number
+         *      @return
+         *  Arguments: IApiArgs.IArgsFetchList
          *  Result   : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
          */
         CmdExecRes GetUserHouseWatchList(int begin, int cnt);

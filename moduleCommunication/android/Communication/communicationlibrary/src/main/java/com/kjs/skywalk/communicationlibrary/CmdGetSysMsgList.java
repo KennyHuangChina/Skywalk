@@ -28,11 +28,11 @@ class CmdGetSysMsgList extends CommunicationBase {
     public void generateRequestData() {
         String mArgu = "";
         Args args = (Args)mArgs;
-        if (args.getBegin() > 0) {
+        if (args.getBeginPosi() > 0) {
             if (!mArgu.isEmpty()) {
                 mArgu += "&";
             }
-            mArgu += ("bgn=" + args.getBegin());
+            mArgu += ("bgn=" + args.getBeginPosi());
         }
         if (args.getFetchCnt() > 0) {
             if (!mArgu.isEmpty()) {
@@ -68,30 +68,22 @@ class CmdGetSysMsgList extends CommunicationBase {
     //      -- API Arguments --
     //
     //////////////////////////////////////////////////////////////////////////////////////////
-    class Args extends ApiArgsBase implements IApiArgs.IArgsGetMsgList {
-        private int mBegin      = 0;
-        private int mFetchCnt   = 0;
-        private boolean mIDO    = false;    // if only fetch message id. true - fetch evvent id / false - fetch whole message info
-        private boolean mNMO    = false;    // if only fetch new message. true - only fetch new messages / false - fetch all messages
+    class Args extends ApiArgFetchList implements IApiArgs.IArgsGetMsgList {
+        private boolean mIDO  = false;    // if only fetch message id. true - fetch evvent id / false - fetch whole message info
+        private boolean mNMO  = false;    // if only fetch new message. true - only fetch new messages / false - fetch all messages
 
         Args(int bgn, int cnt, boolean ido, boolean nmo) {
-            mBegin      = bgn;
-            mFetchCnt   = cnt;
-            mIDO        = ido;
-            mNMO        = nmo;
+            super(bgn, cnt);
+            mIDO = ido;
+            mNMO = nmo;
         }
 
         @Override
         public boolean checkArgs() {
-            if (mBegin < 0) {
-                Log.e(TAG, "mBegin:" + mBegin);
+            if (!super.checkArgs()) {
                 return false;
             }
-            if (mFetchCnt < 0) {
-                Log.e(TAG, "mFetchCnt:" + mFetchCnt);
-                return false;
-            }
-
+            // DO further checking here
             return true;
         }
 
@@ -101,21 +93,10 @@ class CmdGetSysMsgList extends CommunicationBase {
                 return false;
             }
             Args arg_chk = (Args)arg2;
-            if (mBegin != arg_chk.mBegin || mFetchCnt != arg_chk.mFetchCnt ||
-                    mIDO != arg_chk.mIDO || mNMO != arg_chk.mNMO) {
+            if (mIDO != arg_chk.mIDO || mNMO != arg_chk.mNMO) {
                 return false;
             }
             return true;
-        }
-
-        @Override
-        public int getBegin() {
-            return mBegin;
-        }
-
-        @Override
-        public int getFetchCnt() {
-            return mFetchCnt;
         }
 
         @Override

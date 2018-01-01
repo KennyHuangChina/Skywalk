@@ -127,21 +127,17 @@ class CmdGetHouseList extends CommunicationBase {
     /////////////////////////////////////////////////////////////////////////////////////
     //
     //
-    class ApiArgsGetHouseDigestList extends ApiArgsBase implements IApiArgs.IArgsGetHouseDigestList {
+    class ApiArgsGetHouseDigestList extends ApiArgFetchList implements IApiArgs.IArgsGetHouseDigestList {
 
-        private int mType       = IApiArgs.GET_HOUSE_DIG_LST_TYPE_ALL;    // GET_HOUSE_DIG_LST_TYPE_XXX
-        private int mBegin      = 0;
-        private int mFetchCnt   = 0;
+        private int                     mType   = IApiArgs.GET_HOUSE_DIG_LST_TYPE_ALL;    // GET_HOUSE_DIG_LST_TYPE_XXX
+        private HouseFilterCondition    mFilter = null;
+        private ArrayList<Integer>      mSort   = null;
 
-        private HouseFilterCondition  mFilter = null;
-        private ArrayList<Integer>    mSort   = null;
-
-        public ApiArgsGetHouseDigestList(int type, int bgn, int cnt,
+        ApiArgsGetHouseDigestList(int type, int bgn, int cnt,
                                          CommunicationInterface.HouseFilterCondition filter,
                                          ArrayList<Integer> sort) {
+            super(bgn, cnt);
             mType       = type;
-            mBegin      = bgn;
-            mFetchCnt   = cnt;
             mFilter     = filter;
             mSort       = sort;
         }
@@ -149,16 +145,6 @@ class CmdGetHouseList extends CommunicationBase {
         @Override
         public int getType() {
             return mType;
-        }
-
-        @Override
-        public int getBeginPosi() {
-            return mBegin;
-        }
-
-        @Override
-        public int getFetchCnt() {
-            return mFetchCnt;
         }
 
         @Override
@@ -173,16 +159,11 @@ class CmdGetHouseList extends CommunicationBase {
 
         @Override
         public boolean checkArgs() {
+            if (super.checkArgs()) {
+                return false;
+            }
             if (mType < GET_HOUSE_DIG_LST_TYPE_BEGIN || mType > GET_HOUSE_DIG_LST_TYPE_END) {
                 Log.e(TAG, "mType:" + mType);
-                return false;
-            }
-            if (mBegin < 0) {
-                Log.e(TAG, "begin:" + mBegin);
-                return false;
-            }
-            if (mFetchCnt < 0) {
-                Log.e(TAG, "mFetchCnt:" + mFetchCnt);
                 return false;
             }
 
@@ -213,12 +194,6 @@ class CmdGetHouseList extends CommunicationBase {
 
             ApiArgsGetHouseDigestList arg2chk = (ApiArgsGetHouseDigestList)arg2;
             if (arg2chk.mType != mType) {
-                return false;
-            }
-            if (arg2chk.mBegin != mBegin) {
-                return false;
-            }
-            if (arg2chk.mFetchCnt != mFetchCnt) {
                 return false;
             }
             Log.w(TAG, Fn + "TODO: do checking for filter and sort");

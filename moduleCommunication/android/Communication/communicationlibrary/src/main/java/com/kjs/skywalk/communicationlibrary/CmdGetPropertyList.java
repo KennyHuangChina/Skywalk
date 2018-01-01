@@ -25,7 +25,7 @@ class CmdGetPropertyList extends CommunicationBase {
     public void generateRequestData() {
         mRequestData = ("name=" + ((Args)mArgs).getName());
         mRequestData += "&";
-        mRequestData += ("bgn=" + ((Args)mArgs).getBegin());
+        mRequestData += ("bgn=" + ((Args)mArgs).getBeginPosi());
         mRequestData += "&";
         mRequestData += ("cnt=" + ((Args)mArgs).getFetchCnt());
         Log.d(TAG, "mRequestData: " + mRequestData);
@@ -39,15 +39,12 @@ class CmdGetPropertyList extends CommunicationBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsGetPropertyList {
-        private String  mPropertyName   = "";
-        private int     mBeginPosi      = 0;
-        private int     mFetchCount     = 0;
+    class Args extends ApiArgFetchList implements IApiArgs.IArgsGetPropertyList {
+        private String mPropertyName = "";
 
         Args(String property, int begin, int cnt) {
-            mPropertyName   = property;
-            mBeginPosi      = begin;
-            mFetchCount     = cnt;
+            super(begin, cnt);
+            mPropertyName = property;
         }
 
         @Override
@@ -55,13 +52,7 @@ class CmdGetPropertyList extends CommunicationBase {
             if (null == mPropertyName || mPropertyName.isEmpty()) {
                 return false;
             }
-            if (mBeginPosi < 0) {
-                return false;
-            }
-            if (mFetchCount < 0) {
-                return false;
-            }
-            return true;
+            return super.checkArgs();
         }
 
         @Override
@@ -74,25 +65,12 @@ class CmdGetPropertyList extends CommunicationBase {
             if (null == mPropertyName || null == arg_chk.mPropertyName || !mPropertyName.equals(arg_chk.mPropertyName)) {
                 return false;
             }
-            if (mBeginPosi != arg_chk.mBeginPosi || mFetchCount != arg_chk.mFetchCount) {
-                return false;
-            }
             return true;
         }
 
         @Override
         public String getName() {
             return mPropertyName;
-        }
-
-        @Override
-        public int getBegin() {
-            return mBeginPosi;
-        }
-
-        @Override
-        public int getFetchCnt() {
-            return mFetchCount;
         }
     }
 }

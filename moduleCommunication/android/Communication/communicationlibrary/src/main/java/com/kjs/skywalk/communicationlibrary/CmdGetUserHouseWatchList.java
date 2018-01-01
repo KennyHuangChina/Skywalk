@@ -15,7 +15,7 @@ class CmdGetUserHouseWatchList extends CommunicationBase {
 
     CmdGetUserHouseWatchList(Context context, int bgn, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_GET_USER_HOUSE_WATCH_LIST);
-        mArgs = new Args(bgn, cnt);
+        mArgs = new ApiArgFetchList(bgn, cnt);
     }
 
     @Override
@@ -26,9 +26,9 @@ class CmdGetUserHouseWatchList extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("bgn=" + ((Args)mArgs).getBegin());
+        mRequestData = ("bgn=" + ((ApiArgFetchList)mArgs).getBeginPosi());
         mRequestData += "&";
-        mRequestData += ("cnt=" + ((Args)mArgs).getFetchCnt());
+        mRequestData += ("cnt=" + ((ApiArgFetchList)mArgs).getFetchCnt());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
@@ -36,51 +36,5 @@ class CmdGetUserHouseWatchList extends CommunicationBase {
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResGetHouseList result = new ResGetHouseList(nErrCode, jObject);
         return result;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsGetUserHouseWatchList {
-        private int mBeginPosi  = 0;
-        private int mFetchCount = 0;
-
-        Args(int begin, int cnt) {
-            mBeginPosi  = begin;
-            mFetchCount = cnt;
-        }
-
-        @Override
-        public int getBegin() {
-            return mBeginPosi;
-        }
-
-        @Override
-        public int getFetchCnt() {
-            return mFetchCount;
-        }
-
-        @Override
-        public boolean checkArgs() {
-            if (mBeginPosi < 0) {
-                Log.e(TAG, "mBeginPosi: " + mBeginPosi);
-                return false;
-            }
-            if (mFetchCount < 0) {
-                Log.e(TAG, "mFetchCount: " + mFetchCount);
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public boolean isEqual(IApiArgs.IArgsBase arg2) {
-            if (!super.isEqual(arg2)) {
-                return false;
-            }
-            if (mBeginPosi != ((Args)arg2).mBeginPosi || mFetchCount != ((Args)arg2).mFetchCount) {
-                return false;
-            }
-            return true;
-        }
     }
 }
