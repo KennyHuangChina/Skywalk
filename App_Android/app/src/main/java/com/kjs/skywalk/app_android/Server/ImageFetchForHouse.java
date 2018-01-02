@@ -1,8 +1,13 @@
 package com.kjs.skywalk.app_android.Server;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.Target;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
@@ -13,9 +18,15 @@ import com.kjs.skywalk.communicationlibrary.CommunicationInterface;
 import com.kjs.skywalk.communicationlibrary.IApiArgs;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import me.iwf.photopicker.utils.FileUtils;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.CMD_DEL_PICTURE;
@@ -105,6 +116,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
                     mList.add(picInfo);
 //                    picInfo.print();
+                    download(picInfo.smallPicUrl);
                 }
                 if(mListener != null) {
                     mListener.onHouseImageFetched(mList);
@@ -136,6 +148,68 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
         }
 
         return false;
+    }
+
+    private void saveToFile(File source, File target) {
+        try {
+            int bytesum = 0;
+            int byteread = 0;
+            if (source.exists()) {
+                InputStream inStream = new FileInputStream(source); //读入原文件
+                FileOutputStream fs = new FileOutputStream(target);
+                byte[] buffer = new byte[1024];
+                while ((byteread = inStream.read(buffer)) != -1) {
+                    fs.write(buffer, 0, byteread);
+                }
+                inStream.close();
+            }
+        }
+        catch (Exception e) {
+            kjsLogUtil.e("save file failure.");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void download(final String url) {
+        new AsyncTask<Void, Integer, File>() {
+            @Override
+            protected File doInBackground(Void... params) {
+                File targetFile = null;
+                try {
+                    FutureTarget<File> future = Glide
+                            .with(mContext)
+                            .load(url)
+                            .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                    File file = future.get();
+                    File cacheDir = new File("/sdcard/skywalk");//mContext.getCacheDir();
+                    kjsLogUtil.i("cache dir: " + cacheDir);
+                    File imageDir = new File(cacheDir,"images");
+                    if (!imageDir.exists()) {
+                        imageDir.mkdirs();
+                    }
+                    String fileName = url;
+                    int index = fileName.lastIndexOf("/");
+                    fileName = fileName.substring(index + 1);
+                    kjsLogUtil.i("file Name: " + fileName);
+                    targetFile = new File(imageDir, fileName);
+                    saveToFile(file, targetFile);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+                return targetFile;
+            }
+
+            @Override
+            protected void onPostExecute(File file) {
+                kjsLogUtil.i("onPostExecute: " + file.getPath());
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                super.onProgressUpdate(values);
+            }
+        }.execute();
     }
 
     public int fetch(int houseId, final int fetchType, int size) {
