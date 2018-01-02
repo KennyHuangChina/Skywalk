@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import static android.os.SystemClock.sleep;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.CLIENT_APP;
 
 /**
  * Created by kenny on 2017/3/14.
@@ -194,9 +195,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             return CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN;
         }
 
-        CommunicationBase cmdRelogin = new CmdRelogin(mContext);
+        CommunicationBase cmdRelogin = new CmdRelogin(mContext, mLoginUser);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mLoginUser);
+//        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mLoginUser);
         if (!cmdRelogin.checkParameter(pMap)) {
             Log.e(TAG, FN + "fail to check parameters for relogin");
             return -2;
@@ -435,9 +436,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes GetUserSalt(String userName) {
-        CommunicationBase op = new CmdGetUserSalt(mContext);
+        CommunicationBase op = new CmdGetUserSalt(mContext, userName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
         return execute(op, pMap);
     }
 
@@ -448,12 +448,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             storeLoginUser();
         }
 
-        CommunicationBase op = new CmdLoginByPassword(mContext);
+        CommunicationBase op = new CmdLoginByPassword(mContext, CLIENT_APP, salt, user, pass, rand);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
-        pMap.put(CommunicationParameterKey.CPK_PASSWORD, pass);
-        pMap.put(CommunicationParameterKey.CPK_RANDOM, rand);
-        pMap.put(CommunicationParameterKey.CPK_USER_SALT, salt);
         return execute(op, pMap);
     }
 
@@ -464,10 +460,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             storeLoginUser();
         }
 
-        CommunicationBase op = new CmdLoginBySms(mContext);
+        CommunicationBase op = new CmdLoginBySms(mContext, CLIENT_APP, user, smsCode);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, user);
-        pMap.put(CommunicationParameterKey.CPK_SMS_CODE, smsCode);
         return execute(op, pMap);
     }
 
@@ -513,9 +507,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             storeLoginUser();
         }
 
-        CommunicationBase op = new CmdRelogin(mContext);
+        CommunicationBase op = new CmdRelogin(mContext, userName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
+//        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
         return execute(op, pMap);
     }
 
@@ -556,10 +550,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes RecommendHouse(int house_id, int action) {
-        CommunicationBase op = new CmdRecommendHouse(mContext);
+        CommunicationBase op = new CmdRecommendHouse(mContext, house_id, action);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT, String.valueOf(action));
         return execute(op, pMap);
     }
 

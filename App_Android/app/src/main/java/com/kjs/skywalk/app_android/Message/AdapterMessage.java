@@ -42,10 +42,10 @@ public class AdapterMessage extends BaseAdapter implements CommunicationInterfac
 //        public void onItemChanged(int pos, Deliverable deliverable);
     }
 
-    private Context                             mContext    = null;
-    private ArrayList<ClassDefine.MessageInfo>  mList       = new ArrayList<>();
-    private ArrayList<CmdExecRes>               mCmdList    = new ArrayList<>();
-
+    private Context                             mContext        = null;
+    private ArrayList<ClassDefine.MessageInfo>  mList           = new ArrayList<>();
+    private ArrayList<CmdExecRes>               mCmdList        = new ArrayList<>();
+    private ArrayList<Integer>                  mNewMsgIdLst    = new ArrayList<>();
 
     public AdapterMessage(Context context) {
         super();
@@ -74,6 +74,20 @@ public class AdapterMessage extends BaseAdapter implements CommunicationInterfac
         mList = list;
         this.notifyDataSetChanged();
     }
+
+    public void updateNewMsgIdList(ArrayList<Integer> newMsgIdLst) {
+        mNewMsgIdLst = newMsgIdLst;
+    }
+
+    private boolean isNewMsg(int msgId) {
+        for (Integer id : mNewMsgIdLst) {
+            if (id.intValue() == msgId)
+                return true;
+        }
+
+        return false;
+    }
+
 
     @Override
     public int getCount() {
@@ -176,7 +190,7 @@ public class AdapterMessage extends BaseAdapter implements CommunicationInterfac
             // undefined
         }
 
-        if(msgInfo.mRead_time.isEmpty()) {
+        if(isNewMsg(msgInfo.mMsgId)/*msgInfo.mRead_time.isEmpty()*/) {
 //            holder.bv_msg_new.show(true);
             holder.iv_msg_new.setVisibility(View.VISIBLE);
         } else {

@@ -139,8 +139,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsCertifyHouse extends IArgsBase {
-        int     getHouse();
+    public interface IArgsCertifyHouse extends IArgsHouseId {
         boolean passed();
         String  getComments();
     }
@@ -151,17 +150,23 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHouseShowtime extends IArgsBase {
-        int     getHouse();
+    public interface IArgsSetHouseShowtime extends IArgsHouseId {
         int     getPeriodOfWorkingDay();
         int     getPeriodOfVacation();
         String  getPeriodDesc();
     }
 
     /******************************************************************************************/
-    public interface IArgsGetHouseDeliverables extends IArgsBase {
-        int     getHouse();
+    public interface IArgsHouseId extends IArgsBase {
+        int     getHouseId();
     }
+
+    /******************************************************************************************/
+    public interface IArgsRecommendHouse extends IArgsHouseId {
+        int     getRecommendAct();  // RECOMMEND_HOUSE or UNRECOMMEND_HOUSE
+    }
+    public static int   RECOMMEND_HOUSE     = 1,
+                        UNRECOMMEND_HOUSE   = 2;
 
     /******************************************************************************************/
     public interface IArgsGetAppointmentInfo extends IArgsBase {
@@ -174,12 +179,42 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsGetHouseCertHist extends IArgsBase {
-        int     getHouse();
+    public interface IArgsReadMessage extends IArgsBase {
+        int     getMsgId();
     }
 
     /******************************************************************************************/
-    public interface IArgsReadMessage extends IArgsBase {
-        int     getMsgId();
+    public interface IArgsUserName extends IArgsBase {
+        String  getUserName();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsLoginSms extends IArgsUserName {
+        int     getClientType();
+        String  getSms();
+    }
+    public static int   CLIENT_WEB = 0,
+                        CLIENT_APP = 1;
+
+    /******************************************************************************************/
+    public interface IArgsLoginPass extends IArgsUserName {
+        int     getClientType();
+        String  getSalt();
+        String  getPassword();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsResetLoginPwd extends IArgsUserName {
+        String  getSalt();
+        String  getPassword();
+        String  getSms();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsModifyAgencyInfo extends IArgsBase {
+        int     getAencyId();
+        int     getRankProf();
+        int     getRankAttitude();
+        int     getWorkingYears();
     }
 }

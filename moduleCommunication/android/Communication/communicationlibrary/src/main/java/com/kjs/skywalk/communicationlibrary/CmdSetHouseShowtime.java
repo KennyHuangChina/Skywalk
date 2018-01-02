@@ -22,7 +22,7 @@ class CmdSetHouseShowtime extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/showtime", ((Args)mArgs).getHouse());
+        mCommandURL = String.format("/v1/house/%d/showtime", ((Args)mArgs).getHouseId());
         return mCommandURL;
     }
 
@@ -38,14 +38,13 @@ class CmdSetHouseShowtime extends CommunicationBase {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsSetHouseShowtime {
-        private int     mHouse      = 0;    // house id
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsSetHouseShowtime {
         private int     mPeriodW    = -1;   // period for working day
         private int     mPeriodV    = -1;   // period for weekend and vacation
         private String  mPeriodDesc = null; // period description
 
         Args(int house, int pw, int pv, String desc) {
-            mHouse      = house;
+            super(house);
             mPeriodW    = pw;
             mPeriodV    = pv;
             mPeriodDesc = desc;
@@ -53,8 +52,7 @@ class CmdSetHouseShowtime extends CommunicationBase {
 
         @Override
         public boolean checkArgs() {
-            if (mHouse <= 0) {
-                Log.e(TAG, "mHouse: " + mHouse);
+            if (!super.checkArgs()) {
                 return false;
             }
             if (mPeriodW < 0 || mPeriodW > 7) {
@@ -76,7 +74,7 @@ class CmdSetHouseShowtime extends CommunicationBase {
             }
 
             Args ac = (Args)arg2;
-            if (mHouse != ac.mHouse || mPeriodW != ac.mPeriodW || mPeriodV != ac.mPeriodV) {
+            if (mPeriodW != ac.mPeriodW || mPeriodV != ac.mPeriodV) {
                 return false;
             }
             if (null == mPeriodDesc && null == ac.mPeriodDesc) {
@@ -86,11 +84,6 @@ class CmdSetHouseShowtime extends CommunicationBase {
                 return true;
             }
             return false;
-        }
-
-        @Override
-        public int getHouse() {
-            return mHouse;
         }
 
         @Override
