@@ -7,6 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
 
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.CLIENT_APP;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.CLIENT_WEB;
+
 //import CommunicationBase;
 
 /**
@@ -14,40 +17,18 @@ import java.util.HashMap;
  */
 
 class CmdLoginBySms extends CommunicationBase {
-    private String  mLoginName      = "";   // login name. should be phone number
-    private String  mSMS            = "";   // sms code
-    private int     mType           = 1;    // client type. 0 - web; 1 - APP
     private String  mPicSessionId   = "";   // picture session id. ref to captcha GUID of API sec_pic
     private String  mPicResult      = "";   // picture result
 
-    CmdLoginBySms(Context context) {
+    CmdLoginBySms(Context context, int client, String user, String sms) {
         super(context, CommunicationInterface.CmdID.CMD_LOGIN_BY_SMS);
         mMethodType = "POST";
         mNeedLogin  = false;
 
+        mArgs = new Args(client, user, sms);
+
         // generate a random
         mRadom = generateRandom();
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-//        return super.checkParameter(map);
-        if(!map.containsKey(CommunicationParameterKey.CPK_USER_NAME) ||
-                !map.containsKey(CommunicationParameterKey.CPK_SMS_CODE)) {
-            return false;
-        }
-
-        mLoginName = map.get(CommunicationParameterKey.CPK_USER_NAME);
-        if (null == mLoginName || mLoginName.isEmpty()) {
-            return false;
-        }
-
-        mSMS = map.get(CommunicationParameterKey.CPK_SMS_CODE);
-        if (null == mSMS || mSMS.isEmpty()) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
@@ -83,14 +64,66 @@ class CmdLoginBySms extends CommunicationBase {
     public void generateRequestData() {
         mRequestData = ("ver=" +  mVersion);
         mRequestData += "&";
-        mRequestData += ("ln=" +  mLoginName);
+        mRequestData += ("ln=" + ((Args)mArgs).getUserName());
         mRequestData += "&";
-        mRequestData += ("sms=" +  mSMS);
+        mRequestData += ("sms=" + ((Args)mArgs).getSms());
         mRequestData += "&";
 //        mRequestData += ("rd=" + mRadom);
 //        mRequestData += "&";
-        mRequestData += ("typ=" + mType);
+        mRequestData += ("typ=" + ((Args)mArgs).getClientType());
 
         Log.d(TAG, "mRequestData: " + mRequestData);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ArgsUserName implements IApiArgs.IArgsLoginSms {
+        private String  mSMS            = "";           // sms code
+        private int     mClientType     = CLIENT_APP;   // client type. 0 - web; 1 - APP
+
+        Args(int client, String user, String sms) {
+            super(user);
+            mClientType = client;
+            mSMS        = sms;
+        }
+
+        @Override
+        public int getClientType() {
+            return mClientType;
+        }
+
+        @Override
+        public String getSms() {
+            return mSMS;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            String Fn = "[checkArgs] ";
+            if (mClientType != CLIENT_APP && mClientType != CLIENT_WEB) {
+                Log.e(TAG, Fn + "Invalid client:" + mClientType);
+                return false;
+            }
+
+            if (null == mSMS || mSMS.isEmpty()) {
+                Log.e(TAG, Fn + "Invalid SMS:" + mSMS);
+                return false;
+            }
+
+            return super.checkArgs();
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+
+            Args ac = (Args)arg2;
+            if (mClientType != ac.mClientType || !mSMS.equals(ac.mSMS)){
+                return false;
+            }
+            return true;
+        }
     }
 }

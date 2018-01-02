@@ -12,28 +12,17 @@ import java.util.HashMap;
  */
 
 class CmdGetBriefPublicHouseInfo extends CommunicationBase {
-    final protected String  TAG = getClass().getSimpleName();
-    private int mHouseId = -1;
 
     CmdGetBriefPublicHouseInfo(Context context, int house_id){
         super(context, CommunicationInterface.CmdID.CMD_GET_BRIEF_PUBLIC_HOUSE_INFO);
         mNeedLogin  = false;
-        mHouseId    = house_id;
+        mArgs = new ApiArgHouseId(house_id);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/digest/", mHouseId);
+        mCommandURL = String.format("/v1/house/%d/digest/", ((ApiArgHouseId)mArgs).getHouseId());
         return mCommandURL;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mHouseId <= 0) {
-            Log.e(TAG, "mHouseId: " + mHouseId);
-             return false;
-        }
-       return true;
     }
 
     @Override
