@@ -18,10 +18,9 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
 class CmdRelogin extends CommunicationBase {
 
     private String mSession     = "";   // "1234567890";
-    private String mUserName    = "";
     private String mRadom       = "";
 
-    CmdRelogin(Context context) {
+    CmdRelogin(Context context, String user) {
         super(context, CmdID.CMD_RELOGIN);
         mMethodType = "POST";
         mNeedLogin = false;
@@ -33,49 +32,8 @@ class CmdRelogin extends CommunicationBase {
         if (null != sessStore) {
             mSession = sessStore.get();
         }
-    }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map)
-    {
-        if (!map.containsKey(CommunicationParameterKey.CPK_USER_NAME)) // ||
-//                !map.containsKey(CommunicationParameterKey.CPK_SESSION_ID) ||
-//                !map.containsKey(CommunicationParameterKey.CPK_RANDOM))
-        {
-            return false;
-        }
-
-        mUserName = map.get(CommunicationParameterKey.CPK_USER_NAME);
-        if (null == mUserName || mUserName.isEmpty()) {
-            return false;
-        }
-        // Kenny 2017-08-16: move it to method doOperation()
-/*        if (mSession.isEmpty() ) {
-            Log.e(TAG, "mSession is empty");
-            return false;
-        }
-//        mSession = map.get(CommunicationParameterKey.CPK_SESSION_ID);
-//        if (null == mSession || mSession.isEmpty()) {
-//            return false;
-//        }
-//        mRadom = map.get(CommunicationParameterKey.CPK_RANDOM);
-//        if (null == mRadom || mRadom.isEmpty()) {
-//            return false;
-//        }
-
-        Log.d(TAG, "mSession:" + mSession);
-        NativeCall pNC = NativeCall.GetNativeCaller();
-        byte[] sid = pNC.EncryptReloginSession(mUserName, mRadom, mSession, mVersion);
-        if (null == sid) {
-            return false;
-        }
-        Log.w(TAG, "session:" + sid);
-//        map.put(CommunicationParameterKey.CPK_PASSWORD, new String(pass));
-        String strSession = new String(sid);
-        mSession = strSession;
-        Log.d(TAG, "mSession:" + mSession);
-*/
-        return true;
+        mArgs = new ArgsUserName(user);
     }
 
     @Override
@@ -85,7 +43,7 @@ class CmdRelogin extends CommunicationBase {
     }
     @Override
     public void generateRequestData() {
-        mRequestData = ("ln=" + mUserName);
+        mRequestData = ("ln=" + ((ArgsUserName)mArgs).getUserName());
         mRequestData += "&";
         mRequestData += ("ver=" + mVersion);
         mRequestData += "&";
@@ -105,7 +63,7 @@ class CmdRelogin extends CommunicationBase {
 
         Log.d(TAG, FN + "mSession:" + mSession);
         NativeCall pNC = NativeCall.GetNativeCaller();
-        byte[] sid = pNC.EncryptReloginSession(mUserName, mRadom, mSession, mVersion);
+        byte[] sid = pNC.EncryptReloginSession(((ArgsUserName)mArgs).getUserName(), mRadom, mSession, mVersion);
         if (null == sid) {
             Log.e(TAG, FN + "Fail to encrypt relogin session");
             return CommunicationError.CE_COMMAND_ERROR_FATAL_ERROR;

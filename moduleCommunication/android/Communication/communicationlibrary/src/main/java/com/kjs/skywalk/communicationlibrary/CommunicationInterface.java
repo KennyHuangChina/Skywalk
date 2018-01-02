@@ -50,15 +50,17 @@ public class CommunicationInterface {
         CmdExecRes GetUserInfo(int uid);
 
         /**
-         *  Get Login User Info(CMD_GET_LOGIN_USER_INFO)
-         *  @return : IApiResults.IGetUserInfo
+         *  Get Login User Info.    CMD_GET_LOGIN_USER_INFO
+         *      @return
+         *  Result      : IApiResults.IGetUserInfo
          */
         IApiResults.IGetUserInfo GetLoginUserInfo();
 
         /*
         *   CMD: CMD_GET_USER_SALT,
         *       - userName: login name (cell phone number)
-        *   Result: IApiResults.IGetUserSalt
+        *   Result      : IApiResults.IGetUserSalt
+         *  Arguments   : IApiArgs.IArgsUserName
         */
         CmdExecRes GetUserSalt(String userName);
 
@@ -68,29 +70,32 @@ public class CommunicationInterface {
         *       - pass  : password
         *       - rand  : rand number
         *       - salt  : the session salt returned by GetUserSalt
-        *   Result: IApiResults.ILogin
+        *   Result    : IApiResults.ILogin
+        *   Arguments : IApiArgs.IArgsLoginPass
         */
-        CmdExecRes LoginByPassword(String user, String pass, String rand, String salt);// ,
+        CmdExecRes LoginByPassword(String user, String pass, String rand, String salt);
 
         /*
         *   CMD: CMD_LOGIN_BY_SMS,
         *       - user      : login name (cell phone number)
         *       - smsCode   : the sms code user received
-        *   Result: IApiResults.ILogin
+        *   Result    : IApiResults.ILogin
+        *   Arguments : IApiArgs.IArgsLoginSms
         */
         CmdExecRes LoginBySms(String user, String smsCode);
 
         /*
         *   CMD: CMD_RELOGIN,
         *       - userName : login name (cell phone number)
-        *   Result: IApiResults.ILogin
-         */
+        *   Result   : IApiResults.ILogin
+        *  Arguments : IApiArgs.IArgsUserName
+        */
         CmdExecRes Relogin(String userName);
 
         /*
-        *   CMD         : CMD_LOG_OUT,
-        *   Result      : IApiResults.ICommon
-         */
+        *   CMD    : CMD_LOG_OUT,
+        *   Result : IApiResults.ICommon
+        */
         CmdExecRes Logout();
 
         /*
@@ -100,7 +105,8 @@ public class CommunicationInterface {
         *       - sms   : sms captcha code
         *       - salt  : salt
         *       - rand  : rand
-        *   Result: IApiResults.ICommon
+        *   Result    : IApiResults.ICommon
+        *   Arguments : IApiArgs.IArgsResetLoginPwd
         */
         CmdExecRes ResetLoginPass(String user, String pass, String sms, String salt, String rand);
 
@@ -114,7 +120,17 @@ public class CommunicationInterface {
          */
         CmdExecRes GetAgencyList(int begin, int cnt);
 
-        CmdExecRes MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);// CMD_MODIFY_AGENCY,       IApiResults.ICommon
+        /**
+         *  Modify Agency Info. CMD_MODIFY_AGENCY
+         *      @param agency       : agency id
+         *      @param rank_pro     : rank of professional
+         *      @param rank_att     : renk of attitude
+         *      @param begin_year   : working years
+         *      @return
+         *  Arguments: IApiArgs.IArgsModifyAgencyInfo
+         *  Result   : IApiResults.ICommon
+         */
+        CmdExecRes MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);
 
         /*
         *   CMD: NONE
@@ -129,6 +145,7 @@ public class CommunicationInterface {
         *   CMD: CMD_GET_BRIEF_PUBLIC_HOUSE_INFO,
         *       - houseid   : house id
         *   Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo
+        *   Arguments: IApiArgs.IArgsHouseId
          */
         CmdExecRes GetBriefPublicHouseInfo(int houseId);
 
@@ -143,8 +160,8 @@ public class CommunicationInterface {
 
         /**
          *  Commit New House by Landlord. CMD_COMMIT_HOUSE_BY_OWNER
-         *  @param  houseInfo   : house info
-         *  @param  agency      : agency id
+         *      @param  houseInfo   : house info
+         *      @param  agency      : agency id
          *  Arguments: IApiArgs.IArgsCommitNewHouseByLandlord
          *  Result     IApiResults.IAddRes
          */
@@ -152,8 +169,8 @@ public class CommunicationInterface {
 
         /**
          *  Amend House Info. CMD_AMEND_HOUSE
-         *  @param houseInfo : new house info
-         *  @return
+         *      @param houseInfo : new house info
+         *      @return
          *  Result      : IApiResults.ICommon
          *  Arguments   : IApiArgs.IArgsAmendHouseInfo
          */
@@ -195,7 +212,7 @@ public class CommunicationInterface {
          *  @param house_id : house id
          *  @return
          *  Result      : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
-         *  Arguments   : IApiArgs.IArgsGetHouseCertHist
+         *  Arguments   : IApiArgs.IArgsHouseId
          */
         CmdExecRes GetHouseCertHist(int house_id);
 
@@ -289,7 +306,7 @@ public class CommunicationInterface {
          *  Get House Deliverables. CMD_GET_HOUSE_DELIVERABLES
          *  @param house_id
          *  @return
-         *  Arguments : IApiArgs.IArgsGetHouseDeliverables
+         *  Arguments : IApiArgs.IArgsHouseId
          *  Return    : IApiResults.IResultList(IApiResults.IDeliverableInfo)
          */
         CmdExecRes GetHouseDeliverables(int house_id);
