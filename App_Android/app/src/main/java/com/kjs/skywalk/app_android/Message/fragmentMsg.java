@@ -402,7 +402,7 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                 switch (command) {
                     case CommunicationInterface.CmdID.CMD_GET_SYSTEM_MSG_LST: {
                         IApiArgs.IArgsGetMsgList args = (IApiArgs.IArgsGetMsgList)iResult.GetArgs();
-                        kjsLogUtil.i(String.format("getBegin: %d, getFetchCnt:%d, isIdOnly:%b, isNewMsgOnly:%b", args.getBegin(), args.getFetchCnt(), args.isIdOnly(), args.isNewMsgOnly()));
+                        kjsLogUtil.i(String.format("getBegin: %d, getFetchCnt:%d, isIdOnly:%b, isNewMsgOnly:%b", args.getBeginPosi(), args.getFetchCnt(), args.isIdOnly(), args.isNewMsgOnly()));
 
                         IApiResults.IResultList resultList = (IApiResults.IResultList) iResult;
                         int nFetch = resultList.GetFetchedNumber();
