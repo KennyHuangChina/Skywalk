@@ -5,54 +5,68 @@ import android.util.Log;
 
 import java.util.HashMap;
 
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.RECOMMEND_HOUSE;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.UNRECOMMEND_HOUSE;
+
 /**
  * Created by kenny on 2017/3/11.
  */
 
 class CmdRecommendHouse extends CommunicationBase {
-    private int mAct        = 0;   // 1 - recommend; 2 - unrecommend
-    private int mHouseId    = 0;
 
-    CmdRecommendHouse(Context context) {
+    CmdRecommendHouse(Context context, int house, int act) {
         super(context, CommunicationInterface.CmdID.CMD_GET_RECOMMEND_HOUSE);
         mMethodType = "PUT";
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT) ) {
-            return false;
-        }
-
-        try {
-            mHouseId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            if (mHouseId <= 0) {
-                Log.e(TAG, "mHouseId:" + mHouseId);
-                return false;
-            }
-            mAct = Integer.parseInt(map.get(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT));
-            if (1 != mAct && 2 != mAct) {
-                Log.e(TAG, "mAct:" + mAct);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
+        mArgs = new Args(house, act);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/recommend/" + mHouseId;
+        mCommandURL = "/v1/house/recommend/" + ((Args)mArgs).getHouseId();
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("act=" + mAct);
+        mRequestData = ("act=" + ((Args)mArgs).getRecommendAct());
         Log.d(TAG, "mRequestData: " + mRequestData);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsRecommendHouse {
+        private int mAct = RECOMMEND_HOUSE;   // 1 - recommend; 2 - unrecommend
+
+        Args(int house, int act) {
+            super(house);
+            mAct = act;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
+            if (mAct < RECOMMEND_HOUSE || mAct > UNRECOMMEND_HOUSE) {
+                Log.e(TAG, "[checkArgs] mAct:" + mAct);
+            }
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (mAct != ((Args)arg2).mAct) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int getRecommendAct() {
+            return mAct;
+        }
     }
 }

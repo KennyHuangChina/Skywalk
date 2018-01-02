@@ -17,7 +17,7 @@ class CmdGetUserSalt extends CommunicationBase {
     CmdGetUserSalt(Context context, String user) {
         super(context, CommunicationInterface.CmdID.CMD_GET_USER_SALT);
         mNeedLogin = false;
-        mArgs = new Args(user);
+        mArgs = new ArgsUserName(user);
     }
 
     @Override
@@ -27,7 +27,7 @@ class CmdGetUserSalt extends CommunicationBase {
     }
     @Override
     public void generateRequestData() {
-        mRequestData = ("un=" + ((Args)mArgs).getUserName());
+        mRequestData = ("un=" + ((ArgsUserName)mArgs).getUserName());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
@@ -36,38 +36,40 @@ class CmdGetUserSalt extends CommunicationBase {
         ResGetUserSalt result = new ResGetUserSalt(nErrCode, jObject);
         return result;
     }
+}
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsGetUserSalt {
-        private String mUserName = "";
+////////////////////////////////////////////////////////////////////////////////////////////
+//
+class ArgsUserName extends ApiArgsBase implements IApiArgs.IArgsUserName {
+    private String mUserName = "";  // login user name, should be cell phone number
 
-        Args(String name) {
-            mUserName = name;
+    ArgsUserName(String name) {
+        mUserName = name;
+    }
+
+    @Override
+    public String getUserName() {
+        return mUserName;
+    }
+
+    @Override
+    public boolean checkArgs() {
+        String Fn = "[checkArgs] ";
+        if (null == mUserName || mUserName.isEmpty()) {
+            Log.e(TAG, Fn + "Invalid user name:" + mUserName);
+            return false;
         }
+        return true;
+    }
 
-        @Override
-        public String getUserName() {
-            return mUserName;
+    @Override
+    public boolean isEqual(IApiArgs.IArgsBase arg2) {
+        if (!super.isEqual(arg2)) {
+            return false;
         }
-
-        @Override
-        public boolean checkArgs() {
-            if (null == mUserName || mUserName.isEmpty()) {
-                return false;
-            }
-            return true;
+        if (!mUserName.equals(((ArgsUserName)arg2).mUserName)) {
+            return false;
         }
-
-        @Override
-        public boolean isEqual(IApiArgs.IArgsBase arg2) {
-            if (!super.isEqual(arg2)) {
-                return false;
-            }
-            if (!mUserName.equals(((Args)arg2).mUserName)) {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 }

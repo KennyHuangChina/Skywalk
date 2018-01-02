@@ -195,9 +195,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             return CommunicationError.CE_COMMAND_ERROR_NOT_LOGIN;
         }
 
-        CommunicationBase cmdRelogin = new CmdRelogin(mContext);
+        CommunicationBase cmdRelogin = new CmdRelogin(mContext, mLoginUser);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mLoginUser);
+//        pMap.put(CommunicationParameterKey.CPK_USER_NAME, mLoginUser);
         if (!cmdRelogin.checkParameter(pMap)) {
             Log.e(TAG, FN + "fail to check parameters for relogin");
             return -2;
@@ -507,9 +507,9 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
             storeLoginUser();
         }
 
-        CommunicationBase op = new CmdRelogin(mContext);
+        CommunicationBase op = new CmdRelogin(mContext, userName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
+//        pMap.put(CommunicationParameterKey.CPK_USER_NAME, userName);
         return execute(op, pMap);
     }
 
@@ -550,10 +550,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes RecommendHouse(int house_id, int action) {
-        CommunicationBase op = new CmdRecommendHouse(mContext);
+        CommunicationBase op = new CmdRecommendHouse(mContext, house_id, action);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_RECOMMENT_ACT, String.valueOf(action));
         return execute(op, pMap);
     }
 

@@ -77,25 +77,19 @@ class CmdLoginBySms extends CommunicationBase {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsLoginSms {
-        private String  mLoginName      = "";           // login name. should be phone number
+    class Args extends ArgsUserName implements IApiArgs.IArgsLoginSms {
         private String  mSMS            = "";           // sms code
         private int     mClientType     = CLIENT_APP;   // client type. 0 - web; 1 - APP
 
         Args(int client, String user, String sms) {
+            super(user);
             mClientType = client;
-            mLoginName  = user;
             mSMS        = sms;
         }
 
         @Override
         public int getClientType() {
             return mClientType;
-        }
-
-        @Override
-        public String getUserName() {
-            return mLoginName;
         }
 
         @Override
@@ -111,17 +105,12 @@ class CmdLoginBySms extends CommunicationBase {
                 return false;
             }
 
-            if (null == mLoginName || mLoginName.isEmpty()) {
-                Log.e(TAG, Fn + "Invalid user:" + mLoginName);
-                return false;
-            }
-
             if (null == mSMS || mSMS.isEmpty()) {
                 Log.e(TAG, Fn + "Invalid SMS:" + mSMS);
                 return false;
             }
 
-            return true;
+            return super.checkArgs();
         }
 
         @Override
@@ -131,7 +120,7 @@ class CmdLoginBySms extends CommunicationBase {
             }
 
             Args ac = (Args)arg2;
-            if (mClientType != ac.mClientType || !mLoginName.equals(ac.mLoginName) || !mSMS.equals(ac.mSMS)){
+            if (mClientType != ac.mClientType || !mSMS.equals(ac.mSMS)){
                 return false;
             }
             return true;

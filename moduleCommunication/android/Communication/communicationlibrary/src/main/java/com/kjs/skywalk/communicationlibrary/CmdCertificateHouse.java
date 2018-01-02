@@ -20,7 +20,7 @@ class CmdCertificateHouse extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/cert/" + ((Args)mArgs).getHouse();
+        mCommandURL = "/v1/house/cert/" + ((Args)mArgs).getHouseId();
         return mCommandURL;
     }
 
@@ -34,13 +34,12 @@ class CmdCertificateHouse extends CommunicationBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsCertifyHouse {
-        private int     mHouseId        = 0;
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsCertifyHouse {
         private boolean mPass           = false;
         private String  mCertComment    = "";
 
         Args(int house, boolean pass, String comment) {
-            mHouseId        = house;
+            super(house);
             mPass           = pass;
             mCertComment    = comment;
 
@@ -52,8 +51,7 @@ class CmdCertificateHouse extends CommunicationBase {
         @Override
         public boolean checkArgs() {
             String Fn = "[checkArgs] ";
-            if (mHouseId <= 0) {
-                Log.e(TAG, Fn + "Invalid house: " + mHouseId);
+            if (!super.checkArgs()) {
                 return false;
             }
             if (null == mCertComment || mCertComment.isEmpty()) {
@@ -70,16 +68,10 @@ class CmdCertificateHouse extends CommunicationBase {
             }
 
             Args ac = (Args)arg2;
-            if (mHouseId != ac.mHouseId || mPass != ac.mPass ||
-                    !mCertComment.equals(ac.mCertComment)) {
+            if (mPass != ac.mPass || !mCertComment.equals(ac.mCertComment)) {
                 return false;
             }
             return true;
-        }
-
-        @Override
-        public int getHouse() {
-            return mHouseId;
         }
 
         @Override
