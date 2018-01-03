@@ -21,7 +21,7 @@ class CmdSetHousePrice extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/price", ((Args)mArgs).getHouse());
+        mCommandURL = String.format("/v1/house/%d/price", ((Args)mArgs).getHouseId());
         return mCommandURL;
     }
 
@@ -47,8 +47,7 @@ class CmdSetHousePrice extends CommunicationBase {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsSetHousePrice {
-        private int     mHouse          = 0;
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsSetHousePrice {
         private int     mRentalTag      = 0;        // Rental, tag price
         private int     mRentalBottom   = 0;        // Rental, bottom price
         private boolean mPropertyFee    = false;    // if the rental involve the property fee
@@ -56,7 +55,7 @@ class CmdSetHousePrice extends CommunicationBase {
         private int     mPriceBottom    = 0;        // Selling price, bottom price
 
         Args(int house, int rt, int rm, boolean rpf, int spt, int spm) {
-            mHouse          = house;
+            super(house);
             mRentalTag      = rt;
             mRentalBottom   = rm;
             mPropertyFee    = rpf;
@@ -66,6 +65,9 @@ class CmdSetHousePrice extends CommunicationBase {
 
         @Override
         public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
             if (mRentalTag < 0) {
                 Log.e(TAG, "mRentalTag: " + mRentalTag);
                 return false;
@@ -99,16 +101,11 @@ class CmdSetHousePrice extends CommunicationBase {
                 return false;
             }
             Args arg_chk = (Args)arg2;
-            if (mHouse != arg_chk.mHouse || mRentalTag != arg_chk.mRentalTag || mRentalBottom != arg_chk.mRentalBottom ||
+            if (mRentalTag != arg_chk.mRentalTag || mRentalBottom != arg_chk.mRentalBottom ||
                     mPropertyFee != arg_chk.mPropertyFee || mPriceTag != arg_chk.mPriceTag || mPriceBottom != arg_chk.mPriceBottom) {
                 return false;
             }
             return true;
-        }
-
-        @Override
-        public int getHouse() {
-            return mHouse;
         }
 
         @Override
