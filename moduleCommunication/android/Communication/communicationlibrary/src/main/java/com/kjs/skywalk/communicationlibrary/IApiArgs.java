@@ -110,8 +110,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHousePrice extends IArgsBase {
-        int     getHouse();
+    public interface IArgsSetHousePrice extends IArgsHouseId {
         int     getRentalTag();
         int     getRentalMin();
         boolean includePropertyFee();
@@ -159,6 +158,21 @@ public class IApiArgs {
     /******************************************************************************************/
     public interface IArgsHouseId extends IArgsBase {
         int     getHouseId();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAssignHouseAgency extends IArgsHouseId {
+        int     getAgent();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsRecommitHouseCertify extends IArgsHouseId {
+        String  getComments();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsSetHouseCoverImage extends IArgsHouseId {
+        int     getImageId();
     }
 
     /******************************************************************************************/
@@ -216,5 +230,9 @@ public class IApiArgs {
         int     getRankProf();
         int     getRankAttitude();
         int     getWorkingYears();
+    }
+
+    public interface IArgsGetHousePriceHist extends IArgsFetchList {
+        int     getHouseId();
     }
 }

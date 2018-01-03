@@ -12,43 +12,66 @@ import java.util.HashMap;
  */
 
 class CmdRecommitHouseCertification extends CommunicationBase {
-    private int     mHouse      = -1;
-    private String  mComments   = null;
 
     CmdRecommitHouseCertification(Context context, int house, String comments) {
         super(context, CommunicationInterface.CmdID.CMD_RECOMMIT_HOUSE_CERTIFICATON);
         mMethodType = "POST";
-        mHouse      = house;
-        mComments   = comments;
+        mArgs = new Args(house, comments);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/recert", mHouse);
+        mCommandURL = String.format("/v1/house/%d/recert", ((Args)mArgs).getHouseId());
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("cc=" + String2Base64(mComments));
+        mRequestData = ("cc=" + String2Base64(((Args)mArgs).getComments()));
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mHouse <= 0) {
-            Log.e(TAG, "mHouse: " + mHouse);
-            return false;
-        }
-        if (null == mComments || mComments.isEmpty()) {
-            Log.e(TAG, "mComments not set");
-            return false;
-        }
-        return true;
     }
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         return new ResAddResource(nErrCode, jObject);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsRecommitHouseCertify {
+        private String mComments = null;
+
+        Args(int house, String comment) {
+            super(house);
+            mComments = comment;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
+            if (null == mComments || mComments.isEmpty()) {
+                Log.e(TAG, "[checkArgs] mComments:" + mComments);
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (!mComments.equals(((Args)arg2).mComments)) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getComments() {
+            return mComments;
+        }
     }
 }

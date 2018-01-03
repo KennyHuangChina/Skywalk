@@ -19,7 +19,7 @@ class ApiArgHouseId extends ApiArgsBase implements IApiArgs.IArgsHouseId {
             Log.e(TAG, "[checkArgs] mHouseId:" + mHouseId);
             return false;
         }
-        return super.checkArgs();
+        return true; // super.checkArgs();
     }
 
     @Override
