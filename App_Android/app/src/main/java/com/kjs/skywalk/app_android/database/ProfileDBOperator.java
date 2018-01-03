@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.Message.AdapterMessage;
+import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.IApiResults;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by sailor.zhou on 2017/11/11.
@@ -55,7 +57,7 @@ public class ProfileDBOperator {
 
     public ArrayList<ClassDefine.MessageInfo> getMessageListFromDB() {
         SQLiteDatabase db = mProfileDBHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * From " + mProfileDBHelper.getTableName(), null);
+        Cursor cursor = db.rawQuery("SELECT * From " + mProfileDBHelper.getTableName() + " ORDER BY msg_id DESC", null);
 
         ArrayList<ClassDefine.MessageInfo> list = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -63,6 +65,7 @@ public class ProfileDBOperator {
                 ClassDefine.MessageInfo info = new ClassDefine.MessageInfo(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)),Integer.parseInt(cursor.getString(2))
                         , Integer.parseInt(cursor.getString(3)), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9));
                 list.add(info);
+                kjsLogUtil.i(String.format(Locale.CHINA, "mMsgId: %d, mCreate_time:%s, mMsgType:%d", info.mMsgId, info.mCreate_time, info.mMsgType));
             } while (cursor.moveToNext());
         }
 

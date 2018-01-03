@@ -557,10 +557,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes SetHouseCoverImg(int house_id, int img_id) {
-        CommunicationBase op = new CmdSetHouseCoverImg(mContext);
+        CommunicationBase op = new CmdSetHouseCoverImg(mContext, house_id, img_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
-        pMap.put(CommunicationParameterKey.CPK_HOUSE_COVER_IMG, String.valueOf(img_id));
         return execute(op, pMap);
     }
 

@@ -98,8 +98,8 @@ public class CommunicationInterface {
         */
         CmdExecRes Logout();
 
-        /*
-        *   CMD: CMD_RESET_LOGIN_PASS,
+        /**
+        *   CMD: <CMD_RESET_LOGIN_PASS>
         *       - user  : target user name(/phone number)
         *       - pass  : new password
         *       - sms   : sms captcha code
@@ -121,7 +121,7 @@ public class CommunicationInterface {
         CmdExecRes GetAgencyList(int begin, int cnt);
 
         /**
-         *  Modify Agency Info. CMD_MODIFY_AGENCY
+         *  Modify Agency Info. <CMD_MODIFY_AGENCY>
          *      @param agency       : agency id
          *      @param rank_pro     : rank of professional
          *      @param rank_att     : renk of attitude
@@ -142,10 +142,18 @@ public class CommunicationInterface {
         //
         //          House
         /*
-        *   CMD: CMD_GET_BRIEF_PUBLIC_HOUSE_INFO,
+        *   CMD: <CMD_GET_BRIEF_PUBLIC_HOUSE_INFO>
         *       - houseid   : house id
         *   Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo
         *   Arguments: IApiArgs.IArgsHouseId
+         */
+
+        /**
+         *  get brief house inf. <CMD_GET_BRIEF_PUBLIC_HOUSE_INFO>
+         *      @param houseId: house id
+         *      @return
+         *  Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo
+         *  Arguments: IApiArgs.IArgsHouseId
          */
         CmdExecRes GetBriefPublicHouseInfo(int houseId);
 
@@ -159,7 +167,7 @@ public class CommunicationInterface {
         CmdExecRes GetHouseInfo(int houseId, boolean bBackend);
 
         /**
-         *  Commit New House by Landlord. CMD_COMMIT_HOUSE_BY_OWNER
+         *  Commit New House by Landlord. <CMD_COMMIT_HOUSE_BY_OWNER>
          *      @param  houseInfo   : house info
          *      @param  agency      : agency id
          *  Arguments: IApiArgs.IArgsCommitNewHouseByLandlord
@@ -176,31 +184,58 @@ public class CommunicationInterface {
          */
         CmdExecRes AmendHouse(HouseInfo houseInfo);
 
-        CmdExecRes RecommendHouse(int house_id, int action);                           // CMD_GET_RECOMMEND_HOUSE,         IApiResults.ICommon
-        CmdExecRes SetHouseCoverImg(int house_id, int img_id);                         // CMD_GET_SET_HOUSE_COVER_IMAGE,   IApiResults.ICommon
+        /**
+         *  Recommend or Unrecommend house. <CMD_GET_RECOMMEND_HOUSE>
+         *  @param house_id : house id
+         *  @param action   : RECOMMEND_HOUSE / UNRECOMMEND_HOUSE
+         *  @return
+         *  Arguments   : IApiArgs.IArgsRecommendHouse
+         *  Result      : IApiResults.ICommon
+         */
+        CmdExecRes RecommendHouse(int house_id, int action);
 
         /**
-         *  Set House New Price, CMD_SET_HOUSE_PRICE
-         *  @param house_id         : house id
-         *  @param rental_tag       : the tag rental, opened for everyone
-         *  @param rental_bottom    : the bottom tental, only valid for landlord and agent
-         *  @param bIncPropFee      : if the rental include property fee
-         *  @param price_tag        : the tag selling price, opened for everyone
-         *  @param price_bottom     : the bottom selling price, only valid for landlord and agent
+         *  Set House Cover Image. <CMD_GET_SET_HOUSE_COVER_IMAGE>
+         *      @param house_id : house id
+         *      @param img_id   : image id
+         *  @return
+         *  Result      : IApiResults.ICommon
+         *  Arguments   : IApiArgs.IArgsSetHouseCoverImage
+         */
+        CmdExecRes SetHouseCoverImg(int house_id, int img_id);
+
+        /**
+         *  Set House New Price, <CMD_SET_HOUSE_PRICE>
+         *      @param house_id         : house id
+         *      @param rental_tag       : the tag rental, opened for everyone
+         *      @param rental_bottom    : the bottom tental, only valid for landlord and agent
+         *      @param bIncPropFee      : if the rental include property fee
+         *      @param price_tag        : the tag selling price, opened for everyone
+         *      @param price_bottom     : the bottom selling price, only valid for landlord and agent
          *  @return
          *  Result    : IApiResults.IAddRes
          *  Arguments : IApiArgs.IArgsSetHousePrice
          */
-        CmdExecRes SetHousePrice(int house_id, int rental_tag, int rental_bottom, boolean bIncPropFee,
+        CmdExecRes SetHousePrice(int house_id, int rental_tag, int rental_bottom,
+                                 boolean bIncPropFee,
                                  int price_tag, int price_bottom);
 
-        CmdExecRes GetHousePrice(int house_id, int begin, int count);                  // CMD_GET_HOUSE_PRICE,             IApiResults.IResultList(IApiResults.IHousePriceInfo)
+        /**
+         *  Get House Price History. <CMD_GET_HOUSE_PRICE>
+         *      @param house_id : house id
+         *      @param begin    : fetch begin position
+         *      @param count    : fetch count
+         *  @return
+         *  Result      : IApiResults.IResultList(IApiResults.IHousePriceInfo)
+         *  Arguments   : IApiArgs.IArgsGetHousePriceHist
+         */
+        CmdExecRes GetHousePrice(int house_id, int begin, int count);
 
         /**
-         *  Certificat New House.   CMD_CERTIFY_HOUSE
-         *  @param house_id
-         *  @param bPass
-         *  @param sCertComment
+         *  Certificat New House.   <CMD_CERTIFY_HOUSE>
+         *      @param house_id
+         *      @param bPass
+         *      @param sCertComment
          *  @return
          *  Result   : IApiResults.ICommon
          *  Arguments: IArgsCertifyHouse
@@ -209,23 +244,24 @@ public class CommunicationInterface {
 
         /**
          *  Get House Certification History.    CMD_GET_HOUSE_CERTIFY_HIST
-         *  @param house_id : house id
-         *  @return
+         *      @param house_id : house id
+         *      @return
          *  Result      : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
          *  Arguments   : IApiArgs.IArgsHouseId
          */
         CmdExecRes GetHouseCertHist(int house_id);
 
-        /*
-        *   CMD: CMD_RECOMMIT_HOUSE_CERTIFICATON
-        *       - house_id  : house id
-        *       - comments  : recommit comments
-        *   Result: IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
-         */
+        /**
+        *   Recommit house certification: <CMD_RECOMMIT_HOUSE_CERTIFICATON>
+        *       @param house_id  : house id
+        *       @param comments  : recommit comments
+        *   Result      : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
+        *   Arguments   : IApiArgs.IArgsRecommitHouseCertify
+        */
         CmdExecRes RecommitHouseCertification(int house_id, String comments);
 
-        /*
-        *   CMD: CMD_GET_BEHALF_HOUSE_LIST
+        /**
+        *   Get behalf house list. <CMD_GET_BEHALF_HOUSE_LIST>
         *       - type  : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
         *       - begin : fetch begin position
         *       - cnt   : fetch count. set to 0 mean just want to get the total number
@@ -235,7 +271,7 @@ public class CommunicationInterface {
         CmdExecRes GetBehalfHouses(int type, int begin, int cnt);
 
         /*
-        *   CMD: CMD_GET_HOUSE_DIGEST_LIST
+        *   Get Digest House Info List <CMD_GET_HOUSE_DIGEST_LIST>
         *       - type  : list type. 0: all house; 1: recommend houses; 2: deducted houses; 3: new houses
         *       - begin : fetch begin position
         *       - cnt   : fetch count. set to 0 mean just want to get the total number
@@ -246,21 +282,28 @@ public class CommunicationInterface {
          */
         CmdExecRes GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort);
 
-        CmdExecRes GetHouseShowtime(int house_id);                                     // CMD_GET_HOUSE_SHOWTIME,          IApiResults.IHouseShowtime
+        /**
+         *  Get House Show time. <CMD_GET_HOUSE_SHOWTIME>
+         *      @param house_id
+         *  @return
+         *  Result      : IApiResults.IHouseShowtime
+         *  Arguments   : IApiArgs.IArgsHouseId
+         */
+        CmdExecRes GetHouseShowtime(int house_id);
 
         /**
-         *  Set House Show Time.  CMD_SET_HOUSE_SHOWTIME
-         *  @param house_id : house id
-         *  @param pw       : period of working-day
-         *  @param pv       : period of vacation, including weekend and vacation
-         *  @param pd       : period description
-         *  @return
+         *  Set House Show Time.  <CMD_SET_HOUSE_SHOWTIME>
+         *      @param house_id : house id
+         *      @param pw       : period of working-day
+         *      @param pv       : period of vacation, including weekend and vacation
+         *      @param pd       : period description
+         *      @return
          *  Return      : IApiResults.ICommon
          *  Arguments   : IApiArgs.IArgsSetHouseShowtime
          */
         CmdExecRes SetHouseShowtime(int house_id, int pw, int pv, String pd);          // ,
 
-        /*
+       /**
         *   CMD: NONE
         *       - property      : property id
         *       - building_no   : building no for new house
@@ -269,11 +312,12 @@ public class CommunicationInterface {
         String GetLandlordHouseSubmitConfirmUrl(int property, String building_no, String house_no);
 
         /**
-         *  Assign house agency (CMD: CMD_ASSIGN_HOUSE_AGENT)
-         *  @param house : house id
-         *  @param agent : agent id
-         *  @return
+         *  Assign house agency <CMD_ASSIGN_HOUSE_AGENT>
+         *      @param house : house id
+         *      @param agent : agent id
+         *      @return
          *  Result: IApiResults.ICommon
+         *  Arguments; IApiArgs.IArgsAssignHouseAgency
          */
         CmdExecRes AssignHouseAgency(int house, int agent);
 

@@ -12,38 +12,61 @@ import java.util.HashMap;
  */
 
 class AssignHouseAgency extends CommunicationBase {
-    protected int mHouse = 0;
-    protected int mAgent = 0;
 
     AssignHouseAgency(Context context, int house, int agent) {
         super(context, CommunicationInterface.CmdID.CMD_ASSIGN_HOUSE_AGENT);
         mMethodType = "PUT";
-        mHouse = house;
-        mAgent = agent;
+        mArgs = new Args(house, agent);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/assignagency", mHouse);
+        mCommandURL = String.format("/v1/house/%d/assignagency", ((Args)mArgs).getHouseId());
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("aid=" + mAgent);
+        mRequestData = ("aid=" + ((Args)mArgs).getAgent());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mHouse <= 0) {
-            Log.e(TAG, String.format("Invalid house: %d", mHouse));
-            return false;
+    ////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsAssignHouseAgency {
+        protected int mAgent = 0;
+
+        Args(int house, int agent) {
+            super(house);
+            mAgent = agent;
         }
-        if (mAgent <= 0) {
-            Log.e(TAG, String.format("Invalid agent: %d", mAgent));
-            return false;
+
+        @Override
+        public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
+            if (mAgent <= 0) {
+                Log.e(TAG, "[checkArgs] mAgent:" + mAgent);
+                return false;
+            }
+            return true;
         }
-        return true;
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (mAgent != ((Args)arg2).mAgent) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int getAgent() {
+            return mAgent;
+        }
     }
 }

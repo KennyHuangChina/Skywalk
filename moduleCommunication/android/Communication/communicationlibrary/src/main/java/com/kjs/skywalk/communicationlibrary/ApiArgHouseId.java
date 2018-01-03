@@ -7,7 +7,7 @@ import android.util.Log;
  */
 
 class ApiArgHouseId extends ApiArgsBase implements IApiArgs.IArgsHouseId {
-    private int mHouseId = -1;
+    protected int mHouseId = -1;
 
     ApiArgHouseId(int house) {
         mHouseId = house;
@@ -19,7 +19,7 @@ class ApiArgHouseId extends ApiArgsBase implements IApiArgs.IArgsHouseId {
             Log.e(TAG, "[checkArgs] mHouseId:" + mHouseId);
             return false;
         }
-        return super.checkArgs();
+        return true; // super.checkArgs();
     }
 
     @Override

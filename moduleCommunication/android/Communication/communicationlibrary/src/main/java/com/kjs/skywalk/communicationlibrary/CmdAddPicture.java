@@ -29,7 +29,7 @@ class CmdAddPicture extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("house=" + ((Args)mArgs).getHouse());
+        mRequestData = ("house=" + ((Args)mArgs).getHouseId());
         mRequestData += "&";
         mRequestData += ("type=" + ((Args)mArgs).getType());
         mRequestData += "&";
@@ -57,15 +57,14 @@ class CmdAddPicture extends CommunicationBase {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsAddPic {
-        private int     mHouse  = 0;
+    class Args extends ApiArgHouseId implements IApiArgs.IArgsAddPic {
         private int     mType   = -1;
         private int     mRefId  = -1;
         private String  mDesc   = null;
         private String  mFile   = null;
 
         Args(int house, String file, int type, int refId, String desc) {
-            mHouse  = house;
+            super(house);
             mType   = type;
             mRefId  = refId;
             mDesc   = desc;
@@ -74,6 +73,9 @@ class CmdAddPicture extends CommunicationBase {
 
         @Override
         public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
             if (mRefId < 0) {
                 Log.e(TAG, "mRefId: " + mRefId);
                 return false;
@@ -96,7 +98,7 @@ class CmdAddPicture extends CommunicationBase {
                 Log.e(TAG, "picture file not exist");
                 return false;
             }
-            Log.i(TAG, "house:" + mHouse + ", type:" + mType + ", desc:" + mDesc + ", file:" + mFile);
+            Log.i(TAG, "house:" + mHouseId + ", type:" + mType + ", desc:" + mDesc + ", file:" + mFile);
 
             return true;
         }
@@ -108,16 +110,11 @@ class CmdAddPicture extends CommunicationBase {
             }
 
             Args ac = (Args)arg2;
-            if (mHouse != ac.mHouse || mType != ac.mType || mRefId != ac.mRefId ||
+            if (mType != ac.mType || mRefId != ac.mRefId ||
                     !mDesc.equals(ac.mDesc) || !mFile.equals(ac.mFile)) {
                 return false;
             }
             return true;
-        }
-
-        @Override
-        public int getHouse() {
-            return mHouse;
         }
 
         @Override
