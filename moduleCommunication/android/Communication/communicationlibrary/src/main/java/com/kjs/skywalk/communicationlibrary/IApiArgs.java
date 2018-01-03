@@ -87,8 +87,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsGetHouseInfo extends IArgsBase {
-        int     getHouseId();
+    public interface IArgsGetHouseInfo extends IArgsHouseId {
         boolean isBackendUse();
     }
 
@@ -119,8 +118,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsAddPic extends IArgsBase {
-        int         getHouse();
+    public interface IArgsAddPic extends IArgsHouseId {
         int         getType();      // PIC_TYPE_MAJOR_xxx + sub-type(PIC_TYPE_SUB_USER_xxx, PIC_TYPE_SUB_HOUSE_xxx)
         int         getObjId();
         String      getFile();
