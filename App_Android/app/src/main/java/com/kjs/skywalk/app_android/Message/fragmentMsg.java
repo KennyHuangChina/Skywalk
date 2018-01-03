@@ -134,12 +134,6 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
         super.onResume();
         kjsLogUtil.i("fragmentMsg --- onResume");
 
-        // get message count in db
-//        int msgCount = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageCount();
-//        kjsLogUtil.i("msgCount: " + msgCount);
-//        ArrayList<ClassDefine.MessageInfo> msgList = ProfileDBOperator.getOperator(getActivity(), "test_user").getMessageListFromDB();
-        //
-
         setRefreshing(true);
         new ThreadLoadMessage().start();
     }
