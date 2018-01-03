@@ -510,6 +510,7 @@ public class ClassDefine {
         public String middlePicUrl = "";
         public String smallPicUrl = "";
         public int mType = -1;
+        public String mCheckSum = "";
 
         public void print() {
             kjsLogUtil.i("ID: " + mId);
@@ -517,6 +518,7 @@ public class ClassDefine {
             kjsLogUtil.i("Large Pic: " + largePicUrl);
             kjsLogUtil.i("Middle Pic: " + middlePicUrl);
             kjsLogUtil.i("Small Pic: " + smallPicUrl);
+            kjsLogUtil.i("CheckSum: " + mCheckSum);
         }
     }
 
