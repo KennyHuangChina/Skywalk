@@ -2,6 +2,7 @@ package com.kjs.skywalk.app_android.Message;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import static com.kjs.skywalk.app_android.service.UpdateIntentService.BROADACTION_NEW_MESSAGE_COUNT;
 import static com.kjs.skywalk.communicationlibrary.CommunicationError.CE_ERROR_NO_ERROR;
 
 /**
@@ -149,11 +151,13 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                 ArrayList<Integer> newMsgIdLst = new ArrayList<>();
                 for (Object object : list) {
                     IApiResults.ISysMsgInfo msgInfo = (IApiResults.ISysMsgInfo) object;
-                    if (!msgInfo.ReadTime().isEmpty())
+                    kjsLogUtil.i(String.format(Locale.CHINA, "msgInfo.MsgId(): %d, msgInfo.ReadTime: %s", msgInfo.MsgId(), msgInfo.ReadTime()));
+                    if (msgInfo.ReadTime().isEmpty())
                         newMsgIdLst.add(msgInfo.MsgId());
                 }
                 kjsLogUtil.i(String.format(Locale.CHINA, "user_id: %d, list_count: %d, new msg: %d", user_id, list.size(), newMsgIdLst.size()));
                 mAdapterMsg.updateNewMsgIdList(newMsgIdLst);
+                notifyNewMsgCount(newMsgIdLst.size());
             }
 
             activity.runOnUiThread(new Runnable() {
@@ -323,5 +327,21 @@ public class fragmentMsg extends Fragment implements AbsListView.OnScrollListene
                 mSrl_message_list.setLoadingStatue(false);
             }
         }, 2000);
+    }
+
+    private void notifyNewMsgCount(final int newMsgCount) {
+        if (getActivity() == null)
+            return;
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(BROADACTION_NEW_MESSAGE_COUNT);
+                intent.putExtra("new_msg_count", newMsgCount);
+                getActivity().sendBroadcast(intent);
+                kjsLogUtil.i("sendBroadcast --- newMsgCount: " + newMsgCount);
+            }
+        });
+
     }
 }

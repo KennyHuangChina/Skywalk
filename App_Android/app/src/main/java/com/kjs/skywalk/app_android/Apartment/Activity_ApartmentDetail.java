@@ -489,6 +489,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         }
         mOrderDlg.show();
         mOrderDlg.setContentView(R.layout.dialog_apartment_order);
+        mOrderDlg.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 
         final TextView tvDateSelector = (TextView) mOrderDlg.findViewById(R.id.tv_date_selector);
 //        tvDateSelector.setOnClickListener(new View.OnClickListener() {

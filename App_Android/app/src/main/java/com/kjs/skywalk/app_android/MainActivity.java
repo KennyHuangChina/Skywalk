@@ -357,9 +357,14 @@ public class MainActivity extends SKBaseActivity {
             TextView tvMsgInTab = (TextView) findViewById(R.id.tv_msg);
             mBvMsgInTab = new BadgeView(this, tvMsgInTab);
             mBvMsgInTab.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-            mBvMsgInTab.setText(Integer.toString(count));
             mBvMsgInTab.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f);
+        }
+
+        if (count > 0) {
+            mBvMsgInTab.setText(Integer.toString(count));
             mBvMsgInTab.show(true);
+        } else {
+            mBvMsgInTab.hide();
         }
 
         // test notification
