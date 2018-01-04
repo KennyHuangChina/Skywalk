@@ -10,6 +10,7 @@ import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.commonFun;
+import com.kjs.skywalk.app_android.database.ImageCacheDBOperator;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -47,12 +48,14 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
     private boolean             mResultGot  = false;
     private boolean             mFailed     = false;
 
+    private ImageCacheDBOperator mDB        = null;
+
     ArrayList<ClassDefine.PictureInfo>  mList       = new ArrayList<>();
     ArrayList<CmdExecRes>               mCmdList    = new ArrayList<CmdExecRes>();
 
     public ImageFetchForHouse(Context context) {
         mContext    = context;
-
+        mDB = ImageCacheDBOperator.getOperator(mContext);
         // Register Listener
         CommandManager.getCmdMgrInstance(mContext).Register(this, this);
     }
@@ -113,6 +116,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                     picInfo.middlePicUrl    = urls.GetMiddlePicture();
                     picInfo.smallPicUrl     = urls.GetSmallPicture();
                     picInfo.mType           = args.getSubType(); // fetchType;
+                    picInfo.mCheckSum       = info.GetChecksum();
 
                     mList.add(picInfo);
 //                    picInfo.print();
