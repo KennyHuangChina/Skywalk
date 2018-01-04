@@ -662,38 +662,29 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes AddProperty(String sName, String sAddr, String sDesc) {
-        CommunicationBase op = new CmdAddProperty(mContext);
+        CommunicationBase op = new CmdAddProperty(mContext, sName, sAddr, sDesc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, sAddr);
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, sDesc);
         return execute(op, pMap);
     }
 
     @Override
     public CmdExecRes GetPropertyInfo(int nPropId) {
-        CommunicationBase op = new CmdGetPropertyInfo(mContext);
+        CommunicationBase op = new CmdGetPropertyInfo(mContext, nPropId);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(nPropId));
         return execute(op, pMap);
     }
 
     @Override
     public CmdExecRes ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc) {
-        CommunicationBase op = new CmdModifyPropertyInfo(mContext);
+        CommunicationBase op =  new CmdModifyPropertyInfo(mContext, nPropId, sName, sAddr, sDesc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(nPropId));
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_NAME, sName);
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_ADDR, sAddr);
-        pMap.put(CommunicationParameterKey.CPK_PROPERTY_DESC, sDesc);
         return execute(op, pMap);
     }
 
     @Override
     public CmdExecRes AddDeliverable(String sName) {
-        CommunicationBase op = new CmdAddDeliverable(mContext);
+        CommunicationBase op = new CmdAddDeliverable(mContext, sName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_NAME, sName);
         return execute(op, pMap);
     }
 
@@ -706,21 +697,15 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes ModifyDeliverable(int dev_id, String sName) {
-        CommunicationBase op = new CmdModifyDeliverable(mContext);
+        CommunicationBase op = new CmdModifyDeliverable(mContext, dev_id, sName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(dev_id));
-        pMap.put(CommunicationParameterKey.CPK_NAME, sName);
         return execute(op, pMap);
     }
 
     @Override
     public CmdExecRes AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc) {
-        CommunicationBase op = new CmdAddHouseDeliverable(mContext);
+        CommunicationBase op = new CmdAddHouseDeliverable(mContext, house_id, deliverable_id, qty, sDesc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id));
-        pMap.put(CommunicationParameterKey.CPK_DELIVERABLE_ID, String.valueOf(deliverable_id));
-        pMap.put(CommunicationParameterKey.CPK_QTY, String.valueOf(qty));
-        pMap.put(CommunicationParameterKey.CPK_DESC, sDesc);
         return execute(op, pMap);
     }
 
@@ -728,15 +713,13 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     public CmdExecRes GetHouseDeliverables(int house_id) {
         CommunicationBase op = new CmdGetHouseDeliverables(mContext, house_id);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(house_id)); // "2");
         return execute(op, pMap);
     }
 
     @Override
     public CmdExecRes AddFacilityType(String sTypeName) {
-        CommunicationBase op = new CmdAddFacilityType(mContext);
+        CommunicationBase op = new CmdAddFacilityType(mContext, sTypeName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_NAME, sTypeName);
         return execute(op, pMap);
     }
 
@@ -755,10 +738,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes EditFacilityType(int typeId, String sTypeName) {
-        CommunicationBase op = new CmdModifyFacilityType(mContext);
+        CommunicationBase op = new CmdModifyFacilityType(mContext, typeId, sTypeName);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(typeId));
-        pMap.put(CommunicationParameterKey.CPK_NAME, sTypeName);
         return execute(op, pMap);
     }
 

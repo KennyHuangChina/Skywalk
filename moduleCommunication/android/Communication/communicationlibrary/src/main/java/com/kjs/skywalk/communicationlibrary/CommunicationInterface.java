@@ -32,69 +32,69 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          User Admin
-        /*
-        *   CMD: CMD_GET_SMS_CODE,
+       /**
+        *   CMD: <CMD_GET_SMS_CODE,>
         *       - userName: login name (cell phone number)
-        *   Arguments: IApiArgs.IArgsGetSmsCode
-        *   Result: IApiResults.IGetSmsCode
+        *   Arguments: <IApiArgs.IArgsGetSmsCode>
+        *   Result: <IApiResults.IGetSmsCode>
         */
         CmdExecRes GetSmsCode(String userName);
 
         /**
          *  Get user info. CMD_GET_USER_INFO
-         *  @param uid : user id to fetch
-         *  @return
-         *  Arguments   : IApiArgs.IArgsGetUserInfo
-         *  Result      : IApiResults.IGetUserInfo
+         *      @param uid : user id to fetch
+         *      @return
+         *  Arguments   : <IApiArgs.IArgsGetUserInfo>
+         *  Result      : <IApiResults.IGetUserInfo>
          */
         CmdExecRes GetUserInfo(int uid);
 
         /**
          *  Get Login User Info.    CMD_GET_LOGIN_USER_INFO
          *      @return
-         *  Result      : IApiResults.IGetUserInfo
+         *  Result      : <IApiResults.IGetUserInfo>
          */
         IApiResults.IGetUserInfo GetLoginUserInfo();
 
-        /*
+       /**
         *   CMD: CMD_GET_USER_SALT,
         *       - userName: login name (cell phone number)
-        *   Result      : IApiResults.IGetUserSalt
-         *  Arguments   : IApiArgs.IArgsUserName
+        *   Result      : <IApiResults.IGetUserSalt>
+         *  Arguments   : <IApiArgs.IArgsUserName>
         */
         CmdExecRes GetUserSalt(String userName);
 
-        /*
-        *   CMD: CMD_LOGIN_BY_PASSWORD,
+       /**
+        *   CMD: <CMD_LOGIN_BY_PASSWORD>
         *       - user  : login name (cell phone number)
         *       - pass  : password
         *       - rand  : rand number
         *       - salt  : the session salt returned by GetUserSalt
-        *   Result    : IApiResults.ILogin
-        *   Arguments : IApiArgs.IArgsLoginPass
+        *   Result    : <IApiResults.ILogin>
+        *   Arguments : <IApiArgs.IArgsLoginPass>
         */
         CmdExecRes LoginByPassword(String user, String pass, String rand, String salt);
 
-        /*
-        *   CMD: CMD_LOGIN_BY_SMS,
-        *       - user      : login name (cell phone number)
-        *       - smsCode   : the sms code user received
-        *   Result    : IApiResults.ILogin
-        *   Arguments : IApiArgs.IArgsLoginSms
+       /**
+        *   CMD: <CMD_LOGIN_BY_SMS>
+        *       - user    : login name (cell phone number)
+        *       - smsCode : the sms code user received
+        *   Result    : <IApiResults.ILogin>
+        *   Arguments : <IApiArgs.IArgsLoginSms>
         */
         CmdExecRes LoginBySms(String user, String smsCode);
 
-        /*
-        *   CMD: CMD_RELOGIN,
+       /**
+        *   CMD: <CMD_RELOGIN>
         *       - userName : login name (cell phone number)
-        *   Result   : IApiResults.ILogin
-        *  Arguments : IApiArgs.IArgsUserName
+        *   Result   : <IApiResults.ILogin>
+        *  Arguments : <IApiArgs.IArgsUserName>
         */
         CmdExecRes Relogin(String userName);
 
-        /*
-        *   CMD    : CMD_LOG_OUT,
-        *   Result : IApiResults.ICommon
+       /**
+        *   CMD    : <CMD_LOG_OUT>
+        *   Result : <IApiResults.ICommon>
         */
         CmdExecRes Logout();
 
@@ -105,18 +105,18 @@ public class CommunicationInterface {
         *       - sms   : sms captcha code
         *       - salt  : salt
         *       - rand  : rand
-        *   Result    : IApiResults.ICommon
-        *   Arguments : IApiArgs.IArgsResetLoginPwd
+        *   Result    : <IApiResults.ICommon>
+        *   Arguments : <IApiArgs.IArgsResetLoginPwd>
         */
         CmdExecRes ResetLoginPass(String user, String pass, String sms, String salt, String rand);
 
         /**
-         *  Get Agent List. CMD_GET_AGENCY_LIST
+         *  Get Agent List. <CMD_GET_AGENCY_LIST>
          *      @param begin
          *      @param cnt
          *      @return
-         *  Arguments   : IApiArgs.IArgsFetchList
-         *  Result      : IApiResults.IResultList(IApiResults.IAgencyInfo)
+         *  Arguments   : <IApiArgs.IArgsFetchList>
+         *  Result      : <IApiResults.IResultList(IApiResults.IAgencyInfo)>
          */
         CmdExecRes GetAgencyList(int begin, int cnt);
 
@@ -127,8 +127,8 @@ public class CommunicationInterface {
          *      @param rank_att     : renk of attitude
          *      @param begin_year   : working years
          *      @return
-         *  Arguments: IApiArgs.IArgsModifyAgencyInfo
-         *  Result   : IApiResults.ICommon
+         *  Arguments: <IApiArgs.IArgsModifyAgencyInfo>
+         *  Result   : <IApiResults.ICommon>
          */
         CmdExecRes MofidyAgency(int agency, int rank_pro, int rank_att, int begin_year);
 
@@ -141,56 +141,49 @@ public class CommunicationInterface {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House
-        /*
-        *   CMD: <CMD_GET_BRIEF_PUBLIC_HOUSE_INFO>
-        *       - houseid   : house id
-        *   Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo
-        *   Arguments: IApiArgs.IArgsHouseId
-         */
-
         /**
          *  get brief house inf. <CMD_GET_BRIEF_PUBLIC_HOUSE_INFO>
          *      @param houseId: house id
          *      @return
-         *  Result: IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo
-         *  Arguments: IApiArgs.IArgsHouseId
+         *  Result: <IApiResults.IHouseDigest & IApiResults.IResultList(IApiResults.IHouseTag) & IApiResults.IHouseCertDigestInfo>
+         *  Arguments: <IApiArgs.IArgsHouseId>
          */
         CmdExecRes GetBriefPublicHouseInfo(int houseId);
 
-        /*
-        *   CMD: CMD_GET_HOUSE_INFO,
+       /**
+        *   CMD: <CMD_GET_HOUSE_INFO>
         *       - houseid   : house id
         *       - bBackend  : is it for backend using
-        *   Arguments:  IApiArgs.IArgsGetHouseInfo
-        *   Result:     IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo
-         */
+        *   Arguments:  <IApiArgs.IArgsGetHouseInfo>
+        *   Result:     <IApiResults.IGetHouseInfo, IApiResults.IHouseCertInfo>
+        */
         CmdExecRes GetHouseInfo(int houseId, boolean bBackend);
 
         /**
          *  Commit New House by Landlord. <CMD_COMMIT_HOUSE_BY_OWNER>
          *      @param  houseInfo   : house info
          *      @param  agency      : agency id
-         *  Arguments: IApiArgs.IArgsCommitNewHouseByLandlord
-         *  Result     IApiResults.IAddRes
+         *  Arguments: <IApiArgs.IArgsCommitNewHouseByLandlord>
+         *  Result     <IApiResults.IAddRes>
          */
         CmdExecRes CommitHouseByOwner(HouseInfo houseInfo, int agency);
 
         /**
-         *  Amend House Info. CMD_AMEND_HOUSE
+         *  Amend House Info. <CMD_AMEND_HOUSE>
          *      @param houseInfo : new house info
          *      @return
-         *  Result      : IApiResults.ICommon
-         *  Arguments   : IApiArgs.IArgsAmendHouseInfo
+         *  Result      : <IApiResults.ICommon>
+         *  Arguments   : <IApiArgs.IArgsAmendHouseInfo>
          */
         CmdExecRes AmendHouse(HouseInfo houseInfo);
 
         /**
          *  Recommend or Unrecommend house. <CMD_GET_RECOMMEND_HOUSE>
-         *  @param house_id : house id
-         *  @param action   : RECOMMEND_HOUSE / UNRECOMMEND_HOUSE
-         *  @return
-         *  Arguments   : IApiArgs.IArgsRecommendHouse
-         *  Result      : IApiResults.ICommon
+         *      @param house_id : house id
+         *      @param action   : RECOMMEND_HOUSE / UNRECOMMEND_HOUSE
+         *      @return
+         *  Arguments   : <IApiArgs.IArgsRecommendHouse>
+         *  Result      : <IApiResults.ICommon>
          */
         CmdExecRes RecommendHouse(int house_id, int action);
 
@@ -199,8 +192,8 @@ public class CommunicationInterface {
          *      @param house_id : house id
          *      @param img_id   : image id
          *  @return
-         *  Result      : IApiResults.ICommon
-         *  Arguments   : IApiArgs.IArgsSetHouseCoverImage
+         *  Result      : <IApiResults.ICommon>
+         *  Arguments   : <IApiArgs.IArgsSetHouseCoverImage>
          */
         CmdExecRes SetHouseCoverImg(int house_id, int img_id);
 
@@ -213,12 +206,11 @@ public class CommunicationInterface {
          *      @param price_tag        : the tag selling price, opened for everyone
          *      @param price_bottom     : the bottom selling price, only valid for landlord and agent
          *  @return
-         *  Result    : IApiResults.IAddRes
-         *  Arguments : IApiArgs.IArgsSetHousePrice
+         *  Result    : <IApiResults.IAddRes>
+         *  Arguments : <IApiArgs.IArgsSetHousePrice>
          */
         CmdExecRes SetHousePrice(int house_id, int rental_tag, int rental_bottom,
-                                 boolean bIncPropFee,
-                                 int price_tag, int price_bottom);
+                                 boolean bIncPropFee, int price_tag, int price_bottom);
 
         /**
          *  Get House Price History. <CMD_GET_HOUSE_PRICE>
@@ -226,8 +218,8 @@ public class CommunicationInterface {
          *      @param begin    : fetch begin position
          *      @param count    : fetch count
          *  @return
-         *  Result      : IApiResults.IResultList(IApiResults.IHousePriceInfo)
-         *  Arguments   : IApiArgs.IArgsGetHousePriceHist
+         *  Result      : <IApiResults.IResultList(IApiResults.IHousePriceInfo)>
+         *  Arguments   : <IApiArgs.IArgsGetHousePriceHist>
          */
         CmdExecRes GetHousePrice(int house_id, int begin, int count);
 
@@ -237,8 +229,8 @@ public class CommunicationInterface {
          *      @param bPass
          *      @param sCertComment
          *  @return
-         *  Result   : IApiResults.ICommon
-         *  Arguments: IArgsCertifyHouse
+         *  Result   : <IApiResults.ICommon>
+         *  Arguments: <IArgsCertifyHouse>
          */
         CmdExecRes CertificateHouse(int house_id, boolean bPass, String sCertComment);
 
@@ -255,8 +247,8 @@ public class CommunicationInterface {
         *   Recommit house certification: <CMD_RECOMMIT_HOUSE_CERTIFICATON>
         *       @param house_id  : house id
         *       @param comments  : recommit comments
-        *   Result      : IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist
-        *   Arguments   : IApiArgs.IArgsRecommitHouseCertify
+        *   Result      : <IApiResults.IResultList(IApiResults.IHouseCertInfo)), IApiResults.IHouseCertHist>
+        *   Arguments   : <IApiArgs.IArgsRecommitHouseCertify>
         */
         CmdExecRes RecommitHouseCertification(int house_id, String comments);
 
@@ -265,29 +257,29 @@ public class CommunicationInterface {
         *       - type  : list type. 0 - all; 1 - to rent; 2 - rented; 3 - to sale; 4 - to approve
         *       - begin : fetch begin position
         *       - cnt   : fetch count. set to 0 mean just want to get the total number
-        *   Arguments: IApiArgs.IArgsGetBehalfList
-        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+        *   Arguments: <IApiArgs.IArgsGetBehalfList>
+        *   Result: <IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))>
          */
         CmdExecRes GetBehalfHouses(int type, int begin, int cnt);
 
-        /*
+       /**
         *   Get Digest House Info List <CMD_GET_HOUSE_DIGEST_LIST>
         *       - type  : list type. 0: all house; 1: recommend houses; 2: deducted houses; 3: new houses
         *       - begin : fetch begin position
         *       - cnt   : fetch count. set to 0 mean just want to get the total number
         *       - filter: filter confitions. HouseFilterCondition
         *       - sort  : sort condition list
-        *   Arguments: IApiArgs.IArgsGetHouseDigestList
-        *   Result: IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
-         */
+        *   Arguments: <IApiArgs.IArgsGetHouseDigestList>
+        *   Result: <IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))>
+        */
         CmdExecRes GetHouseDigestList(int type, int begin, int cnt, HouseFilterCondition filter, ArrayList<Integer> sort);
 
         /**
          *  Get House Show time. <CMD_GET_HOUSE_SHOWTIME>
          *      @param house_id
          *  @return
-         *  Result      : IApiResults.IHouseShowtime
-         *  Arguments   : IApiArgs.IArgsHouseId
+         *  Result      : <IApiResults.IHouseShowtime>
+         *  Arguments   : <IApiArgs.IArgsHouseId>
          */
         CmdExecRes GetHouseShowtime(int house_id);
 
@@ -298,8 +290,8 @@ public class CommunicationInterface {
          *      @param pv       : period of vacation, including weekend and vacation
          *      @param pd       : period description
          *      @return
-         *  Return      : IApiResults.ICommon
-         *  Arguments   : IApiArgs.IArgsSetHouseShowtime
+         *  Return      : <IApiResults.ICommon>
+         *  Arguments   : <IApiArgs.IArgsSetHouseShowtime>
          */
         CmdExecRes SetHouseShowtime(int house_id, int pw, int pv, String pd);          // ,
 
@@ -316,8 +308,8 @@ public class CommunicationInterface {
          *      @param house : house id
          *      @param agent : agent id
          *      @return
-         *  Result: IApiResults.ICommon
-         *  Arguments; IApiArgs.IArgsAssignHouseAgency
+         *  Result: <IApiResults.ICommon>
+         *  Arguments; <IApiArgs.IArgsAssignHouseAgency>
          */
         CmdExecRes AssignHouseAgency(int house, int agent);
 
@@ -326,41 +318,129 @@ public class CommunicationInterface {
         //          Property, Community
 
         /**
-         *  Get Propery List by Name. CMD_GET_PROPERTY_LIST,
-         *  @param      sName   : property name to search
-         *  @param      nBegin  : begin position
-         *  @param      nCount  : how many items to fetch
-         *  @Arguments  IApiArgs.IArgsGetPropertyList
-         *  @Result     IApiResults.IResultList(IApiResults.IPropertyInfo)
+         *  Get Propery List by Name. <CMD_GET_PROPERTY_LIST>
+         *      @param      sName   : property name to search
+         *      @param      nBegin  : begin position
+         *      @param      nCount  : how many items to fetch
+         *  Arguments  <IApiArgs.IArgsGetPropertyList>
+         *  Result     <IApiResults.IResultList(IApiResults.IPropertyInfo)>
          */
-        CmdExecRes GetPropertyListByName(String sName, int nBegin, int nCount);                //
-        CmdExecRes AddProperty(String sName, String sAddr, String sDesc);                      // CMD_ADD_PROPERTY,        IApiResults.IAddRes
-        CmdExecRes GetPropertyInfo(int nPropId);                                               // CMD_GET_PROPERTY_INFO,   IApiResults.IPropertyInfo
-        CmdExecRes ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);  // CMD_MODIFY_PROPERTY,     IApiResults.ICommon
+        CmdExecRes GetPropertyListByName(String sName, int nBegin, int nCount);
+
+        /**
+         *  Add new Property(Estate) <CMD_ADD_PROPERTY>
+         *      @param sName
+         *      @param sAddr
+         *      @param sDesc
+         *  @return
+         *  Arguments   : <IApiArgs.IArgsAddProperty>
+         *  Result      : <IApiResults.IAddRes>
+         */
+        CmdExecRes AddProperty(String sName, String sAddr, String sDesc);
+
+        /**
+         *  Get Property Info <CMD_GET_PROPERTY_INFO>
+         *      @param nPropId
+         *  @return
+         *  Arguments   : <IApiArgs.IArgsObjId>
+         *  Result      : <IApiResults.IPropertyInfo>
+         */
+        CmdExecRes GetPropertyInfo(int nPropId);
+
+        /**
+         *  Modify property Info. <CMD_MODIFY_PROPERTY>
+         *      @param nPropId
+         *      @param sName
+         *      @param sAddr
+         *      @param sDesc
+         *  @return
+         *  Arguments : <IApiArgs.IArgsModifyProperty>
+         *  Result    : <IApiResults.ICommon>
+         */
+        CmdExecRes ModifyPropertyInfo(int nPropId, String sName, String sAddr, String sDesc);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House Deliverables for rent
-        CmdExecRes AddDeliverable(String sName);                                                   // CMD_ADD_DELIVERABLE,         IApiResults.IAddRes
-        CmdExecRes GetDeliverableList();                                                           // CMD_GET_DELIVERABLE_LIST,    IApiResults.IResultList(IApiResults.IDeliverableItem)
-        CmdExecRes ModifyDeliverable(int dev_id, String sName);                                    // CMD_EDIT_DELIVERABLE,        IApiResults.ICommon
-        CmdExecRes AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);   // CMD_ADD_HOUSE_DELIVERABLE,   IApiResults.IAddRes
 
         /**
-         *  Get House Deliverables. CMD_GET_HOUSE_DELIVERABLES
-         *  @param house_id
+         *  Add Deliverables. <CMD_ADD_DELIVERABLE>
+         *      @param sName
          *  @return
-         *  Arguments : IApiArgs.IArgsHouseId
-         *  Return    : IApiResults.IResultList(IApiResults.IDeliverableInfo)
+         *  Arguments: <IApiArgs.IArgsAddDeliverable>
+         *  Results: <IApiResults.IAddRes>
+         */
+        CmdExecRes AddDeliverable(String sName);
+
+        /**
+         *  Get Deliverable List. <CMD_GET_DELIVERABLE_LIST>
+         *  @return
+         *  Arguments: <None>
+         *  Result: <IApiResults.IResultList(IApiResults.IDeliverableItem)>
+         */
+        CmdExecRes GetDeliverableList();
+
+        /**
+         *  Modify Deliveralb. <CMD_EDIT_DELIVERABLE>
+         *      @param dev_id
+         *      @param sName
+         *  @return
+         *  Arguments: <IApiArgs.IArgsModifyDeliverable>
+         *  Results: <IApiResults.ICommon>
+         */
+        CmdExecRes ModifyDeliverable(int dev_id, String sName);
+
+        /**
+         *  Add House Deliverable. <CMD_ADD_HOUSE_DELIVERABLE>
+         *      @param house_id
+         *      @param deliverable_id
+         *      @param qty
+         *      @param sDesc
+         *  @return
+         *  Arguments: <IApiArgs.IArgsAddHouseDeliverable>
+         *  Result: <IApiResults.IAddRes>
+         */
+        CmdExecRes AddHouseDeliverable(int house_id, int deliverable_id, int qty, String sDesc);   // ,
+
+        /**
+         *  Get House Deliverables. <CMD_GET_HOUSE_DELIVERABLES>
+         *      @param house_id
+         *      @return
+         *  Arguments : <IApiArgs.IArgsObjId>
+         *  Return    : <IApiResults.IResultList(IApiResults.IDeliverableInfo)>
          */
         CmdExecRes GetHouseDeliverables(int house_id);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          House Facilities
-        CmdExecRes AddFacilityType(String sTypeName);                          // CMD_ADD_FACILITY_TYPE,       IApiResults.IAddRes
-        CmdExecRes EditFacilityType(int typeId, String sTypeName);             // CMD_EDIT_FACILITY_TYPE,      IApiResults.ICommon
-        CmdExecRes GetFacilityTypeList();                                      // CMD_GET_FACILITY_TYPE_LIST,  IApiResults.IResultList(IApiResults.IListIdName)
+
+        /**
+         *  Add Facility Type. <CMD_ADD_FACILITY_TYPE>
+         *      @param sTypeName
+         *  @return
+         *  Arguments: <IApiArgs.IArgsAddFacility>
+         *  Result: <IApiResults.IAddRes>
+         */
+        CmdExecRes AddFacilityType(String sTypeName);
+
+        /**
+         *  Modify Facility Type. <CMD_EDIT_FACILITY_TYPE>
+         *      @param typeId
+         *      @param sTypeName
+         *  @return
+         *  Arguments: <IApiArgs.IArgsEditFacilityType>
+         *  Result: <IApiResults.ICommon>
+         */
+        CmdExecRes EditFacilityType(int typeId, String sTypeName);
+
+        /**
+         *  Get Facility Type List. <CMD_GET_FACILITY_TYPE_LIST>
+         *  @return
+         *  Arguments: None
+         *  Result: <IApiResults.IResultList(IApiResults.IListIdName)>
+         */
+        CmdExecRes GetFacilityTypeList();                                      // ,
 
         CmdExecRes AddFacility(int nType, String sName, String sIcon);         // CMD_ADD_FACILITY,            IApiResults.IAddRes
         CmdExecRes EditFacility(int id, int nType, String sName, String sIcon);// CMD_EDIT_FACILITY,           IApiResults.ICommon

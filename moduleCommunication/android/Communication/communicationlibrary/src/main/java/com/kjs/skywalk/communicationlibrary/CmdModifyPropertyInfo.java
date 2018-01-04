@@ -11,73 +11,61 @@ import java.util.HashMap;
  */
 
 class CmdModifyPropertyInfo extends CommunicationBase {
-    private int     mPropId     = 0;
-    private String  mPropName   = "";
-    private String  mPropAddr   = "";
-    private String  mPropDesc   = "";
 
-    CmdModifyPropertyInfo(Context context) {
+    CmdModifyPropertyInfo(Context context, int pid, String name, String addr, String desc) {
         super(context, CommunicationInterface.CmdID.CMD_MODIFY_PROPERTY);
         mMethodType = "PUT";
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_PROPERTY_NAME) ||
-                !map.containsKey(CommunicationParameterKey.CPK_PROPERTY_ADDR) ||
-                !map.containsKey(CommunicationParameterKey.CPK_PROPERTY_DESC) ) {
-            return false;
-        }
-
-        try {
-            mPropId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            if (mPropId <= 0) {
-                Log.e(TAG, "mPropId:" + mPropId);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        mPropName = map.get(CommunicationParameterKey.CPK_PROPERTY_NAME);
-        if (TextUtils.isEmpty(mPropName)) {
-            Log.e(TAG, "No name specified");
-            return false;
-        }
-        mPropName = String2Base64(mPropName);
-
-        mPropAddr = map.get(CommunicationParameterKey.CPK_PROPERTY_ADDR);
-        if (TextUtils.isEmpty(mPropAddr)) {
-            Log.e(TAG, "No address specified");
-            return false;
-        }
-        mPropAddr = String2Base64(mPropAddr);
-
-        mPropDesc = map.get(CommunicationParameterKey.CPK_PROPERTY_DESC);
-        if (TextUtils.isEmpty(mPropDesc)) {
-            Log.e(TAG, "No description specified");
-            return false;
-        }
-        mPropDesc = String2Base64(mPropDesc);
-
-        return true;
+        mArgs = new Args(pid, name, addr, desc);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/property/" + mPropId + "/info";
+        mCommandURL = "/v1/property/" + ((Args)mArgs).getPropertyId() + "/info";
         return mCommandURL;
     }
     @Override
     public void generateRequestData() {
-        mRequestData = ("prop=" + mPropName);
+        mRequestData = ("prop=" + ((Args)mArgs).getName());
         mRequestData += "&";
-        mRequestData += ("addr=" + mPropAddr);
+        mRequestData += ("addr=" + ((Args)mArgs).getAddress());
         mRequestData += "&";
-        mRequestData += ("desc=" + mPropDesc);
+        mRequestData += ("desc=" + ((Args)mArgs).getDesc());
 
         Log.d(TAG, "mRequestData: " + mRequestData);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgPropertyInfo implements IApiArgs.IArgsModifyProperty {
+        private int mPropId = 0;
+
+        Args(int pid, String name, String addr, String desc) {
+            super(name, addr, desc);
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (mPropId <= 0) {
+                Log.e(TAG, "[checkArgs] mPropId:" + mPropId);
+                return false;
+            }
+            return super.checkArgs();
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (mPropId != ((Args)arg2).mPropId) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int getPropertyId() {
+            return mPropId;
+        }
     }
 }

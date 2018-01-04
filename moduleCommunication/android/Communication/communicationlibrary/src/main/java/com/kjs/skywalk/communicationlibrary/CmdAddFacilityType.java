@@ -12,11 +12,11 @@ import java.util.HashMap;
  */
 
 class CmdAddFacilityType extends CommunicationBase {
-    private String mName = "";
 
-    CmdAddFacilityType(Context context) {
+    CmdAddFacilityType(Context context, String name) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_FACILITY_TYPE);
         mMethodType = "POST";
+        mArgs = new Args(name);
     }
 
     @Override
@@ -27,30 +27,43 @@ class CmdAddFacilityType extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("name=" + mName);
+        mRequestData = ("name=" + ((Args)mArgs).getName());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_NAME)) {
-            return false;
-        }
-
-        mName = map.get(CommunicationParameterKey.CPK_NAME);
-        if (mName.length() == 0) {
-            Log.e(TAG, "mName: " + mName);
-            return false;
-        }
-        mName = String2Base64(mName);
-        Log.d(TAG, "mName: " + mName);
-
-        return true;
     }
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResAddResource result = new ResAddResource(nErrCode, jObject);
         return result;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsAddFacility {
+        private String mName = null;
+
+        Args(String name) {
+            mName = name;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (null == mName || mName.isEmpty()) {
+                Log.e(TAG, "[checkArgs] mName:" + mName);
+                return false;
+            }
+            mName = String2Base64(mName);
+            return true;    // super.checkArgs();
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            return super.isEqual(arg2);
+        }
+
+        @Override
+        public String getName() {
+            return mName;
+        }
     }
 }

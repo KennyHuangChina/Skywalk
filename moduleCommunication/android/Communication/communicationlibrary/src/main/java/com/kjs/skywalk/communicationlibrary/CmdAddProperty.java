@@ -12,13 +12,11 @@ import java.util.HashMap;
  */
 
 class CmdAddProperty extends CommunicationBase {
-    private String mPropName = "";
-    private String mPropAddr = "";
-    private String mPropDesc = "";
 
-    CmdAddProperty(Context context) {
+    CmdAddProperty(Context context, String name, String addr, String desc) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_PROPERTY);
         mMethodType = "POST";
+        mArgs = new ApiArgPropertyInfo(name, addr, desc);
     }
 
     @Override
@@ -29,38 +27,12 @@ class CmdAddProperty extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("prop=" + mPropName);
+        mRequestData = ("prop=" + ((ApiArgPropertyInfo)mArgs).getName());
         mRequestData += "&";
-        mRequestData += ("addr=" + mPropAddr);
+        mRequestData += ("addr=" + ((ApiArgPropertyInfo)mArgs).getAddress());
         mRequestData += "&";
-        mRequestData += ("desc=" + mPropDesc);
+        mRequestData += ("desc=" + ((ApiArgPropertyInfo)mArgs).getDesc());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_PROPERTY_NAME)) {
-            return false;
-        }
-
-        mPropName = map.get(CommunicationParameterKey.CPK_PROPERTY_NAME);
-        Log.d(TAG, "mPropName: " + mPropName);
-//        mPropName = getUTF8XMLString(mPropName);
-//        Log.d(TAG, "mPropName: " + mPropName);
-        mPropName = String2Base64(mPropName);
-        Log.d(TAG, "mPropName: " + mPropName);
-
-        if (map.containsKey(CommunicationParameterKey.CPK_PROPERTY_ADDR)) {
-            mPropAddr = map.get(CommunicationParameterKey.CPK_PROPERTY_ADDR);
-        }
-        mPropAddr = String2Base64(mPropAddr);
-
-        if (map.containsKey(CommunicationParameterKey.CPK_PROPERTY_DESC)) {
-            mPropDesc = map.get(CommunicationParameterKey.CPK_PROPERTY_DESC);
-        }
-        mPropDesc = String2Base64(mPropDesc);
-
-        return true;
     }
 
     @Override
