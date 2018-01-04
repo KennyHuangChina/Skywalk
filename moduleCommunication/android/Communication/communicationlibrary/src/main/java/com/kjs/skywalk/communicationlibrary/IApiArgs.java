@@ -136,6 +136,11 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
+    public interface IArgsObjId extends IArgsBase {
+        int getId();
+    }
+
+    /******************************************************************************************/
     public interface IArgsCertifyHouse extends IArgsHouseId {
         boolean passed();
         String  getComments();
@@ -154,6 +159,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
+    // TODO: replace it with IArgsObjId
     public interface IArgsHouseId extends IArgsBase {
         int     getHouseId();
     }
@@ -230,7 +236,47 @@ public class IApiArgs {
         int     getWorkingYears();
     }
 
+    /******************************************************************************************/
     public interface IArgsGetHousePriceHist extends IArgsFetchList {
         int     getHouseId();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddProperty extends IArgsBase {
+        String  getName();
+        String  getAddress();
+        String  getDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsModifyProperty extends IArgsAddProperty {
+        int     getPropertyId();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddDeliverable extends IArgsBase {
+        String  getName();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsModifyDeliverable extends IArgsObjId {
+        String  getName();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddHouseDeliverable extends IArgsObjId {
+        int     getDeliverableId();
+        int     getDeliverableQty();
+        String  getDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddFacility extends IArgsBase {
+        String  getName();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsEditFacilityType extends IArgsObjId {
+        String  getName();
     }
 }

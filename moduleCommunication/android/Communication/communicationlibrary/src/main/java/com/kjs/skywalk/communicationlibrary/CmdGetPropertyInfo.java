@@ -11,36 +11,16 @@ import java.util.HashMap;
 
 class CmdGetPropertyInfo extends CommunicationBase {
 
-    private int mPropertyId = 0;    // property id
-
-    CmdGetPropertyInfo(Context context) {
+    CmdGetPropertyInfo(Context context, int pid) {
         super(context, CommunicationInterface.CmdID.CMD_GET_PROPERTY_INFO);
         mNeedLogin = false;
+        mArgs = new ApiArgsObjId(pid);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/property/" + mPropertyId;
+        mCommandURL = "/v1/property/" + ((ApiArgsObjId)mArgs).getId();
         return mCommandURL;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX)) {
-            return false;
-        }
-
-        String pid = map.get(CommunicationParameterKey.CPK_INDEX);
-        if (null == pid || pid.isEmpty()) {
-            return false;
-        }
-        try {
-            mPropertyId = Integer.parseInt(pid);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
     @Override

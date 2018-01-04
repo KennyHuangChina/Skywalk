@@ -10,48 +10,59 @@ import java.util.HashMap;
  */
 
 class CmdModifyDeliverable extends CommunicationBase {
-    private int mId = 0;
-    private String mName = "";
 
-    CmdModifyDeliverable(Context context) {
+    CmdModifyDeliverable(Context context, int did, String name) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_DELIVERABLE);
         mMethodType = "PUT";
+        mArgs = new Args(did, name);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/accessory/deliverable/" + mId;
+        mCommandURL = "/v1/accessory/deliverable/" + ((Args)mArgs).getId();
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("name=" + mName);
+        mRequestData = ("name=" + ((Args)mArgs).getName());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_NAME) ||
-                !map.containsKey(CommunicationParameterKey.CPK_INDEX)) {
-            return false;
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsModifyDeliverable {
+        private String mName = null;
+
+        Args(int did, String name) {
+            super(did);
+            mName = name;
         }
 
-        try {
-            mId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
+        @Override
+        public boolean checkArgs() {
+            if (null == mName || mName.isEmpty()) {
+                Log.e(TAG, "[checkArgs] mName:" + mName);
+                return false;
+            }
+            mName = String2Base64(mName);
+            return super.checkArgs();
         }
 
-        mName = map.get(CommunicationParameterKey.CPK_NAME);
-        if (mName.length() == 0) {
-            Log.e(TAG, "mName: " + mName);
-            return false;
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (!mName.equals(((Args)arg2).mName)) {
+                return false;
+            }
+            return true;
         }
-        mName = String2Base64(mName);
-        Log.d(TAG, "mName: " + mName);
 
-        return true;
+        @Override
+        public String getName() {
+            return mName;
+        }
     }
 }

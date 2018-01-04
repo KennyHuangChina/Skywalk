@@ -253,7 +253,7 @@ class CommunicationBase implements  InternalDefines.DoOperation,
     }
 
     // Convert string to BASE64
-    protected String String2Base64(String str) {
+    protected static String String2Base64(String str) {
         byte[] bstr = new byte[0];
         try {
             bstr = str.getBytes(("UTF-8"));

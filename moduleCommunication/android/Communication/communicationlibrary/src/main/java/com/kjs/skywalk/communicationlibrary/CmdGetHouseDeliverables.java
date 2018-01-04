@@ -15,12 +15,12 @@ class CmdGetHouseDeliverables extends CommunicationBase {
 
     CmdGetHouseDeliverables(Context context, int house) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_DELIVERABLES);
-        mArgs = new ApiArgHouseId(house);
+        mArgs = new ApiArgsObjId(house);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/accessory/house/%d/deliverables", ((ApiArgHouseId)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/accessory/house/%d/deliverables", ((ApiArgsObjId)mArgs).getId());
         return mCommandURL;
     }
 

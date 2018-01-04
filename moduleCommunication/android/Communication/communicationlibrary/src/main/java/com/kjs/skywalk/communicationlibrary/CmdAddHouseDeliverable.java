@@ -12,74 +12,85 @@ import java.util.HashMap;
  */
 
 class CmdAddHouseDeliverable extends CommunicationBase {
-    private int     mHouseId        = 0;
-    private int     mDeliverable    = 0;    // deliverable id
-    private int     mDelivQty       = 0;    // deliverable quantity
-    private String  mDesc           = "";   // deliverable description
 
-    CmdAddHouseDeliverable(Context context) {
+    CmdAddHouseDeliverable(Context context, int house, int did, int qty, String desc) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_HOUSE_DELIVERABLE);
         mMethodType = "POST";
+        mArgs = new Args(house, did, qty, desc);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/accessory/house/" + mHouseId + "/deliverable";
+        mCommandURL = "/v1/accessory/house/" + ((Args)mArgs).getId() + "/deliverable";
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("did=" + mDeliverable);
+        mRequestData = ("did=" + ((Args)mArgs).getDeliverableId());
         mRequestData += "&";
-        mRequestData += ("qty=" + mDelivQty);
+        mRequestData += ("qty=" + ((Args)mArgs).getDeliverableQty());
         mRequestData += "&";
-        mRequestData += ("desc=" + mDesc);
+        mRequestData += ("desc=" + ((Args)mArgs).getDesc());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_INDEX) ||
-                !map.containsKey(CommunicationParameterKey.CPK_DELIVERABLE_ID) ||
-                !map.containsKey(CommunicationParameterKey.CPK_QTY) ||
-                !map.containsKey(CommunicationParameterKey.CPK_DESC) ) {
-            return false;
-        }
-
-        try {
-            mHouseId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            if (mHouseId <= 0) {
-                Log.e(TAG, "mHouseId:" + mHouseId);
-                return false;
-            }
-            mDeliverable = Integer.parseInt(map.get(CommunicationParameterKey.CPK_DELIVERABLE_ID));
-            if (mDeliverable <= 0) {
-                Log.e(TAG, "mDeliverable:" + mDeliverable);
-                return false;
-            }
-            mDelivQty = Integer.parseInt(map.get(CommunicationParameterKey.CPK_QTY));
-            if (mDelivQty < 0) {
-                Log.e(TAG, "mDelivQty:" + mDelivQty);
-                return false;
-            }
-            mDesc = map.get(CommunicationParameterKey.CPK_DESC);
-            if (mDesc.length() == 0) {
-                Log.e(TAG, "mDesc:" + mDesc);
-                return false;
-            }
-            mDesc = String2Base64(mDesc);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResAddResource res = new ResAddResource(nErrCode, jObject);
         return res;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsAddHouseDeliverable {
+        private int     mDeliverable    = 0;    // deliverable id
+        private int     mDelivQty       = 0;    // deliverable quantity
+        private String  mDesc           = null; // deliverable description
+
+        Args(int house, int did, int qty, String desc) {
+            super(house);
+            mDeliverable = did;
+            mDelivQty    = qty;
+            mDesc        = desc;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (mDeliverable <= 0) {
+                Log.e(TAG, "[checkArgs] mDeliverable:" + mDeliverable);
+                return false;
+            }
+            if (mDelivQty <= 0) {
+                Log.e(TAG, "[checkArgs] mDelivQty:" + mDelivQty);
+                return false;
+            }
+            if (null == mDesc || mDesc.isEmpty()) {
+                Log.e(TAG, "[checkArgs] mDesc:" + mDesc);
+                return false;
+            }
+            mDesc = String2Base64(mDesc);
+            return super.checkArgs();
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            return super.isEqual(arg2);
+        }
+
+        @Override
+        public int getDeliverableId() {
+            return mDeliverable;
+        }
+
+        @Override
+        public int getDeliverableQty() {
+            return mDelivQty;
+        }
+
+        @Override
+        public String getDesc() {
+            return mDesc;
+        }
     }
 }
