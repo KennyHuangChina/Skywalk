@@ -12,12 +12,11 @@ import java.util.HashMap;
  */
 
 class CmdAddFacility extends CommunicationBase {
-    private String  mName = "";
-    private int     mType = 0;
 
-    CmdAddFacility(Context context) {
+    CmdAddFacility(Context context, int type, String name, String pic) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_FACILITY);
         mMethodType = "POST";
+        mArgs = new ApiArgsFacility(type, name, pic);
     }
 
     @Override
@@ -28,55 +27,10 @@ class CmdAddFacility extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("name=" + mName);
+        mRequestData = ("name=" + ((ApiArgsFacility)mArgs).getName());
         mRequestData += "&";
-        mRequestData += ("type=" + mType);
+        mRequestData += ("type=" + ((ApiArgsFacility)mArgs).getType());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_NAME) ||
-                !map.containsKey(CommunicationParameterKey.CPK_TYPE)) {
-            return false;
-        }
-
-        // Facility Name
-        mName = map.get(CommunicationParameterKey.CPK_NAME);
-        if (mName.length() == 0) {
-            Log.e(TAG, "mName: " + mName);
-            return false;
-        }
-        mName = String2Base64(mName);
-        Log.d(TAG, "mName: " + mName);
-
-        // Facility type
-        try {
-            mType = Integer.parseInt(map.get(CommunicationParameterKey.CPK_TYPE));
-            if (mType < 0) {
-                Log.e(TAG, "mType: " + mType);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        // Facility Icon
-        if (map.containsKey(CommunicationParameterKey.CPK_IMG_FILE)) {
-            String picFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
-            if (picFile.length() == 0) {
-                Log.e(TAG, "picture file not assigned");
-                return false;
-            }
-            if (!CUtilities.isPicture(picFile)) {
-                Log.e(TAG, "picture file not exist");
-                return false;
-            }
-            mFile = picFile;
-        }
-
-        return true;
     }
 
     @Override

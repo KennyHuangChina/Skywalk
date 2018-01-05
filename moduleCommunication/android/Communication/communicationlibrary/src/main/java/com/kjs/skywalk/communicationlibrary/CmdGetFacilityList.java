@@ -12,11 +12,11 @@ import java.util.HashMap;
  */
 
 class CmdGetFacilityList extends CommunicationBase {
-    private int mType = 0;  // 0 means all type
 
-    CmdGetFacilityList(Context context) {
+    CmdGetFacilityList(Context context, int type) {
         super(context, CommunicationInterface.CmdID.CMD_GET_FACILITY_LIST);
         mNeedLogin = false;
+        mArgs = new Args(type);
     }
 
     @Override
@@ -27,37 +27,48 @@ class CmdGetFacilityList extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("type=" + mType);
+        mRequestData = ("type=" + ((Args)mArgs).getType());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_TYPE)) {
-            return false;
-        }
-
-        try {
-            String sType = map.get(CommunicationParameterKey.CPK_TYPE);
-            if (0 == sType.length()) {
-                sType = "0";
-            }
-            mType = Integer.parseInt(sType);
-            if (mType < 0) {
-                Log.e(TAG, "mType: " + mType);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         ResFacilityList res = new ResFacilityList(nErrCode, jObject);
         return res;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsBase implements IApiArgs.IArgsGetFacilityList {
+        private int mType = -1;  // 0 means all type
+
+        Args(int type) {
+            mType = type;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (mType < 0) {
+                Log.e(TAG, "[checkArgs] mType:" + mType);
+                return false;
+            }
+            return super.checkArgs();
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
+            if (mType != ((Args)arg2).mType) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int getType() {
+            return mType;
+        }
     }
 }

@@ -39,7 +39,7 @@ class CmdAddFacilityType extends CommunicationBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsAddFacility {
+    class Args extends ApiArgsBase implements IApiArgs.IArgsAddFacilityType {
         private String mName = null;
 
         Args(String name) {

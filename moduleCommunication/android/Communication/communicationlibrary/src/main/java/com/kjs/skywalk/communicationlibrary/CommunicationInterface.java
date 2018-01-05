@@ -419,7 +419,7 @@ public class CommunicationInterface {
          *  Add Facility Type. <CMD_ADD_FACILITY_TYPE>
          *      @param sTypeName
          *  @return
-         *  Arguments: <IApiArgs.IArgsAddFacility>
+         *  Arguments: <IApiArgs.IArgsAddFacilityType>
          *  Result: <IApiResults.IAddRes>
          */
         CmdExecRes AddFacilityType(String sTypeName);
@@ -440,13 +440,50 @@ public class CommunicationInterface {
          *  Arguments: None
          *  Result: <IApiResults.IResultList(IApiResults.IListIdName)>
          */
-        CmdExecRes GetFacilityTypeList();                                      // ,
+        CmdExecRes GetFacilityTypeList();
 
-        CmdExecRes AddFacility(int nType, String sName, String sIcon);         // CMD_ADD_FACILITY,            IApiResults.IAddRes
-        CmdExecRes EditFacility(int id, int nType, String sName, String sIcon);// CMD_EDIT_FACILITY,           IApiResults.ICommon
-        CmdExecRes GetFacilityList(int nType);                                 // CMD_GET_FACILITY_LIST,       IApiResults.IResultList(IApiResults.IFacilityInfo)
+        /**
+         *  Add Facility. <CMD_ADD_FACILITY>
+         *      @param nType
+         *      @param sName
+         *      @param sIcon
+         *  @return
+         *  Arguments: <IApiArgs.IArgsAddFacility>
+         *  Result: <IApiResults.IAddRes>
+         */
+        CmdExecRes AddFacility(int nType, String sName, String sIcon);
 
-        CmdExecRes AddHouseFacility(int house, ArrayList<FacilityItem> list);  // CMD_ADD_HOUSE_FACILITY,      IApiResults.ICommon
+       /**
+        *  Edit Facility. <CMD_EDIT_FACILITY>
+        *    @param id
+        *    @param nType
+        *    @param sName
+        *    @param sIcon
+        *  @return
+        *  Arguments: <IApiArgs.IArgsEditFacility>
+        *  Result: <IApiResults.ICommon>
+        */
+        CmdExecRes EditFacility(int id, int nType, String sName, String sIcon);
+
+     /**
+      *  Get Facility List. <CMD_GET_FACILITY_LIST>
+      *    @param nType
+      *  @return
+      *  Arguments: <IApiArgs.IArgsGetFacilityList>
+      *  Result: <IApiResults.IResultList(IApiResults.IFacilityInfo)>
+      */
+        CmdExecRes GetFacilityList(int nType);
+
+        /**
+         *  Add Facility for house. <CMD_ADD_HOUSE_FACILITY>
+         *      @param house
+         *      @param list
+         *  @return
+         *  Arguments: <IApiArgs.IArgsAddHouseFacility>
+         *  Result: <IApiResults.ICommon>
+         */
+        CmdExecRes AddHouseFacility(int house, ArrayList<FacilityItem> list);
+
         CmdExecRes GetHouseFacilityList(int house);                            // CMD_GET_HOUSEFACILITY_LIST,  IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
         CmdExecRes EditHouseFacility(int hfid, int fid, int qty, String desc); // CMD_EDIT_HOUSE_FACILITY,     IApiResults.ICommon
 
@@ -942,6 +979,16 @@ public class CommunicationInterface {
             mFId = id;
             mQty = qty;
             mDesc = desc;
+        }
+
+        public boolean equal(FacilityItem fi) {
+            if (mFId != fi.mFId || mQty != fi.mQty) {
+                return false;
+            }
+            if (null != mDesc && null != fi.mDesc && mDesc.equals(fi.mDesc)) {
+                return true;
+            }
+            return false;
         }
     }
 

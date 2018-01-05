@@ -39,6 +39,7 @@ public class IApiArgs {
     public interface IArgsGetBehalfList extends IArgsFetchList {
         int getType();
     }
+
     // command: CmdGetBehalfHouses
     static public int   AGENT_HOUSE_ALL         = 0,     // all houses
                         AGENT_HOUSE_TO_RENT     = 1,     // agent houses waiting for renting
@@ -271,12 +272,34 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsAddFacility extends IArgsBase {
+    public interface IArgsAddFacilityType extends IArgsBase {
         String  getName();
     }
 
     /******************************************************************************************/
     public interface IArgsEditFacilityType extends IArgsObjId {
         String  getName();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddFacility extends IArgsBase {
+        String  getName();  // facility name
+        int     getType();  // facility type
+        String  getPic();   // facility picture
+    }
+
+    /******************************************************************************************/
+    public interface IArgsEditFacility extends IArgsAddFacility {
+        int     getFacilityId();  // facility id
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetFacilityList extends IArgsBase {
+        int getType();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddHouseFacility extends IArgsObjId {
+        ArrayList<CommunicationInterface.FacilityItem>  getList();
     }
 }
