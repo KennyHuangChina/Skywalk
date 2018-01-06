@@ -51,13 +51,10 @@ class CmdModifyFacility extends CommunicationBase {
 
         @Override
         public boolean isEqual(IApiArgs.IArgsBase arg2) {
-            if (!super.isEqual(arg2)) {
-                return false;
-            }
             if (mFacilityId != ((Args)arg2).mFacilityId) {
                 return false;
             }
-            return true;
+            return super.isEqual(arg2);
         }
 
         @Override

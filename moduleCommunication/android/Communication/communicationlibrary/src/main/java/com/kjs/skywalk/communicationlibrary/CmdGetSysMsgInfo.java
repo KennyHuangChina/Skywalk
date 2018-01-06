@@ -12,26 +12,17 @@ import java.util.HashMap;
  */
 
 class CmdGetSysMsgInfo extends CommunicationBase {
-    private int mMsgId = 0;
+//    private int mMsgId = 0;
 
     CmdGetSysMsgInfo(Context context, int msgId) {
         super(context, CommunicationInterface.CmdID.CMD_GET_MSG_INFO);
-        mMsgId = msgId;
+        mArgs = new ApiArgsObjId(msgId);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/sysmsg/"+ mMsgId;
+        mCommandURL = "/v1/sysmsg/"+ ((ApiArgsObjId)mArgs).getId();
         return mCommandURL;
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mMsgId <= 0) {
-            Log.e(TAG, "message:" + mMsgId);
-            return false;
-        }
-        return true;
     }
 
     @Override

@@ -16,7 +16,7 @@ class CmdAddHouseFacility extends CommunicationBase {
 ////    private int mNumb = 0;
 //    private ArrayList<CommunicationInterface.FacilityItem> mList = null;
 
-    CmdAddHouseFacility(Context context, int house, ArrayList<CommunicationInterface.FacilityItem> list) {
+    CmdAddHouseFacility(Context context, int house, ArrayList<IApiArgs.IFacilityItem> list) {
         super(context, CommunicationInterface.CmdID.CMD_ADD_HOUSE_FACILITY);
         mMethodType = "POST";
         mArgs = new Args(house, list);
@@ -34,7 +34,7 @@ class CmdAddHouseFacility extends CommunicationBase {
         mRequestData = ("numb=" + ((Args)mArgs).getList().size());
         for (int n = 0; n < ((Args)mArgs).getList().size(); n++) {
             mRequestData += "&";
-            CommunicationInterface.FacilityItem item = ((Args)mArgs).getList().get(n);
+            FacilityItem item = (FacilityItem)((Args)mArgs).getList().get(n);
             mRequestData += ("fid_" + n + "=" + item.mFId);
             mRequestData += "&";
             mRequestData += ("fqty_" + n + "=" + item.mQty);
@@ -53,9 +53,9 @@ class CmdAddHouseFacility extends CommunicationBase {
     ////////////////////////////////////////////////////////////////////////////////////////////
     //
     class Args extends ApiArgsObjId implements IApiArgs.IArgsAddHouseFacility {
-        private ArrayList<CommunicationInterface.FacilityItem> mList = null;
+        private ArrayList<IApiArgs.IFacilityItem> mList = null;
 
-        Args(int house, ArrayList<CommunicationInterface.FacilityItem> list) {
+        Args(int house, ArrayList<IApiArgs.IFacilityItem> list) {
             super(house);
             mList = list;
         }
@@ -65,6 +65,13 @@ class CmdAddHouseFacility extends CommunicationBase {
             if (null == mList || 0 == mList.size()) {
                 Log.e(TAG, "[checkArgs] mList:" + mList);
                 return false;
+            }
+//            for (FacilityItem fi : mList) {
+            for (int n = 0; n < mList.size(); n++) {
+                FacilityItem fi = (FacilityItem) mList.get(n);
+                if (null == fi || !fi.checkFacilityItem()) {
+                    return false;
+                }
             }
             return super.checkArgs();
         }
@@ -78,8 +85,8 @@ class CmdAddHouseFacility extends CommunicationBase {
                 return false;
             }
             for (int n = 0; n < mList.size(); n++) {
-                CommunicationInterface.FacilityItem fiThis = mList.get(n);
-                CommunicationInterface.FacilityItem fcThat = ((Args)arg2).mList.get(n);
+                FacilityItem fiThis = (FacilityItem)mList.get(n);
+                FacilityItem fcThat = (FacilityItem)((Args)arg2).mList.get(n);
                 if (!fiThis.equal(fcThat)) {
                     return false;
                 }
@@ -88,7 +95,7 @@ class CmdAddHouseFacility extends CommunicationBase {
         }
 
         @Override
-        public ArrayList<CommunicationInterface.FacilityItem> getList() {
+        public ArrayList<IApiArgs.IFacilityItem> getList() {
             return mList;
         }
     }

@@ -12,54 +12,66 @@ import java.util.HashMap;
  */
 
 class CmdGetAppointmentListHouseSee extends CommunicationBase {
-
-    private int     mHouseId        = 0;
-    private int     mBeginPosi      = 0;
-    private int     mFetchCount     = 0;
+//
+//    private int     mHouseId        = 0;
+//    private int     mBeginPosi      = 0;
+//    private int     mFetchCount     = 0;
 
     CmdGetAppointmentListHouseSee(Context context, int house_id, int begin, int cnt) {
         super(context, CommunicationInterface.CmdID.CMD_APPOINT_HOUSE_SEE_LST);
         mNeedLogin  = false;
-        mHouseId    = house_id;
-        mBeginPosi  = begin;
-        mFetchCount = cnt;
+        mArgs = new Args(house_id, begin, cnt);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/appointment/house/%d/seelist", mHouseId);
+        mCommandURL = String.format("/v1/appointment/house/%d/seelist", ((Args)mArgs).getHouseId());
         return mCommandURL;
     }
     @Override
     public void generateRequestData() {
-        mRequestData += ("bgn=" + mBeginPosi);
+        mRequestData += ("bgn=" + ((Args)mArgs).getBeginPosi());
         mRequestData += "&";
-        mRequestData += ("fCnt=" + mFetchCount);
+        mRequestData += ("fCnt=" + ((Args)mArgs).getFetchCnt());
         Log.d(TAG, "mRequestData: " + mRequestData);
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mHouseId <= 0) {
-            Log.e(TAG, "mHouseId: " + mHouseId);
-            return false;
-        }
-
-        if (mBeginPosi < 0) {
-            Log.e(TAG, "mBeginPosi: " + mBeginPosi);
-            return false;
-        }
-
-        if (mFetchCount < 0) {
-            Log.e(TAG, "mFetchCount: " + mFetchCount);
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public IApiResults.ICommon doParseResult(int nErrCode, JSONObject jObject) {
         return new ResGetAppointmentList(nErrCode, jObject);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgFetchList implements IApiArgs.IArgsGetHouseSeeAppointmentList {
+        private int mHouseId = 0;
+
+        Args(int house, int begin, int cnt) {
+            super(begin, cnt);
+            mHouseId = house;
+        }
+
+        @Override
+        public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
+            if (mHouseId <= 0) {
+                Log.e(TAG,  "[checkArgs] mHouseId:" + mHouseId);
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            return super.isEqual(arg2) && (mHouseId == ((Args)arg2).mHouseId);
+        }
+
+        @Override
+        public int getHouseId() {
+            return mHouseId;
+        }
     }
 }

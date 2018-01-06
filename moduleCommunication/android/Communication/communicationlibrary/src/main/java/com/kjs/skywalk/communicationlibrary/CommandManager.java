@@ -760,7 +760,7 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
     }
 
     @Override
-    public CmdExecRes AddHouseFacility(int house, ArrayList<FacilityItem> list) {
+    public CmdExecRes AddHouseFacility(int house, ArrayList<IApiArgs.IFacilityItem> list) {
         CommunicationBase op = new CmdAddHouseFacility(mContext, house, list);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
@@ -768,12 +768,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes EditHouseFacility(int hfid, int fid, int qty, String desc) {
-        CommunicationBase op = new CmdModifyHouseFacility(mContext);
+        CommunicationBase op = new CmdModifyHouseFacility(mContext, hfid, fid, qty, desc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(hfid));
-        pMap.put(CommunicationParameterKey.CPK_FACILITY_ID, String.valueOf(fid));
-        pMap.put(CommunicationParameterKey.CPK_QTY, String.valueOf(qty));
-        pMap.put(CommunicationParameterKey.CPK_DESC, desc);
         return execute(op, pMap);
     }
 
@@ -842,9 +838,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes ModifyHouseEvent(int event_id, String desc) {
-        CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id);
+        CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id, desc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_DESC, String.valueOf(desc));
         return execute(op, pMap);
     }
 

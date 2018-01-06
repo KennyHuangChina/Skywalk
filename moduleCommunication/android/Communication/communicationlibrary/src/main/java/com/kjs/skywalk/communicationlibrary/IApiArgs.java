@@ -1,5 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
@@ -80,7 +82,8 @@ public class IApiArgs {
     static public int   PIC_SIZE_ALL        = 0,
                         PIC_SIZE_Small      = 2,
                         PIC_SIZE_Moderate   = 3,
-                        PIC_SIZE_Large      = 4;
+                        PIC_SIZE_Large      = 4,
+                        PIC_SIZE_Max        = PIC_SIZE_Large;
 
     /******************************************************************************************/
     public interface IArgsGetSmsCode extends IArgsBase {
@@ -124,11 +127,6 @@ public class IApiArgs {
         int         getObjId();
         String      getFile();
         String      getDesc();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsDelePic extends IArgsBase {
-        int getPicId();
     }
 
     /******************************************************************************************/
@@ -188,18 +186,8 @@ public class IApiArgs {
                         UNRECOMMEND_HOUSE   = 2;
 
     /******************************************************************************************/
-    public interface IArgsGetAppointmentInfo extends IArgsBase {
-        int     getAppointment();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsAssignAppointmentReceptionist extends IArgsGetAppointmentInfo {
-        int     getReceptionist();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsReadMessage extends IArgsBase {
-        int     getMsgId();
+    public interface IArgsAssignAppointmentReceptionist extends IArgsObjId {
+        int     getReceptionist();  // appointment receptionist
     }
 
     /******************************************************************************************/
@@ -300,6 +288,54 @@ public class IApiArgs {
 
     /******************************************************************************************/
     public interface IArgsAddHouseFacility extends IArgsObjId {
-        ArrayList<CommunicationInterface.FacilityItem>  getList();
+        ArrayList<IFacilityItem>  getList();
     }
+
+    public interface IFacilityItem {
+        int     getFId();   // Facility Id
+        int     getFQty();  // Facility Qty
+        String  getDesc();  // Facility description
+    }
+
+    /******************************************************************************************/
+    public interface IArgsEditHouseFacility extends IArgsObjId {
+        IFacilityItem getFacility();    // facility item
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetPicUrls extends IArgsObjId {
+        int     getPicSize();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsModifyHouseEvent extends IArgsObjId {
+        String  getEventDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsMakeAppointmentSeeHouse extends IArgsObjId {
+        String  getPhone();
+        String  getTimeBegin();
+        String  getTimeEnd();
+        String  getDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetHouseSeeAppointmentList extends IArgsFetchList {
+        int     getHouseId();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsMakeAppointmentAct extends IArgsObjId {
+        int     getAction();    // action code
+        String  getBeginTime();
+        String  getEndTime();
+        String  getDesc();
+    }
+    static public int   APPOINTMENT_ACTION_Min          = 2,
+                        APPOINTMENT_ACTION_Confirm      = 2,
+                        APPOINTMENT_ACTION_Reschedule   = 3,
+                        APPOINTMENT_ACTION_Done         = 4,
+                        APPOINTMENT_ACTION_Cancel       = 5,
+                        APPOINTMENT_ACTION_Max          = 5;
 }
