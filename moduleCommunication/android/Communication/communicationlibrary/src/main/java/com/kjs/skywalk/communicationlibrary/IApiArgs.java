@@ -91,7 +91,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsGetHouseInfo extends IArgsHouseId {
+    public interface IArgsGetHouseInfo extends IArgsObjId {
         boolean isBackendUse();
     }
 
@@ -113,7 +113,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHousePrice extends IArgsHouseId {
+    public interface IArgsSetHousePrice extends IArgsObjId {
         int     getRentalTag();
         int     getRentalMin();
         boolean includePropertyFee();
@@ -122,7 +122,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsAddPic extends IArgsHouseId {
+    public interface IArgsAddPic extends IArgsObjId {
         int         getType();      // PIC_TYPE_MAJOR_xxx + sub-type(PIC_TYPE_SUB_USER_xxx, PIC_TYPE_SUB_HOUSE_xxx)
         int         getObjId();
         String      getFile();
@@ -140,7 +140,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsCertifyHouse extends IArgsHouseId {
+    public interface IArgsCertifyHouse extends IArgsObjId {
         boolean passed();
         String  getComments();
     }
@@ -151,35 +151,29 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHouseShowtime extends IArgsHouseId {
+    public interface IArgsSetHouseShowtime extends IArgsObjId {
         int     getPeriodOfWorkingDay();
         int     getPeriodOfVacation();
         String  getPeriodDesc();
     }
 
     /******************************************************************************************/
-    // TODO: replace it with IArgsObjId
-    public interface IArgsHouseId extends IArgsBase {
-        int     getHouseId();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsAssignHouseAgency extends IArgsHouseId {
+    public interface IArgsAssignHouseAgency extends IArgsObjId {
         int     getAgent();
     }
 
     /******************************************************************************************/
-    public interface IArgsRecommitHouseCertify extends IArgsHouseId {
+    public interface IArgsRecommitHouseCertify extends IArgsObjId {
         String  getComments();
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHouseCoverImage extends IArgsHouseId {
+    public interface IArgsSetHouseCoverImage extends IArgsObjId {
         int     getImageId();
     }
 
     /******************************************************************************************/
-    public interface IArgsRecommendHouse extends IArgsHouseId {
+    public interface IArgsRecommendHouse extends IArgsObjId {
         int     getRecommendAct();  // RECOMMEND_HOUSE or UNRECOMMEND_HOUSE
     }
     public static int   RECOMMEND_HOUSE     = 1,

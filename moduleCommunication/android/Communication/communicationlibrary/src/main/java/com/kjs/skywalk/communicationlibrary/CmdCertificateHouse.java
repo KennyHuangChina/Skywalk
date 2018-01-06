@@ -20,7 +20,7 @@ class CmdCertificateHouse extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/cert/" + ((Args)mArgs).getHouseId();
+        mCommandURL = "/v1/house/cert/" + ((Args)mArgs).getId();
         return mCommandURL;
     }
 
@@ -34,7 +34,7 @@ class CmdCertificateHouse extends CommunicationBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsCertifyHouse {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsCertifyHouse {
         private boolean mPass           = false;
         private String  mCertComment    = "";
 

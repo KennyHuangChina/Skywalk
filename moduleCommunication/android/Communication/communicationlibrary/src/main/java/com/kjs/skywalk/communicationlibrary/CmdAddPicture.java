@@ -29,7 +29,7 @@ class CmdAddPicture extends CommunicationBase {
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("house=" + ((Args)mArgs).getHouseId());
+        mRequestData = ("house=" + ((Args)mArgs).getId());
         mRequestData += "&";
         mRequestData += ("type=" + ((Args)mArgs).getType());
         mRequestData += "&";
@@ -57,7 +57,7 @@ class CmdAddPicture extends CommunicationBase {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsAddPic {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsAddPic {
         private int     mType   = -1;
         private int     mRefId  = -1;
         private String  mDesc   = null;
@@ -98,7 +98,7 @@ class CmdAddPicture extends CommunicationBase {
                 Log.e(TAG, "picture file not exist");
                 return false;
             }
-            Log.i(TAG, "house:" + mHouseId + ", type:" + mType + ", desc:" + mDesc + ", file:" + mFile);
+            Log.i(TAG, "house:" + mId + ", type:" + mType + ", desc:" + mDesc + ", file:" + mFile);
 
             return true;
         }

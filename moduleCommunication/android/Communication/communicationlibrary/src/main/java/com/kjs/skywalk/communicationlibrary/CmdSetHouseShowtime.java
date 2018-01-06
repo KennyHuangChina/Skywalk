@@ -22,7 +22,7 @@ class CmdSetHouseShowtime extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/showtime", ((Args)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/house/%d/showtime", ((Args)mArgs).getId());
         return mCommandURL;
     }
 
@@ -38,7 +38,7 @@ class CmdSetHouseShowtime extends CommunicationBase {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsSetHouseShowtime {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsSetHouseShowtime {
         private int     mPeriodW    = -1;   // period for working day
         private int     mPeriodV    = -1;   // period for weekend and vacation
         private String  mPeriodDesc = null; // period description

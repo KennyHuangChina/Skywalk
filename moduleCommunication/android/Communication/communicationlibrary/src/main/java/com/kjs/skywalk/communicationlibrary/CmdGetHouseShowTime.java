@@ -15,12 +15,12 @@ class CmdGetHouseShowTime extends CommunicationBase {
 
     CmdGetHouseShowTime(Context context, int house_id) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_SHOWTIME);
-        mArgs = new ApiArgHouseId(house_id);
+        mArgs = new ApiArgsObjId(house_id);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/showtime", ((ApiArgHouseId)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/house/%d/showtime", ((ApiArgsObjId)mArgs).getId());
         return mCommandURL;
     }
 

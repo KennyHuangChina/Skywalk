@@ -16,12 +16,12 @@ class CmdGetHouseCertHist extends CommunicationBase {
 
     CmdGetHouseCertHist(Context context, int house_id) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSE_CERTIFY_HIST);
-        mArgs = new ApiArgHouseId(house_id);
+        mArgs = new ApiArgsObjId(house_id);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/certhist", ((ApiArgHouseId)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/house/%d/certhist", ((ApiArgsObjId)mArgs).getId());
         return mCommandURL;
     }
 
