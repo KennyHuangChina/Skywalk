@@ -155,7 +155,7 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
 
         if (command == CMD_GET_HOUSE_INFO) {
             IApiArgs.IArgsGetHouseInfo args = (IApiArgs.IArgsGetHouseInfo)iResult.GetArgs();
-            if (args.getHouseId() == mHouseId) {
+            if (args.getId() == mHouseId) {
                 updateHouseInfo((IApiResults.IGetHouseInfo) iResult);
             }
         }
