@@ -48,6 +48,8 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
     private boolean             mResultGot  = false;
     private boolean             mFailed     = false;
 
+    private int                 mHouseId    = 0;
+
     private ImageCacheDBOperator mDB        = null;
 
     ArrayList<ClassDefine.PictureInfo>  mList       = new ArrayList<>();
@@ -55,7 +57,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
     public ImageFetchForHouse(Context context) {
         mContext    = context;
-        mDB = ImageCacheDBOperator.getOperator(mContext);
+        mDB = ImageCacheDBOperator.getOperator(mContext, "test");
         // Register Listener
         CommandManager.getCmdMgrInstance(mContext).Register(this, this);
     }
@@ -120,7 +122,9 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
                     mList.add(picInfo);
 //                    picInfo.print();
-                    download(picInfo.smallPicUrl);
+                    if(!mDB.isPictureCached(mHouseId, picInfo)) {
+                        download(picInfo);
+                    }
                 }
                 if(mListener != null) {
                     mListener.onHouseImageFetched(mList);
@@ -175,7 +179,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void download(final String url) {
+    public void download(final ClassDefine.PictureInfo picInfo) {
         new AsyncTask<Void, Integer, File>() {
             @Override
             protected File doInBackground(Void... params) {
@@ -183,7 +187,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                 try {
                     FutureTarget<File> future = Glide
                             .with(mContext)
-                            .load(url)
+                            .load(picInfo.smallPicUrl)
                             .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
                     File file = future.get();
                     File cacheDir = new File("/sdcard/skywalk");//mContext.getCacheDir();
@@ -192,12 +196,21 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                     if (!imageDir.exists()) {
                         imageDir.mkdirs();
                     }
-                    String fileName = url;
+                    String fileName = picInfo.smallPicUrl;
                     int index = fileName.lastIndexOf("/");
                     fileName = fileName.substring(index + 1);
                     kjsLogUtil.i("file Name: " + fileName);
                     targetFile = new File(imageDir, fileName);
                     saveToFile(file, targetFile);
+
+                    ClassDefine.PictureInfo pic = new ClassDefine.PictureInfo();
+                    pic.mId = picInfo.mId;
+                    pic.mType = picInfo.mType;
+                    pic.mCheckSum = picInfo.mCheckSum;
+                    pic.smallPicUrl = targetFile.getAbsolutePath();
+                    pic.middlePicUrl = "";
+                    pic.largePicUrl = "";
+                    mDB.addItem(mHouseId, pic);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -218,6 +231,8 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
     public int fetch(int houseId, final int fetchType, int size) {
         mList.clear();
+
+        mHouseId = houseId;
 
         kjsLogUtil.d("houseId: " + houseId + ", fetchType: " + fetchType + ", size: " + size);
         CmdExecRes result = CommandManager.getCmdMgrInstance(mContext).GetHousePics(houseId, fetchType, size);

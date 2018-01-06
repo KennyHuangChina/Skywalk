@@ -11,7 +11,6 @@ import com.kjs.skywalk.app_android.kjsLogUtil;
  */
 
 public class ImageCacheDBHelper extends SQLiteOpenHelper {
-    private static final String mDBName = "image_cache";
     private static final int mVersion = 1;
     private static final String mTableName = "images";
 
@@ -19,8 +18,8 @@ public class ImageCacheDBHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
-    public ImageCacheDBHelper(Context context){
-        this(context, mDBName, null, mVersion);
+    public ImageCacheDBHelper(Context context, String path){
+        super(context, path, null, mVersion);
     }
 
     @Override
@@ -28,7 +27,7 @@ public class ImageCacheDBHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE IF NOT EXISTS " +
                 mTableName +
                 "(" +
-                "_id integer, _md5 varchar(64), _path1 varchar(100), _path2 varchar(100), _path3 varchar(100), _path4 varchar(100)" +
+                "_hid integer, _pid integer, _type integer, _md5 varchar(64), _path1 varchar(100), _path2 varchar(100), _path3 varchar(100), _path4 varchar(100)" +
                 ")";
         db.execSQL(sql);
     }
@@ -42,5 +41,9 @@ public class ImageCacheDBHelper extends SQLiteOpenHelper {
     private void dropTable(SQLiteDatabase db) {
         String sql = "drop table " + mTableName + ";";
         db.execSQL(sql);
+    }
+
+    public String getTableName() {
+        return mTableName;
     }
 }
