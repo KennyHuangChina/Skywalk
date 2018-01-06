@@ -725,14 +725,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes EditFacility(int id, int nType, String sName, String sIcon) {
-        CommunicationBase op = new CmdModifyFacility(mContext);
+        CommunicationBase op = new CmdModifyFacility(mContext, id, nType, sName, sIcon);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(id));
-        pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
-        pMap.put(CommunicationParameterKey.CPK_NAME, sName);
-        if (null != sIcon && !sIcon.isEmpty()) {
-            pMap.put(CommunicationParameterKey.CPK_IMG_FILE, sIcon);
-        }
         return execute(op, pMap);
     }
 
@@ -752,26 +746,21 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes AddFacility(int nType, String sName, String sIcon) {
-        CommunicationBase op = new CmdAddFacility(mContext);
+        CommunicationBase op = new CmdAddFacility(mContext, nType, sName, sIcon);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
-        pMap.put(CommunicationParameterKey.CPK_NAME, sName);
-        if (null != sIcon && !sIcon.isEmpty()) {
-            pMap.put(CommunicationParameterKey.CPK_IMG_FILE, sIcon);
-        }
         return execute(op, pMap);
     }
 
     @Override
     public CmdExecRes GetFacilityList(int nType) {
-        CommunicationBase op = new CmdGetFacilityList(mContext);
+        CommunicationBase op = new CmdGetFacilityList(mContext, nType);
         HashMap<String, String> pMap = new HashMap<String, String>();
         pMap.put(CommunicationParameterKey.CPK_TYPE, String.valueOf(nType));
         return execute(op, pMap);
     }
 
     @Override
-    public CmdExecRes AddHouseFacility(int house, ArrayList<FacilityItem> list) {
+    public CmdExecRes AddHouseFacility(int house, ArrayList<IApiArgs.IFacilityItem> list) {
         CommunicationBase op = new CmdAddHouseFacility(mContext, house, list);
         HashMap<String, String> pMap = new HashMap<String, String>();
         return execute(op, pMap);
@@ -779,12 +768,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes EditHouseFacility(int hfid, int fid, int qty, String desc) {
-        CommunicationBase op = new CmdModifyHouseFacility(mContext);
+        CommunicationBase op = new CmdModifyHouseFacility(mContext, hfid, fid, qty, desc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_INDEX, String.valueOf(hfid));
-        pMap.put(CommunicationParameterKey.CPK_FACILITY_ID, String.valueOf(fid));
-        pMap.put(CommunicationParameterKey.CPK_QTY, String.valueOf(qty));
-        pMap.put(CommunicationParameterKey.CPK_DESC, desc);
         return execute(op, pMap);
     }
 
@@ -853,9 +838,8 @@ public class CommandManager implements ICommand, CICommandListener, CIProgressLi
 
     @Override
     public CmdExecRes ModifyHouseEvent(int event_id, String desc) {
-        CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id);
+        CommunicationBase op = new CmdModifyHouseEvent(mContext, event_id, desc);
         HashMap<String, String> pMap = new HashMap<String, String>();
-        pMap.put(CommunicationParameterKey.CPK_DESC, String.valueOf(desc));
         return execute(op, pMap);
     }
 

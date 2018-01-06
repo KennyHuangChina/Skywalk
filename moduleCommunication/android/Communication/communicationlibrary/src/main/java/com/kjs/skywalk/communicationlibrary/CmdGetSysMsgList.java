@@ -83,7 +83,7 @@ class CmdGetSysMsgList extends CommunicationBase {
             if (!super.checkArgs()) {
                 return false;
             }
-            // DO further checking here
+            // TODO: DO further checking here
             return true;
         }
 
@@ -96,6 +96,7 @@ class CmdGetSysMsgList extends CommunicationBase {
             if (mIDO != arg_chk.mIDO || mNMO != arg_chk.mNMO) {
                 return false;
             }
+            // TODO: do further checking
             return true;
         }
 

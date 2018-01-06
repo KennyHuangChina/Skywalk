@@ -21,7 +21,7 @@ class AssignHouseAgency extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/assignagency", ((Args)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/house/%d/assignagency", ((Args)mArgs).getId());
         return mCommandURL;
     }
 
@@ -33,7 +33,7 @@ class AssignHouseAgency extends CommunicationBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsAssignHouseAgency {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsAssignHouseAgency {
         protected int mAgent = 0;
 
         Args(int house, int agent) {

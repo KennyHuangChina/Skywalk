@@ -1,5 +1,7 @@
 package com.kjs.skywalk.communicationlibrary;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.*;
@@ -39,6 +41,7 @@ public class IApiArgs {
     public interface IArgsGetBehalfList extends IArgsFetchList {
         int getType();
     }
+
     // command: CmdGetBehalfHouses
     static public int   AGENT_HOUSE_ALL         = 0,     // all houses
                         AGENT_HOUSE_TO_RENT     = 1,     // agent houses waiting for renting
@@ -79,7 +82,8 @@ public class IApiArgs {
     static public int   PIC_SIZE_ALL        = 0,
                         PIC_SIZE_Small      = 2,
                         PIC_SIZE_Moderate   = 3,
-                        PIC_SIZE_Large      = 4;
+                        PIC_SIZE_Large      = 4,
+                        PIC_SIZE_Max        = PIC_SIZE_Large;
 
     /******************************************************************************************/
     public interface IArgsGetSmsCode extends IArgsBase {
@@ -87,7 +91,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsGetHouseInfo extends IArgsHouseId {
+    public interface IArgsGetHouseInfo extends IArgsObjId {
         boolean isBackendUse();
     }
 
@@ -109,7 +113,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHousePrice extends IArgsHouseId {
+    public interface IArgsSetHousePrice extends IArgsObjId {
         int     getRentalTag();
         int     getRentalMin();
         boolean includePropertyFee();
@@ -118,16 +122,11 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsAddPic extends IArgsHouseId {
+    public interface IArgsAddPic extends IArgsObjId {
         int         getType();      // PIC_TYPE_MAJOR_xxx + sub-type(PIC_TYPE_SUB_USER_xxx, PIC_TYPE_SUB_HOUSE_xxx)
         int         getObjId();
         String      getFile();
         String      getDesc();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsDelePic extends IArgsBase {
-        int getPicId();
     }
 
     /******************************************************************************************/
@@ -141,7 +140,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsCertifyHouse extends IArgsHouseId {
+    public interface IArgsCertifyHouse extends IArgsObjId {
         boolean passed();
         String  getComments();
     }
@@ -152,53 +151,37 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHouseShowtime extends IArgsHouseId {
+    public interface IArgsSetHouseShowtime extends IArgsObjId {
         int     getPeriodOfWorkingDay();
         int     getPeriodOfVacation();
         String  getPeriodDesc();
     }
 
     /******************************************************************************************/
-    // TODO: replace it with IArgsObjId
-    public interface IArgsHouseId extends IArgsBase {
-        int     getHouseId();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsAssignHouseAgency extends IArgsHouseId {
+    public interface IArgsAssignHouseAgency extends IArgsObjId {
         int     getAgent();
     }
 
     /******************************************************************************************/
-    public interface IArgsRecommitHouseCertify extends IArgsHouseId {
+    public interface IArgsRecommitHouseCertify extends IArgsObjId {
         String  getComments();
     }
 
     /******************************************************************************************/
-    public interface IArgsSetHouseCoverImage extends IArgsHouseId {
+    public interface IArgsSetHouseCoverImage extends IArgsObjId {
         int     getImageId();
     }
 
     /******************************************************************************************/
-    public interface IArgsRecommendHouse extends IArgsHouseId {
+    public interface IArgsRecommendHouse extends IArgsObjId {
         int     getRecommendAct();  // RECOMMEND_HOUSE or UNRECOMMEND_HOUSE
     }
     public static int   RECOMMEND_HOUSE     = 1,
                         UNRECOMMEND_HOUSE   = 2;
 
     /******************************************************************************************/
-    public interface IArgsGetAppointmentInfo extends IArgsBase {
-        int     getAppointment();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsAssignAppointmentReceptionist extends IArgsGetAppointmentInfo {
-        int     getReceptionist();
-    }
-
-    /******************************************************************************************/
-    public interface IArgsReadMessage extends IArgsBase {
-        int     getMsgId();
+    public interface IArgsAssignAppointmentReceptionist extends IArgsObjId {
+        int     getReceptionist();  // appointment receptionist
     }
 
     /******************************************************************************************/
@@ -271,7 +254,7 @@ public class IApiArgs {
     }
 
     /******************************************************************************************/
-    public interface IArgsAddFacility extends IArgsBase {
+    public interface IArgsAddFacilityType extends IArgsBase {
         String  getName();
     }
 
@@ -279,4 +262,74 @@ public class IApiArgs {
     public interface IArgsEditFacilityType extends IArgsObjId {
         String  getName();
     }
+
+    /******************************************************************************************/
+    public interface IArgsAddFacility extends IArgsBase {
+        String  getName();  // facility name
+        int     getType();  // facility type
+        String  getPic();   // facility picture
+    }
+
+    /******************************************************************************************/
+    public interface IArgsEditFacility extends IArgsAddFacility {
+        int     getFacilityId();  // facility id
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetFacilityList extends IArgsBase {
+        int getType();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsAddHouseFacility extends IArgsObjId {
+        ArrayList<IFacilityItem>  getList();
+    }
+
+    public interface IFacilityItem {
+        int     getFId();   // Facility Id
+        int     getFQty();  // Facility Qty
+        String  getDesc();  // Facility description
+    }
+
+    /******************************************************************************************/
+    public interface IArgsEditHouseFacility extends IArgsObjId {
+        IFacilityItem getFacility();    // facility item
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetPicUrls extends IArgsObjId {
+        int     getPicSize();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsModifyHouseEvent extends IArgsObjId {
+        String  getEventDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsMakeAppointmentSeeHouse extends IArgsObjId {
+        String  getPhone();
+        String  getTimeBegin();
+        String  getTimeEnd();
+        String  getDesc();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsGetHouseSeeAppointmentList extends IArgsFetchList {
+        int     getHouseId();
+    }
+
+    /******************************************************************************************/
+    public interface IArgsMakeAppointmentAct extends IArgsObjId {
+        int     getAction();    // action code
+        String  getBeginTime();
+        String  getEndTime();
+        String  getDesc();
+    }
+    static public int   APPOINTMENT_ACTION_Min          = 2,
+                        APPOINTMENT_ACTION_Confirm      = 2,
+                        APPOINTMENT_ACTION_Reschedule   = 3,
+                        APPOINTMENT_ACTION_Done         = 4,
+                        APPOINTMENT_ACTION_Cancel       = 5,
+                        APPOINTMENT_ACTION_Max          = 5;
 }

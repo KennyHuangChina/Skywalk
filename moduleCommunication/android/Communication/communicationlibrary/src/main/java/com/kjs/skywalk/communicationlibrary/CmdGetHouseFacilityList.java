@@ -12,31 +12,22 @@ import java.util.HashMap;
  */
 
 class CmdGetHouseFacilityList extends CommunicationBase {
-    private int mHouseId = 0;
+//    private int mHouseId = 0;
 
     CmdGetHouseFacilityList(Context context, int house) {
         super(context, CommunicationInterface.CmdID.CMD_GET_HOUSEFACILITY_LIST);
-        mHouseId = house;
+        mArgs = new ApiArgsObjId(house);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/accessory/house/" + mHouseId + "/facilities";
+        mCommandURL = "/v1/accessory/house/" + ((ApiArgsObjId)mArgs).getId() + "/facilities";
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
         super.generateRequestData();
-    }
-
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (mHouseId <= 0) {
-            Log.e(TAG, "mHouseId:" + mHouseId);
-            return false;
-        }
-        return true;
     }
 
     @Override

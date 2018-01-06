@@ -10,68 +10,56 @@ import java.util.HashMap;
  */
 
 class CmdModifyFacility extends CommunicationBase {
-    private int     mFacilityId = -1;
-    private int     mTypeId     = -1;
-    private String  mName       = "";
 
-    CmdModifyFacility(Context context) {
+    CmdModifyFacility(Context context, int fid, int type, String name, String pic) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_FACILITY);
         mMethodType = "PUT";
+        mArgs = new Args(fid, type, name, pic);
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/accessory/facility/" + mFacilityId;
+        mCommandURL = "/v1/accessory/facility/" + ((Args)mArgs).getFacilityId();
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("name=" + mName);
-        mRequestData += ("&type=" + mTypeId);
+        mRequestData = ("name=" + ((Args)mArgs).getName());
+        mRequestData += ("&type=" + ((Args)mArgs).getType());
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_NAME) ||
-                !map.containsKey(CommunicationParameterKey.CPK_TYPE) ||
-                !map.containsKey(CommunicationParameterKey.CPK_INDEX)) {
-            return false;
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsFacility implements IApiArgs.IArgsEditFacility {
+        private int mFacilityId = -1;
+
+        Args(int fid, int type, String name, String pic) {
+            super(type, name, pic);
+            mFacilityId = fid;
         }
 
-        // Facility id & type
-        try {
-            mFacilityId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            mTypeId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_TYPE));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        // Facility name
-        mName = map.get(CommunicationParameterKey.CPK_NAME);
-        if (mName.length() == 0) {
-            Log.e(TAG, "mName: " + mName);
-            return false;
-        }
-        mName = String2Base64(mName);
-        Log.d(TAG, "mName: " + mName);
-
-        // Facility ICON
-        if (map.containsKey(CommunicationParameterKey.CPK_IMG_FILE)) {
-            String picFile = map.get(CommunicationParameterKey.CPK_IMG_FILE);
-            if (picFile.length() == 0) {
-                Log.e(TAG, "picture file not assigned");
+        @Override
+        public boolean checkArgs() {
+            if (mFacilityId <= 0) {
+                Log.e(TAG, "[checkArgs] mFacilityId:" + mFacilityId);
                 return false;
             }
-            if (!CUtilities.isPicture(picFile)) {
-                Log.e(TAG, "picture file not exist");
-                return false;
-            }
-            mFile = picFile;
+            return super.checkArgs();
         }
 
-        return true;
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (mFacilityId != ((Args)arg2).mFacilityId) {
+                return false;
+            }
+            return super.isEqual(arg2);
+        }
+
+        @Override
+        public int getFacilityId() {
+            return mFacilityId;
+        }
     }
 }

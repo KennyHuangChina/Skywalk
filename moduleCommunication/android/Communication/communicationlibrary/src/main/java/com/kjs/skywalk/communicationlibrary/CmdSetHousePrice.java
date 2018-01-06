@@ -21,7 +21,7 @@ class CmdSetHousePrice extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/price", ((Args)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/house/%d/price", ((Args)mArgs).getId());
         return mCommandURL;
     }
 
@@ -47,7 +47,7 @@ class CmdSetHousePrice extends CommunicationBase {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsSetHousePrice {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsSetHousePrice {
         private int     mRentalTag      = 0;        // Rental, tag price
         private int     mRentalBottom   = 0;        // Rental, bottom price
         private boolean mPropertyFee    = false;    // if the rental involve the property fee

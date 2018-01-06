@@ -21,7 +21,7 @@ class CmdAssignAppointmentReceptionist extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/appointment/%d/recpt", ((Args)mArgs).getAppointment());
+        mCommandURL = String.format("/v1/appointment/%d/recpt", ((Args)mArgs).getId());
         return mCommandURL;
     }
 
@@ -38,19 +38,17 @@ class CmdAssignAppointmentReceptionist extends CommunicationBase {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsAssignAppointmentReceptionist {
-        private int mAppointment    = 0;
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsAssignAppointmentReceptionist {
         private int mReceptionist   = 0;
 
         Args(int apid, int receptionist) {
-            mAppointment = apid;
+            super(apid);
             mReceptionist = receptionist;
         }
 
         @Override
         public boolean checkArgs() {
-            if (mAppointment <= 0) {
-                Log.e(TAG, String.format("Invalid appointment id:%d", mAppointment));
+            if (!super.checkArgs()) {
                 return false;
             }
             if (mReceptionist <= 0) {
@@ -62,20 +60,7 @@ class CmdAssignAppointmentReceptionist extends CommunicationBase {
 
         @Override
         public boolean isEqual(IApiArgs.IArgsBase arg2) {
-            if (!super.isEqual(arg2)) {
-                return false;
-            }
-
-            Args ac = (Args)arg2;
-            if (mAppointment != ac.mAppointment || mReceptionist != ac.mReceptionist) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public int getAppointment() {
-            return mAppointment;
+            return super.isEqual(arg2) && mReceptionist != ((Args)arg2).mReceptionist;
         }
 
         @Override

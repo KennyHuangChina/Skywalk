@@ -21,7 +21,7 @@ class CmdRecommitHouseCertification extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = String.format("/v1/house/%d/recert", ((Args)mArgs).getHouseId());
+        mCommandURL = String.format("/v1/house/%d/recert", ((Args)mArgs).getId());
         return mCommandURL;
     }
 
@@ -38,7 +38,7 @@ class CmdRecommitHouseCertification extends CommunicationBase {
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsRecommitHouseCertify {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsRecommitHouseCertify {
         private String mComments = null;
 
         Args(int house, String comment) {
