@@ -20,7 +20,7 @@ class CmdSetHouseCoverImg extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/covimg/" + ((Args)mArgs).getHouseId();
+        mCommandURL = "/v1/house/covimg/" + ((Args)mArgs).getId();
         return mCommandURL;
     }
     @Override
@@ -31,7 +31,7 @@ class CmdSetHouseCoverImg extends CommunicationBase {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsSetHouseCoverImage {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsSetHouseCoverImage {
         private int mCoverImg = 0;
 
         Args(int house, int image) {

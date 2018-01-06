@@ -21,7 +21,7 @@ class CmdGetHouseInfo extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/" + ((Args)mArgs).getHouseId();
+        mCommandURL = "/v1/house/" + ((Args)mArgs).getId();
         if (((Args)mArgs).mbBackend) {
             mCommandURL += "?be=1";
         }
@@ -38,41 +38,22 @@ class CmdGetHouseInfo extends CommunicationBase {
     //
     //      -- Arguments List --
     //
-    class Args extends ApiArgsBase implements IApiArgs.IArgsGetHouseInfo {
-        private int     mHouseId;           // house id
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsGetHouseInfo {
         private boolean mbBackend;          // if fetch real, complete house info for back-end using
 
         public Args(int house, boolean backend) {
-            mHouseId    = house;
-            mbBackend   = backend;
+            super(house);
+            mbBackend = backend;
         }
 
         @Override
         public boolean checkArgs() {
-            if (mHouseId <= 0) {
-                Log.e(TAG, "mHouseId: " + mHouseId);
-                return false;
-            }
-            return true;
+            return super.checkArgs();
         }
 
         @Override
         public boolean isEqual(IApiArgs.IArgsBase arg2) {
-            String Fn = "[isEqual] ";
-            if (!super.isEqual(arg2)) {
-                return false;
-            }
-
-            Args args_chk = (Args)arg2;
-            if (mHouseId != args_chk.mHouseId || mbBackend != args_chk.mbBackend) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public int getHouseId() {
-            return mHouseId;
+            return super.isEqual(arg2) && (mbBackend == ((Args)arg2).mbBackend);
         }
 
         @Override

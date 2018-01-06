@@ -22,7 +22,7 @@ class CmdRecommendHouse extends CommunicationBase {
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/house/recommend/" + ((Args)mArgs).getHouseId();
+        mCommandURL = "/v1/house/recommend/" + ((Args)mArgs).getId();
         return mCommandURL;
     }
 
@@ -34,7 +34,7 @@ class CmdRecommendHouse extends CommunicationBase {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    class Args extends ApiArgHouseId implements IApiArgs.IArgsRecommendHouse {
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsRecommendHouse {
         private int mAct = RECOMMEND_HOUSE;   // 1 - recommend; 2 - unrecommend
 
         Args(int house, int act) {

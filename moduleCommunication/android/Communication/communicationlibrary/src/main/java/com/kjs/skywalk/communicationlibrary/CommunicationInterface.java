@@ -419,7 +419,7 @@ public class CommunicationInterface {
          *  Add Facility Type. <CMD_ADD_FACILITY_TYPE>
          *      @param sTypeName
          *  @return
-         *  Arguments: <IApiArgs.IArgsAddFacility>
+         *  Arguments: <IApiArgs.IArgsAddFacilityType>
          *  Result: <IApiResults.IAddRes>
          */
         CmdExecRes AddFacilityType(String sTypeName);
@@ -440,174 +440,260 @@ public class CommunicationInterface {
          *  Arguments: None
          *  Result: <IApiResults.IResultList(IApiResults.IListIdName)>
          */
-        CmdExecRes GetFacilityTypeList();                                      // ,
+        CmdExecRes GetFacilityTypeList();
 
-        CmdExecRes AddFacility(int nType, String sName, String sIcon);         // CMD_ADD_FACILITY,            IApiResults.IAddRes
-        CmdExecRes EditFacility(int id, int nType, String sName, String sIcon);// CMD_EDIT_FACILITY,           IApiResults.ICommon
-        CmdExecRes GetFacilityList(int nType);                                 // CMD_GET_FACILITY_LIST,       IApiResults.IResultList(IApiResults.IFacilityInfo)
+        /**
+         *  Add Facility. <CMD_ADD_FACILITY>
+         *      @param nType
+         *      @param sName
+         *      @param sIcon
+         *  @return
+         *  Arguments: <IApiArgs.IArgsAddFacility>
+         *  Result: <IApiResults.IAddRes>
+         */
+        CmdExecRes AddFacility(int nType, String sName, String sIcon);
 
-        CmdExecRes AddHouseFacility(int house, ArrayList<FacilityItem> list);  // CMD_ADD_HOUSE_FACILITY,      IApiResults.ICommon
-        CmdExecRes GetHouseFacilityList(int house);                            // CMD_GET_HOUSEFACILITY_LIST,  IApiResults.IResultList(IApiResults.IHouseFacilityInfo)
-        CmdExecRes EditHouseFacility(int hfid, int fid, int qty, String desc); // CMD_EDIT_HOUSE_FACILITY,     IApiResults.ICommon
+       /**
+        *  Edit Facility. <CMD_EDIT_FACILITY>
+        *    @param id
+        *    @param nType
+        *    @param sName
+        *    @param sIcon
+        *  @return
+        *  Arguments: <IApiArgs.IArgsEditFacility>
+        *  Result: <IApiResults.ICommon>
+        */
+        CmdExecRes EditFacility(int id, int nType, String sName, String sIcon);
+
+     /**
+      *  Get Facility List. <CMD_GET_FACILITY_LIST>
+      *    @param nType
+      *  @return
+      *  Arguments: <IApiArgs.IArgsGetFacilityList>
+      *  Result: <IApiResults.IResultList(IApiResults.IFacilityInfo)>
+      */
+        CmdExecRes GetFacilityList(int nType);
+
+        /**
+         *  Add Facility for house. <CMD_ADD_HOUSE_FACILITY>
+         *      @param house
+         *      @param list
+         *  @return
+         *  Arguments: <IApiArgs.IArgsAddHouseFacility>
+         *  Result: <IApiResults.ICommon>
+         */
+        CmdExecRes AddHouseFacility(int house, ArrayList<IApiArgs.IFacilityItem> list);
+
+        /**
+         *  Get House Facility List. <CMD_GET_HOUSEFACILITY_LIST>
+         *      @param house
+         *  @return
+         *  Arguments: <IApiArgs.IArgsObjId>
+         *  Result: <IApiResults.IResultList(IApiResults.IHouseFacilityInfo)>
+         */
+        CmdExecRes GetHouseFacilityList(int house);
+
+        /**
+         *  Edit House Facility. <CMD_EDIT_HOUSE_FACILITY>
+         *      @param hfid
+         *      @param fid
+         *      @param qty
+         *      @param desc
+         *  @return
+         *  Arguments: <IApiArgs.IArgsEditHouseFacility>
+         *  Result: <IApiResults.ICommon>
+         */
+        CmdExecRes EditHouseFacility(int hfid, int fid, int qty, String desc);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Pictures
         /**
-         *  upload new picture to server
-         *  @param house    : house id
-         *  @param type     : picture type. PIC_TYPE_MAJOR_xxx + PIC_TYPE_SUB_xxx
-         *  @param refId    : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
-         *  @param desc     : picture description
-         *  @param file     : picture file in local
+         *  upload new picture to server. <CMD_ADD_PICTURE>
+         *      @param house    : house id
+         *      @param type     : picture type. PIC_TYPE_MAJOR_xxx + PIC_TYPE_SUB_xxx
+         *      @param refId    : reference id, depend what type the picture is. for example. if the picture type is house, then the refId is house id
+         *      @param desc     : picture description
+         *      @param file     : picture file in local
          *  @return
-         *   Result      : IApiResults.IAddPic
-         *   Arguments   : IApiArgs.IArgsAddPic
+         *  Result      : <IApiResults.IAddPic>
+         *  Arguments   : <IApiArgs.IArgsAddPic>
          */
         CmdExecRes AddPicture(int house, int type, int refId, String desc, String file);
 
         /**
-         *  Delete Picture from server. CMD_DEL_PICTURE
-         *  @param pic: picture id to delete
-         *  @return
-         *  Result      : IApiResults.ICommon
-         *  Arguments   : IArgsDelePic
+         *  Delete Picture from server. <CMD_DEL_PICTURE>
+         *      @param pic: picture id to delete
+         *      @return
+         *  Result      : <IApiResults.ICommon>
+         *  Arguments   : <IApiArgs.IArgsObjId>
          */
         CmdExecRes DelePicture(int pic);
 
-        /*
-        *   CMD: CMD_GET_PIC_URL
+       /**
+        *   Get Picture URL <CMD_GET_PIC_URL>
         *       - pic   : picture id
         *       - size  : picture size. PIC_SIZE_xxx
-        *   Result: IApiResults.IPicUrls
-         */
+        *   Result: <IApiResults.IPicUrls>
+        *   Arguments: <IApiArgs.IArgsGetPicUrls>
+        */
         CmdExecRes GetPicUrls(int pic, int size);
 
-        /*
-        *   CMD: CMD_GET_HOUSE_PIC_LIST
+       /**
+        *   Get House Pictures. <CMD_GET_HOUSE_PIC_LIST>
         *       - house : house id
         *       - type  : house picture sub-type. PIC_TYPE_SUB_HOUSE_xxx
         *       - size  : picture size. PIC_SIZE_xxx
-        *   Arguments: IApiArgs.IArgsGetXPicLst
-        *   Result: IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)
+        *   Arguments: <IApiArgs.IArgsGetXPicLst>
+        *   Result: <IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)>
         */
         CmdExecRes GetHousePics(int house, int type, int size);
 
-        /*
-        *   CMD: CMD_GET_USER_PIC_LIST
+       /**
+        *   Get User Pictures. <CMD_GET_USER_PIC_LIST>
         *       - user  : user id
         *       - type  : user picture sub-type. PIC_TYPE_SUB_USER__xxx
         *       - size  : picture size. PIC_SIZE_xxx
-        *   Arguments: IApiArgs.IArgsGetXPicLst
-        *   Result: IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)
+        *   Arguments: <IApiArgs.IArgsGetXPicLst>
+        *   Result: <IApiResults.IResultList(IApiResults.IPicInfo, IApiResults.IPicUrls)>
         */
         CmdExecRes GetUserPics(int user, int type, int size);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Event
-        CmdExecRes GetHouseNewEvent();                                 // CMD_GET_HOUSE_NEW_EVENTS,    IApiResults.IResultList(IApiResults.IHouseNewEvent)
-        CmdExecRes GetHouseEventProcList(int event_id);                // CMD_GET_EVENT_PROC_LST,      IApiResults.IResultList(IApiResults.IEventProcInfo)
-        CmdExecRes ModifyHouseEvent(int event_id, String desc);        // CMD_MODIFY_HOUSE_EVENT,      IApiResults.ICommon
+
+        /**
+         *  Get House New Event. <CMD_GET_HOUSE_NEW_EVENTS>
+         *  @return
+         *  Arguments: <None>
+         *  Result: <IApiResults.IResultList(IApiResults.IHouseNewEvent)>
+         */
+        CmdExecRes GetHouseNewEvent();
+
+        /**
+         *  Get Event Process History of house. <CMD_GET_EVENT_PROC_LST>
+         *      @param  event_id
+         *  @return
+         *  Arguments: <IApiArgs.IArgsObjId>
+         *  Result: <IApiResults.IResultList(IApiResults.IEventProcInfo)>
+         */
+        CmdExecRes GetHouseEventProcList(int event_id);
+
+        /**
+         *  Modify House Event. <CMD_MODIFY_HOUSE_EVENT>
+         *      @param event_id
+         *      @param desc
+         *  @return
+         *  Arguments: <IApiArgs.IArgsModifyHouseEvent>
+         *  Result: <IApiResults.ICommon>
+         */
+        CmdExecRes ModifyHouseEvent(int event_id, String desc);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          System Messages
-        /*
-        *   CMD     : CMD_GET_NEW_MSG_CNT
-        *   Result  : IApiResults.GetNewMsgCount
-         */
+       /**
+        *   Get New Message Count of current user. <CMD_GET_NEW_MSG_CNT>
+        *   Arguments: <None>
+        *   Result : IApiResults.GetNewMsgCount
+        */
         CmdExecRes GetNewMsgCount();
 
-        /*
-        *   CMD: CMD_GET_MSG_INFO
+       /**
+        *   Get System Message Info. <CMD_GET_MSG_INFO>
         *       - msg_id: message id
-        *   Result: IApiResults.ISysMsgInfo
-         */
+        *   Arguments: <IApiArgs.IArgsObjId>
+        *   Result: <IApiResults.ISysMsgInfo>
+        */
         CmdExecRes GetSysMsgInfo(int msg_id);
 
         /**
-         *  Mark a message readed.  CMD_READ_NEW_MSG
-         *  @param msg_id: message id
+         *  Mark a message readed.  <CMD_READ_NEW_MSG>
+         *      @param msg_id: message id
          *  @return
-         *  Result      : IApiResults.ICommon
-         *  Arguments   : IApiArgs.IArgsReadMessage
+         *  Result      : <IApiResults.ICommon>
+         *  Arguments   : <IApiArgs.IArgsObjId>
          */
         CmdExecRes ReadNewMsg(int msg_id);
 
-        /*
-        *   CMD : CMD_GET_SYSTEM_MSG_LST
+       /**
+        *   Get System Message List. <CMD_GET_SYSTEM_MSG_LST>
         *       - posi_bgn  :   begin position to fetch
         *       - fetch_cnt :   how many records want to fetch
         *       - ido       :   true  - only fetch message id;
         *                       false - fetch whole message info
         *       - nmo       :   true  - only fetch new messages
         *                       false - fetch all messages
-        *   Arguments: IApiArgs.IArgsGetMsgList
-        *   Result : IApiResults.IResultList(IApiResults.ISysMsgInfo)
-         */
+        *   Arguments: <IApiArgs.IArgsGetMsgList>
+        *   Result : <IApiResults.IResultList(IApiResults.ISysMsgInfo)>
+        */
         CmdExecRes GetSysMsgList(int posi_bgn, int fetch_cnt, boolean ido, boolean nmo);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //          Appointment APIs
-        /*
-        *   CMD: CMD_APPOINT_SEE_HOUSE
+       /**
+        *   Make an appointment for house seeing. <CMD_APPOINT_SEE_HOUSE>
         *       - house       : house id
         *       - phone       : contact phone. if user logined, it could be empty
         *       - time_begin  : appointment period begin, like 2017-06-24 09:00
         *       - time_end    : appointment period end, like 2017-06-24 09:30
         *       - desc        : appointment description
-        *   Result: IApiResults.IAddRes
-         */
+        *   Result: <IApiResults.IAddRes>
+        *   Arguments: <IApiArgs.IArgsMakeAppointmentSeeHouse>
+        */
         CmdExecRes MakeAppointment_SeeHouse(int house, String phone, String time_begin, String time_end, String desc);
 
-        /*
-            CMD: CMD_APPOINT_HOUSE_SEE_LST
-                - house_id: house id
-                - begin   : fetch begin position
-                - cnt     : fetch count. set to 0 to get the total number
-            Result: IApiResults.IResultList(IApiResults.IAppointment)
+        /**
+         *  Get Appointment List of house seeing. <>
+         *      @param house_id : house id
+         *      @param begin    : fetch begin position
+         *      @param cnt      : fetch count. set to 0 to get the total number
+         *  @return
+         *  Arguments: <IApiArgs.IArgsGetHouseSeeAppointmentList>
+         *  Result: <IApiResults.IResultList>
          */
         CmdExecRes GetHouseSeeAppointmentList(int house_id, int begin, int cnt);
 
         /**
-         *  Get house list that be appointed house seeing.  CMD_HOUSE_LST_APPOINT_SEE
+         *  Get house list that be appointed house seeing.  <CMD_HOUSE_LST_APPOINT_SEE>
          *      @param begin  : fetch begin position
          *      @param cnt    : fetch count. set to 0 mean just want to get the total number
          *      @return
-         *  Arguments   : IApiArgs.IArgsFetchList
-         *  Result      : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+         *  Arguments   : <IApiArgs.IArgsFetchList>
+         *  Result      : <IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))>
          */
         CmdExecRes GetHouseList_AppointSee(int begin, int cnt);
 
-        /*
-        *   CMD : CMD_MAKE_APPOINTMENT_ACTION
+       /**
+        *   Make an Action for an appointment. <CMD_MAKE_APPOINTMENT_ACTION>
         *       - apid      : appointment id
         *       - act       : action type: APPOINTMENT_ACTION_xxxx 2: Confirm; 3: Reschedule; 4: Done; 5: Cancel
         *       - time_begin: appointment period begin, like 2017-06-24 09:00
         *       - time_end  : appointment period end, like 2017-06-24 09:30
         *       - comments  : appointment comments
-        *   Result : IApiResults.IAddRes
-         */
+        *   Arguments: <IApiArgs.IArgsMakeAppointmentAct>
+        *   Result : <IApiResults.IAddRes>
+        */
         CmdExecRes MakeAppointmentAction(int apid, int act, String time_begin, String time_end, String comments);
 
         /**
-         *  Get Appointment Info. CMD_GET_APPOINTMENT_INFO
-         *  @param apid: appointment id
+         *  Get Appointment Info. <CMD_GET_APPOINTMENT_INFO>
+         *      @param apid: appointment id
          *  @return
-         *  Result      : IApiResults.IAppointmentInfo & IApiResults.IResultList(IApiResults.IAppointmentAct)
-         *  Arguments   : IApiArgs.IArgsGetAppointmentInfo
+         *  Result      : <IApiResults.IAppointmentInfo & IApiResults.IResultList(IApiResults.IAppointmentAct)>
+         *  Arguments   : <IApiArgs.IArgsObjId>
          */
         CmdExecRes GetAppointmentInfo(int apid);
 
         /**
-         *  Assign receptionist to a appointment. CMD_ASSIGN_APPOINTMENT_RECEPTIONIST
-         *  @param aid          : appointment id
-         *  @param receptionist: the user id of new receptionist
+         *  Assign receptionist to a appointment. <CMD_ASSIGN_APPOINTMENT_RECEPTIONIST>
+         *      @param aid          : appointment id
+         *      @param receptionist: the user id of new receptionist
          *  @return
-         *  Result      : IApiResults.ICommon
-         *  Arguments   : IApiArgs.IArgsAssignAppointmentReceptionist
+         *  Result: <IApiResults.ICommon>
+         *  Arguments: <IApiArgs.IArgsAssignAppointmentReceptionist>
          */
         CmdExecRes AssignAppointmentReceptionist(int aid, int receptionist);
 
@@ -615,12 +701,12 @@ public class CommunicationInterface {
         //
         //          House Watch APIs
         /**
-         *  Get house watching list of current uset. CMD_GET_USER_HOUSE_WATCH_LIST
+         *  Get house watching list of current user. <CMD_GET_USER_HOUSE_WATCH_LIST>
          *      @param begin : fetch begin position
          *      @param cnt   : fetch count, set to 0 means just want to get the totoal number
          *      @return
-         *  Arguments: IApiArgs.IArgsFetchList
-         *  Result   : IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))
+         *  Arguments: <IApiArgs.IArgsFetchList>
+         *  Result: <IApiResults.IResultList(IApiResults.IHouseDigest, IApiResults.IResultList(IApiResults.IHouseTag))>
          */
         CmdExecRes GetUserHouseWatchList(int begin, int cnt);
     }
@@ -821,16 +907,6 @@ public class CommunicationInterface {
     //
     //         -- API data definitions --
     //
-
-
-    static public int   APPOINTMENT_ACTION_Min          = 2,
-                        APPOINTMENT_ACTION_Confirm      = 2,
-                        APPOINTMENT_ACTION_Reschedule   = 3,
-                        APPOINTMENT_ACTION_Done         = 4,
-                        APPOINTMENT_ACTION_Cancel       = 5,
-                        APPOINTMENT_ACTION_Max          = 5;
-
-
     // used in CommitHouse, AmendHouse
     static public class HouseInfo {
         public int      mHouseId        = 0;
@@ -929,19 +1005,6 @@ public class CommunicationInterface {
                 return false;
             }
             return true;
-        }
-    }
-
-    // used in AddHouseFacilities
-    static public class FacilityItem {
-        public int      mFId    = 0;    // facility id
-        public int      mQty    = 0;    // facility quantity
-        public String   mDesc   = "";   // facility description
-
-        public FacilityItem(int id, int qty, String desc) {
-            mFId = id;
-            mQty = qty;
-            mDesc = desc;
         }
     }
 

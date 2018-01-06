@@ -10,54 +10,66 @@ import java.util.HashMap;
  */
 
 class CmdModifyHouseFacility extends CommunicationBase {
-    private int     mId     = 0;    // house facility id
-    private int     mFid    = 0;    // facility id
-    private int     mQty    = 0;    // facility quantity
-    private String  mDesc   = "";   // facility description
+//    private int     mId     = 0;    // house facility id
+//    private int     mFid    = 0;    // facility id
+//    private int     mQty    = 0;    // facility quantity
+//    private String  mDesc   = "";   // facility description
 
-    CmdModifyHouseFacility(Context context) {
+    CmdModifyHouseFacility(Context context, int house, int fid, int qty, String desc) {
         super(context, CommunicationInterface.CmdID.CMD_EDIT_HOUSE_FACILITY);
         mMethodType = "PUT";
+        mArgs = new Args(house, new FacilityItem(fid, qty, desc));
     }
 
     @Override
     public String getRequestURL() {
-        mCommandURL = "/v1/accessory/housefacility/" + mId;
+        mCommandURL = "/v1/accessory/housefacility/" + ((Args)mArgs).getId();
         return mCommandURL;
     }
 
     @Override
     public void generateRequestData() {
-        mRequestData = ("fid=" + mFid);
-        mRequestData += ("&fqty=" + mQty);
-        mRequestData += ("&fdesc=" + mDesc);
+        mRequestData = ("fid=" + ((Args)mArgs).mFacility.mFId);
+        mRequestData += ("&fqty=" + ((Args)mArgs).mFacility.mQty);
+        mRequestData += ("&fdesc=" + String2Base64(((Args)mArgs).mFacility.mDesc));
         Log.d(TAG, "mRequestData: " + mRequestData);
     }
 
-    @Override
-    public boolean checkParameter(HashMap<String, String> map) {
-        if (!map.containsKey(CommunicationParameterKey.CPK_DESC) ||
-                !map.containsKey(CommunicationParameterKey.CPK_QTY) ||
-                !map.containsKey(CommunicationParameterKey.CPK_FACILITY_ID) ||
-                !map.containsKey(CommunicationParameterKey.CPK_INDEX)) {
-            return false;
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    class Args extends ApiArgsObjId implements IApiArgs.IArgsEditHouseFacility {
+        private  FacilityItem mFacility = null;
+
+        Args(int house, FacilityItem facility) {
+            super(house);
+            mFacility = facility;
         }
 
-        try {
-            mId = Integer.parseInt(map.get(CommunicationParameterKey.CPK_INDEX));
-            mFid = Integer.parseInt(map.get(CommunicationParameterKey.CPK_FACILITY_ID));
-            mQty = Integer.parseInt(map.get(CommunicationParameterKey.CPK_QTY));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return false;
+        @Override
+        public boolean checkArgs() {
+            if (!super.checkArgs()) {
+                return false;
+            }
+            if (null == mFacility) {
+                Log.e(TAG, "[checkArgs] mFacility:" + mFacility);
+                return false;
+            }
+
+            return mFacility.checkFacilityItem();
         }
 
-        mDesc = map.get(CommunicationParameterKey.CPK_DESC);
-        if (mDesc.length() > 0) {
-            mDesc = String2Base64(mDesc);
-        }
-        Log.d(TAG, "mDesc: " + mDesc);
+        @Override
+        public boolean isEqual(IApiArgs.IArgsBase arg2) {
+            if (!super.isEqual(arg2)) {
+                return false;
+            }
 
-        return true;
+            return mFacility.equal(((Args)arg2).mFacility);
+        }
+
+        @Override
+        public IApiArgs.IFacilityItem getFacility() {
+            return mFacility;
+        }
     }
 }
