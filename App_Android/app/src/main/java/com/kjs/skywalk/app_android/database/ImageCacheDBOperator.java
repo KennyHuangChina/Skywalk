@@ -9,6 +9,10 @@ import com.kjs.skywalk.app_android.ClassDefine;
 
 import java.util.ArrayList;
 
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_SIZE_Large;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_SIZE_Moderate;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_SIZE_Small;
+
 /**
  * Created by admin on 2017/10/18.
  */
@@ -48,12 +52,6 @@ public class ImageCacheDBOperator {
         return true;
     }
 
-    //如果md5发生变化，表示图片已经更新，清除缓存
-    //问题：图片更新， 先删除在更新id变化？
-    public void cleanCache(int id) {
-
-    }
-
     //images[0]: big images[1]: middle
     public void updateCache(int id, ArrayList<String> images) {
 
@@ -62,6 +60,41 @@ public class ImageCacheDBOperator {
     //删除某个id相关内容
     public void removeItem(int id) {
 
+    }
+
+    public ClassDefine.PictureInfo getCachedPicture(int hid, int pid, int type, int size) {
+        ClassDefine.PictureInfo pic = new ClassDefine.PictureInfo();
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+        String cmd = "SELECT * FROM " + mHelper.getTableName() + " WHERE" + " _hid=? AND _pid=? AND _type=?";
+        Cursor cursor = db.rawQuery(cmd, new String[] {String.valueOf(hid), String.valueOf(pid), String.valueOf(type)});
+        int count = cursor.getCount();
+        if(count == 0) {
+            return null;
+        }
+        if(cursor.moveToFirst()) {
+            if(size == PIC_SIZE_Small) {
+                pic.mId = pid;
+                pic.largePicUrl = null;
+                pic.middlePicUrl = null;
+                pic.smallPicUrl = cursor.getString(4);
+                pic.mType = type;
+            } else if(size == PIC_SIZE_Moderate) {
+                pic.mId = pid;
+                pic.largePicUrl = null;
+                pic.middlePicUrl = cursor.getString(5);
+                pic.smallPicUrl = null;
+                pic.mType = type;
+            } else if(size == PIC_SIZE_Large) {
+                pic.mId = pid;
+                pic.largePicUrl = cursor.getString(6);
+                pic.middlePicUrl = null;
+                pic.smallPicUrl = null;
+                pic.mType = type;
+            } else {
+                return null;
+            }
+        }
+        return pic;
     }
 
     public boolean isPictureCached(int hid, ClassDefine.PictureInfo picInfo) {

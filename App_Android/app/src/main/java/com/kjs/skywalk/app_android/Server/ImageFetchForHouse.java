@@ -49,7 +49,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
     private boolean             mFailed     = false;
 
     private int                 mHouseId    = 0;
-
+    private int                 mCount      = 0;
     private ImageCacheDBOperator mDB        = null;
 
     ArrayList<ClassDefine.PictureInfo>  mList       = new ArrayList<>();
@@ -107,6 +107,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                 IApiResults.IResultList  res  = (IApiResults.IResultList)iResult;
 
                 ArrayList<Object> list = res.GetList();
+                mCount = list.size();
                 kjsLogUtil.d("###### Picture list size: " + list.size() + " type: " + args.getSubType());
                 for(Object obj : list) {
                     IApiResults.IPicInfo info = (IApiResults.IPicInfo)obj;
@@ -120,13 +121,18 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                     picInfo.mType           = args.getSubType(); // fetchType;
                     picInfo.mCheckSum       = info.GetChecksum();
 
-                    mList.add(picInfo);
+//                    mList.add(picInfo);
 //                    picInfo.print();
                     if(!mDB.isPictureCached(mHouseId, picInfo)) {
                         download(picInfo);
+                    } else {
+                        ClassDefine.PictureInfo cachedPic = mDB.getCachedPicture(mHouseId, picInfo.mId, picInfo.mType, PIC_SIZE_Small);
+                        if(cachedPic != null) {
+                            mList.add(cachedPic);
+                        }
                     }
                 }
-                if(mListener != null) {
+                if(mListener != null && mList.size() == mCount) {
                     mListener.onHouseImageFetched(mList);
                 }
         }
@@ -208,9 +214,13 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                     pic.mType = picInfo.mType;
                     pic.mCheckSum = picInfo.mCheckSum;
                     pic.smallPicUrl = targetFile.getAbsolutePath();
-                    pic.middlePicUrl = "";
-                    pic.largePicUrl = "";
+                    pic.middlePicUrl = null;
+                    pic.largePicUrl = null;
                     mDB.addItem(mHouseId, pic);
+                    mList.add(pic);
+                    if(mListener != null && mList.size() == mCount) {
+                        mListener.onHouseImageFetched(mList);
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
