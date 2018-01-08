@@ -47,21 +47,6 @@ public class ImageCacheDBOperator {
         db.close();
     }
 
-    //通过md5检查图片是否有更新
-    public boolean checkChange(int id, String md5) {
-        return true;
-    }
-
-    //images[0]: big images[1]: middle
-    public void updateCache(int id, ArrayList<String> images) {
-
-    }
-
-    //删除某个id相关内容
-    public void removeItem(int id) {
-
-    }
-
     public ClassDefine.PictureInfo getCachedPicture(int hid, int pid, int type, int size) {
         ClassDefine.PictureInfo pic = new ClassDefine.PictureInfo();
         SQLiteDatabase db = mHelper.getReadableDatabase();
