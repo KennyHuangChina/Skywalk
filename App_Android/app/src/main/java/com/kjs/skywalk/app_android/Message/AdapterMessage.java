@@ -183,6 +183,8 @@ public class AdapterMessage extends BaseAdapter implements CommunicationInterfac
                     markMessageRead(msgInfo.mMsgId);
                     Intent intent = new Intent(mContext, Activity_Message_yuyuekanfang.class);
                     intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, msgInfo.mRefId);
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, msgInfo.mHouseId);
+                    intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION, location);
                     mContext.startActivity(intent);
                 }
             });

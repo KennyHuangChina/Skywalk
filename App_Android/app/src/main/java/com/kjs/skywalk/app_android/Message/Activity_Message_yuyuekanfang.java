@@ -15,6 +15,7 @@ import com.kjs.skywalk.app_android.Activity_Xuanzedaili;
 import com.kjs.skywalk.app_android.Activity_Zushouweituo_Fangyuanxinxi;
 import com.kjs.skywalk.app_android.Activity_Zushouweituo_Kanfangshijian;
 import com.kjs.skywalk.app_android.Activity_Zushouweituo_Xuanzedaili;
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
@@ -42,6 +43,8 @@ import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID.
 
 public class Activity_Message_yuyuekanfang extends SKBaseActivity {
     private int mApId = 0;  // 16
+    private int mHouse_id = 0;  // house_id
+    private String mHouseLocation;
 
     private TextView mTvButton1;
     private TextView mTvButton2;
@@ -62,6 +65,10 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
         mBtns.add(mTvButton2);
         mBtns.add(mTvButton3);
 
+        mApId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
+        mHouse_id = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, 0);
+        mHouseLocation = getIntent().getStringExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_LOCATION);
+
         mTvButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,12 +77,17 @@ public class Activity_Message_yuyuekanfang extends SKBaseActivity {
             }
         });
 
-        mApId = getIntent().getIntExtra(ClassDefine.IntentExtraKeyValue.KEY_REFID, 0);
-
         mAdapterYuYueKanFang = new AdapterYuYueKanFangHistory(this);
         ((ListView)findViewById(R.id.lv_history)).setAdapter(mAdapterYuYueKanFang);
 
         getAppointmentInfo();
+
+        findViewById(R.id.tv_house_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commonFun.startActivityWithHouseId(Activity_Message_yuyuekanfang.this, Activity_ApartmentDetail.class, mHouseId);
+            }
+        });
     }
 
     private void assignAgent(int aid, int agentId) {

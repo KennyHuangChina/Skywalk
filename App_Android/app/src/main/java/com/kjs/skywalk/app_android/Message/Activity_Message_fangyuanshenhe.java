@@ -6,9 +6,11 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kjs.skywalk.app_android.Apartment.Activity_ApartmentDetail;
 import com.kjs.skywalk.app_android.ClassDefine;
 import com.kjs.skywalk.app_android.R;
 import com.kjs.skywalk.app_android.SKBaseActivity;
+import com.kjs.skywalk.app_android.commonFun;
 import com.kjs.skywalk.app_android.kjsLogUtil;
 import com.kjs.skywalk.communicationlibrary.CmdExecRes;
 import com.kjs.skywalk.communicationlibrary.CommandManager;
@@ -56,6 +58,13 @@ public class Activity_Message_fangyuanshenhe extends SKBaseActivity {
 
         mAdapterHistory = new AdapterShenHeXiaoXiHistory(this);
         ((ListView)findViewById(R.id.lv_history)).setAdapter(mAdapterHistory);
+
+        findViewById(R.id.tv_house_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commonFun.startActivityWithHouseId(Activity_Message_fangyuanshenhe.this, Activity_ApartmentDetail.class, mHouseId);
+            }
+        });
 
 //        updateButtonGroup(3);
 
