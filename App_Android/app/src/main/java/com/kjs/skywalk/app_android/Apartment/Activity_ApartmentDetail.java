@@ -49,6 +49,7 @@ import com.kjs.skywalk.control.ExpandedView;
 import com.kjs.skywalk.control.LinearLayout_AdaptiveText;
 import com.kjs.skywalk.control.SliderView;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +64,7 @@ import me.iwf.photopicker.PhotoPreview;
 import static com.kjs.skywalk.communicationlibrary.CommunicationInterface.CmdID;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_SIZE_ALL;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_SUB_HOUSE_APPLIANCE;
+import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_SUB_HOUSE_BEGIN;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_SUB_HOUSE_FLOOR_PLAN;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_SUB_HOUSE_FURNITURE;
 import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_SUB_HOUSE_RealMap;
@@ -97,14 +99,8 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     private LinearLayout mLl_housetag_container;
     private LinearLayout_AdaptiveText mLla_facilitylist;
 
-    private ImageFetchForHouse imageFetchHuXing             = null;
-    private ImageFetchForHouse  imageFetchFangJianJieGou    = null;
-    private ImageFetchForHouse  imageFetchJiaJuYongPin      = null;
-    private ImageFetchForHouse  imageFetchDianQi            = null;
-    private boolean mHuxingPicsGot = false;
-    private boolean mFangjianjiegouPicsGot = false;
-    private boolean mJiajuyongpinPicsGot = false;
-    private boolean mDianqiPicsGot = false;
+    private ImageFetchForHouse mImageFetch  = null;
+
     private ArrayList<ClassDefine.PictureInfo> mPictures    = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -754,109 +750,9 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
         return item;
     }
 
-    private void getHuXingPictures() {
-        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
-            @Override
-            public void onHouseImageFetched(final ArrayList<ClassDefine.PictureInfo> list) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for(ClassDefine.PictureInfo info : list) {
-                            mPictures.add(info);
-                        }
-                        mHuxingPicsGot = true;
-                        imageFetchHuXing.close();
-                        updateSliderView();
-                    }
-                });
-            }
-        };
-
-        mHuxingPicsGot = false;
-        imageFetchHuXing = new ImageFetchForHouse(this);
-        imageFetchHuXing.registerListener(listener);
-        imageFetchHuXing.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FLOOR_PLAN, PIC_SIZE_ALL);
-    }
-
-    private void getDianQiPictures() {
-        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
-            @Override
-            public void onHouseImageFetched(final ArrayList<ClassDefine.PictureInfo> list) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for(ClassDefine.PictureInfo info : list) {
-                            mPictures.add(info);
-                        }
-                        mDianqiPicsGot = true;
-                        imageFetchDianQi.close();
-                        updateSliderView();
-                    }
-                });
-            }
-        };
-
-        mDianqiPicsGot = false;
-        imageFetchDianQi = new ImageFetchForHouse(this);
-        imageFetchDianQi.registerListener(listener);
-        imageFetchDianQi.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_APPLIANCE, PIC_SIZE_ALL);
-    }
-
-    private void getJiaJuYongPinPictures() {
-        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
-            @Override
-            public void onHouseImageFetched(final ArrayList<ClassDefine.PictureInfo> list) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for(ClassDefine.PictureInfo info : list) {
-                            mPictures.add(info);
-                        }
-                        mJiajuyongpinPicsGot = true;
-                        imageFetchJiaJuYongPin.close();
-
-                        updateSliderView();
-                    }
-                });
-            }
-        };
-
-        mJiajuyongpinPicsGot = false;
-        imageFetchJiaJuYongPin = new ImageFetchForHouse(this);
-        imageFetchJiaJuYongPin.registerListener(listener);
-        imageFetchJiaJuYongPin.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_FURNITURE, PIC_SIZE_ALL);
-    }
-
-    private void getFangJianJieGouPictures() {
-        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
-            @Override
-            public void onHouseImageFetched(final ArrayList<ClassDefine.PictureInfo> list) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for(ClassDefine.PictureInfo info : list) {
-                            mPictures.add(info);
-                        }
-                        mFangjianjiegouPicsGot = true;
-                        imageFetchFangJianJieGou.close();
-                        updateSliderView();
-                    }
-                });
-            }
-        };
-
-        mFangjianjiegouPicsGot = false;
-        imageFetchFangJianJieGou = new ImageFetchForHouse(this);
-        imageFetchFangJianJieGou.registerListener(listener);
-        imageFetchFangJianJieGou.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_RealMap, PIC_SIZE_ALL);
-    }
-
-    private void updateSliderView() {
-        if(!mHuxingPicsGot || !mFangjianjiegouPicsGot || !mJiajuyongpinPicsGot || !mDianqiPicsGot) {
-            return;
-        }
+    private void updateSliderView(ArrayList<ClassDefine.PictureInfo> list) {
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
-        for(ClassDefine.PictureInfo info : mPictures) {
+        for(ClassDefine.PictureInfo info : list) {
             mImageLst.add(info.smallPicUrl);
         }
         sView.setImages(mImageLst, mSvListener);
@@ -864,14 +760,25 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
 
     private void getPictures() {
         mPictures.clear();
-        mHuxingPicsGot = false;
-        mFangjianjiegouPicsGot = false;
-        mJiajuyongpinPicsGot = false;
-        mDianqiPicsGot = false;
-        getHuXingPictures();
-        getFangJianJieGouPictures();
-        getJiaJuYongPinPictures();
-        getDianQiPictures();
+        ImageFetchForHouse.HouseFetchFinished listener = new ImageFetchForHouse.HouseFetchFinished() {
+            @Override
+            public void onHouseImageFetched(final ArrayList<ClassDefine.PictureInfo> list) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(ClassDefine.PictureInfo info : list) {
+                            mPictures.add(info);
+                        }
+                        mImageFetch.close();
+                        updateSliderView(mPictures);
+                    }
+                });
+            }
+        };
+
+        mImageFetch = new ImageFetchForHouse(this);
+        mImageFetch.registerListener(listener);
+        mImageFetch.fetch(mHouseId, PIC_TYPE_SUB_HOUSE_BEGIN, PIC_SIZE_ALL);
     }
 
 }
