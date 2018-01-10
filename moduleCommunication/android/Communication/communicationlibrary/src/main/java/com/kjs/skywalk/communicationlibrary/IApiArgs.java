@@ -92,13 +92,13 @@ public class IApiArgs {
 
     /******************************************************************************************/
     public interface IArgsGetHouseInfo extends IArgsObjId {
-        boolean isBackendUse();
+        boolean isBackendUse(); // 是否是后台使用
     }
 
     /******************************************************************************************/
     public interface IArgsGetMsgList extends IArgsFetchList {
-        boolean isIdOnly();
-        boolean isNewMsgOnly();
+        boolean isIdOnly();     // 是否只取 message id
+        boolean isNewMsgOnly(); // 是否只取 unread message
     }
 
     /******************************************************************************************/
@@ -191,7 +191,7 @@ public class IApiArgs {
 
     /******************************************************************************************/
     public interface IArgsLoginSms extends IArgsUserName {
-        int     getClientType();
+        int     getClientType();    // CLIENT_WEB， CLIENT_APP
         String  getSms();
     }
     public static int   CLIENT_WEB = 0,
@@ -199,7 +199,7 @@ public class IApiArgs {
 
     /******************************************************************************************/
     public interface IArgsLoginPass extends IArgsUserName {
-        int     getClientType();
+        int     getClientType();    // CLIENT_WEB， CLIENT_APP
         String  getSalt();
         String  getPassword();
     }
@@ -214,9 +214,9 @@ public class IApiArgs {
     /******************************************************************************************/
     public interface IArgsModifyAgencyInfo extends IArgsBase {
         int     getAencyId();
-        int     getRankProf();
-        int     getRankAttitude();
-        int     getWorkingYears();
+        int     getRankProf();      // 专业得分。0 ~ 50(0 ~ 5)
+        int     getRankAttitude();  // 态度得分。0 ~ 50(0 ~ 5)
+        int     getWorkingYears();  // 从业年数
     }
 
     /******************************************************************************************/
@@ -298,7 +298,7 @@ public class IApiArgs {
 
     /******************************************************************************************/
     public interface IArgsGetPicUrls extends IArgsObjId {
-        int     getPicSize();
+        int     getPicSize();   // PIC_SIZE_xxx
     }
 
     /******************************************************************************************/
@@ -321,15 +321,16 @@ public class IApiArgs {
 
     /******************************************************************************************/
     public interface IArgsMakeAppointmentAct extends IArgsObjId {
-        int     getAction();    // action code
+        int     getAction(); // action code
         String  getBeginTime();
         String  getEndTime();
         String  getDesc();
     }
+    // Action Code
     static public int   APPOINTMENT_ACTION_Min          = 2,
-                        APPOINTMENT_ACTION_Confirm      = 2,
+                        APPOINTMENT_ACTION_Confirm      = APPOINTMENT_ACTION_Min,
                         APPOINTMENT_ACTION_Reschedule   = 3,
                         APPOINTMENT_ACTION_Done         = 4,
                         APPOINTMENT_ACTION_Cancel       = 5,
-                        APPOINTMENT_ACTION_Max          = 5;
+                        APPOINTMENT_ACTION_Max          = APPOINTMENT_ACTION_Cancel;
 }
