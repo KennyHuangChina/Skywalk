@@ -159,7 +159,7 @@ class CmdGetHouseList extends CommunicationBase {
 
         @Override
         public boolean checkArgs() {
-            if (super.checkArgs()) {
+            if (!super.checkArgs()) {
                 return false;
             }
             if (mType < GET_HOUSE_DIG_LST_TYPE_BEGIN || mType > GET_HOUSE_DIG_LST_TYPE_END) {
