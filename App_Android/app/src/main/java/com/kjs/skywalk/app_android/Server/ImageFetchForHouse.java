@@ -229,7 +229,9 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
 
             @Override
             protected void onPostExecute(File file) {
-                kjsLogUtil.i("onPostExecute: " + file.getPath());
+                if(file != null) {
+                    kjsLogUtil.i("onPostExecute: " + file.getPath());
+                }
             }
 
             @Override

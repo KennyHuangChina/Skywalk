@@ -71,7 +71,7 @@ import static com.kjs.skywalk.communicationlibrary.IApiArgs.PIC_TYPE_SUB_HOUSE_R
 
 public class Activity_ApartmentDetail extends SKBaseActivity {
     private String TAG = getClass().getSimpleName();
-    private ArrayList<String> mImageLst;
+    private ArrayList<String> mImageLst = new ArrayList<>();
 //    private int mHouseId = -1;
 
     private TextView mTvApartmentName;
@@ -751,6 +751,7 @@ public class Activity_ApartmentDetail extends SKBaseActivity {
     }
 
     private void updateSliderView(ArrayList<ClassDefine.PictureInfo> list) {
+        mImageLst.clear();
         SliderView sView = (SliderView) findViewById(R.id.sv_view);
         for(ClassDefine.PictureInfo info : list) {
             mImageLst.add(info.smallPicUrl);

@@ -64,8 +64,16 @@ public class SliderView extends LinearLayout {
     }
 
     public void setImages(ArrayList<String> imageList, SliderViewListener listener) {
-        mSvAdapter = new SliderViewAdapter(mCtx, imageList, listener);
+        if(mSvAdapter == null) {
+            mSvAdapter = new SliderViewAdapter(mCtx, imageList, listener);
+        }
         mVpImages.setAdapter(mSvAdapter);
+        int imageCount = imageList.size();
+        if(imageCount == 0) {
+            mTvImageCount.setText("0/0");
+        } else {
+            mTvImageCount.setText(String.format("%d/%d", 1, mSvAdapter.getCount()));
+        }
         startSliderTask();
     }
 
