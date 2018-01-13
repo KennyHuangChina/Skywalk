@@ -162,6 +162,9 @@ public class Activity_fangyuan_guanli extends SKBaseActivity {
     }
 
     private void updateHouseInfo(final IApiResults.IGetHouseInfo houseInfo) {
+        mBuildingNo = houseInfo.BuildingNo();
+        mRoomNo = houseInfo.HouseNo();
+        mHouseLocation = mPropertyName + mBuildingNo + "栋" + mRoomNo + "室";
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

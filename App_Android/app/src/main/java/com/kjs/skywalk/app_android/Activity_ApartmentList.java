@@ -381,6 +381,13 @@ public class Activity_ApartmentList extends SKBaseActivity {
         startActivity(intent);
     }
 
+    private void startHouseManagmentActivity(ClassDefine.HouseDigest digest) {
+        Intent intent = new Intent(Activity_ApartmentList.this, Activity_fangyuan_guanli.class);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_HOUSE_ID, digest.houseId);
+        intent.putExtra(ClassDefine.IntentExtraKeyValue.KEY_PROPERTY_NAME, digest.property);
+        startActivity(intent);
+    }
+
     private void doSelectItem(ClassDefine.HouseDigest digest) {
         switch (mType) {
             case TYPE_TO_APPROVE: {
@@ -388,7 +395,8 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 break;
             }
             default: {
-                commonFun.startActivityWithHouseId(this, Activity_ApartmentDetail.class, digest.houseId);
+                //commonFun.startActivityWithHouseId(this, Activity_ApartmentDetail.class, digest.houseId);
+                startHouseManagmentActivity(digest);
                 break;
             }
         }

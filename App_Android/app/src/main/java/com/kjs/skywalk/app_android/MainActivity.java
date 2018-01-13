@@ -458,13 +458,13 @@ public class MainActivity extends SKBaseActivity {
 //                    }
 //                    break;
 
-                    case R.id.action_setting5: {
-                        Intent intent = new Intent(MainActivity.this, Activity_fangyuan_guanli.class);
-                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, 14);
-                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_LOCATION, "世茂蝶湖湾17栋1208室");
-                        startActivity(intent);
-                    }
-                    break;
+//                    case R.id.action_setting5: {
+//                        Intent intent = new Intent(MainActivity.this, Activity_fangyuan_guanli.class);
+//                        intent.putExtra(IntentExtraKeyValue.KEY_HOUSE_ID, 14);
+//                        intent.putExtra(IntentExtraKeyValue.KEY_PROPERTY_NAME, "世茂蝶湖湾");
+//                        startActivity(intent);
+//                    }
+//                    break;
 
                     case R.id.action_setting6: {
 //                        // 消息-预约看房

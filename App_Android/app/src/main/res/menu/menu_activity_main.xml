@@ -31,11 +31,11 @@
         <!--android:title="租售委托"-->
         <!--app:showAsAction="never"/>-->
 
-    <item
-        android:id="@+id/action_setting5"
-        android:orderInCategory="100"
-        android:title="房源管理"
-        app:showAsAction="never"/>
+    <!--<item-->
+        <!--android:id="@+id/action_setting5"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="房源管理"-->
+        <!--app:showAsAction="never"/>-->
 
     <item
         android:id="@+id/action_setting6"
