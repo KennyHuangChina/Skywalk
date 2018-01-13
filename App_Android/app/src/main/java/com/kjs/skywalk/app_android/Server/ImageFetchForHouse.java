@@ -189,9 +189,6 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
         new AsyncTask<Void, Integer, File>() {
             @Override
             protected File doInBackground(Void... params) {
-                if(picInfo.smallPicUrl == null || picInfo.smallPicUrl.isEmpty()) {
-                    return null;
-                }
                 File targetFile = null;
                 try {
                     FutureTarget<File> future = Glide
@@ -225,7 +222,7 @@ public class ImageFetchForHouse implements CommunicationInterface.CICommandListe
                         mListener.onHouseImageFetched(mList);
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
                 }
                 return targetFile;
             }
