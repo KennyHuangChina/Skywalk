@@ -82,7 +82,9 @@ public class Activity_ApartmentList extends SKBaseActivity {
 
     public void onClickResponse(View v) {
         switch (v.getId()) {
-            case R.id.tv_title: {
+            case R.id.tv_title:
+            case R.id.rl_titlebar:
+            {
                 finish();
             }
             break;
@@ -394,6 +396,15 @@ public class Activity_ApartmentList extends SKBaseActivity {
                 startApproveActivity(digest);
                 break;
             }
+//            case TYPE_ALL_AGENCY_HOUSES:
+//            case TYPE_TO_RENT:
+//            case TYPE_TO_SALE:
+//            case TYPE_RENTED:
+            case TYPE_WATCH_LIST:           // 我的关注
+            case TYPE_BROWSING_HISTORY:     // 浏览记录
+            case TYPE_APPOINTMENT:          // 我的预约
+                commonFun.startActivityWithHouseId(this, Activity_ApartmentDetail.class, digest.houseId);
+                break;
             default: {
                 //commonFun.startActivityWithHouseId(this, Activity_ApartmentDetail.class, digest.houseId);
                 startHouseManagmentActivity(digest);
