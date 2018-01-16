@@ -72,6 +72,9 @@ public class MainActivity extends SKBaseActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        // init ksjCrashHandler
+        kjsCrashHandler.getInstance().init(this);
+
         createImageCacheFolder();
 
         // copy file from "asset/testPics/" to "cache" dir
